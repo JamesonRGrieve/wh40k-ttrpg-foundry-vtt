@@ -1,0 +1,28 @@
+{
+  "name": "dark-heresy-2nd",
+  "title": "Dark Heresy 2nd Edition",
+  "description": "Dark Heresy 2nd Edition - Foundry VTT",
+  "version": "1.0.0",
+  "minimumCoreVersion": "0.8.6",
+  "compatibleCoreVersion": "9",
+  "author": "Matt Keathley",
+  "esmodules": ["module/dark-heresy-2nd.mjs"],
+  "styles": ["css/dark-heresy-2nd.css"],
+  "scripts": [],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "gridDistance": 1,
+  "gridUnits": "m",
+  "primaryTokenAttribute": "wounds",
+  "secondaryTokenAttribute": "fate",
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "LICENSE.txt"
+}
