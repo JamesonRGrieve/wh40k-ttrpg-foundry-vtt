@@ -1,0 +1,15 @@
+.dh-wrapper {
+    .page__main,
+    .page__advances,
+    .page__gear,
+    .page__social{
+        display: block;
+        &--flex {
+            display: flex;
+        }
+        &--grid {
+            display: grid;
+        }
+    }
+}
+

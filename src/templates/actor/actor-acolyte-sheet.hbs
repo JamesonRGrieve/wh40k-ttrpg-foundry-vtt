@@ -1,0 +1,49 @@
+<div class="dh-wrapper">
+    <form class="{{cssClass}} dh-pc {{actor.type}}" autocomplete="off">
+        {{log 'data' data}}
+        {{log 'actor' actor}}
+        <div class="dh-header dh-panel">
+            <div class="dh-header__info">
+                <div class="dh-header__logo dh-header__item-wrapper dh-header__item-wrapper--logo">
+                    <img class="dh-header__logo_image" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+                </div>
+                <div class="dh-header__item-wrapper dh-header__item-wrapper--character_name">
+                    <span class="dh-header__title">Name</span>
+                    <input class="dh-header__input" name="name" type="text" value="{{actor.name}}"/>
+                </div>
+                {{#each data.bio}}
+                    {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                {{/each}}
+            </div>
+
+            <div class="dh-navigation dh-panel dh-navigation__items" data-group="primary">
+                <label class="dh-navigation__item">
+                    <a class="item" data-tab="main" data-group="primary">main</a>
+                </label>
+                <label class="dh-navigation__item">
+                    <a class="item" data-tab="gear" data-group="primary">gear</a>
+                </label>
+                <label class="dh-navigation__item">
+                    <a class="item" data-tab="advances" data-group="primary">advances</a>
+                </label>
+                <label class="dh-navigation__item">
+                    <a class="item" data-tab="social" data-group="primary">social</a>
+                </label>
+            </div>
+            <section class="dh-body">
+                <div class="tab" data-group="primary" data-tab="main">
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
+                </div>
+                <div class="tab" data-group="primary" data-tab="combat">
+                </div>
+            </section>
+        </div>
+    </form>
+</div>
+
+

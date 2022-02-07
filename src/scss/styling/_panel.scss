@@ -1,0 +1,30 @@
+.dh-panel {
+    background: url('../images/40k_back.png') #eff2f1 center/cover;
+    border: 3px solid transparent;
+    border-image: url("../images/panel_border.png") 8 / 2 / 0 repeat;
+    
+    h1 {
+        border-bottom: $grid-border;
+    }
+}
+
+.dh-armour {
+    &__wrapper {
+        background:
+                url('../images/armour.png') center/80% no-repeat,
+                url('../images/40k_back.png') center/cover;
+    }
+
+    &__display {
+        border: $grid-border;
+    }
+}
+
+.dh-wrapper {
+    .dh-controls {
+        button {
+            background: rgba($form-button-background,0.125);
+            text-align: center;
+        }
+    }
+}

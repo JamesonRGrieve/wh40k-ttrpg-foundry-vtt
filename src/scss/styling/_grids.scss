@@ -1,0 +1,138 @@
+%grid-row {
+    border-bottom: $grid-border;
+}
+
+%grid-row--unknown {
+    background-color: rgba(255, 0, 0, .1);
+}
+
+%grid-row--inverted {    
+    border-bottom: 0;
+    border-top: $grid-border;
+}
+
+%grid-row-head {
+    @extend %grid-row;
+    font-weight: bold;
+}
+
+%grid-cell {
+    border-right: $grid-border;
+    overflow: hidden;
+
+    input[type="number"] {
+        height: 100%;
+    }
+
+    > span[name*="attr"] {
+        font-family: $font-family-alt;
+        font-size: 1.25rem;
+    }
+}
+
+%grid-cell--last {
+    @extend %grid-cell;
+    border-right: 0;
+}
+
+%grid-cell--highlight {
+    font-weight: bold;
+}
+
+%grid-cell--description {
+    border-top: $grid-border-description;
+
+    font-size: 0.95em;
+    font-style: italic;
+}
+
+    
+.dh-field,
+.dh-textarea {
+    @extend %grid-row;
+}
+
+.dh-field__header,
+.dh-field__input,
+.dh-textarea__header,
+.dh-textarea__input {
+    @extend %grid-cell;
+}
+
+.dh-chartable__cell {
+    border-left: $grid-border;
+    border-top: $grid-border;
+
+    font-family: $font-family-alt;
+
+    &--left {
+        font-weight: bold;
+        border-top: $grid-border;    
+    }
+
+    &--head {
+        font-weight: bold;
+        border-left: $grid-border;    
+    }
+
+    &--highlight {
+        font-weight: bold;
+    }
+}
+
+@each $table in "skill", "talent", "trait", "corruption", "insanity", "armour", "critical", "cybernetic", "weapon", "experience", "wounds" {
+
+    .dh-#{$table}table__row--head {
+        @extend %grid-row-head;
+    }
+
+    .dh-#{$table}table__row {
+        @extend %grid-row;
+    }
+
+    .dh-#{$table}table__row--unknown {
+        @extend %grid-row--unknown;
+    }
+
+    .dh-#{$table}table__cell {
+        @extend %grid-cell;
+    }
+
+    .dh-#{$table}table__cell--span2 {
+        @extend %grid-cell;
+    }
+
+    .dh-#{$table}table__cell--description {
+        @extend %grid-cell--description;
+    }
+
+    .dh-#{$table}table__cell--last {
+        @extend %grid-cell--last;
+    }
+
+    .dh-#{$table}table__cell--highlight {
+        @extend %grid-cell--highlight;
+    }
+}
+
+.dh-skilltable__row--grouped,
+.dh-skilltable__row--specialisation {
+    background: rgba(36, 107, 131, 0.1);
+}
+
+.dh-skilltable__cell--grouped {
+    @extend %grid-cell--last;
+    padding-top: 1px;
+
+    font-weight: bold;
+    text-align: center !important;
+    text-indent: -1.5rem;
+    text-transform: uppercase;
+}
+
+.dh-armour__display {
+    font-family: $font-family-alt;
+    font-size: 14pt;
+    font-weight: bold;
+    line-height: 3.5rem;
+}

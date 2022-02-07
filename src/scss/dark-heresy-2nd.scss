@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400|Lusitana:400:700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@import "reset";
+.window-content {
+  @import "abstracts";
+  @import "fonts";
+
+  @import "src/scss/layout/pc/pc";
+  @import "src/scss/layout/pc/header";
+  @import "src/scss/layout/pc/navigation";
+  @import "src/scss/layout/pc/skills";
+  @import "src/scss/layout/pc/grids";
+
+  @import "src/scss/components/generic_field";
+  @import "src/scss/components/iconbuttons";
+  @import "src/scss/components/panel";
+  @import "src/scss/components/settings";
+
+  @import "src/scss/styling/form_fields";
+  @import "src/scss/styling/general";
+  @import "src/scss/styling/generic_fields";
+  @import "src/scss/styling/grids";
+  @import "src/scss/styling/header";
+  @import "src/scss/styling/panel";
+  @import "src/scss/styling/navigation";
+  @import "src/scss/styling/settings";
+
+
+  @import "src/scss/control/hide";
+  @import "src/scss/control/tabs";
+}
+

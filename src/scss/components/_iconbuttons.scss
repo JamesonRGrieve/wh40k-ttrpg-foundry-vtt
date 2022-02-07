@@ -1,0 +1,48 @@
+.dh {
+    &-material {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 12px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-grid;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+    }
+
+    // Settings Cog
+    &-displaytoggle {
+        cursor: pointer;
+        &__span {
+            @extend .dh-material;
+            opacity: .5;
+            .active {
+                opacity: 1;
+            }
+            &:hover {
+                opacity: 1
+            }
+        }
+    }
+}
+
+// Vocalise Button
+button.dh-vocalise[type="roll"] {
+    @extend .dh-material;
+    opacity: .5;
+    text-align: center;
+    &:hover {
+        opacity: 1
+    }
+}
+
+button.dh-material[type="action"] {
+    &:hover {
+        color: red;
+    }
+}

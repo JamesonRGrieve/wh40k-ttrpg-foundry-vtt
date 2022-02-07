@@ -1,0 +1,118 @@
+.dh-pc {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border: 30px solid transparent;
+    border-image: url("../images/border.png") 30 round;
+    grid-gap: 0px;
+    > * {
+        min-width: 100px;
+    }
+
+    .tab.active {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 0px;
+    }
+
+    // General PC Positioning
+    .dh {
+        &-image {
+            grid-column: 1 / -1;
+        }
+
+        &-header {
+            grid-column: 1 / -1;
+        }
+
+        &-navigation {
+            grid-column: 1 / -1;
+        }
+
+        &-characteristics {
+            grid-column: span 4;
+        }
+
+        &-talents,
+        &-traits {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        &-movement,
+        &-fate,
+        &-fatigue,
+        &-corruption,
+        &-insanity,
+        &-encumbrance,
+        &-cybernetic {
+            grid-column: span 2;
+        }
+
+        &-skills {
+            grid-column: span 2;
+            grid-row: span 4;
+        }
+
+        &-experience {
+            grid-row: span 2;
+            grid-column: span 2;
+        }
+
+        &-specialist-skills {
+            grid-column: span 2;
+            grid-row: span 3;
+        }
+
+        &-armour {
+            grid-column: 1 / span 6;
+        }
+
+        &-armour__wrapper {
+            grid-column: 1 / span 2;
+            grid-row: span 6;
+        }
+
+        &-experience--alt {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+
+            .dh-panel {
+                flex-grow: 0;
+
+                &--awards {
+                    flex-grow: 1;
+                }
+            }
+        }
+
+        &-wounds {
+            grid-column: span 2;
+        }
+
+        &-controls {
+            grid-column: span 2;
+
+            &__wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: $margin-small;
+                margin: $margin-small;
+            }
+        }
+
+        &-weapons {
+            grid-column: 1 / span 6;
+        }
+
+        &-settingswrapper {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+
+            > * {
+                flex-grow: 1;
+            }
+        }
+    }
+}

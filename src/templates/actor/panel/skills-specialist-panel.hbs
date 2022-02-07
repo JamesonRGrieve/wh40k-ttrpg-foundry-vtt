@@ -1,0 +1,16 @@
+<div class="dh-specialist-skills dh-panel">
+    <div class="dh-skilltable">
+        <h1 class="dh-panel__header">Specialist Skills</h1>
+        <div class="dh-skilltable__row--head">
+            <div class="dh-skilltable__cell">Name</div>
+            <div class="dh-skilltable__cell">Adv.</div>
+            <div class="dh-skilltable__cell">Char.</div>
+            <div class="dh-skilltable__cell--last">Total</div>
+        </div>
+        {{#each data.skills as | skill name |}}
+            {{#if skill.isSpecialist}}
+                {{> systems/dark-heresy-2nd/templates/actor/partial/skill-specialist.hbs key=name}}
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

@@ -1,0 +1,44 @@
+.dh-header {
+    padding: 0;
+    font-size: 12pt;
+
+    &__logo {
+        background: url('../images/aquilla.png') no-repeat right;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        -o-background-size: contain;
+        background-size: contain;
+    }
+
+    &__item-wrapper {
+        &__logo,
+        &--character_name,
+        &--homeworld,
+        &--background,
+        &--role,
+        &--elite,
+        &--divination,
+        &--gender,
+        &--age,
+        &--build,
+        &--complexion,
+        &--height,
+        &--hair,
+        &--eyes,
+        &--superstition,
+        &--quirks,
+        &--notes,
+        &--momentos {
+            border: 0;
+            border-bottom: $grid-border;
+        }
+    }
+
+    &__title {
+        padding: $margin-small;
+    }
+
+    button[type="action"]#{&}__hidecustom {
+        text-align: center;
+    }
+}

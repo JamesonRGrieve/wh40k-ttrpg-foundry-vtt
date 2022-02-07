@@ -1,0 +1,206 @@
+%hide {
+    display: none;
+}
+
+%show {
+    display: block;
+}
+
+%show-grid {
+    display: grid;
+}
+
+.sheet-control__hide-control {
+    cursor: pointer;
+}
+
+.sheet-control__hide {
+    @extend %hide;
+}
+
+.sheet-control__show {
+    @extend %show;
+}
+
+.sheet-control__hide-grid {
+    @extend %hide;
+}
+
+.sheet-control__show-grid {
+    @extend %show-grid;
+}
+
+$has_test: ["characteristic", "skill"];
+$hidden_sections: ["talent", "trait", "insanity", "corruption", "critical", "cybernetic", "armour", "weapon"];
+
+// Attribute Settings
+
+@each $attribute in $attributes {
+    .control__hide--#{$attribute} {
+        @extend %hide;
+    }
+}
+
+input[name*="characteristic"] {
+    @each $attribute in $attributes {
+        &[value="#{$attribute}"] ~ .control__hide--#{$attribute} {
+            @extend %show;
+        }    
+    }
+}
+
+// Skill Settings
+
+@each $skill in $skills {
+    .control__hide--#{$skill}_settings {
+        @extend %hide;
+    }
+    .control__hide--settings {
+        @extend %hide;
+    }
+}
+
+@each $skill in $specialisations {
+    .control__hide--#{$skill}_settings {
+        @extend %hide;
+    }
+    .control__hide--settings {
+        @extend %hide;
+    }
+}
+
+input[name*="settings"] {
+    @each $skill in $skills {
+        &[value="1"] ~ div > .control__hide--#{$skill}_settings {
+            @extend %show-grid;
+        }
+        &[value="1"] ~ div > div[class*="settings"] {
+            @extend %show-grid;
+        }
+    }
+
+    @each $skill in $specialisations {
+        &[value="1"] ~ div > .control__hide--#{$skill}_settings {
+            @extend %show-grid;
+        }
+        &[value="1"] ~ div > div[class*="settings"] {
+            @extend %show-grid;
+        }
+    }
+}
+
+// Specialisation Rows
+
+@each $specialisation in $specialisations {
+    .control__hide--#{$specialisation} {
+        @extend %hide;
+    }
+}
+
+input[name*="control"] {
+    @each $specialisation in $specialisations {
+        &[value="on"] + .control__hide--#{$specialisation} {
+            @extend %show-grid;
+        }
+    }
+}
+
+// Custom Selections
+
+.control__custom {
+    display: none;
+}
+
+input.control__custom[value*=Custom] {
+    display: none; 
+
+    & + select.control__custom {
+        display: none;
+    }
+
+    & ~ .control__custom {
+        display: grid;
+        grid-template-columns: 1fr 2em;
+        flex-grow: 1;
+    }
+}
+
+// Hidden Block Controls
+@each $block in $hidden_sections {
+    .control__hide--#{$block}_settings {
+        @extend %hide;
+    }
+    .control__hide--settings {
+        @extend %hide;
+    }
+}
+
+input[name*="settings"] {
+    @each $block in $hidden_sections {
+        &[value="1"] + div > .control__hide--#{$block}_settings {
+            @extend %show-grid;
+        }
+        &[value="1"] + div > div[class*="settings"] {
+            @extend %show-grid;
+        }
+        &[value="1"] + div > .dh-#{$block}table__cell--description {
+            display: none !important;
+        }
+    }
+}
+
+// Trait Details Toggle
+.dh-traittoggle {
+    @at-root label#{&} {
+        text-align: left;
+        cursor: pointer;
+    }
+
+    @at-root input#{&}__hide {
+        display: none;
+    }
+
+    &__span {
+        text-align: left;
+    }
+}
+
+@each $block in $hidden_sections {
+    .dh-#{$block}table__row {
+        .dh-#{$block}table__cell--description {
+            @extend %hide;
+        }
+        input[name="attr_#{$block}_toggle"][value="1"]
+        { 
+            & + .dh-#{$block}table__cell--description {
+                @extend %show-grid;
+            }
+        }
+    } 
+}
+
+// Test Control
+@each $element in $has_test {
+    .control__hide--#{$element} {
+        @extend %hide;
+    }
+}
+
+input[name="attr_talent_test_type"] {
+    @each $element in $has_test {
+        &[value="#{$element}"] ~ .control__hide--#{$element} {
+            @extend %show-grid;
+        }
+    }
+}
+
+
+input[name*=weapon_damage_bonus] {
+    + span {
+        display: none;
+    }
+
+    &[value="on"] + span {
+        display: inline-block;
+    }
+}

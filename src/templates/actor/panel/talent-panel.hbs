@@ -1,0 +1,32 @@
+<div class="dh-talents dh-panel">
+    <h1 class="dh-panel__header">Talents</h1>
+    <div class="dh-talenttable">
+        <div class="dh-talenttable__row--head">
+            <div class="dh-talenttable__cell--span2">Name</div>
+            <div class="dh-talenttable__cell">Tier</div>
+            <div class="dh-talenttable__cell--last"></div>
+        </div>
+        {{#each actor.items as | item |}}
+            {{#if item.isTalent}}
+                {{log 'talent' item}}
+                    <div class="dh-talenttable__row">
+                        <div class="dh-talenttable__cell--settingstoggle">
+                            {{> systems/dark-heresy-2nd/templates/actor/partial/display-toggle.hbs toggle=(concat 'details_' item.data._id)}}
+                        </div>
+                        <div class="dh-talenttable__cell">
+                            {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.data._id) text=item.name}}
+                        </div>
+                        <div class="dh-talenttable__cell">
+                            <span>{{item.data.data.tier}}</span>
+                        </div>
+                        <div class="dh-talenttable__cell--vocalise">
+                            <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">record_voice_over</button>
+                        </div>
+                        <div class="dh-talenttable__cell--description description_{{item.data._id}}">
+                            <span>{{item.data.data.benefit}}</span>
+                        </div>
+                    </div>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

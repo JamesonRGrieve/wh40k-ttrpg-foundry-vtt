@@ -1,0 +1,16 @@
+<div class="dh-characteristics dh-panel">
+    <h1 class="dh-panel__header">Characteristics</h1>
+    <div class="dh-chartable">
+        <div class="dh-chartable__cell--noborder">&nbsp;</div>
+        <div class="dh-chartable__cell--left">Initial</div>
+        <div class="dh-chartable__cell--left">Advances</div>
+        <div class="dh-chartable__cell--left">Modifier</div>
+        <div class="dh-chartable__cell--left">Current</div>
+        <div class="dh-chartable__cell--left">Unnatural</div>
+        <div class="dh-chartable__cell--left">Bonus</div>
+        {{log 'characteristics' data.characteristics}}
+        {{#each data.characteristics as | characteristic name |}}
+            {{> systems/dark-heresy-2nd/templates/actor/partial/characteristic-col.hbs key=name}}
+        {{/each}}
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="dh-chartable__cell--head">
+    <button class="roll-characteristic" type="roll" data-characteristic="{{key}}">{{this.short}}</button>
+</div>
+<div class="dh-chartable__cell">
+    <input name="data.characteristics.{{key}}.base" data-dtype="Number" type="number" value="{{this.base}}"/>
+</div>
+<div class="dh-chartable__cell">
+    <select name="data.characteristics.{{key}}.advance">
+        {{option '0' this.advance 'None'}}
+        {{option '1' this.advance 'Simple'}}
+        {{option '2' this.advance 'Intermediate'}}
+        {{option '3' this.advance 'Trained'}}
+        {{option '4' this.advance 'Proficient'}}
+        {{option '5' this.advance 'Expert'}}
+    </select>
+</div>
+<div class="dh-chartable__cell">
+    <input class="dh-field__input" name="data.characteristics.{{key}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}"/>
+</div>
+<div class="dh-chartable__cell dh-chartable__cell--highlight">
+    <span class="display">{{this.total}}</span>
+</div>
+<div class="dh-chartable__cell">
+    <input class="dh-field__input" name="data.characteristics.{{key}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}"/>
+</div>
+<div class="dh-chartable__cell">
+    <span class="display">{{this.bonus}}</span>
+</div>

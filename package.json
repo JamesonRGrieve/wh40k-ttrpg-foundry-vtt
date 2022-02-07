@@ -1,12 +1,13 @@
 {
   "name": "dark-heresy-2nd",
   "version": "1.0.0",
-  "description": "CSS compiler for the Dark Heresy 2nd Edition system",
+  "description": "Dark Heresy 2nd Edition Foundry VTT",
   "scripts": {
+    "clean": "gulp clean",
     "build": "gulp build",
-    "compile": "gulp css",
-    "watch": "gulp",
-    "gulp": "gulp"
+    "packs": "gulp packs",
+    "scss": "gulp scss",
+    "watch": "gulp"
   },
   "browserslist": [
     "last 3 versions"
@@ -19,6 +20,16 @@
     "gulp-autoprefixer": "8.0.0",
     "gulp-sass": "5.1.0",
     "sass": "1.49.7",
-    "gulp-sourcemaps": "3.0.0"
+    "gulp-sourcemaps": "3.0.0",
+    "through2": "4.0.2",
+    "nedb": "1.8.0",
+    "cb": "0.1.0",
+    "merge-stream": "2.0.0",
+    "gulp-clean": "0.4.0",
+    "fs": "0.0.1-security",
+    "path": "0.12.7",
+    "js-yaml": "4.1.0",
+    "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",
+    "eslint": "8.8.0,"
   }
 }
