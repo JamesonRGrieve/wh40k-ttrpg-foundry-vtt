@@ -6,6 +6,15 @@
     border: 3px solid transparent;
     border-image: url("../images/panel_border.png") 8 / 2 / 0 repeat;
 
+    &--inquisition {
+        @extend .dh-panel;
+        background:
+                url('../images/inqu_watermark.png') center/80% no-repeat,
+                url('../images/40k_back.png') center/cover;
+        grid-column: span 1;
+        grid-row: span 2;
+    }
+
     h1 {
         border-bottom: $grid-border;
 
@@ -15,6 +24,15 @@
             text-align: center;
             text-transform: uppercase;
         }
+
+        &.span-4 {
+            grid-column: span 4;
+        }
+    }
+
+    &-span-6 {
+        @extend .dh-panel;
+        grid-column: span 6;
     }
 }
 

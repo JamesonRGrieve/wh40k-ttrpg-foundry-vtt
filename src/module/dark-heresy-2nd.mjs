@@ -4,6 +4,7 @@ import { AcolyteSheet } from "./sheets/acolyte-sheet.mjs";
 import { DarkHeresyItemSheet } from "./sheets/item-sheet.mjs";
 import { initializeHandlebars } from "./helpers/handlebars.mjs";
 import { DarkHeresy } from "./helpers/config.mjs";
+import {DarkHeresyWeaponSheet} from "./sheets/weapon-sheet.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -32,6 +33,7 @@ Hooks.once('init', async function() {
   Actors.registerSheet("dark-heresy-2nd", AcolyteSheet, { makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("dark-heresy-2nd", DarkHeresyItemSheet, { makeDefault: true });
+  Items.registerSheet("dark-heresy-2nd", DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
 
   // Preload Handlebars templates.
   return initializeHandlebars();

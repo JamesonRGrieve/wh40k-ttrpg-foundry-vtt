@@ -27,6 +27,12 @@
             grid-column: 1 / -1;
         }
 
+        &-armour,
+        &-weapons {
+            grid-column: span 3;
+            grid-row: span 2;
+        }
+
         &-characteristics {
             grid-column: span 4;
             grid-row: span 2;
@@ -56,11 +62,7 @@
         &-skills,
         &-specialist-skills {
             grid-column: span 2;
-            grid-row: span 3;
-        }
-
-        &-armour {
-            grid-column: 1 / span 6;
+            grid-row: span 4;
         }
 
         &-armour__wrapper {
@@ -95,10 +97,6 @@
                 grid-gap: $margin-small;
                 margin: $margin-small;
             }
-        }
-
-        &-weapons {
-            grid-column: 1 / span 6;
         }
 
         &-settingswrapper {

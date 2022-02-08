@@ -1,0 +1,36 @@
+<div class="dh-armour dh-panel">
+    <h1 class="dh-panel__header">Armour</h1>
+    <div class="dh-armourtable">
+        <div class="dh-armourtable__row--head">
+            <div class="dh-armourtable__cell--span2">Name</div>
+            <div class="dh-armourtable__cell">AP</div>
+            <div class="dh-armourtable__cell">Location</div>
+            <div class="dh-armourtable__cell--last">Equipped</div>
+        </div>
+        {{#each actor.items as | item |}}
+            {{#if item.isArmour}}
+                <div class="dh-armourtable__row">
+                    <div class="dh-armourtable__cell--settingstoggle">
+                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        </label>
+                    </div>
+                    <div class="dh-armourtable__cell">
+                        <button type="roll">
+                            <span>{{item.name}}</span>
+                        </button>
+                    </div>
+                    <div class="dh-armourtable__cell">
+                        <span>{{item.data.data.class}}</span>
+                    </div>
+                    <div class="dh-armourtable__cell">
+                        <span>{{item.data.data.type}}</span>
+                    </div>
+                    <div class="dh-armourtable__cell--last">
+                        <input class="dh-settings__input" type="checkbox" data-dtype="Boolean" name="item.data.data.equipped" {{checked item.data.data.equipped}}/>
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

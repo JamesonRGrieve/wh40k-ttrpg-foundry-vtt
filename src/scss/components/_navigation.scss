@@ -20,20 +20,17 @@
             margin-right: auto !important;
         }
 
-        input[type="checkbox"],
-        input[type="radio"] {
-            &:checked + span {
-                background: $form-input-background;
-                border: 1px solid darken($form-input-background,15%);
-            }
-        }
-
         a {
             padding: $margin-small $margin-general;
             border: 1px solid $form-input-background;
             border-radius: 5px;
             line-height: 1.5;
             text-transform: uppercase;
+
+            &.active {
+                background: $form-input-background;
+                border: 1px solid darken($form-input-background,15%);
+            }
         }
 
         &--settings {

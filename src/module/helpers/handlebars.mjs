@@ -11,6 +11,8 @@ export const initializeHandlebars = () => {
 function preloadHandlebarsTemplates() {
     return loadTemplates([
         // Actor partials.
+        "systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs",
@@ -21,6 +23,7 @@ function preloadHandlebarsTemplates() {
         "systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs",
 
         "systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs",
         "systems/dark-heresy-2nd/templates/actor/partial/characteristic-col.hbs",

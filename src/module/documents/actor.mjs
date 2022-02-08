@@ -1,31 +1,39 @@
+import {homeworlds} from "../helpers/homeworlds.mjs";
+import {backgrounds} from "../helpers/backgrounds.mjs";
+import {divinations} from "../helpers/divinations.mjs";
+import {roles} from "../helpers/roles.mjs";
+import {eliteAdvances} from "../helpers/elite_advances.mjs";
 
 
 export class DarkHeresyActor extends Actor {
 
-  async _preCreate(data, options, user) {
-    let initData = {
-      "token.bar1": { "attribute": "combat.wounds" },
-      "token.bar2": { "attribute": "combat.shock" },
-      "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-      "token.displayBars": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-      "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-      "token.name": data.name
-    }
-    if (data.type === "agent") {
-      initData["token.vision"] =  true;
-      initData["token.actorLink"] = true;
-    }
-    this.data.update(initData)
-  }
-
   prepareData() {
     const data = super.prepareData();
+    this._computeBackgroundFields()
     this._computeCharacteristics();
     this._computeSkills();
     // this._computeExperience();
     // this._computeArmour();
     this._computeMovement();
     return data;
+  }
+
+  _computeBackgroundFields() {
+    if(this.bio.homeWorld) {
+      this.data.data.homeworld = homeworlds().find(h => h.name === this.bio.homeWorld)
+    }
+    if(this.bio.background) {
+      this.data.data.background = backgrounds().find(h => h.name === this.bio.background)
+    }
+    if(this.bio.role) {
+      this.data.data.role = roles().find(h => h.name === this.bio.role)
+    }
+    if(this.bio.divination) {
+      this.data.data.divination = divinations().find(h => h.name === this.bio.divination)
+    }
+    if(this.bio.elite) {
+      this.data.data.eliteAdvance = eliteAdvances().find(h => h.name === this.bio.elite)
+    }
   }
 
   _computeCharacteristics() {

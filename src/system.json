@@ -11,6 +11,13 @@
   "scripts": [],
   "packs": [
     {
+      "name": "talents",
+      "system": "dark-heresy-2nd",
+      "label": "Talents",
+      "path": "./packs/talents.db",
+      "type": "Item"
+    },
+    {
       "name": "weapons",
       "system": "dark-heresy-2nd",
       "label": "Weapons",
@@ -18,10 +25,10 @@
       "type": "Item"
     },
     {
-      "name": "talents",
+      "name": "weapon-mods",
       "system": "dark-heresy-2nd",
-      "label": "Talents",
-      "path": "./packs/talents.db",
+      "label": "Weapon Mods",
+      "path": "./packs/weapon-mods.db",
       "type": "Item"
     }
   ],

@@ -94,6 +94,10 @@
 
 .dh {
     @each $table in "skill", "talent", "trait", "corruption", "insanity", "armour", "critical", "cybernetic", "weapon", "experience", "wounds" {
+        &-#{$table}table {
+            min-height:50px
+        }
+
         &-#{$table}table__row--head {
             @extend %grid-row-head;
         }
@@ -425,13 +429,6 @@
         }
     }
 
-    &-armourtable{
-        &__row--head,
-        &__row {
-            grid-template-columns: 1.5rem 1fr .75fr 3rem 1.25fr;
-        }
-    }
-
     &-cybernetictable{
         &__row--head,
         &__row {
@@ -446,10 +443,11 @@
         }
     }
 
+    &-armourtable,
     &-weapontable {
         &__row--head,
         &__row {
-            grid-template-columns: 1.5rem 1fr .75fr .33fr .5fr .5fr 1.25fr;
+            grid-template-columns: 1.5rem 2fr 1fr 1fr 1fr;
         }
     }
 

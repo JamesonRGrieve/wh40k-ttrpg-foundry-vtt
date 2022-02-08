@@ -1,6 +1,7 @@
 .dh {
     &-settings {
         padding-top: $margin-general;
+        padding-bottom: $margin-general;
         border-top: $grid-border-settings;
         background: rgba(195, 223, 241, 0.125);
         grid-column: 1 / -1;
@@ -15,6 +16,7 @@
             background-color: $form-input-background;
             color: $form-input-foreground;
             border-radius: 3px;
+            text-align: center;
         }
 
         h2 {
@@ -49,10 +51,29 @@
             grid-template-columns: 3.5fr 1fr;
             text-align: left;
 
+            &--height-2 {
+                grid-row: span 2;
+            }
+
+            &--height-3 {
+                grid-row: span 2;
+            }
+
+            &--label {
+                @extend .dh-settings__row;
+                grid-template-columns: 5rem 1fr;
+            }
+
             &--span {
                 @extend .dh-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 9rem 1fr;
+            }
+
+            &--span-even {
+                @extend .dh-settings__row;
+                grid-column: 1 / -1;
+                grid-template-columns: 1fr 1fr;
             }
 
             &--characteristics {
@@ -129,8 +150,15 @@
             }
         }
 
+        &__description {
+            text-align: center;
+            padding-top: 3px;
+            text-transform: uppercase;
+        }
+
         &__item {
             text-align: center;
+
             input[type="checkbox"] {
                 display: none;
             }
@@ -138,47 +166,6 @@
                 pointer-events: none;
                 background: transparent;
                 color: #000;
-            }
-
-            input[type="hidden"][value="on"] {
-                & ~ * input.dh-settings__input.dh-settings__input[type="number"] {
-                    pointer-events: auto;
-                    background: $form-input-background; 
-                    color: $form-input-foreground;
-                }
-            }
-
-            input[type="hidden"][value="1"] {
-                & ~ * input.dh-settings__input.dh-settings__input[type="number"] {
-                    pointer-events: auto;
-                    background: $form-input-background; 
-                    color: $form-input-foreground;
-                }
-            }
-
-            input[type="hidden"][value="2"] {
-                & ~ * input.dh-settings__input.dh-settings__input[type="number"] {
-                    pointer-events: auto;
-                    background: rgba(darkgoldenrod, 0.25);
-                    color: $form-input-foreground;
-                }
-
-            }
-
-            input[type="hidden"][value="3"] {
-                & ~ * input.dh-settings__input.dh-settings__input[type="number"] {
-                    pointer-events: auto;
-                    background: rgba(silver, 0.25); 
-                    color: $form-input-foreground;
-                }
-            }
-
-            input[type="hidden"][value="4"] {
-                & ~ * input.dh-settings__input.dh-settings__input[type="number"] {
-                    pointer-events: auto;
-                    background: rgba(gold, 0.25); 
-                    color: $form-input-foreground;
-                }
             }
 
             label {
@@ -195,6 +182,14 @@
             &--2 {
                 display: grid;
                 grid-template-columns: 1fr 3em;
+            }
+            &--2-even {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+            &--3 {
+                display:grid;
+                grid-template-columns: 1fr 1fr 1fr;
             }
         }
 

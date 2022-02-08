@@ -1,10 +1,32 @@
+import {eliteAdvances, eliteAdvancesNames} from "./elite_advances.mjs";
+import {homeworldNames, homeworlds} from "./homeworlds.mjs";
+import {attackSpecialsNames} from "./attack_specials.mjs";
+import {backgroundNames} from "./backgrounds.mjs";
+import {roleNames} from "./roles.mjs";
+import {divinationNames} from "./divinations.mjs";
+
 export const DarkHeresy = {};
 
 DarkHeresy.bio = {
-  'homeWorld': ["Adeptus Astartes Homeworld", "Agri-World", "Cardinal World", "Cemetary World", "Civilized World", "Craftworld", "Crone World", "Daemon World", "Death World", "Desert World", "Exodite World", "Feral World", "Feudal World", "Forge World", "Frontier World", "Garden World", "Gas Giant", "Highborn", "Hive World", "Knight World", "Ice World", "Industrial World", "Jungle World", "Maiden World", "Mining World", "Navis Nobilite World", "Ocean World", "Ork World", "Penal Colony", "Pleasure World", "Quarantine World", "Research Station", "Shrine World", "Tau World", "Tomb World", "Voidborn", "Xenos World"],
-  'background': ["Adepta Sororitas", "Adeptus Administratum", "Adeptus Arbites", "Adeptus Astra Telepathica", "Adeptus Mechanicus", "Adeptus Ministorum", "Exorcised", "Heretek", "Imperial Guard", "Imperial Navy", "Mutant", "Outcast", "Rogue Trader Fleet"],
-  'role': ["Ace", "Assassin", "Chirurgeon", "Crusader", "Desperado", "Fanatic", "Hierophant", "Mystic", "Penitent", "Sage", "Seeker", "Warrior"],
-  'divination': ["Mutation without, corruption within.", "Trust in your fear.", "Humans must die so that humanity can endure.", "The pain of the bullet is ecstasy compared to damnation.", "Be a boon to your allies and the bane of your enemies.", "The wise learn from the deaths of others.", "Kill the alien before it can speak its lies.", "Truth is subjective.", "Thought begets Heresy.", "Heresy begets Retribution.", "A mind without purpose wanders in dark places.", "If a job is worth doing, it is worth dying for.", "Dark dreams lie upon the heart.", "Violence solves everything.", "Ignorance is a wisdom of its own.", "Only the insane have strength enough to prosper.", "A suspicious mind is a healthy mind.", "Suffering is an unrelenting instructor", "The only true fear is dying without your duty done.", "Only in death does duty end.", "Innocence is an illusion.", "To war is human.", "There is no substitute for zeal.", "Even one who has nothing can still offer his life.", "Do not ask why you serve. Only ask how."]
+  'homeWorld': homeworldNames(),
+  'background': backgroundNames(),
+  'role': roleNames(),
+  'elite': eliteAdvancesNames(),
+  'divination': divinationNames(),
+  'primary': ['background', 'role', 'elite']
+}
+
+DarkHeresy.items = {
+  'availability': ['Ubiquitous', 'Abundant', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
+  'craftsmanship': ['Poor', 'Common', 'Good', 'Best']
+}
+
+DarkHeresy.combat = {
+  'damage_types': ['Energy', 'Impact', 'Rending', 'Explosive'],
+  'special': attackSpecialsNames(),
+  'weapon_class': ['Pistol', 'Basic', 'Heavy', 'Thrown', 'Melee'],
+  'weapon_type': ['Bolt', 'Flame', 'Las', 'Launcher', 'Low-Tech', 'Melta', 'Plasma', 'Solid Projectile', 'Exotic', 'Grenades/Missiles', 'Explosives', 'Chain', 'Force', 'Power', 'Shock'],
+  'armour_type': ['Basic', 'Flak', 'Mesh', 'Carapace', 'Power']
 }
 
 DarkHeresy.ui = {
@@ -19,4 +41,8 @@ DarkHeresy.ui = {
     }
   },
   'expanded': []
+}
+
+export function toggleUIExpanded(name) {
+  DarkHeresy.ui.expanded(name);
 }

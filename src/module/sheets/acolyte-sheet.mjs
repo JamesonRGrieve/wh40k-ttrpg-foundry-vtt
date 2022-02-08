@@ -1,3 +1,5 @@
+import {toggleUIExpanded} from "../helpers/config.mjs";
+
 export class AcolyteSheet extends ActorSheet {
 
   static get defaultOptions() {
@@ -18,7 +20,6 @@ export class AcolyteSheet extends ActorSheet {
     const context = super.getData();
     context.data = context.data.data;
     context.dh = CONFIG.dh;
-    console.log('acolyte sheet context', context);
     return context;
   }
 
@@ -47,7 +48,7 @@ export class AcolyteSheet extends ActorSheet {
     $('span:first', displayToggle).toggleClass('active');
     const target = displayToggle.data("toggle");
     $('.' + target).toggle();
-    CONFIG.dh.ui.toggleExpanded(target);
+    toggleUIExpanded(target)
   }
 
   _onItemEdit(event) {

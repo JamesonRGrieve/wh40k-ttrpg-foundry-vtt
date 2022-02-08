@@ -1,0 +1,125 @@
+<div class="dh-wrapper">
+    <form class="dh-item" autocomplete="off">
+        <div class="dh-header dh-panel">
+            <div class="dh-header__info">
+                <div class="dh-header__logo dh-header__item-wrapper--span-4">
+                    <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                </div>
+                <div class="dh-header__item-wrapper--span-4">
+                    <span class="dh-header__title">Name</span>
+                    <input class="dh-header__input" name="name" type="text" value="{{item.name}}"/>
+                </div>
+                <div class="dh-header__item-wrapper--span-2">
+                    <span class="dh-header__title">Class</span>
+                    <input class="dh-header__input" name="data.class" type="text" value="{{data.class}}"/>
+                </div>
+                <div class="dh-header__item-wrapper--span-2">
+                    <span class="dh-header__title">Type</span>
+                    <input class="dh-header__input" name="data.type" type="text" value="{{data.type}}"/>
+                </div>
+                <div class="dh-header__item-wrapper--span-2">
+                    <span class="dh-header__title">Source</span>
+                    <input class="dh-header__input" name="data.source" type="text" value="{{data.source}}"/>
+                </div>
+                <div class="dh-header__item-wrapper">
+                    <span class="dh-header__title">Weight</span>
+                    <input class="dh-header__input" name="data.weight" type="number" data-dtype="Number" value="{{data.weight}}"/>
+                </div>
+                <div class="dh-header__item-wrapper">
+                    <span class="dh-header__title">Equipped</span>
+                    <input class="dh-header__input" name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked data.equipped}}"/>
+                </div>
+                <div class="dh-header__item-wrapper--span-2">
+                    <span class="dh-header__title">Availability</span>
+                    <input class="dh-header__input" name="data.availability" type="text" value="{{data.availability}}"/>
+                </div>
+                <div class="dh-header__item-wrapper--span-2">
+                    <span class="dh-header__title">Craftsmanship</span>
+                    <input class="dh-header__input" name="data.craftsmanship" type="text" value="{{data.craftsmanship}}"/>
+                </div>
+            </div>
+            <div class="dh-panel dh-settings">
+                {{#if item.isRanged}}
+                    <div class="dh-settings__row--label">
+                        <div class="dh-settings__label">Range</div>
+                        <div class="dh-settings__split--2-even">
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="number" data-dtype="Number" name="data.range" value="{{data.range}}"/>
+                                <span class="dh-settings__description">Metres</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dh-settings__row--label dh-settings__row--height-3">
+                        <div class="dh-settings__label">Rate of Fire</div>
+                        <div class="dh-settings__split--3">
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="number" data-dtype="Number" name="data.rateOfFire.single" value="{{data.rateOfFire.single}}"/>
+                                <span class="dh-settings__description">Single</span>
+                            </div>
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="number" data-dtype="Number" name="data.rateOfFire.burst" value="{{data.rateOfFire.burst}}"/>
+                                <span class="dh-settings__description">Burst</span>
+                            </div>
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="number" data-dtype="Number" name="data.rateOfFire.full" value="{{data.rateOfFire.full}}"/>
+                                <span class="dh-settings__description">Full</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dh-settings__row--label">
+                        <div class="dh-settings__label">Reload</div>
+                        <div class="dh-settings__split--2-even">
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="text" name="data.reload" value="{{data.reload}}"/>
+                                <span class="dh-settings__description">Actions</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dh-settings__row--label dh-settings__row--height-2">
+                        <div class="dh-settings__label">Clip</div>
+                        <div class="dh-settings__split--2-even">
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="number" data-dtype="Number" name="data.clip.value" value="{{data.clip.value}}"/>
+                                <span class="dh-settings__description">Value</span>
+                            </div>
+                            <div class="dh-settings__row--span-even">
+                                <input class="dh-settings__input" type="number" data-dtype="Number" name="data.clip.max" value="{{data.clip.max}}"/>
+                                <span class="dh-settings__description">Max</span>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+                <div class="dh-settings__row--label dh-settings__row--height-2">
+                    <div class="dh-settings__label">Damage</div>
+                    <div class="dh-settings__split--2-even">
+                        <div class="dh-settings__row--span-even">
+                            <input class="dh-settings__input" type="text" name="data.damage" value="{{data.damage}}"/>
+                            <span class="dh-settings__description">roll</span>
+                        </div>
+                        <div class="dh-settings__row--span-even">
+                            <input class="dh-settings__input" type="text" name="data.damageType" value="{{data.damageType}}"/>
+                            <span class="dh-settings__description">type</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dh-settings__row--label">
+                    <div class="dh-settings__label">Penetration</div>
+                    <div class="dh-settings__split--2-even">
+                        <div class="dh-settings__row--span-even">
+                            <input class="dh-settings__input" type="text" name="data.penetration" value="{{data.penetration}}"/>
+                            <span class="dh-settings__description">Roll/Value</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dh-header__info">
+                <div class="dh-header__item-wrapper--text-area">
+                    <span class="dh-header__title">Description</span>
+                    <textarea class="dh-header__textarea" name="data.description">{{data.description}}</textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+

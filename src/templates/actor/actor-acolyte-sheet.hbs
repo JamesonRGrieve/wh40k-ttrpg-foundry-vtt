@@ -11,16 +11,21 @@
                     <input class="dh-header__input" name="name" type="text" value="{{actor.name}}"/>
                 </div>
                 {{#each data.bio}}
-                    {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                    {{#if (arrayIncludes @key @root.dh.bio.primary)}}
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                    {{/if}}
                 {{/each}}
             </div>
 
             <div class="dh-navigation dh-panel dh-navigation__items" data-group="primary">
                 <label class="dh-navigation__item dh-navigation__item-left">
-                    <a class="item" data-tab="main" data-group="primary">combat</a>
+                    <a class="item" data-tab="combat" data-group="primary">combat</a>
                 </label>
                 <label class="dh-navigation__item">
                     <a class="item" data-tab="main" data-group="primary">main</a>
+                </label>
+                <label class="dh-navigation__item">
+                    <a class="item" data-tab="bio" data-group="primary">bio</a>
                 </label>
                 <label class="dh-navigation__item">
                     <a class="item" data-tab="gear" data-group="primary">gear</a>
@@ -34,22 +39,37 @@
             </div>
             <section class="dh-body">
                 <div class="tab" data-group="primary" data-tab="combat">
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
                 </div>
                 <div class="tab" data-group="primary" data-tab="main">
+                    <div class="dh-panel--inquisition"></div>
                     {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs}}
-                    {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
-                    {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
+                    <div class="dh-panel--inquisition"></div>
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
                     {{> systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs}}
                     {{> systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs}}
-                    {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
-                    {{> systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs}}
-                    {{> systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs}}
-                    {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
                     {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
                 </div>
+                <div class="tab" data-group="primary" data-tab="bio">
+                    <div class="dh-header__info dh-panel-span-6">
+                        <h1 class="dh-panel__header span-4">Biography</h1>
+                        {{#each data.bio}}
+                            {{#unless (arrayIncludes @key @root.dh.bio.primary)}}
+                                {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                            {{/unless}}
+                        {{/each}}
+                    </div>
+                </div>
                 <div class="tab" data-group="primary" data-tab="gear">
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs}}
                 </div>
                 <div class="tab" data-group="primary" data-tab="advances">
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs}}
+                    {{> systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs}}
                 </div>
                 <div class="tab" data-group="primary" data-tab="social">
                 </div>
