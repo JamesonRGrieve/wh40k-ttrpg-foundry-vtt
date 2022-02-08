@@ -24,7 +24,7 @@ export class DarkHeresyActor extends Actor {
     this._computeSkills();
     // this._computeExperience();
     // this._computeArmour();
-    // this._computeMovement();
+    this._computeMovement();
     return data;
   }
 
@@ -57,7 +57,6 @@ export class DarkHeresyActor extends Actor {
 
   _computeSkills() {
     for (let skill of Object.values(this.skills)) {
-      console.log(skill);
       let short = (!skill.characteristic || skill.characteristic === '') ? skill.characteristics[0] : skill.characteristic;
       let characteristic = this._findCharacteristic(short);
       skill.current = characteristic.total + this._skillAdvanceToValue(skill.advance);

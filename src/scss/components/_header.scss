@@ -1,0 +1,103 @@
+.dh-header {
+    padding: 0;
+    font-size: 12pt;
+
+    &__logo {
+        background: url('../images/aquilla.png') no-repeat right;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        -o-background-size: contain;
+        background-size: contain;
+
+        &-image {
+            height: 100px;
+            border: 0;
+            padding: .5rem;
+        }
+    }
+
+    &__info {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        width: auto;
+        padding: 0 1.5em .5em;
+    }
+
+    &__item-wrapper {
+        display: flex; 
+        flex-flow: row nowrap;
+        align-items: baseline;
+        min-width: 0;
+        border: 0;
+        border-bottom: $grid-border;
+
+        &--age,
+        &--gender,
+        &--build,
+        &--complexion,
+        &--hair {
+            @extend .dh-header__item-wrapper;
+        }
+
+        &--span-2,
+        &--homeworld,
+        &--background,
+        &--role {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 2;
+        }
+
+        &--span3,
+        &--quirks {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 3;
+        }
+
+        &--3-span-2,
+        &--elite {
+            @extend .dh-header__item-wrapper;
+            grid-column: 3 / span 2;
+        }
+
+        &--span-4,
+        &--divination,
+        &--mementos,
+        &--superstition,
+        &--notes {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 4;
+        }
+
+        &--text-area {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 4;
+            grid-row: span 2;
+            min-height: 150px;
+            border-bottom: 0;
+        }
+    }
+
+    &__title {
+        flex-shrink: 0;
+        margin-right: $margin-large;
+        font-weight: bold;
+        padding: $margin-small;
+    }
+
+    &__textarea,
+    &__select,
+    &__input,
+    &__display {
+        flex-grow: 1;
+        flex-shrink: 1;
+        min-width: 0;
+        max-width: 100%;
+        padding: 0.25rem;
+    }
+
+    &__textarea,
+    &__select,
+    &__input {
+        height: 100% !important;
+    }
+}

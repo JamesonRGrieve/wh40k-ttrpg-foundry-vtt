@@ -16,9 +16,11 @@
     }
 
     // Settings Cog
-    &-displaytoggle {
+    &-control-button {
         cursor: pointer;
         &__span {
+            margin-top: 3px;
+            margin-left: 2px;
             @extend .dh-material;
             opacity: .5;
             .active {
@@ -36,6 +38,7 @@ button.dh-vocalise[type="roll"] {
     @extend .dh-material;
     opacity: .5;
     text-align: center;
+    margin-top: 3px;
     &:hover {
         opacity: 1
     }

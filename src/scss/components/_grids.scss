@@ -44,12 +44,106 @@
     grid-column: 1 / -1;
 }
 
+%grid-row {
+    border-bottom: $grid-border;
+}
+
+%grid-row--unknown {
+    background-color: rgba(255, 0, 0, .1);
+}
+
+%grid-row--inverted {
+    border-bottom: 0;
+    border-top: $grid-border;
+}
+
+%grid-row-head {
+    @extend %grid-row;
+    font-weight: bold;
+}
+
+%grid-cell {
+    border-right: $grid-border;
+    overflow: hidden;
+
+    input[type="number"] {
+        height: 100%;
+    }
+
+    > span[name*="attr"] {
+        font-family: $font-family-alt;
+        font-size: 1.25rem;
+    }
+}
+
+%grid-cell--last {
+    @extend %grid-cell;
+    border-right: 0;
+}
+
+%grid-cell--highlight {
+    font-weight: bold;
+}
+
+%grid-cell--description {
+    border-top: $grid-border-description;
+
+    font-size: 0.95em;
+    font-style: italic;
+}
+
 .dh {
-    // CHARACTERISTICS
+    @each $table in "skill", "talent", "trait", "corruption", "insanity", "armour", "critical", "cybernetic", "weapon", "experience", "wounds" {
+        &-#{$table}table__row--head {
+            @extend %grid-row-head;
+        }
+
+        &-#{$table}table__row {
+            @extend %grid-row;
+        }
+
+        &-#{$table}table__row--unknown {
+            @extend %grid-row--unknown;
+        }
+
+        &-#{$table}table__cell {
+            @extend %grid-cell;
+        }
+
+        &-#{$table}table__cell--span2 {
+            @extend %grid-cell;
+        }
+
+        &-#{$table}table__cell--description {
+            @extend %grid-cell--description;
+        }
+
+        &-#{$table}table__cell--last {
+            @extend %grid-cell--last;
+        }
+
+        &-#{$table}table__cell--highlight {
+            @extend %grid-cell--highlight;
+        }
+    }
+
+    &-field,
+    &-textarea {
+        @extend %grid-row;
+    }
+
+    &-field__header,
+    &-field__input,
+    &-textarea__header,
+    &-textarea__input {
+        @extend %grid-cell;
+    }
+
     button {
         cursor: pointer;
     }
 
+    // Characteristic Table
     &-chartable {
         display: grid;
         grid-template-columns: .75fr repeat(10, .5fr);
@@ -60,11 +154,32 @@
         input[type=number],
         .dh-chartable__cell,
         .dh-chartable__cell--head {
+            height: 100%;
             text-align: center !important;
+        }
+
+        &__cell {
+            border-left: $grid-border;
+            border-top: $grid-border;
+
+            font-family: $font-family-alt;
+
+            &--left {
+                font-weight: bold;
+                border-top: $grid-border;
+            }
+
+            &--head {
+                font-weight: bold;
+                border-left: $grid-border;
+            }
+
+            &--highlight {
+                font-weight: bold;
+            }
         }
     }
 
-    // SKILLS
     &-skills {
         h1 {
             grid-column: 1 / -1;
@@ -81,7 +196,6 @@
                 @extend .dh-skilltable__row;
                 .dh-skilltable__cell {
                     text-align: center;
-
                     &:first-child {
                         text-align: left;
                     }
@@ -90,6 +204,7 @@
 
             &--specialisation {
                 @extend .dh-skilltable__row;
+                background: rgba(36, 107, 131, 0.1);
                 grid-column: 1 / -1;
                 padding: 0; 
             }
@@ -97,6 +212,7 @@
             &--grouped {
                 @extend .dh-skilltable__row;
                 grid-template-columns: 1rem 1fr;
+                background: rgba(36, 107, 131, 0.1);
                 padding: 0; 
             }
         }
@@ -144,6 +260,12 @@
 
             &--grouped {
                 @extend .dh-skilltable__cell;
+                @extend %grid-cell--last;
+                padding-top: 3px;
+                font-weight: bold;
+                text-align: center !important;
+                text-indent: -1.5rem;
+                text-transform: uppercase;
             }
 
             &--settingstoggle + #{&}--grouped {
@@ -159,12 +281,10 @@
         }
     }
 
-    // TRAITS
     &-talenttable,
     &-traittable,
     &-insanitytable,
     &-corruptiontable {
-
         &__row {
             @extend %row;
             &--head {
@@ -205,8 +325,6 @@
             grid-template-columns: 1.5rem 1fr 3rem;
         }
     }
-
-    // Advances
 
     &-experiencetable{
         &__row {
@@ -265,8 +383,6 @@
             grid-template-columns: 1fr .25fr;
         }
     }
-
-    // GEAR
 
     &-armourtable,
     &-criticaltable,
@@ -344,8 +460,6 @@
             grid-template-columns: 2fr 1fr;
             gap: $margin-small;
         }
-
-        
     }
 
     &-armour {
@@ -377,6 +491,10 @@
         }
         
         &__display {
+            font-family: $font-family-alt;
+            font-size: 14pt;
+            font-weight: bold;
+            line-height: 3.5rem;
             display: inline-block;
             width: 3.5rem;
             height: 3.5rem;

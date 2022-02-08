@@ -6,28 +6,19 @@
   @import "abstracts";
   @import "fonts";
 
-  @import "src/scss/layout/pc/pc";
-  @import "src/scss/layout/pc/header";
-  @import "src/scss/layout/pc/navigation";
-  @import "src/scss/layout/pc/skills";
-  @import "src/scss/layout/pc/grids";
+  @import "src/scss/sheets/actor";
+  @import "src/scss/sheets/item";
 
+  @import "src/scss/components/form_fields";
   @import "src/scss/components/generic_field";
+  @import "src/scss/components/grids";
+  @import "src/scss/components/header";
+  @import "src/scss/components/hide";
   @import "src/scss/components/iconbuttons";
+  @import "src/scss/components/navigation";
   @import "src/scss/components/panel";
   @import "src/scss/components/settings";
 
-  @import "src/scss/styling/form_fields";
-  @import "src/scss/styling/general";
-  @import "src/scss/styling/generic_fields";
-  @import "src/scss/styling/grids";
-  @import "src/scss/styling/header";
-  @import "src/scss/styling/panel";
-  @import "src/scss/styling/navigation";
-  @import "src/scss/styling/settings";
 
-
-  @import "src/scss/control/hide";
-  @import "src/scss/control/tabs";
 }
 

@@ -1,4 +1,4 @@
-.dh-pc {
+.dh-actor {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     border: 30px solid transparent;
@@ -14,7 +14,6 @@
         grid-gap: 0px;
     }
 
-    // General PC Positioning
     .dh {
         &-image {
             grid-column: 1 / -1;
@@ -30,6 +29,7 @@
 
         &-characteristics {
             grid-column: span 4;
+            grid-row: span 2;
         }
 
         &-talents,
@@ -48,16 +48,12 @@
             grid-column: span 2;
         }
 
-        &-skills {
-            grid-column: span 2;
-            grid-row: span 4;
-        }
-
         &-experience {
             grid-row: span 2;
             grid-column: span 2;
         }
 
+        &-skills,
         &-specialist-skills {
             grid-column: span 2;
             grid-row: span 3;

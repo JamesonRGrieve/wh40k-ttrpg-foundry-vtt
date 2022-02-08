@@ -1,0 +1,33 @@
+<div class="dh-corruption dh-panel">
+    <h1 class="dh-panel__header">Corruption</h1>
+    <div class="dh-field--grid2-1">
+        <span class="dh-field__header">Corruption Points</span>
+        <input class="dh-field__input" data-dtype="Number" type="number" name="data.corruption" value="{{data.corruption}}"/>
+    </div>
+    <div class="dh-corruptiontable">
+        <div class="dh-corruptiontable__row--head">
+            <div class="dh-corruptiontable__cell--span2">Malignancies</div>
+            <div class="dh-corruptiontable__cell--last"></div>
+        </div>
+        {{#each actor.items as | item |}}
+            {{#if item.isMalignancy}}
+                <div class="dh-corruptiontable__row">
+                    <div class="dh-corruptiontable__cell--settingstoggle">
+                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        </label>
+                    </div>
+                    <div class="dh-corruptiontable__cell">
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
+                    </div>
+                    <div class="dh-corruptiontable__cell--vocalise">
+                        <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">record_voice_over</button>
+                    </div>
+                    <div class="dh-corruptiontable__cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                        <span>{{item.data.data.description}}</span>
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

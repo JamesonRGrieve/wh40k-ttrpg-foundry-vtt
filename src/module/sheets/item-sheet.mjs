@@ -2,15 +2,15 @@ export class DarkHeresyItemSheet extends ItemSheet {
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      width: 520,
-      height: 480,
+      width: 650,
+      height: 500,
       tabs: [{ navSelector: ".dh-navigation", contentSelector: ".dh-body", initial: "description" }]
     });
   }
 
   get template() {
     const path = "systems/dark-heresy-2nd/templates/item";
-    return `${path}/${this.item.data.type}-sheet.hbs`;
+    return `${path}/item-${this.item.data.type}-sheet.hbs`;
   }
 
   getData() {

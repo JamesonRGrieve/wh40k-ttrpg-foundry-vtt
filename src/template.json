@@ -990,7 +990,7 @@
         "hair": "",
         "quirks": "",
         "superstition": "",
-        "momentos": "",
+        "mementos": "",
         "notes": ""
       },
       "experience": {
@@ -1134,6 +1134,7 @@
     },
     "trait": {
       "templates": ["itemDescription"],
+      "level": 0,
       "benefit": ""
     },
     "weapon": {

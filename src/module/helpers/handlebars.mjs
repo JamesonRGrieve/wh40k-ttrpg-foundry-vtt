@@ -12,11 +12,15 @@ function preloadHandlebarsTemplates() {
     return loadTemplates([
         // Actor partials.
         "systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs",
 
         "systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs",
         "systems/dark-heresy-2nd/templates/actor/partial/characteristic-col.hbs",
@@ -36,6 +40,22 @@ function registerHandlebarsHelpers() {
             }
         }
         return outStr;
+    });
+
+    Handlebars.registerHelper('hideIf', function (check) {
+        if(check) {
+            return new Handlebars.SafeString('style="display:none;"');
+        }
+    })
+
+    Handlebars.registerHelper('hideIfNot', function (check) {
+        if(!check) {
+            return new Handlebars.SafeString('style="display:none;"');
+        }
+    })
+
+    Handlebars.registerHelper('isExpanded', function(field) {
+        return CONFIG.dh.ui.expanded ? CONFIG.dh.ui.expanded.includes(field) : false;
     });
 
     Handlebars.registerHelper('toLowerCase', function(str) {

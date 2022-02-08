@@ -3,8 +3,8 @@ export class AcolyteSheet extends ActorSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       template: "systems/dark-heresy-2nd/templates/actor/actor-sheet.hbs",
-      width: 1100,
-      height: 600,
+      width: 1000,
+      height: 750,
       resizable: true,
       tabs: [{ navSelector: ".dh-navigation", contentSelector: ".dh-body", initial: "main" }]
     });
@@ -18,6 +18,7 @@ export class AcolyteSheet extends ActorSheet {
     const context = super.getData();
     context.data = context.data.data;
     context.dh = CONFIG.dh;
+    console.log('acolyte sheet context', context);
     return context;
   }
 
@@ -25,6 +26,7 @@ export class AcolyteSheet extends ActorSheet {
     super.activateListeners(html);
     html.find('.roll-characteristic').click(async ev => await this._prepareRollCharacteristic(ev));
     html.find('.sheet-control__hide-control').click(async ev => await this._sheetControlHideToggle(ev));
+    html.find('.item-edit').click(ev => this._onItemEdit(ev));
   }
 
   async _prepareRollCharacteristic(event) {
@@ -41,11 +43,18 @@ export class AcolyteSheet extends ActorSheet {
 
   async _sheetControlHideToggle(event) {
     event.preventDefault();
-    console.log('click?');
     const displayToggle = $(event.currentTarget);
     $('span:first', displayToggle).toggleClass('active');
     const target = displayToggle.data("toggle");
     $('.' + target).toggle();
+    CONFIG.dh.ui.toggleExpanded(target);
+  }
+
+  _onItemEdit(event) {
+    event.preventDefault();
+    const div = $(event.currentTarget);
+    let item = this.actor.items.get(div.data("itemId"));
+    item.sheet.render(true);
   }
 
 }

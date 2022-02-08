@@ -2,7 +2,8 @@
 export class DarkHeresyItem extends Item {
 
   prepareData() {
-    super.prepareData();
+    const data = super.prepareData();
+    return data;
   }
 
   get isMentalDisorder() { return this.type === "mentalDisorder"; }

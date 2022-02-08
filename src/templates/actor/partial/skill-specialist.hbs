@@ -6,7 +6,7 @@
         <div class="dh-skilltable__cell--grouped">
             <span>{{localize this.label}}</span>
         </div>
-        <div class="dh-skilltable__row dh-settings spec_skills_{{key}}" style="display:none;">
+        <div class="dh-skilltable__row dh-settings spec_skills_{{key}}" {{hideIfNot (isExpanded (concat 'spec_skills_' key ))}}>
             <h2>specialisation display</h2>
             {{#each this.specialities as | specialty skey |}}
                 <div class="dh-settings__row">

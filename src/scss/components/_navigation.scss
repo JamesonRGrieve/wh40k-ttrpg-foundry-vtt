@@ -1,5 +1,25 @@
-.dh-navigation {
-    &__item {
+.dh {
+    &-navigation__items {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+
+        label {
+            width: auto;
+            margin: $margin-general;
+            cursor: pointer;
+
+            input {
+                display: none;
+            }
+        }
+    }
+
+    &-navigation__item {
+        &-left {
+            margin-right: auto !important;
+        }
+
         input[type="checkbox"],
         input[type="radio"] {
             &:checked + span {
