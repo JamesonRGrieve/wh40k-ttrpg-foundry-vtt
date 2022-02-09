@@ -3,9 +3,10 @@
     <div class="dh-armourtable">
         <div class="dh-armourtable__row--head">
             <div class="dh-armourtable__cell--span2">Name</div>
+            <div class="dh-armourtable__cell">Type</div>
             <div class="dh-armourtable__cell">AP</div>
-            <div class="dh-armourtable__cell">Location</div>
-            <div class="dh-armourtable__cell--last">Equipped</div>
+            <div class="dh-armourtable__cell">Equipped</div>
+            <div class="dh-armourtable__cell--last"></div>
         </div>
         {{#each actor.items as | item |}}
             {{#if item.isArmour}}
@@ -21,13 +22,18 @@
                         </button>
                     </div>
                     <div class="dh-armourtable__cell">
-                        <span>{{item.data.data.class}}</span>
-                    </div>
-                    <div class="dh-armourtable__cell">
                         <span>{{item.data.data.type}}</span>
                     </div>
+                    <div class="dh-armourtable__cell">
+                        <span>{{armourDisplay item.data.data}}</span>
+                    </div>
+                    <div class="dh-armourtable__cell">
+                        <input class="dh-settings__input" type="checkbox" data-dtype="Boolean" disabled {{checked item.data.data.equipped}}/>
+                    </div>
                     <div class="dh-armourtable__cell--last">
-                        <input class="dh-settings__input" type="checkbox" data-dtype="Boolean" name="item.data.data.equipped" {{checked item.data.data.equipped}}/>
+                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        </label>
                     </div>
                 </div>
             {{/if}}

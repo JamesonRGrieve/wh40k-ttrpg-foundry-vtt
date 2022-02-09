@@ -28,6 +28,7 @@ export class AcolyteSheet extends ActorSheet {
     html.find('.roll-characteristic').click(async ev => await this._prepareRollCharacteristic(ev));
     html.find('.sheet-control__hide-control').click(async ev => await this._sheetControlHideToggle(ev));
     html.find('.item-edit').click(ev => this._onItemEdit(ev));
+    html.find('.item-delete').click(ev => this._onItemDelete(ev));
   }
 
   async _prepareRollCharacteristic(event) {
@@ -56,6 +57,13 @@ export class AcolyteSheet extends ActorSheet {
     const div = $(event.currentTarget);
     let item = this.actor.items.get(div.data("itemId"));
     item.sheet.render(true);
+  }
+
+  _onItemDelete(event) {
+    event.preventDefault();
+    const div = $(event.currentTarget);
+    this.actor.deleteEmbeddedDocuments("Item", [div.data("itemId")]);
+    div.slideUp(200, () => this.render(false));
   }
 
 }

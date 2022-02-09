@@ -20,8 +20,10 @@
                         <div class="dh-talenttable__cell">
                             <span>{{item.data.data.tier}}</span>
                         </div>
-                        <div class="dh-talenttable__cell--vocalise">
-                            <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">record_voice_over</button>
+                        <div class="dh-talenttable__cell">
+                            <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
+                                <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                            </label>
                         </div>
                         <div class="dh-talenttable__cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
                             <span>{{item.data.data.benefit}}</span>

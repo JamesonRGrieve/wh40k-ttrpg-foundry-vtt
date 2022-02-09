@@ -8,7 +8,6 @@
         <div class="dh-chartable__cell--left">Current</div>
         <div class="dh-chartable__cell--left">Unnatural</div>
         <div class="dh-chartable__cell--left">Bonus</div>
-        {{log 'characteristics' data.characteristics}}
         {{#each data.characteristics as | characteristic name |}}
             {{> systems/dark-heresy-2nd/templates/actor/partial/characteristic-col.hbs key=name}}
         {{/each}}

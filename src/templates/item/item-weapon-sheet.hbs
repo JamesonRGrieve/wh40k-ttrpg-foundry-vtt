@@ -27,7 +27,8 @@
                 </div>
                 <div class="dh-header__item-wrapper">
                     <span class="dh-header__title">Equipped</span>
-                    <input class="dh-header__input" name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked data.equipped}}"/>
+                    {{log 'data.equipped' data.equipped}}
+                    <input name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked data.equipped}}/>
                 </div>
                 <div class="dh-header__item-wrapper--span-2">
                     <span class="dh-header__title">Availability</span>

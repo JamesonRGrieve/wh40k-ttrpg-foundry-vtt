@@ -4,7 +4,6 @@ import {divinations} from "../helpers/divinations.mjs";
 import {roles} from "../helpers/roles.mjs";
 import {eliteAdvances} from "../helpers/elite_advances.mjs";
 
-
 export class DarkHeresyActor extends Actor {
 
   prepareData() {
@@ -12,8 +11,8 @@ export class DarkHeresyActor extends Actor {
     this._computeBackgroundFields()
     this._computeCharacteristics();
     this._computeSkills();
-    // this._computeExperience();
-    // this._computeArmour();
+    this._computeExperience();
+    this._computeArmour();
     this._computeMovement();
     return data;
   }
@@ -46,21 +45,11 @@ export class DarkHeresyActor extends Actor {
       }
     }
 
-    // this.data.data.insanityBonus = Math.floor(this.insanity / 10);
-    // this.data.data.corruptionBonus = Math.floor(this.corruption / 10);
-    // this.psy.currentRating = this.psy.rating - this.psy.sustained;
-    // this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
-    // // done as variables to make it easier to read & understand
-    // let tb = Math.floor(
-    //     ( this.characteristics.toughness.base
-    //         + this.characteristics.toughness.advance) / 10);
-    //
-    // let wb = Math.floor(
-    //     ( this.characteristics.willpower.base
-    //         + this.characteristics.willpower.advance) / 10);
-    //
-    // //the only thing not affected by itself
-    // this.fatigue.max = tb + wb;
+    this.data.data.insanityBonus = Math.floor(this.insanity / 10);
+    this.data.data.corruptionBonus = Math.floor(this.corruption / 10);
+    this.psy.currentRating = this.psy.rating - this.psy.sustained;
+    this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
+    this.fatigue.max = this.characteristics.toughness.bonus + this.characteristics.willpower.bonus;
   }
 
   _computeSkills() {
@@ -123,7 +112,6 @@ export class DarkHeresyActor extends Actor {
 
   _computeArmour() {
     let locations = game.system.template.Item.armour.armourPoints;
-
     let toughness = this.characteristics.toughness;
 
     this.data.data.armour =
@@ -149,7 +137,7 @@ export class DarkHeresyActor extends Actor {
         .reduce((acc, armour) => {
           Object.keys(locations)
               .forEach((location) => {
-                    let armourVal = armour.armourPoints[location] || 0;
+                    let armourVal = armour.data.data.armourPoints[location] || 0;
                     if (armourVal > acc[location]) {
                       acc[location] = armourVal;
                     }

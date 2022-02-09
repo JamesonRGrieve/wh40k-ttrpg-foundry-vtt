@@ -123,6 +123,33 @@ function registerHandlebarsHelpers() {
         return value || defaultVal;
     });
 
+    Handlebars.registerHelper('armourDisplay', function(armour) {
+        let first = armour.part.body;
+        const same = Object.keys(armour.part).every(p => armour.part[p] === first);
+        if(same) {
+            return first + ' ALL';
+        }
+
+        const locations_array = [];
+        Object.keys(armour.part).forEach(part => {
+            if (armour[part] > 0) {
+                locations_array.push(part)
+            }
+        });
+
+        const location_out = locations_array.map(item => {
+            return armour.part[item] + " " +
+                (item.toLowerCase() === "head") ?  "H" :
+                (item.toLowerCase() === "leftarm") ? "LA" :
+                (item.toLowerCase() === "rightarm") ? "RA" :
+                (item.toLowerCase() === "body") ? "B" :
+                (item.toLowerCase() === "leftleg") ? "LL" :
+                (item.toLowerCase() === "rightleg") ? "RL" : "";
+        }).filter(item => item !== "").join(", ");
+
+        return location_out;
+    });
+
     Handlebars.registerHelper("damageTypeLong", function (damageType) {
         damageType = (damageType || "i").toLowerCase();
         switch (damageType) {

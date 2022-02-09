@@ -11,6 +11,13 @@
   "scripts": [],
   "packs": [
     {
+      "name": "armour",
+      "system": "dark-heresy-2nd",
+      "label": "Armour",
+      "path": "./packs/armour.db",
+      "type": "Item"
+    },
+    {
       "name": "talents",
       "system": "dark-heresy-2nd",
       "label": "Talents",

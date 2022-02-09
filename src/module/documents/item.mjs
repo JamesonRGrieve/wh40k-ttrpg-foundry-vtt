@@ -16,10 +16,8 @@ export class DarkHeresyItem extends Item {
   get isPsychicPower() { return this.type === "psychicPower"; }
   get isCriticalInjury() { return this.type === "criticalInjury"; }
   get isWeapon() { return this.type === "weapon"; }
-  get isRanged() {
-    console.log(this);
-    return this.type === "weapon" && this.data.data.class.toLowerCase() !== 'melee';
-  }
+  get isRanged() { return this.type === "weapon" && this.data.data.class.toLowerCase() !== 'melee';}
+  get isMelee() { return this.type === "weapon" && this.data.data.class.toLowerCase() === 'melee';}
   get isArmour() { return this.type === "armour"; }
   get isGear() { return this.type === "gear"; }
   get isDrug() { return this.type === "drug"; }
