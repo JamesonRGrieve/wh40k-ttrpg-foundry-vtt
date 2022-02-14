@@ -22,7 +22,7 @@ export class DarkHeresyWeaponSheet extends DarkHeresyContainerSheet {
         }
 
         // Only one ammo can be loaded
-        if (this.item.items.some(i => i.type === 'ammunition')) {
+        if (itemData.type === 'ammunition' && this.item.items.some(i => i.type === 'ammunition')) {
             ui.notifications.info("Only one type of ammunition can be loaded.");
             return false;
         }
