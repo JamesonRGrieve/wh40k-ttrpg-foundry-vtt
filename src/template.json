@@ -997,6 +997,14 @@
         "used": 0,
         "total": 0
       },
+      "backpack": {
+        "hasBackpack": false,
+        "name": "Backpack",
+        "isCombatVest": false,
+        "weight": {
+          "max": 30
+        }
+      },
       "insanity": 0,
       "corruption": 0,
       "aptitudes": {}
@@ -1014,6 +1022,9 @@
       "ammunition",
       "aptitude",
       "armour",
+      "armourModification",
+      "attackSpecial",
+      "backpack",
       "criticalInjury",
       "cybernetic",
       "drug",
@@ -1024,6 +1035,7 @@
       "mutation",
       "psychicPower",
       "specialAbility",
+      "storageLocation",
       "talent",
       "tool",
       "trait",
@@ -1035,7 +1047,8 @@
         "craftsmanship": "common",
         "availability": "common",
         "weight": 0,
-        "equipped": false
+        "equipped": false,
+        "inBackpack": false
       },
       "itemDescription": {
         "description": "",
@@ -1055,22 +1068,29 @@
         "damage": "",
         "damageType": "",
         "penetration": "",
-        "special": []
+        "special": {}
       },
       "action": {
         "target": "",
         "formula": ""
+      },
+      "backpack": {
+        "backpack": {
+          "inBackpack": false
+        }
       }
     },
     "ammunition": {
-      "templates": ["physicalItem", "itemDescription", "damage"],
+      "templates": ["physicalItem", "itemDescription", "damage", "attack", "backpack"],
       "weaponType": ""
     },
     "aptitude": {
       "template": ["itemDescription"]
     },
     "armour": {
-      "templates": ["physicalItem", "itemDescription"],
+      "templates": ["physicalItem", "itemDescription", "container", "backpack"],
+      "container": true,
+      "containerTypes": ["armourModification"],
       "armourPoints": {
         "head": 0,
         "leftArm": 0,
@@ -1081,25 +1101,33 @@
       },
       "maxAgility": 0
     },
+    "armourModification": {
+      "templates": ["physicalItem", "itemDescription", "backpack"]
+    },
+    "attackSpecial": {
+      "templates": ["itemDescription"],
+      "hasLevel": false,
+      "level": 0
+    },
     "criticalInjury": {
       "templates": ["itemDescription"],
       "type": "impact",
       "part": "body"
     },
     "cybernetic": {
-      "templates": ["physicalItem", "itemDescription"]
+      "templates": ["physicalItem", "itemDescription", "backpack"]
     },
     "drug": {
-      "templates": ["physicalItem", "itemDescription"]
+      "templates": ["physicalItem", "itemDescription", "backpack"]
     },
     "forceField": {
-      "templates": [ "physicalItem", "itemDescription", "action" ],
+      "templates": [ "physicalItem", "itemDescription", "action", "backpack"],
       "protectionRating": 0,
       "activated": false,
       "overloaded": false
     },
     "gear": {
-      "templates": ["physicalItem", "itemDescription", "action"]
+      "templates": ["physicalItem", "itemDescription", "action", "backpack"]
     },
     "malignancy": {
       "templates": ["itemDescription"]
@@ -1112,6 +1140,8 @@
     },
     "psychicPower": {
       "templates": ["itemDescription", "damage", "attack", "action"],
+      "container": true,
+      "containerTypes": ["attackSpecial"],
       "cost": 0,
       "sustained": "",
       "discipline": "",
@@ -1130,7 +1160,7 @@
       "cost": 0
     },
     "tool": {
-      "templates": [ "physicalItem", "itemDescription", "action" ]
+      "templates": [ "physicalItem", "itemDescription", "action", "backpack"]
     },
     "trait": {
       "templates": ["itemDescription"],
@@ -1138,7 +1168,9 @@
       "benefit": ""
     },
     "weapon": {
-      "templates": ["itemDescription", "damage", "attack", "action"],
+      "templates": ["itemDescription", "damage", "attack", "action", "container", "backpack"],
+      "container": true,
+      "containerTypes": ["weaponModification", "attackSpecial", "ammunition"],
       "class": "",
       "type": "",
       "reload": "",
@@ -1149,7 +1181,24 @@
       "modifications": []
     },
     "weaponModification": {
-      "templates": ["physicalItem", "itemDescription", "damage", "attack"]
+      "templates": ["physicalItem", "itemDescription", "damage", "attack", "backpack"]
+    },
+    "storageLocation": {
+      "templates": ["itemDescription"],
+      "location": "",
+      "container": true,
+      "containerTypes": [
+        "ammunition",
+        "armour",
+        "armourModification",
+        "cybernetic",
+        "drug",
+        "forceField",
+        "gear",
+        "tool",
+        "weapon",
+        "weaponModification"
+      ]
     }
   }
 }

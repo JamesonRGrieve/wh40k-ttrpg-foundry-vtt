@@ -1,30 +1,27 @@
-{{!-- This template is a fallback for when items don't have more specific templates. --}}
-{{!-- Generally, you'll want to make more specific templates when possible. --}}
-<form class="{{cssClass}}" autocomplete="off">
-  <header class="header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-    <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-    </div>
-  </header>
+<div class="dh-wrapper">
+    <form class="dh-item" autocomplete="off">
+        <div class="dh-panel dh-grid-col-6">
+            <div class="dh-header">
+                <div class="dh-header__info">
+                    <div class="dh-header__logo dh-header__item-wrapper--span-4">
+                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    </div>
+                    <div class="dh-header__item-wrapper--span-4">
+                        <span class="dh-header__title">Name</span>
+                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}"/>
+                    </div>
+                    <div class="dh-header__item-wrapper--span-4">
+                        <span class="dh-header__title">Source</span>
+                        <input class="dh-header__input" name="data.source" type="text" value="{{data.source}}"/>
+                    </div>
+                    <div class="dh-header__item-wrapper--text-area">
+                        <span class="dh-header__title">Description</span>
+                        <textarea class="dh-header__textarea" name="data.description">{{data.description}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
-  {{!-- Sheet Tab Navigation --}}
-  <nav class="tabs tabs" data-group="primary">
-    <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
-  </nav>
 
-  {{!-- Sheet Body --}}
-  <section class="body">
-
-    {{!-- Description Tab --}}
-    <div class="tab" data-group="primary" data-tab="description">
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
-    </div>
-
-    {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
-      {{!-- As you add new fields, add them in here! --}}
-    </div>
-  </section>
-</form>

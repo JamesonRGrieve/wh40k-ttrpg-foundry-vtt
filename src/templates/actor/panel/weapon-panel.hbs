@@ -1,111 +1,55 @@
-<div class="dh-weapons dh-panel">
+<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
     <h1 class="dh-panel__header">Weapons</h1>
-    <div class="dh-weapontable">
-        <div class="dh-weapontable__row--head">
-            <div class="dh-weapontable__cell--span2">Name</div>
-            <div class="dh-weapontable__cell">Class</div>
-            <div class="dh-weapontable__cell">Type</div>
-            <div class="dh-weapontable__cell">Equipped</div>
-            <div class="dh-weapontable__cell--last"></div>
+    <div class="dh-weapontable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">Name</div>
+            <div class="table-cell">Class</div>
+            <div class="table-cell">Type</div>
+            <div class="table-cell">Equipped</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="weapon">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
         </div>
         {{#each actor.items as | item |}}
             {{#if item.isWeapon}}
-                <div class="dh-weapontable__row">
-                    <div class="dh-weapontable__cell--settingstoggle">
+                <div class="table-row">
+                    <div class="table-cell--settingstoggle">
                         <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
                         </label>
                     </div>
-                    <div class="dh-weapontable__cell">
+                    <div class="table-cell--left">
                         {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
-                    <div class="dh-weapontable__cell">
-                        <span>{{item.data.data.class}}</span>
+                    <div class="table-cell">
+                        <span class="display">{{item.data.data.class}}</span>
                     </div>
-                    <div class="dh-weapontable__cell">
-                        <span>{{item.data.data.type}}</span>
+                    <div class="table-cell">
+                        <span class="display">{{item.data.data.type}}</span>
                     </div>
-                    <div class="dh-weapontable__cell">
-                        <input class="dh-settings__input" type="checkbox" data-dtype="Boolean" disabled {{checked item.data.data.equipped}}/>
+                    <div class="table-cell">
+                        <span class="display">{{item.data.data.equipped}}</span>
                     </div>
-                    <div class="dh-weapontable__cell--last">
+                    <div class="table-cell--last">
                         <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
                         </label>
                     </div>
-                    <div class="dh-weapontable__cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
                         <div class="dh-settings">
-                            {{#if item.isRanged}}
-                                <div class="dh-settings__row--label">
-                                    <div class="dh-settings__label">Range</div>
-                                    <div class="dh-settings__split--2-even">
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.range}}</span>
-                                            <span class="dh-settings__description">Metres</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dh-settings__row--label dh-settings__row--height-3">
-                                    <div class="dh-settings__label">Rate of Fire</div>
-                                    <div class="dh-settings__split--3">
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.rateOfFire.single}}</span>
-                                            <span class="dh-settings__description">Single</span>
-                                        </div>
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.rateOfFire.burst}}</span>
-                                            <span class="dh-settings__description">Burst</span>
-                                        </div>
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.rateOfFire.full}}</span>
-                                            <span class="dh-settings__description">Full</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dh-settings__row--label">
-                                    <div class="dh-settings__label">Reload</div>
-                                    <div class="dh-settings__split--2-even">
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.reload}}</span>
-                                            <span class="dh-settings__description">Actions</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dh-settings__row--label dh-settings__row--height-2">
-                                    <div class="dh-settings__label">Clip</div>
-                                    <div class="dh-settings__split--2-even">
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.clip.value}}</span>
-                                            <span class="dh-settings__description">Value</span>
-                                        </div>
-                                        <div class="dh-settings__row--span-even">
-                                            <span class="dh-settings__item">{{item.data.data.clip.max}}</span>
-                                            <span class="dh-settings__description">Max</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            {{/if}}
-                            <div class="dh-settings__row--label dh-settings__row--height-2">
-                                <div class="dh-settings__label">Damage</div>
-                                <div class="dh-settings__split--2-even">
-                                    <div class="dh-settings__row--span-even">
-                                        <span class="dh-settings__item">{{item.data.data.damage}}</span>
-                                        <span class="dh-settings__description">roll</span>
-                                    </div>
-                                    <div class="dh-settings__row--span-even">
-                                        <span class="dh-settings__item">{{item.data.data.damageType}}</span>
-                                        <span class="dh-settings__description">type</span>
-                                    </div>
-                                </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Damage</span>
+                                <span class="dh-field__span">{{item.data.data.damage}}</span>
                             </div>
-                            <div class="dh-settings__row--label">
-                                <div class="dh-settings__label">Penetration</div>
-                                <div class="dh-settings__split--2-even">
-                                    <div class="dh-settings__row--span-even">
-                                        <span class="dh-settings__item">{{item.data.data.penetration}}</span>
-                                        <span class="dh-settings__description">Roll/Value</span>
-                                    </div>
-                                </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Type</span>
+                                <span class="dh-field__span">{{item.data.data.damageType}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Pen</span>
+                                <span class="dh-field__span">{{item.data.data.penetration}}</span>
                             </div>
                         </div>
                     </div>

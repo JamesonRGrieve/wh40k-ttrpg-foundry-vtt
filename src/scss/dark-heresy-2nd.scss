@@ -6,19 +6,22 @@
   @import "abstracts";
   @import "fonts";
 
+  // Generic Settings
+  @import "src/scss/components/grids_templates";
+  @import "src/scss/components/grids";
+  @import "src/scss/components/panel";
+  @import "src/scss/components/controls";
+  @import "src/scss/components/form_fields";
+
+  // Components
+  @import "src/scss/components/header";
+  @import "src/scss/components/navigation";
+  @import "src/scss/components/settings";
+  @import "src/scss/components/armour";
+  @import "src/scss/components/characteristics";
+
+  // Sheets
   @import "src/scss/sheets/actor";
   @import "src/scss/sheets/item";
-
-  @import "src/scss/components/form_fields";
-  @import "src/scss/components/generic_field";
-  @import "src/scss/components/grids";
-  @import "src/scss/components/header";
-  @import "src/scss/components/hide";
-  @import "src/scss/components/iconbuttons";
-  @import "src/scss/components/navigation";
-  @import "src/scss/components/panel";
-  @import "src/scss/components/settings";
-
-
 }
 

@@ -7,6 +7,7 @@
         background: $form-input-background; 
         color: $form-input-foreground;
         vertical-align: baseline;
+        height: 100%;
         
         &:focus,
         &:active,
@@ -16,24 +17,35 @@
         }
     }
 
-    input[type="text"],
-    textarea,
-    select {
-        text-align: left;  
+    input[disabled],
+    select[disabled],
+    textarea[disabled],
+    input[disabled],
+    select[disabled],
+    textarea[disabled],
+    input[readonly],
+    select[readonly],
+    textarea[readonly] {
+        background-color: unset !important;
+        border-color: unset !important;
+        cursor: unset !important;
+        color: $form-input-disabled !important;
+        > option {
+            color: $form-input-disabled !important;
+        }
+    }
+
+    textarea {
+        text-align: left;
     }
 
     input[type="number"] {
         text-align: center;
-
     }
 
     input[type="checkbox"] {
         margin: auto;
         width: 1em;
-    }
-
-    textarea {
-
     }
 
     select {
@@ -44,20 +56,68 @@
     }
 
     button {
+        cursor: pointer;
         text-shadow: none;
     }
 
-    button.dh-advancenotify__button {
-        display: block;
-        margin: 2px;
-        padding: $margin-general;
-        border-radius: 5px;
-        background-color: #28a745;
-        color: #fff;
-        font-family: "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-        font-size: 8pt;
-        font-weight: bold;
-        text-align: center;
-        
+    .dh-field,
+    .dh-textarea {
+        border-bottom: $grid-border;
+        &:last-child {
+            border-bottom: 0;
+        }
+        &__span {
+            font-family: $font-family-alt;
+        }
+        &__wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            > * {
+                border-bottom: 1px solid #000 !important;
+            }
+            > *:first-child {
+                border-right: 1px solid #000;
+            }
+        }
     }
+
+    .dh-field {
+        display: flex;
+        flex-flow: row nowrap;
+
+        &__header {
+            flex-shrink: 0;
+            &--flex {
+                display: flex;
+                align-items: center;
+                > span {
+                    flex-basis: 50%;
+                }
+                > button {
+                    flex-basis: 25%;
+                }
+            }
+        }
+
+        &__input {
+            flex-grow: 1;
+            padding-right: .5em;
+        }
+
+        &__span {
+            text-align: center;
+        }
+    }
+
+    .dh-textarea {
+        display: flex;
+        flex-flow: row nowrap;
+        &__header {
+            flex-shrink: 0;
+        }
+        &__textarea {
+            flex-grow: 1;
+        }
+    }
+
 }

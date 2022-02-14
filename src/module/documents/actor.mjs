@@ -7,14 +7,15 @@ import {eliteAdvances} from "../helpers/elite_advances.mjs";
 export class DarkHeresyActor extends Actor {
 
   prepareData() {
-    const data = super.prepareData();
+    super.prepareData();
     this._computeBackgroundFields()
     this._computeCharacteristics();
     this._computeSkills();
     this._computeExperience();
     this._computeArmour();
     this._computeMovement();
-    return data;
+    this._computeEncumbrance();
+
   }
 
   _computeBackgroundFields() {
@@ -134,6 +135,7 @@ export class DarkHeresyActor extends Actor {
     // for each item, find the maximum armour val per location
     this.items
         .filter(item => item.type === "armour")
+        .filter(item => item.data.data.equipped)
         .reduce((acc, armour) => {
           Object.keys(locations)
               .forEach((location) => {
@@ -181,12 +183,39 @@ export class DarkHeresyActor extends Actor {
     return { total: 0 };
   }
 
+  _computeEncumbrance() {
+    // Current Weight
+    let currentWeight = 0;
 
-  _computeEncumbrance(encumbrance) {
+    // Backpack
+    let backpackCurrentWeight = 0;
+    let backpackMaxWeight = 0;
+    if(this.backpack.hasBackpack) {
+      backpackMaxWeight = this.backpack.weight.max;
+      this.items.forEach(item => {
+        if(item.data.data.backpack?.inBackpack) {
+          backpackCurrentWeight += item.totalWeight;
+        } else {
+          currentWeight += item.totalWeight;
+        }
+      });
+
+      if(this.backpack.isCombatVest) {
+        currentWeight += backpackCurrentWeight;
+      }
+    } else {
+      // No backpack -- add everything
+      this.items.forEach(item => currentWeight += item.totalWeight);
+    }
+
     const attributeBonus = this.characteristics.strength.bonus + this.characteristics.toughness.bonus;
     this.data.data.encumbrance = {
       max: 0,
-      value: encumbrance
+      value: currentWeight,
+      encumbered: false,
+      backpack_max: backpackMaxWeight,
+      backpack_value: backpackCurrentWeight,
+      backpack_encumbered: false
     };
     switch (attributeBonus) {
       case 0:
@@ -256,8 +285,16 @@ export class DarkHeresyActor extends Actor {
         this.encumbrance.max = 2250;
         break
     }
+
+    if(this.encumbrance.value > this.encumbrance.max) {
+      this.encumbrance.encumbered = true;
+    }
+    if(this.encumbrance.backpack_value > this.encumbrance.backpack_max) {
+      this.encumbrance.backpack_encumbered = true;
+    }
   }
 
+  get backpack() {return this.data.data.backpack}
   get characteristics() {return this.data.data.characteristics}
   get skills() {return this.data.data.skills}
   get initiative() {return this.data.data.initiative}

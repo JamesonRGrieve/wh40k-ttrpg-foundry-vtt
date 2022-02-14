@@ -1,3 +1,5 @@
+import {toggleUIExpanded} from "../helpers/config.mjs";
+
 export class DarkHeresyItemSheet extends ItemSheet {
 
   static get defaultOptions() {
@@ -9,29 +11,33 @@ export class DarkHeresyItemSheet extends ItemSheet {
   }
 
   get template() {
-    const path = "systems/dark-heresy-2nd/templates/item";
-    return `${path}/item-${this.item.data.type}-sheet.hbs`;
+    return `systems/dark-heresy-2nd/templates/item/item-sheet.hbs`;
   }
 
   getData() {
     const context = super.getData();
-
-    // Use a safe clone of the item data for further operations.
     const itemData = context.item.data;
-
-    // Add the actor's data to context.data for easier access, as well as flags.
     context.data = itemData.data;
     context.flags = itemData.flags;
+    context.dh = CONFIG.dh;
     return context;
   }
 
 
   activateListeners(html) {
     super.activateListeners(html);
-
-    // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
-    // Roll handlers, click handlers, etc. would go here.
+    html.find('.sheet-control__hide-control').click(async ev => await this._sheetControlHideToggle(ev));
   }
+
+  async _sheetControlHideToggle(event) {
+    event.preventDefault();
+    const displayToggle = $(event.currentTarget);
+    $('span:first', displayToggle).toggleClass('active');
+    const target = displayToggle.data("toggle");
+    $('.' + target).toggle();
+    toggleUIExpanded(target)
+  }
+
 }

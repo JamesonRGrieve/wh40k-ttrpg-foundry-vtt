@@ -5,6 +5,8 @@ import { DarkHeresyItemSheet } from "./sheets/item-sheet.mjs";
 import { initializeHandlebars } from "./helpers/handlebars.mjs";
 import { DarkHeresy } from "./helpers/config.mjs";
 import {DarkHeresyWeaponSheet} from "./sheets/weapon-sheet.mjs";
+import {DarkHeresyTalentSheet} from "./sheets/talent-sheet.mjs";
+import {DarkHeresyArmourSheet} from "./sheets/armour-sheet.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -31,12 +33,24 @@ Hooks.once('init', async function() {
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("dark-heresy-2nd", AcolyteSheet, { makeDefault: true });
+
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("dark-heresy-2nd", DarkHeresyItemSheet, { makeDefault: true });
   Items.registerSheet("dark-heresy-2nd", DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
+  Items.registerSheet("dark-heresy-2nd", DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
+  Items.registerSheet("dark-heresy-2nd", DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
 
   // Preload Handlebars templates.
   return initializeHandlebars();
+});
+
+Hooks.on("preCreateItem", (candidate, data, options, user) => {
+  console.log('preCreateItem');
+  console.log(candidate);
+  console.log(data);
+  console.log(options);
+  console.log(user);
+  return true;
 });
 
 /* -------------------------------------------- */

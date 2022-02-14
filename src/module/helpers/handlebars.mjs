@@ -13,14 +13,18 @@ function preloadHandlebarsTemplates() {
         // Actor partials.
         "systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs",
@@ -119,32 +123,36 @@ function registerHandlebarsHelpers() {
         return 0
     })
 
+    Handlebars.registerHelper('isError', function (value) {
+        return value ? "error" : "";
+    });
+
     Handlebars.registerHelper('defaultVal', function (value, defaultVal) {
         return value || defaultVal;
     });
 
     Handlebars.registerHelper('armourDisplay', function(armour) {
-        let first = armour.part.body;
-        const same = Object.keys(armour.part).every(p => armour.part[p] === first);
+        let first = armour.armourPoints.body;
+        const same = Object.keys(armour.armourPoints).every(p => armour.armourPoints[p] === first);
         if(same) {
             return first + ' ALL';
         }
 
         const locations_array = [];
-        Object.keys(armour.part).forEach(part => {
-            if (armour[part] > 0) {
+        Object.keys(armour.armourPoints).forEach(part => {
+            if (armour.armourPoints[part] > 0) {
                 locations_array.push(part)
             }
         });
 
         const location_out = locations_array.map(item => {
-            return armour.part[item] + " " +
-                (item.toLowerCase() === "head") ?  "H" :
+            return armour.armourPoints[item] + " " +
+                ((item.toLowerCase() === "head") ?  "H" :
                 (item.toLowerCase() === "leftarm") ? "LA" :
                 (item.toLowerCase() === "rightarm") ? "RA" :
                 (item.toLowerCase() === "body") ? "B" :
                 (item.toLowerCase() === "leftleg") ? "LL" :
-                (item.toLowerCase() === "rightleg") ? "RL" : "";
+                (item.toLowerCase() === "rightleg") ? "RL" : "");
         }).filter(item => item !== "").join(", ");
 
         return location_out;

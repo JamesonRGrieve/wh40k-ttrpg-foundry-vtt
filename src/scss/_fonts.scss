@@ -1,9 +1,9 @@
-$h1-size: 1.15rem;
-$h2-size: .9rem;
-$h3-size: .8rem;
+$h1-size: 12pt;
+$h2-size: 11pt;
+$h3-size: 10pt;
 
-$font-general-medium: 1rem;
-$font-alt-medium: .95rem;
+$font-general-medium: 10pt;
+$font-alt-medium: 8pt;
 
 $font-family-general: "IM Fell DW Pica", serif;
 $font-family-alt: "Lusitana", serif;
@@ -11,14 +11,6 @@ $font-family-alt: "Lusitana", serif;
 .dh-wrapper {
     font-family: $font-family-general;
     font-size: $font-general-medium;
-
-    button[type=roll] {
-        margin: 0;
-        cursor: pointer;
-        &:hover {
-            color: red;
-        }
-    }
 
     button,
     button[type=roll],

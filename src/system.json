@@ -11,6 +11,13 @@
   "scripts": [],
   "packs": [
     {
+      "name": "ammo",
+      "system": "dark-heresy-2nd",
+      "label": "Ammo",
+      "path": "./packs/ammo.db",
+      "type": "Item"
+    },
+    {
       "name": "armour",
       "system": "dark-heresy-2nd",
       "label": "Armour",
@@ -18,10 +25,24 @@
       "type": "Item"
     },
     {
+      "name": "attack-specials",
+      "system": "dark-heresy-2nd",
+      "label": "Specials",
+      "path": "./packs/attack-specials.db",
+      "type": "Item"
+    },
+    {
       "name": "talents",
       "system": "dark-heresy-2nd",
       "label": "Talents",
       "path": "./packs/talents.db",
+      "type": "Item"
+    },
+    {
+      "name": "tools",
+      "system": "dark-heresy-2nd",
+      "label": "Tools",
+      "path": "./packs/tools.db",
       "type": "Item"
     },
     {

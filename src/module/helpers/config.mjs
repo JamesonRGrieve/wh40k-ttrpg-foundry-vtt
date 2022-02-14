@@ -44,5 +44,5 @@ DarkHeresy.ui = {
 }
 
 export function toggleUIExpanded(name) {
-  CONFIG.dh.ui.expanded(name);
+  CONFIG.dh.ui.toggleExpanded(name);
 }

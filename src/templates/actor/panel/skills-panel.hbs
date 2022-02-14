@@ -1,11 +1,11 @@
-<div class="dh-skills dh-panel">
-    <div class="dh-skilltable">
+<div class="dh-panel dh-grid-col-2 dh-grid-row-2">
+    <div class="dh-skilltable--border">
         <h1 class="dh-panel__header">Basic Skills</h1>
-        <div class="dh-skilltable__row--head">
-            <div class="dh-skilltable__cell">Name</div>
-            <div class="dh-skilltable__cell">Adv.</div>
-            <div class="dh-skilltable__cell">Char.</div>
-            <div class="dh-skilltable__cell--last">Total</div>
+        <div class="table-row--head">
+            <div class="table-cell">Name</div>
+            <div class="table-cell">Adv.</div>
+            <div class="table-cell">Char.</div>
+            <div class="table-cell--last">Total</div>
         </div>
         {{#each data.skills as | skill name |}}
             {{#unless skill.isSpecialist}}

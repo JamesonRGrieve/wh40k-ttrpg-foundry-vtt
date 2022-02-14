@@ -1,17 +1,12 @@
 .dh-item {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  border: 30px solid transparent;
-  border-image: url("../images/border.png") 30 round;
-  grid-gap: 0px;
+  border: 20px solid transparent;
+  border-image: url("../images/border-floral.png") 95 / 20px / 0 round;
+  grid-gap: 0;
+
   > * {
     min-width: 100px;
-  }
-
-  .tab.active {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-gap: 0px;
   }
 
   &__info {
@@ -25,41 +20,6 @@
       flex-flow: row nowrap;
       align-items: baseline;
       min-width: 0;
-    }
-  }
-
-  .dh {
-    &-image {
-      grid-column: 1 / -1;
-    }
-
-    &-header {
-      grid-column: 1 / -1;
-    }
-
-    &-navigation {
-      grid-column: 1 / -1;
-    }
-
-    &-controls {
-      grid-column: span 2;
-
-      &__wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: $margin-small;
-        margin: $margin-small;
-      }
-    }
-
-    &-settingswrapper {
-      grid-column: span 2;
-      display: flex;
-      flex-direction: column;
-
-      > * {
-        flex-grow: 1;
-      }
     }
   }
 }

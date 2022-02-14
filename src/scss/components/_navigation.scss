@@ -1,5 +1,19 @@
 .dh {
-    &-navigation__items {
+    &-wrapper {
+        .tab.active {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 0;
+        }
+    }
+
+    &-body {
+        grid-column: span 6;
+    }
+
+    &-navigation {
+        @extend .dh-panel;
+        grid-column: span 6;
         display: flex;
         align-items: center;
         justify-content: end;
@@ -13,31 +27,23 @@
                 display: none;
             }
         }
-    }
 
-    &-navigation__item {
-        &-left {
-            margin-right: auto !important;
-        }
-
-        a {
-            padding: $margin-small $margin-general;
-            border: 1px solid $form-input-background;
-            border-radius: 5px;
-            line-height: 1.5;
-            text-transform: uppercase;
-
-            &.active {
-                background: $form-input-background;
-                border: 1px solid darken($form-input-background,15%);
+        &__item {
+            &-left {
+                margin-right: auto !important;
             }
-        }
 
-        &--settings {
-            @extend .dh-navigation__item;
             a {
-                font-family: "Pictos";
-                text-transform: lowercase;
+                padding: $margin-small $margin-general;
+                border: 1px solid $form-input-background;
+                border-radius: 5px;
+                line-height: 1.5;
+                text-transform: uppercase;
+
+                &.active {
+                    background: $form-input-background;
+                    border: 1px solid darken($form-input-background,15%);
+                }
             }
         }
     }

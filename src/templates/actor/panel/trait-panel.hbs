@@ -1,29 +1,33 @@
-<div class="dh-traits dh-panel">
+<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
     <h1 class="dh-panel__header">Traits</h1>
-    <div class="dh-traittable">
-        <div class="dh-traittable__row--head">
-            <div class="dh-traittable__cell--span2">Name</div>
-            <div class="dh-traittable__cell">Level</div>
-            <div class="dh-traittable__cell--last"></div>
+    <div class="dh-traittable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">Name</div>
+            <div class="table-cell">Level</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="trait">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
         </div>
         {{#each actor.items as | item |}}
             {{#if item.isTrait}}
-                <div class="dh-traittable__row">
-                    <div class="dh-traittable__cell--settingstoggle">
+                <div class="table-row">
+                    <div class="table-cell--settingstoggle">
                         <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
                         </label>
                     </div>
-                    <div class="dh-traittable__cell">
+                    <div class="table-cell">
                         {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
-                    <div class="dh-traittable__cell">
+                    <div class="table-cell">
                         <span>{{item.data.data.level}}</span>
                     </div>
-                    <div class="dh-traittable__cell--vocalise">
+                    <div class="table-cell">
                         <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">record_voice_over</button>
                     </div>
-                    <div class="dh-traittable__cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
                         <span>{{item.data.data.benefit}}</span>
                     </div>
                 </div>

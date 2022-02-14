@@ -1,4 +1,14 @@
 .dh {
+    &-wrapper {
+        button[type=roll] {
+            margin: 0;
+            cursor: pointer;
+            &:hover {
+                color: red;
+            }
+        }
+    }
+
     &-material {
         font-family: 'Material Icons';
         font-weight: normal;
@@ -19,8 +29,8 @@
     &-control-button {
         cursor: pointer;
         &__span {
-            margin-top: 3px;
-            margin-left: 2px;
+            padding-top: 3px;
+            padding-left: 2px;
             @extend .dh-material;
             opacity: .5;
             .active {
@@ -31,6 +41,17 @@
             }
         }
     }
+
+    &-trait-toggle {
+        cursor: pointer;
+        opacity: 1;
+        &:hover {
+            opacity: .5
+        }
+        &__span {
+            text-align: left;
+        }
+    }
 }
 
 // Vocalise Button
@@ -38,7 +59,7 @@ button.dh-vocalise[type="roll"] {
     @extend .dh-material;
     opacity: .5;
     text-align: center;
-    margin-top: 3px;
+    padding-top: 3px;
     &:hover {
         opacity: 1
     }

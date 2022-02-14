@@ -1,10 +1,9 @@
 //General Reset
-
 .window-content .dh-wrapper {
     position: relative;
 
     * {
-        font-size: .95em;
+        font-size: 10pt;
         box-sizing: border-box;
         font-family: inherit;
         min-width: 0;
@@ -61,21 +60,11 @@
             display: none;
         }
     }
-
-    input[disabled],
-    select[disabled],
-    textarea[disabled],
-    input[readonly],
-    select[readonly],
-    textarea[readonly] {
-        background-color: unset;
-        border-color: unset;
-    }
 }
 
 .window-content {
     * {
-        font-size: 1em;
+        font-size: 10pt;
         box-sizing: border-box;
         font-family: inherit;
         min-width: 0;

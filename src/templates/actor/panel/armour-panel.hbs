@@ -1,39 +1,69 @@
-<div class="dh-armour dh-panel">
+<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
     <h1 class="dh-panel__header">Armour</h1>
-    <div class="dh-armourtable">
-        <div class="dh-armourtable__row--head">
-            <div class="dh-armourtable__cell--span2">Name</div>
-            <div class="dh-armourtable__cell">Type</div>
-            <div class="dh-armourtable__cell">AP</div>
-            <div class="dh-armourtable__cell">Equipped</div>
-            <div class="dh-armourtable__cell--last"></div>
+    <div class="dh-armourtable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">Name</div>
+            <div class="table-cell">Type</div>
+            <div class="table-cell">AP</div>
+            <div class="table-cell">Equipped</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="armour">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
         </div>
         {{#each actor.items as | item |}}
             {{#if item.isArmour}}
-                <div class="dh-armourtable__row">
-                    <div class="dh-armourtable__cell--settingstoggle">
+                <div class="table-row">
+                    <div class="table-cell--settingstoggle">
                         <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
                         </label>
                     </div>
-                    <div class="dh-armourtable__cell">
-                        <button type="roll">
-                            <span>{{item.name}}</span>
-                        </button>
+                    <div class="table-cell--left">
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
-                    <div class="dh-armourtable__cell">
-                        <span>{{item.data.data.type}}</span>
+                    <div class="table-cell">
+                        <span class="display">{{item.data.data.type}}</span>
                     </div>
-                    <div class="dh-armourtable__cell">
-                        <span>{{armourDisplay item.data.data}}</span>
+                    <div class="table-cell">
+                        <span class="display">{{armourDisplay item.data.data}}</span>
                     </div>
-                    <div class="dh-armourtable__cell">
-                        <input class="dh-settings__input" type="checkbox" data-dtype="Boolean" disabled {{checked item.data.data.equipped}}/>
+                    <div class="table-cell">
+                        <span class="display">{{item.data.data.equipped}}</span>
                     </div>
-                    <div class="dh-armourtable__cell--last">
+                    <div class="table-cell--last">
                         <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
                         </label>
+                    </div>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                        <div class="dh-settings">
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Head</span>
+                                <input class="dh-field__input" type="text" name="data.damage" value="{{data.armourPoints.head}}"/>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Left Arm</span>
+                                <input class="dh-field__input" type="text" name="data.damageType" value="{{data.armourPoints.leftArm}}"/>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Right Arm</span>
+                                <input class="dh-field__input" type="text" name="data.penetration" value="{{data.armourPoints.rightArm}}"/>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Body</span>
+                                <input class="dh-field__input" type="text" name="data.penetration" value="{{data.armourPoints.body}}"/>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Left Leg</span>
+                                <input class="dh-field__input" type="text" name="data.damageType" value="{{data.armourPoints.leftLeg}}"/>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Right Leg</span>
+                                <input class="dh-field__input" type="text" name="data.penetration" value="{{data.armourPoints.rightLeg}}"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {{/if}}

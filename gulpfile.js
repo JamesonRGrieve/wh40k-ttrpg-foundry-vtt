@@ -17,12 +17,13 @@ const STATIC_FILES = [
   "src/icons/**/*",
   "src/lang/**/*",
   "src/module/**/*",
+  "!src/module/foundry-core/*",
   "src/templates/**/*",
   "src/images/**/*",
   "src/*.json"
 ];
 const PACK_SRC = "src/packs";
-const BUILD_DIR = "/Users/***REMOVED***/Library/Application Support/FoundryVTT/Data/systems/dark-heresy-2nd";
+const BUILD_DIR = "build/Data/systems/dark-heresy-2nd";
 
 /* ----------------------------------------- */
 /*  Compile Packs

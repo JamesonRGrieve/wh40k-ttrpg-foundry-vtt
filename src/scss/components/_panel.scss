@@ -1,58 +1,60 @@
-.dh-panel {
-    position: relative;
-    padding: 2px;
+.dh {
+    &-panel {
+        position: relative;
+        padding: 2px;
 
-    background: url('../images/40k_back.png') #eff2f1 center/cover;
-    border: 3px solid transparent;
-    border-image: url("../images/panel_border.png") 8 / 2 / 0 repeat;
+        background: url('../images/40k_back.png') #eff2f1 center/cover;
+        border: 3px solid transparent;
+        border-image: url("../images/panel_border.png") 8 / 2 / 0 repeat;
 
-    &--inquisition {
-        @extend .dh-panel;
-        background:
-                url('../images/inqu_watermark.png') center/80% no-repeat,
-                url('../images/40k_back.png') center/cover;
-        grid-column: span 1;
-        grid-row: span 2;
-    }
-
-    h1 {
-        border-bottom: $grid-border;
-
-        &.dh-panel__header {
-            font-size: $h1-size;
-            font-weight: normal;
-            text-align: center;
-            text-transform: uppercase;
+        &--inquisition {
+            @extend .dh-panel;
+            background:
+                    url('../images/inqu_watermark.png') center/70% no-repeat,
+                    url('../images/40k_back.png') center/cover;
+            grid-column: span 1;
+            grid-row: span 2;
+            min-height: 150px;
         }
 
-        &.span-4 {
-            grid-column: span 4;
+        &.error {
+            background: rgba(255, 0, 0, .1);
+        }
+
+        h1 {
+            border-bottom: $grid-border;
+
+            &.dh-panel__header {
+                font-size: $h1-size;
+                font-weight: normal;
+                text-align: center;
+                text-transform: uppercase;
+
+                .dh-trait-toggle__span {
+                    font-size: $h1-size;
+                    font-weight: normal;
+                    text-align: center;
+                    text-transform: uppercase;
+                }
+            }
+
+            &.span-4 {
+                grid-column: span 4;
+            }
         }
     }
 
-    &-span-6 {
-        @extend .dh-panel;
-        grid-column: span 6;
-    }
-}
-
-.dh-armour {
-    &__wrapper {
-        background:
-                url('../images/armour.png') center/80% no-repeat,
-                url('../images/40k_back.png') center/cover;
-    }
-
-    &__display {
-        border: $grid-border;
-    }
-}
-
-.dh-wrapper {
-    .dh-controls {
-        button {
-            background: rgba($form-button-background,0.125);
-            text-align: center;
+    &-wrapper {
+        .dh-controls {
+            button {
+                background: rgba($form-button-background, 0.125);
+                text-align: center;
+            }
         }
     }
 }
+
+
+
+
+
