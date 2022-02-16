@@ -9,7 +9,34 @@
         <div class="dh-chartable__cell--left">Unnatural</div>
         <div class="dh-chartable__cell--left">Bonus</div>
         {{#each data.characteristics as | characteristic name |}}
-            {{> systems/dark-heresy-2nd/templates/actor/partial/characteristic-col.hbs key=name}}
+            <div class="dh-chartable__cell--head {{colorCode this.has_bonus this.has_negative}}">
+                <button class="roll-characteristic" type="roll" data-characteristic="{{name}}">{{this.short}}</button>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <input name="data.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}"/>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <select name="data.characteristics.{{name}}.advance">
+                    {{option '0' this.advance 'None'}}
+                    {{option '1' this.advance 'Simple'}}
+                    {{option '2' this.advance 'Intermediate'}}
+                    {{option '3' this.advance 'Trained'}}
+                    {{option '4' this.advance 'Proficient'}}
+                    {{option '5' this.advance 'Expert'}}
+                </select>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <input class="dh-field__input" name="data.characteristics.{{name}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}"/>
+            </div>
+            <div class="dh-chartable__cell dh-chartable__cell--highlight {{colorCode this.has_bonus this.has_negative}}">
+                <span class="display">{{this.total}}</span>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <input class="dh-field__input" name="data.characteristics.{{name}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}"/>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <span class="display">{{this.bonus}}</span>
+            </div>
         {{/each}}
     </div>
 </div>

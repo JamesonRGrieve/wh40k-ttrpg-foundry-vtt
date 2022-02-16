@@ -1,0 +1,39 @@
+.dh {
+  &-char-roller {
+    &__wrapper {
+      background:
+              url('../images/inqu_watermark.png') bottom/50% no-repeat,
+              url('../images/40k_back.png') center/cover;
+    }
+
+    &__row {
+      display: flex;
+      justify-content: space-between;
+      max-height: 8rem;
+    }
+    &__block {
+      flex-grow: 0;
+      flex-basis: 30%;
+      text-align: center;
+    }
+
+    &__display {
+      border: $grid-border;
+      font-family: $font-family-alt;
+      font-size: 14pt;
+      font-weight: bold;
+      line-height: 3.5rem;
+      display: inline-block;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 5pt;
+
+      background-color: rgba($form-button-background, 0.125);
+      cursor: pointer;
+
+      &:hover {
+        color: red;
+      }
+    }
+  }
+}

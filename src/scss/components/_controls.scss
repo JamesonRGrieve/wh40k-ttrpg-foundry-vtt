@@ -1,14 +1,4 @@
 .dh {
-    &-wrapper {
-        button[type=roll] {
-            margin: 0;
-            cursor: pointer;
-            &:hover {
-                color: red;
-            }
-        }
-    }
-
     &-material {
         font-family: 'Material Icons';
         font-weight: normal;
@@ -51,6 +41,14 @@
         &__span {
             text-align: left;
         }
+    }
+}
+
+button[type=roll] {
+    margin: 0;
+    cursor: pointer;
+    &:hover {
+        color: red;
     }
 }
 

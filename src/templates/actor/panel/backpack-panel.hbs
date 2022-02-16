@@ -1,4 +1,4 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-2 {{isError data.encumbrance.backpack_encumbered}}">
+<div class="dh-panel dh-grid-col-2 dh-grid-row-3 {{isError data.encumbrance.backpack_encumbered}}">
     <h1 class="dh-panel__header">
         <label class="dh-trait-toggle sheet-control__hide-control" data-toggle="backpack_settings">
             <div class="dh-material material-icons">{{defaultVal icon 'settings'}}</div>
@@ -30,7 +30,7 @@
         </div>
     </div>
     {{#if data.backpack.hasBackpack}}
-        <div class="dh-backpacktable--border">
+        <div class="dh-table--border dh-backpacktable--border">
             <div class="table-row--head">
                 <div class="table-cell">Name</div>
                 <div class="table-cell--last">Weight</div>

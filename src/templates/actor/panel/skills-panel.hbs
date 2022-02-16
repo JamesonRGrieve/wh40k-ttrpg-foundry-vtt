@@ -1,5 +1,5 @@
 <div class="dh-panel dh-grid-col-2 dh-grid-row-2">
-    <div class="dh-skilltable--border">
+    <div class="dh-table--border dh-skilltable--border">
         <h1 class="dh-panel__header">Basic Skills</h1>
         <div class="table-row--head">
             <div class="table-cell">Name</div>
@@ -9,7 +9,28 @@
         </div>
         {{#each data.skills as | skill name |}}
             {{#unless skill.isSpecialist}}
-                {{> systems/dark-heresy-2nd/templates/actor/partial/skill.hbs key=name}}
+                <div class="table-row">
+                    <div class="table-cell">
+                        <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
+                    </div>
+                    <div class="table-cell">
+                        <select name="data.skills.{{name}}.advance">
+                            {{option '0' this.advance 'Unknown'}}
+                            {{option '1' this.advance 'Known'}}
+                            {{option '2' this.advance 'Trained'}}
+                            {{option '3' this.advance 'Experienced'}}
+                            {{option '4' this.advance 'Veteran'}}
+                        </select>
+                    </div>
+                    <div class="table-cell">
+                        <select name="data.skills.{{name}}.characteristic">
+                            {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
+                        </select>
+                    </div>
+                    <div class="table-cell--last table-cell--highlight">
+                        <span class="display">{{this.current}}</span>
+                    </div>
+                </div>
             {{/unless}}
         {{/each}}
     </div>

@@ -41,18 +41,21 @@
         <section class="dh-body">
             <div class="tab" data-group="primary" data-tab="combat">
                 {{> systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/combat-controls-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/wounds-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="main">
-                <div class="dh-panel--inquisition"></div>
                 {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs}}
-                <div class="dh-panel--inquisition"></div>
-                {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/bonuses-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
+
             </div>
             <div class="tab" data-group="primary" data-tab="bio">
                 <div class="dh-panel dh-grid-col-6">
@@ -71,11 +74,13 @@
                 {{> systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="advances">
                 {{> systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/aptitude-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/experience-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="social">

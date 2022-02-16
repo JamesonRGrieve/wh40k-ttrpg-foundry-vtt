@@ -1,7 +1,8 @@
 <div class="dh-header__item-wrapper--{{cleanFieldName key}}">
     <span class="dh-header__title">{{capitalize key}}</span>
     {{#if options}}
-        <select class="dh-header__select" name="data.bio.{{key}}">
+        <select class="dh-header__select acolyte-{{key}}" name="data.bio.{{key}}">
+            <option value=""></option>
             {{selectOptions (arrayToObject options) selected=this.value}}
         </select>
     {{else}}

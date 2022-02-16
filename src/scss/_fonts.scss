@@ -8,38 +8,39 @@ $font-alt-medium: 8pt;
 $font-family-general: "IM Fell DW Pica", serif;
 $font-family-alt: "Lusitana", serif;
 
-.dh-wrapper {
+* {
     font-family: $font-family-general;
     font-size: $font-general-medium;
-
-    button,
-    button[type=roll],
-    input[type=text],
-    input[type=number],
-    select,
-    option,
-    textarea,
-    label,
-    span.display {
-        font-family: $font-family-alt;
-        font-size: 10pt;
-    }
-
-    h1, h2, h3 {
-        margin: 0;
-        padding: 0;
-        font-family: $font-family-general;
-    }
-
-    h1 {
-        font-size: $h1-size;
-    }
-
-    h2 {
-        font-size: $h2-size;
-    }
-
-    h3 {
-        font-size: $h3-size;
-    }
 }
+
+button,
+button[type=roll],
+input[type=text],
+input[type=number],
+select,
+option,
+textarea,
+label,
+span.display {
+    font-family: $font-family-alt;
+    font-size: 10pt;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+    font-family: $font-family-general;
+}
+
+h1 {
+    font-size: $h1-size;
+}
+
+h2 {
+    font-size: $h2-size;
+}
+
+h3 {
+    font-size: $h3-size;
+}
+

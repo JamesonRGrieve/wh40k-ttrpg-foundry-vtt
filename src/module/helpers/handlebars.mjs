@@ -11,12 +11,17 @@ export const initializeHandlebars = () => {
 function preloadHandlebarsTemplates() {
     return loadTemplates([
         // Actor partials.
+        "systems/dark-heresy-2nd/templates/actor/panel/aptitude-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/bonuses-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/combat-controls-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/experience-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs",
@@ -28,13 +33,17 @@ function preloadHandlebarsTemplates() {
         "systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs",
         "systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs",
+        "systems/dark-heresy-2nd/templates/actor/panel/wounds-panel.hbs",
 
         "systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs",
-        "systems/dark-heresy-2nd/templates/actor/partial/characteristic-col.hbs",
         "systems/dark-heresy-2nd/templates/actor/partial/display-toggle.hbs",
-        "systems/dark-heresy-2nd/templates/actor/partial/skill.hbs",
-        "systems/dark-heresy-2nd/templates/actor/partial/skill-specialist.hbs",
-        "systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs"
+        "systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs",
+
+        // Prompts
+        "systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs",
+
+        // Chats
+        "systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs"
     ]);
 }
 
@@ -125,6 +134,19 @@ function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('isError', function (value) {
         return value ? "error" : "";
+    });
+
+    Handlebars.registerHelper('isSuccess', function (value) {
+        return value ? "success" : "";
+    });
+
+    Handlebars.registerHelper('colorCode', function (positive, negative) {
+        // Positive Precedence
+        if (positive) {
+            return "success";
+        } else if (negative) {
+            return "error";
+        }
     });
 
     Handlebars.registerHelper('defaultVal', function (value, defaultVal) {

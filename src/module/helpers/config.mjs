@@ -13,7 +13,7 @@ DarkHeresy.bio = {
   'role': roleNames(),
   'elite': eliteAdvancesNames(),
   'divination': divinationNames(),
-  'primary': ['background', 'role', 'elite']
+  'primary': ['background', 'role', 'elite', 'homeWorld', 'divination']
 }
 
 DarkHeresy.items = {
@@ -45,4 +45,10 @@ DarkHeresy.ui = {
 
 export function toggleUIExpanded(name) {
   CONFIG.dh.ui.toggleExpanded(name);
+}
+
+export function fieldMatch(val1, val2) {
+  let one = val1.replace(/\s/g, "");
+  let two = val2.replace(/\s/g, "");
+  return one.toUpperCase() === two.toUpperCase();
 }

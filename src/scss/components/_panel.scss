@@ -1,4 +1,11 @@
 .dh {
+    &-controls {
+        button {
+            background: rgba($form-button-background, 0.125);
+            text-align: center;
+        }
+    }
+
     &-panel {
         position: relative;
         padding: 2px;
@@ -6,6 +13,10 @@
         background: url('../images/40k_back.png') #eff2f1 center/cover;
         border: 3px solid transparent;
         border-image: url("../images/panel_border.png") 8 / 2 / 0 repeat;
+
+        &.prompt {
+            margin-bottom: 5pt;
+        }
 
         &--inquisition {
             @extend .dh-panel;
@@ -15,10 +26,6 @@
             grid-column: span 1;
             grid-row: span 2;
             min-height: 150px;
-        }
-
-        &.error {
-            background: rgba(255, 0, 0, .1);
         }
 
         h1 {
@@ -40,15 +47,6 @@
 
             &.span-4 {
                 grid-column: span 4;
-            }
-        }
-    }
-
-    &-wrapper {
-        .dh-controls {
-            button {
-                background: rgba($form-button-background, 0.125);
-                text-align: center;
             }
         }
     }

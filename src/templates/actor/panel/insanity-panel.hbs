@@ -4,7 +4,7 @@
         <span class="dh-field__header">Insanity Points</span>
         <input class="dh-field__input" data-dtype="Number" type="number" name="data.insanity" value="{{data.insanity}}"/>
     </div>
-    <div class="dh-insanitytable--border">
+    <div class="dh-table--border dh-insanitytable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Mental Disorders</div>
             <div class="table-cell--last">
@@ -25,7 +25,9 @@
                         {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
                     <div class="table-cell">
-                        <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">record_voice_over</button>
+                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        </label>
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
                         <span>{{item.data.data.description}}</span>

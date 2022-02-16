@@ -1,0 +1,22 @@
+<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+    <h1 class="dh-panel__header">Bonuses</h1>
+    <div class="dh-table--border dh-bonusestable--border">
+        <div class="table-row--head">
+            <div class="table-cell">Name</div>
+            <div class="table-cell--last">Source</div>
+        </div>
+        {{#each actor.backgroundEffects.abilities as | ability |}}
+            <div class="table-row">
+                <div class="table-cell">
+                    {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' ability.source) text=ability.name}}
+                </div>
+                <div class="table-cell--last">
+                    <span>{{ability.source}}</span>
+                </div>
+                <div class="table-cell--description description_{{ability.source}}" {{hideIfNot (isExpanded (concat 'description_' ability.source ))}}>
+                    <span>{{ability.benefit}}</span>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>

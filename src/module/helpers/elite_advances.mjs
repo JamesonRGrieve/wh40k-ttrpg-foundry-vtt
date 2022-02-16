@@ -1,13 +1,6 @@
 export function eliteAdvances() {
     return [
         {
-            'name': 'None',
-            'cost': 0,
-            'prerequisites': '',
-            'changes': '',
-            'talents': []
-        },
-        {
             'name': 'Inquisitor',
             'cost': 1000,
             'prerequisites': 'Influence: 75, Emperor\'s Blessing: Do something to impress the Emperor. See Becoming an Inquisitor on page 88 of Core Rule Book. GM Guidance: If GM allows it.',

@@ -42,7 +42,9 @@
         &--span-2,
         &--homeworld,
         &--background,
-        &--role {
+        &--role,
+        &--divination,
+        &--elite {
             @extend .dh-header__item-wrapper;
             grid-column: span 2;
         }
@@ -53,14 +55,12 @@
             grid-column: span 3;
         }
 
-        &--3-span-2,
-        &--elite {
+        &--3-span-2 {
             @extend .dh-header__item-wrapper;
             grid-column: 3 / span 2;
         }
 
         &--span-4,
-        &--divination,
         &--mementos,
         &--superstition,
         &--notes {

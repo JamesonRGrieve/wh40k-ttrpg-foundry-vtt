@@ -3,11 +3,15 @@ import {backgrounds} from "../helpers/backgrounds.mjs";
 import {divinations} from "../helpers/divinations.mjs";
 import {roles} from "../helpers/roles.mjs";
 import {eliteAdvances} from "../helpers/elite_advances.mjs";
+import {fieldMatch} from "../helpers/config.mjs";
 
 export class DarkHeresyActor extends Actor {
 
   prepareData() {
     super.prepareData();
+    this.data.data.backgroundEffects = {
+      abilities: []
+    };
     this._computeBackgroundFields()
     this._computeCharacteristics();
     this._computeSkills();
@@ -20,26 +24,61 @@ export class DarkHeresyActor extends Actor {
 
   _computeBackgroundFields() {
     if(this.bio.homeWorld) {
-      this.data.data.homeworld = homeworlds().find(h => h.name === this.bio.homeWorld)
+      this.backgroundEffects.homeworld = homeworlds().find(h => h.name === this.bio.homeWorld)
+      if(this.backgroundEffects.homeworld) {
+        this.backgroundEffects.abilities.push({
+          source: 'Homeworld',
+          ...this.backgroundEffects.homeworld.home_world_bonus
+        });
+      }
     }
     if(this.bio.background) {
-      this.data.data.background = backgrounds().find(h => h.name === this.bio.background)
+      this.backgroundEffects.background = backgrounds().find(h => h.name === this.bio.background)
+      if(this.backgroundEffects.background) {
+        this.backgroundEffects.abilities.push({
+          source: 'Background',
+          ...this.backgroundEffects.background.background_bonus
+        });
+      }
     }
     if(this.bio.role) {
-      this.data.data.role = roles().find(h => h.name === this.bio.role)
+      this.backgroundEffects.role = roles().find(h => h.name === this.bio.role)
+      if(this.backgroundEffects.role) {
+        this.backgroundEffects.abilities.push({
+          source: 'Role',
+          ...this.backgroundEffects.role.role_bonus
+        });
+      }
     }
     if(this.bio.divination) {
-      this.data.data.divination = divinations().find(h => h.name === this.bio.divination)
+      this.backgroundEffects.divination = divinations().find(h => h.name === this.bio.divination)
+      if(this.backgroundEffects.divination) {
+        this.backgroundEffects.abilities.push({
+          source: 'Divination',
+          name: this.backgroundEffects.divination.name,
+          benefit: this.backgroundEffects.divination.effect
+        });
+      }
     }
     if(this.bio.elite) {
-      this.data.data.eliteAdvance = eliteAdvances().find(h => h.name === this.bio.elite)
+      this.backgroundEffects.eliteAdvance = eliteAdvances().find(h => h.name === this.bio.elite)
     }
   }
 
   _computeCharacteristics() {
-    for (let characteristic of Object.values(this.characteristics)) {
+    for (const [name, characteristic] of Object.entries(this.characteristics)) {
       characteristic.total = characteristic.base + (characteristic.advance * 5) + characteristic.modifier;
       characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
+
+      // Homeworld Bonus or Negative
+      if(this.backgroundEffects.homeworld) {
+        if (this.backgroundEffects.homeworld.bonus_characteristics.some(c => fieldMatch(c, name))) {
+          characteristic.has_bonus = true;
+        } else if (fieldMatch(this.backgroundEffects.homeworld.negative_characteristic, name)) {
+          characteristic.has_negative = true;
+        }
+      }
+
       if(this.fatigue.value > characteristic.bonus) {
         characteristic.total = Math.ceil(characteristic.total / 2);
         characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
@@ -315,5 +354,6 @@ export class DarkHeresyActor extends Actor {
   get armour() {return this.data.data.armour}
   get encumbrance() {return this.data.data.encumbrance}
   get movement() {return this.data.data.movement}
+  get backgroundEffects() {return this.data.data.backgroundEffects}
 
 }

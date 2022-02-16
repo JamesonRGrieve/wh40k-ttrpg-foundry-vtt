@@ -6,7 +6,8 @@
         "wounds": {
           "max": 0,
           "value": 0,
-          "critical": 0
+          "critical": 0,
+          "rolled": false
         },
         "fatigue": {
           "max": 0,
@@ -14,7 +15,8 @@
         },
         "fate": {
           "max": 0,
-          "value": 0
+          "value": 0,
+          "rolled": false
         },
         "psy": {
           "rating": 0,
@@ -29,7 +31,7 @@
         "size": 4,
         "characteristics": {
           "weaponSkill": {
-            "label": "CHARACTERISTIC.WEAPON_SKILL",
+            "label": "Weapon Skill",
             "short": "WS",
             "base": 0,
             "advance": 0,
@@ -38,7 +40,7 @@
             "cost": 0
           },
           "ballisticSkill": {
-            "label": "CHARACTERISTIC.BALLISTIC_SKILL",
+            "label": "Ballistic Skill",
             "short": "BS",
             "base": 0,
             "advance": 0,
@@ -47,7 +49,7 @@
             "cost": 0
           },
           "strength": {
-            "label": "CHARACTERISTIC.STRENGTH",
+            "label": "Strength",
             "short": "S",
             "base": 0,
             "advance": 0,
@@ -56,7 +58,7 @@
             "cost": 0
           },
           "toughness": {
-            "label": "CHARACTERISTIC.TOUGHNESS",
+            "label": "Toughness",
             "short": "T",
             "base": 0,
             "advance": 0,
@@ -65,7 +67,7 @@
             "cost": 0
           },
           "agility": {
-            "label": "CHARACTERISTIC.AGILITY",
+            "label": "Agility",
             "short": "Ag",
             "base": 0,
             "advance": 0,
@@ -74,7 +76,7 @@
             "cost": 0
           },
           "intelligence": {
-            "label": "CHARACTERISTIC.INTELLIGENCE",
+            "label": "Intelligence",
             "short": "Int",
             "base": 0,
             "advance": 0,
@@ -83,7 +85,7 @@
             "cost": 0
           },
           "perception": {
-            "label": "CHARACTERISTIC.PERCEPTION",
+            "label": "Perception",
             "short": "Per",
             "base": 0,
             "advance": 0,
@@ -92,7 +94,7 @@
             "cost": 0
           },
           "willpower": {
-            "label": "CHARACTERISTIC.WILLPOWER",
+            "label": "Willpower",
             "short": "WP",
             "base": 0,
             "advance": 0,
@@ -101,7 +103,7 @@
             "cost": 0
           },
           "fellowship": {
-            "label": "CHARACTERISTIC.FELLOWSHIP",
+            "label": "Fellowship",
             "short": "Fel",
             "base": 0,
             "advance": 0,
@@ -110,7 +112,7 @@
             "cost": 0
           },
           "influence": {
-            "label": "CHARACTERISTIC.INFLUENCE",
+            "label": "Influence",
             "short": "Inf",
             "base": 0,
             "advance": 0,
@@ -121,7 +123,7 @@
         },
         "skills": {
           "acrobatics": {
-            "label": "SKILL.ACROBATICS",
+            "label": "Acrobatics",
             "characteristics": [
               "Ag",
               "S"
@@ -134,7 +136,7 @@
             "characteristic": "Ag"
           },
           "athletics": {
-            "label": "SKILL.ATHLETICS",
+            "label": "Athletics",
             "characteristics": [
               "S",
               "T"
@@ -146,7 +148,7 @@
             "characteristic": "S"
           },
           "awareness": {
-            "label": "SKILL.AWARENESS",
+            "label": "Awareness",
             "characteristics": [
               "Per",
               "Fel",
@@ -159,7 +161,7 @@
             "characteristic": "Per"
           },
           "charm": {
-            "label": "SKILL.CHARM",
+            "label": "Charm",
             "characteristics": [
               "Fel",
               "Inf"
@@ -171,7 +173,7 @@
             "characteristic": "Fel"
           },
           "command": {
-            "label": "SKILL.COMMAND",
+            "label": "Command",
             "characteristics": [
               "Fel",
               "Int",
@@ -185,7 +187,7 @@
             "characteristic": "Fel"
           },
           "commerce": {
-            "label": "SKILL.COMMERCE",
+            "label": "Commerce",
             "characteristics": [
               "Int",
               "Fel"
@@ -197,7 +199,7 @@
             "characteristic": "Int"
           },
           "commonLore": {
-            "label": "SKILL.COMMON_LORE",
+            "label": "Common Lore",
             "characteristics": [
               "Int",
               "Fel"
@@ -335,7 +337,7 @@
             "characteristic": "Int"
           },
           "deceive": {
-            "label": "SKILL.DECEIVE",
+            "label": "Deceive",
             "characteristics": [
               "Fel",
               "Int"
@@ -347,7 +349,7 @@
             "characteristic": "Fel"
           },
           "dodge": {
-            "label": "SKILL.DODGE",
+            "label": "Dodge",
             "characteristics": [
               "Ag"
             ],
@@ -358,7 +360,7 @@
             "characteristic": "Ag"
           },
           "forbiddenLore": {
-            "label": "SKILL.FORBIDDEN_LORE",
+            "label": "Forbidden Lore",
             "characteristics": [
               "Int",
               "Fel"
@@ -448,7 +450,7 @@
             "characteristic": "Int"
           },
           "inquiry": {
-            "label": "SKILL.INQUIRY",
+            "label": "Inquiry",
             "characteristics": [
               "Fel",
               "Int",
@@ -461,7 +463,7 @@
             "characteristic": "Fel"
           },
           "interrogation": {
-            "label": "SKILL.INTERROGATION",
+            "label": "Interrogation",
             "characteristics": [
               "WP",
               "Fel"
@@ -473,7 +475,7 @@
             "characteristic": "WP"
           },
           "intimidate": {
-            "label": "SKILL.INTIMIDATE",
+            "label": "Intimidate",
             "characteristics": [
               "S",
               "WP"
@@ -485,7 +487,7 @@
             "characteristic": "S"
           },
           "linguistics": {
-            "label": "SKILL.LINGUISTICS",
+            "label": "Linguistics",
             "characteristics": [
               "Int",
               "Fel"
@@ -575,7 +577,7 @@
             "characteristic": "Int"
           },
           "logic": {
-            "label": "SKILL.LOGIC",
+            "label": "Logic",
             "characteristics": [
               "Int",
               "Ag"
@@ -587,7 +589,7 @@
             "characteristic": "Int"
           },
           "medicae": {
-            "label": "SKILL.MEDICAE",
+            "label": "Medicae",
             "characteristics": [
               "Int",
               "Ag",
@@ -600,7 +602,7 @@
             "characteristic": "Int"
           },
           "navigate": {
-            "label": "SKILL.NAVIGATE",
+            "label": "Navigate",
             "characteristics": [
               "Int",
               "Per"
@@ -630,7 +632,7 @@
             "characteristic": "Int"
           },
           "operate": {
-            "label": "SKILL.OPERATE",
+            "label": "Operate",
             "characteristics": [
               "Ag",
               "Int"
@@ -660,7 +662,7 @@
             "characteristic": "Ag"
           },
           "parry": {
-            "label": "SKILL.PARRY",
+            "label": "Parry",
             "characteristics": [
               "WS"
             ],
@@ -671,7 +673,7 @@
             "characteristic": "WS"
           },
           "psyniscience": {
-            "label": "SKILL.PSYNISCIENCE",
+            "label": "Psyniscience",
             "characteristics": [
               "Per",
               "WP"
@@ -683,7 +685,7 @@
             "characteristic": "Per"
           },
           "scholasticLore": {
-            "label": "SKILL.SCHOLASTIC_LORE",
+            "label": "Scholastic Lore",
             "characteristics": [
               "Int",
               "Fel"
@@ -773,7 +775,7 @@
             "characteristic": "Int"
           },
           "scrutiny": {
-            "label": "SKILL.SCRUTINY",
+            "label": "Scrutiny",
             "characteristics": [
               "Per",
               "Fel"
@@ -785,7 +787,7 @@
             "characteristic": "Per"
           },
           "security": {
-            "label": "SKILL.SECURITY",
+            "label": "Security",
             "characteristics": [
               "Int",
               "Ag"
@@ -797,7 +799,7 @@
             "characteristic": "Int"
           },
           "sleightOfHand": {
-            "label": "SKILL.SLEIGHT_OF_HAND",
+            "label": "Sleight of Hand",
             "characteristics": [
               "Ag",
               "Int"
@@ -809,7 +811,7 @@
             "characteristic": "Ag"
           },
           "stealth": {
-            "label": "SKILL.STEALTH",
+            "label": "Stealth",
             "characteristics": [
               "Ag",
               "Per"
@@ -821,7 +823,7 @@
             "characteristic": "Ag"
           },
           "survival": {
-            "label": "SKILL.SURVIVAL",
+            "label": "Survival",
             "characteristics": [
               "Per",
               "Ag",
@@ -834,7 +836,7 @@
             "characteristic": "Per"
           },
           "techUse": {
-            "label": "SKILL.TECH_USE",
+            "label": "Tech Use",
             "characteristics": [
               "Int",
               "Ag"
@@ -846,7 +848,7 @@
             "characteristic": "Int"
           },
           "trade": {
-            "label": "SKILL.TRADE",
+            "label": "Trade",
             "characteristics": [
               "Int",
               "Ag",
@@ -1128,6 +1130,11 @@
     },
     "gear": {
       "templates": ["physicalItem", "itemDescription", "action", "backpack"]
+    },
+    "journalEntry": {
+      "time": "",
+      "place": "",
+      "entry": ""
     },
     "malignancy": {
       "templates": ["itemDescription"]
