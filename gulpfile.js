@@ -15,7 +15,6 @@ const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
 const SYSTEM_SCSS = ["src/scss/**/*.scss"];
 const STATIC_FILES = [
   "src/icons/**/*",
-  "src/lang/**/*",
   "src/module/**/*",
   "!src/module/foundry-core/*",
   "src/templates/**/*",
@@ -23,7 +22,7 @@ const STATIC_FILES = [
   "src/*.json"
 ];
 const PACK_SRC = "src/packs";
-const BUILD_DIR = "build/Data/systems/dark-heresy-2nd";
+const BUILD_DIR = "build";
 
 /* ----------------------------------------- */
 /*  Compile Packs

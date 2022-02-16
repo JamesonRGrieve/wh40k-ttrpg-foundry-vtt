@@ -1,5 +1,8 @@
 version: "3.8"
 
+volumes:
+  foundry-volume:
+
 networks:
   foundry:
 
@@ -25,7 +28,8 @@ services:
     networks:
       - foundry
     volumes:
-      - "./build:/data"
+      - "foundry-volume:/data"
+      - "./build:/data/Data/systems/dark-heresy-2nd:delegated"
     environment:
       - FOUNDRY_PASSWORD=***REMOVED***
       - FOUNDRY_USERNAME=***REMOVED***

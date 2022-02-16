@@ -1030,11 +1030,14 @@
       "criticalInjury",
       "cybernetic",
       "drug",
+      "enemy",
       "forceField",
       "gear",
+      "journalEntry",
       "malignancy",
       "mentalDisorder",
       "mutation",
+      "peer",
       "psychicPower",
       "specialAbility",
       "storageLocation",
@@ -1122,6 +1125,11 @@
     "drug": {
       "templates": ["physicalItem", "itemDescription", "backpack"]
     },
+    "enemy": {
+      "templates": ["itemDescription"],
+      "name": "",
+      "modifier": 0
+    },
     "forceField": {
       "templates": [ "physicalItem", "itemDescription", "action", "backpack"],
       "protectionRating": 0,
@@ -1132,9 +1140,9 @@
       "templates": ["physicalItem", "itemDescription", "action", "backpack"]
     },
     "journalEntry": {
+      "templates": ["itemDescription"],
       "time": "",
-      "place": "",
-      "entry": ""
+      "place": ""
     },
     "malignancy": {
       "templates": ["itemDescription"]
@@ -1144,6 +1152,11 @@
     },
     "mutation": {
       "templates": ["itemDescription"]
+    },
+    "peer": {
+      "templates": ["itemDescription"],
+      "name": "",
+      "modifier": 0
     },
     "psychicPower": {
       "templates": ["itemDescription", "damage", "attack", "action"],

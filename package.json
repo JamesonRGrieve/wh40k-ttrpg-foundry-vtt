@@ -30,6 +30,6 @@
     "path": "0.12.7",
     "js-yaml": "4.1.0",
     "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",
-    "eslint": "8.8.0,"
+    "eslint": "8.8.0"
   }
 }

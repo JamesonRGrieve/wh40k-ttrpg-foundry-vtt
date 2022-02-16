@@ -7,6 +7,10 @@ import { DarkHeresy } from "./helpers/config.mjs";
 import {DarkHeresyWeaponSheet} from "./sheets/weapon-sheet.mjs";
 import {DarkHeresyTalentSheet} from "./sheets/talent-sheet.mjs";
 import {DarkHeresyArmourSheet} from "./sheets/armour-sheet.mjs";
+import {DarkHeresyJournalEntrySheet} from "./sheets/journal-entry-sheet.mjs";
+import {DarkHeresyPeerEnemySheet} from "./sheets/peer-enemy-sheet.mjs";
+
+export const MODULE_NAME = 'dark-heresy-2nd';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -18,8 +22,7 @@ Hooks.once('init', async function() {
   // accessible in global contexts.
   game.dh = {
     dhActor: DarkHeresyActor,
-    dhItem: DarkHeresyItem,
-    rollItemMacro
+    dhItem: DarkHeresyItem
   };
 
   // Add custom constants for configuration.
@@ -32,25 +35,18 @@ Hooks.once('init', async function() {
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("dark-heresy-2nd", AcolyteSheet, { makeDefault: true });
+  Actors.registerSheet(MODULE_NAME, AcolyteSheet, { makeDefault: true });
 
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("dark-heresy-2nd", DarkHeresyItemSheet, { makeDefault: true });
-  Items.registerSheet("dark-heresy-2nd", DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
-  Items.registerSheet("dark-heresy-2nd", DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
-  Items.registerSheet("dark-heresy-2nd", DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
+  Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });
+  Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
+  Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
+  Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
+  Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
+  Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
 
   // Preload Handlebars templates.
   return initializeHandlebars();
-});
-
-Hooks.on("preCreateItem", (candidate, data, options, user) => {
-  console.log('preCreateItem');
-  console.log(candidate);
-  console.log(data);
-  console.log(options);
-  console.log(user);
-  return true;
 });
 
 /* -------------------------------------------- */

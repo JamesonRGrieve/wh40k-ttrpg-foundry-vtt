@@ -39,4 +39,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
   get isStorageLocation() { return this.type === "storageLocation"; }
   get isBackpack() { return this.type === "backpack"; }
   get isInBackpack() { return this.data.data.backpack?.inBackpack || false; }
+  get isJournalEntry() { return this.type === "journalEntry"; }
+  get isEnemy() { return this.type === "enemy"; }
+  get isPeer() { return this.type === "peer"; }
 }
