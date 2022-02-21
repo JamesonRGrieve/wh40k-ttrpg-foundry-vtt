@@ -1,56 +1,10 @@
-/**
- * Define a set of template paths to pre-load
- * Pre-loaded templates are compiled and cached for fast access when rendering
- * @return {Promise}
- */
-export const initializeHandlebars = () => {
-    registerHandlebarsHelpers();
-    preloadHandlebarsTemplates();
-};
-
-function preloadHandlebarsTemplates() {
-    return loadTemplates([
-        // Actor partials.
-        "systems/dark-heresy-2nd/templates/actor/panel/aptitude-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/bonuses-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/combat-controls-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/enemy-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/experience-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/journal-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/peer-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs",
-        "systems/dark-heresy-2nd/templates/actor/panel/wounds-panel.hbs",
-
-        "systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs",
-        "systems/dark-heresy-2nd/templates/actor/partial/display-toggle.hbs",
-        "systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs",
-
-        // Prompts
-        "systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs",
-
-        // Chats
-        "systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs"
-    ]);
+export function capitalize(text) {
+    return text[0].toUpperCase() + text.substring(1);
 }
 
-function registerHandlebarsHelpers() {
+export function registerHandlebarsHelpers() {
+    console.log('Registering Handlebars Helpers');
+
     Handlebars.registerHelper('concat', function() {
         var outStr = '';
         for (var arg in arguments) {
@@ -91,7 +45,7 @@ function registerHandlebarsHelpers() {
     })
 
     Handlebars.registerHelper("capitalize", function (text) {
-        return text[0].toUpperCase() + text.substring(1);
+        return capitalize(text);
     })
 
     Handlebars.registerHelper("getBioOptions", function (field) {
@@ -173,11 +127,11 @@ function registerHandlebarsHelpers() {
         const location_out = locations_array.map(item => {
             return armour.armourPoints[item] + " " +
                 ((item.toLowerCase() === "head") ?  "H" :
-                (item.toLowerCase() === "leftarm") ? "LA" :
-                (item.toLowerCase() === "rightarm") ? "RA" :
-                (item.toLowerCase() === "body") ? "B" :
-                (item.toLowerCase() === "leftleg") ? "LL" :
-                (item.toLowerCase() === "rightleg") ? "RL" : "");
+                    (item.toLowerCase() === "leftarm") ? "LA" :
+                        (item.toLowerCase() === "rightarm") ? "RA" :
+                            (item.toLowerCase() === "body") ? "B" :
+                                (item.toLowerCase() === "leftleg") ? "LL" :
+                                    (item.toLowerCase() === "rightleg") ? "RL" : "");
         }).filter(item => item !== "").join(", ");
 
         return location_out;
@@ -198,5 +152,4 @@ function registerHandlebarsHelpers() {
                 return game.i18n.localize("DAMAGE_TYPE.IMPACT");
         }
     });
-
 }

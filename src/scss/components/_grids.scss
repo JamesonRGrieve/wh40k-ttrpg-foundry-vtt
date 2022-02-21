@@ -2,26 +2,27 @@
 
 $grid-tables: (
     skill: .9fr .7fr .4fr .4fr,
-    talent: 1.5rem 1fr 5rem 3rem,
-    trait: 1.5rem 1fr 5rem 3rem,
+    talent: 1.5rem 1fr 3rem 3rem,
+    trait: 1.5rem 1fr 3rem 3rem,
     wounds: 1.5rem 1fr 5rem 3rem,
     corruption: 1.5rem 1fr 3rem,
     insanity: 1.5rem 1fr 3rem,
-    armour: 1.5rem 1.5fr 1fr 1fr .75fr .6fr,
-    armourmod: 1.5rem 1.5fr 1fr .75fr .6fr,
-    weapon: 1.5rem 1.5fr 1fr 1fr .75fr .6fr,
-    weaponmod : 1.5rem 1.5fr 1fr .75fr .6fr,
-    attackspecial : 1.5rem 1.5fr 1fr .6fr,
-    critical: 1.5rem 1fr 1fr 4rem,
-    cybernetic: 1.5rem 1fr 1fr 4rem,
+    armour: 1.5rem 1.5fr 1fr 1fr .75fr 3rem,
+    armourmod: 1.5rem 1.5fr 1fr .75fr 3rem,
+    weapon: 1.5rem 1.5fr 1fr 1fr .75fr 3rem,
+    weaponmod : 1.5rem 1.5fr 1fr .75fr 3rem,
+    attackspecial : 1.5rem 1.5fr 1fr 3rem,
+    critical: 1.5rem 1fr 1fr 3rem,
+    cybernetic: 1.5rem 1fr 1fr 3rem,
     experience: 1fr .25fr,
-    storageloc: 1.5rem 1fr .25fr,
+    storageloc: 1.5rem 1fr 1fr 3rem,
     backpack: 1fr .5fr,
-    ammo: 1.5rem 1fr .25fr,
+    ammo: 1.5rem 1fr 3rem,
     bonuses: 1fr .5fr,
     aptitude: 1.5rem 1fr 3rem,
     journal: 1.5rem 2fr .75fr .75fr 3rem,
-    peerenemy: 1.5rem 2fr .75fr 3rem
+    peerenemy: 1.5rem 2fr .75fr 3rem,
+    gear: 1.5rem 1fr 1fr 3rem 3rem
 );
 
 .dh {
@@ -144,7 +145,7 @@ $grid-tables: (
                 &--grouped {
                     @extend %cell;
                     @extend %grid-cell--last;
-                    margin-top: 3pt;
+                    margin-top: 1pt;
                     font-weight: bold;
                     text-align: center !important;
                     text-indent: -1.5rem;
@@ -205,7 +206,7 @@ $grid-tables: (
                 &--grouped {
                     @extend %grid-cell;
                     @extend %grid-cell--last;
-                    margin-top: 3pt;
+                    margin-top: 1pt;
                     font-weight: bold;
                     text-align: center !important;
                     text-indent: -1.5rem;

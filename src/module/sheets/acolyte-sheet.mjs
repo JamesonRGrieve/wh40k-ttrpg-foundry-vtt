@@ -33,42 +33,78 @@ export class AcolyteSheet extends ActorSheet {
     html.find('.item-edit').click(ev => this._onItemEdit(ev));
     html.find('.item-delete').click(ev => this._onItemDelete(ev));
     html.find('.acolyte-homeWorld').change(ev => this._onHomeworldChange(ev));
+    this._addDragSupportToItems(html);
+  }
+
+  _addDragSupportToItems(html) {
+    html.find('.table-row').each((i, item) => {
+      if (item.dataset && item.dataset.itemId) {
+        item.setAttribute('draggable', true);
+        item.addEventListener('dragstart', this._onDragStart.bind(this), false);
+      }
+    });
+    html.find('.roll-characteristic').each((i, item) => {
+      if (item.dataset && item.dataset.itemId) {
+        item.setAttribute('draggable', true);
+        item.addEventListener('dragstart', this._onDragStart.bind(this), false);
+      }
+    });
+  }
+
+  async _onDragStart(event) {
+    // Create drag data
+    const dragData = {
+      actorId: this.actor.id,
+      sceneId: this.actor.isToken ? canvas.scene?.id : null,
+      tokenId: this.actor.isToken ? this.actor.token?.id : null,
+      type: '',
+      data: {}
+    };
+
+    const element = event.currentTarget;
+    switch (element.dataset.itemType) {
+      case 'characteristic':
+        dragData.type = 'Characteristic';
+        const characteristic = this.actor.characteristics[element.dataset.itemId];
+        dragData.data = {
+          name: characteristic.label,
+          characteristic: element.dataset.itemId
+        };
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+        return;
+      case 'skill':
+        dragData.type = 'Skill';
+        const skill = this.actor.skills[element.dataset.itemId];
+        let name = skill.label;
+        if(element.dataset.speciality) {
+          const speciality = skill.specialities[element.dataset.speciality];
+          name = `${name}: ${speciality.label}`;
+        }
+        dragData.data = {
+          name,
+          skill: element.dataset.itemId,
+          speciality: element.dataset.speciality
+        };
+        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+        return;
+      default:
+        // Let default Foundry handler deal with default drag cases.
+        return super._onDragStart(event);
+    }
   }
 
   async _prepareRollCharacteristic(event) {
     event.preventDefault();
+    console.log('_prepareRollCharacteristic');
     const characteristicName = $(event.currentTarget).data("characteristic");
-    const characteristic = this.actor.characteristics[characteristicName];
-    const rollData = {
-      sheetName: this.actor.name,
-      name: characteristic.label,
-      type: 'Characteristic',
-      baseTarget: characteristic.total,
-      modifier: 0
-    };
-    await prepareSimpleRoll(rollData);
+    await this.actor.rollCharacteristic(characteristicName);
   }
 
   async _prepareRollSkill(event) {
     event.preventDefault();
     const skillName = $(event.currentTarget).data("skill");
     const specialtyName = $(event.currentTarget).data("specialty");
-
-    let skill = this.actor.skills[skillName];
-    let label = skill.label;
-    if(specialtyName) {
-      skill = skill.specialities[specialtyName];
-      label = `${label}: ${skill.label}`;
-    }
-
-    const rollData = {
-      sheetName: this.actor.name,
-      name: label,
-      type: 'Skill',
-      baseTarget: skill.current,
-      modifier: 0
-    };
-    await prepareSimpleRoll(rollData);
+    await this.actor.rollSkill(skillName, specialtyName);
   }
 
   async _sheetControlHideToggle(event) {

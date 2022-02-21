@@ -4,6 +4,7 @@ import {divinations} from "../helpers/divinations.mjs";
 import {roles} from "../helpers/roles.mjs";
 import {eliteAdvances} from "../helpers/elite_advances.mjs";
 import {fieldMatch} from "../helpers/config.mjs";
+import {prepareSimpleRoll} from "../rolls/prompt.mjs";
 
 export class DarkHeresyActor extends Actor {
 
@@ -19,6 +20,44 @@ export class DarkHeresyActor extends Actor {
     this._computeArmour();
     this._computeMovement();
     this._computeEncumbrance();
+  }
+
+  async rollSkill(skillName, specialityName) {
+    let skill = this.skills[skillName];
+    let label = skill.label;
+    if(specialityName) {
+      skill = skill.specialities[specialityName];
+      label = `${label}: ${skill.label}`;
+    }
+    await prepareSimpleRoll({
+      sheetName: this.name,
+      name: label,
+      type: 'Skill',
+      baseTarget: skill.current,
+      modifier: 0
+    });
+  }
+
+  async rollCharacteristic(characteristicName) {
+    const characteristic = this.characteristics[characteristicName];
+    await prepareSimpleRoll({
+      sheetName: this.name,
+      name: characteristic.label,
+      type: 'Characteristic',
+      baseTarget: characteristic.total,
+      modifier: 0
+    });
+  }
+
+  async rollItem(itemId) {
+    const item = this.actor.items.get(itemId);
+    switch(item.type) {
+      case "weapon":
+        console.log('Roll Weapon');
+        break;
+      default:
+        return ui.notifications.warn(`Unable to roll item type: ${item.type}`);
+    }
 
   }
 

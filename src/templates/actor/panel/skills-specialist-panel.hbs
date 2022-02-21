@@ -28,7 +28,7 @@
                 </div>
                 {{#each this.specialities as | specialty skey |}}
                     {{#if specialty.taken }}
-                        <div class="table-row">
+                        <div class="table-row" data-item-type="skill" data-item-id="{{name}}" data-speciality="{{skey}}">
                             <div class="table-cell">
                                 <button class="roll-skill" data-skill="{{name}}" data-specialty="{{skey}}" type="roll">{{localize this.label}}</button>
                             </div>

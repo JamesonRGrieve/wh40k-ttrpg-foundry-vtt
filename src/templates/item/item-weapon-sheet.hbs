@@ -207,7 +207,7 @@
                                                 {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
                                             </div>
                                             <div class="table-cell">
-                                                <span class="display">{{embedded.data.data.equipped}}</span>
+                                                <span class="display">{{defaultVal embedded.data.data.level 'N/A'}}</span>
                                             </div>
                                             <div class="table-cell--last">
                                                 <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">

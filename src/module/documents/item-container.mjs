@@ -19,7 +19,7 @@ export class DarkHeresyItemContainer extends Item {
                 currentItems.push(theData);
             }
             if (this.parent) return this.parent.updateEmbeddedDocuments("Item", [{"_id": this.id, "flags.itemcollection.contentsData": currentItems}]);
-            else setCollection(this, currentItems);
+            else this.setCollection(this, currentItems);
         }
     }
 
@@ -32,7 +32,7 @@ export class DarkHeresyItemContainer extends Item {
             await this.parent.updateEmbeddedDocuments("Item", [{"_id": this.id, "flags.itemcollection.contentsData": newContained}]);
         }
         else {
-            await setCollection(this, newContained);
+            await this.setCollection(this, newContained);
         }
         return deletedItems;
     }
@@ -56,7 +56,7 @@ export class DarkHeresyItemContainer extends Item {
             if (this.parent) {
                 await this.parent.updateEmbeddedDocuments("Item", [{ "_id": this.id, "flags.itemcollection.contentsData": newContained}]);
             } else {
-                await setCollection(this, newContained);
+                await this.setCollection(this, newContained);
             }
         }
         return updated;

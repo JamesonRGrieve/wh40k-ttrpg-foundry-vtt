@@ -123,7 +123,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
             else if (this.item.parent) { // this bag is owned by an actor - drop into the inventory instead.
                 if (actor && actor.data.type === "character") await actor.deleteEmbeddedDocuments("Item", [data.data._id]);
                 await this.item.parent.createEmbeddedDocuments("Item", [data.data]);
-                ui.notifications.info(game.i18n.localize('itemcollection.AlternateDropInInventory'));
+                ui.notifications.info('Item dropped back into actor.');
                 return false;
             }
         }
@@ -139,9 +139,6 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
             if (this.canAdd(item.data)) {
                 const itemData = item.data.toJSON();
                 await this.item.createEmbeddedDocuments("Item", [itemData]);
-            } else {
-                console.log(`ItemCollection | no room in bag for dropped item`);
-                ui.notifications.info(game.i18n.localize('itemcollection.NoRoomInBag'));
             }
         }
         return false;

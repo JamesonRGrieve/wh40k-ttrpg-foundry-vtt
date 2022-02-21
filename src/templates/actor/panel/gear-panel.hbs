@@ -1,6 +1,6 @@
 <div class="dh-panel dh-grid-col-4 dh-grid-row-2">
     <h1 class="dh-panel__header">Gear</h1>
-    <div class="dh-table--border dh-armourtable--border">
+    <div class="dh-table--border dh-geartable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Name</div>
             <div class="table-cell">Type</div>
@@ -19,7 +19,7 @@
                         {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.type}}</span>
+                        <span class="display">{{capitalize item.type}}</span>
                     </div>
                     <div class="table-cell">
                         <span class="display">{{item.data.data.weight}}</span>

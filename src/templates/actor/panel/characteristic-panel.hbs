@@ -10,7 +10,7 @@
         <div class="dh-chartable__cell--left">Bonus</div>
         {{#each data.characteristics as | characteristic name |}}
             <div class="dh-chartable__cell--head {{colorCode this.has_bonus this.has_negative}}">
-                <button class="roll-characteristic" type="roll" data-characteristic="{{name}}">{{this.short}}</button>
+                <button class="roll-characteristic" type="roll" data-item-type="characteristic" data-item-id="{{name}}" data-characteristic="{{name}}">{{this.short}}</button>
             </div>
             <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
                 <input name="data.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}"/>
