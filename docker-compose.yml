@@ -29,7 +29,7 @@ services:
       - foundry
     volumes:
       - "foundry-volume:/data"
-      - "./build:/data/Data/systems/dark-heresy-2nd:delegated"
+      - "./build:/data/Data/systems:delegated"
     environment:
       - FOUNDRY_PASSWORD=***REMOVED***
       - FOUNDRY_USERNAME=***REMOVED***

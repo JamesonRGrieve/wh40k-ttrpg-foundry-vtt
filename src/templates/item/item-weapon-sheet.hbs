@@ -192,6 +192,7 @@
                             <div class="dh-table--border dh-attackspecialtable--border">
                                 <div class="table-row--head">
                                     <div class="table-cell--span2">Name</div>
+                                    <div class="table-cell">Enabled</div>
                                     <div class="table-cell">Level</div>
                                     <div class="table-cell--last"></div>
                                 </div>
@@ -205,6 +206,9 @@
                                             </div>
                                             <div class="table-cell--left">
                                                 {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
+                                            </div>
+                                            <div class="table-cell">
+                                                <span class="display">{{embedded.data.data.enabled}}</span>
                                             </div>
                                             <div class="table-cell">
                                                 <span class="display">{{defaultVal embedded.data.data.level 'N/A'}}</span>

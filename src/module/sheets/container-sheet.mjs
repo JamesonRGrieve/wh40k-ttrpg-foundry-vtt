@@ -29,6 +29,8 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
         if (this.item.data.data.container) {
             this.form.ondragover = ev => this._onDragOver(ev);
             this.form.ondrop = ev => this._onDrop(ev);
+            html.find('.item-create').click(async ev => await this._onItemCreate(ev));
+            html.find('.item-edit').click(ev => this._onItemEdit(ev));
             html.find('.item-delete').click(ev => this._onItemDelete(ev));
 
             // html.find('.item').each((i, li) => {
@@ -48,6 +50,23 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
     _onDragOver(event) {
         event.preventDefault();
         return false;
+    }
+
+    async _onItemCreate(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        let data = {
+            name : `New ${div.data("type").capitalize()}`,
+            type : div.data("type")
+        };
+        await this.item.updateEmbeddedDocuments("Item", [data]);
+    }
+
+    _onItemEdit(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        let item = this.item.items.get(div.data("itemId"));
+        item.sheet.render(true);
     }
 
     _onItemDelete(event) {

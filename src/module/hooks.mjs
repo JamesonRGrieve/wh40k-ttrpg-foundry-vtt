@@ -17,6 +17,7 @@ import {
     rollSkillMacro
 } from "./rolls/macros.mjs";
 import {HandlebarManager} from "./handlebars.mjs";
+import {DarkHeresyAmmoSheet} from "./sheets/ammo-sheet.mjs";
 export const MODULE_NAME = 'dh';
 
 export class HooksManager {
@@ -63,6 +64,7 @@ _  /_/ /_  __  / _  __/
         Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
 

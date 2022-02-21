@@ -1077,7 +1077,7 @@
       },
       "action": {
         "target": "",
-        "formula": ""
+        "effect": ""
       },
       "backpack": {
         "backpack": {
@@ -1086,7 +1086,9 @@
       }
     },
     "ammunition": {
-      "templates": ["physicalItem", "itemDescription", "damage", "attack", "backpack"],
+      "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "backpack"],
+      "container": true,
+      "containerTypes": ["attackSpecial"],
       "weaponType": ""
     },
     "aptitude": {
@@ -1111,6 +1113,7 @@
     },
     "attackSpecial": {
       "templates": ["itemDescription"],
+      "enabled": true,
       "hasLevel": false,
       "level": 0
     },

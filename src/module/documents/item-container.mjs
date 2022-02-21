@@ -6,8 +6,8 @@ export class DarkHeresyItemContainer extends Item {
         return this.items.get(id);
     }
 
-    createEmbeddedDocuments(embeddedName, data, context) {
-        if (!this.data.data.container || embeddedName !== "Item") return super.createEmbeddedDocuments(embeddedName, data, context);
+    async createEmbeddedDocuments(embeddedName, data, context) {
+        if (!this.data.data.container || embeddedName !== "Item") return await super.createEmbeddedDocuments(embeddedName, data, context);
         if (!Array.isArray(data)) data = [data];
         const currentItems = duplicate(getProperty(this, "data.flags.itemcollection.contentsData") ?? []);
 
@@ -18,8 +18,8 @@ export class DarkHeresyItemContainer extends Item {
                 theData = new CONFIG.Item.documentClass(theData, {parent: this}).toJSON();
                 currentItems.push(theData);
             }
-            if (this.parent) return this.parent.updateEmbeddedDocuments("Item", [{"_id": this.id, "flags.itemcollection.contentsData": currentItems}]);
-            else this.setCollection(this, currentItems);
+            if (this.parent) return await this.parent.updateEmbeddedDocuments("Item", [{"_id": this.id, "flags.itemcollection.contentsData": currentItems}]);
+            else await this.setCollection(this, currentItems);
         }
     }
 
@@ -38,7 +38,7 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     async updateEmbeddedDocuments(embeddedName, data, options)  {
-        if (!this.data.data.container || embeddedName !== "Item") return super.updateEmbeddedDocuments(embeddedName, data, options);
+        if (!this.data.data.container || embeddedName !== "Item") return await super.updateEmbeddedDocuments(embeddedName, data, options);
         const contained = getProperty(this, "data.flags.itemcollection.contentsData") ?? [];
         if (!Array.isArray(data)) data = [data];
         let updated = [];
@@ -154,7 +154,7 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     async setCollection(item, contents) {
-        item.update({"flags.itemcollection.contentsData": duplicate(contents)});
+        await item.update({"flags.itemcollection.contentsData": duplicate(contents)});
     }
 
 }

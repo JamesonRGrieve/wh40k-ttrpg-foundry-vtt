@@ -170,8 +170,4 @@ export class AcolyteSheet extends ActorSheet {
     this.actor.createEmbeddedDocuments("Item", [data], { renderSheet: true });
   }
 
-  _confirm(func) {
-
-  }
-
 }

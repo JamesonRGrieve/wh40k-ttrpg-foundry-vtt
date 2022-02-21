@@ -22,7 +22,7 @@ const STATIC_FILES = [
   "src/*.json"
 ];
 const PACK_SRC = "src/packs";
-const BUILD_DIR = "build";
+const BUILD_DIR = "build/dark-heresy-2nd";
 
 /* ----------------------------------------- */
 /*  Compile Packs
