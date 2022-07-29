@@ -22,7 +22,6 @@ services:
 
   foundry:
     image: felddy/foundryvtt:release
-    hostname: server_hostname
     init: true
     restart: "unless-stopped"
     networks:
@@ -30,9 +29,7 @@ services:
     volumes:
       - "foundry-volume:/data"
       - "./build:/data/Data/systems:delegated"
-    environment:
-      - FOUNDRY_PASSWORD=foundry_pass
-      - FOUNDRY_USERNAME=foundry_user
-      - FOUNDRY_ADMIN_KEY=admin
+    env_file:
+      - .env.secret
     ports:
       - "30000:30000"
