@@ -22,7 +22,7 @@ services:
 
   foundry:
     image: felddy/foundryvtt:release
-    hostname: ***REMOVED***
+    hostname: server_hostname
     init: true
     restart: "unless-stopped"
     networks:
@@ -31,8 +31,8 @@ services:
       - "foundry-volume:/data"
       - "./build:/data/Data/systems:delegated"
     environment:
-      - FOUNDRY_PASSWORD=***REMOVED***
-      - FOUNDRY_USERNAME=***REMOVED***
-      - FOUNDRY_ADMIN_KEY=***REMOVED***
+      - FOUNDRY_PASSWORD=foundry_pass
+      - FOUNDRY_USERNAME=foundry_user
+      - FOUNDRY_ADMIN_KEY=admin
     ports:
       - "30000:30000"
