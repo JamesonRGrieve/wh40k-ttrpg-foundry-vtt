@@ -1,7 +1,14 @@
+## IDE
 .idea
+
+## Build Output
 node_modules
 css
 build
-.env.secret
+
+## Development
 db-conversion
 **/foundry-core/**
+
+## Secrets
+.env.secret
