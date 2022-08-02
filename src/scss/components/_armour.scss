@@ -1,9 +1,7 @@
 .dh {
   &-armour {
     &__wrapper {
-      background:
-              url('../images/armour.png') center/80% no-repeat,
-              url('../images/40k_back.png') center/cover;
+      background: url('../images/armour.png') center/80% no-repeat, url('../images/40k_back.png') center/cover;
     }
 
     &__row {
@@ -11,6 +9,7 @@
       justify-content: space-between;
       max-height: 8rem;
     }
+
     &__block {
       flex-grow: 0;
       flex-basis: 30%;

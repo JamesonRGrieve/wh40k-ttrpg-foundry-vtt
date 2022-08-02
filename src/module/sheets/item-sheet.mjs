@@ -1,12 +1,11 @@
-import {toggleUIExpanded} from "../helpers/config.mjs";
+import { toggleUIExpanded } from '../helpers/config.mjs';
 
 export class DarkHeresyItemSheet extends ItemSheet {
-
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       width: 650,
       height: 500,
-      tabs: [{ navSelector: ".dh-navigation", contentSelector: ".dh-body", initial: "description" }]
+      tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'description' }],
     });
   }
 
@@ -23,21 +22,19 @@ export class DarkHeresyItemSheet extends ItemSheet {
     return context;
   }
 
-
   activateListeners(html) {
     super.activateListeners(html);
     if (!this.isEditable) return;
 
-    html.find('.sheet-control__hide-control').click(async ev => await this._sheetControlHideToggle(ev));
+    html.find('.sheet-control__hide-control').click(async (ev) => await this._sheetControlHideToggle(ev));
   }
 
   async _sheetControlHideToggle(event) {
     event.preventDefault();
     const displayToggle = $(event.currentTarget);
     $('span:first', displayToggle).toggleClass('active');
-    const target = displayToggle.data("toggle");
+    const target = displayToggle.data('toggle');
     $('.' + target).toggle();
-    toggleUIExpanded(target)
+    toggleUIExpanded(target);
   }
-
 }

@@ -1,70 +1,77 @@
 .dh {
-    &-material {
-        font-family: 'Material Icons';
-        font-weight: normal;
-        font-style: normal;
-        font-size: 12px;
-        line-height: 1;
-        letter-spacing: normal;
-        text-transform: none;
-        display: inline-grid;
-        white-space: nowrap;
-        word-wrap: normal;
-        direction: ltr;
-        -webkit-font-feature-settings: 'liga';
-        -webkit-font-smoothing: antialiased;
-    }
+  &-material {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-grid;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
 
-    // Settings Cog
-    &-control-button {
-        cursor: pointer;
-        &__span {
-            padding-top: 3px;
-            padding-left: 2px;
-            @extend .dh-material;
-            opacity: .5;
-            .active {
-                opacity: 1;
-            }
-            &:hover {
-                opacity: 1
-            }
-        }
-    }
+  // Settings Cog
+  &-control-button {
+    cursor: pointer;
 
-    &-trait-toggle {
-        cursor: pointer;
+    &__span {
+      padding-top: 3px;
+      padding-left: 2px;
+      @extend .dh-material;
+      opacity: 0.5;
+
+      .active {
         opacity: 1;
-        &:hover {
-            opacity: .5
-        }
-        &__span {
-            text-align: left;
-        }
+      }
+
+      &:hover {
+        opacity: 1;
+      }
     }
+  }
+
+  &-trait-toggle {
+    cursor: pointer;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &__span {
+      text-align: left;
+    }
+  }
 }
 
-button[type=roll] {
-    margin: 0;
-    cursor: pointer;
-    &:hover {
-        color: red;
-    }
+button[type='roll'] {
+  margin: 0;
+  cursor: pointer;
+
+  &:hover {
+    color: red;
+  }
 }
 
 // Vocalise Button
-button.dh-vocalise[type="roll"] {
-    @extend .dh-material;
-    opacity: .5;
-    text-align: center;
-    padding-top: 3px;
-    &:hover {
-        opacity: 1
-    }
+button.dh-vocalise[type='roll'] {
+  @extend .dh-material;
+  opacity: 0.5;
+  text-align: center;
+  padding-top: 3px;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
-button.dh-material[type="action"] {
-    &:hover {
-        color: red;
-    }
+button.dh-material[type='action'] {
+  &:hover {
+    color: red;
+  }
 }

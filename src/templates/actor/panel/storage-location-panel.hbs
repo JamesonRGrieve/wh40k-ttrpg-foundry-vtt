@@ -25,7 +25,8 @@
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
                         </label>
                     </div>
-                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
+                            (isExpanded (concat 'description_' item.id ))}}>
                         <span class="display">{{item.data.data.description}}</span>
                     </div>
                 </div>

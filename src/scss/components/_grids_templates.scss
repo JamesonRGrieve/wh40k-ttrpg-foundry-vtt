@@ -33,8 +33,8 @@
   }
 
   select,
-  input[type="text"],
-  input[type="number"] {
+  input[type='text'],
+  input[type='number'] {
     height: 100%;
     text-align: center !important;
   }
@@ -62,7 +62,7 @@
 
 %grid-row--unknown {
   @extend %grid-row;
-  background-color: rgba(255, 0, 0, .1);
+  background-color: rgba(255, 0, 0, 0.1);
 }
 
 %grid-row--inverted {
@@ -88,11 +88,11 @@
   border-right: $grid-border;
   overflow: hidden;
 
-  input[type="number"] {
+  input[type='number'] {
     height: 100%;
   }
 
-  > span[name*="attr"] {
+  > span[name*='attr'] {
     font-family: $font-family-alt;
     font-size: 1.25rem;
   }

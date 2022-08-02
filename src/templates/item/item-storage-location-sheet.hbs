@@ -21,45 +21,49 @@
                 </div>
                 <section class="dh-body">
                     <div class="tab" data-group="primary" data-tab="items">
-                       <div class="dh-panel dh-grid-col-6">
-                           <h1 class="dh-panel__header">Stored Items</h1>
-                           <div class="dh-table--border dh-storageloctable--border">
-                               <div class="table-row--head">
-                                   <div class="table-cell--span2">Name</div>
-                                   <div class="table-cell">Type</div>
-                                   <div class="table-cell--last"></div>
-                               </div>
-                               {{#each item.items as | embedded |}}
-                                   <div class="table-row">
-                                       <div class="table-cell--settingstoggle">
-                                           <label class="dh-control-button item-edit" data-item-id="{{embedded.id}}">
-                                               <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                                           </label>
-                                       </div>
-                                       <div class="table-cell--left">
-                                           {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
-                                       </div>
-                                       <div class="table-cell">
-                                           <span>{{capitalize embedded.type}}</span>
-                                       </div>
-                                       <div class="table-cell--last">
-                                           <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">
-                                               <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                                           </label>
-                                       </div>
-                                       <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot (isExpanded (concat 'description_' embedded.id ))}}>
-                                           <span>{{embedded.data.data.description}}</span>
-                                       </div>
-                                   </div>
-                               {{/each}}
-                           </div>
-                       </div>
+                        <div class="dh-panel dh-grid-col-6">
+                            <h1 class="dh-panel__header">Stored Items</h1>
+                            <div class="dh-table--border dh-storageloctable--border">
+                                <div class="table-row--head">
+                                    <div class="table-cell--span2">Name</div>
+                                    <div class="table-cell">Type</div>
+                                    <div class="table-cell--last"></div>
+                                </div>
+                                {{#each item.items as | embedded |}}
+                                    <div class="table-row">
+                                        <div class="table-cell--settingstoggle">
+                                            <label class="dh-control-button item-edit" data-item-id="{{embedded.id}}">
+                                                <span class="dh-control-button__span material-icons">{{defaultVal icon
+                                                                                                                  'settings'}}</span>
+                                            </label>
+                                        </div>
+                                        <div class="table-cell--left">
+                                            {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
+                                        </div>
+                                        <div class="table-cell">
+                                            <span>{{capitalize embedded.type}}</span>
+                                        </div>
+                                        <div class="table-cell--last">
+                                            <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">
+                                                <span class="dh-control-button__span material-icons">{{defaultVal icon
+                                                                                                                  'delete'}}</span>
+                                            </label>
+                                        </div>
+                                        <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
+                                                (isExpanded (concat 'description_' embedded.id ))}}>
+                                            <span>{{embedded.data.data.description}}</span>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
                     </div>
                     <div class="tab" data-group="primary" data-tab="description">
                         <div class="dh-header__info dh-grid-col-6">
                             <div class="dh-header__item-wrapper--text-area">
                                 <span class="dh-header__title">Description</span>
-                                <textarea class="dh-header__textarea" name="data.description">{{data.description}}</textarea>
+                                <textarea class="dh-header__textarea"
+                                          name="data.description">{{data.description}}</textarea>
                             </div>
                         </div>
                     </div>

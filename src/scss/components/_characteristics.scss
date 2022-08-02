@@ -1,12 +1,12 @@
 .dh {
   &-chartable {
     display: grid;
-    grid-template-columns: .75fr repeat(10, .5fr);
+    grid-template-columns: 0.75fr repeat(10, 0.5fr);
     grid-template-rows: repeat(7, 1fr);
     grid-auto-flow: column;
 
     select,
-    input[type=number],
+    input[type='number'],
     .dh-chartable__cell,
     .dh-chartable__cell--head {
       height: 100%;

@@ -1,5 +1,5 @@
-import {HooksManager} from "./hooks.mjs";
-import {HandlebarManager} from "./handlebars.mjs";
+import { HooksManager } from './hooks.mjs';
+import { HandlebarManager } from './handlebars.mjs';
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */

@@ -1,9 +1,7 @@
 .dh {
   &-char-roller {
     &__wrapper {
-      background:
-              url('../images/inqu_watermark.png') bottom/50% no-repeat,
-              url('../images/40k_back.png') center/cover;
+      background: url('../images/inqu_watermark.png') bottom/50% no-repeat, url('../images/40k_back.png') center/cover;
     }
 
     &__row {
@@ -11,6 +9,7 @@
       justify-content: space-between;
       max-height: 8rem;
     }
+
     &__block {
       flex-grow: 0;
       flex-basis: 30%;

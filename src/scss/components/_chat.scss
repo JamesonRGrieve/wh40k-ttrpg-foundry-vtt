@@ -2,7 +2,9 @@
   font-family: $font-family-alt;
   color: black;
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     grid-column: 1 / -1;
     margin: 0;
     border: none;
@@ -29,7 +31,7 @@
   h3 {
     font-size: 9pt;
     text-transform: uppercase;
-    color: lighten(black,20%);
+    color: lighten(black, 20%);
   }
 
   .importantroll,
@@ -53,7 +55,7 @@
 
   .dh-roll {
     display: grid;
-    gap: .25rem;
+    gap: 0.25rem;
     padding: 1rem 1.5rem;
 
     background: url('../images/40k_back.png') no-repeat center/100% 100%;
@@ -68,11 +70,11 @@
 
     &__tooltip {
       position: fixed;
-      overflow:hidden;
+      overflow: hidden;
       z-index: 10000;
       padding: 4px;
       text-align: left;
-      pointer-events:none;
+      pointer-events: none;
       vertical-align: middle;
 
       .tt-text {
@@ -86,18 +88,19 @@
         -moz-border-radius: 8px;
         border-radius: 8px;
         /* box-shadow */
-        -webkit-box-shadow: rgba(0,0,0,0.8) 0 0 2px;
-        -moz-box-shadow: rgba(0,0,0,0.8) 0 0 2px;
-        box-shadow: rgba(0,0,0,0.8) 0 0 2px;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.8) 0 0 2px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.8) 0 0 2px;
+        box-shadow: rgba(0, 0, 0, 0.8) 0 0 2px;
       }
+
       .tt-arrow-left {
         width: 0;
         height: 0;
-        top:50%;
-        bottom:50%;
+        top: 50%;
+        bottom: 50%;
         border-top: 14px solid transparent;
         border-bottom: 14px solid transparent;
-        border-right:14px solid #0000009f;
+        border-right: 14px solid #0000009f;
         display: inline-block;
         vertical-align: middle;
         position: relative;
@@ -117,7 +120,7 @@
 
       display: grid;
       grid-template-columns: 1fr 3em;
-      padding: .5rem;
+      padding: 0.5rem;
 
       background: url('../images/max.png') no-repeat center/100% 100%;
 
@@ -127,7 +130,7 @@
     &__success,
     &__fail {
       grid-column: 1 / -1;
-      padding: .5rem;
+      padding: 0.5rem;
 
       color: white;
 
@@ -138,7 +141,7 @@
       text-transform: uppercase;
 
       > span:not(:last-child) {
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
     }
 
@@ -154,8 +157,8 @@
 
     &__row {
       display: grid;
-      grid-template-columns: .75fr 1fr;
-      gap: .25rem;
+      grid-template-columns: 0.75fr 1fr;
+      gap: 0.25rem;
 
       &--number {
         grid-template-columns: 1fr 3rem;
@@ -189,7 +192,7 @@
     &__text {
       max-height: 10em;
       overflow: hidden auto;
-      padding: .25rem;
+      padding: 0.25rem;
       scrollbar-width: thin;
     }
   }

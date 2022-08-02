@@ -124,10 +124,7 @@
         "skills": {
           "acrobatics": {
             "label": "Acrobatics",
-            "characteristics": [
-              "Ag",
-              "S"
-            ],
+            "characteristics": ["Ag", "S"],
             "selectedCharacteristic": "",
             "advance": 0,
             "isSpecialist": false,
@@ -137,10 +134,7 @@
           },
           "athletics": {
             "label": "Athletics",
-            "characteristics": [
-              "S",
-              "T"
-            ],
+            "characteristics": ["S", "T"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -149,11 +143,7 @@
           },
           "awareness": {
             "label": "Awareness",
-            "characteristics": [
-              "Per",
-              "Fel",
-              "Int"
-            ],
+            "characteristics": ["Per", "Fel", "Int"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -162,10 +152,7 @@
           },
           "charm": {
             "label": "Charm",
-            "characteristics": [
-              "Fel",
-              "Inf"
-            ],
+            "characteristics": ["Fel", "Inf"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -174,12 +161,7 @@
           },
           "command": {
             "label": "Command",
-            "characteristics": [
-              "Fel",
-              "Int",
-              "S",
-              "WP"
-            ],
+            "characteristics": ["Fel", "Int", "S", "WP"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -188,10 +170,7 @@
           },
           "commerce": {
             "label": "Commerce",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
+            "characteristics": ["Int", "Fel"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -200,10 +179,7 @@
           },
           "commonLore": {
             "label": "Common Lore",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
+            "characteristics": ["Int", "Fel"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -338,10 +314,7 @@
           },
           "deceive": {
             "label": "Deceive",
-            "characteristics": [
-              "Fel",
-              "Int"
-            ],
+            "characteristics": ["Fel", "Int"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -350,9 +323,7 @@
           },
           "dodge": {
             "label": "Dodge",
-            "characteristics": [
-              "Ag"
-            ],
+            "characteristics": ["Ag"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -361,10 +332,7 @@
           },
           "forbiddenLore": {
             "label": "Forbidden Lore",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
+            "characteristics": ["Int", "Fel"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -451,11 +419,7 @@
           },
           "inquiry": {
             "label": "Inquiry",
-            "characteristics": [
-              "Fel",
-              "Int",
-              "Per"
-            ],
+            "characteristics": ["Fel", "Int", "Per"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -464,10 +428,7 @@
           },
           "interrogation": {
             "label": "Interrogation",
-            "characteristics": [
-              "WP",
-              "Fel"
-            ],
+            "characteristics": ["WP", "Fel"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -476,10 +437,7 @@
           },
           "intimidate": {
             "label": "Intimidate",
-            "characteristics": [
-              "S",
-              "WP"
-            ],
+            "characteristics": ["S", "WP"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -488,10 +446,7 @@
           },
           "linguistics": {
             "label": "Linguistics",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
+            "characteristics": ["Int", "Fel"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -578,10 +533,7 @@
           },
           "logic": {
             "label": "Logic",
-            "characteristics": [
-              "Int",
-              "Ag"
-            ],
+            "characteristics": ["Int", "Ag"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -590,11 +542,7 @@
           },
           "medicae": {
             "label": "Medicae",
-            "characteristics": [
-              "Int",
-              "Ag",
-              "Per"
-            ],
+            "characteristics": ["Int", "Ag", "Per"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -603,10 +551,7 @@
           },
           "navigate": {
             "label": "Navigate",
-            "characteristics": [
-              "Int",
-              "Per"
-            ],
+            "characteristics": ["Int", "Per"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -633,10 +578,7 @@
           },
           "operate": {
             "label": "Operate",
-            "characteristics": [
-              "Ag",
-              "Int"
-            ],
+            "characteristics": ["Ag", "Int"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -663,9 +605,7 @@
           },
           "parry": {
             "label": "Parry",
-            "characteristics": [
-              "WS"
-            ],
+            "characteristics": ["WS"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -674,10 +614,7 @@
           },
           "psyniscience": {
             "label": "Psyniscience",
-            "characteristics": [
-              "Per",
-              "WP"
-            ],
+            "characteristics": ["Per", "WP"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -686,10 +623,7 @@
           },
           "scholasticLore": {
             "label": "Scholastic Lore",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
+            "characteristics": ["Int", "Fel"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -776,10 +710,7 @@
           },
           "scrutiny": {
             "label": "Scrutiny",
-            "characteristics": [
-              "Per",
-              "Fel"
-            ],
+            "characteristics": ["Per", "Fel"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -788,10 +719,7 @@
           },
           "security": {
             "label": "Security",
-            "characteristics": [
-              "Int",
-              "Ag"
-            ],
+            "characteristics": ["Int", "Ag"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -800,10 +728,7 @@
           },
           "sleightOfHand": {
             "label": "Sleight of Hand",
-            "characteristics": [
-              "Ag",
-              "Int"
-            ],
+            "characteristics": ["Ag", "Int"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -812,10 +737,7 @@
           },
           "stealth": {
             "label": "Stealth",
-            "characteristics": [
-              "Ag",
-              "Per"
-            ],
+            "characteristics": ["Ag", "Per"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -824,11 +746,7 @@
           },
           "survival": {
             "label": "Survival",
-            "characteristics": [
-              "Per",
-              "Ag",
-              "Int"
-            ],
+            "characteristics": ["Per", "Ag", "Int"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -837,10 +755,7 @@
           },
           "techUse": {
             "label": "Tech Use",
-            "characteristics": [
-              "Int",
-              "Ag"
-            ],
+            "characteristics": ["Int", "Ag"],
             "advance": 0,
             "isSpecialist": false,
             "specialities": {},
@@ -849,11 +764,7 @@
           },
           "trade": {
             "label": "Trade",
-            "characteristics": [
-              "Int",
-              "Ag",
-              "Fel"
-            ],
+            "characteristics": ["Int", "Ag", "Fel"],
             "advance": 0,
             "isSpecialist": true,
             "specialities": {
@@ -1134,7 +1045,7 @@
       "modifier": 0
     },
     "forceField": {
-      "templates": [ "physicalItem", "itemDescription", "action", "backpack"],
+      "templates": ["physicalItem", "itemDescription", "action", "backpack"],
       "protectionRating": 0,
       "activated": false,
       "overloaded": false
@@ -1183,7 +1094,7 @@
       "cost": 0
     },
     "tool": {
-      "templates": [ "physicalItem", "itemDescription", "action", "backpack"]
+      "templates": ["physicalItem", "itemDescription", "action", "backpack"]
     },
     "trait": {
       "templates": ["itemDescription"],
@@ -1210,18 +1121,7 @@
       "templates": ["itemDescription"],
       "location": "",
       "container": true,
-      "containerTypes": [
-        "ammunition",
-        "armour",
-        "armourModification",
-        "cybernetic",
-        "drug",
-        "forceField",
-        "gear",
-        "tool",
-        "weapon",
-        "weaponModification"
-      ]
+      "containerTypes": ["ammunition", "armour", "armourModification", "cybernetic", "drug", "forceField", "gear", "tool", "weapon", "weaponModification"]
     }
   }
 }

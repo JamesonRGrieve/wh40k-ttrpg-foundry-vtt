@@ -1,28 +1,28 @@
-input[type="date"],
-input[type="text"],
-input[type="number"],
+input[type='date'],
+input[type='text'],
+input[type='number'],
 textarea,
 select {
-    padding: 0;
-    background: $form-input-background;
-    color: $form-input-foreground;
-    vertical-align: baseline;
-    height: 100%;
+  padding: 0;
+  background: $form-input-background;
+  color: $form-input-foreground;
+  vertical-align: baseline;
+  height: 100%;
 
-    &:focus,
-    &:active,
-    &:hover {
-        background: $form-active;
-        outline: 0;
-    }
+  &:focus,
+  &:active,
+  &:hover {
+    background: $form-active;
+    outline: 0;
+  }
 }
 
 .error {
-    background: rgba(255, 0, 0, .1);
+  background: rgba(255, 0, 0, 0.1);
 }
 
 .success {
-    background: rgba(104, 195, 163, .3);
+  background: rgba(104, 195, 163, 0.3);
 }
 
 input[disabled],
@@ -34,98 +34,107 @@ textarea[disabled],
 input[readonly],
 select[readonly],
 textarea[readonly] {
-    background-color: unset !important;
-    border-color: unset !important;
-    cursor: unset !important;
+  background-color: unset !important;
+  border-color: unset !important;
+  cursor: unset !important;
+  color: $form-input-disabled !important;
+
+  > option {
     color: $form-input-disabled !important;
-    > option {
-        color: $form-input-disabled !important;
-    }
+  }
 }
 
 textarea {
-    text-align: left;
+  text-align: left;
 }
 
-input[type="number"] {
-    text-align: center;
+input[type='number'] {
+  text-align: center;
 }
 
-input[type="checkbox"] {
-    margin: auto;
-    width: 1em;
+input[type='checkbox'] {
+  margin: auto;
+  width: 1em;
 }
 
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    text-overflow: '';
-    cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-overflow: '';
+  cursor: pointer;
 }
 
 button {
-    cursor: pointer;
-    text-shadow: none;
+  cursor: pointer;
+  text-shadow: none;
 }
 
 .dh-field,
 .dh-textarea {
-    border-bottom: $grid-border;
-    &:last-child {
-        border-bottom: 0;
+  border-bottom: $grid-border;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &__span {
+    font-family: $font-family-alt;
+  }
+
+  &__wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    > * {
+      border-bottom: 1px solid #000 !important;
     }
-    &__span {
-        font-family: $font-family-alt;
+
+    > *:first-child {
+      border-right: 1px solid #000;
     }
-    &__wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        > * {
-            border-bottom: 1px solid #000 !important;
-        }
-        > *:first-child {
-            border-right: 1px solid #000;
-        }
-    }
+  }
 }
 
 .dh-field {
-    display: flex;
-    flex-flow: row nowrap;
+  display: flex;
+  flex-flow: row nowrap;
 
-    &__header {
-        flex-shrink: 0;
-        &--flex {
-            display: flex;
-            align-items: center;
-            > span {
-                flex-basis: 50%;
-            }
-            > button {
-                flex-basis: 25%;
-            }
-        }
-    }
+  &__header {
+    flex-shrink: 0;
 
-    &__input {
-        flex-grow: 1;
-        padding-right: .5em;
-    }
+    &--flex {
+      display: flex;
+      align-items: center;
 
-    &__span {
-        text-align: center;
+      > span {
+        flex-basis: 50%;
+      }
+
+      > button {
+        flex-basis: 25%;
+      }
     }
+  }
+
+  &__input {
+    flex-grow: 1;
+    padding-right: 0.5em;
+  }
+
+  &__span {
+    text-align: center;
+  }
 }
 
 .dh-textarea {
-    display: flex;
-    flex-flow: row nowrap;
-    &__header {
-        flex-shrink: 0;
-    }
-    &__textarea {
-        flex-grow: 1;
-    }
+  display: flex;
+  flex-flow: row nowrap;
+
+  &__header {
+    flex-shrink: 0;
+  }
+
+  &__textarea {
+    flex-grow: 1;
+  }
 }
-
-

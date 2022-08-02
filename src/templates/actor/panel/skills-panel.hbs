@@ -1,37 +1,37 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-2">
-    <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">Basic Skills</h1>
-        <div class="table-row--head">
-            <div class="table-cell">Name</div>
-            <div class="table-cell">Adv.</div>
-            <div class="table-cell">Char.</div>
-            <div class="table-cell--last">Total</div>
-        </div>
-        {{#each data.skills as | skill name |}}
-            {{#unless skill.isSpecialist}}
-                <div class="table-row" data-item-type="skill" data-item-id="{{name}}">
-                    <div class="table-cell">
-                        <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
-                    </div>
-                    <div class="table-cell">
-                        <select name="data.skills.{{name}}.advance">
-                            {{option '0' this.advance 'Unknown'}}
-                            {{option '1' this.advance 'Known'}}
-                            {{option '2' this.advance 'Trained'}}
-                            {{option '3' this.advance 'Experienced'}}
-                            {{option '4' this.advance 'Veteran'}}
-                        </select>
-                    </div>
-                    <div class="table-cell">
-                        <select name="data.skills.{{name}}.characteristic">
-                            {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
-                        </select>
-                    </div>
-                    <div class="table-cell--last table-cell--highlight">
-                        <span class="display">{{this.current}}</span>
-                    </div>
-                </div>
-            {{/unless}}
-        {{/each}}
+<div class='dh-panel dh-grid-col-2 dh-grid-row-2'>
+  <div class='dh-table--border dh-skilltable--border'>
+    <h1 class='dh-panel__header'>Basic Skills</h1>
+    <div class='table-row--head'>
+      <div class='table-cell'>Name</div>
+      <div class='table-cell'>Adv.</div>
+      <div class='table-cell'>Char.</div>
+      <div class='table-cell--last'>Total</div>
     </div>
+    {{#each data.skills as |skill name|}}
+      {{#unless skill.isSpecialist}}
+        <div class='table-row' data-item-type='skill' data-item-id='{{name}}'>
+          <div class='table-cell'>
+            <button class='roll-skill' data-skill='{{name}}' type='roll'>{{localize this.label}}</button>
+          </div>
+          <div class='table-cell'>
+            <select name='data.skills.{{name}}.advance'>
+              {{option '0' this.advance 'Unknown'}}
+              {{option '1' this.advance 'Known'}}
+              {{option '2' this.advance 'Trained'}}
+              {{option '3' this.advance 'Experienced'}}
+              {{option '4' this.advance 'Veteran'}}
+            </select>
+          </div>
+          <div class='table-cell'>
+            <select name='data.skills.{{name}}.characteristic'>
+              {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
+            </select>
+          </div>
+          <div class='table-cell--last table-cell--highlight'>
+            <span class='display'>{{this.current}}</span>
+          </div>
+        </div>
+      {{/unless}}
+    {{/each}}
+  </div>
 </div>

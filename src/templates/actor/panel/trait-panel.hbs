@@ -25,9 +25,12 @@
                         <span>{{item.data.data.level}}</span>
                     </div>
                     <div class="table-cell">
-                        <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">record_voice_over</button>
+                        <button type="roll" data-talent-id="{{item.data._id}}" class="dh-vocalise material-icons">
+                            record_voice_over
+                        </button>
                     </div>
-                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
+                            (isExpanded (concat 'description_' item.id ))}}>
                         <span>{{item.data.data.benefit}}</span>
                     </div>
                 </div>

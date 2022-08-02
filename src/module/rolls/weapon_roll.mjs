@@ -1,3 +1,1 @@
-export async function weaponRoll(rollData) {
-
-}
+export async function weaponRoll(rollData) {}

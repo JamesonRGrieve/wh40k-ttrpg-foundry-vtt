@@ -15,49 +15,56 @@
       "system": "dark-heresy-2nd",
       "label": "Ammo",
       "path": "./packs/ammo.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     },
     {
       "name": "armour",
       "system": "dark-heresy-2nd",
       "label": "Armour",
       "path": "./packs/armour.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     },
     {
       "name": "attack-specials",
       "system": "dark-heresy-2nd",
       "label": "Specials",
       "path": "./packs/attack-specials.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     },
     {
       "name": "talents",
       "system": "dark-heresy-2nd",
       "label": "Talents",
       "path": "./packs/talents.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     },
     {
       "name": "tools",
       "system": "dark-heresy-2nd",
       "label": "Tools",
       "path": "./packs/tools.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     },
     {
       "name": "weapons",
       "system": "dark-heresy-2nd",
       "label": "Weapons",
       "path": "./packs/weapons.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     },
     {
       "name": "weapon-mods",
       "system": "dark-heresy-2nd",
       "label": "Weapon Mods",
       "path": "./packs/weapon-mods.db",
-      "type": "Item"
+      "type": "Item",
+      "entity": "Item"
     }
   ],
   "gridDistance": 1,

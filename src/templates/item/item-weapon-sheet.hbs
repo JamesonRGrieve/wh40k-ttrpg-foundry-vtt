@@ -28,7 +28,8 @@
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Weight</span>
-                        <input class="dh-header__input" name="data.weight" type="number" data-dtype="Number" value="{{data.weight}}"/>
+                        <input class="dh-header__input" name="data.weight" type="number" data-dtype="Number"
+                               value="{{data.weight}}"/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Equipped</span>
@@ -36,7 +37,8 @@
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
-                        <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked data.backpack.inBackpack}}/>
+                        <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
+                                data.backpack.inBackpack}}/>
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Availability</span>
@@ -75,77 +77,90 @@
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Pen</span>
-                                <input class="dh-field__input" type="text" name="data.penetration" value="{{data.penetration}}"/>
+                                <input class="dh-field__input" type="text" name="data.penetration"
+                                       value="{{data.penetration}}"/>
                             </div>
                         </div>
                         {{#if item.isRanged}}
-                        <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
-                            <h1 class="dh-panel__header">Ranged Attack</h1>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Range (m)</span>
-                                <input class="dh-field__input" type="number" data-dtype="Number" name="data.range" value="{{data.range}}"/>
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Single</span>
-                                <input class="dh-field__input" type="number" data-dtype="Number" name="data.rateOfFire.single" value="{{data.rateOfFire.single}}"/>
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Burst</span>
-                                <input class="dh-field__input" type="number" data-dtype="Number" name="data.rateOfFire.burst" value="{{data.rateOfFire.burst}}"/>
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Full</span>
-                                <input class="dh-field__input" type="number" data-dtype="Number" name="data.rateOfFire.full" value="{{data.rateOfFire.full}}"/>
-                            </div>
-                        </div>
-                        <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
-                            <h1 class="dh-panel__header">Ammo</h1>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Reload</span>
-                                <input class="dh-field__input" type="text" name="data.reload" value="{{data.reload}}"/>
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Current</span>
-                                <input class="dh-field__input" type="number" data-dtype="Number" name="data.clip.value" value="{{data.clip.value}}"/>
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Max</span>
-                                <input class="dh-field__input" type="number" data-dtype="Number" name="data.clip.max" value="{{data.clip.max}}"/>
-                            </div>
-                            <div>
-                                <h1 class="dh-panel__header">Loaded Ammo</h1>
-                                <div class="dh-table--border dh-ammotable--border">
-                                    <div class="table-row--head">
-                                        <div class="table-cell--span2">Name</div>
-                                        <div class="table-cell--last"></div>
-                                    </div>
-                                    {{#each item.items as | embedded |}}
-                                        {{#if embedded.isAmmunition}}
-                                            <div class="table-row">
-                                                <div class="table-cell--settingstoggle">
-                                                    <label class="dh-control-button item-edit" data-item-id="{{embedded.id}}">
-                                                        <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                                                    </label>
-                                                </div>
-                                                <div class="table-cell--left">
-                                                    {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
-                                                </div>
-                                                <div class="table-cell--last">
-                                                    <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">
-                                                        <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                                                    </label>
-                                                </div>
-                                                <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot (isExpanded (concat 'description_' embedded.id ))}}>
-                                                    <span>{{embedded.data.data.description}}</span>
-                                                </div>
-                                            </div>
-                                        {{/if}}
-                                    {{/each}}
+                            <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+                                <h1 class="dh-panel__header">Ranged Attack</h1>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Range (m)</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number" name="data.range"
+                                           value="{{data.range}}"/>
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Single</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.rateOfFire.single" value="{{data.rateOfFire.single}}"/>
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Burst</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.rateOfFire.burst" value="{{data.rateOfFire.burst}}"/>
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Full</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.rateOfFire.full" value="{{data.rateOfFire.full}}"/>
                                 </div>
                             </div>
-                        </div>
+                            <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+                                <h1 class="dh-panel__header">Ammo</h1>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Reload</span>
+                                    <input class="dh-field__input" type="text" name="data.reload"
+                                           value="{{data.reload}}"/>
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Current</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.clip.value" value="{{data.clip.value}}"/>
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Max</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.clip.max" value="{{data.clip.max}}"/>
+                                </div>
+                                <div>
+                                    <h1 class="dh-panel__header">Loaded Ammo</h1>
+                                    <div class="dh-table--border dh-ammotable--border">
+                                        <div class="table-row--head">
+                                            <div class="table-cell--span2">Name</div>
+                                            <div class="table-cell--last"></div>
+                                        </div>
+                                        {{#each item.items as | embedded |}}
+                                            {{#if embedded.isAmmunition}}
+                                                <div class="table-row">
+                                                    <div class="table-cell--settingstoggle">
+                                                        <label class="dh-control-button item-edit"
+                                                               data-item-id="{{embedded.id}}">
+                                                            <span class="dh-control-button__span material-icons">{{defaultVal
+                                                                    icon 'settings'}}</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="table-cell--left">
+                                                        {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
+                                                    </div>
+                                                    <div class="table-cell--last">
+                                                        <label class="dh-control-button item-delete"
+                                                               data-item-id="{{embedded.id}}">
+                                                            <span class="dh-control-button__span material-icons">{{defaultVal
+                                                                    icon 'delete'}}</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
+                                                            (isExpanded (concat 'description_' embedded.id ))}}>
+                                                        <span>{{embedded.data.data.description}}</span>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
                         {{else}}
-                        <div class="dh-panel dh-grid-col-4"></div>
+                            <div class="dh-panel dh-grid-col-4"></div>
                         {{/if}}
 
                         <div class="dh-panel dh-grid-col-3">
@@ -161,8 +176,10 @@
                                     {{#if embedded.isWeaponModification}}
                                         <div class="table-row">
                                             <div class="table-cell--settingstoggle">
-                                                <label class="dh-control-button item-edit" data-item-id="{{embedded.id}}">
-                                                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                                                <label class="dh-control-button item-edit"
+                                                       data-item-id="{{embedded.id}}">
+                                                    <span class="dh-control-button__span material-icons">{{defaultVal
+                                                            icon 'settings'}}</span>
                                                 </label>
                                             </div>
                                             <div class="table-cell--left">
@@ -175,11 +192,14 @@
                                                 <span>{{embedded.data.data.equipped}}</span>
                                             </div>
                                             <div class="table-cell--last">
-                                                <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">
-                                                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                                                <label class="dh-control-button item-delete"
+                                                       data-item-id="{{embedded.id}}">
+                                                    <span class="dh-control-button__span material-icons">{{defaultVal
+                                                            icon 'delete'}}</span>
                                                 </label>
                                             </div>
-                                            <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot (isExpanded (concat 'description_' embedded.id ))}}>
+                                            <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
+                                                    (isExpanded (concat 'description_' embedded.id ))}}>
                                                 <span>{{embedded.data.data.description}}</span>
                                             </div>
                                         </div>
@@ -200,8 +220,10 @@
                                     {{#if embedded.isAttackSpecial}}
                                         <div class="table-row">
                                             <div class="table-cell--settingstoggle">
-                                                <label class="dh-control-button item-edit" data-item-id="{{embedded.id}}">
-                                                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                                                <label class="dh-control-button item-edit"
+                                                       data-item-id="{{embedded.id}}">
+                                                    <span class="dh-control-button__span material-icons">{{defaultVal
+                                                            icon 'settings'}}</span>
                                                 </label>
                                             </div>
                                             <div class="table-cell--left">
@@ -211,14 +233,18 @@
                                                 <span class="display">{{embedded.data.data.enabled}}</span>
                                             </div>
                                             <div class="table-cell">
-                                                <span class="display">{{defaultVal embedded.data.data.level 'N/A'}}</span>
+                                                <span class="display">{{defaultVal embedded.data.data.level
+                                                                                   'N/A'}}</span>
                                             </div>
                                             <div class="table-cell--last">
-                                                <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">
-                                                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                                                <label class="dh-control-button item-delete"
+                                                       data-item-id="{{embedded.id}}">
+                                                    <span class="dh-control-button__span material-icons">{{defaultVal
+                                                            icon 'delete'}}</span>
                                                 </label>
                                             </div>
-                                            <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot (isExpanded (concat 'description_' embedded.id ))}}>
+                                            <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
+                                                    (isExpanded (concat 'description_' embedded.id ))}}>
                                                 <span>{{embedded.data.data.description}}</span>
                                             </div>
                                         </div>
@@ -231,7 +257,8 @@
                         <div class="dh-header__info dh-grid-col-6">
                             <div class="dh-header__item-wrapper--text-area">
                                 <span class="dh-header__title">Description</span>
-                                <textarea class="dh-header__textarea" name="data.description">{{data.description}}</textarea>
+                                <textarea class="dh-header__textarea"
+                                          name="data.description">{{data.description}}</textarea>
                             </div>
                         </div>
                     </div>
