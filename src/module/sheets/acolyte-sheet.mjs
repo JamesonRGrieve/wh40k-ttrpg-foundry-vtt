@@ -1,4 +1,4 @@
-import { toggleUIExpanded } from '../helpers/config.mjs';
+import { toggleUIExpanded } from '../rules/config.mjs';
 
 export class AcolyteSheet extends ActorSheet {
   static get defaultOptions() {

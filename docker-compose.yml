@@ -27,8 +27,12 @@ services:
     networks:
       - foundry
     volumes:
-      - "foundry-volume:/data"
-      - "./build:/data/Data/systems:delegated"
+      - type: volume
+        source: foundry-volume
+        target: /data
+      - type: bind
+        source: ./build
+        target: /data/Data/systems
     env_file:
       - .env.secret
     ports:

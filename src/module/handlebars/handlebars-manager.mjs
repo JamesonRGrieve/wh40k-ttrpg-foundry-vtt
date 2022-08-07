@@ -1,4 +1,4 @@
-import { registerHandlebarsHelpers } from './helpers.mjs';
+import { registerHandlebarsHelpers } from './handlebars-helpers.mjs';
 
 export class HandlebarManager {
   static async loadTemplates() {

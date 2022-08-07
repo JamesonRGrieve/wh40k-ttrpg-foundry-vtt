@@ -1,3 +1,5 @@
+import { getDegree } from './roll_helpers.mjs';
+
 export async function simpleRoll(rollData) {
   await _computeTarget(rollData);
   await _rollTarget(rollData);
@@ -26,15 +28,11 @@ async function _rollTarget(rollData) {
   rollData.isSuccess = rollData.result <= rollData.target;
   if (rollData.isSuccess) {
     rollData.dof = 0;
-    rollData.dos = 1 + _getDegree(rollData.target, rollData.result);
+    rollData.dos = 1 + getDegree(rollData.target, rollData.result);
   } else {
     rollData.dos = 0;
-    rollData.dof = 1 + _getDegree(rollData.result, rollData.target);
+    rollData.dof = 1 + getDegree(rollData.result, rollData.target);
   }
-}
-
-function _getDegree(a, b) {
-  return Math.floor(a / 10) - Math.floor(b / 10);
 }
 
 async function _sendToChat(rollData) {

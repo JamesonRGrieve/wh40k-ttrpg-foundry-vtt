@@ -1,4 +1,4 @@
-import { prepareSimpleRoll } from './prompt.mjs';
+import { prepareSimpleRoll } from './simple-prompt.mjs';
 
 export async function createItemMacro(data, slot) {
   if (data.type !== 'Item') return;

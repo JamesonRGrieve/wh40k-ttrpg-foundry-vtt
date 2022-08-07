@@ -1,5 +1,5 @@
 import { DarkHeresyItemContainer } from './item-container.mjs';
-import { capitalize } from '../helpers.mjs';
+import { capitalize } from '../handlebars/handlebars-helpers.mjs';
 
 export class DarkHeresyItem extends DarkHeresyItemContainer {
   async prepareData() {

@@ -85,7 +85,7 @@
 }
 
 %grid-cell {
-  border-right: $grid-border;
+  border-right: $grid-border !important;
   overflow: hidden;
 
   input[type='number'] {

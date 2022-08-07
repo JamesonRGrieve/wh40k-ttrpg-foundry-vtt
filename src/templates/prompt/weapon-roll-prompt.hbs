@@ -1,0 +1,75 @@
+{{log this}}
+<form class='dh-wrapper' autocomplete='off'>
+  <div class='dh-attack'>
+    <!-- Header -->
+    <div class='dh-panel dh-grid-col-6'>
+      <div class='dh-header'>
+        <div class='dh-header__info dh-header__logo'>
+          <div class='dh-header__item-wrapper dh-header__borderless'>
+            <img class='dh-header__logo-image-small' src='{{this.actor.img}}'/>
+          </div>
+          <div class='dh-header__item-wrapper--span-3 dh-header__borderless'>
+            <span class="dh-header__title mt-5">Weapon Attack</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weapon Select -->
+    <div class='dh-panel dh-grid-col-6'>
+      <div class='dh-table--border dh-attackprompttable--border'>
+        <div class='table-row--head'>
+          <div class='table-cell'></div>
+          <div class='table-cell'></div>
+          <div class="table-cell--last"></div>
+        </div>
+        {{#each weapons as | weapon |}}
+          <div class='table-row'>
+            <div class='table-cell--left'>
+              <input class='table-cell--checkbox weapon-select' type='checkbox' data-dtype='Boolean' {{checked weapon.isSelected}} name='{{weapon.id}}' />
+            </div>
+            <div class='table-cell'>
+              <div class='display'>{{weapon.name}}</div>
+              {{#if weapon.items}}
+                <div class='table-cell--description'>- {{#each weapon.items as | item |}}{{item.name}} - {{/each}}</div>
+              {{/if}}
+            </div>
+            <div class='table-cell'>
+              <img class='dh-field__image' src='{{weapon.img}}'/>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- Other -->
+    <div class='dh-panel dh-grid-col-6'>
+      <div class='dh-field__wrapper'>
+        <span class='dh-field__span'>Attack Type</span>
+        <select class='dh-field__input' name='action' id='action'>
+          {{selectOptions actions selected=this.action}}
+        </select>
+      </div>
+      {{#if this.attackModifier}}
+        <div class='dh-field__wrapper'>
+          <span class='dh-field__span'>Attack Modifier</span>
+          <span class='dh-field__span'>{{attackModifier}}</span>
+        </div>
+      {{/if}}
+      <div class='dh-field__wrapper'>
+        <span class='dh-field__span'>Base</span>
+        <span class='dh-field__span'>{{baseTarget}}</span>
+      </div>
+      <div class='dh-field__wrapper'>
+        <span class='dh-field__span'>Difficulty</span>
+        <select class='dh-field__input' name='difficulty'>
+          {{selectOptions difficulties selected=this.difficulty}}
+        </select>
+      </div>
+      <div class='dh-field__wrapper'>
+        <span class='dh-field__span'>Modifier</span>
+        <input class='dh-field__input' type='number' data-dtype='Number' name='modifier' id='modifier' value='{{this.modifier}}' />
+      </div>
+    </div>
+  </div>
+</form>

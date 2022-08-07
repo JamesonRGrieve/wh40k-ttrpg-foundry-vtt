@@ -1,10 +1,10 @@
-import { homeworlds } from '../helpers/homeworlds.mjs';
-import { backgrounds } from '../helpers/backgrounds.mjs';
-import { divinations } from '../helpers/divinations.mjs';
-import { roles } from '../helpers/roles.mjs';
-import { eliteAdvances } from '../helpers/elite_advances.mjs';
-import { fieldMatch } from '../helpers/config.mjs';
-import { prepareSimpleRoll } from '../rolls/prompt.mjs';
+import { homeworlds } from '../rules/homeworlds.mjs';
+import { backgrounds } from '../rules/backgrounds.mjs';
+import { divinations } from '../rules/divinations.mjs';
+import { roles } from '../rules/roles.mjs';
+import { eliteAdvances } from '../rules/elite-advances.mjs';
+import { fieldMatch } from '../rules/config.mjs';
+import { prepareSimpleRoll } from '../rolls/simple-prompt.mjs';
 
 export class DarkHeresyActor extends Actor {
   prepareData() {
@@ -60,7 +60,7 @@ export class DarkHeresyActor extends Actor {
   }
 
   _computeBackgroundFields() {
-    if (this.bio.homeWorld) {
+    if (this.bio?.homeWorld) {
       this.backgroundEffects.homeworld = homeworlds().find((h) => h.name === this.bio.homeWorld);
       if (this.backgroundEffects.homeworld) {
         this.backgroundEffects.abilities.push({
@@ -69,7 +69,7 @@ export class DarkHeresyActor extends Actor {
         });
       }
     }
-    if (this.bio.background) {
+    if (this.bio?.background) {
       this.backgroundEffects.background = backgrounds().find((h) => h.name === this.bio.background);
       if (this.backgroundEffects.background) {
         this.backgroundEffects.abilities.push({
@@ -78,7 +78,7 @@ export class DarkHeresyActor extends Actor {
         });
       }
     }
-    if (this.bio.role) {
+    if (this.bio?.role) {
       this.backgroundEffects.role = roles().find((h) => h.name === this.bio.role);
       if (this.backgroundEffects.role) {
         this.backgroundEffects.abilities.push({
@@ -87,7 +87,7 @@ export class DarkHeresyActor extends Actor {
         });
       }
     }
-    if (this.bio.divination) {
+    if (this.bio?.divination) {
       this.backgroundEffects.divination = divinations().find((h) => h.name === this.bio.divination);
       if (this.backgroundEffects.divination) {
         this.backgroundEffects.abilities.push({
@@ -97,7 +97,7 @@ export class DarkHeresyActor extends Actor {
         });
       }
     }
-    if (this.bio.elite) {
+    if (this.bio?.elite) {
       this.backgroundEffects.eliteAdvance = eliteAdvances().find((h) => h.name === this.bio.elite);
     }
   }
@@ -364,6 +364,12 @@ export class DarkHeresyActor extends Actor {
     if (this.encumbrance.backpack_value > this.encumbrance.backpack_max) {
       this.encumbrance.backpack_encumbered = true;
     }
+  }
+
+  hasTalent(talent) {
+    return !!this.items
+      .filter(i => i.type === 'talent')
+      .find(t => t.name === talent);
   }
 
   get backpack() {

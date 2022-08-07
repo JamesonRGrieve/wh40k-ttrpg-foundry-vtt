@@ -1,4 +1,4 @@
-import { eliteAdvancesNames } from './elite_advances.mjs';
+import { eliteAdvancesNames } from './elite-advances.mjs';
 import { homeworldNames } from './homeworlds.mjs';
 import { attackSpecialsNames } from './attack_specials.mjs';
 import { backgroundNames } from './backgrounds.mjs';

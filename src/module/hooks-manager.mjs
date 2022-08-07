@@ -1,6 +1,6 @@
 import { DarkHeresyActor } from './documents/actor.mjs';
 import { DarkHeresyItem } from './documents/item.mjs';
-import { DarkHeresy } from './helpers/config.mjs';
+import { DarkHeresy } from './rules/config.mjs';
 import { AcolyteSheet } from './sheets/acolyte-sheet.mjs';
 import { DarkHeresyItemSheet } from './sheets/item-sheet.mjs';
 import { DarkHeresyWeaponSheet } from './sheets/weapon-sheet.mjs';
@@ -9,8 +9,9 @@ import { DarkHeresyTalentSheet } from './sheets/talent-sheet.mjs';
 import { DarkHeresyJournalEntrySheet } from './sheets/journal-entry-sheet.mjs';
 import { DarkHeresyPeerEnemySheet } from './sheets/peer-enemy-sheet.mjs';
 import { createCharacteristicMacro, createItemMacro, createSkillMacro, rollCharacteristicMacro, rollItemMacro, rollSkillMacro } from './rolls/macros.mjs';
-import { HandlebarManager } from './handlebars.mjs';
+import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/ammo-sheet.mjs';
+import { initializeActorActions } from './actions/actions-manager.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -21,6 +22,7 @@ export class HooksManager {
     Hooks.once('init', HooksManager.init);
     Hooks.on('ready', HooksManager.ready);
     Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
+    initializeActorActions();
   }
 
   static init() {
@@ -40,6 +42,8 @@ _  /_/ /_  __  / _  __/
       rollSkillMacro,
       rollCharacteristicMacro,
     };
+
+    // CONFIG.debug.hooks = true;
 
     // Add custom constants for configuration.
     CONFIG.dh = DarkHeresy;
@@ -65,7 +69,9 @@ _  /_/ /_  __  / _  __/
     HandlebarManager.loadTemplates();
   }
 
-  static async ready() {}
+  static async ready() {
+    console.log(`DH2e Loaded!`);
+  }
 
   static async hotbarDrop(bar, data, slot) {
     switch (data.type) {

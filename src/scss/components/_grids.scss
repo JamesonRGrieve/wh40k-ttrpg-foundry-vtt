@@ -23,6 +23,7 @@ $grid-tables: (
   journal: 1.5rem 2fr 0.75fr 0.75fr 3rem,
   peerenemy: 1.5rem 2fr 0.75fr 3rem,
   gear: 1.5rem 1fr 1fr 3rem 3rem,
+  attackprompt: 2rem 1fr 3rem
 );
 
 .dh {
@@ -250,6 +251,10 @@ $grid-tables: (
 
         &--settingstoggle + #{&}--grouped {
           grid-column-start: 2;
+        }
+
+        &--checkbox {
+          margin: 8px;
         }
       }
     }

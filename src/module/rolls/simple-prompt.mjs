@@ -1,5 +1,5 @@
-import { rollDifficulties } from './roll_difficulties.mjs';
-import { simpleRoll } from './simple_roll.mjs';
+import { rollDifficulties } from './roll-difficulties.mjs';
+import { simpleRoll } from './simple-roll.mjs';
 
 export async function prepareSimpleRoll(rollData) {
   rollData.difficulties = rollDifficulties();

@@ -973,7 +973,7 @@
       "attack": {
         "range": "",
         "attackType": "",
-        "attackBonus": "",
+        "attackBonus": 0,
         "rateOfFire": {
           "single": 1,
           "burst": 0,
@@ -983,7 +983,7 @@
       "damage": {
         "damage": "",
         "damageType": "",
-        "penetration": "",
+        "penetration": 0,
         "special": {}
       },
       "action": {

@@ -90,7 +90,7 @@ button {
     }
 
     > *:first-child {
-      border-right: 1px solid #000;
+      border-right: 1px solid #000 !important;
     }
   }
 }
@@ -123,6 +123,12 @@ button {
 
   &__span {
     text-align: center;
+  }
+
+  &__image {
+    height: 15px;
+    width: 15px;
+    border: none;
   }
 }
 
