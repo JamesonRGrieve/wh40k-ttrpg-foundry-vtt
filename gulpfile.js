@@ -19,7 +19,8 @@ const STATIC_FILES = [
   "!src/module/foundry-core/*",
   "src/templates/**/*",
   "src/images/**/*",
-  "src/*.json"
+  "src/*.json",
+  "src/packs/*.db"
 ];
 const PACK_SRC = "src/packs";
 const BUILD_DIR = "build/dark-heresy-2nd";
@@ -95,6 +96,10 @@ function watchUpdates() {
   gulp.watch("src/**/*", gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
 }
 
+function watchCopy() {
+  gulp.watch("src/**/*", gulp.series(copyFiles));
+}
+
 /* ----------------------------------------- */
 /*  Export Tasks
 /* ----------------------------------------- */
@@ -102,6 +107,6 @@ function watchUpdates() {
 exports.clean = gulp.series(cleanBuild);
 exports.scss = gulp.series(compileScss);
 exports.packs = gulp.series(compilePacks);
-exports.copy = gulp.series(copyFiles);
-exports.build = gulp.series(cleanBuild, compileScss, copyFiles, compilePacks);
-exports.default = gulp.series(cleanBuild, compileScss, copyFiles, compilePacks, watchUpdates);
+exports.copy = gulp.series(copyFiles, watchCopy);
+exports.build = gulp.series(cleanBuild, compileScss, copyFiles);
+exports.default = gulp.series(cleanBuild, compileScss, copyFiles, watchUpdates);

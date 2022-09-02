@@ -1,6 +1,6 @@
 import { DarkHeresyItemSheet } from './item-sheet.mjs';
 
-export class AttackSpecialSheet extends DarkHeresyItemSheet {
+export class DarkHeresyAttackSpecialSheet extends DarkHeresyItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       width: 820,

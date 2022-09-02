@@ -8,10 +8,12 @@ import { DarkHeresyArmourSheet } from './sheets/armour-sheet.mjs';
 import { DarkHeresyTalentSheet } from './sheets/talent-sheet.mjs';
 import { DarkHeresyJournalEntrySheet } from './sheets/journal-entry-sheet.mjs';
 import { DarkHeresyPeerEnemySheet } from './sheets/peer-enemy-sheet.mjs';
+import { DarkHeresyAttackSpecialSheet } from './sheets/attack-special-sheet.mjs';
 import { createCharacteristicMacro, createItemMacro, createSkillMacro, rollCharacteristicMacro, rollItemMacro, rollSkillMacro } from './rolls/macros.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';
+import { DarkHeresyPsykanaSheet } from './sheets/psykana-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -65,6 +67,8 @@ _  /_/ /_  __  / _  __/
     Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
     Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
     Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
+    Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
+    Items.registerSheet(MODULE_NAME, DarkHeresyPsykanaSheet, { types: ['psychicPower'], makeDefault: true});
 
     HandlebarManager.loadTemplates();
   }

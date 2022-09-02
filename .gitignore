@@ -9,6 +9,7 @@ build
 ## Development
 db-conversion
 **/foundry-core/**
+backup
 
 ## Secrets
 .env.secret

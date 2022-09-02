@@ -1,0 +1,153 @@
+<div class='dh-wrapper'>
+  <form class='dh-item' autocomplete='off'>
+    <div class='dh-panel dh-grid-col-6'>
+      <div class='dh-header'>
+        <div class='dh-header__info'>
+          <div class='dh-header__logo dh-header__item-wrapper--span-4'>
+            <img class='dh-header__logo-image' src='{{item.img}}' data-edit='img' title='{{item.name}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-4'>
+            <span class='dh-header__title'>Name</span>
+            <input class='dh-header__input' name='name' type='text' value='{{item.name}}' />
+          </div>
+          <div class='dh-header__item-wrapper'>
+            <span class='dh-header__title'>Discipline</span>
+            <input class='dh-header__input' name='data.discipline' type='number' data-dtype='Number' value='{{data.discipline}}' />
+          </div>
+          <div class='dh-header__item-wrapper'>
+            <span class='dh-header__title'>XP Cost</span>
+            <input class='dh-header__input' name='data.cost' type='number' data-dtype='Number' value='{{data.cost}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-2'>
+            <span class='dh-header__title'>Source</span>
+            <input class='dh-header__input' name='data.source' type='text' value='{{data.source}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-4'>
+            <span class='dh-header__title'>Prerequisites</span>
+            <input class='dh-header__input' name='data.prerequisites' type='text' value='{{data.prerequisites}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-2'>
+            <span class='dh-header__title'>Range</span>
+            <input class='dh-header__input' name='data.range' type='text' value='{{data.range}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-2'>
+            <span class='dh-header__title'>Speed</span>
+            <input class='dh-header__input' name='data.speed' type='text' value='{{data.speed}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-2'>
+            <span class='dh-header__title'>Sustained</span>
+            <input class='dh-header__input' name='data.sustained' type='text' value='{{data.sustained}}' />
+          </div>
+          <div class='dh-header__item-wrapper--span-2'>
+            <span class='dh-header__title'>Subtype</span>
+            <input class='dh-header__input' name='data.subtype' type='text' value='{{data.subtype}}' />
+          </div>
+        </div>
+        <div class="dh-navigation" data-group="primary">
+          <label class="dh-navigation__item">
+            <a class="item" data-tab="stats" data-group="primary">action</a>
+          </label>
+          <label class="dh-navigation__item">
+            <a class="item" data-tab="description" data-group="primary">effect</a>
+          </label>
+        </div>
+        <section class="dh-body">
+          <div class="tab" data-group="primary" data-tab="stats">
+            <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+              <h1 class="dh-panel__header">Action</h1>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Characteristic</span>
+                <input class="dh-field__input" type="text" name="data.target.characteristic" value="{{data.target.characteristic}}"/>
+              </div>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Bonus</span>
+                <input class="dh-field__input" type="text" name="data.target.bonus" value="{{data.target.bonus}}"/>
+              </div>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Is Opposed</span>
+                <div class='dh-field__input check'>
+                  <input name="data.target.isOpposed" type="checkbox" data-dtype="Boolean" {{checked data.target.isOpposed}}/>
+                </div>
+              </div>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Opposed Characteristic</span>
+                <input class="dh-field__input" type="text" name="data.target.opposed" value="{{data.target.opposed}}"/>
+              </div>
+            </div>
+            <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+              <h1 class="dh-panel__header">Damage</h1>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Roll</span>
+                <input class="dh-field__input" type="text" name="data.damage" value="{{data.damage}}"/>
+              </div>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Type</span>
+                <select class="dh-field__input" name="data.damageType">
+                  {{selectOptions (arrayToObject dh.combat.damage_types) selected=data.damageType}}
+                </select>
+              </div>
+              <div class="dh-field__wrapper">
+                <span class="dh-field__header">Pen</span>
+                <input class="dh-field__input" type="text" name="data.penetration"
+                       value="{{data.penetration}}"/>
+              </div>
+            </div>
+            <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+              <h1 class="dh-panel__header">Attack Specials</h1>
+              <div class="dh-table--border dh-attackspecialtable--border">
+                <div class="table-row--head">
+                  <div class="table-cell--span2">Name</div>
+                  <div class="table-cell">Enabled</div>
+                  <div class="table-cell">Level</div>
+                  <div class="table-cell--last"></div>
+                </div>
+                {{#each item.items as | embedded |}}
+                  {{#if embedded.isAttackSpecial}}
+                    <div class="table-row">
+                      <div class="table-cell--settingstoggle">
+                        <label class="dh-control-button item-edit"
+                               data-item-id="{{embedded.id}}">
+                                                    <span class="dh-control-button__span material-icons">{{defaultVal
+                                                      icon 'settings'}}</span>
+                        </label>
+                      </div>
+                      <div class="table-cell--left">
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
+                      </div>
+                      <div class="table-cell">
+                        <span class="display">{{embedded.data.data.enabled}}</span>
+                      </div>
+                      <div class="table-cell">
+                                                <span class="display">{{defaultVal embedded.data.data.level
+                                                                                   'N/A'}}</span>
+                      </div>
+                      <div class="table-cell--last">
+                        <label class="dh-control-button item-delete"
+                               data-item-id="{{embedded.id}}">
+                                                    <span class="dh-control-button__span material-icons">{{defaultVal
+                                                      icon 'delete'}}</span>
+                        </label>
+                      </div>
+                      <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
+                        (isExpanded (concat 'description_' embedded.id ))}}>
+                        <span>{{embedded.data.data.description}}</span>
+                      </div>
+                    </div>
+                  {{/if}}
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          <div class="tab" data-group="primary" data-tab="effect">
+            <div class="dh-header__info dh-grid-col-6">
+              <div class="dh-header__item-wrapper--text-area">
+                <span class="dh-header__title">Effect</span>
+                <textarea class="dh-header__textarea" name="data.description">{{data.effect}}</textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
+</div>

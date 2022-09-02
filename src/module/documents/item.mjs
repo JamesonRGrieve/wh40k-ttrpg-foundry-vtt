@@ -118,7 +118,12 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
   }
 
   get isGear() {
-    return this.type === 'gear' || this.type === 'drug' || this.type === 'tool' || this.type === 'ammunition' || this.type === 'forceField';
+    return this.type === 'gear' ||
+      this.isDrug ||
+      this.isAmmunition ||
+      this.isTool ||
+      this.isForceField ||
+      this.isCybernetic;
   }
 
   get isDrug() {

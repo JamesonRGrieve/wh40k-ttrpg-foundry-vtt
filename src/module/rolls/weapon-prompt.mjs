@@ -15,9 +15,9 @@ export class WeaponAttackDialog extends FormApplication {
       id: 'dh-weapon-attack-dialog',
       template: 'systems/dark-heresy-2nd/templates/prompt/weapon-roll-prompt.hbs',
       width: 500,
-      height: 400,
       closeOnSubmit: false,
-      submitOnChange: true
+      submitOnChange: true,
+      classes: ['dialog']
     });
   }
 
@@ -25,10 +25,12 @@ export class WeaponAttackDialog extends FormApplication {
     super.activateListeners(html);
 
     html.find('.weapon-select').change(async (ev) => await this._updateWeapon(ev));
+    html.find('#attack-roll').click(async (ev) => await this._rollAttack(ev));
+    html.find('#attack-cancel').click(async (ev) => await this._cancelAttack(ev));
   }
 
   _updateBaseTarget() {
-    if (this.weapon.isRanged) {
+    if (this.data.weapon.isRanged) {
       this.data.baseTarget = this.data.actor?.data?.characteristics?.ballisticSkill?.total ?? 0;
     } else {
       this.data.baseTarget = this.data.actor?.data?.characteristics?.weaponSkill?.total ?? 0;
@@ -55,7 +57,7 @@ export class WeaponAttackDialog extends FormApplication {
     this.availableActions = combatActions()
       .filter(action => action.subtype.includes('Attack'))
       .filter(action => {
-        if(this.weapon.isRanged) {
+        if(this.data.weapon.isRanged) {
           return action.subtype.includes('Ranged');
         } else {
           return action.subtype.includes('Melee');
@@ -104,6 +106,15 @@ export class WeaponAttackDialog extends FormApplication {
       this.data[key] = formData[key];
     }
     this.render(true);
+  }
+
+  async _cancelAttack(event) {
+    await this.close();
+  }
+
+  async _rollAttack(event) {
+    await weaponRoll(this.data);
+    await this.close();
   }
 
 }

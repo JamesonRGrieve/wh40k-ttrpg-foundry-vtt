@@ -98,13 +98,16 @@
 
   &__textarea,
   &__select,
-  &__input,
-  &__display {
+  &__input {
     flex-grow: 1;
     flex-shrink: 1;
     min-width: 0;
     max-width: 100%;
     padding: 0.25rem;
+  }
+
+  &__display {
+    margin: auto;
   }
 
   &__textarea,

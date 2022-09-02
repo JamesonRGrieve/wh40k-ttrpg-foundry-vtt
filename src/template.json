@@ -966,6 +966,16 @@
         "equipped": false,
         "inBackpack": false
       },
+      "armourPoints": {
+        "armourPoints": {
+          "head": 0,
+          "leftArm": 0,
+          "rightArm": 0,
+          "body": 0,
+          "leftLeg": 0,
+          "rightLeg": 0
+        }
+      },
       "itemDescription": {
         "description": "",
         "source": ""
@@ -1006,17 +1016,9 @@
       "template": ["itemDescription"]
     },
     "armour": {
-      "templates": ["physicalItem", "itemDescription", "container", "backpack"],
+      "templates": ["physicalItem", "itemDescription", "container", "backpack", "armourPoints"],
       "container": true,
       "containerTypes": ["armourModification"],
-      "armourPoints": {
-        "head": 0,
-        "leftArm": 0,
-        "rightArm": 0,
-        "body": 0,
-        "leftLeg": 0,
-        "rightLeg": 0
-      },
       "maxAgility": 0
     },
     "armourModification": {
@@ -1034,7 +1036,7 @@
       "part": "body"
     },
     "cybernetic": {
-      "templates": ["physicalItem", "itemDescription", "backpack"]
+      "templates": ["physicalItem", "itemDescription", "backpack", "armourPoints"]
     },
     "drug": {
       "templates": ["physicalItem", "itemDescription", "backpack"]
@@ -1102,7 +1104,7 @@
       "benefit": ""
     },
     "weapon": {
-      "templates": ["itemDescription", "damage", "attack", "action", "container", "backpack"],
+      "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "container", "backpack"],
       "container": true,
       "containerTypes": ["weaponModification", "attackSpecial", "ammunition"],
       "class": "",
