@@ -15,7 +15,45 @@ job("Env Warmup") {
     }
 }
 
-job("Run NPM Build") {
+job("Package Release") {
+    startOn {
+        gitPush {
+            // run only if there's a release tag
+            // e.g., release/v1.0.0
+            tagFilter {
+                +"release/*"
+            }
+        }
+    }
+
+    container(displayName = "NPM Build", image = "node:14-alpine") {
+        shellScript {
+            interpreter = "/bin/sh"
+            content = """
+            	echo Install npm dependencies...
+                npm install
+                echo Run Build
+                npm run build
+                export ARCHIVE_NAME=`cd archive && echo *`
+                cp ./archive/* ${'$'}JB_SPACE_FILE_SHARE_PATH
+            """.trimIndent()
+        }
+    }
+
+    container(displayName = "Space Deploy", image ="alpine/curl") {
+        shellScript {
+            content = """
+                echo Uploading artifacts
+                ARCHIVE_NAME=`cd ${'$'}JB_SPACE_FILE_SHARE_PATH && echo *`
+                SOURCE_PATH=${'$'}JB_SPACE_FILE_SHARE_PATH/${'$'}ARCHIVE_NAME
+                REPO_URL=https://files.pkg.jetbrains.space/keathley/p/dark-heresy-foundry-module/releases
+                curl -i -H "Authorization: Bearer ${'$'}JB_SPACE_CLIENT_TOKEN" -F file=@"${'$'}SOURCE_PATH" ${'$'}REPO_URL/
+            """.trimIndent()
+        }
+    }
+}
+
+job("Build and Deploy") {
     container(displayName = "NPM Build", image = "node:14-alpine") {
     	shellScript {
         	interpreter = "/bin/sh"
@@ -30,15 +68,27 @@ job("Run NPM Build") {
         }
     }
 
-    container("alpine/curl") {
+    container(displayName = "Foundry Deploy", image ="ubuntu") {
+        env["RSA_KEY"] = Secrets("id-rsa-key")
+
         shellScript {
             content = """
-                echo Uploading artifacts
+                echo Deploying to Foundry
+                
                 ARCHIVE_NAME=`cd ${'$'}JB_SPACE_FILE_SHARE_PATH && echo *`
                 SOURCE_PATH=${'$'}JB_SPACE_FILE_SHARE_PATH/${'$'}ARCHIVE_NAME
-                TARGET_PATH=${'$'}JB_SPACE_EXECUTION_NUMBER/
-                REPO_URL=https://files.pkg.jetbrains.space/keathley/p/dark-heresy-foundry-module/releases
-                curl -i -H "Authorization: Bearer ${'$'}JB_SPACE_CLIENT_TOKEN" -F file=@"${'$'}SOURCE_PATH" ${'$'}REPO_URL/${'$'}TARGET_PATH
+                
+                echo Setting up rsa key
+                echo ${'$'}RSA_KEY > id_rsa
+                chmod 600 id_rsa
+                
+                echo SCP Archive
+                scp -i id_rsa ${'$'}SOURCE_PATH root@foundry.keathley.co:/home/foundry/foundryuserdata/Data/systems
+                
+                echo Inflate Archive
+                ssh -i id_rsa root@foundry.keathley.co "cd /home/foundry/foundryuserdata/Data/systems; unzip -o ${'$'}ARCHIVE_NAME -d dark-heresy-2nd/; rm -f ${'$'}ARCHIVE_NAME"
+                
+                echo Deployed
             """.trimIndent()
         }
     }
