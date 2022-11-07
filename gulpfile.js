@@ -10,6 +10,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass')(require('sass'));
 const fs = require("fs");
 const path = require("path");
+const zip = require("gulp-zip");
 
 const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
 const SYSTEM_SCSS = ["src/scss/**/*.scss"];
@@ -93,11 +94,17 @@ function cleanBuild() {
 }
 
 function watchUpdates() {
-  gulp.watch("src/**/*", gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
+  return gulp.watch("src/**/*", gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
 }
 
 function watchCopy() {
-  gulp.watch("src/**/*", gulp.series(copyFiles));
+  return gulp.watch("src/**/*", gulp.series(copyFiles));
+}
+
+function createArchive() {
+  return gulp.src(`${BUILD_DIR}/**`)
+      .pipe(zip(`dh2-vtt-${SYSTEM.version}.zip`))
+      .pipe(gulp.dest('./archive'));
 }
 
 /* ----------------------------------------- */
@@ -108,5 +115,5 @@ exports.clean = gulp.series(cleanBuild);
 exports.scss = gulp.series(compileScss);
 exports.packs = gulp.series(compilePacks);
 exports.copy = gulp.series(copyFiles, watchCopy);
-exports.build = gulp.series(cleanBuild, compileScss, copyFiles);
+exports.build = gulp.series(cleanBuild, compileScss, copyFiles, createArchive);
 exports.default = gulp.series(cleanBuild, compileScss, copyFiles, watchUpdates);

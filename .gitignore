@@ -5,6 +5,7 @@
 node_modules
 css
 build
+archive
 
 ## Development
 db-conversion

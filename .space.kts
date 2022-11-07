@@ -26,13 +26,13 @@ job("Run NPM Build") {
                 npm run build
             """
         }
-        
-        failOn {
-            testFailed { enabled = true }
-        	nonZeroExitCode { enabled = true }
-            outOfMemory { enabled = true }
-            timeOut { runningTimeOutInMinutes = 15 }
-        }
+    }
+
+    failOn {
+        testFailed { enabled = true }
+        nonZeroExitCode { enabled = true }
+        outOfMemory { enabled = true }
+        timeOut { runningTimeOutInMinutes = 15 }
     }
 }
 
