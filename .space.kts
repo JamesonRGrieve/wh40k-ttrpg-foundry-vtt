@@ -4,6 +4,17 @@
 * For more info, see https://www.jetbrains.com/help/space/automation.html
 */
 
+job("Env Warmup") {
+	startOn {
+    	schedule { cron("0 7 * * *") }
+    }
+    warmup(ide = Ide.Idea) {}
+    git {
+    	depth = UNLIMITED_DEPTH
+        refSpec = "refs/*:refs/*"
+    }
+}
+
 job("Run NPM Build") {
     container(displayName = "NPM Build", image = "node:14-alpine") {
     	shellScript {
@@ -15,16 +26,14 @@ job("Run NPM Build") {
                 npm run build
             """
         }
-    }
-    container("openjdk:11") {
-        kotlinScript { api ->
-            api.space().projects.automation.deployments.start(
-                project = api.projectIdentifier(),
-                targetIdentifier = TargetIdentifier.Key("foundry"),
-                version = "1.0.0",
-                // automatically update deployment status based on a status of a job
-                syncWithAutomationJob = true
-            )
+        
+        failOn {
+            testFailed { enabled = true }
+        	nonZeroExitCode { enabled = true }
+            outOfMemory { enabled = true }
+            timeOut { runningTimeOutInMinutes = 15 }
         }
     }
 }
+
+
