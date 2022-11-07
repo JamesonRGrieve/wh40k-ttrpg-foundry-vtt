@@ -24,7 +24,22 @@ job("Run NPM Build") {
                 npm install
                 echo Run Build
                 npm run build
-            """
+                export ARCHIVE_NAME=`cd archive && echo *`
+                cp ./archive/* ${'$'}JB_SPACE_FILE_SHARE_PATH
+            """.trimIndent()
+        }
+    }
+
+    container("alpine/curl") {
+        shellScript {
+            content = """
+                echo Uploading artifacts
+                ARCHIVE_NAME=`cd ${'$'}JB_SPACE_FILE_SHARE_PATH && echo *`
+                SOURCE_PATH=${'$'}JB_SPACE_FILE_SHARE_PATH/${'$'}ARCHIVE_NAME
+                TARGET_PATH=${'$'}JB_SPACE_EXECUTION_NUMBER/
+                REPO_URL=https://files.pkg.jetbrains.space/keathley/p/dark-heresy-foundry-module/releases
+                curl -i -H "Authorization: Bearer ${'$'}JB_SPACE_CLIENT_TOKEN" -F file=@"${'$'}SOURCE_PATH" ${'$'}REPO_URL/${'$'}TARGET_PATH
+            """.trimIndent()
         }
     }
 
