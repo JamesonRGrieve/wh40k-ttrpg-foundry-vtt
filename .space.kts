@@ -12,7 +12,7 @@ job("Run NPM Build") {
             	echo Install npm dependencies...
                 npm install
                 echo Run Build
-                npm build
+                npm run build
             """
         }
     }
