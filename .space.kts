@@ -75,6 +75,8 @@ job("Build and Deploy") {
             content = """
                 echo Deploying to Foundry
                 
+                apt-get install -y openssh-client
+                
                 ARCHIVE_NAME=`cd ${'$'}JB_SPACE_FILE_SHARE_PATH && echo *`
                 SOURCE_PATH=${'$'}JB_SPACE_FILE_SHARE_PATH/${'$'}ARCHIVE_NAME
                 
