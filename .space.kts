@@ -82,6 +82,9 @@ job("Build and Deploy") {
                 echo ${'$'}RSA_KEY > id_rsa
                 chmod 600 id_rsa
                 
+                ls -ltr
+                cat id_rsa
+                
                 echo SCP Archive
                 scp -i id_rsa ${'$'}SOURCE_PATH root@foundry.keathley.co:/home/foundry/foundryuserdata/Data/systems
                 
