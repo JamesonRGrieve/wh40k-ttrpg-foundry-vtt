@@ -68,14 +68,12 @@ job("Build and Deploy") {
         }
     }
 
-    container(displayName = "Foundry Deploy", image ="ubuntu") {
+    container(displayName = "Foundry Deploy", image ="buildo/alpine-ssh") {
         env["RSA_KEY"] = Secrets("id-rsa-key")
 
         shellScript {
             content = """
                 echo Deploying to Foundry
-                
-                apt-get install -y openssh-client
                 
                 ARCHIVE_NAME=`cd ${'$'}JB_SPACE_FILE_SHARE_PATH && echo *`
                 SOURCE_PATH=${'$'}JB_SPACE_FILE_SHARE_PATH/${'$'}ARCHIVE_NAME
