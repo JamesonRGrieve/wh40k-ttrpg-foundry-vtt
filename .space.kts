@@ -69,7 +69,7 @@ job("Build and Deploy") {
     }
 
     container(displayName = "Foundry Deploy", image ="buildo/alpine-ssh") {
-        env["RSA_KEY"] = Secrets("id-rsa-key")
+        env["RSA_KEY"] = Secrets("jb-space-id-rsa")
 
         shellScript {
             content = """
@@ -79,7 +79,7 @@ job("Build and Deploy") {
                 SOURCE_PATH=${'$'}JB_SPACE_FILE_SHARE_PATH/${'$'}ARCHIVE_NAME
                 
                 echo Setting up rsa key
-                echo ${'$'}RSA_KEY > id_rsa
+                echo ${'$'}RSA_KEY | sed 's/\\n/\n/g' > id_rsa
                 chmod 600 id_rsa
                 
                 ls -ltr
