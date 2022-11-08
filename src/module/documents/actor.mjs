@@ -188,7 +188,7 @@ export class DarkHeresyActor extends Actor {
   }
 
   _computeArmour() {
-    let locations = game.system.template.Item.templates.armourPoints.armourPoints;
+    let locations = game.system.template.Item['armourPoints'].armourPoints;
     let toughness = this.characteristics.toughness;
 
     this.data.data.armour = Object.keys(locations).reduce(
