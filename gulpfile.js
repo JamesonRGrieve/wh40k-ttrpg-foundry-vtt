@@ -103,7 +103,7 @@ function watchCopy() {
 
 function createArchive() {
   return gulp.src(`${BUILD_DIR}/**`)
-      .pipe(zip(`dh2-vtt-${SYSTEM.version}.zip`))
+      .pipe(zip(`dark-heresy-2nd-${SYSTEM.version}.zip`))
       .pipe(gulp.dest('./archive'));
 }
 

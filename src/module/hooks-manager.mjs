@@ -9,6 +9,7 @@ import { DarkHeresyTalentSheet } from './sheets/talent-sheet.mjs';
 import { DarkHeresyJournalEntrySheet } from './sheets/journal-entry-sheet.mjs';
 import { DarkHeresyPeerEnemySheet } from './sheets/peer-enemy-sheet.mjs';
 import { DarkHeresyAttackSpecialSheet } from './sheets/attack-special-sheet.mjs';
+import { DarkHeresyWeaponModSheet } from "./sheets/weapon-mod-sheet.mjs";
 import { createCharacteristicMacro, createItemMacro, createSkillMacro, rollCharacteristicMacro, rollItemMacro, rollSkillMacro } from './rolls/macros.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/ammo-sheet.mjs';
@@ -62,6 +63,7 @@ _  /_/ /_  __  / _  __/
     Items.unregisterSheet('core', ItemSheet);
     Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });
     Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
+    Items.registerSheet(MODULE_NAME, DarkHeresyWeaponModSheet, { types: ['weaponModification'], makeDefault: true });
     Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
     Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
     Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });

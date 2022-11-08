@@ -5,7 +5,11 @@
             <div class="table-cell--span2">Name</div>
             <div class="table-cell">Type</div>
             <div class="table-cell">Weight</div>
-            <div class="table-cell--last"></div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="gear">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
         </div>
         {{#each actor.items as | item |}}
             {{#if item.isGear}}

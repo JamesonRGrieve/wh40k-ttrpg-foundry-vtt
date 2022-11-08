@@ -1,8 +1,9 @@
 {
   "name": "dark-heresy-2nd",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Dark Heresy 2nd Edition Foundry VTT",
   "scripts": {
+    "version": "json -I -f package.json -e \"this.version='$npm_config_next'\" && json -I -f src/system.json -e \"this.version='$npm_config_next'\"",
     "clean": "gulp clean",
     "build": "gulp build",
     "packs": "gulp packs",
@@ -18,7 +19,7 @@
   "dependencies": {
     "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",
     "cb": "0.1.0",
-    "eslint": "8.20.0",
+    "eslint": "8.27.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "fancy-log": "2.0.0",
@@ -30,11 +31,12 @@
     "gulp-sourcemaps": "3.0.0",
     "gulp-zip": "5.1.0",
     "js-yaml": "4.1.0",
+    "json": "11.0.0",
     "merge-stream": "2.0.0",
     "nedb": "1.8.0",
     "path": "0.12.7",
     "prettier": "2.7.1",
-    "sass": "1.49.7",
+    "sass": "1.56.0",
     "through2": "4.0.2"
   }
 }

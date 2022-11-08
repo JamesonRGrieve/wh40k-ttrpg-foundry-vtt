@@ -4,7 +4,9 @@ import { capitalize } from '../handlebars/handlebars-helpers.mjs';
 export class DarkHeresyItem extends DarkHeresyItemContainer {
   async prepareData() {
     super.prepareData();
-    await this._determineNestedItems();
+    if (game.ready) {
+      await this._determineNestedItems();
+    }
   }
 
   /**
