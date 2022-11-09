@@ -1,4 +1,4 @@
-import { getDegree } from './roll_helpers.mjs';
+import { getDegree } from './roll-helpers.mjs';
 
 export async function simpleRoll(rollData) {
   await _computeTarget(rollData);

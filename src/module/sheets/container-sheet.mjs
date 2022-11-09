@@ -24,7 +24,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
-    if (this.item.data.data.container) {
+    if (this.item.system.container) {
       this.form.ondragover = (ev) => this._onDragOver(ev);
       this.form.ondrop = (ev) => this._onDrop(ev);
       html.find('.item-create').click(async (ev) => await this._onItemCreate(ev));
@@ -90,7 +90,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
   }
 
   canAdd(itemData) {
-    return this.item.data.data.containerTypes.includes(itemData.type);
+    return this.item.system.containerTypes.includes(itemData.type);
   }
 
   async _onDrop(event) {
@@ -144,7 +144,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
       // Item is not accepted by this container -- place back onto actor
       else if (this.item.parent) {
         // this bag is owned by an actor - drop into the inventory instead.
-        if (actor && actor.data.type === 'character') await actor.deleteEmbeddedDocuments('Item', [data.data._id]);
+        if (actor && actor.type === 'character') await actor.deleteEmbeddedDocuments('Item', [data.data._id]);
         await this.item.parent.createEmbeddedDocuments('Item', [data.data]);
         ui.notifications.info('Item dropped back into actor.');
         return false;

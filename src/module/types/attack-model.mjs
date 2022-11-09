@@ -1,4 +1,4 @@
-import { RateOfFireModel } from './rate_of_fire_model.mjs';
+import { RateOfFireModel } from './rate-of-fire-model.mjs';
 
 
 export class AttackModel {

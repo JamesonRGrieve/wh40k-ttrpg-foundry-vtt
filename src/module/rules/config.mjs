@@ -1,6 +1,6 @@
 import { eliteAdvancesNames } from './elite-advances.mjs';
 import { homeworldNames } from './homeworlds.mjs';
-import { attackSpecialsNames } from './attack_specials.mjs';
+import { attackSpecialsNames } from './attack-specials.mjs';
 import { backgroundNames } from './backgrounds.mjs';
 import { roleNames } from './roles.mjs';
 import { divinationNames } from './divinations.mjs';

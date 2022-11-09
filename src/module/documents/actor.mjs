@@ -209,10 +209,10 @@ export class DarkHeresyActor extends Actor {
     // for each item, find the maximum armour val per location
     this.items
       .filter((item) => item.type === 'armour')
-      .filter((item) => item.data.data.equipped)
+      .filter((item) => item.system.equipped)
       .reduce((acc, armour) => {
         Object.keys(locations).forEach((location) => {
-          let armourVal = armour.data.data.armourPoints[location] || 0;
+          let armourVal = armour.system.armourPoints[location] || 0;
           if (armourVal > acc[location]) {
             acc[location] = armourVal;
           }
@@ -265,7 +265,7 @@ export class DarkHeresyActor extends Actor {
     if (this.backpack.hasBackpack) {
       backpackMaxWeight = this.backpack.weight.max;
       this.items.forEach((item) => {
-        if (item.data.data.backpack?.inBackpack) {
+        if (item.system.backpack?.inBackpack) {
           backpackCurrentWeight += item.totalWeight;
         } else {
           currentWeight += item.totalWeight;

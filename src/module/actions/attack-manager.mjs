@@ -1,6 +1,6 @@
 import { rollDifficulties } from '../rolls/roll-difficulties.mjs';
 import { prepareWeaponRoll } from '../rolls/weapon-prompt.mjs';
-import { combatActions } from '../rules/combat_actions.mjs';
+import { combatActions } from '../rules/combat-actions.mjs';
 
 export class AttackManager {
 
@@ -63,7 +63,7 @@ export class AttackManager {
     const sourceActorData = sourceToken.actor.data;
     const equippedWeapons = sourceToken.actor.items
       .filter((item) => item.type === 'weapon')
-      .filter((item) => item.data.data.equipped);
+      .filter((item) => item.system.equipped);
 
     if(!equippedWeapons || equippedWeapons.length === 0) {
       ui.notifications.warn('Actor must have an equipped weapon!');

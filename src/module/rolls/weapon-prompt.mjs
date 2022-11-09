@@ -1,6 +1,6 @@
 import { rollDifficulties } from './roll-difficulties.mjs';
 import { weaponRoll } from './weapon-roll.mjs';
-import { combatActions } from '../rules/combat_actions.mjs';
+import { combatActions } from '../rules/combat-actions.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
   constructor(attackData={}, options={}) {

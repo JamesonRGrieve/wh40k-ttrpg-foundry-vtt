@@ -1,4 +1,4 @@
-import { getDegree } from './roll_helpers.mjs';
+import { getDegree } from './roll-helpers.mjs';
 
 /**
  * RollData requires --
