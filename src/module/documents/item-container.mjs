@@ -1,11 +1,11 @@
 export class DarkHeresyItemContainer extends Item {
   getEmbeddedDocument(embeddedName, id, { strict = false } = {}) {
-    if (!this.data.data.container) return super.getEmbeddedDocument(embeddedName, id, { strict });
+    if (!this.system.container) return super.getEmbeddedDocument(embeddedName, id, { strict });
     return this.items.get(id);
   }
 
   async createEmbeddedDocuments(embeddedName, data, context) {
-    if (!this.data.data.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
+    if (!this.system.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
     if (!Array.isArray(data)) data = [data];
     const currentItems = duplicate(getProperty(this, 'data.flags.itemcollection.contentsData') ?? []);
 
@@ -28,7 +28,7 @@ export class DarkHeresyItemContainer extends Item {
   }
 
   async deleteEmbeddedDocuments(embeddedName, ids = [], options = {}) {
-    if (!this.data.data.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
+    if (!this.system.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
     const containedItems = getProperty(this.data, 'flags.itemcollection.contentsData') ?? [];
     const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
     const deletedItems = this.items.filter((item) => ids.includes(item.id));
@@ -46,7 +46,7 @@ export class DarkHeresyItemContainer extends Item {
   }
 
   async updateEmbeddedDocuments(embeddedName, data, options) {
-    if (!this.data.data.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
+    if (!this.system.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
     const contained = getProperty(this, 'data.flags.itemcollection.contentsData') ?? [];
     if (!Array.isArray(data)) data = [data];
     let updated = [];
@@ -82,7 +82,7 @@ export class DarkHeresyItemContainer extends Item {
 
   prepareEmbeddedDocuments() {
     super.prepareEmbeddedDocuments();
-    if (!(this instanceof Item && this.data.data.container)) return;
+    if (!(this instanceof Item && this.system.container)) return;
     const containedItems = getProperty(this.data.flags, 'itemcollection.contentsData') ?? [];
     const oldItems = this.items;
     this.items = new foundry.utils.Collection();
@@ -105,7 +105,7 @@ export class DarkHeresyItemContainer extends Item {
   }
 
   getEmbeddedCollection(type) {
-    if (type === 'Item' && this.data.data.container) return this.items;
+    if (type === 'Item' && this.system.container) return this.items;
     return super.getEmbeddedCollection(type);
   }
 
@@ -153,13 +153,13 @@ export class DarkHeresyItemContainer extends Item {
 
   async createDocuments(data = [], context = { parent: {}, pack: {}, options: {} }) {
     const { parent, pack, options } = context;
-    if (!(this.data.data.container && parent instanceof Item)) return super.createDocuments(data, context);
+    if (!(this.system.container && parent instanceof Item)) return super.createDocuments(data, context);
     await parent.createEmbeddedDocuments('Item', data, options);
   }
 
   async deleteDocuments(ids = [], context = { parent: {}, pack: {}, options: {} }) {
     const { parent, pack, options } = context;
-    if (!(this.data.data.container && parent instanceof Item)) return super.deleteDocuments(ids, context);
+    if (!(this.system.container && parent instanceof Item)) return super.deleteDocuments(ids, context);
     // an Item whose parent is an item only exists in the embedded documents
     return parent.deleteEmbeddedDocuments('Item', ids);
   }
@@ -167,7 +167,7 @@ export class DarkHeresyItemContainer extends Item {
   async updateDocuments(updates = [], context = { parent: {}, pack: {}, options: {} }) {
     const { parent, pack, options } = context;
     // An item whose parent is an item only exists in the parents embedded documents
-    if (!(this.data.data.container && parent instanceof Item)) return super.updateDocuments(updates, context);
+    if (!(this.system.container && parent instanceof Item)) return super.updateDocuments(updates, context);
     return parent.updateEmbeddedDocuments('Item', updates, options);
   }
 

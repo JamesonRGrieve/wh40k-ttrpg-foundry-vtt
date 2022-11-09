@@ -9,7 +9,7 @@ import { prepareSimpleRoll } from '../rolls/simple-prompt.mjs';
 export class DarkHeresyActor extends Actor {
   prepareData() {
     super.prepareData();
-    this.data.data.backgroundEffects = {
+    this.system.backgroundEffects = {
       abilities: [],
     };
     this._computeBackgroundFields();
@@ -122,8 +122,8 @@ export class DarkHeresyActor extends Actor {
       }
     }
 
-    this.data.data.insanityBonus = Math.floor(this.insanity / 10);
-    this.data.data.corruptionBonus = Math.floor(this.corruption / 10);
+    this.system.insanityBonus = Math.floor(this.insanity / 10);
+    this.system.corruptionBonus = Math.floor(this.corruption / 10);
     this.psy.currentRating = this.psy.rating - this.psy.sustained;
     this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
     this.fatigue.max = this.characteristics.toughness.bonus + this.characteristics.willpower.bonus;
@@ -191,7 +191,7 @@ export class DarkHeresyActor extends Actor {
     let locations = game.system.template.Item.templates.armourPoints.armourPoints;
     let toughness = this.characteristics.toughness;
 
-    this.data.data.armour = Object.keys(locations).reduce(
+    this.system.armour = Object.keys(locations).reduce(
       (accumulator, location) =>
         Object.assign(accumulator, {
           [location]: {
@@ -238,7 +238,7 @@ export class DarkHeresyActor extends Actor {
   _computeMovement() {
     let agility = this.characteristics.agility;
     let size = this.size;
-    this.data.data.movement = {
+    this.system.movement = {
       half: agility.bonus + size - 4,
       full: (agility.bonus + size - 4) * 2,
       charge: (agility.bonus + size - 4) * 3,
@@ -281,7 +281,7 @@ export class DarkHeresyActor extends Actor {
     }
 
     const attributeBonus = this.characteristics.strength.bonus + this.characteristics.toughness.bonus;
-    this.data.data.encumbrance = {
+    this.system.encumbrance = {
       max: 0,
       value: currentWeight,
       encumbered: false,
@@ -373,90 +373,90 @@ export class DarkHeresyActor extends Actor {
   }
 
   get backpack() {
-    return this.data.data.backpack;
+    return this.system.backpack;
   }
 
   get characteristics() {
-    return this.data.data.characteristics;
+    return this.system.characteristics;
   }
 
   get skills() {
-    return this.data.data.skills;
+    return this.system.skills;
   }
 
   get initiative() {
-    return this.data.data.initiative;
+    return this.system.initiative;
   }
 
   get wounds() {
-    return this.data.data.wounds;
+    return this.system.wounds;
   }
 
   get fatigue() {
-    return this.data.data.fatigue;
+    return this.system.fatigue;
   }
 
   get fate() {
-    return this.data.data.fate;
+    return this.system.fate;
   }
 
   get psy() {
-    return this.data.data.psy;
+    return this.system.psy;
   }
 
   get bio() {
-    return this.data.data.bio;
+    return this.system.bio;
   }
 
   get experience() {
-    return this.data.data.experience;
+    return this.system.experience;
   }
 
   get insanity() {
-    return this.data.data.insanity;
+    return this.system.insanity;
   }
 
   get corruption() {
-    return this.data.data.corruption;
+    return this.system.corruption;
   }
 
   get aptitudes() {
-    return this.data.data.aptitudes;
+    return this.system.aptitudes;
   }
 
   get size() {
-    return this.data.data.size;
+    return this.system.size;
   }
 
   get faction() {
-    return this.data.data.faction;
+    return this.system.faction;
   }
 
   get subfaction() {
-    return this.data.data.subfaction;
+    return this.system.subfaction;
   }
 
   get subtype() {
-    return this.data.data.type;
+    return this.system.type;
   }
 
   get threatLevel() {
-    return this.data.data.threatLevel;
+    return this.system.threatLevel;
   }
 
   get armour() {
-    return this.data.data.armour;
+    return this.system.armour;
   }
 
   get encumbrance() {
-    return this.data.data.encumbrance;
+    return this.system.encumbrance;
   }
 
   get movement() {
-    return this.data.data.movement;
+    return this.system.movement;
   }
 
   get backgroundEffects() {
-    return this.data.data.backgroundEffects;
+    return this.system.backgroundEffects;
   }
 }

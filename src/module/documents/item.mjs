@@ -18,9 +18,9 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     if (this.items && this.items.size > 0) return;
 
     // Check for specials
-    if (this.data.data.special) {
-      if (this.isWeapon) await this._updateSpecialsFromPack('dark-heresy-2nd.weapons', this.data.data.special);
-      if (this.isAmmunition) await this._updateSpecialsFromPack('dark-heresy-2nd.ammo', this.data.data.special);
+    if (this.system.special) {
+      if (this.isWeapon) await this._updateSpecialsFromPack('dark-heresy-2nd.weapons', this.system.special);
+      if (this.isAmmunition) await this._updateSpecialsFromPack('dark-heresy-2nd.ammo', this.system.special);
     }
   }
 
@@ -56,7 +56,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
   }
 
   get totalWeight() {
-    let weight = this.data.data.weight || 0;
+    let weight = this.system.weight || 0;
     if (this.items && this.items.size > 0) {
       this.items.forEach((item) => (weight += item.totalWeight));
     }
@@ -104,11 +104,11 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
   }
 
   get isRanged() {
-    return this.type === 'weapon' && this.data.data.class.toLowerCase() !== 'melee';
+    return this.type === 'weapon' && this.system.class.toLowerCase() !== 'melee';
   }
 
   get isMelee() {
-    return this.type === 'weapon' && this.data.data.class.toLowerCase() === 'melee';
+    return this.type === 'weapon' && this.system.class.toLowerCase() === 'melee';
   }
 
   get isArmour() {
@@ -165,7 +165,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
   }
 
   get isInBackpack() {
-    return this.data.data.backpack?.inBackpack || false;
+    return this.system.backpack?.inBackpack || false;
   }
 
   get isJournalEntry() {
