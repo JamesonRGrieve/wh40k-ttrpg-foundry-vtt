@@ -29,7 +29,7 @@ export class DarkHeresyItemContainer extends Item {
 
   async deleteEmbeddedDocuments(embeddedName, ids = [], options = {}) {
     if (!this.system.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
-    const containedItems = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
+    const containedItems = getProperty(this.data, 'flags.itemcollection.contentsData') ?? [];
     const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
     const deletedItems = this.items.filter((item) => ids.includes(item.id));
     if (this.parent) {
@@ -83,7 +83,7 @@ export class DarkHeresyItemContainer extends Item {
   prepareEmbeddedDocuments() {
     super.prepareEmbeddedDocuments();
     if (!(this instanceof Item && this.system.container)) return;
-    const containedItems = getProperty(this.system.flags, 'itemcollection.contentsData') ?? [];
+    const containedItems = getProperty(this.flags, 'itemcollection.contentsData') ?? [];
     const oldItems = this.items;
     this.items = new foundry.utils.Collection();
     containedItems.forEach((idata) => {

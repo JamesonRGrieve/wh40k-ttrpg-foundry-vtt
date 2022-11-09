@@ -31,9 +31,9 @@ export class WeaponAttackDialog extends FormApplication {
 
   _updateBaseTarget() {
     if (this.data.weapon.isRanged) {
-      this.data.baseTarget = this.data.actor?.data?.characteristics?.ballisticSkill?.total ?? 0;
+      this.data.baseTarget = this.data.actor?.characteristics?.ballisticSkill?.total ?? 0;
     } else {
-      this.data.baseTarget = this.data.actor?.data?.characteristics?.weaponSkill?.total ?? 0;
+      this.data.baseTarget = this.data.actor?.characteristics?.weaponSkill?.total ?? 0;
     }
   }
 

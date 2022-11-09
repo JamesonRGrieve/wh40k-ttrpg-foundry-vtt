@@ -60,7 +60,7 @@ export class AttackManager {
       return;
     }
 
-    const sourceActorData = sourceToken.actor.data;
+    const sourceActorData = sourceToken.actor;
     const equippedWeapons = sourceToken.actor.items
       .filter((item) => item.type === 'weapon')
       .filter((item) => item.system.equipped);

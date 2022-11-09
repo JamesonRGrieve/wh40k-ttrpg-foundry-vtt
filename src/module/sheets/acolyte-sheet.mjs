@@ -12,12 +12,12 @@ export class AcolyteSheet extends ActorSheet {
   }
 
   get template() {
-    return `systems/dark-heresy-2nd/templates/actor/actor-${this.actor.data.type}-sheet.hbs`;
+    return `systems/dark-heresy-2nd/templates/actor/actor-${this.actor.type}-sheet.hbs`;
   }
 
   getData() {
     const context = super.getData();
-    context.data = context.system;
+    context.data = context;
     context.dh = CONFIG.dh;
     return context;
   }
