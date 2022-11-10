@@ -17,37 +17,47 @@
             </div>
 
             <!-- Weapon Select -->
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-table--border dh-attackprompttable--border">
-                    <div class="table-row--head">
-                        <div class="table-cell"></div>
-                        <div class="table-cell"></div>
-                        <div class="table-cell--last"></div>
-                    </div>
-                    {{#each weapons as |weapon|}}
-                        <div class="table-row">
-                            <div class="table-cell--left">
-                                <input
-                                    class="table-cell--checkbox weapon-select"
-                                    type="checkbox"
-                                    data-dtype="Boolean"
-                                    {{checked weapon.isSelected}}
-                                    name="{{weapon.id}}"
-                                />
-                            </div>
-                            <div class="table-cell">
-                                <div class="display">{{weapon.name}}</div>
-                                {{#if weapon.items}}
-                                    <div class="table-cell--description">- {{#each weapon.items as |item|}}{{item.name}} - {{/each}}</div>
-                                {{/if}}
-                            </div>
-                            <div class="table-cell">
-                                <img class="dh-field__image" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                            </div>
+            {{#if weaponSelect}}
+                <div class="dh-panel dh-grid-col-6">
+                    <div class="dh-table--border dh-attackprompttable--border">
+                        <div class="table-row--head">
+                            <div class="table-cell"></div>
+                            <div class="table-cell"></div>
+                            <div class="table-cell--last"></div>
                         </div>
-                    {{/each}}
+                        {{#each weapons as |weapon|}}
+                            <div class="table-row">
+                                <div class="table-cell--left">
+                                    <input
+                                        class="table-cell--checkbox weapon-select"
+                                        type="checkbox"
+                                        data-dtype="Boolean"
+                                        {{checked weapon.isSelected}}
+                                        name="{{weapon.id}}"
+                                    />
+                                </div>
+                                <div class="table-cell">
+                                    <div class="display">{{weapon.name}}</div>
+                                    {{#if weapon.items}}
+                                        <div class="table-cell--description">- {{#each weapon.items as |item|}}{{item.name}} - {{/each}}</div>
+                                    {{/if}}
+                                </div>
+                                <div class="table-cell">
+                                    <img class="dh-field__image" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
                 </div>
-            </div>
+            {{else}}
+                <div class="dh-panel prompt dh-grid-col-6">
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Weapon</span>
+                        <span class="dh-field__span">{{weapon.name}}</span>
+                    </div>
+                </div>
+            {{/if}}
+
 
             <!-- Other -->
             <div class="dh-panel prompt dh-grid-col-6">

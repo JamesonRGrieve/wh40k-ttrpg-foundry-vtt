@@ -52,7 +52,7 @@ async function _rollTarget(rollData) {
 async function _sendToChat(rollData) {
     rollData.render = await rollData.rollObject.render();
 
-    const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs', rollData);
+    const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs', rollData);
     let chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),

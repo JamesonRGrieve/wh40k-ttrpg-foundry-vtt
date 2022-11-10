@@ -89,6 +89,8 @@ export class WeaponAttackDialog extends FormApplication {
             this.data.difficulty = 0;
             this.data.modifier = 0;
 
+            this.data.weaponSelect = this.data.weapons.length > 1;
+
             const firstWeapon = this.data.weapons[0];
             this.data.weapon = firstWeapon;
             firstWeapon.isSelected = true;
