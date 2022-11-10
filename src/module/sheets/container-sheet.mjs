@@ -7,7 +7,7 @@ import { DarkHeresyItemSheet } from './item-sheet.mjs';
 export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
   getData() {
     const context = super.getData();
-    if (!context.system.container) {
+    if (!context.item.system.container) {
       this.options.editable = false;
       return context;
     }
