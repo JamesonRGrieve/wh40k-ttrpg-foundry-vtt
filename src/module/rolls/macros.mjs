@@ -2,8 +2,8 @@ import { prepareSimpleRoll } from './simple-prompt.mjs';
 
 export async function createItemMacro(data, slot) {
   if (data.type !== 'Item') return;
-  if (!('data' in data)) return ui.notifications.warn('You can only create macro buttons for owned Items');
-  const item = data.data;
+  if (!('system' in data)) return ui.notifications.warn('You can only create macro buttons for owned Items');
+  const item = data.system;
 
   // Create the macro command
   const command = `game.dh.rollItemMacro("${item.name}");`;

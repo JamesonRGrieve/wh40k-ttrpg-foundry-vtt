@@ -93,12 +93,12 @@ export class DarkHeresyItemContainer extends Item {
       } else {
         // TODO see how to avoid this - here to make sure the contained items is correctly setup
         const currentItem = oldItems.get(idata._id);
-        setProperty(currentItem.data._source, 'flags', idata.flags);
-        setProperty(currentItem.data._source, 'data', idata.data);
+        setProperty(currentItem.system._source, 'flags', idata.flags);
+        setProperty(currentItem.system._source, 'data', idata.data);
         currentItem.prepareData();
         this.items.set(idata._id, currentItem);
         if (this.sheet) {
-          currentItem.render(false, { action: 'update', data: currentItem.data });
+          currentItem.render(false, { action: 'update', data: currentItem.system });
         }
       }
     });
@@ -119,7 +119,7 @@ export class DarkHeresyItemContainer extends Item {
     data = foundry.utils.expandObject(data);
     data._id = this.id;
     await this.parent.updateEmbeddedDocuments('Item', [data]);
-    this.render(false, { action: 'update', data: data });
+    this.render(false, { action: 'update', data: data.system });
   }
 
   async delete(data) {

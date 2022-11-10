@@ -44,10 +44,10 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
       const specialName = capitalize(special);
       const attackSpecial = index.find((n) => n.name === specialName);
       if (attackSpecial) {
-        if (attackSpecial.data.hasLevel) {
-          attackSpecial.data.level = specialData[special];
+        if (attackSpecial.system.hasLevel) {
+          attackSpecial.system.level = specialData[special];
         } else {
-          attackSpecial.data.enabled = specialData[special];
+          attackSpecial.system.enabled = specialData[special];
         }
         specials.push(attackSpecial);
       }
