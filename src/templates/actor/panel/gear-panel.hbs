@@ -26,7 +26,7 @@
                         <span class="display">{{capitalize item.type}}</span>
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.weight}}</span>
+                        <span class="display">{{item.system.weight}}</span>
                     </div>
                     <div class="table-cell--last">
                         <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
@@ -35,7 +35,7 @@
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot
                             (isExpanded (concat 'description_' item.id ))}}>
-                        <span class="display">{{item.data.data.description}}</span>
+                        <span class="display">{{item.system.description}}</span>
                     </div>
                 </div>
             {{/if}}

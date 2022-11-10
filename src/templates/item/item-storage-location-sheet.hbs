@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
                                                 (isExpanded (concat 'description_' embedded.id ))}}>
-                                            <span>{{embedded.data.data.description}}</span>
+                                            <span>{{embedded.system.description}}</span>
                                         </div>
                                     </div>
                                 {{/each}}
@@ -63,7 +63,7 @@
                             <div class="dh-header__item-wrapper--text-area">
                                 <span class="dh-header__title">Description</span>
                                 <textarea class="dh-header__textarea"
-                                          name="data.description">{{data.description}}</textarea>
+                                          name="data.description">{{item.description}}</textarea>
                             </div>
                         </div>
                     </div>

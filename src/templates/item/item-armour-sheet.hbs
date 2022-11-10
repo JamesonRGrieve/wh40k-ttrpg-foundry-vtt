@@ -13,37 +13,37 @@
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Type</span>
                         <select class="dh-header__select" name="data.type">
-                            {{selectOptions (arrayToObject dh.combat.armour_type) selected=data.type}}
+                            {{selectOptions (arrayToObject dh.combat.armour_type) selected=item.type}}
                         </select>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="data.source" type="text" value="{{data.source}}"/>
+                        <input class="dh-header__input" name="data.source" type="text" value="{{item.source}}"/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Weight</span>
                         <input class="dh-header__input" name="data.weight" type="number" data-dtype="Number"
-                               value="{{data.weight}}"/>
+                               value="{{item.weight}}"/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Equipped</span>
-                        <input name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked data.equipped}}/>
+                        <input name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked item.equipped}}/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
                         <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
-                                data.backpack.inBackpack}}/>
+                                item.backpack.inBackpack}}/>
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Availability</span>
                         <select class="dh-header__select" name="data.availability">
-                            {{selectOptions (arrayToObject dh.items.availability) selected=data.availability}}
+                            {{selectOptions (arrayToObject dh.items.availability) selected=item.availability}}
                         </select>
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Craftsmanship</span>
                         <select class="dh-header__select" name="data.craftsmanship">
-                            {{selectOptions (arrayToObject dh.items.crafstmanship) selected=data.craftsmanship}}
+                            {{selectOptions (arrayToObject dh.items.crafstmanship) selected=item.craftsmanship}}
                         </select>
                     </div>
                 </div>
@@ -62,32 +62,32 @@
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Head</span>
                                 <input class="dh-field__input" type="text" name="data.damage"
-                                       value="{{data.armourPoints.head}}"/>
+                                       value="{{item.armourPoints.head}}"/>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Left Arm</span>
                                 <input class="dh-field__input" type="text" name="data.damageType"
-                                       value="{{data.armourPoints.leftArm}}"/>
+                                       value="{{item.armourPoints.leftArm}}"/>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Right Arm</span>
                                 <input class="dh-field__input" type="text" name="data.penetration"
-                                       value="{{data.armourPoints.rightArm}}"/>
+                                       value="{{item.armourPoints.rightArm}}"/>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Body</span>
                                 <input class="dh-field__input" type="text" name="data.penetration"
-                                       value="{{data.armourPoints.body}}"/>
+                                       value="{{item.armourPoints.body}}"/>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Left Leg</span>
                                 <input class="dh-field__input" type="text" name="data.damageType"
-                                       value="{{data.armourPoints.leftLeg}}"/>
+                                       value="{{item.armourPoints.leftLeg}}"/>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Right Leg</span>
                                 <input class="dh-field__input" type="text" name="data.penetration"
-                                       value="{{data.armourPoints.rightLeg}}"/>
+                                       value="{{item.armourPoints.rightLeg}}"/>
                             </div>
                         </div>
                         <div class="dh-panel dh-grid-col-1">
@@ -95,7 +95,7 @@
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Max Agility</span>
                                 <input class="dh-field__input" type="text" name="data.damage"
-                                       value="{{data.maxAgility}}"/>
+                                       value="{{item.maxAgility}}"/>
                             </div>
                         </div>
                         <div class="dh-panel dh-grid-col-3">
@@ -121,10 +121,10 @@
                                                 {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
                                             </div>
                                             <div class="table-cell">
-                                                <span>{{embedded.data.data.craftsmanship}}</span>
+                                                <span>{{embedded.system.craftsmanship}}</span>
                                             </div>
                                             <div class="table-cell">
-                                                <span>{{embedded.data.data.equipped}}</span>
+                                                <span>{{embedded.system.equipped}}</span>
                                             </div>
                                             <div class="table-cell--last">
                                                 <label class="dh-control-button item-delete"
@@ -135,7 +135,7 @@
                                             </div>
                                             <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
                                                     (isExpanded (concat 'description_' embedded.id ))}}>
-                                                <span>{{embedded.data.data.description}}</span>
+                                                <span>{{embedded.system.description}}</span>
                                             </div>
                                         </div>
                                     {{/if}}
@@ -148,7 +148,7 @@
                             <div class="dh-header__item-wrapper--text-area">
                                 <span class="dh-header__title">Description</span>
                                 <textarea class="dh-header__textarea"
-                                          name="data.description">{{data.description}}</textarea>
+                                          name="data.description">{{item.description}}</textarea>
                             </div>
                         </div>
                     </div>

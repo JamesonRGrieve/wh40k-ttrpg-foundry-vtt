@@ -24,13 +24,13 @@
                         {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.type}}</span>
+                        <span class="display">{{item.system.type}}</span>
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{armourDisplay item.data.data}}</span>
+                        <span class="display">{{armourDisplay item.system}}</span>
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.equipped}}</span>
+                        <span class="display">{{item.system.equipped}}</span>
                     </div>
                     <div class="table-cell--last">
                         <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
@@ -42,27 +42,27 @@
                         <div class="dh-settings">
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Head</span>
-                                <span class="dh-field__span">{{item.data.data.armourPoints.head}}</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.head}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Left Arm</span>
-                                <span class="dh-field__span">{{item.data.data.armourPoints.leftArm}}</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.leftArm}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Right Arm</span>
-                                <span class="dh-field__span">{{item.data.data.armourPoints.rightArm}}</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.rightArm}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Body</span>
-                                <span class="dh-field__span">{{item.data.data.armourPoints.body}}</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.body}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Left Leg</span>
-                                <span class="dh-field__span">{{item.data.data.armourPoints.leftLeg}}</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.leftLeg}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Right Leg</span>
-                                <span class="dh-field__span">{{item.data.data.armourPoints.rightLeg}}</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.rightLeg}}</span>
                             </div>
                         </div>
                     </div>

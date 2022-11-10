@@ -3,7 +3,7 @@
     <div class="dh-field__wrapper">
         <span class="dh-field__header">Insanity Points</span>
         <input class="dh-field__input" data-dtype="Number" type="number" name="data.insanity"
-               value="{{data.insanity}}"/>
+               value="{{actor.insanity}}"/>
     </div>
     <div class="dh-table--border dh-insanitytable--border">
         <div class="table-row--head">
@@ -32,7 +32,7 @@
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot
                             (isExpanded (concat 'description_' item.id ))}}>
-                        <span>{{item.data.data.description}}</span>
+                        <span>{{item.system.description}}</span>
                     </div>
                 </div>
             {{/if}}

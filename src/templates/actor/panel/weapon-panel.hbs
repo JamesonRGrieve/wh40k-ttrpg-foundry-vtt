@@ -24,13 +24,13 @@
                         {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.class}}</span>
+                        <span class="display">{{item.system.class}}</span>
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.type}}</span>
+                        <span class="display">{{item.system.type}}</span>
                     </div>
                     <div class="table-cell">
-                        <span class="display">{{item.data.data.equipped}}</span>
+                        <span class="display">{{item.system.equipped}}</span>
                     </div>
                     <div class="table-cell--last">
                         <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
@@ -42,15 +42,15 @@
                         <div class="dh-settings">
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Damage</span>
-                                <span class="dh-field__span">{{item.data.data.damage}}</span>
+                                <span class="dh-field__span">{{item.system.damage}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Type</span>
-                                <span class="dh-field__span">{{item.data.data.damageType}}</span>
+                                <span class="dh-field__span">{{item.system.damageType}}</span>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Pen</span>
-                                <span class="dh-field__span">{{item.data.data.penetration}}</span>
+                                <span class="dh-field__span">{{item.system.penetration}}</span>
                             </div>
                         </div>
                     </div>

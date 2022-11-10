@@ -23,15 +23,15 @@
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
                         <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
-                                data.backpack.inBackpack}}/>
+                                item.backpack.inBackpack}}/>
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Weapon Types</span>
-                        <input name="data.weapon_type" type="text" value="{{data.weapon_type}}"/>
+                        <input name="data.weapon_type" type="text" value="{{item.weapon_type}}"/>
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Effect</span>
-                        <textarea class="dh-header__textarea" name="data.effect">{{data.effect}}</textarea>
+                        <textarea class="dh-header__textarea" name="data.effect">{{item.effect}}</textarea>
                     </div>
                 </div>
             </div>
@@ -40,24 +40,24 @@
             <h1 class="dh-panel__header">Damage</h1>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Modification</span>
-                <input class="dh-field__input" type="text" name="data.damage" value="{{data.damage}}"/>
+                <input class="dh-field__input" type="text" name="data.damage" value="{{item.damage}}"/>
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Type</span>
                 <select class="dh-field__input" name="data.damageType">
                     <option value=""></option>
-                    {{selectOptions (arrayToObject dh.combat.damage_types) selected=data.damageType}}
+                    {{selectOptions (arrayToObject dh.combat.damage_types) selected=item.damageType}}
                 </select>
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Pen</span>
                 <input class="dh-field__input" type="text" name="data.penetration"
-                       value="{{data.penetration}}"/>
+                       value="{{item.penetration}}"/>
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Attack Bonus</span>
                 <input class="dh-field__input" type="text" name="data.attackBonus"
-                       value="{{data.attackBonus}}"/>
+                       value="{{item.attackBonus}}"/>
             </div>
         </div>
         <div class="dh-panel dh-grid-col-4">
@@ -82,10 +82,10 @@
                                 {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' embedded.id) text=embedded.name}}
                             </div>
                             <div class="table-cell">
-                                <span class="display">{{embedded.data.data.enabled}}</span>
+                                <span class="display">{{embedded.system.enabled}}</span>
                             </div>
                             <div class="table-cell">
-                                <span class="display">{{defaultVal embedded.data.data.level 'N/A'}}</span>
+                                <span class="display">{{defaultVal embedded.system.level 'N/A'}}</span>
                             </div>
                             <div class="table-cell--last">
                                 <label class="dh-control-button item-delete" data-item-id="{{embedded.id}}">
@@ -95,7 +95,7 @@
                             </div>
                             <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
                                     (isExpanded (concat 'description_' embedded.id ))}}>
-                                <span>{{embedded.data.data.description}}</span>
+                                <span>{{embedded.system.description}}</span>
                             </div>
                         </div>
                     {{/if}}

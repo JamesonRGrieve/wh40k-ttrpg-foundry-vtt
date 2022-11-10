@@ -1,6 +1,6 @@
 <div class='dh-panel dh-grid-col-2 {{isError data.encumbrance.encumbered}}'>
   <h1 class='dh-panel__header'>
-    {{#if data.encumbrance.encumbered}}
+    {{#if actor.encumbrance.encumbered}}
       Encumbrance (overweight)
     {{else}}
       Encumbrance
@@ -8,21 +8,21 @@
   </h1>
   <div class='dh-field__wrapper'>
     <span class='dh-field__header'>Current Enc.</span>
-    <span class='dh-field__span'>{{data.encumbrance.value}}</span>
+    <span class='dh-field__span'>{{actor.encumbrance.value}}</span>
   </div>
   <div class='dh-field__wrapper'>
     <span class='dh-field__header'>Max Enc.</span>
-    <span class='dh-field__span'>{{data.encumbrance.max}}</span>
+    <span class='dh-field__span'>{{actor.encumbrance.max}}</span>
   </div>
-  {{#if data.backpack.hasBackpack}}
-    {{#unless data.backpack.isCombatVest}}
+  {{#if actor.backpack.hasBackpack}}
+    {{#unless actor.backpack.isCombatVest}}
       <div class='dh-field__wrapper'>
         <span class='dh-field__header'>Backpack Current Enc.</span>
-        <span class='dh-field__span'>{{data.encumbrance.backpack_value}}</span>
+        <span class='dh-field__span'>{{actor.encumbrance.backpack_value}}</span>
       </div>
       <div class='dh-field__wrapper'>
         <span class='dh-field__header'>Backpack Max Enc.</span>
-        <span class='dh-field__span'>{{data.encumbrance.backpack_max}}</span>
+        <span class='dh-field__span'>{{actor.encumbrance.backpack_max}}</span>
       </div>
     {{/unless}}
   {{/if}}
