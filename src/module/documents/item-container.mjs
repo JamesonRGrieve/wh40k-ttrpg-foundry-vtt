@@ -96,7 +96,7 @@ export class DarkHeresyItemContainer extends Item {
         // TODO see how to avoid this - here to make sure the contained items is correctly setup
         const currentItem = oldItems.get(idata._id);
         setProperty(currentItem._source, 'flags', idata.flags);
-        setProperty(currentItem._source, 'data', idata.data);
+        setProperty(currentItem._source, 'data', idata.system);
         currentItem.prepareData();
         this.items.set(idata._id, currentItem);
         if (this.sheet) {
