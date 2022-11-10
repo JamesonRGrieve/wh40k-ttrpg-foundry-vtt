@@ -41,20 +41,16 @@ function checkExistingMacro(name, command) {
 }
 
 export async function createItemMacro(data, slot) {
-    console.log('Create Item Macro');
-    console.log(data);
-    if (data.type !== 'Item') return ui.notifications.warn(`Data type must be item to create item macro`);
-    if (!('system' in data)) return ui.notifications.warn('You can only create macro buttons for owned Items');
-    const item = data.system;
+    if (!checkMacroCanCreate()) return;
 
     // Create the macro command
-    const command = `game.dh.rollItemMacro("${item.name}");`;
-    if (checkExistingMacro(item.name, command)) return;
+    const command = `game.dh.rollItemMacro("${data.name}");`;
+    if (checkExistingMacro(data.name, command)) return;
 
     const macro = await Macro.create({
-        name: item.name,
+        name: data.name,
         type: 'script',
-        img: item.img,
+        img: data.img,
         command: command,
         flags: { 'dh.itemMacro': true },
     });

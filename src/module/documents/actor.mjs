@@ -140,10 +140,9 @@ export class DarkHeresyActor extends Actor {
         const item = this.actor.items.get(itemId);
         switch (item.type) {
             case 'weapon':
-                console.log('Roll Weapon');
-                break;
+                return ui.notifications.warn(`Weapon Rolls coming soon: ${item.type}`);
             default:
-                return ui.notifications.warn(`Unable to roll item type: ${item.type}`);
+                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
         }
     }
 

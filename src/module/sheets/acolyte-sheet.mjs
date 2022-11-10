@@ -85,8 +85,22 @@ export class AcolyteSheet extends ActorSheet {
                 event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
                 return;
             default:
-                // Let default Foundry handler deal with default drag cases.
-                return super._onDragStart(event);
+                // Check if it's an item
+                const item = this.actor.items.find(i => i.id === element.dataset.itemId);
+                if(item) {
+                    dragData.type = 'Item';
+                    dragData.data = {
+                        name: item.name,
+                        img: item.img,
+                        item_type: element.dataset.itemType,
+                        item_id: element.dataset.itemId,
+                    }
+                    event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+                    return;
+                } else {
+                    // Let default Foundry handler deal with default drag cases.
+                    return super._onDragStart(event);
+                }
         }
     }
 
