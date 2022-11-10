@@ -7,7 +7,7 @@
       <div class='table-cell'>Char.</div>
       <div class='table-cell--last'>Total</div>
     </div>
-    {{#each data.skills as |skill name|}}
+    {{#each actor.skills as |skill name|}}
       {{#unless skill.isSpecialist}}
         <div class='table-row' data-item-type='skill' data-item-id='{{name}}'>
           <div class='table-cell'>

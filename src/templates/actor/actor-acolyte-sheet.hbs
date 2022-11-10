@@ -10,7 +10,7 @@
                     <span class="dh-header__title">Name</span>
                     <input class="dh-header__input" name="name" type="text" value="{{actor.name}}"/>
                 </div>
-                {{#each data.bio}}
+                {{#each actor.bio}}
                     {{#if (arrayIncludes @key @root.dh.bio.primary)}}
                         {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
                     {{/if}}
@@ -61,7 +61,7 @@
                 <div class="dh-panel dh-grid-col-6">
                     <div class="dh-header__info">
                         <h1 class="dh-panel__header dh-grid-col-4">Biography</h1>
-                        {{#each data.bio}}
+                        {{#each actor.bio}}
                             {{#unless (arrayIncludes @key @root.dh.bio.primary)}}
                                 {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
                             {{/unless}}

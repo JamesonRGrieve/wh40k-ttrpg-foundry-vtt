@@ -1,13 +1,13 @@
-<div class='dh-panel dh-grid-col-2 dh-grid-row-3 {{isError data.encumbrance.backpack_encumbered}}'>
+<div class='dh-panel dh-grid-col-2 dh-grid-row-3 {{isError actor.encumbrance.backpack_encumbered}}'>
   <h1 class='dh-panel__header'>
     <label class='dh-trait-toggle sheet-control__hide-control' data-toggle='backpack_settings'>
       <div class='dh-material material-icons'>{{defaultVal icon 'settings'}}</div>
       <span class='dh-trait-toggle__span'>
-        {{#if data.encumbrance.backpack_encumbered}}
-          {{data.backpack.name}}
+        {{#if actor.encumbrance.backpack_encumbered}}
+          {{actor.backpack.name}}
           (overweight)
         {{else}}
-          {{data.backpack.name}}
+          {{actor.backpack.name}}
         {{/if}}
       </span>
     </label>
@@ -15,22 +15,22 @@
   <div class='dh-settings--border backpack_settings' {{hideIfNot (isExpanded 'backpack_settings')}}>
     <div class='dh-settings__row--invert'>
       <div class='dh-settings__label'>Backpack Equipped</div>
-      <input class='dh-settings__checkbox' {{checked data.backpack.hasBackpack}} data-dtype='Boolean' type='checkbox' name='data.backpack.hasBackpack' />
+      <input class='dh-settings__checkbox' {{checked actor.backpack.hasBackpack}} data-dtype='Boolean' type='checkbox' name='data.backpack.hasBackpack' />
     </div>
     <div class='dh-settings__row--invert'>
       <div class='dh-settings__label'>Is Combat Vest</div>
-      <input class='dh-settings__checkbox' {{checked data.backpack.isCombatVest}} data-dtype='Boolean' type='checkbox' name='data.backpack.isCombatVest' />
+      <input class='dh-settings__checkbox' {{checked actor.backpack.isCombatVest}} data-dtype='Boolean' type='checkbox' name='data.backpack.isCombatVest' />
     </div>
     <div class='dh-settings__row--span'>
       <div class='dh-settings__label'>Name</div>
-      <input class='dh-settings__input' type='text' name='data.backpack.name' value='{{data.backpack.name}}' />
+      <input class='dh-settings__input' type='text' name='data.backpack.name' value='{{actor.backpack.name}}' />
     </div>
     <div class='dh-settings__row--span'>
       <div class='dh-settings__label'>Max Weight</div>
-      <input class='dh-settings__input' data-dtype='Number' type='number' name='data.backpack.weight.max' value='{{data.backpack.weight.max}}' />
+      <input class='dh-settings__input' data-dtype='Number' type='number' name='data.backpack.weight.max' value='{{actor.backpack.weight.max}}' />
     </div>
   </div>
-  {{#if data.backpack.hasBackpack}}
+  {{#if actor.backpack.hasBackpack}}
     <div class='dh-table--border dh-backpacktable--border'>
       <div class='table-row--head'>
         <div class='table-cell'>Name</div>

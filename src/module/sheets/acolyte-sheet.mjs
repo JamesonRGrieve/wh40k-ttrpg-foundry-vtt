@@ -17,7 +17,6 @@ export class AcolyteSheet extends ActorSheet {
 
   getData() {
     const context = super.getData();
-    context.data = context;
     context.dh = CONFIG.dh;
     return context;
   }

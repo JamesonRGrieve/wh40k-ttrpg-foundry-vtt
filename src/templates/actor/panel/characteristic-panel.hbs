@@ -8,7 +8,7 @@
     <div class='dh-chartable__cell--left'>Current</div>
     <div class='dh-chartable__cell--left'>Unnatural</div>
     <div class='dh-chartable__cell--left'>Bonus</div>
-    {{#each data.characteristics as |characteristic name|}}
+    {{#each actor.characteristics as |characteristic name|}}
       <div class='dh-chartable__cell--head {{colorCode this.has_bonus this.has_negative}}'>
         <button
           class='roll-characteristic'
