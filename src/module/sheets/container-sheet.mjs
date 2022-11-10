@@ -7,14 +7,10 @@ import { DarkHeresyItemSheet } from './item-sheet.mjs';
 export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
   getData() {
     const context = super.getData();
-    if (!context.data.container) {
+    if (!context.system.container) {
       this.options.editable = false;
-      options.editable = false;
       return context;
     }
-
-    const item = this.item;
-    context.flags = duplicate(item.data.flags);
     return context;
   }
 
@@ -118,15 +114,15 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
       const tokenDocument = await fromUuid(uuid);
       if (tokenDocument) actor = tokenDocument.actor;
     }
-    if (data.data) {
+    if (data.system) {
       // Check up the chain that we are not dropping one of our parents onto us.
-      let canAdd = this.item.id !== data.data._id;
+      let canAdd = this.item.id !== data.system._id;
       parent = this.item.parent;
       let count = 0;
       while (parent && count < 10) {
         // Don't allow drops of anything in the parent chain or the item will disappear.
         count += 1;
-        canAdd = canAdd && parent.id !== data.data._id;
+        canAdd = canAdd && parent.id !== data.system._id;
         parent = parent.parent;
       }
       if (!canAdd) {
@@ -135,17 +131,17 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
         throw new Error('Dragging bag onto itself or ancestor opens a planar vortex and you are sucked into it');
       }
       // drop from player characters or another bag.
-      if (this.canAdd(data.data)) {
-        let toDelete = data.data._id;
-        await this.item.createEmbeddedDocuments('Item', [data.data]);
-        if (actor && (actor.data.type === 'character' || actor.isToken)) await actor.deleteEmbeddedDocuments('Item', [toDelete]);
+      if (this.canAdd(data)) {
+        let toDelete = data.system._id;
+        await this.item.createEmbeddedDocuments('Item', [data.system]);
+        if (actor && (actor.system.type === 'character' || actor.isToken)) await actor.deleteEmbeddedDocuments('Item', [toDelete]);
         return false;
       }
       // Item is not accepted by this container -- place back onto actor
       else if (this.item.parent) {
         // this bag is owned by an actor - drop into the inventory instead.
-        if (actor && actor.type === 'character') await actor.deleteEmbeddedDocuments('Item', [data.data._id]);
-        await this.item.parent.createEmbeddedDocuments('Item', [data.data]);
+        if (actor && actor.type === 'character') await actor.deleteEmbeddedDocuments('Item', [data.system._id]);
+        await this.item.parent.createEmbeddedDocuments('Item', [data.system]);
         ui.notifications.info('Item dropped back into actor.');
         return false;
       }
@@ -159,8 +155,8 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
     // Case 3 - Import from World entity
     else {
       let item = game.items.get(data.id);
-      if (this.canAdd(item.data)) {
-        const itemData = item.data.toJSON();
+      if (this.canAdd(item)) {
+        const itemData = item.system.toJSON();
         await this.item.createEmbeddedDocuments('Item', [itemData]);
       }
     }
@@ -170,8 +166,8 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
   async _importItemFromCollection(collection, entryId) {
     let item = await game.packs.get(collection).getDocument(entryId);
     if (!item) return;
-    if (this.canAdd(item.data)) {
-      return this.item.createEmbeddedDocuments('Item', item.data.toJSON());
+    if (this.canAdd(item)) {
+      return this.item.createEmbeddedDocuments('Item', item.system.toJSON());
     }
   }
 }
