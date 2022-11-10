@@ -17,13 +17,13 @@
                         <span>{{localize this.label}}</span>
                     </div>
                     <div class="dh-settings spec_skills_{{name}}" {{hideIfNot
-                            (isExpanded (concat 'spec_skills_' name ))}}>
+                        (isExpanded (concat 'spec_skills_' name ))}}>
                         <h2>specialisation display</h2>
                         {{#each this.specialities as | specialty skey |}}
                             <div class="dh-settings__row--invert">
                                 <div class="dh-settings__label">{{this.label}}</div>
                                 <input class="dh-settings__checkbox" {{checked specialty.taken}} data-dtype="Boolean"
-                                       type="checkbox" name="data.skills.{{name}}.specialities.{{skey}}.taken"/>
+                                       type="checkbox" name="data.skills.{{name}}.specialities.{{skey}}.taken" />
                             </div>
                         {{/each}}
                     </div>

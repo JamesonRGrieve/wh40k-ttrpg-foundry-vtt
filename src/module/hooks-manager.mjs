@@ -9,8 +9,15 @@ import { DarkHeresyTalentSheet } from './sheets/talent-sheet.mjs';
 import { DarkHeresyJournalEntrySheet } from './sheets/journal-entry-sheet.mjs';
 import { DarkHeresyPeerEnemySheet } from './sheets/peer-enemy-sheet.mjs';
 import { DarkHeresyAttackSpecialSheet } from './sheets/attack-special-sheet.mjs';
-import { DarkHeresyWeaponModSheet } from "./sheets/weapon-mod-sheet.mjs";
-import { createCharacteristicMacro, createItemMacro, createSkillMacro, rollCharacteristicMacro, rollItemMacro, rollSkillMacro } from './rolls/macros.mjs';
+import { DarkHeresyWeaponModSheet } from './sheets/weapon-mod-sheet.mjs';
+import {
+    createCharacteristicMacro,
+    createItemMacro,
+    createSkillMacro,
+    rollCharacteristicMacro,
+    rollItemMacro,
+    rollSkillMacro,
+} from './rolls/macros.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';
@@ -19,17 +26,17 @@ import { DarkHeresyPsykanaSheet } from './sheets/psykana-sheet.mjs';
 export const MODULE_NAME = 'dh';
 
 export class HooksManager {
-  static registerHooks() {
-    console.log('Dark Heresy 2nd Edition | Registering system hooks');
+    static registerHooks() {
+        console.log('Dark Heresy 2nd Edition | Registering system hooks');
 
-    Hooks.once('init', HooksManager.init);
-    Hooks.on('ready', HooksManager.ready);
-    Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
-    initializeActorActions();
-  }
+        Hooks.once('init', HooksManager.init);
+        Hooks.on('ready', HooksManager.ready);
+        Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
+        initializeActorActions();
+    }
 
-  static init() {
-    console.log(`Loading Dark Heresy 2nd Edition System
+    static init() {
+        console.log(`Loading Dark Heresy 2nd Edition System
 ______________  _______ 
 ___  __ \__  / / /_|__ \
 __  / / /_  /_/ /____/ /
@@ -38,60 +45,65 @@ _  /_/ /_  __  / _  __/
                         
 `);
 
-    game.dh = {
-      dhActor: DarkHeresyActor,
-      dhItem: DarkHeresyItem,
-      rollItemMacro,
-      rollSkillMacro,
-      rollCharacteristicMacro,
-    };
+        game.dh = {
+            dhActor: DarkHeresyActor,
+            dhItem: DarkHeresyItem,
+            rollItemMacro,
+            rollSkillMacro,
+            rollCharacteristicMacro,
+        };
 
-    // CONFIG.debug.hooks = true;
+        // CONFIG.debug.hooks = true;
 
-    // Add custom constants for configuration.
-    CONFIG.dh = DarkHeresy;
-    CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
+        // Add custom constants for configuration.
+        CONFIG.dh = DarkHeresy;
+        CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
 
-    // Define custom Document classes
-    CONFIG.Actor.documentClass = DarkHeresyActor;
-    CONFIG.Item.documentClass = DarkHeresyItem;
+        // Define custom Document classes
+        CONFIG.Actor.documentClass = DarkHeresyActor;
+        CONFIG.Item.documentClass = DarkHeresyItem;
 
-    // Register sheet application classes
-    Actors.unregisterSheet('core', ActorSheet);
-    Actors.registerSheet(MODULE_NAME, AcolyteSheet, { makeDefault: true });
+        // Register sheet application classes
+        Actors.unregisterSheet('core', ActorSheet);
+        Actors.registerSheet(MODULE_NAME, AcolyteSheet, { makeDefault: true });
 
-    Items.unregisterSheet('core', ItemSheet);
-    Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyWeaponModSheet, { types: ['weaponModification'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
-    Items.registerSheet(MODULE_NAME, DarkHeresyPsykanaSheet, { types: ['psychicPower'], makeDefault: true});
+        Items.unregisterSheet('core', ItemSheet);
+        Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponModSheet, {
+            types: ['weaponModification'],
+            makeDefault: true,
+        });
+        Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyPsykanaSheet, { types: ['psychicPower'], makeDefault: true });
 
-    HandlebarManager.loadTemplates();
-  }
-
-  static async ready() {
-    console.log(`DH2e Loaded!`);
-  }
-
-  static async hotbarDrop(bar, data, slot) {
-    switch (data.type) {
-      case 'Characteristic':
-        await createCharacteristicMacro(data.data, slot);
-        return false;
-      case 'Item':
-        await createItemMacro(data.data, slot);
-        return false;
-      case 'Skill':
-        await createSkillMacro(data.data, slot);
-        return false;
-      default:
-        return;
+        HandlebarManager.loadTemplates();
     }
-  }
+
+    static async ready() {
+        console.log(`DH2e Loaded!`);
+    }
+
+    static async hotbarDrop(bar, data, slot) {
+        console.log('Hotbar Drop');
+        console.log(data);
+        switch (data.type) {
+            case 'Characteristic':
+                await createCharacteristicMacro(data.data, slot);
+                return false;
+            case 'Item':
+                await createItemMacro(data.data, slot);
+                return false;
+            case 'Skill':
+                await createSkillMacro(data.data, slot);
+                return false;
+            default:
+                return;
+        }
+    }
 }

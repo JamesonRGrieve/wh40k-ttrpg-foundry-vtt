@@ -1,48 +1,48 @@
-<div class='dh-panel dh-grid-col-4 dh-grid-row-2'>
-  <h1 class='dh-panel__header'>Characteristics</h1>
-  <div class='dh-chartable'>
-    <div class='dh-chartable__cell--noborder'>&nbsp;</div>
-    <div class='dh-chartable__cell--left'>Initial</div>
-    <div class='dh-chartable__cell--left'>Advances</div>
-    <div class='dh-chartable__cell--left'>Modifier</div>
-    <div class='dh-chartable__cell--left'>Current</div>
-    <div class='dh-chartable__cell--left'>Unnatural</div>
-    <div class='dh-chartable__cell--left'>Bonus</div>
-    {{#each actor.characteristics as |characteristic name|}}
-      <div class='dh-chartable__cell--head {{colorCode this.has_bonus this.has_negative}}'>
-        <button
-          class='roll-characteristic'
-          type='roll'
-          data-item-type='characteristic'
-          data-item-id='{{name}}'
-          data-characteristic='{{name}}'
-        >{{this.short}}</button>
-      </div>
-      <div class='dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}'>
-        <input name='data.characteristics.{{name}}.base' data-dtype='Number' type='number' value='{{this.base}}' />
-      </div>
-      <div class='dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}'>
-        <select name='data.characteristics.{{name}}.advance'>
-          {{option '0' this.advance 'None'}}
-          {{option '1' this.advance 'Simple'}}
-          {{option '2' this.advance 'Intermediate'}}
-          {{option '3' this.advance 'Trained'}}
-          {{option '4' this.advance 'Proficient'}}
-          {{option '5' this.advance 'Expert'}}
-        </select>
-      </div>
-      <div class='dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}'>
-        <input class='dh-field__input' name='data.characteristics.{{name}}.modifier' data-dtype='Number' type='number' value='{{this.modifier}}' />
-      </div>
-      <div class='dh-chartable__cell dh-chartable__cell--highlight {{colorCode this.has_bonus this.has_negative}}'>
-        <span class='display'>{{this.total}}</span>
-      </div>
-      <div class='dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}'>
-        <input class='dh-field__input' name='data.characteristics.{{name}}.unnatural' data-dtype='Number' type='number' value='{{this.unnatural}}' />
-      </div>
-      <div class='dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}'>
-        <span class='display'>{{this.bonus}}</span>
-      </div>
-    {{/each}}
-  </div>
+<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
+    <h1 class="dh-panel__header">Characteristics</h1>
+    <div class="dh-chartable">
+        <div class="dh-chartable__cell--noborder">&nbsp;</div>
+        <div class="dh-chartable__cell--left">Initial</div>
+        <div class="dh-chartable__cell--left">Advances</div>
+        <div class="dh-chartable__cell--left">Modifier</div>
+        <div class="dh-chartable__cell--left">Current</div>
+        <div class="dh-chartable__cell--left">Unnatural</div>
+        <div class="dh-chartable__cell--left">Bonus</div>
+        {{#each actor.characteristics as |characteristic name|}}
+            <div class="dh-chartable__cell--head {{colorCode this.has_bonus this.has_negative}}">
+                <button
+                    class="roll-characteristic"
+                    type="roll"
+                    data-item-type="characteristic"
+                    data-item-id="{{name}}"
+                    data-characteristic="{{name}}"
+                >{{this.short}}</button>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <input name="data.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}" />
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <select name="data.characteristics.{{name}}.advance">
+                    {{option "0" this.advance "None"}}
+                    {{option "1" this.advance "Simple"}}
+                    {{option "2" this.advance "Intermediate"}}
+                    {{option "3" this.advance "Trained"}}
+                    {{option "4" this.advance "Proficient"}}
+                    {{option "5" this.advance "Expert"}}
+                </select>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <input class="dh-field__input" name="data.characteristics.{{name}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}" />
+            </div>
+            <div class="dh-chartable__cell dh-chartable__cell--highlight {{colorCode this.has_bonus this.has_negative}}">
+                <span class="display">{{this.total}}</span>
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <input class="dh-field__input" name="data.characteristics.{{name}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}" />
+            </div>
+            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+                <span class="display">{{this.bonus}}</span>
+            </div>
+        {{/each}}
+    </div>
 </div>

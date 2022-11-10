@@ -1,9 +1,9 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+<div class='dh-panel dh-grid-col-2 dh-grid-row-1'>
     <h1 class="dh-panel__header">Insanity</h1>
     <div class="dh-field__wrapper">
         <span class="dh-field__header">Insanity Points</span>
         <input class="dh-field__input" data-dtype="Number" type="number" name="data.insanity"
-               value="{{actor.insanity}}"/>
+               value="{{actor.insanity}}" />
     </div>
     <div class="dh-table--border dh-insanitytable--border">
         <div class="table-row--head">
@@ -31,7 +31,7 @@
                         </label>
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot
-                            (isExpanded (concat 'description_' item.id ))}}>
+                        (isExpanded (concat 'description_' item.id ))}}>
                         <span>{{item.system.description}}</span>
                     </div>
                 </div>

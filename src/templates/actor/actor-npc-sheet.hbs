@@ -2,9 +2,9 @@
 
     {{!-- Sheet Header --}}
     <header class="header">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" height="100" width="100" />
         <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
             {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
             use both the "grid" and "grid-Ncol" class where "N" can be any number
             from 1 to 12 and will create that number of columns.  --}}
@@ -16,27 +16,28 @@
                 <div class="resource flex-group-center">
                     <label for="data.health.value" class="resource-label">Health</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.health.value" value="{{actor.health.value}}" data-dtype="Number"/>
+                        <input type="text" name="data.health.value" value="{{actor.health.value}}"
+                               data-dtype="Number" />
                         <span> / </span>
-                        <input type="text" name="data.health.max" value="{{actor.health.max}}" data-dtype="Number"/>
+                        <input type="text" name="data.health.max" value="{{actor.health.max}}" data-dtype="Number" />
                     </div>
                 </div>
 
                 <div class="resource flex-group-center">
                     <label for="data.power.value" class="resource-label">Power</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.power.value" value="{{actor.power.value}}" data-dtype="Number"/>
+                        <input type="text" name="data.power.value" value="{{actor.power.value}}" data-dtype="Number" />
                         <span> / </span>
-                        <input type="text" name="data.power.max" value="{{actor.power.max}}" data-dtype="Number"/>
+                        <input type="text" name="data.power.max" value="{{actor.power.max}}" data-dtype="Number" />
                     </div>
                 </div>
 
                 <div class="resource flex-group-center">
                     <label for="data.cr" class="resource-label">CR / XP</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.cr" value="{{actor.cr}}" data-dtype="Number"/>
+                        <input type="text" name="data.cr" value="{{actor.cr}}" data-dtype="Number" />
                         <span> / </span>
-                        <input type="text" disabled="true" name="data.xp" value="{{actor.xp}}" data-dtype="Number"/>
+                        <input type="text" disabled name="data.xp" value="{{actor.xp}}" data-dtype="Number" />
                     </div>
                 </div>
 

@@ -4,15 +4,15 @@
             <div class="dh-header">
                 <div class="dh-header__info">
                     <div class="dh-header__logo dh-header__item-wrapper--span-4">
-                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Name</span>
-                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}"/>
+                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="data.source" type="text" value="{{item.system.source}}"/>
+                        <input class="dh-header__input" name="data.source" type="text" value="{{item.system.source}}" />
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Availability</span>
@@ -23,11 +23,11 @@
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
                         <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
-                                item.system.backpack.inBackpack}}/>
+                            item.system.backpack.inBackpack}}/>
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Weapon Types</span>
-                        <input name="data.weapon_type" type="text" value="{{item.system.weapon_type}}"/>
+                        <input name="data.weapon_type" type="text" value="{{item.system.weapon_type}}" />
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Effect</span>
@@ -40,7 +40,7 @@
             <h1 class="dh-panel__header">Damage</h1>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Modification</span>
-                <input class="dh-field__input" type="text" name="data.damage" value="{{item.system.damage}}"/>
+                <input class="dh-field__input" type="text" name="data.damage" value="{{item.system.damage}}" />
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Type</span>
@@ -52,12 +52,12 @@
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Pen</span>
                 <input class="dh-field__input" type="text" name="data.penetration"
-                       value="{{item.system.penetration}}"/>
+                       value="{{item.system.penetration}}" />
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Attack Bonus</span>
                 <input class="dh-field__input" type="text" name="data.attackBonus"
-                       value="{{item.system.attackBonus}}"/>
+                       value="{{item.system.attackBonus}}" />
             </div>
         </div>
         <div class="dh-panel dh-grid-col-4">
@@ -94,7 +94,7 @@
                                 </label>
                             </div>
                             <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
-                                    (isExpanded (concat 'description_' embedded.id ))}}>
+                                (isExpanded (concat 'description_' embedded.id ))}}>
                                 <span>{{embedded.system.description}}</span>
                             </div>
                         </div>

@@ -4,11 +4,11 @@
             <div class="dh-header">
                 <div class="dh-header__info">
                     <div class="dh-header__logo dh-header__item-wrapper--span-4">
-                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Name</span>
-                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}"/>
+                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
                     </div>
                 </div>
                 <div class="dh-navigation" data-group="primary">
@@ -50,7 +50,7 @@
                                             </label>
                                         </div>
                                         <div class="table-cell--description description_{{embedded.id}}" {{hideIfNot
-                                                (isExpanded (concat 'description_' embedded.id ))}}>
+                                            (isExpanded (concat 'description_' embedded.id ))}}>
                                             <span>{{embedded.system.description}}</span>
                                         </div>
                                     </div>
