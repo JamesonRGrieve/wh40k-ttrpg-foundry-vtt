@@ -12,35 +12,35 @@
           </div>
           <div class='dh-header__item-wrapper'>
             <span class='dh-header__title'>Discipline</span>
-            <input class='dh-header__input' name='data.discipline' type='number' data-dtype='Number' value='{{item.discipline}}' />
+            <input class='dh-header__input' name='data.discipline' type='number' data-dtype='Number' value='{{item.system.discipline}}' />
           </div>
           <div class='dh-header__item-wrapper'>
             <span class='dh-header__title'>XP Cost</span>
-            <input class='dh-header__input' name='data.cost' type='number' data-dtype='Number' value='{{item.cost}}' />
+            <input class='dh-header__input' name='data.cost' type='number' data-dtype='Number' value='{{item.system.cost}}' />
           </div>
           <div class='dh-header__item-wrapper--span-2'>
             <span class='dh-header__title'>Source</span>
-            <input class='dh-header__input' name='data.source' type='text' value='{{item.source}}' />
+            <input class='dh-header__input' name='data.source' type='text' value='{{item.system.source}}' />
           </div>
           <div class='dh-header__item-wrapper--span-4'>
             <span class='dh-header__title'>Prerequisites</span>
-            <input class='dh-header__input' name='data.prerequisites' type='text' value='{{item.prerequisites}}' />
+            <input class='dh-header__input' name='data.prerequisites' type='text' value='{{item.system.prerequisites}}' />
           </div>
           <div class='dh-header__item-wrapper--span-2'>
             <span class='dh-header__title'>Range</span>
-            <input class='dh-header__input' name='data.range' type='text' value='{{item.range}}' />
+            <input class='dh-header__input' name='data.range' type='text' value='{{item.system.range}}' />
           </div>
           <div class='dh-header__item-wrapper--span-2'>
             <span class='dh-header__title'>Speed</span>
-            <input class='dh-header__input' name='data.speed' type='text' value='{{item.speed}}' />
+            <input class='dh-header__input' name='data.speed' type='text' value='{{item.system.speed}}' />
           </div>
           <div class='dh-header__item-wrapper--span-2'>
             <span class='dh-header__title'>Sustained</span>
-            <input class='dh-header__input' name='data.sustained' type='text' value='{{item.sustained}}' />
+            <input class='dh-header__input' name='data.sustained' type='text' value='{{item.system.sustained}}' />
           </div>
           <div class='dh-header__item-wrapper--span-2'>
             <span class='dh-header__title'>Subtype</span>
-            <input class='dh-header__input' name='data.subtype' type='text' value='{{item.subtype}}' />
+            <input class='dh-header__input' name='data.subtype' type='text' value='{{item.system.subtype}}' />
           </div>
         </div>
         <div class="dh-navigation" data-group="primary">
@@ -57,39 +57,39 @@
               <h1 class="dh-panel__header">Action</h1>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Characteristic</span>
-                <input class="dh-field__input" type="text" name="data.target.characteristic" value="{{item.target.characteristic}}"/>
+                <input class="dh-field__input" type="text" name="data.target.characteristic" value="{{item.system.target.characteristic}}"/>
               </div>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Bonus</span>
-                <input class="dh-field__input" type="text" name="data.target.bonus" value="{{item.target.bonus}}"/>
+                <input class="dh-field__input" type="text" name="data.target.bonus" value="{{item.system.target.bonus}}"/>
               </div>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Is Opposed</span>
                 <div class='dh-field__input check'>
-                  <input name="data.target.isOpposed" type="checkbox" data-dtype="Boolean" {{checked item.target.isOpposed}}/>
+                  <input name="data.target.isOpposed" type="checkbox" data-dtype="Boolean" {{checked item.system.target.isOpposed}}/>
                 </div>
               </div>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Opposed Characteristic</span>
-                <input class="dh-field__input" type="text" name="data.target.opposed" value="{{item.target.opposed}}"/>
+                <input class="dh-field__input" type="text" name="data.target.opposed" value="{{item.system.target.opposed}}"/>
               </div>
             </div>
             <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
               <h1 class="dh-panel__header">Damage</h1>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Roll</span>
-                <input class="dh-field__input" type="text" name="data.damage" value="{{item.damage}}"/>
+                <input class="dh-field__input" type="text" name="data.damage" value="{{item.system.damage}}"/>
               </div>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Type</span>
                 <select class="dh-field__input" name="data.damageType">
-                  {{selectOptions (arrayToObject dh.combat.damage_types) selected=item.damageType}}
+                  {{selectOptions (arrayToObject dh.combat.damage_types) selected=item.system.damageType}}
                 </select>
               </div>
               <div class="dh-field__wrapper">
                 <span class="dh-field__header">Pen</span>
                 <input class="dh-field__input" type="text" name="data.penetration"
-                       value="{{item.penetration}}"/>
+                       value="{{item.system.penetration}}"/>
               </div>
             </div>
             <div class="dh-panel dh-grid-col-2 dh-grid-row-1">

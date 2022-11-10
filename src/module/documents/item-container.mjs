@@ -29,7 +29,7 @@ export class DarkHeresyItemContainer extends Item {
 
   async deleteEmbeddedDocuments(embeddedName, ids = [], options = {}) {
     if (!this.system.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
-    const containedItems = getProperty(this.data, 'flags.itemcollection.contentsData') ?? [];
+    const containedItems = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
     const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
     const deletedItems = this.items.filter((item) => ids.includes(item.id));
     if (this.parent) {
@@ -87,18 +87,20 @@ export class DarkHeresyItemContainer extends Item {
     const oldItems = this.items;
     this.items = new foundry.utils.Collection();
     containedItems.forEach((idata) => {
+      console.log('Prepare Embedded Documents')
+      console.log(idata)
       if (!oldItems?.has(idata._id)) {
         const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
         this.items.set(idata._id, theItem);
       } else {
         // TODO see how to avoid this - here to make sure the contained items is correctly setup
         const currentItem = oldItems.get(idata._id);
-        setProperty(currentItem.system._source, 'flags', idata.flags);
-        setProperty(currentItem.system._source, 'data', idata.data);
+        setProperty(currentItem._source, 'flags', idata.flags);
+        setProperty(currentItem._source, 'data', idata.data);
         currentItem.prepareData();
         this.items.set(idata._id, currentItem);
         if (this.sheet) {
-          currentItem.render(false, { action: 'update', data: currentItem.system });
+          currentItem.render(false, { action: 'update', data: currentItem });
         }
       }
     });
@@ -119,7 +121,7 @@ export class DarkHeresyItemContainer extends Item {
     data = foundry.utils.expandObject(data);
     data._id = this.id;
     await this.parent.updateEmbeddedDocuments('Item', [data]);
-    this.render(false, { action: 'update', data: data.system });
+    this.render(false, { action: 'update', data: data });
   }
 
   async delete(data) {
