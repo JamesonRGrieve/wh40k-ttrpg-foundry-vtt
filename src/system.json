@@ -32,6 +32,14 @@
       "entity": "Item"
     },
     {
+      "name": "aptitudes",
+      "system": "dark-heresy-2nd",
+      "label": "Aptitudes",
+      "path": "./packs/aptitudes.db",
+      "type": "Item",
+      "entity": "Item"
+    },
+    {
       "name": "armour",
       "system": "dark-heresy-2nd",
       "label": "Armour",
@@ -44,6 +52,14 @@
       "system": "dark-heresy-2nd",
       "label": "Specials",
       "path": "./packs/attack-specials.db",
+      "type": "Item",
+      "entity": "Item"
+    },
+    {
+      "name": "psychic-powers",
+      "system": "dark-heresy-2nd",
+      "label": "Psychic Powers",
+      "path": "./packs/psychic-powers.db",
       "type": "Item",
       "entity": "Item"
     },
