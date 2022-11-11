@@ -89,12 +89,7 @@ export class AcolyteSheet extends ActorSheet {
                 const item = this.actor.items.find(i => i.id === element.dataset.itemId);
                 if(item) {
                     dragData.type = 'Item';
-                    dragData.data = {
-                        name: item.name,
-                        img: item.img,
-                        item_type: element.dataset.itemType,
-                        item_id: element.dataset.itemId,
-                    }
+                    dragData.data = item;
                     event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
                     return;
                 } else {

@@ -5,6 +5,7 @@ import { roles } from '../rules/roles.mjs';
 import { eliteAdvances } from '../rules/elite-advances.mjs';
 import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../rolls/simple-prompt.mjs';
+import { prepareWeaponRoll } from '../rolls/weapon-prompt.mjs';
 
 export class DarkHeresyActor extends Actor {
     get backpack() {
@@ -109,6 +110,17 @@ export class DarkHeresyActor extends Actor {
         this._computeEncumbrance();
     }
 
+    async rollWeaponAttack(weapon) {
+        if (!weapon.system.equipped) {
+            ui.notifications.warn('Actor must have weapon equipped!');
+            return;
+        }
+        await prepareWeaponRoll({
+            actor: this,
+            weapons: [weapon]
+        })
+    }
+
     async rollSkill(skillName, specialityName) {
         let skill = this.skills[skillName];
         let label = skill.label;
@@ -140,7 +152,8 @@ export class DarkHeresyActor extends Actor {
         const item = this.actor.items.get(itemId);
         switch (item.type) {
             case 'weapon':
-                return ui.notifications.warn(`Weapon Rolls coming soon: ${item.type}`);
+                await this.rollWeaponAttack(item);
+                return;
             default:
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
         }
