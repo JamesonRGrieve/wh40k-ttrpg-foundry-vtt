@@ -1,4 +1,4 @@
-import { toggleUIExpanded } from '../rules/config.mjs';
+import { toggleUIExpanded } from '../../rules/config.mjs';
 
 export class DarkHeresyItemSheet extends ItemSheet {
     static get defaultOptions() {

@@ -30,7 +30,7 @@
                 </div>
                 {{#each this.specialities as | specialty skey |}}
                     {{#if specialty.taken }}
-                        <div class="table-row" data-item-type="skill" data-item-id="{{name}}"
+                        <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}"
                              data-speciality="{{skey}}">
                             <div class="table-cell">
                                 <button class="roll-skill" data-skill="{{name}}" data-specialty="{{skey}}"

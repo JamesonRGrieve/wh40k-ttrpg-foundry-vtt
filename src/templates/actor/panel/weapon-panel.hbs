@@ -14,7 +14,7 @@
         </div>
         {{#each actor.items as | item |}}
             {{#if item.isWeapon}}
-                <div class="table-row" data-item-id="{{item.id}}" data-item-type="weapon">
+                <div class="table-row item-drag" data-item-id="{{item.id}}" data-item-type="weapon">
                     <div class="table-cell--settingstoggle">
                         <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="table-cell--last">
                         <label class="dh-control-button item-roll" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'dice'}}</span>
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'casino'}}</span>
                         </label>
                         <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
                             <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>

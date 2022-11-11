@@ -1,6 +1,7 @@
-import { toggleUIExpanded } from '../rules/config.mjs';
+import { toggleUIExpanded } from '../../rules/config.mjs';
+import { ActorContainerSheet } from './actor-container-sheet.mjs';
 
-export class AcolyteSheet extends ActorSheet {
+export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             template: 'systems/dark-heresy-2nd/templates/actor/actor-sheet.hbs',
@@ -26,51 +27,36 @@ export class AcolyteSheet extends ActorSheet {
 
         html.find('.roll-characteristic').click(async (ev) => await this._prepareRollCharacteristic(ev));
         html.find('.roll-skill').click(async (ev) => await this._prepareRollSkill(ev));
-        html.find('.sheet-control__hide-control').click(async (ev) => await this._sheetControlHideToggle(ev));
-        html.find('.item-roll').click((ev) => this._onItemRoll(ev));
-        html.find('.item-create').click((ev) => this._onItemCreate(ev));
-        html.find('.item-edit').click((ev) => this._onItemEdit(ev));
-        html.find('.item-delete').click((ev) => this._onItemDelete(ev));
         html.find('.acolyte-homeWorld').change((ev) => this._onHomeworldChange(ev));
-
-        this._addDragSupportToItems(html);
-    }
-
-    _addDragSupportToItems(html) {
-        html.find('.table-row').each((i, item) => {
+        html.find('.actor-drag').each((i, item) => {
             if (item.dataset && item.dataset.itemId) {
                 item.setAttribute('draggable', true);
-                item.addEventListener('dragstart', this._onDragStart.bind(this), false);
-            }
-        });
-        html.find('.roll-characteristic').each((i, item) => {
-            if (item.dataset && item.dataset.itemId) {
-                item.setAttribute('draggable', true);
-                item.addEventListener('dragstart', this._onDragStart.bind(this), false);
+                item.addEventListener('dragstart', this._onActorDragStart.bind(this), false);
             }
         });
     }
 
-    async _onDragStart(event) {
-        console.log('onDragStart', event)
+    async _onActorDragStart(event) {
+        event.stopPropagation();
+        console.log('_onActorDragStart', event)
         const element = event.currentTarget;
-        if (!element.dataset?.itemType) {
-            console.log('No Item Type - Cancelling Drag');
+        if (!element.dataset?.dragType) {
+            console.warn('No Drag Type - Cancelling Drag');
             return;
         }
 
         // Create drag data
+        const dragType = element.dataset.itemType;
         const dragData = {
             actorId: this.actor.id,
             sceneId: this.actor.isToken ? canvas.scene?.id : null,
             tokenId: this.actor.isToken ? this.actor.token?.id : null,
-            type: '',
+            type: dragType,
             data: {},
         };
 
-        switch (element.dataset.itemType) {
+        switch (dragType) {
             case 'characteristic':
-                dragData.type = 'Characteristic';
                 const characteristic = this.actor.characteristics[element.dataset.itemId];
                 dragData.data = {
                     name: characteristic.label,
@@ -79,7 +65,6 @@ export class AcolyteSheet extends ActorSheet {
                 event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
                 return;
             case 'skill':
-                dragData.type = 'Skill';
                 const skill = this.actor.skills[element.dataset.itemId];
                 let name = skill.label;
                 if (element.dataset.speciality) {
@@ -94,18 +79,9 @@ export class AcolyteSheet extends ActorSheet {
                 event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
                 return;
             default:
-                // Check if it's an item
-                const item = this.actor.items.find(i => i.id === element.dataset.itemId);
-                if(item) {
-                    dragData.type = 'Item';
-                    dragData.data = item;
-                    event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
-                    return;
-                } else {
-                    // Let default Foundry handler deal with default drag cases.
-                    console.log('Default Foundry Handler');
-                    return super._onDragStart(event);
-                }
+                // Let default Foundry handler deal with default drag cases.
+                console.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
+                return super._onDragStart(event);
         }
     }
 
@@ -154,44 +130,5 @@ export class AcolyteSheet extends ActorSheet {
             },
             defaultYes: false,
         });
-    }
-
-    _onItemRoll(event) {
-        event.preventDefault();
-        const div = $(event.currentTarget);
-        this.actor.rollItem(div.data('itemId'));
-    }
-
-    _onItemEdit(event) {
-        event.preventDefault();
-        const div = $(event.currentTarget);
-        let item = this.actor.items.get(div.data('itemId'));
-        item.sheet.render(true);
-    }
-
-    _onItemDelete(event) {
-        event.preventDefault();
-        Dialog.confirm({
-            title: 'Confirm Delete',
-            content: '<p>Are you sure you would like to delete this?</p>',
-            yes: () => {
-                const div = $(event.currentTarget);
-                this.actor.deleteEmbeddedDocuments('Item', [div.data('itemId')]);
-                div.slideUp(200, () => this.render(false));
-            },
-            no: () => {
-            },
-            defaultYes: false,
-        });
-    }
-
-    _onItemCreate(event) {
-        event.preventDefault();
-        const div = $(event.currentTarget);
-        let data = {
-            name: `New ${div.data('type').capitalize()}`,
-            type: div.data('type'),
-        };
-        this.actor.createEmbeddedDocuments('Item', [data], { renderSheet: true });
     }
 }

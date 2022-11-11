@@ -13,16 +13,14 @@
   overflow: hidden;
 
   &:first-child {
+    text-align: left;
     font-weight: bolder;
     margin-block: auto;
   }
 
-  &:first-child {
-    text-align: left;
-  }
-
   &:not(:first-child) {
     text-align: center;
+    margin-block: auto;
   }
 
   label,

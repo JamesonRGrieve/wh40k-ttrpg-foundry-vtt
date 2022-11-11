@@ -1,15 +1,15 @@
 import { DarkHeresyActor } from './documents/actor.mjs';
 import { DarkHeresyItem } from './documents/item.mjs';
 import { DarkHeresy } from './rules/config.mjs';
-import { AcolyteSheet } from './sheets/acolyte-sheet.mjs';
-import { DarkHeresyItemSheet } from './sheets/item-sheet.mjs';
-import { DarkHeresyWeaponSheet } from './sheets/weapon-sheet.mjs';
-import { DarkHeresyArmourSheet } from './sheets/armour-sheet.mjs';
-import { DarkHeresyTalentSheet } from './sheets/talent-sheet.mjs';
-import { DarkHeresyJournalEntrySheet } from './sheets/journal-entry-sheet.mjs';
-import { DarkHeresyPeerEnemySheet } from './sheets/peer-enemy-sheet.mjs';
-import { DarkHeresyAttackSpecialSheet } from './sheets/attack-special-sheet.mjs';
-import { DarkHeresyWeaponModSheet } from './sheets/weapon-mod-sheet.mjs';
+import { AcolyteSheet } from './sheets/actor/acolyte-sheet.mjs';
+import { DarkHeresyItemSheet } from './sheets/item/item-sheet.mjs';
+import { DarkHeresyWeaponSheet } from './sheets/item/weapon-sheet.mjs';
+import { DarkHeresyArmourSheet } from './sheets/item/armour-sheet.mjs';
+import { DarkHeresyTalentSheet } from './sheets/item/talent-sheet.mjs';
+import { DarkHeresyJournalEntrySheet } from './sheets/item/journal-entry-sheet.mjs';
+import { DarkHeresyPeerEnemySheet } from './sheets/item/peer-enemy-sheet.mjs';
+import { DarkHeresyAttackSpecialSheet } from './sheets/item/attack-special-sheet.mjs';
+import { DarkHeresyWeaponModSheet } from './sheets/item/weapon-mod-sheet.mjs';
 import {
     createCharacteristicMacro,
     createItemMacro,
@@ -19,9 +19,9 @@ import {
     rollSkillMacro,
 } from './rolls/macros.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
-import { DarkHeresyAmmoSheet } from './sheets/ammo-sheet.mjs';
+import { DarkHeresyAmmoSheet } from './sheets/item/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';
-import { DarkHeresyPsykanaSheet } from './sheets/psykana-sheet.mjs';
+import { DarkHeresyPsykanaSheet } from './sheets/item/psykana-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 

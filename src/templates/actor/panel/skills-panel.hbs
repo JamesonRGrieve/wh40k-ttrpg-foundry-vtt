@@ -9,7 +9,7 @@
         </div>
         {{#each actor.skills as |skill name|}}
             {{#unless skill.isSpecialist}}
-                <div class="table-row" data-item-type="skill" data-item-id="{{name}}">
+                <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}">
                     <div class="table-cell">
                         <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
                     </div>

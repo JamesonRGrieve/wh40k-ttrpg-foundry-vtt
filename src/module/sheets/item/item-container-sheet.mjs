@@ -4,7 +4,7 @@
  */
 import { DarkHeresyItemSheet } from './item-sheet.mjs';
 
-export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
+export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
     getData() {
         const context = super.getData();
         if (!context.item.system.container) {
@@ -58,7 +58,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
             name: `New ${div.data('type').capitalize()}`,
             type: div.data('type'),
         };
-        await this.item.updateEmbeddedDocuments('Item', [data]);
+        await this.item.createEmbeddedDocuments('Item', [data]);
     }
 
     _onItemEdit(event) {
@@ -77,7 +77,14 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
 
     async _onDragItemStart(event) {
         event.stopPropagation();
-        const itemId = event.currentTarget.dataset.itemId;
+
+        const element = event.currentTarget;
+        if (!element.dataset?.itemId) {
+            console.log('No Item Id - Cancelling Drag');
+            return;
+        }
+
+        const itemId = element.dataset.itemId;
         let item = this.item.items.get(itemId);
         event.dataTransfer.setData(
             'text/plain',
