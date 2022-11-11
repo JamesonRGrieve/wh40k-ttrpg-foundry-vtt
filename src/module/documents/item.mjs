@@ -141,11 +141,11 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     async _determineNestedItems() {
         // Already has items just skip
         if (this.items && this.items.size > 0) return;
-        console.log('Performing first time nested item configuration for item: ' + this.name);
+
 
         // Check for specials
         if (this.system.special) {
-            console.log('Item has specials. Looking for them in compendium.', this.system.special);
+            console.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('dark-heresy-2nd.weapons', this.system.special);
             if (this.isAmmunition) await this._updateSpecialsFromPack('dark-heresy-2nd.ammo', this.system.special);
         }
@@ -165,7 +165,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     async _getAttackSpecials(specialData) {
         const attackSpecialPack = game.packs.find((p) => p.collection === 'dark-heresy-2nd.attack-specials');
         if (!attackSpecialPack) return;
-        const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'data'] });
+        const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
         const specials = [];
         for (const special of Object.keys(specialData)) {
             const specialName = capitalize(special);

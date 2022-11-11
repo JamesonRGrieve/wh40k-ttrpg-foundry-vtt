@@ -90,7 +90,6 @@ _  /_/ /_  __  / _  __/
     }
 
     static hotbarDrop(bar, data, slot) {
-        console.log('Hotbar Drop');
         console.log(data);
         switch (data.type) {
             case 'Characteristic':

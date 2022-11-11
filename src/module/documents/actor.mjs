@@ -149,7 +149,7 @@ export class DarkHeresyActor extends Actor {
     }
 
     async rollItem(itemId) {
-        const item = this.actor.items.get(itemId);
+        const item = this.items.get(itemId);
         switch (item.type) {
             case 'weapon':
                 await this.rollWeaponAttack(item);
