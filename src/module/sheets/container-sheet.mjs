@@ -25,6 +25,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
             this.form.ondragover = (ev) => this._onDragOver(ev);
             this.form.ondrop = (ev) => this._onDrop(ev);
             this.form.ondragend = (ev) => this._onDragEnd(ev);
+            html.find('.item-roll').click((ev) => this._onItemRoll(ev));
             html.find('.item-create').click(async (ev) => await this._onItemCreate(ev));
             html.find('.item-edit').click((ev) => this._onItemEdit(ev));
             html.find('.item-delete').click((ev) => this._onItemDelete(ev));
@@ -41,6 +42,11 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
     }
 
     _onDragOver(event) {
+        event.preventDefault();
+        return false;
+    }
+
+    _onItemRoll(event) {
         event.preventDefault();
         return false;
     }
