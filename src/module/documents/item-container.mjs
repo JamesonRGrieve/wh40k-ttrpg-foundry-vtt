@@ -12,11 +12,14 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     static async _onCreateDocuments(items, context) {
+        // Parent is not an item -- ignore
         if (!(context.parent instanceof Item)) return super._onCreateDocuments(items, context);
+        // None of the items being created are containers -- ignore
         if (items.filter((item) => item.system.container).length === 0) return super._onCreateDocuments(items, context);
+
         const toCreate = [];
-        for (let item of items) {
-            for (let e of item.effects) {
+        for (const item of items) {
+            for (const e of item.effects) {
                 if (!e.data.transfer) continue;
                 const effectData = e.toJSON();
                 effectData.origin = item.uuid;
@@ -24,6 +27,7 @@ export class DarkHeresyItemContainer extends Item {
             }
         }
         if (!toCreate.length) return [];
+        console.log('_onCreateDocuments: active effect transfer', toCreate);
         const cls = getDocumentClass('ActiveEffect');
         return cls.createDocuments(toCreate, context);
     }
@@ -36,6 +40,7 @@ export class DarkHeresyItemContainer extends Item {
     async createEmbeddedDocuments(embeddedName, data, context) {
         if (!this.system.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
         if (!Array.isArray(data)) data = [data];
+        console.log('item: ' + this.name + ' createEmbeddedDocuments');
         const currentItems = duplicate(getProperty(this, 'data.flags.itemcollection.contentsData') ?? []);
 
         if (data.length) {
@@ -58,6 +63,7 @@ export class DarkHeresyItemContainer extends Item {
 
     async deleteEmbeddedDocuments(embeddedName, ids = [], options = {}) {
         if (!this.system.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
+        console.log('item: ' + this.name + ' deleteEmbeddedDocuments');
         const containedItems = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id));
@@ -78,6 +84,7 @@ export class DarkHeresyItemContainer extends Item {
         if (!this.system.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
         const contained = getProperty(this, 'data.flags.itemcollection.contentsData') ?? [];
         if (!Array.isArray(data)) data = [data];
+        console.log('item: ' + this.name + ' updateEmbeddedDocuments');
         let updated = [];
         let newContained = contained.map((existing) => {
             let theUpdate = data.find((update) => update._id === existing._id);
@@ -112,17 +119,20 @@ export class DarkHeresyItemContainer extends Item {
     prepareEmbeddedDocuments() {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
+        console.log('Preparing Embedded Documents for item: ' + this.name);
+
         const containedItems = getProperty(this.flags, 'itemcollection.contentsData') ?? [];
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
-            console.log('Prepare Embedded Documents');
             console.log(idata);
             if (!oldItems?.has(idata._id)) {
+                console.log('Old Items does not contain nested item... adding: ' + idata._id);
                 const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
                 this.items.set(idata._id, theItem);
             } else {
                 // TODO see how to avoid this - here to make sure the contained items is correctly setup
+                console.log('Old Items already has nested item... re-rendering: ' + idata._id);
                 const currentItem = oldItems.get(idata._id);
                 setProperty(currentItem._source, 'flags', idata.flags);
                 setProperty(currentItem._source, 'system', idata.system);

@@ -8,6 +8,7 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
     getData() {
         const context = super.getData();
         if (!context.item.system.container) {
+            console.warn('Unexpected Sheet Type: Item has container sheet but is not container?', context);
             this.options.editable = false;
             return context;
         }
@@ -23,17 +24,14 @@ export class DarkHeresyContainerSheet extends DarkHeresyItemSheet {
         if (this.item.system.container) {
             this.form.ondragover = (ev) => this._onDragOver(ev);
             this.form.ondrop = (ev) => this._onDrop(ev);
+            this.form.ondragend = (ev) => this._onDragEnd(ev);
             html.find('.item-create').click(async (ev) => await this._onItemCreate(ev));
             html.find('.item-edit').click((ev) => this._onItemEdit(ev));
             html.find('.item-delete').click((ev) => this._onItemDelete(ev));
-
-            // html.find('.item').each((i, li) => {
-            //     li.setAttribute("draggable", true);
-            //     li.addEventListener("dragstart", this._onDragItemStart.bind(this), false);
-            // });
-            //
-            // document.addEventListener("dragend", this._onDragEnd.bind(this));
-            // html.find('.item .item-name.rollable h4').click(event => this._onItemSummary(event));
+            html.find('.item-drag').each((i, item) => {
+                item.setAttribute('draggable', true);
+                item.addEventListener('dragstart', this._onDragItemStart.bind(this), false);
+            });
         }
     }
 

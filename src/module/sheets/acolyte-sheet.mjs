@@ -23,6 +23,7 @@ export class AcolyteSheet extends ActorSheet {
 
     activateListeners(html) {
         super.activateListeners(html);
+
         html.find('.roll-characteristic').click(async (ev) => await this._prepareRollCharacteristic(ev));
         html.find('.roll-skill').click(async (ev) => await this._prepareRollSkill(ev));
         html.find('.sheet-control__hide-control').click(async (ev) => await this._sheetControlHideToggle(ev));
@@ -30,6 +31,7 @@ export class AcolyteSheet extends ActorSheet {
         html.find('.item-edit').click((ev) => this._onItemEdit(ev));
         html.find('.item-delete').click((ev) => this._onItemDelete(ev));
         html.find('.acolyte-homeWorld').change((ev) => this._onHomeworldChange(ev));
+
         this._addDragSupportToItems(html);
     }
 
@@ -49,6 +51,13 @@ export class AcolyteSheet extends ActorSheet {
     }
 
     async _onDragStart(event) {
+        console.log('onDragStart', event)
+        const element = event.currentTarget;
+        if (!element.dataset?.itemType) {
+            console.log('No Item Type - Cancelling Drag');
+            return;
+        }
+
         // Create drag data
         const dragData = {
             actorId: this.actor.id,
@@ -58,7 +67,6 @@ export class AcolyteSheet extends ActorSheet {
             data: {},
         };
 
-        const element = event.currentTarget;
         switch (element.dataset.itemType) {
             case 'characteristic':
                 dragData.type = 'Characteristic';
@@ -94,6 +102,7 @@ export class AcolyteSheet extends ActorSheet {
                     return;
                 } else {
                     // Let default Foundry handler deal with default drag cases.
+                    console.log('Default Foundry Handler');
                     return super._onDragStart(event);
                 }
         }
@@ -101,7 +110,6 @@ export class AcolyteSheet extends ActorSheet {
 
     async _prepareRollCharacteristic(event) {
         event.preventDefault();
-        console.log('_prepareRollCharacteristic');
         const characteristicName = $(event.currentTarget).data('characteristic');
         await this.actor.rollCharacteristic(characteristicName);
     }
