@@ -12,27 +12,27 @@
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Has Level</span>
-                        <input name="data.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
+                        <input name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Enabled</span>
-                        <input name="data.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
+                        <input name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Level</span>
                         {{#if item.system.hasLevel}}
-                            <input class="dh-header__input" name="data.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
+                            <input class="dh-header__input" name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
                         {{else}}
                             <span class="dh-header__display">N/A</span>
                         {{/if}}
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="data.source" type="text" value="{{item.system.source}}" />
+                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
                     </div>
                     <div class="dh-header__item-wrapper--text-area">
                         <span class="dh-header__title">Description</span>
-                        <textarea class="dh-header__textarea" name="data.description">{{item.system.description}}</textarea>
+                        <textarea class="dh-header__textarea" name="system.description">{{item.system.description}}</textarea>
                     </div>
                 </div>
             </div>

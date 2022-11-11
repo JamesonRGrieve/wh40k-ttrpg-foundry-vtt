@@ -41,7 +41,7 @@ export class DarkHeresyItemContainer extends Item {
         if (!this.system.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
         if (!Array.isArray(data)) data = [data];
         console.log('item: ' + this.name + ' createEmbeddedDocuments');
-        const currentItems = duplicate(getProperty(this, 'data.flags.itemcollection.contentsData') ?? []);
+        const currentItems = duplicate(getProperty(this, 'flags.itemcollection.contentsData') ?? []);
 
         if (data.length) {
             for (let itemData of data) {
@@ -82,7 +82,7 @@ export class DarkHeresyItemContainer extends Item {
 
     async updateEmbeddedDocuments(embeddedName, data, options) {
         if (!this.system.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
-        const contained = getProperty(this, 'data.flags.itemcollection.contentsData') ?? [];
+        const contained = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
         if (!Array.isArray(data)) data = [data];
         console.log('item: ' + this.name + ' updateEmbeddedDocuments');
         let updated = [];

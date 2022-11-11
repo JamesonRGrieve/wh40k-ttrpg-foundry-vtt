@@ -14,7 +14,7 @@
                         <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
                     </div>
                     <div class="table-cell">
-                        <select name="data.skills.{{name}}.advance">
+                        <select name="system.skills.{{name}}.advance">
                             {{option "0" this.advance "Unknown"}}
                             {{option "1" this.advance "Known"}}
                             {{option "2" this.advance "Trained"}}
@@ -23,7 +23,7 @@
                         </select>
                     </div>
                     <div class="table-cell">
-                        <select name="data.skills.{{name}}.characteristic">
+                        <select name="system.skills.{{name}}.characteristic">
                             {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
                         </select>
                     </div>

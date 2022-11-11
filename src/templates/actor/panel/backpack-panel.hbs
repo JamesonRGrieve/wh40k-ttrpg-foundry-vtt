@@ -15,7 +15,7 @@
     <div class="dh-settings--border backpack_settings" {{hideIfNot (isExpanded "backpack_settings")}}>
         <div class="dh-settings__row--invert">
             <div class="dh-settings__label">Backpack Equipped</div>
-            <input class="dh-settings__checkbox" {{checked actor.backpack.hasBackpack}} data-dtype="Boolean" type="checkbox" name="data.backpack.hasBackpack" />
+            <input class="dh-settings__checkbox" {{checked actor.backpack.hasBackpack}} data-dtype="Boolean" type="checkbox" name="system.backpack.hasBackpack" />
         </div>
         <div class="dh-settings__row--invert">
             <div class="dh-settings__label">Is Combat Vest</div>
@@ -24,16 +24,16 @@
                 {{checked actor.backpack.isCombatVest}}
                 data-dtype="Boolean"
                 type="checkbox"
-                name="data.backpack.isCombatVest"
+                name="system.backpack.isCombatVest"
             />
         </div>
         <div class="dh-settings__row--span">
             <div class="dh-settings__label">Name</div>
-            <input class="dh-settings__input" type="text" name="data.backpack.name" value="{{actor.backpack.name}}" />
+            <input class="dh-settings__input" type="text" name="system.backpack.name" value="{{actor.backpack.name}}" />
         </div>
         <div class="dh-settings__row--span">
             <div class="dh-settings__label">Max Weight</div>
-            <input class="dh-settings__input" data-dtype="Number" type="number" name="data.backpack.weight.max" value="{{actor.backpack.weight.max}}" />
+            <input class="dh-settings__input" data-dtype="Number" type="number" name="system.backpack.weight.max" value="{{actor.backpack.weight.max}}" />
         </div>
     </div>
     {{#if actor.backpack.hasBackpack}}

@@ -23,7 +23,7 @@
                             <div class="dh-settings__row--invert">
                                 <div class="dh-settings__label">{{this.label}}</div>
                                 <input class="dh-settings__checkbox" {{checked specialty.taken}} data-dtype="Boolean"
-                                       type="checkbox" name="data.skills.{{name}}.specialities.{{skey}}.taken" />
+                                       type="checkbox" name="system.skills.{{name}}.specialities.{{skey}}.taken" />
                             </div>
                         {{/each}}
                     </div>
@@ -37,7 +37,7 @@
                                         type="roll">{{localize this.label}}</button>
                             </div>
                             <div class="table-cell">
-                                <select name="data.skills.{{name}}.specialities.{{skey}}.advance">
+                                <select name="system.skills.{{name}}.specialities.{{skey}}.advance">
                                     {{option '0' this.advance 'Unknown'}}
                                     {{option '1' this.advance 'Known'}}
                                     {{option '2' this.advance 'Trained'}}

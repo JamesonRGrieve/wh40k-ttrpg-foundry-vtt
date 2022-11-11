@@ -12,26 +12,26 @@
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="data.source" type="text" value="{{item.system.source}}" />
+                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Availability</span>
-                        <select class="dh-header__select" name="data.availability">
+                        <select class="dh-header__select" name="system.availability">
                             {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
                         </select>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
-                        <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
+                        <input name="system.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
                             item.system.backpack.inBackpack}}/>
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Weapon Types</span>
-                        <input name="data.weapon_type" type="text" value="{{item.system.weapon_type}}" />
+                        <input name="system.weapon_type" type="text" value="{{item.system.weapon_type}}" />
                     </div>
                     <div class="dh-header__item-wrapper--span-4">
                         <span class="dh-header__title">Effect</span>
-                        <textarea class="dh-header__textarea" name="data.effect">{{item.system.effect}}</textarea>
+                        <textarea class="dh-header__textarea" name="system.effect">{{item.system.effect}}</textarea>
                     </div>
                 </div>
             </div>
@@ -40,23 +40,23 @@
             <h1 class="dh-panel__header">Damage</h1>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Modification</span>
-                <input class="dh-field__input" type="text" name="data.damage" value="{{item.system.damage}}" />
+                <input class="dh-field__input" type="text" name="system.damage" value="{{item.system.damage}}" />
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Type</span>
-                <select class="dh-field__input" name="data.damageType">
+                <select class="dh-field__input" name="system.damageType">
                     <option value=""></option>
                     {{selectOptions (arrayToObject dh.combat.damage_types) selected=item.system.damageType}}
                 </select>
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Pen</span>
-                <input class="dh-field__input" type="text" name="data.penetration"
+                <input class="dh-field__input" type="text" name="system.penetration"
                        value="{{item.system.penetration}}" />
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__header">Attack Bonus</span>
-                <input class="dh-field__input" type="text" name="data.attackBonus"
+                <input class="dh-field__input" type="text" name="system.attackBonus"
                        value="{{item.system.attackBonus}}" />
             </div>
         </div>
