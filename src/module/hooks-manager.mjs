@@ -94,13 +94,13 @@ _  /_/ /_  __  / _  __/
         console.log(data);
         switch (data.type) {
             case 'Characteristic':
-                await createCharacteristicMacro(data.data, slot);
+                createCharacteristicMacro(data.data, slot);
                 return false;
             case 'Item':
-                await createItemMacro(data.data, slot);
+                createItemMacro(data.data, slot);
                 return false;
             case 'Skill':
-                await createSkillMacro(data.data, slot);
+                createSkillMacro(data.data, slot);
                 return false;
             default:
                 return;
