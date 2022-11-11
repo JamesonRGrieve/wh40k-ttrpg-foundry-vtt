@@ -89,7 +89,7 @@ _  /_/ /_  __  / _  __/
         console.log(`DH2e Loaded!`);
     }
 
-    static async hotbarDrop(bar, data, slot) {
+    static hotbarDrop(bar, data, slot) {
         console.log('Hotbar Drop');
         console.log(data);
         switch (data.type) {
