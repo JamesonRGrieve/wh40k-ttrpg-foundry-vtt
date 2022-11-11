@@ -31,6 +31,8 @@ export class HandlebarManager {
             'systems/dark-heresy-2nd/templates/actor/panel/journal-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/peer-panel.hbs',
+            'systems/dark-heresy-2nd/templates/actor/panel/psychic-powers-panel.hbs',
+            'systems/dark-heresy-2nd/templates/actor/panel/psy-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs',
@@ -45,9 +47,11 @@ export class HandlebarManager {
 
             // Prompts
             'systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs',
+            'systems/dark-heresy-2nd/templates/prompt/weapon-roll-prompt.hbs',
 
             // Chats
             'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs',
+            'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs',
         ]);
     }
 }
