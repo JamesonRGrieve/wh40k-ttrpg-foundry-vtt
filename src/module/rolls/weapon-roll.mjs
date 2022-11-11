@@ -13,7 +13,6 @@ import { getDegree } from './roll-helpers.mjs';
  * @returns {Promise<void>}
  */
 export async function weaponRoll(rollData) {
-
     await _computeTarget(rollData);
     await _rollTarget(rollData);
     await _sendToChat(rollData);
@@ -46,6 +45,14 @@ async function _rollTarget(rollData) {
     } else {
         rollData.dos = 0;
         rollData.dof = 1 + getDegree(rollData.result, rollData.target);
+    }
+}
+
+async function _rollDamage(rollData) {
+    if (rollData.isSuccess) {
+
+
+
     }
 }
 

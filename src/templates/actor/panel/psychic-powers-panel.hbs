@@ -1,0 +1,47 @@
+<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
+    <h1 class="dh-panel__header">Psychic Powers</h1>
+    <div class="dh-table--border dh-psychictable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">Name</div>
+            <div class="table-cell">Discipline</div>
+            <div class="table-cell">Sustained</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="psychicPower">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
+        </div>
+        {{#each actor.items as | item |}}
+            {{#if item.isPsychicPower}}
+                <div class="table-row item-drag" data-item-id="{{item.id}}" data-item-type="psychicPower">
+                    <div class="table-cell--settingstoggle">
+                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        </label>
+                    </div>
+                    <div class="table-cell--left">
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
+                    </div>
+                    <div class="table-cell">
+                        <span class="display">{{item.system.discipline}}</span>
+                    </div>
+                    <div class="table-cell">
+                        <span class="display">{{item.system.sustained}}</span>
+                    </div>
+                    <div class="table-cell--last">
+                        <label class="dh-control-button item-roll" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'casino'}}</span>
+                        </label>
+                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        </label>
+                    </div>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
+                        (isExpanded (concat 'description_' item.id ))}}>
+                        <span class="display">{{item.system.description}}</span>
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

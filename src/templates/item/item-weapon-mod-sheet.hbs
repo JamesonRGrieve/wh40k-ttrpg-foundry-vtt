@@ -10,20 +10,105 @@
                         <span class="dh-header__title">Name</span>
                         <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
                     </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Installed</span>
-                        <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked item.system.equipped}} />
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
+                    <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
+                        <input class="dh-header__input" name="data.source" type="text" value="{{item.system.source}}" />
                     </div>
-                    <div class="dh-header__item-wrapper--text-area">
-                        <span class="dh-header__title">Description</span>
-                        <textarea class="dh-header__textarea" name="system.description">{{item.system.description}}</textarea>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Weight</span>
+                        <input class="dh-header__input" name="data.weight" type="number" data-dtype="Number"
+                               value="{{item.system.weight}}" />
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Installed</span>
+                        <input name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked
+                            item.system.equipped}}/>
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">In Backpack</span>
+                        <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
+                            item.system.backpack.inBackpack}}/>
+                    </div>
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Availability</span>
+                        <select class="dh-header__select" name="data.availability">
+                            {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                        </select>
+                    </div>
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Craftsmanship</span>
+                        <select class="dh-header__select" name="data.craftsmanship">
+                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                        </select>
                     </div>
                 </div>
+                <div class="dh-navigation" data-group="primary">
+                    <label class="dh-navigation__item">
+                        <a class="item" data-tab="stats" data-group="primary">stats</a>
+                    </label>
+                    <label class="dh-navigation__item">
+                        <a class="item" data-tab="description" data-group="primary">description</a>
+                    </label>
+                </div>
+                <section class="dh-body">
+                    <div class="tab" data-group="primary" data-tab="stats">
+                        <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+                            <h1 class="dh-panel__header">Damage</h1>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Roll</span>
+                                <input class="dh-field__input" type="text" name="data.damage"
+                                       value="{{item.system.damage}}" />
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Type</span>
+                                <select class="dh-field__input" name="data.damageType">
+                                    {{selectOptions (arrayToObject dh.combat.damage_types)
+                                                    selected=item.system.damageType}}
+                                </select>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Pen</span>
+                                <input class="dh-field__input" type="text" name="data.penetration"
+                                       value="{{item.system.penetration}}" />
+                            </div>
+                        </div>
+                        <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+                                <h1 class="dh-panel__header">Ranged Attack</h1>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Range (m)</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number" name="data.range"
+                                           value="{{item.system.range}}" />
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Single</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.rateOfFire.single" value="{{item.system.rateOfFire.single}}" />
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Burst</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.rateOfFire.burst" value="{{item.system.rateOfFire.burst}}" />
+                                </div>
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Full</span>
+                                    <input class="dh-field__input" type="number" data-dtype="Number"
+                                           name="data.rateOfFire.full" value="{{item.system.rateOfFire.full}}" />
+                                </div>
+                            </div>
+                    </div>
+                    <div class="tab" data-group="primary" data-tab="description">
+                        <div class="dh-header__info dh-grid-col-6">
+                            <div class="dh-header__item-wrapper--text-area">
+                                <span class="dh-header__title">Description</span>
+                                <textarea class="dh-header__textarea"
+                                          name="data.description">{{item.system.description}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     </form>
 </div>
+
+

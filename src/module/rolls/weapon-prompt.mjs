@@ -49,7 +49,12 @@ export class WeaponAttackDialog extends FormApplication {
         this._updateAvailableActions();
         this._updateAction();
         this._updateBaseTarget();
+
         this.render(true);
+    }
+
+    _recalculateWeaponMods() {
+
     }
 
     _updateAvailableActions() {
