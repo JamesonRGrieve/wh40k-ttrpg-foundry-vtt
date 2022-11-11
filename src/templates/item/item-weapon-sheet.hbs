@@ -18,38 +18,38 @@
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Type</span>
-                        <select class="dh-header__select" name="data.type">
+                        <select class="dh-header__select" name="system.type">
                             {{selectOptions (arrayToObject dh.combat.weapon_type) selected=item.system.type}}
                         </select>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="data.source" type="text" value="{{item.system.source}}" />
+                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Weight</span>
-                        <input class="dh-header__input" name="data.weight" type="number" data-dtype="Number"
+                        <input class="dh-header__input" name="system.weight" type="number" data-dtype="Number"
                                value="{{item.system.weight}}" />
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Equipped</span>
-                        <input name="data.equipped" type="checkbox" data-dtype="Boolean" {{checked
+                        <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked
                             item.system.equipped}}/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
-                        <input name="data.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
+                        <input name="system.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
                             item.system.backpack.inBackpack}}/>
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Availability</span>
-                        <select class="dh-header__select" name="data.availability">
+                        <select class="dh-header__select" name="system.availability">
                             {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
                         </select>
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Craftsmanship</span>
-                        <select class="dh-header__select" name="data.craftsmanship">
+                        <select class="dh-header__select" name="system.craftsmanship">
                             {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
                         </select>
                     </div>
@@ -68,19 +68,19 @@
                             <h1 class="dh-panel__header">Damage</h1>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Roll</span>
-                                <input class="dh-field__input" type="text" name="data.damage"
+                                <input class="dh-field__input" type="text" name="system.damage"
                                        value="{{item.system.damage}}" />
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Type</span>
-                                <select class="dh-field__input" name="data.damageType">
+                                <select class="dh-field__input" name="system.damageType">
                                     {{selectOptions (arrayToObject dh.combat.damage_types)
                                                     selected=item.system.damageType}}
                                 </select>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Pen</span>
-                                <input class="dh-field__input" type="text" name="data.penetration"
+                                <input class="dh-field__input" type="text" name="system.penetration"
                                        value="{{item.system.penetration}}" />
                             </div>
                         </div>
@@ -89,41 +89,41 @@
                                 <h1 class="dh-panel__header">Ranged Attack</h1>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Range (m)</span>
-                                    <input class="dh-field__input" type="number" data-dtype="Number" name="data.range"
+                                    <input class="dh-field__input" type="number" data-dtype="Number" name="system.range"
                                            value="{{item.system.range}}" />
                                 </div>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Single</span>
                                     <input class="dh-field__input" type="number" data-dtype="Number"
-                                           name="data.rateOfFire.single" value="{{item.system.rateOfFire.single}}" />
+                                           name="system.rateOfFire.single" value="{{item.system.rateOfFire.single}}" />
                                 </div>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Burst</span>
                                     <input class="dh-field__input" type="number" data-dtype="Number"
-                                           name="data.rateOfFire.burst" value="{{item.system.rateOfFire.burst}}" />
+                                           name="system.rateOfFire.burst" value="{{item.system.rateOfFire.burst}}" />
                                 </div>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Full</span>
                                     <input class="dh-field__input" type="number" data-dtype="Number"
-                                           name="data.rateOfFire.full" value="{{item.system.rateOfFire.full}}" />
+                                           name="system.rateOfFire.full" value="{{item.system.rateOfFire.full}}" />
                                 </div>
                             </div>
                             <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                                 <h1 class="dh-panel__header">Ammo</h1>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Reload</span>
-                                    <input class="dh-field__input" type="text" name="data.reload"
+                                    <input class="dh-field__input" type="text" name="system.reload"
                                            value="{{item.system.reload}}" />
                                 </div>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Current</span>
                                     <input class="dh-field__input" type="number" data-dtype="Number"
-                                           name="data.clip.value" value="{{item.system.clip.value}}" />
+                                           name="system.clip.value" value="{{item.system.clip.value}}" />
                                 </div>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Max</span>
                                     <input class="dh-field__input" type="number" data-dtype="Number"
-                                           name="data.clip.max" value="{{item.system.clip.max}}" />
+                                           name="system.clip.max" value="{{item.system.clip.max}}" />
                                 </div>
                                 <div>
                                     <h1 class="dh-panel__header">Loaded Ammo</h1>
@@ -264,7 +264,7 @@
                             <div class="dh-header__item-wrapper--text-area">
                                 <span class="dh-header__title">Description</span>
                                 <textarea class="dh-header__textarea"
-                                          name="data.description">{{item.system.description}}</textarea>
+                                          name="system.description">{{item.system.description}}</textarea>
                             </div>
                         </div>
                     </div>

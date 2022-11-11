@@ -103,7 +103,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
     async _onDrop(event) {
         event.preventDefault();
         event.stopPropagation();
-        console.log('_onDrop');
+        console.log('ItemContainerSheet _onDrop', event);
         let data;
         try {
             data = JSON.parse(event.dataTransfer.getData('text/plain'));
@@ -112,7 +112,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
                 return false;
             }
         } catch (err) {
-            console.log('ItemCollection | drop error');
+            console.log('Item Container | drop error');
             console.log(event.dataTransfer.getData('text/plain'));
             console.log(err);
             return false;

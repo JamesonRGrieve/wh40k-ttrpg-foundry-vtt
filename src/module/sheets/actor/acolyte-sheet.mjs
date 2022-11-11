@@ -40,7 +40,7 @@ export class AcolyteSheet extends ActorContainerSheet {
         event.stopPropagation();
         console.log('_onActorDragStart', event)
         const element = event.currentTarget;
-        if (!element.dataset?.dragType) {
+        if (!element.dataset?.itemType) {
             console.warn('No Drag Type - Cancelling Drag');
             return;
         }

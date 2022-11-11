@@ -10,7 +10,7 @@ export class ActorContainerSheet extends ActorSheet {
 
         // Everything below here is only needed if the sheet is editable
         if (!this.isEditable) return;
-
+        this.form.ondrop = (ev) => this._onDrop(ev);
         html.find('.sheet-control__hide-control').click(async (ev) => await this._sheetControlHideToggle(ev));
         html.find('.item-roll').click(async (ev) => await this._onItemRoll(ev));
         html.find('.item-create').click(async (ev) => await this._onItemCreate(ev));
@@ -22,6 +22,29 @@ export class ActorContainerSheet extends ActorSheet {
                 item.addEventListener('dragstart', this._onItemDragStart.bind(this), false);
             }
         });
+    }
+
+    _onDrop(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        try {
+            const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            if (data.type === 'Item') {
+                // Check if Item already Exists
+                if(this.actor.items.find(i => i._id === data._id)) {
+                    console.log('Item already exists on Actor -- ignoring');
+                    return false;
+                } else {
+                    return super._onDrop(event);
+                }
+            }
+        } catch (err) {
+            console.log('Actor Container | drop error');
+            console.log(event.dataTransfer.getData('text/plain'));
+            console.log(err);
+            return false;
+        }
     }
 
     async _onItemRoll(event) {
@@ -98,11 +121,10 @@ export class ActorContainerSheet extends ActorSheet {
             actorId: this.actor.id,
             sceneId: this.actor.isToken ? canvas.scene?.id : null,
             tokenId: this.actor.isToken ? this.actor.token?.id : null,
-            type: 'Item',
+            type: 'item',
             data: item,
         };
         event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
-        await this.actor.deleteEmbeddedDocuments('Item', [itemId]);
     }
 
 }

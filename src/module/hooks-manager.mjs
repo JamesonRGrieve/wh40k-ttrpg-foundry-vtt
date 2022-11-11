@@ -92,13 +92,13 @@ _  /_/ /_  __  / _  __/
     static hotbarDrop(bar, data, slot) {
         console.log(data);
         switch (data.type) {
-            case 'Characteristic':
+            case 'characteristic':
                 createCharacteristicMacro(data.data, slot);
                 return false;
-            case 'Item':
+            case 'item':
                 createItemMacro(data.data, slot);
                 return false;
-            case 'Skill':
+            case 'skill':
                 createSkillMacro(data.data, slot);
                 return false;
             default:
