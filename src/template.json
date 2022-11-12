@@ -1100,8 +1100,7 @@
     },
     "trait": {
       "templates": ["itemDescription"],
-      "level": 0,
-      "benefit": ""
+      "level": 0
     },
     "weapon": {
       "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "container", "backpack"],

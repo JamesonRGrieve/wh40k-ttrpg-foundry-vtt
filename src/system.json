@@ -80,6 +80,14 @@
       "entity": "Item"
     },
     {
+      "name": "traits",
+      "system": "dark-heresy-2nd",
+      "label": "Traits",
+      "path": "./packs/traits.db",
+      "type": "Item",
+      "entity": "Item"
+    },
+    {
       "name": "weapons",
       "system": "dark-heresy-2nd",
       "label": "Weapons",
