@@ -48,14 +48,6 @@ async function _rollTarget(rollData) {
     }
 }
 
-async function _rollDamage(rollData) {
-    if (rollData.isSuccess) {
-
-
-
-    }
-}
-
 async function _sendToChat(rollData) {
     rollData.render = await rollData.rollObject.render();
 

@@ -53,10 +53,6 @@ export class WeaponAttackDialog extends FormApplication {
         this.render(true);
     }
 
-    _recalculateWeaponMods() {
-
-    }
-
     _updateAvailableActions() {
         this.data.actions = {};
         this.availableActions = combatActions()

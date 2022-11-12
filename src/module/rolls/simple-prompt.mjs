@@ -2,8 +2,6 @@ import { rollDifficulties } from './roll-difficulties.mjs';
 import { simpleRoll } from './simple-roll.mjs';
 
 export async function prepareSimpleRoll(rollData) {
-    console.log('Prepare Simple Roll');
-    console.log(rollData);
     rollData.difficulties = rollDifficulties();
     const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs', rollData);
     let dialog = new Dialog(
