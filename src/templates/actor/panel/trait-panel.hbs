@@ -25,13 +25,13 @@
                         <span>{{item.system.level}}</span>
                     </div>
                     <div class="table-cell">
-                        <button type="roll" data-talent-id="{{item.system._id}}" class="dh-vocalise material-icons">
+                        <button type="roll" data-item-id="{{item.id}}" class="dh-vocalise material-icons">
                             record_voice_over
                         </button>
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot
                         (isExpanded (concat 'description_' item.id ))}}>
-                        <span>{{item.system.benefit}}</span>
+                        <span>{{item.system.description}}</span>
                     </div>
                 </div>
             {{/if}}

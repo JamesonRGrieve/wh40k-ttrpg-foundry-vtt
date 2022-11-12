@@ -16,6 +16,7 @@ export class ActorContainerSheet extends ActorSheet {
         html.find('.item-create').click(async (ev) => await this._onItemCreate(ev));
         html.find('.item-edit').click((ev) => this._onItemEdit(ev));
         html.find('.item-delete').click((ev) => this._onItemDelete(ev));
+        html.find('.item-vocalize').click(async (ev) => await this._onItemVocalize(ev));
         html.find('.item-drag').each((i, item) => {
             if (item.dataset && item.dataset.itemId) {
                 item.setAttribute('draggable', true);
@@ -83,6 +84,18 @@ export class ActorContainerSheet extends ActorSheet {
             no: () => {
             },
             defaultYes: false,
+        });
+    }
+
+    async _onItemVocalize(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        let item = this.actor.items.get(div.data('itemId'));
+        await sendItemVocalizeChat({
+            actor: this.actor.name,
+            name: item.name,
+            type: item.type,
+            description: item.system.description
         });
     }
 

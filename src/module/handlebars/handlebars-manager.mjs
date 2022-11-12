@@ -52,6 +52,7 @@ export class HandlebarManager {
             // Chats
             'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs',
             'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs',
+            'systems/dark-heresy-2nd/templates/chat/item-vocalize-chat.hbs',
         ]);
     }
 }
