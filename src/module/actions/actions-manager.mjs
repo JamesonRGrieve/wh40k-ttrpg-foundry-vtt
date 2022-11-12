@@ -1,5 +1,7 @@
-import { DHAttackManager } from './attack-manager.mjs';
+import { DHTargetedActionManager } from './targetted-action-manager.mjs';
+import { DHBasicActionManager } from './basic-action-manager.mjs';
 
 export function initializeActorActions() {
-    DHAttackManager.initializeHooks();
+    DHBasicActionManager.initializeHooks();
+    DHTargetedActionManager.initializeHooks();
 }

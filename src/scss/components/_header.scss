@@ -19,10 +19,17 @@
       padding: 0.5rem;
 
       &-small {
-        height: 40px;
+        height: 50px;
         border: 0;
       }
     }
+  }
+
+  &__prompt {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: auto;
+    padding: 0 1.5em 0 0;
   }
 
   &__info {

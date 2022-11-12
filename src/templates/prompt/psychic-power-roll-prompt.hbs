@@ -61,10 +61,10 @@
 
             <!-- Other -->
             <div class="dh-panel prompt dh-grid-col-6">
-                {{#if this.targetBonus}}
+                {{#if this.modifiers.bonus}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Target Bonus</span>
-                        <span class="dh-field__span">{{targetBonus}}</span>
+                        <span class="dh-field__span">{{modifiers.bonus}}</span>
                     </div>
                 {{/if}}
                 <div class="dh-field__wrapper">
@@ -79,7 +79,7 @@
                 </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Modifier</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="modifier" id="modifier" value="{{this.modifier}}" />
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifiers.modifier" value="{{this.modifiers.modifier}}" />
                 </div>
             </div>
         </div>

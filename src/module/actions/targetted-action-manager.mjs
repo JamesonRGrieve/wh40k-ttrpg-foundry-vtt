@@ -1,7 +1,8 @@
-import { prepareWeaponRoll } from '../rolls/weapon-prompt.mjs';
-import { preparePsychicPowerRoll } from '../rolls/psychic-power-prompt.mjs';
+import { prepareWeaponRoll } from '../prompts/weapon-prompt.mjs';
+import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
+import { PsychicRollData, WeaponRollData } from '../rolls/roll-data.mjs';
 
-export class AttackManager {
+export class TargetedActionManager {
 
     selectedTokens = {};
     targetedTokens = {};
@@ -40,7 +41,7 @@ export class AttackManager {
                 title: 'Attack',
                 icon: 'fas fa-hand-fist',
                 visible: true,
-                onClick: async () => DHAttackManager.performWeaponAttack(),
+                onClick: async () => DHTargetedActionManager.performWeaponAttack(),
                 button: true,
             });
         });
@@ -50,10 +51,10 @@ export class AttackManager {
         if(!token1 || !token2) return;
 
         let distance = canvas.grid.measureDistance(token1, token2);
-        if(token1.elevation !== token2.data.elevation){
-            let h_diff = token2.data.elevation > token1.data.elevation
-                ? token2.data.elevation - token1.data.elevation
-                : token1.data.elevation - token2.data.elevation;
+        if(token1.document.elevation !== token2.document.elevation){
+            let h_diff = token2.document.elevation > token1.document.elevation
+                ? token2.document.elevation - token1.document.elevation
+                : token1.document.elevation - token2.document.elevation;
 
             return Math.floor(Math.sqrt(Math.pow(h_diff,2) + Math.pow(distance,2)));
         }else{
@@ -131,9 +132,14 @@ export class AttackManager {
             ui.notifications.warn('Actor must have an equipped weapon!');
             return;
         }
-        rollData.weapons = weapons;
 
-        await prepareWeaponRoll(rollData);
+        const weaponRollData = new WeaponRollData();
+        weaponRollData.weapons = weapons;
+        weaponRollData.sourceActor = rollData.actor;
+        weaponRollData.targetActor = rollData.target;
+        weaponRollData.distance = rollData.distance;
+
+        await prepareWeaponRoll(weaponRollData);
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
@@ -142,17 +148,22 @@ export class AttackManager {
 
         // Powers
         const powers = psychicPower ? [psychicPower] : rollData.actor.items
-            .filter((item) => item.type === 'psychic-power');
+            .filter((item) => item.type === 'psychicPower');
         if (!powers || powers.length === 0) {
             ui.notifications.warn('Actor must have psychic power!');
             return;
         }
-        rollData.psychicPowers = psychicPower;
 
-        await preparePsychicPowerRoll(powers);
+        const psychicRollData = new PsychicRollData();
+        psychicRollData.psychicPowers = powers;
+        psychicRollData.sourceActor = rollData.actor;
+        psychicRollData.targetActor = rollData.target;
+        psychicRollData.distance = rollData.distance;
+
+        await preparePsychicPowerRoll(psychicRollData);
     }
 }
 
 
-export const DHAttackManager = new AttackManager();
+export const DHTargetedActionManager = new TargetedActionManager();
 

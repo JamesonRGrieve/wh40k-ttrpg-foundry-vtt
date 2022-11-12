@@ -4,9 +4,9 @@ import { divinations } from '../rules/divinations.mjs';
 import { roles } from '../rules/roles.mjs';
 import { eliteAdvances } from '../rules/elite-advances.mjs';
 import { fieldMatch } from '../rules/config.mjs';
-import { prepareSimpleRoll } from '../rolls/simple-prompt.mjs';
-import { prepareWeaponRoll } from '../rolls/weapon-prompt.mjs';
-import { DHAttackManager } from '../actions/attack-manager.mjs';
+import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
+import { DHTargetedActionManager } from '../actions/targetted-action-manager.mjs';
+import { SimpleRollData } from '../rolls/roll-data.mjs';
 
 export class DarkHeresyActor extends Actor {
     get backpack() {
@@ -116,7 +116,7 @@ export class DarkHeresyActor extends Actor {
             ui.notifications.warn('Actor must have weapon equipped!');
             return;
         }
-        await DHAttackManager.performWeaponAttack(weapon, null, weapon);
+        await DHTargetedActionManager.performWeaponAttack(this, null, weapon);
     }
 
     async rollSkill(skillName, specialityName) {
@@ -126,24 +126,24 @@ export class DarkHeresyActor extends Actor {
             skill = skill.specialities[specialityName];
             label = `${label}: ${skill.label}`;
         }
-        await prepareSimpleRoll({
-            sheetName: this.name,
-            name: label,
-            type: 'Skill',
-            baseTarget: skill.current,
-            modifier: 0,
-        });
+        const rollData = new SimpleRollData();
+        rollData.actor = this;
+        rollData.name = label;
+        rollData.type = 'Skill';
+        rollData.baseTarget = skill.current;
+        rollData.modifiers.modifier = 0;
+        await prepareSimpleRoll(rollData);
     }
 
     async rollCharacteristic(characteristicName) {
         const characteristic = this.characteristics[characteristicName];
-        await prepareSimpleRoll({
-            sheetName: this.name,
-            name: characteristic.label,
-            type: 'Characteristic',
-            baseTarget: characteristic.total,
-            modifier: 0,
-        });
+        const rollData = new SimpleRollData();
+        rollData.actor = this;
+        rollData.name = characteristic.label;
+        rollData.type = 'Characteristic';
+        rollData.baseTarget = characteristic.total;
+        rollData.modifiers.modifier = 0;
+        await prepareSimpleRoll(rollData);
     }
 
     async rollItem(itemId) {
@@ -153,7 +153,7 @@ export class DarkHeresyActor extends Actor {
                 await this.rollWeaponAttack(item);
                 return;
             case 'psychicPower':
-                await DHAttackManager.performPsychicAttack(this, null, item);
+                await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 return;
             default:
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);

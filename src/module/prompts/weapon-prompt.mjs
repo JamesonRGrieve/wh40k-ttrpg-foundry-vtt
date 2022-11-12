@@ -1,12 +1,11 @@
-import { rollDifficulties } from './roll-difficulties.mjs';
-import { weaponRoll } from './weapon-roll.mjs';
 import { combatActions } from '../rules/combat-actions.mjs';
-import { calculateRange } from './roll-helpers.mjs';
+import { calculateRange } from '../rolls/roll-helpers.mjs';
+import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
-    constructor(attackData = {}, options = {}) {
-        super(attackData, options);
-        this.data = attackData;
+    constructor(weaponRollData = {}, options = {}) {
+        super(weaponRollData, options);
+        this.data = weaponRollData;
         this.initialized = false;
     }
 
@@ -32,10 +31,10 @@ export class WeaponAttackDialog extends FormApplication {
 
     _updateBaseTarget() {
         if (this.data.weapon.isRanged) {
-            this.data.baseTarget = this.data.actor?.characteristics?.ballisticSkill?.total ?? 0;
+            this.data.baseTarget = this.data.sourceActor?.characteristics?.ballisticSkill?.total ?? 0;
             this._updateRange();
         } else {
-            this.data.baseTarget = this.data.actor?.characteristics?.weaponSkill?.total ?? 0;
+            this.data.baseTarget = this.data.sourceActor?.characteristics?.weaponSkill?.total ?? 0;
         }
     }
 
@@ -78,9 +77,9 @@ export class WeaponAttackDialog extends FormApplication {
     _updateAction() {
         const currentAction = this.availableActions.find(a => a.name === this.data.action);
         if (currentAction?.attack?.modifier) {
-            this.data.attackModifier = currentAction.attack.modifier;
+            this.data.modifiers.attack = currentAction.attack.modifier;
         } else {
-            this.data.attackModifier = 0;
+            this.data.modifiers.attack = 0;
         }
     }
 
@@ -94,9 +93,9 @@ export class WeaponAttackDialog extends FormApplication {
         // Initial Values
         if (!this.initialized) {
             this.data.baseTarget = 0;
-            this.data.attackModifier = 0;
-            this.data.difficulty = 0;
-            this.data.modifier = 0;
+            this.data.modifiers.attack = 0;
+            this.data.modifiers.difficulty = 0;
+            this.data.modifiers.modifier = 0;
 
             this.data.weaponSelect = this.data.weapons.length > 1;
 
@@ -124,14 +123,13 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     async _rollAttack(event) {
-        await weaponRoll(this.data);
+        await performRollAndSendToChat(this.data);
         await this.close();
     }
 
 }
 
-export async function prepareWeaponRoll(rollData) {
-    rollData.difficulties = rollDifficulties();
-    const prompt = new WeaponAttackDialog(rollData);
+export async function prepareWeaponRoll(weaponRollData) {
+    const prompt = new WeaponAttackDialog(weaponRollData);
     prompt.render(true);
 }

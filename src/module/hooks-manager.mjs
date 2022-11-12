@@ -17,7 +17,7 @@ import {
     rollCharacteristicMacro,
     rollItemMacro,
     rollSkillMacro,
-} from './rolls/macros.mjs';
+} from './macros/macro-manager.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/item/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';

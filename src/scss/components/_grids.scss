@@ -187,6 +187,11 @@ $grid-tables: (
           @extend %cell;
           grid-column: span 3;
         }
+
+        &--image {
+          @extend %cell;
+          padding-top: 3px;
+        }
       }
     }
 

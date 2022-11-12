@@ -1,12 +1,10 @@
-import { rollDifficulties } from './roll-difficulties.mjs';
-import { weaponRoll } from './weapon-roll.mjs';
-import { combatActions } from '../rules/combat-actions.mjs';
-import { psychicPowerRoll } from './psychic-power-roll.mjs';
+import { rollDifficulties } from '../rolls/roll-difficulties.mjs';
+import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
-    constructor(powerData = {}, options = {}) {
-        super(powerData, options);
-        this.data = powerData;
+    constructor(psychicRollData = {}, options = {}) {
+        super(psychicRollData, options);
+        this.data = psychicRollData;
         this.initialized = false;
     }
 
@@ -50,7 +48,7 @@ export class PsychicPowerDialog extends FormApplication {
         const power = this.data.psychicPowers.find(power => power.id === event.target.name);
         power.isSelected = true;
         this.data.power = power;
-        this.data.targetBonus = power.system.target.bonus;
+        this.data.modifiers.bonus = power.system.target.bonus;
         this._updateBaseTarget();
         this.render(true);
     }
@@ -59,9 +57,9 @@ export class PsychicPowerDialog extends FormApplication {
         // Initial Values
         if (!this.initialized) {
             this.data.baseTarget = 0;
-            this.data.targetBonus = 0;
-            this.data.difficulty = 0;
-            this.data.modifier = 0;
+            this.data.modifiers.bonus = 0;
+            this.data.modifiers.difficulty = 0;
+            this.data.modifiers.modifier = 0;
             this.data.effectiveRating = 0;
             this.data.maxRating = this.data.actor.system.psy.rating;
 
@@ -88,7 +86,7 @@ export class PsychicPowerDialog extends FormApplication {
     }
 
     async _rollPower(event) {
-        await psychicPowerRoll(this.data);
+        await performRollAndSendToChat(this.data);
         await this.close();
     }
 

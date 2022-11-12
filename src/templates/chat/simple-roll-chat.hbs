@@ -11,10 +11,12 @@
                 <div class='dh-roll__label'>Base</div>
                 <div class='dh-roll__value'>{{baseTarget}}</div>
             </div>
-            <div class='dh-roll__row dh-roll__row--number'>
-                <div class='dh-roll__label'>Modifier</div>
-                <div class='dh-roll__value'>{{modifier}}</div>
-            </div>
+            {{#each modifiers}}
+                <div class="dh-roll__row dh-roll__row--number">
+                    <div class="dh-roll__label">Modifier: {{@key}}</div>
+                    <div class="dh-roll__value">{{this}}</div>
+                </div>
+            {{/each}}
             <div class='dh-roll__target'>
                 <div class='dh-roll__label'>Target</div>
                 <div class='dh-roll__value'>{{target}}</div>
