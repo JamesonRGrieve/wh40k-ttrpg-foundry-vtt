@@ -1,5 +1,5 @@
 import { toggleUIExpanded } from '../../rules/config.mjs';
-import { sendItemVocalizedChat } from '../../rolls/chat.mjs';
+import { sendItemVocalizeChat } from '../../rolls/chat.mjs';
 
 /**
  * Shared Actor functions for Actor that contains embedded items

@@ -4,7 +4,7 @@
  * @param data
  * @returns {Promise<void>}
  */
-async function sendItemVocalizeChat(data) {
+export async function sendItemVocalizeChat(data) {
     const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/item-vocalize-chat.hbs', data);
     let chatData = {
         user: game.user.id,
