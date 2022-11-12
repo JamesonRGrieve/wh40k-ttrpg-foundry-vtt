@@ -1080,8 +1080,7 @@
       "containerTypes": ["attackSpecial"],
       "cost": 0,
       "sustained": "",
-      "discipline": "",
-      "effect": ""
+      "discipline": ""
     },
     "specialAbility": {
       "templates": ["itemDescription"],

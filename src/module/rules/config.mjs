@@ -17,8 +17,8 @@ DarkHeresy.bio = {
 };
 
 DarkHeresy.items = {
-    availability: ['Ubiquitous', 'Abundant', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
-    craftsmanship: ['Poor', 'Common', 'Good', 'Best'],
+    availability: ['', 'Ubiquitous', 'Abundant', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
+    craftsmanship: ['', 'Poor', 'Common', 'Good', 'Best'],
 };
 
 DarkHeresy.combat = {

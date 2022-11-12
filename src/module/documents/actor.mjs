@@ -6,6 +6,7 @@ import { eliteAdvances } from '../rules/elite-advances.mjs';
 import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../rolls/simple-prompt.mjs';
 import { prepareWeaponRoll } from '../rolls/weapon-prompt.mjs';
+import { DHAttackManager } from '../actions/attack-manager.mjs';
 
 export class DarkHeresyActor extends Actor {
     get backpack() {
@@ -115,10 +116,7 @@ export class DarkHeresyActor extends Actor {
             ui.notifications.warn('Actor must have weapon equipped!');
             return;
         }
-        await prepareWeaponRoll({
-            actor: this,
-            weapons: [weapon]
-        })
+        await DHAttackManager.performWeaponAttack(weapon, null, weapon);
     }
 
     async rollSkill(skillName, specialityName) {
@@ -153,6 +151,9 @@ export class DarkHeresyActor extends Actor {
         switch (item.type) {
             case 'weapon':
                 await this.rollWeaponAttack(item);
+                return;
+            case 'psychic-power':
+                await DHAttackManager.performPsychicAttack(this, null, item);
                 return;
             default:
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);

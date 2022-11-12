@@ -21,7 +21,7 @@ import {
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/item/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';
-import { DarkHeresyPsykanaSheet } from './sheets/item/psykana-sheet.mjs';
+import { DarkHeresyPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -80,7 +80,7 @@ _  /_/ /_  __  / _  __/
         Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyPsykanaSheet, { types: ['psychicPower'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
 
         HandlebarManager.loadTemplates();
     }

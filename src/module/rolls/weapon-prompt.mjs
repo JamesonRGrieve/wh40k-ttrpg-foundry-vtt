@@ -1,6 +1,7 @@
 import { rollDifficulties } from './roll-difficulties.mjs';
 import { weaponRoll } from './weapon-roll.mjs';
 import { combatActions } from '../rules/combat-actions.mjs';
+import { calculateRange } from './roll-helpers.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
     constructor(attackData = {}, options = {}) {
@@ -32,6 +33,7 @@ export class WeaponAttackDialog extends FormApplication {
     _updateBaseTarget() {
         if (this.data.weapon.isRanged) {
             this.data.baseTarget = this.data.actor?.characteristics?.ballisticSkill?.total ?? 0;
+            this._updateRange();
         } else {
             this.data.baseTarget = this.data.actor?.characteristics?.weaponSkill?.total ?? 0;
         }
@@ -80,6 +82,12 @@ export class WeaponAttackDialog extends FormApplication {
         } else {
             this.data.attackModifier = 0;
         }
+    }
+
+    _updateRange() {
+        const rangeData = calculateRange(this.data.weapon.system.range, this.data.distance, this.data.weapon);
+        this.data.rangeName = rangeData.name;
+        this.data.rangeBonus = rangeData.bonus;
     }
 
     async getData() {

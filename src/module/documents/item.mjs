@@ -181,4 +181,17 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         }
         return specials;
     }
+
+    hasAttackSpecial(special) {
+        return this.hasEmbeddedItem(special, 'attackSpecial');
+    }
+
+    hasWeaponModification(mod) {
+        return this.hasEmbeddedItem(mod, 'weaponModification');
+    }
+
+    hasEmbeddedItem(item, type) {
+        if (!this.system.container) return false;
+        return !!this.items.find(i => i.name === item && i.type === type);
+    }
 }

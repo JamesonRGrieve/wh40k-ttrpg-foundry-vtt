@@ -77,6 +77,16 @@
                     <span class="dh-field__span">Base</span>
                     <span class="dh-field__span">{{baseTarget}}</span>
                 </div>
+
+                {{#if this.weapon.isRanged}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Distance</span>
+                        <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                        <span class="dh-field__span">{{rangeName}}</span>
+                        <span class="dh-field__span">{{rangeBonus}}</span>
+                    </div>
+                {{/if}}
+
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Difficulty</span>
                     <select class="dh-field__input" name="difficulty">
