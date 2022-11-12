@@ -152,7 +152,7 @@ export class DarkHeresyActor extends Actor {
             case 'weapon':
                 await this.rollWeaponAttack(item);
                 return;
-            case 'psychic-power':
+            case 'psychicPower':
                 await DHAttackManager.performPsychicAttack(this, null, item);
                 return;
             default:

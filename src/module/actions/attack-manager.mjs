@@ -55,9 +55,9 @@ export class AttackManager {
                 ? token2.data.elevation - token1.data.elevation
                 : token1.data.elevation - token2.data.elevation;
 
-            return Math.sqrt(Math.pow(h_diff,2) + Math.pow(distance,2));
+            return Math.floor(Math.sqrt(Math.pow(h_diff,2) + Math.pow(distance,2)));
         }else{
-            return distance;
+            return Math.floor(distance);
         }
     }
 
@@ -73,7 +73,7 @@ export class AttackManager {
             sourceToken = this.selectedTokens[Object.keys(this.selectedTokens)[0]];
         }
 
-        if (!sourceToken.actor) {
+        if (sourceToken && !sourceToken.actor) {
             ui.notifications.warn('Token must be associated with an actor!');
             return;
         }
@@ -93,7 +93,7 @@ export class AttackManager {
             targetToken = this.targetedTokens[Object.keys(this.targetedTokens)[0]];
         }
 
-        if (!targetToken.actor) {
+        if (targetToken && !targetToken.actor) {
             ui.notifications.warn('Target token must be associated with an actor!');
             return;
         }
