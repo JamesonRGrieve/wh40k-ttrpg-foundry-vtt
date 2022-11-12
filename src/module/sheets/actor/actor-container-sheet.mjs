@@ -96,7 +96,7 @@ export class ActorContainerSheet extends ActorSheet {
             actor: this.actor.name,
             name: item.name,
             type: item.type,
-            description: item.system.description
+            description: item.system.benefit ?? item.system.description
         });
     }
 
