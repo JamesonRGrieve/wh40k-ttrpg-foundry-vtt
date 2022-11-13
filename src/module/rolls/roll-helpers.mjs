@@ -83,28 +83,27 @@ export function calculateRange(actionRange, targetDistance, weapon = null) {
     return rangeData;
 }
 
-export function recursiveUpdate(targetObject, obj) {
-    Object.keys(obj).forEach(function(key) {
-        // delete property if set to undefined or null
-        if (undefined === obj[key] || null === obj[key]) {
-            delete targetObject[key];
+export function recursiveUpdate(targetObject, updateObject) {
+    for (const key of Object.keys(updateObject)) {
+        handleDotNotationUpdate(targetObject, key, updateObject[key]);
+    }
+}
+
+export function handleDotNotationUpdate(targetObject, key, value) {
+    if (typeof key == 'string') {
+        // Key Starts as string and we split across dots
+        handleDotNotationUpdate(targetObject, key.split('.'), value);
+    } else if (key.length === 1) {
+        // Final Key -- either delete or set parent field
+        if(value === undefined || value === null) {
+            delete targetObject[key[0]];
+        } else if ('object' === typeof value && !Array.isArray(value)) {
+            recursiveUpdate(targetObject[key[0]], value);
+        } else {
+            targetObject[key[0]] = value;
         }
-
-        // property value is object, so recurse
-        else if ('object' === typeof obj[key] && !Array.isArray(obj[key])) {
-
-            // target property not object, overwrite with empty object
-            if (!('object' === typeof targetObject[key] && !Array.isArray(targetObject[key]))) {
-                targetObject[key] = {};
-            }
-
-            // recurse
-            recursiveUpdate(targetObject[key], obj[key]);
-        }
-
-        // set target property to update property
-        else {
-            targetObject[key] = obj[key];
-        }
-    });
+    } else {
+        // Go a layer deeper into object
+        handleDotNotationUpdate(targetObject[key[0]], key.slice(1), value);
+    }
 }
