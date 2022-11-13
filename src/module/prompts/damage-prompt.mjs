@@ -1,4 +1,4 @@
-import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
+import { performDamageAndSendToChat, performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 
 export async function prepareDamageRoll(rollData) {
     const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/damage-roll-prompt.hbs', rollData);
@@ -13,7 +13,7 @@ export async function prepareDamageRoll(rollData) {
                     callback: async (html) => {
                         rollData.damage = html.find('#damage')[0].value;
                         rollData.penetration = html.find('#penetration')[0].value;
-                        await performRollAndSendToChat(rollData);
+                        await performDamageAndSendToChat(rollData);
                     },
                 },
                 cancel: {

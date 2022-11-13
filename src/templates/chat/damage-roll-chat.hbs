@@ -1,0 +1,24 @@
+{{log this}}
+<div class="dh-wrapper">
+    <div class="dh-chat">
+        <h3>Damage Roll</h3>
+        <div class="dh-roll">
+            <h1>{{name}}</h1>
+            <div class="dh-roll__divider"></div>
+
+            <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Damage</div>
+                <div class="dh-roll__value">{{roll.total}}</div>
+            </div>
+            <div class="dh-roll__target">
+                <div class="dh-roll__label">Penetration</div>
+                <div class="dh-roll__value">{{penetration}}</div>
+            </div>
+        </div>
+        <div class="dice-rolls" style="margin-top: 4px">
+            <div class="dice-roll-render">
+                {{{render}}}
+            </div>
+        </div>
+    </div>
+</div>

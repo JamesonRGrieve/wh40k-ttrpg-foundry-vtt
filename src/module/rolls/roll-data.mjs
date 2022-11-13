@@ -43,7 +43,7 @@ export class RollData {
 
     toTemplateModel() {
         const data = {...this};
-        data['activeModifier'] = this.activeModifiers;
+        data['activeModifiers'] = this.activeModifiers;
         data['modifiedTarget'] = this.modifiedTarget;
         return data;
     }
