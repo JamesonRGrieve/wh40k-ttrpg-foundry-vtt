@@ -7,7 +7,7 @@
             <input class='dh-field__input' type='text' id='damage' name='damage' value='{{damage}}'/>
         </div>
         <div class="dh-field__wrapper">
-            <span class="dh-field__header">Type</span>
+            <span class="dh-field__span">Type</span>
             <select class="dh-field__input" id='damageType' name="damageType">
                 {{selectOptions (arrayToObject dh.combat.damage_types)
                                 selected=damageType}}
