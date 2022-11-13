@@ -58,6 +58,7 @@ export async function createItemMacro(data, slot) {
 }
 
 export function rollItemMacro(itemName) {
+    console.log('RollItemMacro');
     if (!checkCanRollMacro(itemName)) return;
     const actor = getTokenActor();
     if (!actor) return;

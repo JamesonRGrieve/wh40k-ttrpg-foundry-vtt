@@ -5,12 +5,7 @@ export class CombatModel {
 
     }
 
-    addModifier(modifierName, modifier) {
-        this.modifierArray.push({
-            name: modifierName,
-            value: modifier,
-        });
-    }
+
 
     scatterDirection() {
         let direction = '';

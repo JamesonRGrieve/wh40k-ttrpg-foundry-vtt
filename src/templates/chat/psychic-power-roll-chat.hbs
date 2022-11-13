@@ -1,9 +1,8 @@
 <div class="dh-wrapper">
     <div class="dh-chat">
-        <h3>Attack Roll</h3>
+        <h3>Psychic Power</h3>
         <div class="dh-roll">
-            <h1>{{weapon.name}}</h1>
-            <h2>{{action}}</h2>
+            <h1>{{power.name}}</h1>
             <h2>{{lookup difficulties difficulty}}</h2>
             <div class="dh-roll__divider"></div>
 
@@ -11,23 +10,21 @@
                 <div class="dh-roll__label">Base</div>
                 <div class="dh-roll__value">{{baseTarget}}</div>
             </div>
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Attack Modifier</div>
-                <div class="dh-roll__value">{{attackModifier}}</div>
-            </div>
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Modifier</div>
-                <div class="dh-roll__value">{{modifier}}</div>
-            </div>
+            {{#each activeModifiers}}
+                <div class="dh-roll__row dh-roll__row--number">
+                    <div class="dh-roll__label">Modifier: {{@key}}</div>
+                    <div class="dh-roll__value">{{this}}</div>
+                </div>
+            {{/each}}
             <div class="dh-roll__target">
                 <div class="dh-roll__label">Target</div>
-                <div class="dh-roll__value">{{target}}</div>
+                <div class="dh-roll__value">{{modifiedTarget}}</div>
             </div>
 
-            {{#if isSuccess}}
+            {{#if success}}
                 <div class="dh-roll__success">
                     <span>Success</span>
-                    <span>{{result}}</span>
+                    <span>{{roll.total}}</span>
                 </div>
                 <div class="dh-roll__row dh-roll__row--number">
                     <div class="dh-roll__label">Degrees of Success</div>
@@ -36,7 +33,7 @@
             {{else}}
                 <div class="dh-roll__fail">
                     <span>Fail</span>
-                    <span>{{result}}</span>
+                    <span>{{roll.total}}</span>
                 </div>
                 <div class="dh-roll__row dh-roll__row--number">
                     <div class="dh-roll__label">Degrees of Failure</div>

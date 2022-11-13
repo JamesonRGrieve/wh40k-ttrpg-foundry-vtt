@@ -18,6 +18,7 @@ export class RollData {
         difficulty: 0,
         modifier: 0
     };
+    modifierTotal = 0;
 
     roll;
     render;
@@ -25,6 +26,20 @@ export class RollData {
     success = false;
     dos = 0;
     dof = 0;
+
+    get modifiedTarget() {
+        return this.baseTarget + this.modifierTotal;
+    }
+
+    get activeModifiers() {
+        const modifiers = {};
+        for(const m of Object.keys(this.modifiers)) {
+            if(this.modifiers[m] !== 0) {
+                modifiers[m.toUpperCase()] = this.modifiers[m];
+            }
+        }
+        return modifiers;
+    }
 }
 
 export class SimpleRollData extends RollData {

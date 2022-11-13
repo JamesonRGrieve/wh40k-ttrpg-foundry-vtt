@@ -1,9 +1,9 @@
-import { adjustForMaxAndMin, determineSuccess, performSkillCheckRoll } from './roll-helpers.mjs';
+import { totalModifiers, determineSuccess, performSkillCheckRoll } from './roll-helpers.mjs';
 
 export async function performRollAndSendToChat(rollData) {
-    rollData.modifiers = await adjustForMaxAndMin(rollData.modifiers);
-    rollData.roll = await performSkillCheckRoll(rollData.modifiers);
-    rollData = {...rollData, ...determineSuccess(rollData.roll, rollData.baseTarget)}
+    rollData.modifierTotal = await totalModifiers(rollData.modifiers);
+    rollData.roll = await performSkillCheckRoll(rollData.modifierTotal);
+    rollData = {...rollData, ...determineSuccess(rollData.roll, rollData.modifiedTarget)}
 
     rollData.render = await rollData.roll.render();
     const html = await renderTemplate(rollData.template, rollData);

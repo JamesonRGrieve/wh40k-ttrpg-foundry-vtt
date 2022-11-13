@@ -11,7 +11,7 @@
                 <div class="dh-roll__label">Base</div>
                 <div class="dh-roll__value">{{baseTarget}}</div>
             </div>
-            {{#each modifiers}}
+            {{#each activeModifiers}}
                 <div class="dh-roll__row dh-roll__row--number">
                     <div class="dh-roll__label">Modifier: {{@key}}</div>
                     <div class="dh-roll__value">{{this}}</div>
@@ -19,13 +19,13 @@
             {{/each}}
             <div class="dh-roll__target">
                 <div class="dh-roll__label">Target</div>
-                <div class="dh-roll__value">{{target}}</div>
+                <div class="dh-roll__value">{{modifiedTarget}}</div>
             </div>
 
-            {{#if isSuccess}}
+            {{#if success}}
                 <div class="dh-roll__success">
                     <span>Success</span>
-                    <span>{{result}}</span>
+                    <span>{{roll.total}}</span>
                 </div>
                 <div class="dh-roll__row dh-roll__row--number">
                     <div class="dh-roll__label">Degrees of Success</div>
@@ -34,7 +34,7 @@
             {{else}}
                 <div class="dh-roll__fail">
                     <span>Fail</span>
-                    <span>{{result}}</span>
+                    <span>{{roll.total}}</span>
                 </div>
                 <div class="dh-roll__row dh-roll__row--number">
                     <div class="dh-roll__label">Degrees of Failure</div>
