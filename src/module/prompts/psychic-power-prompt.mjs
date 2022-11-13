@@ -61,7 +61,7 @@ export class PsychicPowerDialog extends FormApplication {
             this.data.modifiers['difficulty'] = 0;
             this.data.modifiers['modifier'] = 0;
             this.data.effectiveRating = 0;
-            this.data.maxRating = this.data.actor.system.psy.rating;
+            this.data.maxRating = this.data.sourceActor.psy.rating;
 
             this.data.powerSelect = this.data.psychicPowers.length > 1;
 

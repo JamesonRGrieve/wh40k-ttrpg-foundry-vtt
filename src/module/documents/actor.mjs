@@ -179,7 +179,7 @@ export class DarkHeresyActor extends Actor {
                 await this.rollWeaponAttack(item);
                 return;
             case 'psychicPower':
-                await this.rollPsychicPowerDamage(item);
+                await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 return;
             default:
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
@@ -193,7 +193,7 @@ export class DarkHeresyActor extends Actor {
                 await this.rollWeaponDamage(item);
                 return;
             case 'psychicPower':
-                await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                await this.rollPsychicPowerDamage(item);
                 return;
             default:
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);

@@ -1,5 +1,6 @@
 import { toggleUIExpanded } from '../../rules/config.mjs';
 import { ActorContainerSheet } from './actor-container-sheet.mjs';
+import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
 
 export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
@@ -42,7 +43,7 @@ export class AcolyteSheet extends ActorContainerSheet {
         const div = $(event.currentTarget);
         let bonus = this.actor.backgroundEffects.abilities.find(a => a.name === div.data('bonusName'));
         if(bonus) {
-            await sendItemVocalizeChat({
+            await DHBasicActionManager.sendItemVocalizeChat({
                 actor: this.actor.name,
                 name: bonus[0].name,
                 type: bonus[0].source,

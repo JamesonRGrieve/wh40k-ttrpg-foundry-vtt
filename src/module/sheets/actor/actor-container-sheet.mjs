@@ -1,5 +1,5 @@
 import { toggleUIExpanded } from '../../rules/config.mjs';
-import { sendItemVocalizeChat } from '../../rolls/chat.mjs';
+import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
 
 /**
  * Shared Actor functions for Actor that contains embedded items
@@ -99,7 +99,7 @@ export class ActorContainerSheet extends ActorSheet {
         event.preventDefault();
         const div = $(event.currentTarget);
         let item = this.actor.items.get(div.data('itemId'));
-        await sendItemVocalizeChat({
+        await DHBasicActionManager.sendItemVocalizeChat({
             actor: this.actor.name,
             name: item.name,
             type: item.type,
