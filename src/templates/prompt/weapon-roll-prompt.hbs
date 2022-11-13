@@ -90,7 +90,7 @@
                 {{#with this.modifiers}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Difficulty</span>
-                        <select class="dh-field__input" name="modifiers.difficulty">
+                        <select class="dh-field__input" data-dtype="Number" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>

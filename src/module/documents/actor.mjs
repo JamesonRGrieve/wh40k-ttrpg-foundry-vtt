@@ -354,6 +354,8 @@ export class DarkHeresyActor extends Actor {
             .reduce((acc, armour) => {
                 Object.keys(locations).forEach((location) => {
                     let armourVal = armour.system.armourPoints[location] || 0;
+                    // Coerce -- sometimes this is a string??
+                    armourVal = Number(armourVal);
                     if (armourVal > acc[location]) {
                         acc[location] = armourVal;
                     }

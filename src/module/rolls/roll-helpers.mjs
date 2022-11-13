@@ -100,7 +100,12 @@ export function handleDotNotationUpdate(targetObject, key, value) {
         } else if ('object' === typeof value && !Array.isArray(value)) {
             recursiveUpdate(targetObject[key[0]], value);
         } else {
-            targetObject[key[0]] = value;
+            // Coerce numbers
+            if('number' === typeof targetObject[key[0]]) {
+                targetObject[key[0]] = Number(value);
+            } else {
+                targetObject[key[0]] = value;
+            }
         }
     } else {
         // Go a layer deeper into object
