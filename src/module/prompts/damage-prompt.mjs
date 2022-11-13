@@ -15,6 +15,7 @@ export async function prepareDamageRoll(rollData) {
                         rollData.damage = html.find('#damage')[0].value;
                         rollData.penetration = html.find('#penetration')[0].value;
                         rollData.damageType = html.find('[name=damageType] :selected').val();
+                        rollData.pr = html.find('#pr')[0].value;
                         await performDamageAndSendToChat(rollData);
                     },
                 },
