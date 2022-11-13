@@ -48,4 +48,12 @@
       }
     }
   }
+
+  &-divider {
+    width: 100%;
+    height: 10px;
+    grid-column: 1/-1;
+
+    background: url('../images/divider.png') no-repeat center/100% 100%;
+  }
 }

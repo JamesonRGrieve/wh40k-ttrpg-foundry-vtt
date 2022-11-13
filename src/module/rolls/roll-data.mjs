@@ -31,7 +31,8 @@ export class SimpleRollData extends RollData {
     name = '';
     type = '';
 
-    SimpleRollData() {
+    constructor() {
+        super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs';
     }
 }
@@ -41,7 +42,8 @@ export class WeaponRollData extends RollData {
     weapon;
     weaponSelect = false;
 
-    WeaponRollData() {
+    constructor() {
+        super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';
     }
 }
@@ -54,7 +56,8 @@ export class PsychicRollData extends RollData {
     maxRating = 0;
     effectiveRating = 0;
 
-    PsychicRollData() {
+    constructor() {
+        super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-power-roll-chat.hbs';
     }
 }

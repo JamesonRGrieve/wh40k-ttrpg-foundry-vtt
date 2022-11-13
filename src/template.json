@@ -1078,6 +1078,7 @@
       "templates": ["itemDescription", "damage", "attack", "action"],
       "container": true,
       "containerTypes": ["attackSpecial"],
+      "attackType": "",
       "cost": 0,
       "sustained": "",
       "discipline": ""

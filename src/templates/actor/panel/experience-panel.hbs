@@ -1,4 +1,24 @@
 <div class="dh-panel dh-grid-col-2 dh-grid-row-2">
     <h1 class="dh-panel__header">Experience</h1>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Total</span>
+        <input class="dh-field__input" data-dtype="Number" type="number" name="system.experience.total"
+               value="{{actor.system.experience.total}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Spent</span>
+        <input class="dh-field__input" data-dtype="Number" type="number" name="system.experience.used"
+               value="{{actor.system.experience.used}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Available</span>
+        <span class="dh-field__span">{{actor.system.experience.available}}</span>
+    </div>
 
+    <div class="dh-divider"></div>
+
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Estimated Total</span>
+        <span class="dh-field__span">{{actor.system.experience.calculatedTotal}}</span>
+    </div>
 </div>

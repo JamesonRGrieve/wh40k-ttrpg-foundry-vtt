@@ -22,6 +22,7 @@ DarkHeresy.items = {
 };
 
 DarkHeresy.combat = {
+    psychic_attacks: ['Psychic Bolt', 'Psychic Blast', 'Psychic Barrage', 'Psychic Storm'],
     damage_types: ['Energy', 'Impact', 'Rending', 'Explosive'],
     special: attackSpecialsNames(),
     weapon_class: ['Pistol', 'Basic', 'Heavy', 'Thrown', 'Melee'],
