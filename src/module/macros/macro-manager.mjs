@@ -1,8 +1,9 @@
-function getTokenActor() {
+function getTokenActor(actorId) {
     // Fetch the actor from the current users token or the actor collection.
     const speaker = ChatMessage.getSpeaker();
     let actor;
-    if (speaker.token) actor = game.actors.tokens[speaker.token];
+    if (actorId) actor = game.actors.get(actorId);
+    if (!actor && speaker.token) actor = game.actors.tokens[speaker.token];
     if (!actor) actor = game.actors.get(speaker.actor);
     if (!actor) return ui.notifications.warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
     return actor;
@@ -44,39 +45,39 @@ export async function createItemMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
     // Create the macro command
-    const command = `game.dh.rollItemMacro("${data.name}");`;
-    if (checkExistingMacro(data.name, command)) return;
+    const command = `game.dh.rollItemMacro("${data.actorId}", "${data.data._id}");`;
+    if (checkExistingMacro(data.data.name, command)) return;
 
     const macro = await Macro.create({
-        name: data.name,
+        name: data.data.name,
         type: 'script',
-        img: data.img,
+        img: data.data.img,
         command: command,
         flags: { 'dh.itemMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
 }
 
-export function rollItemMacro(itemName) {
+export function rollItemMacro(actorId, itemId) {
     console.log('RollItemMacro');
-    if (!checkCanRollMacro(itemName)) return;
-    const actor = getTokenActor();
+    if (!checkCanRollMacro(itemId)) return;
+    const actor = getTokenActor(actorId);
     if (!actor) return;
 
-    const item = actor ? actor.items.find((i) => i.name === itemName) : null;
-    if (!item) return ui.notifications.warn(`Your controlled Actor does not have an item named ${itemName}`);
+    const item = actor ? actor.items.find((i) => i._id === itemId) : null;
+    if (!item) return ui.notifications.warn(`Actor does not have an item id: ${itemId}`);
     return actor.rollItem(item._id);
 }
 
 export async function createSkillMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
-    const { skill, speciality, name } = data;
+    const { skill, speciality, name } = data.data;
 
     // Setup macro data.
-    let command = `game.dh.rollSkillMacro("${skill}");`;
+    let command = `game.dh.rollSkillMacro("${data.actorId}", "${skill}");`;
     if (speciality) {
-        command = `game.dh.rollSkillMacro("${skill}", "${speciality}");`;
+        command = `game.dh.rollSkillMacro("${data.actorId}", "${skill}", "${speciality}");`;
     }
     if (checkExistingMacro(name, command)) return;
 
@@ -90,9 +91,9 @@ export async function createSkillMacro(data, slot) {
     if (macro) await game.user.assignHotbarMacro(macro, slot);
 }
 
-export async function rollSkillMacro(skillName, speciality) {
+export async function rollSkillMacro(actorId, skillName, speciality) {
     if (!checkCanRollMacro(skillName)) return;
-    const actor = getTokenActor();
+    const actor = getTokenActor(actorId);
     if (!actor) return;
 
     const skill = actor ? actor.skills[skillName] : null;
@@ -103,10 +104,10 @@ export async function rollSkillMacro(skillName, speciality) {
 export async function createCharacteristicMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
-    const { characteristic, name } = data;
+    const { characteristic, name } = data.data;
 
     // Create the macro command
-    const command = `game.dh.rollCharacteristicMacro("${characteristic}");`;
+    const command = `game.dh.rollCharacteristicMacro("${data.actorId}","${characteristic}");`;
     if (checkExistingMacro(name, command)) return;
 
     const macro = await Macro.create({
@@ -119,9 +120,9 @@ export async function createCharacteristicMacro(data, slot) {
     if (macro) await game.user.assignHotbarMacro(macro, slot);
 }
 
-export async function rollCharacteristicMacro(characteristic) {
+export async function rollCharacteristicMacro(actorId, characteristic) {
     if (!checkCanRollMacro(characteristic)) return;
-    const actor = getTokenActor();
+    const actor = getTokenActor(actorId);
     if (!actor) return;
 
     const charCheck = actor ? actor.characteristics[characteristic] : null;

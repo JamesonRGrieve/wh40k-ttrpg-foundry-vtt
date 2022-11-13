@@ -90,16 +90,16 @@ _  /_/ /_  __  / _  __/
     }
 
     static hotbarDrop(bar, data, slot) {
-        console.log(data);
+        console.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
-                createCharacteristicMacro(data.data, slot);
+                createCharacteristicMacro(data, slot);
                 return false;
             case 'item':
-                createItemMacro(data.data, slot);
+                createItemMacro(data, slot);
                 return false;
             case 'skill':
-                createSkillMacro(data.data, slot);
+                createSkillMacro(data, slot);
                 return false;
             default:
                 return;
