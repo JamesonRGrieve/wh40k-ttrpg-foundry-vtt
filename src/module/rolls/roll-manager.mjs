@@ -6,7 +6,7 @@ export async function performRollAndSendToChat(rollData) {
     rollData = {...rollData, ...determineSuccess(rollData.roll, rollData.modifiedTarget)}
 
     rollData.render = await rollData.roll.render();
-    const html = await renderTemplate(rollData.template, rollData);
+    const html = await renderTemplate(rollData.template, rollData.toTemplateModel());
     let chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
