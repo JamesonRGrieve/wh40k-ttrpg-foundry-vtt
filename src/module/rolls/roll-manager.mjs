@@ -3,7 +3,10 @@ import { totalModifiers, determineSuccess, roll1d100 } from './roll-helpers.mjs'
 export async function performRollAndSendToChat(rollData) {
     rollData.modifierTotal = await totalModifiers(rollData.modifiers);
     rollData.roll = await roll1d100();
-    rollData = {...rollData, ...determineSuccess(rollData.roll, rollData.modifiedTarget)}
+    const successData = determineSuccess(rollData.roll, rollData.modifiedTarget);
+    rollData.success = successData.success;
+    rollData.dos = successData.dos;
+    rollData.dof = successData.dof;
 
     rollData.render = await rollData.roll.render();
     const html = await renderTemplate(rollData.template, rollData.toTemplateModel());

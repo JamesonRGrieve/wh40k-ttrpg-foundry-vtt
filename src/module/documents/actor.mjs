@@ -7,6 +7,7 @@ import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { DHTargetedActionManager } from '../actions/targetted-action-manager.mjs';
 import { SimpleRollData } from '../rolls/roll-data.mjs';
+import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 
 export class DarkHeresyActor extends Actor {
     get backpack() {

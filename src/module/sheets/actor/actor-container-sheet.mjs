@@ -53,13 +53,13 @@ export class ActorContainerSheet extends ActorSheet {
     async _onItemDamage(event) {
         event.preventDefault();
         const div = $(event.currentTarget);
-        await this.actor.rollItem(div.data('itemId'));
+        await this.actor.damageItem(div.data('itemId'));
     }
 
     async _onItemRoll(event) {
         event.preventDefault();
         const div = $(event.currentTarget);
-        await this.actor.damageItem(div.data('itemId'));
+        await this.actor.rollItem(div.data('itemId'));
     }
 
     async _onItemCreate(event) {
