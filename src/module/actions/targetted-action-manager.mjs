@@ -63,9 +63,10 @@ export class TargetedActionManager {
     }
 
     getSourceToken(source) {
+        console.log('getSourceToken', source);
         let sourceToken;
         if (source) {
-            sourceToken = source.token ?? source.getActiveTokens[0];
+            sourceToken = source.token ?? source.getActiveTokens()[0];
         } else {
             if (Object.keys(this.selectedTokens).length !== 1) {
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
@@ -83,9 +84,10 @@ export class TargetedActionManager {
     }
 
     getTargetToken(target) {
+        console.log('getSourceToken', target);
         let targetToken;
         if (target) {
-            targetToken = target.token ?? target.getActiveTokens[0];
+            targetToken = target.token ?? target.getActiveTokens()[0];
         } else {
             if (Object.keys(this.targetedTokens).length > 1) {
                 ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
@@ -103,6 +105,7 @@ export class TargetedActionManager {
     }
 
     createSourceAndTargetData(source, target) {
+        console.log('createSourceAndTargetData', {source, target});
         // Source
         const sourceToken = this.getSourceToken(source);
         if(!sourceToken) return;
@@ -121,6 +124,7 @@ export class TargetedActionManager {
     }
 
     async performWeaponAttack(source = null, target = null, weapon = null) {
+        console.log('performWeaponAttack')
         const rollData = this.createSourceAndTargetData(source, target);
         if(!rollData) return;
 
@@ -143,6 +147,7 @@ export class TargetedActionManager {
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
+        console.log('performPsychicAttack')
         const rollData = this.createSourceAndTargetData(source, target);
         if(!rollData) return;
 

@@ -111,6 +111,14 @@ export class DarkHeresyActor extends Actor {
         this._computeEncumbrance();
     }
 
+    async rollWeaponDamage(weapon) {
+        if (!weapon.system.equipped) {
+            ui.notifications.warn('Actor must have weapon equipped!');
+            return;
+        }
+        await DHTargetedActionManager.performWeaponAttack(this, null, weapon);
+    }
+
     async rollWeaponAttack(weapon) {
         if (!weapon.system.equipped) {
             ui.notifications.warn('Actor must have weapon equipped!');
@@ -147,10 +155,25 @@ export class DarkHeresyActor extends Actor {
     }
 
     async rollItem(itemId) {
+        console.log('RollItem', itemId);
         const item = this.items.get(itemId);
         switch (item.type) {
             case 'weapon':
                 await this.rollWeaponAttack(item);
+                return;
+            case 'psychicPower':
+                await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                return;
+            default:
+                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+        }
+    }
+
+    async damageItem(itemId) {
+        const item = this.items.get(itemId);
+        switch (item.type) {
+            case 'weapon':
+                await this.rollWeaponDamage(item);
                 return;
             case 'psychicPower':
                 await DHTargetedActionManager.performPsychicAttack(this, null, item);

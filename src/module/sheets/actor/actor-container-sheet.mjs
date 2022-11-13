@@ -14,6 +14,7 @@ export class ActorContainerSheet extends ActorSheet {
         this.form.ondrop = (ev) => this._onDrop(ev);
         html.find('.sheet-control__hide-control').click(async (ev) => await this._sheetControlHideToggle(ev));
         html.find('.item-roll').click(async (ev) => await this._onItemRoll(ev));
+        html.find('.item-damage').click(async (ev) => await this._onItemDamage(ev));
         html.find('.item-create').click(async (ev) => await this._onItemCreate(ev));
         html.find('.item-edit').click((ev) => this._onItemEdit(ev));
         html.find('.item-delete').click((ev) => this._onItemDelete(ev));
@@ -47,6 +48,12 @@ export class ActorContainerSheet extends ActorSheet {
             console.log(err);
             return false;
         }
+    }
+
+    async _onItemDamage(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        await this.actor.rollItem(div.data('itemId'));
     }
 
     async _onItemRoll(event) {

@@ -57,9 +57,9 @@ export class PsychicPowerDialog extends FormApplication {
         // Initial Values
         if (!this.initialized) {
             this.data.baseTarget = 0;
-            this.data.modifiers.bonus = 0;
-            this.data.modifiers.difficulty = 0;
-            this.data.modifiers.modifier = 0;
+            this.data.modifiers['bonus'] = 0;
+            this.data.modifiers['difficulty'] = 0;
+            this.data.modifiers['modifier'] = 0;
             this.data.effectiveRating = 0;
             this.data.maxRating = this.data.actor.system.psy.rating;
 

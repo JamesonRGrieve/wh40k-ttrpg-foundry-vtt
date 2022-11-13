@@ -1,8 +1,8 @@
-import { totalModifiers, determineSuccess, performSkillCheckRoll } from './roll-helpers.mjs';
+import { totalModifiers, determineSuccess, roll1d100 } from './roll-helpers.mjs';
 
 export async function performRollAndSendToChat(rollData) {
     rollData.modifierTotal = await totalModifiers(rollData.modifiers);
-    rollData.roll = await performSkillCheckRoll(rollData.modifierTotal);
+    rollData.roll = await roll1d100();
     rollData = {...rollData, ...determineSuccess(rollData.roll, rollData.modifiedTarget)}
 
     rollData.render = await rollData.roll.render();

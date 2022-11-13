@@ -34,13 +34,8 @@ export async function totalModifiers(modifiers) {
     }
 }
 
-export async function performSkillCheckRoll(modifier) {
+export async function roll1d100() {
     let formula = '1d100';
-    if(modifier > 0) {
-        formula += ` + ${Math.abs(modifier)}`;
-    } else if (modifier < 0) {
-        formula += ` - ${Math.abs(modifier)}`;
-    }
     const roll = new Roll(formula, {});
     await roll.evaluate({ async: true });
     return roll;
