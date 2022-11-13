@@ -117,6 +117,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             console.log(err);
             return false;
         }
+        console.log('_onDrop data: ', data);
 
         // Case 1 - Data explicitly provided
         let actor = game.actors.get(data.actorId);
@@ -160,12 +161,13 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
 
         // Case 2 - Import from a Compendium pack
         else if (data.pack) {
-            this._importItemFromCollection(data.pack, data.id);
+            await this._importItemFromCollection(data.pack, data.id);
         }
 
         // Case 3 - Import from World entity
         else {
             let item = game.items.get(data.id);
+
             if (this.canAdd(item)) {
                 const itemData = item.system.toJSON();
                 await this.item.createEmbeddedDocuments('Item', [itemData]);
