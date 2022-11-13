@@ -12,8 +12,8 @@ export async function prepareSimpleRoll(rollData) {
                     label: 'Roll',
                     callback: async (html) => {
                         console.log(html.find('[name=difficulty] :selected'));
-                        rollData.modifiers.difficulty = parseInt(html.find('[name=difficulty] :selected').val());
-                        rollData.modifiers.modifier = html.find('#modifier')[0].value;
+                        rollData.modifiers['difficulty'] = parseInt(html.find('[name=difficulty] :selected').val());
+                        rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
                         console.log('Roll Data');
                         console.log(rollData);
                         await performRollAndSendToChat(rollData);

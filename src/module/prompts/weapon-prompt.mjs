@@ -77,9 +77,9 @@ export class WeaponAttackDialog extends FormApplication {
     _updateAction() {
         const currentAction = this.availableActions.find(a => a.name === this.data.action);
         if (currentAction?.attack?.modifier) {
-            this.data.modifiers.attack = currentAction.attack.modifier;
+            this.data.modifiers['attack'] = currentAction.attack.modifier;
         } else {
-            this.data.modifiers.attack = 0;
+            this.data.modifiers['attack'] = 0;
         }
     }
 
@@ -93,9 +93,9 @@ export class WeaponAttackDialog extends FormApplication {
         // Initial Values
         if (!this.initialized) {
             this.data.baseTarget = 0;
-            this.data.modifiers.attack = 0;
-            this.data.modifiers.difficulty = 0;
-            this.data.modifiers.modifier = 0;
+            this.data.modifiers['attack'] = 0;
+            this.data.modifiers['difficulty'] = 0;
+            this.data.modifiers['modifier'] = 0;
 
             this.data.weaponSelect = this.data.weapons.length > 1;
 
