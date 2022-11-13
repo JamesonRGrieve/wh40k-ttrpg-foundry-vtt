@@ -125,6 +125,17 @@ export class DarkHeresyActor extends Actor {
         })
     }
 
+    async rollPsychicPowerDamage(power) {
+        await prepareDamageRoll({
+            psychicPower: true,
+            pr: this.psy.currentRating,
+            name: power.name,
+            damage: power.system.damage,
+            damageType: power.system.damageType,
+            penetration: power.system.penetration
+        })
+    }
+
     async rollWeaponAttack(weapon) {
         if (!weapon.system.equipped) {
             ui.notifications.warn('Actor must have weapon equipped!');
@@ -168,7 +179,7 @@ export class DarkHeresyActor extends Actor {
                 await this.rollWeaponAttack(item);
                 return;
             case 'psychicPower':
-                await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                await this.rollPsychicPowerDamage(item);
                 return;
             default:
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);

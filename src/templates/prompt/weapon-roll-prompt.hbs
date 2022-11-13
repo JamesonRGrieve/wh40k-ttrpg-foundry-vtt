@@ -7,7 +7,7 @@
                 <div class="dh-header">
                     <div class="dh-header__prompt dh-header__logo">
                         <div class="dh-header__item-wrapper dh-header__borderless">
-                            <img class="dh-header__logo-image-small" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                            <img class="dh-header__logo-image-small" alt="{{this.sourceActor.name}}" src="{{this.sourceActor.img}}" />
                         </div>
                         <div class="dh-header__item-wrapper--span-3 dh-header__borderless">
                             <span class="dh-header__title mt-5">Weapon Attack</span>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             {{else}}
-                <div class="dh-panel prompt dh-grid-col-6">
+                <div class="dh-panel dh-grid-col-6">
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Weapon</span>
                         <span class="dh-field__span">{{weapon.name}}</span>
@@ -89,13 +89,13 @@
 
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Difficulty</span>
-                    <select class="dh-field__input" name="modifiers.difficulty">
+                    <select class="dh-field__input" name="modifiers['difficulty']">
                         {{selectOptions difficulties selected=this.modifiers.difficulty}}
                     </select>
                 </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Modifier</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifiers.modifier" value="{{this.modifiers.modifier}}" />
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers['modifier']" id="modifiers.modifier" value="{{this.modifiers.modifier}}" />
                 </div>
             </div>
         </div>

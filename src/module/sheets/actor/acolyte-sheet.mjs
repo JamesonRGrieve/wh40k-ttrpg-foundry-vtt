@@ -28,12 +28,27 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('.roll-characteristic').click(async (ev) => await this._prepareRollCharacteristic(ev));
         html.find('.roll-skill').click(async (ev) => await this._prepareRollSkill(ev));
         html.find('.acolyte-homeWorld').change((ev) => this._onHomeworldChange(ev));
+        html.find('.bonus-vocalize').click(async (ev) => await this._onBonusVocalize(ev));
         html.find('.actor-drag').each((i, item) => {
             if (item.dataset && item.dataset.itemId) {
                 item.setAttribute('draggable', true);
                 item.addEventListener('dragstart', this._onActorDragStart.bind(this), false);
             }
         });
+    }
+
+    async _onBonusVocalize(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        let bonus = this.actor.backgroundEffects.abilities.find(a => a.name === div.data('bonusName'));
+        if(bonus) {
+            await sendItemVocalizeChat({
+                actor: this.actor.name,
+                name: bonus[0].name,
+                type: bonus[0].source,
+                description: bonus[0].benefit
+            });
+        }
     }
 
     async _onActorDragStart(event) {

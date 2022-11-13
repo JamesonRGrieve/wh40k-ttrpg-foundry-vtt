@@ -2,6 +2,12 @@
 <form class="dh-wrapper">
     <div class="dh-panel prompt">
         <h1 class="dh-panel__header">{{name}} Damage Roll</h1>
+        {{#if psychicPower}}
+            <div class="dh-field__wrapper">
+                <span class="dh-field__span">Psychic Rating</span>
+                <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name='pr' value='{{pr}}' />
+            </div>
+        {{/if}}
         <div class="dh-field__wrapper">
             <span class="dh-field__span">Damage</span>
             <input class='dh-field__input' type='text' id='damage' name='damage' value='{{damage}}'/>
