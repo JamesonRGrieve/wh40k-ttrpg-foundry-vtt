@@ -112,7 +112,7 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        console.log('weapon-prompt _updateObject');
+        console.log('weapon-prompt _updateObject', formData);
         recursiveUpdate(this.data, formData);
         this.render(true);
     }
