@@ -87,16 +87,16 @@
                     </div>
                 {{/if}}
 
-                {{#with modifiers}}
+                {{#with this.modifiers}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Difficulty</span>
-                        <select class="dh-field__input" name="difficulty">
-                            {{selectOptions difficulties selected=this.difficulty}}
+                        <select class="dh-field__input" name="modifiers.difficulty">
+                            {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Modifier</span>
-                        <input class="dh-field__input" type="number" data-dtype="Number" name="modifier" value="{{this.modifier}}" />
+                        <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
             </div>

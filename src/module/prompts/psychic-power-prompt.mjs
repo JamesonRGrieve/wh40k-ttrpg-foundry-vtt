@@ -1,5 +1,6 @@
 import { rollDifficulties } from '../rolls/roll-difficulties.mjs';
 import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
+import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
     constructor(psychicRollData = {}, options = {}) {
@@ -75,9 +76,7 @@ export class PsychicPowerDialog extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        for (let key of Object.keys(formData)) {
-            this.data[key] = formData[key];
-        }
+        recursiveUpdate(this.data, formData);
         this.render(true);
     }
 

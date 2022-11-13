@@ -1,5 +1,5 @@
 import { combatActions } from '../rules/combat-actions.mjs';
-import { calculateRange } from '../rolls/roll-helpers.mjs';
+import { calculateRange, recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
@@ -112,9 +112,8 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        for (let key of Object.keys(formData)) {
-            this.data[key] = formData[key];
-        }
+        console.log('weapon-prompt _updateObject');
+        recursiveUpdate(this.data, formData);
         this.render(true);
     }
 
