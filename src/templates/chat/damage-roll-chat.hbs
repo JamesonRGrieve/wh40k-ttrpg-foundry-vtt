@@ -7,18 +7,20 @@
             <div class="dh-roll__divider"></div>
 
             <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Damage</div>
-                <div class="dh-roll__value">{{roll.total}}</div>
+                <div class="dh-roll__label">Formula</div>
+                <div class="dh-roll__value">{{roll.formula}}</div>
             </div>
-            <div class="dh-roll__target">
-                <div class="dh-roll__label">Penetration</div>
-                <div class="dh-roll__value">{{penetration}}</div>
+
+            <div class="dh-roll__notice">
+                <span>Damage</span>
+                <span>{{roll.total}}</span>
             </div>
-        </div>
-        <div class="dice-rolls" style="margin-top: 4px">
-            <div class="dice-roll-render">
-                {{{render}}}
+
+            <div class="dh-roll__notice">
+                <span>Penetration</span>
+                <span>{{penetration}}</span>
             </div>
+
         </div>
     </div>
 </div>

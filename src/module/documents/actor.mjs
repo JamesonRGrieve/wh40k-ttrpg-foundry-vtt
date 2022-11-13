@@ -119,8 +119,9 @@ export class DarkHeresyActor extends Actor {
         }
         await prepareDamageRoll({
             name: weapon.name,
-            damage: weapon.system.damage.damage,
-            penetration: weapon.system.damage.penetration
+            damage: weapon.system.damage,
+            damageType: weapon.system.damageType,
+            penetration: weapon.system.penetration
         })
     }
 

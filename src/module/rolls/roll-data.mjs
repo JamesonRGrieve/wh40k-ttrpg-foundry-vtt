@@ -40,13 +40,6 @@ export class RollData {
         }
         return modifiers;
     }
-
-    toTemplateModel() {
-        const data = {...this};
-        data['activeModifiers'] = this.activeModifiers;
-        data['modifiedTarget'] = this.modifiedTarget;
-        return data;
-    }
 }
 
 export class SimpleRollData extends RollData {

@@ -145,6 +145,11 @@
       }
     }
 
+    &__notice {
+      background: #868858;
+      background: url('../images/notice.png') no-repeat center/100% 100%;
+    }
+
     &__success {
       background: #073;
       background: url('../images/success.png') no-repeat center/100% 100%;
