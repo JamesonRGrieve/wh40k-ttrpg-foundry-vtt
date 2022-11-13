@@ -11,15 +11,15 @@
                 <div class='dh-roll__label'>Base</div>
                 <div class='dh-roll__value'>{{baseTarget}}</div>
             </div>
-            {{#each activeModifiers}}
+            {{#each (lookup this activeModifiers)}}
                 <div class="dh-roll__row dh-roll__row--number">
                     <div class="dh-roll__label">Modifier: {{@key}}</div>
                     <div class="dh-roll__value">{{this}}</div>
                 </div>
             {{/each}}
-            <div class='dh-roll__target'>
-                <div class='dh-roll__label'>Target</div>
-                <div class='dh-roll__value'>{{modifiedTarget}}</div>
+            <div class="dh-roll__target">
+                <div class="dh-roll__label">Target</div>
+                <div class="dh-roll__value">{{lookup this modifiedTarget}}</div>
             </div>
 
             {{#if success}}

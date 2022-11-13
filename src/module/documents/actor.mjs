@@ -116,7 +116,11 @@ export class DarkHeresyActor extends Actor {
             ui.notifications.warn('Actor must have weapon equipped!');
             return;
         }
-        await DHTargetedActionManager.performWeaponAttack(this, null, weapon);
+        await prepareDamageRoll({
+            name: weapon.name,
+            damage: weapon.system.damage.damage,
+            penetration: weapon.system.damage.penetration
+        })
     }
 
     async rollWeaponAttack(weapon) {
