@@ -31,9 +31,9 @@ export class PsychicPowerDialog extends FormApplication {
     _updateBaseTarget() {
         const characteristic = this.data.power.system.target.characteristic;
         this.data.baseTarget = 0;
-        for (const c in Object.keys(this.data.actor?.characteristics)) {
+        for (const c in Object.keys(this.data.sourceActor?.characteristics)) {
             if (c.toUpperCase() === characteristic.toUpperCase()) {
-                this.data.baseTarget = this.data.actor.characteristics[c].total;
+                this.data.baseTarget = this.data.sourceActor.characteristics[c].total;
                 break;
             }
         }

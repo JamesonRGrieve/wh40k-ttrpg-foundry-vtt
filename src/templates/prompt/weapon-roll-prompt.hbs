@@ -87,16 +87,18 @@
                     </div>
                 {{/if}}
 
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Difficulty</span>
-                    <select class="dh-field__input" name="modifiers['difficulty']">
-                        {{selectOptions difficulties selected=this.modifiers.difficulty}}
-                    </select>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Modifier</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers['modifier']" id="modifiers.modifier" value="{{this.modifiers.modifier}}" />
-                </div>
+                {{#with modifiers}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Difficulty</span>
+                        <select class="dh-field__input" name="difficulty">
+                            {{selectOptions difficulties selected=this.difficulty}}
+                        </select>
+                    </div>
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Modifier</span>
+                        <input class="dh-field__input" type="number" data-dtype="Number" name="modifier" value="{{this.modifier}}" />
+                    </div>
+                {{/with}}
             </div>
         </div>
     </form>

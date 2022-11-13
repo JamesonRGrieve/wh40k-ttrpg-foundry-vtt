@@ -102,7 +102,7 @@ export class ActorContainerSheet extends ActorSheet {
         await DHBasicActionManager.sendItemVocalizeChat({
             actor: this.actor.name,
             name: item.name,
-            type: item.type,
+            type: item.type?.toUpperCase(),
             description: item.system.benefit ?? item.system.description
         });
     }

@@ -45,9 +45,9 @@ export class AcolyteSheet extends ActorContainerSheet {
         if(bonus) {
             await DHBasicActionManager.sendItemVocalizeChat({
                 actor: this.actor.name,
-                name: bonus[0].name,
-                type: bonus[0].source,
-                description: bonus[0].benefit
+                name: bonus.name,
+                type: bonus.source,
+                description: bonus.benefit
             });
         }
     }
