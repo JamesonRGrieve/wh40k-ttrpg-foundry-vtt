@@ -1,0 +1,73 @@
+<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
+    <h1 class="dh-panel__header">Cybernetics</h1>
+    <div class="dh-table--border dh-cybernetictable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">Name</div>
+            <div class="table-cell">Type</div>
+            <div class="table-cell">AP</div>
+            <div class="table-cell">Equipped</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="cybernetic">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
+        </div>
+        {{#each actor.items as | item |}}
+            {{#if item.isCybernetic}}
+                <div class="table-row">
+                    <div class="table-cell--settingstoggle">
+                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        </label>
+                    </div>
+                    <div class="table-cell--left">
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
+                    </div>
+                    <div class="table-cell">
+                        <span class="display">{{item.system.type}}</span>
+                    </div>
+                    <div class="table-cell">
+                        <span class="display">{{armourDisplay item.system}}</span>
+                    </div>
+                    <div class="table-cell">
+                        <span class="display">{{item.system.equipped}}</span>
+                    </div>
+                    <div class="table-cell--last">
+                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        </label>
+                    </div>
+                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
+                        (isExpanded (concat 'description_' item.id ))}}>
+                        <div class="dh-settings">
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Head</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.head}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Left Arm</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.leftArm}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Right Arm</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.rightArm}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Body</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.body}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Left Leg</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.leftLeg}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Right Leg</span>
+                                <span class="dh-field__span">{{item.system.armourPoints.rightLeg}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

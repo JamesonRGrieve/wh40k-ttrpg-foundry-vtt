@@ -1,3 +1,4 @@
+{{log this}}
 <div class="dh-wrapper">
     <form class="dh-item" autocomplete="off">
         <div class="dh-panel dh-grid-col-6">
@@ -22,7 +23,7 @@
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Installed</span>
                         <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.equipped}}/>
+                            system.equipped}}/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
@@ -37,8 +38,8 @@
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Craftsmanship</span>
-                        <select class="dh-header__select" name="system.craftsmanship">
-                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                        <select class="dh-header__select" name="system.craftmanship">
+                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=system.craftmanship}}
                         </select>
                     </div>
                 </div>
