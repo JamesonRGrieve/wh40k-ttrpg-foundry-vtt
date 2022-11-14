@@ -32,6 +32,7 @@ export class PsychicPowerDialog extends FormApplication {
     _updateBaseTarget() {
         const characteristic = this.data.power.system.target.characteristic;
         this.data.baseTarget = 0;
+        console.log('PowerBaseTarget Char: ', characteristic);
         for (const c in Object.keys(this.data.sourceActor?.characteristics)) {
             if (c.toUpperCase() === characteristic.toUpperCase()) {
                 this.data.baseTarget = this.data.sourceActor.characteristics[c].total;
@@ -53,6 +54,7 @@ export class PsychicPowerDialog extends FormApplication {
             .forEach(power => power.isSelected = false);
 
         const power = this.data.psychicPowers.find(power => power.id === event.target.name);
+        console.log('Power', power);
         power.isSelected = true;
         this.data.power = power;
         this.data.modifiers.bonus = power.system.target.bonus;
@@ -68,7 +70,7 @@ export class PsychicPowerDialog extends FormApplication {
             this.data.modifiers['bonus'] = 0;
             this.data.modifiers['difficulty'] = 0;
             this.data.modifiers['modifier'] = 0;
-            this.data.effectiveRating = 0;
+            this.data.pr = 0;
             this.data.maxRating = this.data.sourceActor.psy.rating;
 
             this.data.powerSelect = this.data.psychicPowers.length > 1;
