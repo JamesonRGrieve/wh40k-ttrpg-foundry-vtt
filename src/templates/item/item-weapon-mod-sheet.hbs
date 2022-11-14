@@ -35,15 +35,13 @@
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Craftsmanship</span>
-                        <select class="dh-header__select" name="system.craftmanship">
-                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftmanship}}
+                        <select class="dh-header__select" name="system.craftsmanship">
+                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
                         </select>
                     </div>
-                    <div class="dh-header__info dh-grid-col-6">
-                        <div class="dh-header__item-wrapper--text-area">
-                            <span class="dh-header__title">Description</span>
-                            <textarea class="dh-header__textarea" name="system.description">{{item.system.description}}</textarea>
-                        </div>
+                    <div class="dh-header__item-wrapper--text-area">
+                        <span class="dh-header__title">Description</span>
+                        <textarea class="dh-header__textarea" name="system.description">{{item.system.description}}</textarea>
                     </div>
                 </div>
             </div>
