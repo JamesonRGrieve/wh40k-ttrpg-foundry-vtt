@@ -10,8 +10,9 @@
     </div>
     <div class="dh-field__wrapper">
         <div class="dh-field__header">Has Focus</div>
-        <input class="dh-settings__checkbox" {{checked actor.psy.hasFocus}} data-dtype="Boolean" type="checkbox" name="system.psy.hasFocus" />
-        <input class="dh-field__input" type="text" name="system.psy.class" value="{{actor.psy.class}}" />
+        <span class="dh-field__input check">
+            <input {{checked actor.psy.hasFocus}} data-dtype="Boolean" type="checkbox" name="system.psy.hasFocus" />
+        </span>
     </div>
     <div class="dh-field__wrapper">
         <div class="dh-field__header">Class</div>
