@@ -139,8 +139,7 @@ export class DarkHeresyItemContainer extends Item {
                 // TODO see how to avoid this - here to make sure the contained items is correctly setup
                 console.log('Existing item... lets make sure its setup correctly')
                 const currentItem = oldItems.get(idata._id);
-                setProperty(currentItem._source, 'flags', idata.flags);
-                setProperty(currentItem._source, 'system', idata.system);
+                currentItem.updateSource(idata);
                 currentItem.prepareData();
                 this.items.set(idata._id, currentItem);
                 console.log('Items updated?', this.items);
