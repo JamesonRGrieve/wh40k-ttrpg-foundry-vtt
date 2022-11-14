@@ -15,8 +15,7 @@ export class DarkHeresyItemSheet extends ItemSheet {
 
     getData() {
         const context = super.getData();
-        const itemData = context.item;
-        context.flags = itemData.flags;
+        context.flags = context.item.flags;
         context.dh = CONFIG.dh;
         return context;
     }
