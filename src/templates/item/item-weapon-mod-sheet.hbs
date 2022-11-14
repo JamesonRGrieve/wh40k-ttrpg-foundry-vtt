@@ -23,7 +23,7 @@
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">Installed</span>
                         <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked
-                            system.equipped}}/>
+                            item.system.equipped}}/>
                     </div>
                     <div class="dh-header__item-wrapper">
                         <span class="dh-header__title">In Backpack</span>
@@ -39,7 +39,7 @@
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Craftsmanship</span>
                         <select class="dh-header__select" name="system.craftmanship">
-                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=system.craftmanship}}
+                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftmanship}}
                         </select>
                     </div>
                 </div>

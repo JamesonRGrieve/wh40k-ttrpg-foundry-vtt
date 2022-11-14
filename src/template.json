@@ -9,21 +9,6 @@
           "critical": 0,
           "rolled": false
         },
-        "fatigue": {
-          "max": 0,
-          "value": 0
-        },
-        "fate": {
-          "max": 0,
-          "value": 0,
-          "rolled": false
-        },
-        "psy": {
-          "rating": 0,
-          "sustained": 0,
-          "class": "bound",
-          "cost": 0
-        },
         "initiative": {
           "characteristic": "agility",
           "base": "1d10"
@@ -119,6 +104,31 @@
             "modifier": 0,
             "unnatural": 0,
             "cost": 0
+          }
+        }
+      },
+      "creature": {
+        "fatigue": {
+          "max": 0,
+          "value": 0
+        },
+        "fate": {
+          "max": 0,
+          "value": 0,
+          "rolled": false
+        },
+        "psy": {
+          "rating": 0,
+          "sustained": 0,
+          "class": "bound",
+          "cost": 0
+        },
+        "backpack": {
+          "hasBackpack": false,
+          "name": "Backpack",
+          "isCombatVest": false,
+          "weight": {
+            "max": 30
           }
         },
         "skills": {
@@ -886,10 +896,29 @@
             "characteristic": "Int"
           }
         }
+      },
+      "npc": {
+        "faction": "",
+        "subfaction": "",
+        "type": "troop",
+        "threatLevel": 0
+      },
+      "vehicle": {
+        "front": "",
+        "side": "",
+        "rear": "",
+        "availability": "",
+        "speed": {
+          "cruising": 0,
+          "tactical": 0
+        },
+        "manoeuverability": 0,
+        "carryingCapacity": 0,
+        "integrity": 0
       }
     },
     "acolyte": {
-      "templates": ["base"],
+      "templates": ["base", "creature"],
       "bio": {
         "homeWorld": "",
         "background": "",
@@ -910,24 +939,19 @@
         "used": 0,
         "total": 0
       },
-      "backpack": {
-        "hasBackpack": false,
-        "name": "Backpack",
-        "isCombatVest": false,
-        "weight": {
-          "max": 30
-        }
-      },
       "insanity": 0,
       "corruption": 0,
       "aptitudes": {}
     },
     "npc": {
-      "templates": ["base"],
-      "faction": "",
-      "subfaction": "",
-      "type": "troop",
-      "threatLevel": 0
+      "templates": ["base", "creature", "npc"]
+    },
+    "xenos": {
+      "templates": ["base", "creature", "npc"],
+      "species": ""
+    },
+    "vehicle": {
+      "templates": ["base", "vehicle", "npc"]
     }
   },
   "Item": {
