@@ -36,8 +36,9 @@ export async function prepareDamageRoll(rollData) {
         },
     );
     const originalActivate = dialog.activateListeners;
+    originalActivate.bind(dialog);
+
     dialog.activateListeners = (html) => {
-        originalActivate.bind(dialog);
         originalActivate(html);
         html.find('.roll-control__hide-control').click(async (ev) => game.dh.sheetControlHideToggle(ev));
     }

@@ -64,6 +64,14 @@
       "entity": "Item"
     },
     {
+      "name": "tables",
+      "system": "dark-heresy-2nd",
+      "label": "Tables",
+      "path": "./packs/tables.db",
+      "type": "RollTable",
+      "entity": "RollTable"
+    },
+    {
       "name": "talents",
       "system": "dark-heresy-2nd",
       "label": "Talents",
