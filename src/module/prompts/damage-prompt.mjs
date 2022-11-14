@@ -1,16 +1,28 @@
 import { performDamageAndSendToChat, performRollAndSendToChat } from '../rolls/roll-manager.mjs';
-import { sheetControlHideToggle } from '../hooks-manager.mjs';
 
 export class ListeningDialog extends Dialog {
     constructor(data, options) {
         super(data, options);
     }
 
-    otherListeners(html) {}
+    otherListeners(html) {
+        html.find('.roll-control__hide-control').click(async (ev) => {
+            console.log('roll-control-toggle')
+            this.sheetControlHideToggle(ev)
+        });
+    }
 
     activateListeners(html) {
         super.activateListeners(html);
         this.otherListeners(html);
+    }
+
+    sheetControlHideToggle(event) {
+        event.preventDefault();
+        const displayToggle = $(event.currentTarget);
+        $('span:first', displayToggle).toggleClass('active');
+        const target = displayToggle.data('toggle');
+        $('.' + target).toggle();
     }
 }
 
@@ -48,8 +60,7 @@ export async function prepareDamageRoll(rollData) {
             width: 300,
         },
     );
-    dialog.otherListeners = (html) => {
-        html.find('.roll-control__hide-control').click(async (ev) => game.dh.sheetControlHideToggle(ev));
-    };
     dialog.render(true);
 }
+
+

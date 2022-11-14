@@ -50,8 +50,7 @@ _  /_/ /_  __  / _  __/
             dhItem: DarkHeresyItem,
             rollItemMacro,
             rollSkillMacro,
-            rollCharacteristicMacro,
-            sheetControlHideToggle
+            rollCharacteristicMacro
         };
 
         // CONFIG.debug.hooks = true;
@@ -106,12 +105,4 @@ _  /_/ /_  __  / _  __/
                 return;
         }
     }
-}
-
-export function sheetControlHideToggle(event) {
-    event.preventDefault();
-    const displayToggle = $(event.currentTarget);
-    $('span:first', displayToggle).toggleClass('active');
-    const target = displayToggle.data('toggle');
-    $('.' + target).toggle();
 }
