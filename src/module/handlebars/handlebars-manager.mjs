@@ -21,6 +21,7 @@ export class HandlebarManager {
             'systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/combat-controls-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/corruption-panel.hbs',
+            'systems/dark-heresy-2nd/templates/actor/panel/cybernetic-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/enemy-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/experience-panel.hbs',

@@ -1,4 +1,5 @@
 import { performDamageAndSendToChat, performRollAndSendToChat } from '../rolls/roll-manager.mjs';
+import { sheetControlHideToggle } from '../hooks-manager.mjs';
 
 export async function prepareDamageRoll(rollData) {
     rollData.dh = CONFIG.dh;
@@ -34,5 +35,9 @@ export async function prepareDamageRoll(rollData) {
             width: 300,
         },
     );
+    dialog.activateListeners = (html) => {
+        super.activateListeners(html);
+        html.find('.roll-control__hide-control').click(async (ev) => game.dh.sheetControlHideToggle(ev));
+    }
     dialog.render(true);
 }
