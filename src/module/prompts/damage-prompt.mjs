@@ -1,10 +1,23 @@
 import { performDamageAndSendToChat, performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 import { sheetControlHideToggle } from '../hooks-manager.mjs';
 
+export class ListeningDialog extends Dialog {
+    constructor(data, options) {
+        super(data, options);
+    }
+
+    otherListeners(html) {}
+
+    activateListeners(html) {
+        super.activateListeners(html);
+        this.otherListeners(html);
+    }
+}
+
 export async function prepareDamageRoll(rollData) {
     rollData.dh = CONFIG.dh;
     const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/damage-roll-prompt.hbs', rollData);
-    let dialog = new Dialog(
+    let dialog = new ListeningDialog(
         {
             title: 'Damage Roll',
             content: html,
@@ -35,12 +48,8 @@ export async function prepareDamageRoll(rollData) {
             width: 300,
         },
     );
-    const originalActivate = dialog.activateListeners;
-    originalActivate.bind(dialog);
-
-    dialog.activateListeners = (html) => {
-        originalActivate(html);
+    dialog.otherListeners = (html) => {
         html.find('.roll-control__hide-control').click(async (ev) => game.dh.sheetControlHideToggle(ev));
-    }
+    };
     dialog.render(true);
 }

@@ -56,6 +56,14 @@
       "entity": "Item"
     },
     {
+      "name": "cybernetics",
+      "system": "dark-heresy-2nd",
+      "label": "Cybernetics",
+      "path": "./packs/cybernetics.db",
+      "type": "Item",
+      "entity": "Item"
+    },
+    {
       "name": "psychic-powers",
       "system": "dark-heresy-2nd",
       "label": "Psychic Powers",
