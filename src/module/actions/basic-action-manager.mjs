@@ -1,10 +1,5 @@
-
-
 export class BasicActionManager {
-
-    initializeHooks() {
-
-    }
+    initializeHooks() {}
 
     /**
      * Data Expected to vocalize item:

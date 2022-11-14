@@ -47,7 +47,7 @@ DarkHeresy.combat = {
 };
 
 DarkHeresy.ui = {
-    toggleExpanded: function(name) {
+    toggleExpanded: function (name) {
         if (DarkHeresy.ui.expanded.includes(name)) {
             const index = DarkHeresy.ui.expanded.indexOf(name);
             if (index > -1) {

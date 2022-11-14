@@ -1,15 +1,15 @@
-<div class='dh-wrapper'>
-    <div class='dh-chat'>
+<div class="dh-wrapper">
+    <div class="dh-chat">
         <h3>{{sheetName}}</h3>
-        <div class='dh-roll'>
+        <div class="dh-roll">
             <h1>{{name}}</h1>
             <h2>{{type}}</h2>
             <h2>{{lookup difficulties difficulty}}</h2>
-            <div class='dh-roll__divider'></div>
+            <div class="dh-roll__divider"></div>
 
-            <div class='dh-roll__row dh-roll__row--number'>
-                <div class='dh-roll__label'>Base</div>
-                <div class='dh-roll__value'>{{baseTarget}}</div>
+            <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Base</div>
+                <div class="dh-roll__value">{{baseTarget}}</div>
             </div>
             {{#each (lookup this activeModifiers)}}
                 <div class="dh-roll__row dh-roll__row--number">
@@ -23,27 +23,27 @@
             </div>
 
             {{#if success}}
-                <div class='dh-roll__success'>
+                <div class="dh-roll__success">
                     <span>Success</span>
                     <span>{{roll.total}}</span>
                 </div>
-                <div class='dh-roll__row dh-roll__row--number'>
-                    <div class='dh-roll__label'>Degrees of Success</div>
-                    <div class='dh-roll__value'>{{dos}}</div>
+                <div class="dh-roll__row dh-roll__row--number">
+                    <div class="dh-roll__label">Degrees of Success</div>
+                    <div class="dh-roll__value">{{dos}}</div>
                 </div>
             {{else}}
-                <div class='dh-roll__fail'>
+                <div class="dh-roll__fail">
                     <span>Fail</span>
                     <span>{{roll.total}}</span>
                 </div>
-                <div class='dh-roll__row dh-roll__row--number'>
-                    <div class='dh-roll__label'>Degrees of Failure</div>
-                    <div class='dh-roll__value'>{{dof}}</div>
+                <div class="dh-roll__row dh-roll__row--number">
+                    <div class="dh-roll__label">Degrees of Failure</div>
+                    <div class="dh-roll__value">{{dof}}</div>
                 </div>
             {{/if}}
         </div>
-        <div class='dice-rolls' style='display:none'>
-            <div class='dice-roll-render'>
+        <div class="dice-rolls" style="display:none">
+            <div class="dice-roll-render">
                 {{{render}}}
             </div>
         </div>

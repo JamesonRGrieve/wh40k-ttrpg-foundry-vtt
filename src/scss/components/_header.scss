@@ -94,11 +94,18 @@
 
   &__title {
     flex-shrink: 0;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: $margin-large;
+    margin: auto;
     padding: $margin-small;
     font-size: $h1-size;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  &__subtitle {
+    flex-shrink: 0;
+    margin: auto;
+    font-size: $h2-size;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;

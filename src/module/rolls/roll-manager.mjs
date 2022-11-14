@@ -1,7 +1,7 @@
 import { totalModifiers, determineSuccess, roll1d100 } from './roll-helpers.mjs';
 
 export async function performDamageAndSendToChat(rollData) {
-    rollData.roll = new Roll(rollData.damage, rollData)
+    rollData.roll = new Roll(rollData.damage, rollData);
     rollData.render = await rollData.roll.render();
     const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs', rollData);
     let chatData = {

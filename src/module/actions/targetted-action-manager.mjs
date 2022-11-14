@@ -3,7 +3,6 @@ import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
 import { PsychicRollData, WeaponRollData } from '../rolls/roll-data.mjs';
 
 export class TargetedActionManager {
-
     selectedTokens = {};
     targetedTokens = {};
 
@@ -35,7 +34,7 @@ export class TargetedActionManager {
 
         // Initialize Hotbar Button
         Hooks.on('getSceneControlButtons', (controls) => {
-            const bar = controls.find(c => c.name === 'token');
+            const bar = controls.find((c) => c.name === 'token');
             bar.tools.push({
                 name: 'Attack',
                 title: 'Attack',
@@ -47,17 +46,18 @@ export class TargetedActionManager {
         });
     }
 
-    tokenDistance(token1, token2){
-        if(!token1 || !token2) return;
+    tokenDistance(token1, token2) {
+        if (!token1 || !token2) return;
 
         let distance = canvas.grid.measureDistance(token1, token2);
-        if(token1.document.elevation !== token2.document.elevation){
-            let h_diff = token2.document.elevation > token1.document.elevation
-                ? token2.document.elevation - token1.document.elevation
-                : token1.document.elevation - token2.document.elevation;
+        if (token1.document.elevation !== token2.document.elevation) {
+            let h_diff =
+                token2.document.elevation > token1.document.elevation
+                    ? token2.document.elevation - token1.document.elevation
+                    : token1.document.elevation - token2.document.elevation;
 
-            return Math.floor(Math.sqrt(Math.pow(h_diff,2) + Math.pow(distance,2)));
-        }else{
+            return Math.floor(Math.sqrt(Math.pow(h_diff, 2) + Math.pow(distance, 2)));
+        } else {
             return Math.floor(distance);
         }
     }
@@ -105,10 +105,10 @@ export class TargetedActionManager {
     }
 
     createSourceAndTargetData(source, target) {
-        console.log('createSourceAndTargetData', {source, target});
+        console.log('createSourceAndTargetData', { source, target });
         // Source
         const sourceToken = this.getSourceToken(source);
-        if(!sourceToken) return;
+        if (!sourceToken) return;
         const sourceActorData = sourceToken.actor;
 
         // Target
@@ -119,19 +119,17 @@ export class TargetedActionManager {
         return {
             actor: sourceActorData,
             target: targetActorData,
-            distance: targetDistance
-        }
+            distance: targetDistance,
+        };
     }
 
     async performWeaponAttack(source = null, target = null, weapon = null) {
-        console.log('performWeaponAttack')
+        console.log('performWeaponAttack');
         const rollData = this.createSourceAndTargetData(source, target);
-        if(!rollData) return;
+        if (!rollData) return;
 
         // Weapon
-        const weapons = weapon ? [weapon] : rollData.actor.items
-            .filter((item) => item.type === 'weapon')
-            .filter((item) => item.system.equipped);
+        const weapons = weapon ? [weapon] : rollData.actor.items.filter((item) => item.type === 'weapon').filter((item) => item.system.equipped);
         if (!weapons || weapons.length === 0) {
             ui.notifications.warn('Actor must have an equipped weapon!');
             return;
@@ -147,13 +145,12 @@ export class TargetedActionManager {
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
-        console.log('performPsychicAttack')
+        console.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
-        if(!rollData) return;
+        if (!rollData) return;
 
         // Powers
-        const powers = psychicPower ? [psychicPower] : rollData.actor.items
-            .filter((item) => item.type === 'psychicPower');
+        const powers = psychicPower ? [psychicPower] : rollData.actor.items.filter((item) => item.type === 'psychicPower');
         if (!powers || powers.length === 0) {
             ui.notifications.warn('Actor must have psychic power!');
             return;
@@ -169,6 +166,4 @@ export class TargetedActionManager {
     }
 }
 
-
 export const DHTargetedActionManager = new TargetedActionManager();
-

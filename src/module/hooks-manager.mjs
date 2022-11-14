@@ -50,7 +50,7 @@ _  /_/ /_  __  / _  __/
             dhItem: DarkHeresyItem,
             rollItemMacro,
             rollSkillMacro,
-            rollCharacteristicMacro
+            rollCharacteristicMacro,
         };
 
         // CONFIG.debug.hooks = true;

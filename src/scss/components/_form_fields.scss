@@ -118,14 +118,15 @@ button {
 
   &__input {
     flex-grow: 1;
-    padding-right: 0.5em;
+    // padding-right: 0.5em;
 
     &.check {
       background: $form-input-background;
     }
 
     input[type='checkbox'] {
-      margin: 3px 5px;
+      vertical-align: middle;
+      margin: 2px;
     }
 
   }

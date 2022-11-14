@@ -5,23 +5,22 @@
         {{#if psychicPower}}
             <div class="dh-field__wrapper">
                 <span class="dh-field__span">Psychic Rating</span>
-                <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name='pr' value='{{pr}}' />
+                <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
             </div>
         {{/if}}
         <div class="dh-field__wrapper">
             <span class="dh-field__span">Damage</span>
-            <input class='dh-field__input' type='text' id='damage' name='damage' value='{{damage}}'/>
+            <input class="dh-field__input" type="text" id="damage" name="damage" value="{{damage}}" />
         </div>
         <div class="dh-field__wrapper">
             <span class="dh-field__span">Type</span>
-            <select class="dh-field__input" id='damageType' name="damageType">
-                {{selectOptions (arrayToObject dh.combat.damage_types)
-                                selected=damageType}}
+            <select class="dh-field__input" id="damageType" name="damageType">
+                {{selectOptions (arrayToObject dh.combat.damage_types) selected=damageType}}
             </select>
         </div>
         <div class="dh-field__wrapper">
             <span class="dh-field__span">Penetration</span>
-            <input class="dh-field__input" type="number" data-dtype="Number" id="penetration" name='penetration' value='{{penetration}}' />
+            <input class="dh-field__input" type="number" data-dtype="Number" id="penetration" name="penetration" value="{{penetration}}" />
         </div>
     </div>
 </form>

@@ -5,26 +5,26 @@ export function getDegree(a, b) {
 export function modifiersToRollData(modifiers) {
     let formula = '0 ';
     const rollParams = {};
-    for(const modifier of Object.keys(modifiers)) {
-        if(modifiers[modifier] !== 0) {
-            if(modifiers[modifier] >= 0) {
-                formula += ` + @${modifier}`
+    for (const modifier of Object.keys(modifiers)) {
+        if (modifiers[modifier] !== 0) {
+            if (modifiers[modifier] >= 0) {
+                formula += ` + @${modifier}`;
             } else {
-                formula += ` - @${modifier}`
+                formula += ` - @${modifier}`;
             }
             rollParams[modifier] = Math.abs(modifiers[modifier]);
         }
     }
     return {
         formula: formula,
-        params: rollParams
-    }
+        params: rollParams,
+    };
 }
 
 export async function totalModifiers(modifiers) {
     const rollDetails = modifiersToRollData(modifiers);
     const roll = new Roll(rollDetails.formula, rollDetails.params);
-    await roll.evaluate({async: true});
+    await roll.evaluate({ async: true });
     if (roll.total > 60) {
         return 60;
     } else if (roll.total < -60) {
@@ -43,8 +43,8 @@ export async function roll1d100() {
 
 export function determineSuccess(roll, target) {
     const successData = {
-        success: roll.total <= target
-    }
+        success: roll.total <= target,
+    };
     if (successData.success) {
         successData.dof = 0;
         successData.dos = 1 + getDegree(target, roll.total);
@@ -55,28 +55,28 @@ export function determineSuccess(roll, target) {
     return successData;
 }
 
-export function calculateRange(actionRange, targetDistance, weapon = null) {
-    const rangeData = {}
+export function calculateRange(actionRange, targetDistance, weapon = null, aim = 0) {
+    const rangeData = {};
     if (targetDistance === 0) {
         rangeData.name = 'Self';
         rangeData.bonus = 0;
     } else if (targetDistance === 2) {
         rangeData.name = 'Point Blank';
         rangeData.bonus = 30;
-    } else if (targetDistance <= (actionRange / 2)) {
+    } else if (targetDistance <= actionRange / 2) {
         rangeData.name = 'Short Range';
         rangeData.bonus = 10;
-    } else if (targetDistance <= (actionRange * 2)) {
+    } else if (targetDistance <= actionRange * 2) {
         rangeData.name = 'Normal Range';
         rangeData.bonus = 0;
-    } else if (targetDistance <= (actionRange * 3)) {
+    } else if (targetDistance <= actionRange * 3) {
         rangeData.name = 'Long Range';
-        if (weapon && (weapon.hasAttackSpecial('Telescopic Sight') || weapon.hasAttackSpecial('Omni-Scope'))) {
+        if (weapon && aim && (weapon.hasAttackSpecial('Telescopic Sight') || weapon.hasAttackSpecial('Omni-Scope'))) {
             rangeData.bonus = 0;
         } else rangeData.bonus = -10;
     } else {
         rangeData.name = 'Extreme Range';
-        if (weapon && (weapon.hasAttackSpecial('Telescopic Sight') || weapon.hasAttackSpecial('Omni-Scope'))) {
+        if (weapon && aim && (weapon.hasAttackSpecial('Telescopic Sight') || weapon.hasAttackSpecial('Omni-Scope'))) {
             rangeData.bonus = 0;
         } else rangeData.bonus = -30;
     }
@@ -95,13 +95,13 @@ export function handleDotNotationUpdate(targetObject, key, value) {
         handleDotNotationUpdate(targetObject, key.split('.'), value);
     } else if (key.length === 1) {
         // Final Key -- either delete or set parent field
-        if(value === undefined || value === null) {
+        if (value === undefined || value === null) {
             delete targetObject[key[0]];
         } else if ('object' === typeof value && !Array.isArray(value)) {
             recursiveUpdate(targetObject[key[0]], value);
         } else {
             // Coerce numbers
-            if('number' === typeof targetObject[key[0]]) {
+            if ('number' === typeof targetObject[key[0]]) {
                 targetObject[key[0]] = Number(value);
             } else {
                 targetObject[key[0]] = value;

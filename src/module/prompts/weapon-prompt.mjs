@@ -32,19 +32,19 @@ export class WeaponAttackDialog extends FormApplication {
     _updateBaseTarget() {
         if (this.data.weapon.isRanged) {
             this.data.baseTarget = this.data.sourceActor?.characteristics?.ballisticSkill?.total ?? 0;
+            this.data.baseChar = 'BS';
             this._updateRange();
         } else {
             this.data.baseTarget = this.data.sourceActor?.characteristics?.weaponSkill?.total ?? 0;
+            this.data.baseChar = 'WS';
         }
     }
 
     async _updateWeapon(event) {
         console.log('Weapon Change', event);
-        this.data.weapons
-            .filter(weapon => weapon.id !== event.target.name)
-            .forEach(weapon => weapon.isSelected = false);
+        this.data.weapons.filter((weapon) => weapon.id !== event.target.name).forEach((weapon) => (weapon.isSelected = false));
 
-        const weapon = this.data.weapons.find(weapon => weapon.id === event.target.name);
+        const weapon = this.data.weapons.find((weapon) => weapon.id === event.target.name);
         weapon.isSelected = true;
         this.data.weapon = weapon;
         this._updateAvailableActions();
@@ -54,11 +54,30 @@ export class WeaponAttackDialog extends FormApplication {
         this.render(true);
     }
 
+    async _updateWeaponModifiers() {
+        this.data.weaponModifiers = {};
+        for(const item of this.data.weapon.items) {
+            if(!item.system.equipped) continue;
+            switch(item.name) {
+                case "Red-Dot Laser Sight":
+                    if(this.data.action === 'Standard Attack' && this.data.weapon.isRanged) {
+                        this.data.weaponModifiers['Red-Dot'] = 10;
+                    }
+                    break;
+                case "Custom Grip":
+                    this.data.weaponModifiers['Custom Grip'] = 10;
+                    break;
+            }
+
+
+        }
+    }
+
     _updateAvailableActions() {
         this.data.actions = {};
         this.availableActions = combatActions()
-            .filter(action => action.subtype.includes('Attack'))
-            .filter(action => {
+            .filter((action) => action.subtype.includes('Attack'))
+            .filter((action) => {
                 if (this.data.weapon.isRanged) {
                     return action.subtype.includes('Ranged');
                 } else {
@@ -69,13 +88,13 @@ export class WeaponAttackDialog extends FormApplication {
             this.data.actions[action.name] = action.name;
         }
         // If action no longer exists -- set to first available
-        if (!Object.keys(this.data.actions).find(a => a === this.data.action)) {
+        if (!Object.keys(this.data.actions).find((a) => a === this.data.action)) {
             this.data.action = this.data.actions[Object.keys(this.data.actions)[0]];
         }
     }
 
     _updateAction() {
-        const currentAction = this.availableActions.find(a => a.name === this.data.action);
+        const currentAction = this.availableActions.find((a) => a.name === this.data.action);
         if (currentAction?.attack?.modifier) {
             this.data.modifiers['attack'] = currentAction.attack.modifier;
         } else {
@@ -84,7 +103,7 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     _updateRange() {
-        const rangeData = calculateRange(this.data.weapon.system.range, this.data.distance, this.data.weapon);
+        const rangeData = calculateRange(this.data.weapon.system.range, this.data.distance, this.data.weapon, this.data.modifiers['aim']);
         this.data.rangeName = rangeData.name;
         this.data.rangeBonus = rangeData.bonus;
     }
@@ -95,7 +114,10 @@ export class WeaponAttackDialog extends FormApplication {
             this.data.baseTarget = 0;
             this.data.modifiers['attack'] = 0;
             this.data.modifiers['difficulty'] = 0;
+            this.data.modifiers['aim'] = 0;
             this.data.modifiers['modifier'] = 0;
+            this.data.weaponModifiers = {};
+
 
             this.data.weaponSelect = this.data.weapons.length > 1;
 
@@ -125,7 +147,6 @@ export class WeaponAttackDialog extends FormApplication {
         await performRollAndSendToChat(this.data);
         await this.close();
     }
-
 }
 
 export async function prepareWeaponRoll(weaponRollData) {

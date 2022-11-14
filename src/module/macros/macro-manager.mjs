@@ -9,7 +9,6 @@ function getTokenActor(actorId) {
     return actor;
 }
 
-
 function checkCanRollMacro(data) {
     if (!game || !game.actors) {
         ui.notifications.warn(`Game or Actors not found. Unable to perform roll`);

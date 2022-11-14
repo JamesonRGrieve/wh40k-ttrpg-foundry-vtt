@@ -121,8 +121,8 @@ export class DarkHeresyActor extends Actor {
             name: weapon.name,
             damage: weapon.system.damage,
             damageType: weapon.system.damageType,
-            penetration: weapon.system.penetration
-        })
+            penetration: weapon.system.penetration,
+        });
     }
 
     async rollPsychicPowerDamage(power) {
@@ -132,8 +132,8 @@ export class DarkHeresyActor extends Actor {
             name: power.name,
             damage: power.system.damage,
             damageType: power.system.damageType,
-            penetration: power.system.penetration
-        })
+            penetration: power.system.penetration,
+        });
     }
 
     async rollWeaponAttack(weapon) {
@@ -519,8 +519,6 @@ export class DarkHeresyActor extends Actor {
     }
 
     hasTalent(talent) {
-        return !!this.items
-            .filter(i => i.type === 'talent')
-            .find(t => t.name === talent);
+        return !!this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent);
     }
 }

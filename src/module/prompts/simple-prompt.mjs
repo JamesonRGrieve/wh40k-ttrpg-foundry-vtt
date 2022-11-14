@@ -8,7 +8,7 @@ export async function prepareSimpleRoll(rollData) {
             content: html,
             buttons: {
                 roll: {
-                    icon: '<i class=\'dh-material\'>casino</i>',
+                    icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
                     callback: async (html) => {
                         console.log(html.find('[name=difficulty] :selected'));
@@ -20,15 +20,13 @@ export async function prepareSimpleRoll(rollData) {
                     },
                 },
                 cancel: {
-                    icon: '<i class=\'dh-material\'>close</i>',
+                    icon: "<i class='dh-material'>close</i>",
                     label: 'Cancel',
-                    callback: () => {
-                    },
+                    callback: () => {},
                 },
             },
             default: 'roll',
-            close: () => {
-            },
+            close: () => {},
         },
         {
             width: 300,

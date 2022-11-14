@@ -7,8 +7,8 @@ export class ListeningDialog extends Dialog {
 
     otherListeners(html) {
         html.find('.roll-control__hide-control').click(async (ev) => {
-            console.log('roll-control-toggle')
-            this.sheetControlHideToggle(ev)
+            console.log('roll-control-toggle');
+            this.sheetControlHideToggle(ev);
         });
     }
 
@@ -35,7 +35,7 @@ export async function prepareDamageRoll(rollData) {
             content: html,
             buttons: {
                 roll: {
-                    icon: '<i class=\'dh-material\'>casino</i>',
+                    icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
                     callback: async (html) => {
                         rollData.damage = html.find('#damage')[0].value;
@@ -46,15 +46,13 @@ export async function prepareDamageRoll(rollData) {
                     },
                 },
                 cancel: {
-                    icon: '<i class=\'dh-material\'>close</i>',
+                    icon: "<i class='dh-material'>close</i>",
                     label: 'Cancel',
-                    callback: () => {
-                    },
+                    callback: () => {},
                 },
             },
             default: 'roll',
-            close: () => {
-            },
+            close: () => {},
         },
         {
             width: 300,
@@ -62,5 +60,3 @@ export async function prepareDamageRoll(rollData) {
     );
     dialog.render(true);
 }
-
-

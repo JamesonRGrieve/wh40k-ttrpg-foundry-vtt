@@ -20,14 +20,16 @@ export function backgrounds() {
             starting_equipment: 'Shotgun or Shock Maul, Enforcer Light Carapace Armor or Carapace Chest Plate, 3 doses of Stimm, Manacles, 12 lho sticks',
             background_bonus: {
                 name: 'The Face of the Law',
-                benefit: 'An Arbitrator can intimidation and Interrogation test, and can substitute his Willpower bonus for his degrees of success on these tests.',
+                benefit:
+                    'An Arbitrator can intimidation and Interrogation test, and can substitute his Willpower bonus for his degrees of success on these tests.',
             },
             aptitudes: ['Offence', 'Defense'],
             source: 'PG 48 CB',
         },
         {
             name: 'Adeptus Astra Telepathica',
-            starting_skills: 'Awareness, Common Lore (Adeptus Astra Telepathica), Deceive or Interrogation, Forbidden Lore (the Warp), Psyniscience or Scrutiny',
+            starting_skills:
+                'Awareness, Common Lore (Adeptus Astra Telepathica), Deceive or Interrogation, Forbidden Lore (the Warp), Psyniscience or Scrutiny',
             starting_talents: 'Weapon Training (Las, Low-Tech)',
             starting_equipment: 'Laspistol, Staff or Whip, Light Flak Cloak or Flak Vest, Micro-bead or Psy Focus',
             background_bonus: {
@@ -71,7 +73,7 @@ export function backgrounds() {
             background_bonus: {
                 name: 'Hammer of the Emperor',
                 benefit:
-                    'When attacking a target that an ally attacked since the end of the Guardsman\'s last turn, the Guardsman can re-roll any results of 1 or 2 damage rolls.',
+                    "When attacking a target that an ally attacked since the end of the Guardsman's last turn, the Guardsman can re-roll any results of 1 or 2 damage rolls.",
             },
             aptitudes: ['Fieldcraft', 'Leadership'],
             source: 'PG 56 CB',
@@ -144,7 +146,8 @@ export function backgrounds() {
         },
         {
             name: 'Rogue Trader',
-            starting_skills: 'Charm or Scrutiny, Commerce, Common Lore (Rogue Traders), Linguistics (pick one alien language), Operate (Surface or Aeronautica)',
+            starting_skills:
+                'Charm or Scrutiny, Commerce, Common Lore (Rogue Traders), Linguistics (pick one alien language), Operate (Surface or Aeronautica)',
             starting_talents: 'Weapon Training (Las or Solid Projectile, Shock)',
             starting_equipment: 'Laspistol or autopistol (fitted with Compact weapon upgrade), shock maul, mesh cloak or carapace chestplate, auspex, chrono',
             background_bonus: {

@@ -15,7 +15,13 @@
     <div class="dh-settings--border backpack_settings" {{hideIfNot (isExpanded "backpack_settings")}}>
         <div class="dh-settings__row--invert">
             <div class="dh-settings__label">Backpack Equipped</div>
-            <input class="dh-settings__checkbox" {{checked actor.backpack.hasBackpack}} data-dtype="Boolean" type="checkbox" name="system.backpack.hasBackpack" />
+            <input
+                class="dh-settings__checkbox"
+                {{checked actor.backpack.hasBackpack}}
+                data-dtype="Boolean"
+                type="checkbox"
+                name="system.backpack.hasBackpack"
+            />
         </div>
         <div class="dh-settings__row--invert">
             <div class="dh-settings__label">Is Combat Vest</div>

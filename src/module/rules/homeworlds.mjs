@@ -8,7 +8,7 @@ export function homeworlds() {
             emperors_blessing: 3,
             home_world_bonus: {
                 name: 'The Old Ways',
-                benefit: 'A Feral World character\'s Low-Tech weapons lose any present Primitive Qualities and gain the Proven (3) Quality.',
+                benefit: "A Feral World character's Low-Tech weapons lose any present Primitive Qualities and gain the Proven (3) Quality.",
             },
             aptitude: 'Toughness',
             wounds: '9+1d5',
@@ -21,7 +21,7 @@ export function homeworlds() {
             fate_threshold: 3,
             emperors_blessing: 8,
             home_world_bonus: {
-                name: 'Omnissiah\'s Chosen',
+                name: "Omnissiah's Chosen",
                 benefit: 'A Forge World character gains the Technical Knock or Weapon-Tech Talent.',
             },
             aptitude: 'Intelligence',
@@ -50,7 +50,8 @@ export function homeworlds() {
             emperors_blessing: 6,
             home_world_bonus: {
                 name: 'Teeming Masses in Metal Mountains',
-                benefit: 'A Hive World character moves through crowds as if they were open terrain and gains a +20 bonus to Navigate (Surface) Tests in closed spaces.',
+                benefit:
+                    'A Hive World character moves through crowds as if they were open terrain and gains a +20 bonus to Navigate (Surface) Tests in closed spaces.',
             },
             aptitude: 'Perception',
             wounds: '7+1d5',
@@ -64,7 +65,7 @@ export function homeworlds() {
             emperors_blessing: 6,
             home_world_bonus: {
                 name: 'Faith in the Creed',
-                benefit: 'When spending a Fate Point, a Shrine World character\'s number of Fate Points are not reduced on a 1d10 result of 1.',
+                benefit: "When spending a Fate Point, a Shrine World character's number of Fate Points are not reduced on a 1d10 result of 1.",
             },
             aptitude: 'Willpower',
             wounds: '8+1d5',

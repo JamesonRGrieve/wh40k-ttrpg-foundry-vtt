@@ -10,7 +10,7 @@
                             <img class="dh-header__logo-image-small" alt="{{this.sourceActor.name}}" src="{{this.sourceActor.img}}" />
                         </div>
                         <div class="dh-header__item-wrapper--span-3 dh-header__borderless">
-                            <span class="dh-header__title mt-5">Psychic Power</span>
+                            <span class="dh-header__title">Psychic Power</span>
                         </div>
                     </div>
                 </div>
@@ -66,16 +66,22 @@
                 </div>
             {{/if}}
 
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Focus Power</span>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Other -->
-            <div class="dh-panel prompt dh-grid-col-6">
                 <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Psychic Rating</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name='pr' value='{{pr}}' />
+                    <span class="dh-field__span">Base ({{baseChar}})</span>
+                    <span class="dh-field__span">{{baseTarget}}</span>
                 </div>
                 <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Base</span>
-                    <span class="dh-field__span">{{baseTarget}}</span>
+                    <span class="dh-field__span">Psychic Rating</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
                 </div>
                 {{#if this.modifiers.bonus}}
                     <div class="dh-field__wrapper">
@@ -83,18 +89,21 @@
                         <span class="dh-field__span">{{modifiers.bonus}}</span>
                     </div>
                 {{/if}}
-
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Has Focus</span>
-                    <input
-                        class="dh-field__input"
-                        type="checkbox"
-                        data-dtype="Boolean"
-                        {{checked hasFocus}}
-                        name="{{hasFocus}}"
-                    />
+                    <span class="dh-field__input check">
+                        <input type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="{{hasFocus}}" />
+                    </span>
                 </div>
-
+            </div>
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Modifiers</span>
+                        </div>
+                    </div>
+                </div>
                 {{#with this.modifiers}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Difficulty</span>
@@ -107,14 +116,26 @@
                         <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
-
+            </div>
+            <div class="dh-panel prompt dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Target</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Distance</span>
                     <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                </div>
+                <div class="dh-field__wrapper">
                     <span class="dh-field__span">Range Type</span>
                     <span class="dh-field__span">{{rangeName}}</span>
+                </div>
+                <div class="dh-field__wrapper">
                     <span class="dh-field__span">Max Range</span>
-                    <span class="dh-field__span">{{maxRange}}m max</span>
+                    <span class="dh-field__span">{{maxRange}}m</span>
                 </div>
             </div>
         </div>

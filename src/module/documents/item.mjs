@@ -67,12 +67,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     }
 
     get isGear() {
-        return this.type === 'gear' ||
-            this.isDrug ||
-            this.isAmmunition ||
-            this.isTool ||
-            this.isForceField ||
-            this.isCybernetic;
+        return this.type === 'gear' || this.isDrug || this.isAmmunition || this.isTool || this.isForceField || this.isCybernetic;
     }
 
     get isDrug() {
@@ -193,6 +188,6 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
     hasEmbeddedItem(item, type) {
         if (!this.system.container) return false;
-        return !!this.items.find(i => i.name === item && i.type === type);
+        return !!this.items.find((i) => i.name === item && i.type === type);
     }
 }

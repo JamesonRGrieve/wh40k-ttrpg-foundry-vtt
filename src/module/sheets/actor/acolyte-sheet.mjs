@@ -41,20 +41,20 @@ export class AcolyteSheet extends ActorContainerSheet {
     async _onBonusVocalize(event) {
         event.preventDefault();
         const div = $(event.currentTarget);
-        let bonus = this.actor.backgroundEffects.abilities.find(a => a.name === div.data('bonusName'));
-        if(bonus) {
+        let bonus = this.actor.backgroundEffects.abilities.find((a) => a.name === div.data('bonusName'));
+        if (bonus) {
             await DHBasicActionManager.sendItemVocalizeChat({
                 actor: this.actor.name,
                 name: bonus.name,
                 type: bonus.source,
-                description: bonus.benefit
+                description: bonus.benefit,
             });
         }
     }
 
     async _onActorDragStart(event) {
         event.stopPropagation();
-        console.log('_onActorDragStart', event)
+        console.log('_onActorDragStart', event);
         const element = event.currentTarget;
         if (!element.dataset?.itemType) {
             console.warn('No Drag Type - Cancelling Drag');
@@ -142,8 +142,7 @@ export class AcolyteSheet extends ActorContainerSheet {
                     (fateRoll.total >= this.actor.backgroundEffects.homeworld.emperors_blessing ? 1 : 0);
                 this.render(true);
             },
-            no: () => {
-            },
+            no: () => {},
             defaultYes: false,
         });
     }

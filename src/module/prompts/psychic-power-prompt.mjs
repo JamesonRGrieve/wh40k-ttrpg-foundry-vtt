@@ -34,6 +34,7 @@ export class PsychicPowerDialog extends FormApplication {
         this.data.baseTarget = 0;
         const actorCharacteristic = this.data.sourceActor.getCharacteristicFuzzy(characteristic);
         this.data.baseTarget = actorCharacteristic.total;
+        this.data.baseChar = actorCharacteristic.short;
     }
 
     _updateOtherBonuses() {
@@ -42,23 +43,26 @@ export class PsychicPowerDialog extends FormApplication {
     }
 
     async _updateRange() {
+        console.log('Power Range Formula?', this.data.power.system.range)
         const rangeCalculation = new Roll(this.data.power.system.range, this.data);
         await rangeCalculation.evaluate({ async: true });
 
-        const rangeData = calculateRange(rangeCalculation.total, this.data.distance, this.data.power);
-        this.data.maxRange = rangeCalculation.total;
+        console.log('Range roll?', rangeCalculation);
+        const total = rangeCalculation.total ?? 0;
+
+        const rangeData = calculateRange(total, this.data.distance, this.data.power);
+        this.data.maxRange = total;
         this.data.rangeName = rangeData.name;
+
         // Psychic Abilities get no range bonus
         this.data.rangeBonus = 0;
     }
 
     async _updatePower(event) {
         console.log('Power Change', event);
-        this.data.psychicPowers
-            .filter(power => power.id !== event.target.name)
-            .forEach(power => power.isSelected = false);
+        this.data.psychicPowers.filter((power) => power.id !== event.target.name).forEach((power) => (power.isSelected = false));
 
-        const power = this.data.psychicPowers.find(power => power.id === event.target.name);
+        const power = this.data.psychicPowers.find((power) => power.id === event.target.name);
         console.log('Power', power);
         power.isSelected = true;
         this.data.power = power;
@@ -103,7 +107,6 @@ export class PsychicPowerDialog extends FormApplication {
         await performRollAndSendToChat(this.data);
         await this.close();
     }
-
 }
 
 export async function preparePsychicPowerRoll(rollData) {

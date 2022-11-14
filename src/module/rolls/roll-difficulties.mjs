@@ -11,3 +11,11 @@ export function rollDifficulties() {
         '-40': 'Arduous (-40)',
     };
 }
+
+export function aimModifiers() {
+    return {
+        '0': 'None',
+        '10': 'Half (+10)',
+        '20': 'Full (+20)'
+    }
+}

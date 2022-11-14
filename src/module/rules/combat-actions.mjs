@@ -13,13 +13,13 @@ export function combatActions() {
             name: 'Aim',
             type: ['Full', 'Half'],
             subtype: ['Concentration'],
-            description: 'Grants +10 (Half) or +20 (Full) bonus to character\'s next attack. Taking a Reaction will remove the bonus from Aiming.',
+            description: "Grants +10 (Half) or +20 (Full) bonus to character's next attack. Taking a Reaction will remove the bonus from Aiming.",
         },
         {
             name: 'All Out Attack',
             type: ['Full'],
             subtype: ['Attack', 'Melee'],
-            description: 'Give up that round\'s Evasion reaction to gain +30 WS.',
+            description: "Give up that round's Evasion reaction to gain +30 WS.",
             attack: {
                 modifier: 30,
             },
@@ -58,7 +58,7 @@ export function combatActions() {
             name: 'Delay',
             type: ['Full'],
             subtype: ['Miscellaneous'],
-            description: 'May take any Half Action at any time before character\'s next turn. Attacks count as being part of the next turn.',
+            description: "May take any Half Action at any time before character's next turn. Attacks count as being part of the next turn.",
         },
         {
             name: 'Disengage',
@@ -70,7 +70,8 @@ export function combatActions() {
             name: 'Evasion',
             type: ['Reaction'],
             subtype: ['Movement'],
-            description: 'Attempt to avoid an attack by using Dodge (ranged or melee) or Parry (melee) skills. Evading an area of effect attack requires the character be able to escape the radius by moving no further than a Half Move.',
+            description:
+                'Attempt to avoid an attack by using Dodge (ranged or melee) or Parry (melee) skills. Evading an area of effect attack requires the character be able to escape the radius by moving no further than a Half Move.',
         },
         {
             name: 'Feint',
@@ -124,25 +125,29 @@ export function combatActions() {
             name: 'Manoeuvre',
             type: ['Half'],
             subtype: ['Movement', 'Melee'],
-            description: 'Make an opposed WS test against character in melee range; if successful, move them up to 1 metre in direction of choice (character may advance 1 metre as well). Cannot push into obstacles or characters, but can push off of cliffs or edges.',
+            description:
+                'Make an opposed WS test against character in melee range; if successful, move them up to 1 metre in direction of choice (character may advance 1 metre as well). Cannot push into obstacles or characters, but can push off of cliffs or edges.',
         },
         {
             name: 'Overwatch',
             type: ['Full'],
             subtype: ['Attack', 'Concentration', 'Ranged'],
-            description: 'Shoot targets coming into a set 45-degree kill zone with Standard/Semi-Auto/Full-Auto attack (specify which) meeting certain criteria, as chosen by the player. Targets of an Overwatch shot must make a +0 Pinning test or become Pinned, even if the attack did no damage.',
+            description:
+                'Shoot targets coming into a set 45-degree kill zone with Standard/Semi-Auto/Full-Auto attack (specify which) meeting certain criteria, as chosen by the player. Targets of an Overwatch shot must make a +0 Pinning test or become Pinned, even if the attack did no damage.',
         },
         {
             name: 'Ready',
             type: ['Half'],
             subtype: ['Miscellaneous'],
-            description: 'Ready a weapon or an item, apply a bandage or coat a blade with poison, stow an item securely in a bag. Dropping an item is considered a Free Action. Can used twice to affect 2 different items.',
+            description:
+                'Ready a weapon or an item, apply a bandage or coat a blade with poison, stow an item securely in a bag. Dropping an item is considered a Free Action. Can used twice to affect 2 different items.',
         },
         {
             name: 'Reload',
             type: ['Half', 'Full', '2Full'],
             subtype: ['Miscellaneous'],
-            description: 'Reload a ranged weapon - the time necessary depends on the specific weapon. If a reload action extends across multiple turns, it counts as being Extended, and is subject to additional tests or interruptions.',
+            description:
+                'Reload a ranged weapon - the time necessary depends on the specific weapon. If a reload action extends across multiple turns, it counts as being Extended, and is subject to additional tests or interruptions.',
         },
         {
             name: 'Semi-Auto Burst',
@@ -157,13 +162,15 @@ export function combatActions() {
             name: 'Stun',
             type: ['Half'],
             subtype: ['Attack', 'Melee'],
-            description: 'Using melee weapon, WS test with -20. Success is 1d10+SB, vs targets TB+(AP on head). If success, target is stunned for the number of rounds equal to difference.',
+            description:
+                'Using melee weapon, WS test with -20. Success is 1d10+SB, vs targets TB+(AP on head). If success, target is stunned for the number of rounds equal to difference.',
         },
         {
             name: 'Suppressing Fire',
             type: ['Full'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Fires a semi-auto (in 30 degree arc) or full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 (if semi-auto) or -20 (if full-auto) Pinning save or become pinned.',
+            description:
+                'Fires a semi-auto (in 30 degree arc) or full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 (if semi-auto) or -20 (if full-auto) Pinning save or become pinned.',
             attack: {
                 modifier: -20,
             },

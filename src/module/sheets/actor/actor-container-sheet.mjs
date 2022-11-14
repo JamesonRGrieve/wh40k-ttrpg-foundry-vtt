@@ -5,7 +5,6 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
  * Shared Actor functions for Actor that contains embedded items
  */
 export class ActorContainerSheet extends ActorSheet {
-
     activateListeners(html) {
         super.activateListeners(html);
 
@@ -35,7 +34,7 @@ export class ActorContainerSheet extends ActorSheet {
             const data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type === 'Item') {
                 // Check if Item already Exists
-                if(this.actor.items.find(i => i._id === data._id)) {
+                if (this.actor.items.find((i) => i._id === data._id)) {
                     console.log('Item already exists on Actor -- ignoring');
                     return false;
                 } else {
@@ -89,8 +88,7 @@ export class ActorContainerSheet extends ActorSheet {
                 this.actor.deleteEmbeddedDocuments('Item', [div.data('itemId')]);
                 div.slideUp(200, () => this.render(false));
             },
-            no: () => {
-            },
+            no: () => {},
             defaultYes: false,
         });
     }
@@ -103,7 +101,7 @@ export class ActorContainerSheet extends ActorSheet {
             actor: this.actor.name,
             name: item.name,
             type: item.type?.toUpperCase(),
-            description: item.system.benefit ?? item.system.description
+            description: item.system.benefit ?? item.system.description,
         });
     }
 
@@ -121,7 +119,7 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onItemDragStart(event) {
         event.stopPropagation();
-        console.log('_onItemDragStart', event)
+        console.log('_onItemDragStart', event);
 
         const element = event.currentTarget;
         if (!element.dataset?.itemId) {
@@ -130,7 +128,7 @@ export class ActorContainerSheet extends ActorSheet {
         }
 
         const itemId = element.dataset.itemId;
-        const item = this.actor.items.find(i => i.id === itemId);
+        const item = this.actor.items.find((i) => i.id === itemId);
         if (!item) {
             // Cannot find item on actor? Just let foundry handle it...
             console.log('Default Foundry Handler');
@@ -147,5 +145,4 @@ export class ActorContainerSheet extends ActorSheet {
         };
         event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
     }
-
 }

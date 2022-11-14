@@ -1,7 +1,7 @@
-import { rollDifficulties } from './roll-difficulties.mjs';
+import { aimModifiers, rollDifficulties } from './roll-difficulties.mjs';
 
 export class RollData {
-    template = ''
+    template = '';
 
     sourceActor;
     targetActor;
@@ -14,9 +14,10 @@ export class RollData {
 
     baseTarget = 0;
     difficulties = rollDifficulties();
+    aims = aimModifiers();
     modifiers = {
         difficulty: 0,
-        modifier: 0
+        modifier: 0,
     };
     modifierTotal = 0;
 
@@ -33,8 +34,8 @@ export class RollData {
 
     get activeModifiers() {
         const modifiers = {};
-        for(const m of Object.keys(this.modifiers)) {
-            if(this.modifiers[m] !== 0) {
+        for (const m of Object.keys(this.modifiers)) {
+            if (this.modifiers[m] !== 0) {
                 modifiers[m.toUpperCase()] = this.modifiers[m];
             }
         }
@@ -76,4 +77,3 @@ export class PsychicRollData extends RollData {
         this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-power-roll-chat.hbs';
     }
 }
-

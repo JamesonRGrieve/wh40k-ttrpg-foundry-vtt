@@ -4,7 +4,7 @@ export function eliteAdvances() {
             name: 'Inquisitor',
             cost: 1000,
             prerequisites:
-                'Influence: 75, Emperor\'s Blessing: Do something to impress the Emperor. See Becoming an Inquisitor on page 88 of Core Rule Book. GM Guidance: If GM allows it.',
+                "Influence: 75, Emperor's Blessing: Do something to impress the Emperor. See Becoming an Inquisitor on page 88 of Core Rule Book. GM Guidance: If GM allows it.",
             changes: 'Gains the Peer (Inquisition) talent, the Forbidden Lore (Pick One) skill, and the Leadership Aptitude.',
             talents: [
                 'Complete Control',
@@ -47,7 +47,7 @@ export function eliteAdvances() {
                 'Ceaseless Crusader',
                 'Cleanse with Fire',
                 'Divine Vengeance',
-                'Emperor\'s Guidance',
+                "Emperor's Guidance",
                 'Furious Zeal',
                 'Spirit of the Martyr',
                 'Shielding Faith',

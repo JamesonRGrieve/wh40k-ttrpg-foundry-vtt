@@ -74,9 +74,19 @@
                 </div>
             {{/if}}
 
-
             <!-- Other -->
-            <div class="dh-panel prompt dh-grid-col-6">
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Attack</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Base ({{baseChar}}</span>
+                    <span class="dh-field__span">{{baseTarget}}</span>
+                </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Attack Type</span>
                     <select class="dh-field__input" name="action" id="action">
@@ -89,20 +99,15 @@
                         <span class="dh-field__span">{{modifiers.attack}}</span>
                     </div>
                 {{/if}}
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Base</span>
-                    <span class="dh-field__span">{{baseTarget}}</span>
-                </div>
-
-                {{#if this.weapon.isRanged}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Distance</span>
-                        <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
-                        <span class="dh-field__span">{{rangeName}}</span>
-                        <span class="dh-field__span">{{rangeBonus}}</span>
+            </div>
+            <div class="dh-panel prompt dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Modifiers</span>
+                        </div>
                     </div>
-                {{/if}}
-
+                </div>
                 {{#with this.modifiers}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Difficulty</span>
@@ -111,10 +116,24 @@
                         </select>
                     </div>
                     <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Aim</span>
+                        <select class="dh-field__input" data-dtype="Number" name="modifiers.aim">
+                            {{selectOptions @root.aims selected=aim}}
+                        </select>
+                    </div>
+                    <div class="dh-field__wrapper">
                         <span class="dh-field__span">Modifier</span>
                         <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
+                {{#if this.weapon.isRanged}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Distance</span>
+                        <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                        <span class="dh-field__span">{{rangeName}}</span>
+                        <span class="dh-field__span">{{rangeBonus}}</span>
+                    </div>
+                {{/if}}
             </div>
         </div>
     </form>

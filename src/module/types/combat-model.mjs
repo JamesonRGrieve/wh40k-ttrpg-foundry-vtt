@@ -1,11 +1,7 @@
 export class CombatModel {
-
     constructor(data) {
         this.modifierArray = [];
-
     }
-
-
 
     scatterDirection() {
         let direction = '';
@@ -58,5 +54,4 @@ export class CombatModel {
             return 'left leg';
         }
     }
-
 }
