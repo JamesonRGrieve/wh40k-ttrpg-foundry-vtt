@@ -50,11 +50,19 @@
                     </div>
                 </div>
             {{else}}
-                <div class="dh-panel prompt dh-grid-col-6">
+                <div class="dh-panel dh-grid-col-6">
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Power</span>
                         <span class="dh-field__span">{{power.name}}</span>
                     </div>
+                    {{#each power.items as |item|}}
+                        {{#if power.isAttackSpecial}}
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__span">Special</span>
+                                <span class="dh-field__span">{{item.name}}</span>
+                            </div>
+                        {{/if}}
+                    {{/each}}
                 </div>
             {{/if}}
 
@@ -65,17 +73,28 @@
                     <span class="dh-field__span">Psychic Rating</span>
                     <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name='pr' value='{{pr}}' />
                 </div>
-
-                {{#if this.modifiers.bonus}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Target Bonus</span>
-                        <span class="dh-field__span">{{modifiers.bonus}}</span>
-                    </div>
-                {{/if}}
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Base</span>
                     <span class="dh-field__span">{{baseTarget}}</span>
                 </div>
+                {{#if this.modifiers.bonus}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Rating Bonus</span>
+                        <span class="dh-field__span">{{modifiers.bonus}}</span>
+                    </div>
+                {{/if}}
+
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Has Focus</span>
+                    <input
+                        class="dh-field__input"
+                        type="checkbox"
+                        data-dtype="Boolean"
+                        {{checked hasFocus}}
+                        name="{{hasFocus}}"
+                    />
+                </div>
+
                 {{#with this.modifiers}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Difficulty</span>
@@ -88,6 +107,15 @@
                         <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
+
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Distance</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                    <span class="dh-field__span">Range Type</span>
+                    <span class="dh-field__span">{{rangeName}}</span>
+                    <span class="dh-field__span">Max Range</span>
+                    <span class="dh-field__span">{{maxRange}}m max</span>
+                </div>
             </div>
         </div>
     </form>
@@ -95,11 +123,11 @@
 
 <!-- Buttons -->
 <div class="dialog-buttons">
-    <button class="dialog-button roll default" data-button="roll" id="attack-roll">
+    <button class="dialog-button roll default" data-button="roll" id="power-roll">
         <i class="dh-material">casino</i>
         Roll
     </button>
-    <button class="dialog-button cancel" data-button="cancel" id="attack-cancel">
+    <button class="dialog-button cancel" data-button="cancel" id="power-cancel">
         <i class="dh-material">close</i>
         Cancel
     </button>

@@ -121,7 +121,8 @@
           "rating": 0,
           "sustained": 0,
           "class": "bound",
-          "cost": 0
+          "cost": 0,
+          "hasFocus": false
         },
         "backpack": {
           "hasBackpack": false,
@@ -1017,7 +1018,7 @@
       "damage": {
         "damage": "",
         "damageType": "",
-        "penetration": 0,
+        "penetration": "",
         "special": {}
       },
       "action": {

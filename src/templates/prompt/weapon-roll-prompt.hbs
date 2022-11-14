@@ -55,6 +55,22 @@
                         <span class="dh-field__span">Weapon</span>
                         <span class="dh-field__span">{{weapon.name}}</span>
                     </div>
+                    {{#each weapon.items as |item|}}
+                        {{#if embedded.isAttackSpecial}}
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__span">Special</span>
+                                <span class="dh-field__span">{{item.name}}</span>
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                    {{#each weapon.items as |item|}}
+                        {{#if embedded.isWeaponModification}}
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__span">Modification</span>
+                                <span class="dh-field__span">{{item.name}}</span>
+                            </div>
+                        {{/if}}
+                    {{/each}}
                 </div>
             {{/if}}
 

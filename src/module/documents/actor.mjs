@@ -243,6 +243,15 @@ export class DarkHeresyActor extends Actor {
         }
     }
 
+    getCharacteristicFuzzy(char) {
+        // This tries to account for case sensitivity and abbreviations
+        for (const [name, characteristic] of Object.entries(this.characteristics)) {
+            if (char.toUpperCase() === name.toUpperCase() || char.toLocaleString() === characteristic.short.toUpperCase()) {
+                return characteristic;
+            }
+        }
+    }
+
     _computeCharacteristics() {
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
             characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier;

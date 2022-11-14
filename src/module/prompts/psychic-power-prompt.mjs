@@ -32,19 +32,24 @@ export class PsychicPowerDialog extends FormApplication {
     _updateBaseTarget() {
         const characteristic = this.data.power.system.target.characteristic;
         this.data.baseTarget = 0;
-        console.log('PowerBaseTarget Char: ', characteristic);
-        for (const c in Object.keys(this.data.sourceActor?.characteristics)) {
-            if (c.toUpperCase() === characteristic.toUpperCase()) {
-                this.data.baseTarget = this.data.sourceActor.characteristics[c].total;
-                break;
-            }
-        }
+        const actorCharacteristic = this.data.sourceActor.getCharacteristicFuzzy(characteristic);
+        this.data.baseTarget = actorCharacteristic.total;
     }
 
-    _updateRange() {
-        const rangeData = calculateRange(this.data.power.system.range, this.data.distance, this.data.power);
+    _updateOtherBonuses() {
+        this.data.modifiers['bonus'] = 10 * Math.floor(this.data.sourceActor.psy.rating - this.data.pr);
+        this.data.modifiers['focus'] = this.data.hasFocus ? 10 : 0;
+    }
+
+    async _updateRange() {
+        const rangeCalculation = new Roll(this.data.power.system.range, this.data);
+        await rangeCalculation.evaluate({ async: true });
+
+        const rangeData = calculateRange(rangeCalculation.total, this.data.distance, this.data.power);
+        this.data.maxRange = rangeCalculation.total;
         this.data.rangeName = rangeData.name;
-        this.data.rangeBonus = rangeData.bonus;
+        // Psychic Abilities get no range bonus
+        this.data.rangeBonus = 0;
     }
 
     async _updatePower(event) {
@@ -59,7 +64,7 @@ export class PsychicPowerDialog extends FormApplication {
         this.data.power = power;
         this.data.modifiers.bonus = power.system.target.bonus;
         this._updateBaseTarget();
-        this._updateRange();
+        await this._updateRange();
         this.render(true);
     }
 
@@ -70,8 +75,8 @@ export class PsychicPowerDialog extends FormApplication {
             this.data.modifiers['bonus'] = 0;
             this.data.modifiers['difficulty'] = 0;
             this.data.modifiers['modifier'] = 0;
-            this.data.pr = 0;
-            this.data.maxRating = this.data.sourceActor.psy.rating;
+            this.data.pr = this.data.sourceActor.psy.rating;
+            this.data.hasFocus = !!this.data.sourceActor.psy.hasFocus;
 
             this.data.powerSelect = this.data.psychicPowers.length > 1;
 
@@ -81,6 +86,7 @@ export class PsychicPowerDialog extends FormApplication {
             this.initialized = true;
         }
         this._updateBaseTarget();
+        this._updateOtherBonuses();
         return this.data;
     }
 
