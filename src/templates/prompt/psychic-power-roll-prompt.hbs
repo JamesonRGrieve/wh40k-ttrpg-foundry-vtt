@@ -6,10 +6,8 @@
             <div class="dh-panel dh-grid-col-6">
                 <div class="dh-header">
                     <div class="dh-header__info dh-header__logo">
-                        <div class="dh-header__item-wrapper dh-header__borderless">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
                             <img class="dh-header__logo-image-small" alt="{{this.sourceActor.name}}" src="{{this.sourceActor.img}}" />
-                        </div>
-                        <div class="dh-header__item-wrapper--span-3 dh-header__borderless">
                             <span class="dh-header__title">Psychic Power</span>
                         </div>
                     </div>
@@ -56,7 +54,7 @@
                         <span class="dh-field__span">{{power.name}}</span>
                     </div>
                     {{#each power.items as |item|}}
-                        {{#if power.isAttackSpecial}}
+                        {{#if item.isAttackSpecial}}
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__span">Special</span>
                                 <span class="dh-field__span">{{item.name}}</span>

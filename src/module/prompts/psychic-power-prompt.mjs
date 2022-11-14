@@ -86,6 +86,9 @@ export class PsychicPowerDialog extends FormApplication {
 
             const firstPower = this.data.psychicPowers[0];
             this.data.power = firstPower;
+            this.data.modifiers.bonus = this.data.power.system.target.bonus;
+            await this._updateRange();
+
             firstPower.isSelected = true;
             this.initialized = true;
         }
