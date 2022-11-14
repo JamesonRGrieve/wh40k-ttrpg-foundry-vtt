@@ -1,6 +1,6 @@
 import { rollDifficulties } from '../rolls/roll-difficulties.mjs';
 import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
-import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
+import { calculateRange, recursiveUpdate } from '../rolls/roll-helpers.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
     constructor(psychicRollData = {}, options = {}) {
@@ -40,6 +40,12 @@ export class PsychicPowerDialog extends FormApplication {
         }
     }
 
+    _updateRange() {
+        const rangeData = calculateRange(this.data.power.system.range, this.data.distance, this.data.power);
+        this.data.rangeName = rangeData.name;
+        this.data.rangeBonus = rangeData.bonus;
+    }
+
     async _updatePower(event) {
         console.log('Power Change', event);
         this.data.psychicPowers
@@ -51,6 +57,7 @@ export class PsychicPowerDialog extends FormApplication {
         this.data.power = power;
         this.data.modifiers.bonus = power.system.target.bonus;
         this._updateBaseTarget();
+        this._updateRange();
         this.render(true);
     }
 
