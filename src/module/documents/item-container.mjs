@@ -81,7 +81,6 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     async updateEmbeddedDocuments(embeddedName, data, options) {
-        console.log('ItemContainer: ' + this.name + ' updateEmbeddedDocuments');
         if (!this.system.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
         const contained = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
         if (!Array.isArray(data)) data = [data];
@@ -105,6 +104,7 @@ export class DarkHeresyItemContainer extends Item {
         if (updated.length > 0) {
             console.log('ItemContainer: ' + this.name + ' updatedEmbeddedDocuments updated:', updated);
             if (this.parent) {
+                console.log('Passing to parent?')
                 await this.parent.updateEmbeddedDocuments('Item', [
                     {
                         '_id': this.id,
@@ -112,9 +112,11 @@ export class DarkHeresyItemContainer extends Item {
                     },
                 ]);
             } else {
+                console.log('Setting local collection')
                 await this.setCollection(this, newContained);
             }
         }
+        console.log('everythings modified', this);
         return updated;
     }
 
@@ -124,21 +126,27 @@ export class DarkHeresyItemContainer extends Item {
         console.log('ItemContainer: ' + this.name + ' prepareEmbeddedDocuments');
 
         const containedItems = getProperty(this.flags, 'itemcollection.contentsData') ?? [];
+        console.log('Items in flags', containedItems);
         const oldItems = this.items;
+        console.log('Old Items', oldItems);
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
             if (!oldItems?.has(idata._id)) {
+                console.log('New item created... adding to parent items set');
                 const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
                 this.items.set(idata._id, theItem);
             } else {
                 // TODO see how to avoid this - here to make sure the contained items is correctly setup
+                console.log('Existing item... lets make sure its setup correctly')
                 const currentItem = oldItems.get(idata._id);
                 setProperty(currentItem._source, 'flags', idata.flags);
                 setProperty(currentItem._source, 'system', idata.system);
                 currentItem.prepareData();
                 this.items.set(idata._id, currentItem);
+                console.log('Items updated?', this.items);
                 if (this.sheet) {
-                    currentItem.render(false, { action: 'update', data: currentItem });
+                    console.log('Render update');
+                    currentItem.render(false, { action: 'update', data: currentItem.system });
                 }
             }
         });
