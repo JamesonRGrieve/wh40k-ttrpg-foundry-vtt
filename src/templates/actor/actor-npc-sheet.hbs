@@ -1,78 +1,69 @@
-<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
-
-    {{!-- Sheet Header --}}
-    <header class="header">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" height="100" width="100" />
-        <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
-            {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-            use both the "grid" and "grid-Ncol" class where "N" can be any number
-            from 1 to 12 and will create that number of columns.  --}}
-            <div class="resources grid grid-3col">
-
-                {{!-- "flex-group-center" is also defined in the _grid.scss file
-                and it will add a small amount of padding, a border, and will
-                center all of its child elements content and text. --}}
-                <div class="resource flex-group-center">
-                    <label for="data.health.value" class="resource-label">Health</label>
-                    <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.health.value" value="{{actor.health.value}}"
-                               data-dtype="Number" />
-                        <span> / </span>
-                        <input type="text" name="data.health.max" value="{{actor.health.max}}" data-dtype="Number" />
-                    </div>
+{{log this}}
+<div class="dh-wrapper">
+    <form class="dh-actor" autocomplete="off">
+        <div class="dh-header dh-grid-col-6 dh-panel">
+            <div class="dh-header__info">
+                <div class="dh-header__logo dh-header__item-wrapper--span-4">
+                    <img class="dh-header__logo-image" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
-
-                <div class="resource flex-group-center">
-                    <label for="data.power.value" class="resource-label">Power</label>
-                    <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.power.value" value="{{actor.power.value}}" data-dtype="Number" />
-                        <span> / </span>
-                        <input type="text" name="data.power.max" value="{{actor.power.max}}" data-dtype="Number" />
-                    </div>
+                <div class="dh-header__item-wrapper--span-2">
+                    <span class="dh-header__title">Name</span>
+                    <input class="dh-header__input" name="name" type="text" value="{{actor.name}}" />
                 </div>
-
-                <div class="resource flex-group-center">
-                    <label for="data.cr" class="resource-label">CR / XP</label>
-                    <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.cr" value="{{actor.cr}}" data-dtype="Number" />
-                        <span> / </span>
-                        <input type="text" disabled name="data.xp" value="{{actor.xp}}" data-dtype="Number" />
-                    </div>
-                </div>
-
+                {{#each actor.bio}}
+                    {{#if (arrayIncludes @key @root.dh.bio.primary)}}
+                        {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                    {{/if}}
+                {{/each}}
             </div>
         </div>
-    </header>
 
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="tabs tabs" data-group="primary">
-        {{!-- Default tab is specified in acolyte-sheet.mjs --}}
-        <a class="item" data-tab="description">Description</a>
-        <a class="item" data-tab="items">Items</a>
-        <a class="item" data-tab="effects">Effects</a>
-    </nav>
-
-    {{!-- Sheet Body --}}
-    <section class="body">
-
-        {{!-- Biography Tab --}}
-        <div class="tab biography" data-group="primary" data-tab="description">
-            {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
-            {{editor content=actor.biography target="data.biography" rollData=rollData button=true owner=owner
-                     editable=editable}}
+        <div class="dh-navigation" data-group="primary">
+            <label class="dh-navigation__item dh-navigation__item-left">
+                <a class="item" data-tab="combat" data-group="primary">combat</a>
+            </label>
+            <label class="dh-navigation__item">
+                <a class="item" data-tab="main" data-group="primary">main</a>
+            </label>
+            <label class="dh-navigation__item">
+                <a class="item" data-tab="gear" data-group="primary">gear</a>
+            </label>
+            <label class="dh-navigation__item">
+                <a class="item" data-tab="psychic" data-group="primary">psychic powers</a>
+            </label>
         </div>
 
-        {{!-- Owned Items Tab --}}
-        <div class="tab items" data-group="primary" data-tab="items">
-            {{> "systems/dark-heresy-2nd/templates/actor/parts/actor-items.html"}}
-        </div>
+        <section class="dh-body">
+            <div class="tab" data-group="primary" data-tab="combat">
+                {{> systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/wounds-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
+            </div>
+            <div class="tab" data-group="primary" data-tab="main">
+                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/bonuses-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
+            </div>
+            <div class="tab" data-group="primary" data-tab="gear">
+                {{> systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs}}
+            </div>
+            <div class="tab" data-group="primary" data-tab="psychic">
+                {{> systems/dark-heresy-2nd/templates/actor/panel/psychic-powers-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/psy-panel.hbs}}
+            </div>
+        </section>
+    </form>
+</div>
 
-        {{!-- Active Effects Tab --}}
-        <div class="tab effects flexcol" data-group="primary" data-tab="effects">
-            {{> "systems/dark-heresy-2nd/templates/actor/parts/actor-effects.html"}}
-        </div>
-
-    </section>
-</form>
 
