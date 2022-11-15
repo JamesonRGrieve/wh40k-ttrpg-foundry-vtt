@@ -4,7 +4,7 @@ import { WeaponRollData } from '../rolls/roll-data.mjs';
  * @param rollData {WeaponRollData}
  */
 export function calculateCombatActionModifier(rollData) {
-    const currentAction = rollData.actions.find((a) => a.name === rollData.action);
+    const currentAction = rollData.actions[rollData.action];
     if (currentAction?.attack?.modifier) {
         rollData.modifiers['attack'] = currentAction.attack.modifier;
     } else {

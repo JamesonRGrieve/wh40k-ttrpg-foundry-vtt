@@ -23,6 +23,11 @@ async function calculateWeaponMaxRange(rollData) {
  * @param rollData {PsychicRollData}
  */
 async function calculatePsychicAbilityMaxRange(rollData) {
+    if (!rollData.power) {
+        rollData.maxRange = 0;
+        return;
+    }
+
     const rangeCalculation = new Roll(rollData.power.system.range, rollData);
     await rangeCalculation.evaluate({ async: true });
 
