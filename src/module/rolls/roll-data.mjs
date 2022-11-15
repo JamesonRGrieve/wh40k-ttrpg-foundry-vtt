@@ -1,6 +1,6 @@
 import { rollDifficulties } from '../rules/difficulties.mjs';
 import { aimModifiers } from '../rules/aim.mjs';
-import { calculatePsychicPowerRange } from '../rules/range.mjs';
+import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.mjs';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
 import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
 import { calculateAmmoUsed } from '../rules/ammo.mjs';
@@ -110,9 +110,10 @@ export class WeaponRollData extends RollData {
         this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';
     }
 
-    update() {
+    async update() {
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
+        await calculateWeaponRange(this);
         this.updateBaseTarget();
     }
 
@@ -192,7 +193,7 @@ export class PsychicRollData extends RollData {
         this.modifiers['power'] = this.power.system.target.bonus ?? 0;
 
         this.updateBaseTarget();
-        await calculatePsychicPowerRange(this.data);
+        await calculatePsychicPowerRange(this);
     }
 
     updateBaseTarget() {

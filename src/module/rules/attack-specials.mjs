@@ -9,7 +9,7 @@ export async function calculateAttackSpecialModifiers(rollData) {
 
     let actionItem = rollData.weapon ?? rollData.power;
 
-    for (const item of actionItem) {
+    for (const item of actionItem.items) {
         if (!item.system.equipped) continue;
         if (!item.isAttackSpecial) continue;
         switch (item.name) {

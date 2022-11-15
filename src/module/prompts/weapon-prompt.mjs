@@ -34,7 +34,7 @@ export class WeaponAttackDialog extends FormApplication {
 
     async _updateWeapon(event) {
         this.data.selectWeapon(event.target.name);
-        this.data.update();
+        await this.data.update();
         this.render(true);
     }
 
@@ -44,7 +44,7 @@ export class WeaponAttackDialog extends FormApplication {
             this.data.initialize();
             this.initialized = true;
         }
-        this.data.update();
+        await this.data.update();
         return this.data;
     }
 

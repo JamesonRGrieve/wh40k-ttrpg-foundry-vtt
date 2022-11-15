@@ -25,6 +25,7 @@ export class Hit {
     static async createHit(attackData) {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
+        hit.location = this.determineHitLocation(attackData.rollData.roll.total);
         return hit;
     }
 
@@ -34,6 +35,7 @@ export class Hit {
      */
     async _calculateDamage(attackData) {
         let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const sourceActor = attackData.rollData.sourceActor;
 
         let righteousFuryThreshold = 10;
         if (actionItem.hasAttackSpecial('Vengeful')) {
@@ -56,8 +58,8 @@ export class Hit {
                     this.righteousFury.push(righteousFuryRoll);
 
                     // DeathDealer
-                    if (attackData.rollData.sourceActor.hasTalent('Deathdealer')) {
-                        this.modifiers['deathdealer'] = attackData.rollData.sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                    if (sourceActor.hasTalent('Deathdealer')) {
+                        this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
                     }
                 }
 
@@ -75,6 +77,17 @@ export class Hit {
                     }
                 }
             }
+        }
+
+        if (actionItem.isMelee) {
+            this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
+
+            if(sourceActor.hasTalent('Crushing Blow')) {
+                const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus
+                this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
+            }
+        } else if (actionItem.isRanged) {
+
         }
     }
 

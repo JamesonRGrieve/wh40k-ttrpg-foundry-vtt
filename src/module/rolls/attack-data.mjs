@@ -1,5 +1,5 @@
 import { PsychicRollData, WeaponRollData } from '../rolls/roll-data.mjs';
-import { PsychicDamageData, WeaponDamageData } from '../rolls/damage-data.mjs';
+import { Hit, PsychicDamageData, WeaponDamageData } from '../rolls/damage-data.mjs';
 import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
 
 export class AttackData {
@@ -78,6 +78,16 @@ export class AttackData {
 
             if (this.rollData.roll.total === 100) {
                 this.effects.push('Automatic Failure');
+            }
+        }
+    }
+
+    async calculateHits() {
+        if(this.rollData.success) {
+            this.damageData.push(await Hit.createHit(this));
+
+            for(let i = 0; i< this.damageData.additionalHits; i++) {
+                this.damageData.push(await Hit.createHit(this));
             }
         }
     }

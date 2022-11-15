@@ -17,6 +17,9 @@ export async function performAttack(attackData) {
     // Determine Success/Hits
     await attackData.calculateSuccessOrFailure();
 
+    // Calculate Hits
+    await attackData.calculateHits();
+
     // Send to Chat
     await sendRollDataToChat(attackData.rollData);
 }
