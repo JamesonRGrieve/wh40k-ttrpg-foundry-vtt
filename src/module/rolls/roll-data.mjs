@@ -58,14 +58,14 @@ export class RollData {
     modifiersToRollData() {
         let formula = '0 ';
         const rollParams = {};
-        for (const modifier of Object.keys(modifiers)) {
-            if (modifiers[modifier] !== 0) {
-                if (modifiers[modifier] >= 0) {
+        for (const modifier of Object.keys(this.modifiers)) {
+            if (this.modifiers[modifier] !== 0) {
+                if (this.modifiers[modifier] >= 0) {
                     formula += ` + @${modifier}`;
                 } else {
                     formula += ` - @${modifier}`;
                 }
-                rollParams[modifier] = Math.abs(modifiers[modifier]);
+                rollParams[modifier] = Math.abs(this.modifiers[modifier]);
             }
         }
         return {

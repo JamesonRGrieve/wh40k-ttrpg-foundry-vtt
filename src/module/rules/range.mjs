@@ -5,11 +5,19 @@ import { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.mj
  */
 async function calculateWeaponMaxRange(rollData) {
     const weapon = rollData.weapon;
-    if (!weapon) return 0;
+    if (!weapon) {
+        rollData.maxRange = 0;
+        return;
+    }
 
-    const rangeCalculation = new Roll(weapon.system.range, rollData);
-    await rangeCalculation.evaluate({ async: true });
-    let range = rangeCalculation.total ?? 0;
+    let range;
+    if (Number.isInteger(weapon.system.range)) {
+        range = weapon.system.range;
+    } else {
+        const rangeCalculation = new Roll(weapon.system.range, rollData);
+        await rangeCalculation.evaluate({ async: true });
+        range = rangeCalculation.total ?? 0;
+    }
 
     // Check Maximal
     if (weapon.hasAttackSpecial('Maximal')) {
