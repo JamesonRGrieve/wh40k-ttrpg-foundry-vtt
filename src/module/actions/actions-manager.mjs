@@ -20,6 +20,8 @@ export async function performAttack(attackData) {
     // Calculate Hits
     await attackData.calculateHits();
 
+    console.log('Attack Data', attackData);
+
     // Send to Chat
     await sendRollDataToChat(attackData.rollData);
 }

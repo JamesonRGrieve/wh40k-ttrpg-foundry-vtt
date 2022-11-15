@@ -84,10 +84,10 @@ export class AttackData {
 
     async calculateHits() {
         if(this.rollData.success) {
-            this.damageData.push(await Hit.createHit(this));
+            this.damageData.hits.push(await Hit.createHit(this));
 
             for(let i = 0; i< this.damageData.additionalHits; i++) {
-                this.damageData.push(await Hit.createHit(this));
+                this.damageData.hits.push(await Hit.createHit(this));
             }
         }
     }
