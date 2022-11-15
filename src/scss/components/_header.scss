@@ -1,135 +1,136 @@
 .dh-header {
-  padding: 0;
-  font-size: 12pt;
+    padding: 0;
+    font-size: 12pt;
 
-  &__borderless {
-    border: none !important;
-  }
+    &__borderless {
+        border: none !important;
+    }
 
+  //noinspection CssUnknownTarget
   &__logo {
-    background: url('../images/aquilla.png') no-repeat right;
-    -webkit-background-size: contain;
-    -moz-background-size: contain;
-    -o-background-size: contain;
-    background-size: contain;
+        background: url('../images/aquilla.png') no-repeat right;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        -o-background-size: contain;
+        background-size: contain;
 
-    &-image {
-      height: 100px;
-      border: 0;
-      padding: 0.5rem;
+        &-image {
+            height: 100px;
+            border: 0;
+            padding: 0.5rem;
 
-      &-small {
-        height: 50px;
-        border: 0;
-        margin-right: -50px;
-      }
-    }
-  }
-
-  &__prompt {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    width: auto;
-    padding: 0 1.5em 0 0;
-  }
-
-  &__info {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    width: auto;
-    padding: 0 1.5em 0.5em;
-  }
-
-  &__item-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: baseline;
-    min-width: 0;
-    border-bottom: $grid-border;
-
-    &--age,
-    &--gender,
-    &--build,
-    &--complexion,
-    &--hair {
-      @extend .dh-header__item-wrapper;
+            &-small {
+                height: 50px;
+                border: 0;
+                margin-right: -50px;
+            }
+        }
     }
 
-    &--span-2,
-    &--homeworld,
-    &--background,
-    &--role,
-    &--divination,
-    &--elite {
-      @extend .dh-header__item-wrapper;
-      grid-column: span 2;
+    &__prompt {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        width: auto;
+        padding: 0 1.5em 0 0;
     }
 
-    &--span-3,
-    &--quirks {
-      @extend .dh-header__item-wrapper;
-      grid-column: span 3;
+    &__info {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        width: auto;
+        padding: 0 1.5em 0.5em;
     }
 
-    &--3-span-2 {
-      @extend .dh-header__item-wrapper;
-      grid-column: 3 / span 2;
+    &__item-wrapper {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: baseline;
+        min-width: 0;
+        border-bottom: $grid-border;
+
+        &--age,
+        &--gender,
+        &--build,
+        &--complexion,
+        &--hair {
+            @extend .dh-header__item-wrapper;
+        }
+
+        &--span-2,
+        &--homeworld,
+        &--background,
+        &--role,
+        &--divination,
+        &--elite {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 2;
+        }
+
+        &--span-3,
+        &--quirks {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 3;
+        }
+
+        &--3-span-2 {
+            @extend .dh-header__item-wrapper;
+            grid-column: 3 / span 2;
+        }
+
+        &--span-4,
+        &--mementos,
+        &--superstition,
+        &--notes {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 4;
+        }
+
+        &--text-area {
+            @extend .dh-header__item-wrapper;
+            grid-column: span 4;
+            grid-row: span 2;
+            min-height: 150px;
+            border-bottom: 0;
+        }
     }
 
-    &--span-4,
-    &--mementos,
-    &--superstition,
-    &--notes {
-      @extend .dh-header__item-wrapper;
-      grid-column: span 4;
+    &__title {
+        flex-shrink: 0;
+        margin: auto;
+        padding: $margin-small;
+        font-size: $h1-size;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
     }
 
-    &--text-area {
-      @extend .dh-header__item-wrapper;
-      grid-column: span 4;
-      grid-row: span 2;
-      min-height: 150px;
-      border-bottom: 0;
+    &__subtitle {
+        flex-shrink: 0;
+        margin: auto;
+        font-size: $h2-size;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+        margin-bottom: -7px;
     }
-  }
 
-  &__title {
-    flex-shrink: 0;
-    margin: auto;
-    padding: $margin-small;
-    font-size: $h1-size;
-    font-weight: bold;
-    text-align: center;
-    text-transform: uppercase;
-  }
+    &__textarea,
+    &__select,
+    &__input {
+        flex-grow: 1;
+        flex-shrink: 1;
+        min-width: 0;
+        max-width: 100%;
+        padding: 0.25rem;
+    }
 
-  &__subtitle {
-    flex-shrink: 0;
-    margin: auto;
-    font-size: $h2-size;
-    font-weight: bold;
-    text-align: center;
-    text-transform: uppercase;
-    margin-bottom: -7px;
-  }
+    &__display {
+        margin: auto;
+    }
 
-  &__textarea,
-  &__select,
-  &__input {
-    flex-grow: 1;
-    flex-shrink: 1;
-    min-width: 0;
-    max-width: 100%;
-    padding: 0.25rem;
-  }
-
-  &__display {
-    margin: auto;
-  }
-
-  &__textarea,
-  &__select,
-  &__input {
-    height: 100% !important;
-  }
+    &__textarea,
+    &__select,
+    &__input {
+        height: 100% !important;
+    }
 }

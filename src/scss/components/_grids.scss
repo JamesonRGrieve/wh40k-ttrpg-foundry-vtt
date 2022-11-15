@@ -1,290 +1,290 @@
 @import 'grids_templates';
 
 $grid-tables: (
-        skill: 0.9fr 0.7fr 0.4fr 0.4fr,
-        talent: 1.5rem 1fr 3rem 3rem,
-        trait: 1.5rem 1fr 3rem 3rem,
-        wounds: 1.5rem 1fr 5rem 3rem,
-        corruption: 1.5rem 1fr 3rem,
-        insanity: 1.5rem 1fr 3rem,
-        armour: 1.5rem 1.5fr 1fr 1fr 0.75fr 3rem,
-        armourmod: 1.5rem 1.5fr 1fr 0.75fr 3rem,
-        weapon: 1.5rem 1.5fr 1fr 1fr 0.75fr 4rem,
-        psychic: 1.5rem 1.5fr 1fr 0.75fr 5rem,
-        weaponmod: 1.5rem 1.5fr 1fr 0.75fr 3rem,
-        attackspecial: 1.5rem 1.5fr 1fr 1fr 3rem,
-        critical: 1.5rem 1fr 1fr 3rem,
-        cybernetic: 1.5rem 1.5fr 1fr 0.75fr 3rem,
-        experience: 1fr 0.25fr,
-        storageloc: 1.5rem 1fr 3rem,
-        backpack: 1fr 0.5fr,
-        ammo: 1.5rem 1fr 3rem,
-        bonuses: 1fr 0.5fr 3rem,
-        aptitude: 1.5rem 1fr 3rem,
-        journal: 1.5rem 2fr 0.75fr 0.75fr 3rem,
-        peerenemy: 1.5rem 2fr 0.75fr 3rem,
-        gear: 1.5rem 1fr 1fr 3rem 3rem,
-        attackprompt: 2rem 1fr 3rem
+    skill: 0.9fr 0.7fr 0.4fr 0.4fr,
+    talent: 1.5rem 1fr 3rem 3rem,
+    trait: 1.5rem 1fr 3rem 3rem,
+    wounds: 1.5rem 1fr 5rem 3rem,
+    corruption: 1.5rem 1fr 3rem,
+    insanity: 1.5rem 1fr 3rem,
+    armour: 1.5rem 1.5fr 1fr 1fr 0.75fr 3rem,
+    armourmod: 1.5rem 1.5fr 1fr 0.75fr 3rem,
+    weapon: 1.5rem 1.5fr 1fr 1fr 0.75fr 4rem,
+    psychic: 1.5rem 1.5fr 1fr 0.75fr 5rem,
+    weaponmod: 1.5rem 1.5fr 1fr 0.75fr 3rem,
+    attackspecial: 1.5rem 1.5fr 1fr 1fr 3rem,
+    critical: 1.5rem 1fr 1fr 3rem,
+    cybernetic: 1.5rem 1.5fr 1fr 0.75fr 3rem,
+    experience: 1fr 0.25fr,
+    storageloc: 1.5rem 1fr 3rem,
+    backpack: 1fr 0.5fr,
+    ammo: 1.5rem 1fr 3rem,
+    bonuses: 1fr 0.5fr 3rem,
+    aptitude: 1.5rem 1fr 3rem,
+    journal: 1.5rem 2fr 0.75fr 0.75fr 3rem,
+    peerenemy: 1.5rem 2fr 0.75fr 3rem,
+    gear: 1.5rem 1fr 1fr 3rem 3rem,
+    attackprompt: 2rem 1fr 3rem,
 );
 
 .dh {
-  &-field,
-  &-textarea {
-    @extend %grid-row;
-  }
-
-  &-field__span,
-  &-field__header,
-  &-field__input,
-  &-textarea__header,
-  &-textarea__input {
-    @extend %grid-cell;
-  }
-
-  &-grid-template1-1 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  &-grid-template-settings {
-    display: grid;
-    grid-template-columns: 1.5rem 1fr;
-  }
-
-  &-grid-template1-2 {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-  }
-
-  &-grid-template2-1 {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-  }
-
-  @each $span in [2, 3, 4, 5, 6] {
-    &-grid-col-#{$span} {
-      grid-column: span $span;
-    }
-    &-grid-row-#{$span} {
-      grid-row: span $span;
-    }
-  }
-
-  &-grid-col-1-offset {
-    grid-column: 1 / -1;
-  }
-
-  @each $table, $layout in $grid-tables {
-    &-#{$table}table {
-      &--no-border {
-        .table-row {
-          grid-template-columns: $layout;
-
-          &--head {
-            grid-template-columns: $layout;
-          }
-
-          &--highlight {
-            grid-template-columns: $layout;
-          }
-        }
-      }
-
-      &--border {
-        .table-row {
-          grid-template-columns: $layout;
-
-          &--head {
-            grid-template-columns: $layout;
-          }
-
-          &--unknown {
-            grid-template-columns: $layout;
-          }
-        }
-      }
-    }
-  }
-
-  &-table {
-    h1 {
-      grid-column: 1 / -1;
-    }
-
-    .table-roll {
-      text-align: left !important;
-
-      span {
-        text-align: left;
-      }
-    }
-
-    &--no-border {
-      min-height: 50px;
-
-      .table-row {
-        @extend %row;
-
-        &--head {
-          @extend %row;
-
-          div[class*='cell'] {
-            @extend %cell--head;
-          }
-        }
-
-        &--highlight {
-          @extend %row;
-          background: rgba(36, 107, 131, 0.1);
-          grid-column: 1 / -1;
-          padding: 0;
-        }
-      }
-
-      .table-cell {
-        @extend %cell;
-
-        &--description {
-          @extend %description;
-
-          span {
-            text-align: left;
-          }
-        }
-
-        &--settingstoggle {
-          @extend %cell;
-        }
-
-        &--settingstoggle + #{&}--grouped {
-          grid-column-start: 2;
-        }
-
-        &--last {
-          @extend %cell;
-        }
-
-        &--grouped {
-          @extend %cell;
-          @extend %grid-cell--last;
-          margin-top: 1pt;
-          font-weight: bold;
-          text-align: center !important;
-          text-indent: -1.5rem;
-          text-transform: uppercase;
-        }
-
-        &--left {
-          @extend %cell;
-          text-align: left !important;
-        }
-
-        &--span2 {
-          @extend %cell;
-          grid-column: span 2;
-        }
-
-        &--span3 {
-          @extend %cell;
-          grid-column: span 3;
-        }
-
-        &--image {
-          @extend %cell;
-          padding-top: 3px;
-        }
-      }
-    }
-
-    &--border {
-      min-height: 50px;
-
-      .table-row {
+    &-field,
+    &-textarea {
         @extend %grid-row;
+    }
 
-        &--head {
-          @extend %grid-row-head;
-        }
-
-        &--unknown {
-          @extend %grid-row--unknown;
-        }
-
-        &--grouped {
-          @extend %grid-row;
-          grid-template-columns: 1rem 1fr;
-          background: rgba(36, 107, 131, 0.1);
-        }
-      }
-
-      .table-cell {
+    &-field__span,
+    &-field__header,
+    &-field__input,
+    &-textarea__header,
+    &-textarea__input {
         @extend %grid-cell;
-
-        &--left {
-          @extend %grid-cell;
-          text-align: left !important;
-        }
-
-        &--span2 {
-          @extend %grid-cell;
-          grid-column: span 2;
-        }
-
-        &--description {
-          @extend %grid-cell--description;
-        }
-
-        &--last {
-          @extend %grid-cell--last;
-        }
-
-        &--highlight {
-          @extend %grid-cell--highlight;
-        }
-
-        &--grouped {
-          @extend %grid-cell;
-          @extend %grid-cell--last;
-          margin-top: 1pt;
-          font-weight: bold;
-          text-align: center !important;
-          text-indent: -1.5rem;
-          text-transform: uppercase;
-        }
-
-        &--settingstoggle {
-          @extend %cell;
-        }
-
-        &--settingstoggle + #{&}--grouped {
-          grid-column-start: 2;
-        }
-
-        &--checkbox {
-          margin: 8px;
-        }
-      }
     }
-  }
 
-  &-controls {
-    grid-column: span 2;
-
-    &__wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-gap: $margin-small;
-      margin: $margin-small;
+    &-grid-template1-1 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
-  }
 
-  &-settingswrapper {
-    grid-column: span 2;
-    display: flex;
-    flex-direction: column;
-
-    > * {
-      flex-grow: 1;
+    &-grid-template-settings {
+        display: grid;
+        grid-template-columns: 1.5rem 1fr;
     }
-  }
+
+    &-grid-template1-2 {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+    }
+
+    &-grid-template2-1 {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+
+    @each $span in [2, 3, 4, 5, 6] {
+        &-grid-col-#{$span} {
+            grid-column: span $span;
+        }
+        &-grid-row-#{$span} {
+            grid-row: span $span;
+        }
+    }
+
+    &-grid-col-1-offset {
+        grid-column: 1 / -1;
+    }
+
+    @each $table, $layout in $grid-tables {
+        &-#{$table}table {
+            &--no-border {
+                .table-row {
+                    grid-template-columns: $layout;
+
+                    &--head {
+                        grid-template-columns: $layout;
+                    }
+
+                    &--highlight {
+                        grid-template-columns: $layout;
+                    }
+                }
+            }
+
+            &--border {
+                .table-row {
+                    grid-template-columns: $layout;
+
+                    &--head {
+                        grid-template-columns: $layout;
+                    }
+
+                    &--unknown {
+                        grid-template-columns: $layout;
+                    }
+                }
+            }
+        }
+    }
+
+    &-table {
+        h1 {
+            grid-column: 1 / -1;
+        }
+
+        .table-roll {
+            text-align: left !important;
+
+            span {
+                text-align: left;
+            }
+        }
+
+        &--no-border {
+            min-height: 50px;
+
+            .table-row {
+                @extend %row;
+
+                &--head {
+                    @extend %row;
+
+                    div[class*='cell'] {
+                        @extend %cell--head;
+                    }
+                }
+
+                &--highlight {
+                    @extend %row;
+                    background: rgba(36, 107, 131, 0.1);
+                    grid-column: 1 / -1;
+                    padding: 0;
+                }
+            }
+
+            .table-cell {
+                @extend %cell;
+
+                &--description {
+                    @extend %description;
+
+                    span {
+                        text-align: left;
+                    }
+                }
+
+                &--settingstoggle {
+                    @extend %cell;
+                }
+
+                &--settingstoggle + #{&}--grouped {
+                    grid-column-start: 2;
+                }
+
+                &--last {
+                    @extend %cell;
+                }
+
+                &--grouped {
+                    @extend %cell;
+                    @extend %grid-cell--last;
+                    margin-top: 1pt;
+                    font-weight: bold;
+                    text-align: center !important;
+                    text-indent: -1.5rem;
+                    text-transform: uppercase;
+                }
+
+                &--left {
+                    @extend %cell;
+                    text-align: left !important;
+                }
+
+                &--span2 {
+                    @extend %cell;
+                    grid-column: span 2;
+                }
+
+                &--span3 {
+                    @extend %cell;
+                    grid-column: span 3;
+                }
+
+                &--image {
+                    @extend %cell;
+                    padding-top: 3px;
+                }
+            }
+        }
+
+        &--border {
+            min-height: 50px;
+
+            .table-row {
+                @extend %grid-row;
+
+                &--head {
+                    @extend %grid-row-head;
+                }
+
+                &--unknown {
+                    @extend %grid-row--unknown;
+                }
+
+                &--grouped {
+                    @extend %grid-row;
+                    grid-template-columns: 1rem 1fr;
+                    background: rgba(36, 107, 131, 0.1);
+                }
+            }
+
+            .table-cell {
+                @extend %grid-cell;
+
+                &--left {
+                    @extend %grid-cell;
+                    text-align: left !important;
+                }
+
+                &--span2 {
+                    @extend %grid-cell;
+                    grid-column: span 2;
+                }
+
+                &--description {
+                    @extend %grid-cell--description;
+                }
+
+                &--last {
+                    @extend %grid-cell--last;
+                }
+
+                &--highlight {
+                    @extend %grid-cell--highlight;
+                }
+
+                &--grouped {
+                    @extend %grid-cell;
+                    @extend %grid-cell--last;
+                    margin-top: 1pt;
+                    font-weight: bold;
+                    text-align: center !important;
+                    text-indent: -1.5rem;
+                    text-transform: uppercase;
+                }
+
+                &--settingstoggle {
+                    @extend %cell;
+                }
+
+                &--settingstoggle + #{&}--grouped {
+                    grid-column-start: 2;
+                }
+
+                &--checkbox {
+                    margin: 8px;
+                }
+            }
+        }
+    }
+
+    &-controls {
+        grid-column: span 2;
+
+        &__wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: $margin-small;
+            margin: $margin-small;
+        }
+    }
+
+    &-settingswrapper {
+        grid-column: span 2;
+        display: flex;
+        flex-direction: column;
+
+        > * {
+            flex-grow: 1;
+        }
+    }
 }

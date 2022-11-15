@@ -27,15 +27,15 @@ export function updateAvailableCombatActions(rollData) {
         });
 
     if (rollData.weapon.hasAttackSpecial('Unbalanced') || rollData.weapon.hasAttackSpecial('Unwieldy')) {
-        actions.findSplice(action => action.name === 'Lightning Attack');
+        actions.findSplice((action) => action.name === 'Lightning Attack');
     }
 
-    if(rollData.weapon.isRanged) {
+    if (rollData.weapon.isRanged) {
         if (rollData.weapon.system.rateOfFire.burst <= 0) {
-            actions.findSplice(action => action.name === 'Semi-Auto Burst');
+            actions.findSplice((action) => action.name === 'Semi-Auto Burst');
         }
         if (rollData.weapon.system.rateOfFire.full <= 0) {
-            actions.findSplice(action => action.name === 'Full Auto Burst');
+            actions.findSplice((action) => action.name === 'Full Auto Burst');
         }
     }
 

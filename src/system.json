@@ -1,131 +1,127 @@
 {
-  "name": "dark-heresy-2nd",
-  "title": "Dark Heresy 2nd Edition",
-  "description": "Dark Heresy 2nd Edition - Foundry VTT",
-  "version": "1.2.0",
-  "compatibility": {
-    "minimum": "10",
-    "verified": "10",
-    "maximum": "10"
-  },
-  "authors": [
-    {
-      "name": "Matt Keathley",
-      "url": "https://www.keathley.co",
-      "discord": "keathley#5925"
-    }
-  ],
-  "esmodules": [
-    "module/dark-heresy-2nd.mjs"
-  ],
-  "styles": [
-    "css/dark-heresy-2nd.css"
-  ],
-  "scripts": [],
-  "packs": [
-    {
-      "name": "ammo",
-      "system": "dark-heresy-2nd",
-      "label": "Ammo",
-      "path": "./packs/ammo.db",
-      "type": "Item",
-      "entity": "Item"
+    "name": "dark-heresy-2nd",
+    "title": "Dark Heresy 2nd Edition",
+    "description": "Dark Heresy 2nd Edition - Foundry VTT",
+    "version": "1.2.0",
+    "compatibility": {
+        "minimum": "10",
+        "verified": "10",
+        "maximum": "10"
     },
-    {
-      "name": "aptitudes",
-      "system": "dark-heresy-2nd",
-      "label": "Aptitudes",
-      "path": "./packs/aptitudes.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "armour",
-      "system": "dark-heresy-2nd",
-      "label": "Armour",
-      "path": "./packs/armour.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "attack-specials",
-      "system": "dark-heresy-2nd",
-      "label": "Specials",
-      "path": "./packs/attack-specials.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "cybernetics",
-      "system": "dark-heresy-2nd",
-      "label": "Cybernetics",
-      "path": "./packs/cybernetics.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "psychic-powers",
-      "system": "dark-heresy-2nd",
-      "label": "Psychic Powers",
-      "path": "./packs/psychic-powers.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "tables",
-      "system": "dark-heresy-2nd",
-      "label": "Tables",
-      "path": "./packs/tables.db",
-      "type": "RollTable",
-      "entity": "RollTable"
-    },
-    {
-      "name": "talents",
-      "system": "dark-heresy-2nd",
-      "label": "Talents",
-      "path": "./packs/talents.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "tools",
-      "system": "dark-heresy-2nd",
-      "label": "Tools",
-      "path": "./packs/tools.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "traits",
-      "system": "dark-heresy-2nd",
-      "label": "Traits",
-      "path": "./packs/traits.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "weapons",
-      "system": "dark-heresy-2nd",
-      "label": "Weapons",
-      "path": "./packs/weapons.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "weapon-mods",
-      "system": "dark-heresy-2nd",
-      "label": "Weapon Mods",
-      "path": "./packs/weapon-mods.db",
-      "type": "Item",
-      "entity": "Item"
-    }
-  ],
-  "gridDistance": 1,
-  "gridUnits": "m",
-  "primaryTokenAttribute": "wounds",
-  "secondaryTokenAttribute": "fate",
-  "url": "https://github.com/mrkeathley/dark-heresy-2nd-vtt",
-  "manifest": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/system.json",
-  "download": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/dark-heresy-2nd-1.2.0.zip",
-  "license": "LICENSE.txt"
+    "authors": [
+        {
+            "name": "Matt Keathley",
+            "url": "https://www.keathley.co",
+            "discord": "keathley#5925"
+        }
+    ],
+    "esmodules": ["module/dark-heresy-2nd.mjs"],
+    "styles": ["css/dark-heresy-2nd.css"],
+    "scripts": [],
+    "packs": [
+        {
+            "name": "ammo",
+            "system": "dark-heresy-2nd",
+            "label": "Ammo",
+            "path": "./packs/ammo.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "aptitudes",
+            "system": "dark-heresy-2nd",
+            "label": "Aptitudes",
+            "path": "./packs/aptitudes.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "armour",
+            "system": "dark-heresy-2nd",
+            "label": "Armour",
+            "path": "./packs/armour.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "attack-specials",
+            "system": "dark-heresy-2nd",
+            "label": "Specials",
+            "path": "./packs/attack-specials.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "cybernetics",
+            "system": "dark-heresy-2nd",
+            "label": "Cybernetics",
+            "path": "./packs/cybernetics.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "psychic-powers",
+            "system": "dark-heresy-2nd",
+            "label": "Psychic Powers",
+            "path": "./packs/psychic-powers.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "tables",
+            "system": "dark-heresy-2nd",
+            "label": "Tables",
+            "path": "./packs/tables.db",
+            "type": "RollTable",
+            "entity": "RollTable"
+        },
+        {
+            "name": "talents",
+            "system": "dark-heresy-2nd",
+            "label": "Talents",
+            "path": "./packs/talents.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "tools",
+            "system": "dark-heresy-2nd",
+            "label": "Tools",
+            "path": "./packs/tools.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "traits",
+            "system": "dark-heresy-2nd",
+            "label": "Traits",
+            "path": "./packs/traits.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "weapons",
+            "system": "dark-heresy-2nd",
+            "label": "Weapons",
+            "path": "./packs/weapons.db",
+            "type": "Item",
+            "entity": "Item"
+        },
+        {
+            "name": "weapon-mods",
+            "system": "dark-heresy-2nd",
+            "label": "Weapon Mods",
+            "path": "./packs/weapon-mods.db",
+            "type": "Item",
+            "entity": "Item"
+        }
+    ],
+    "gridDistance": 1,
+    "gridUnits": "m",
+    "primaryTokenAttribute": "wounds",
+    "secondaryTokenAttribute": "fate",
+    "url": "https://github.com/mrkeathley/dark-heresy-2nd-vtt",
+    "manifest": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/system.json",
+    "download": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/dark-heresy-2nd-1.2.0.zip",
+    "license": "LICENSE.txt"
 }

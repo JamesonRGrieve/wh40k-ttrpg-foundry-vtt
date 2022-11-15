@@ -3,7 +3,6 @@ import { AttackData } from '../actions/weapon-attack-data.mjs';
 import { performAttack } from '../actions/actions-manager.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
-
     /**
      * @param weaponRollData {WeaponRollData}
      * @param options

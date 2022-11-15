@@ -2,46 +2,46 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 .dh-material {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 12px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-grid;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-grid;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
 }
 
 .dh-wrapper {
-  position: relative;
+    position: relative;
 
-  @import 'reset';
-  @import 'abstracts';
-  @import 'fonts';
-  @import 'src/scss/components/chat';
+    @import 'reset';
+    @import 'abstracts';
+    @import 'fonts';
+    @import 'src/scss/components/chat';
 
-  // Generic Settings
-  @import 'src/scss/components/grids_templates';
-  @import 'src/scss/components/grids';
-  @import 'src/scss/components/panel';
-  @import 'src/scss/components/controls';
-  @import 'src/scss/components/form_fields';
+    // Generic Settings
+    @import 'src/scss/components/grids_templates';
+    @import 'src/scss/components/grids';
+    @import 'src/scss/components/panel';
+    @import 'src/scss/components/controls';
+    @import 'src/scss/components/form_fields';
 
-  // Components
-  @import 'src/scss/components/header';
-  @import 'src/scss/components/navigation';
-  @import 'src/scss/components/settings';
-  @import 'src/scss/components/armour';
-  @import 'src/scss/components/characteristic_roller';
-  @import 'src/scss/components/characteristics';
+    // Components
+    @import 'src/scss/components/header';
+    @import 'src/scss/components/navigation';
+    @import 'src/scss/components/settings';
+    @import 'src/scss/components/armour';
+    @import 'src/scss/components/characteristic_roller';
+    @import 'src/scss/components/characteristics';
 
-  // Sheets
-  @import 'src/scss/sheets/actor';
-  @import 'src/scss/sheets/item';
-  @import 'src/scss/sheets/attack';
+    // Sheets
+    @import 'src/scss/sheets/actor';
+    @import 'src/scss/sheets/item';
+    @import 'src/scss/sheets/attack';
 }

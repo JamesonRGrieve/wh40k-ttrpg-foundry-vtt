@@ -36,7 +36,7 @@ export class Hit {
         let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
 
         let righteousFuryThreshold = 10;
-        if(actionItem.hasAttackSpecial('Vengeful')) {
+        if (actionItem.hasAttackSpecial('Vengeful')) {
             righteousFuryThreshold = actionItem.getAttackSpecial('Vengeful').system.level ?? 10;
         }
 
@@ -45,40 +45,38 @@ export class Hit {
         await this.damageRoll.evaluate({ async: true });
         this.damage = this.damageRoll.total;
 
-        for(const term of this.damageRoll.terms) {
-            if(!term.results) continue;
-            for(const result of term.results) {
-                if(result.discarded || !result.active) continue;
-                if(result.result >= righteousFuryThreshold) {
+        for (const term of this.damageRoll.terms) {
+            if (!term.results) continue;
+            for (const result of term.results) {
+                if (result.discarded || !result.active) continue;
+                if (result.result >= righteousFuryThreshold) {
                     // Righteous fury hit
-                    const righteousFuryRoll = new Roll("1d5", {});
-                    await righteousFuryRoll.evaluate({async: true});
+                    const righteousFuryRoll = new Roll('1d5', {});
+                    await righteousFuryRoll.evaluate({ async: true });
                     this.righteousFury.push(righteousFuryRoll);
 
                     // DeathDealer
-                    if(attackData.rollData.sourceActor.hasTalent('Deathdealer')) {
+                    if (attackData.rollData.sourceActor.hasTalent('Deathdealer')) {
                         this.modifiers['deathdealer'] = attackData.rollData.sourceActor.getCharacteristicFuzzy('Perception').bonus;
                     }
                 }
 
                 if (actionItem.hasAttackSpecial('Primitive')) {
                     const primitive = actionItem.getAttackSpecial('Primitive');
-                    if(result.result > primitive.system.level) {
+                    if (result.result > primitive.system.level) {
                         this.modifiers['primitive'] = primitive.system.level - result.result;
                     }
                 }
 
                 if (actionItem.hasAttackSpecial('Proven')) {
                     const proven = actionItem.getAttackSpecial('Proven');
-                    if(result.result < proven.system.level) {
+                    if (result.result < proven.system.level) {
                         this.modifiers['proven'] = proven.system.level - result.result;
                     }
                 }
             }
         }
     }
-
-
 
     static determineHitLocation(roll) {
         const rollString = roll.toString().split('');
@@ -120,7 +118,6 @@ export class Hit {
 }
 
 export class WeaponDamageData extends DamageData {
-
     constructor() {
         super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';
@@ -128,7 +125,6 @@ export class WeaponDamageData extends DamageData {
 }
 
 export class PsychicDamageData extends DamageData {
-
     constructor() {
         super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';

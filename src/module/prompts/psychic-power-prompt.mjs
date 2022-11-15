@@ -3,7 +3,6 @@ import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { PsychicRollData } from '../rolls/roll-data.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
-
     /**
      * @param psychicRollData {PsychicRollData}
      */

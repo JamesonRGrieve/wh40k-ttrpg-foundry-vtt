@@ -3,7 +3,7 @@ import { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.mj
 /**
  * @param rollData {WeaponRollData}
  */
-async function calculateWeaponMaxRange(rollData: WeaponRollData) {
+async function calculateWeaponMaxRange(rollData) {
     const weapon = rollData.weapon;
     if (!weapon) return 0;
 
@@ -11,9 +11,8 @@ async function calculateWeaponMaxRange(rollData: WeaponRollData) {
     await rangeCalculation.evaluate({ async: true });
     let range = rangeCalculation.total ?? 0;
 
-
     // Check Maximal
-    if(weapon.hasAttackSpecial('Maximal')) {
+    if (weapon.hasAttackSpecial('Maximal')) {
         range += 10;
     }
 
@@ -23,7 +22,7 @@ async function calculateWeaponMaxRange(rollData: WeaponRollData) {
 /**
  * @param rollData {PsychicRollData}
  */
-async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData) {
+async function calculatePsychicAbilityMaxRange(rollData) {
     const rangeCalculation = new Roll(rollData.power.system.range, rollData);
     await rangeCalculation.evaluate({ async: true });
 
@@ -34,7 +33,7 @@ async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData) {
 /**
  * @param rollData {RollData}
  */
-function calculateRangeNameAndBonus(rollData: RollData) {
+function calculateRangeNameAndBonus(rollData) {
     const targetDistance = rollData.distance ?? 0;
     const maxRange = rollData.maxRange ?? 0;
 
@@ -62,12 +61,12 @@ function calculateRangeNameAndBonus(rollData: RollData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateWeaponRange(rollData: WeaponRollData) {
+export async function calculateWeaponRange(rollData) {
     await calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
     // Ignore Negative Range Bonus for certain modifications
-    if(rollData.rangeBonus < 0) {
+    if (rollData.rangeBonus < 0) {
         const aiming = rollData.modifiers['aim'] > 0;
         const weapon = rollData.weapon;
         if (aiming && (weapon.hasWeaponModification('Telescopic Sight') || weapon.hasWeaponModification('Omni-Scope'))) {
@@ -79,12 +78,9 @@ export async function calculateWeaponRange(rollData: WeaponRollData) {
 /**
  * @param rollData {PsychicRollData}
  */
-export async function calculatePsychicPowerRange(rollData: PsychicRollData) {
+export async function calculatePsychicPowerRange(rollData) {
     await calculatePsychicAbilityMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
     // Ignore Bonus for Psychic Powers
     rollData.rangeBonus = 0;
 }
-
-
-

@@ -123,7 +123,6 @@ export class WeaponRollData extends RollData {
         this.modifiers['aim'] = 0;
         this.modifiers['modifier'] = 0;
 
-
         this.weaponSelect = this.weapons.length > 1;
         this.weapon = this.weapons[0];
         this.weapon.isSelected = true;
@@ -149,7 +148,7 @@ export class WeaponRollData extends RollData {
     async finalize() {
         calculateAmmoUsed(this);
         await calculateAttackSpecialModifiers(this);
-        this.modifiers = {...this.modifiers, ...this.specialModifiers};
+        this.modifiers = { ...this.modifiers, ...this.specialModifiers };
         await this.calculateTotalModifiers();
     }
 }
@@ -205,7 +204,7 @@ export class PsychicRollData extends RollData {
 
     async finalize() {
         await calculateAttackSpecialModifiers(this);
-        this.modifiers = {...this.modifiers, ...this.specialModifiers};
+        this.modifiers = { ...this.modifiers, ...this.specialModifiers };
         await this.calculateTotalModifiers();
     }
 }

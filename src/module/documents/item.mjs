@@ -143,7 +143,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
     /**
      * This unlocks and loads nested items dynamically from the adjacent compendium.
-     * I tried to find another way to do this but couldn't find anything online so I made my own hack.
+     * I tried to find another way to do this but couldn't find anything online - I made my own hack.
      */
     async _determineNestedItems() {
         // Already has items just skip
@@ -189,5 +189,4 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         }
         return specials;
     }
-
 }

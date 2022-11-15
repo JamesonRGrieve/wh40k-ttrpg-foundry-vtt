@@ -1,123 +1,123 @@
 %row {
-  display: grid;
-  grid-column: 1 / -1;
+    display: grid;
+    grid-column: 1 / -1;
 }
 
 %cell {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
-
-  &:first-child {
-    text-align: left;
-    font-weight: bolder;
-    margin-block: auto;
-  }
-
-  &:not(:first-child) {
-    text-align: center;
-    margin-block: auto;
-  }
-
-  label,
-  span {
-    padding: 1px;
-  }
-
-  span:empty {
-    display: none;
-  }
-
-  select,
-  input[type='text'],
-  input[type='number'] {
     height: 100%;
-    text-align: center !important;
-  }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+
+    &:first-child {
+        text-align: left;
+        font-weight: bolder;
+        margin-block: auto;
+    }
+
+    &:not(:first-child) {
+        text-align: center;
+        margin-block: auto;
+    }
+
+    label,
+    span {
+        padding: 1px;
+    }
+
+    span:empty {
+        display: none;
+    }
+
+    select,
+    input[type='text'],
+    input[type='number'] {
+        height: 100%;
+        text-align: center !important;
+    }
 }
 
 %cell--head {
-  &:first-child {
-    text-align: left;
-  }
+    &:first-child {
+        text-align: left;
+    }
 
-  &:not(:first-child) {
-    text-align: center;
-  }
+    &:not(:first-child) {
+        text-align: center;
+    }
 }
 
 %description {
-  @extend %cell;
-  grid-column: 1 / -1;
+    @extend %cell;
+    grid-column: 1 / -1;
 }
 
 %grid-row {
-  display: grid;
-  border-bottom: $grid-border;
+    display: grid;
+    border-bottom: $grid-border;
 }
 
 %grid-row--unknown {
-  @extend %grid-row;
-  background-color: rgba(255, 0, 0, 0.1);
+    @extend %grid-row;
+    background-color: rgba(255, 0, 0, 0.1);
 }
 
 %grid-row--inverted {
-  @extend %grid-row;
-  border-bottom: 0;
-  border-top: $grid-border;
+    @extend %grid-row;
+    border-bottom: 0;
+    border-top: $grid-border;
 }
 
 %grid-row-head {
-  @extend %grid-row;
-  font-weight: bold;
+    @extend %grid-row;
+    font-weight: bold;
 
-  &:first-child {
-    text-align: left;
-  }
+    &:first-child {
+        text-align: left;
+    }
 
-  &:not(:first-child) {
-    text-align: center;
-  }
+    &:not(:first-child) {
+        text-align: center;
+    }
 }
 
 %grid-cell {
-  border-right: $grid-border !important;
-  overflow: hidden;
+    border-right: $grid-border !important;
+    overflow: hidden;
 
-  input[type='number'] {
-    height: 100%;
-  }
+    input[type='number'] {
+        height: 100%;
+    }
 
-  > span[name*='attr'] {
-    font-family: $font-family-alt;
-    font-size: 1.25rem;
-  }
+    > span[name*='attr'] {
+        font-family: $font-family-alt;
+        font-size: 1.25rem;
+    }
 
-  &:first-child {
-    text-align: left;
-  }
+    &:first-child {
+        text-align: left;
+    }
 
-  &:not(:first-child) {
-    text-align: center;
-  }
+    &:not(:first-child) {
+        text-align: center;
+    }
 }
 
 %grid-cell--last {
-  @extend %grid-cell;
-  border-right: 0;
+    @extend %grid-cell;
+    border-right: 0;
 }
 
 %grid-cell--highlight {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 %grid-cell--description {
-  border-top: $grid-border-description;
-  grid-column: 1 / -1;
-  font-size: 0.95em;
-  font-style: italic;
+    border-top: $grid-border-description;
+    grid-column: 1 / -1;
+    font-size: 0.95em;
+    font-style: italic;
 }

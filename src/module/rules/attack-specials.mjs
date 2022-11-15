@@ -9,12 +9,12 @@ export async function calculateAttackSpecialModifiers(rollData) {
 
     let actionItem = rollData.weapon ?? rollData.power;
 
-    for(const item of actionItem) {
-        if(!item.system.equipped) continue;
-        if(!item.isAttackSpecial) continue;
-        switch(item.name) {
+    for (const item of actionItem) {
+        if (!item.system.equipped) continue;
+        if (!item.isAttackSpecial) continue;
+        switch (item.name) {
             case 'Scatter':
-                if(this.data.rangeName === 'Point Blank' || this.data.rangeName === 'Short Range') {
+                if (this.data.rangeName === 'Point Blank' || this.data.rangeName === 'Short Range') {
                     rollData.specialModifiers['Scatter'] = 10;
                 }
                 break;
@@ -28,12 +28,12 @@ export async function calculateAttackSpecialModifiers(rollData) {
                 rollData.specialModifiers['Defensive'] = -10;
                 break;
             case 'Accurate':
-                if(rollData.modifiers['aim'] > 0) {
+                if (rollData.modifiers['aim'] > 0) {
                     rollData.specialModifiers['Accurate'] = 10;
                 }
                 break;
             case 'Inaccurate':
-                if(rollData.modifiers['aim'] > 0){
+                if (rollData.modifiers['aim'] > 0) {
                     rollData.specialModifiers['Inaccurate'] = -1 * rollData.modifiers['aim'];
                 }
                 break;
