@@ -25,6 +25,8 @@ export async function performRollAndSendToChat(rollData) {
     rollData.modifierTotal = await totalModifiers(rollData.modifiers);
     rollData.roll = await roll1d100();
     const successData = determineSuccess(rollData.roll, rollData.modifiedTarget);
+
+
     rollData.success = successData.success;
     rollData.dos = successData.dos;
     rollData.dof = successData.dof;

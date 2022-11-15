@@ -33,6 +33,7 @@ $grid-tables: (
     @extend %grid-row;
   }
 
+  &-field__span,
   &-field__header,
   &-field__input,
   &-textarea__header,

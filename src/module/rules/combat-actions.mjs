@@ -1,4 +1,50 @@
-export function combatActions() {
+import { WeaponRollData } from '../rolls/roll-data.mjs';
+
+export function calculateCombatActionModifier(rollData: WeaponRollData) {
+    const currentAction = rollData.actions.find((a) => a.name === rollData.action);
+    if (currentAction?.attack?.modifier) {
+        rollData.modifiers['attack'] = currentAction.attack.modifier;
+    } else {
+        rollData.modifiers['attack'] = 0;
+    }
+}
+
+export function updateAvailableCombatActions(rollData: WeaponRollData) {
+    const actions = allCombatActions()
+        .filter((action) => action.subtype.includes('Attack'))
+        .filter((action) => {
+            if (rollData.weapon.isRanged) {
+                return action.subtype.includes('Ranged');
+            } else {
+                return action.subtype.includes('Melee');
+            }
+        });
+
+    if (rollData.weapon.hasAttackSpecial('Unbalanced') || rollData.weapon.hasAttackSpecial('Unwieldy')) {
+        actions.findSplice(action => action.name === 'Lightning Attack');
+    }
+
+    if(rollData.weapon.isRanged) {
+        if (rollData.weapon.system.rateOfFire.burst <= 0) {
+            actions.findSplice(action => action.name === 'Semi-Auto Burst');
+        }
+        if (rollData.weapon.system.rateOfFire.full <= 0) {
+            actions.findSplice(action => action.name === 'Full Auto Burst');
+        }
+    }
+
+    rollData.actions = {};
+    for (let action of actions) {
+        rollData.actions[action.name] = action.name;
+    }
+
+    // If action no longer exists -- set to first available
+    if (!Object.keys(rollData.actions).find((a) => a === rollData.action)) {
+        rollData.action = rollData.actions[Object.keys(rollData.actions)[0]];
+    }
+}
+
+function allCombatActions() {
     return [
         {
             name: 'Standard Attack',

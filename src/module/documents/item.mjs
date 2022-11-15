@@ -10,6 +10,10 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         return weight;
     }
 
+    get equipped() {
+        return !!this.system.equipped;
+    }
+
     get isMentalDisorder() {
         return this.type === 'mentalDisorder';
     }
@@ -188,6 +192,6 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
     hasEmbeddedItem(item, type) {
         if (!this.system.container) return false;
-        return !!this.items.find((i) => i.name === item && i.type === type);
+        return !!this.items.find((i) => i.name === item && i.type === type && i.equipped);
     }
 }
