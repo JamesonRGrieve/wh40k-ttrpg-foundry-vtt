@@ -3,6 +3,7 @@ import { Hit, PsychicDamageData, WeaponDamageData } from '../rolls/damage-data.m
 import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
 
 export class AttackData {
+    template = ''
     rollData;
     damageData;
     effects = [];

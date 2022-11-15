@@ -10,7 +10,6 @@ export async function roll1d100() {
 }
 
 export async function sendRollDataToChat(rollData) {
-    rollData.render = await rollData.roll.render();
     const html = await renderTemplate(rollData.template, rollData);
     let chatData = {
         user: game.user.id,

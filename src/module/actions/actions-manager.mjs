@@ -22,6 +22,10 @@ export async function performAttack(attackData) {
 
     console.log('Attack Data', attackData);
 
+    // Render Attack Roll
+    attackData.rollData.render = await attackData.rollData.roll.render();
+    attackData.template = attackData.rollData.template;
+
     // Send to Chat
     await sendRollDataToChat(attackData.rollData);
 }
