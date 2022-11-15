@@ -1,4 +1,4 @@
-import { performDamageAndSendToChat, performRollAndSendToChat } from '../rolls/roll-manager.mjs';
+import { sendRollDataToChat } from '../rolls/roll-helpers.mjs';
 
 export class ListeningDialog extends Dialog {
     constructor(data, options) {
@@ -42,7 +42,9 @@ export async function prepareDamageRoll(rollData) {
                         rollData.penetration = html.find('#penetration')[0].value;
                         rollData.damageType = html.find('[name=damageType] :selected').val();
                         rollData.pr = html.find('#pr')[0]?.value;
-                        await performDamageAndSendToChat(rollData);
+                        rollData.template = 'systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs';
+                        rollData.roll = new Roll(rollData.damage, rollData);
+                        await sendRollDataToChat(rollData);
                     },
                 },
                 cancel: {

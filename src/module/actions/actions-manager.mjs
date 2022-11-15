@@ -7,12 +7,6 @@ export function initializeActorActions() {
     DHTargetedActionManager.initializeHooks();
 }
 
-export async function performDamageAndSendToChat(rollData) {
-    rollData.template = 'systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs';
-    rollData.roll = new Roll(rollData.damage, rollData);
-    await sendRollDataToChat(rollData);
-}
-
 /**
  * @param attackData {AttackData}
  */

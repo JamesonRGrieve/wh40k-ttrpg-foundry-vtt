@@ -1,6 +1,6 @@
-import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { PsychicRollData } from '../rolls/roll-data.mjs';
+import { performAttack } from '../actions/actions-manager.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
     /**
@@ -57,7 +57,10 @@ export class PsychicPowerDialog extends FormApplication {
     }
 
     async _rollPower(event) {
-        // await performRollAndSendToChat(this.data);
+        await this.data.finalize();
+        const attackData = new AttackData();
+        attackData.rollData = this.data;
+        await performAttack(attackData);
         await this.close();
     }
 }
