@@ -46,6 +46,14 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         return this.type === 'psychicPower';
     }
 
+    get isPsychicBarrage() {
+        return this.type === 'psychicPower' && this.system.attackType === 'Psychic Barrage';
+    }
+
+    get isPsychicStorm() {
+        return this.type === 'psychicPower' && this.system.attackType === 'Psychic Storm';
+    }
+
     get isCriticalInjury() {
         return this.type === 'criticalInjury';
     }

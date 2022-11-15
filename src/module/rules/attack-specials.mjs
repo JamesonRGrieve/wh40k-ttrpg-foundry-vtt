@@ -1,7 +1,9 @@
 import { RollData } from '../rolls/roll-data.mjs';
 
-
-export async function calculateAttackSpecialModifiers(rollData: RollData) {
+/**
+ * @param rollData {RollData}
+ */
+export async function calculateAttackSpecialModifiers(rollData) {
     // Reset Attack Specials
     rollData.specialModifiers = {};
 

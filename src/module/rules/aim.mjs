@@ -1,11 +1,11 @@
 import { RollData } from '../rolls/roll-data.mjs';
 import { DarkHeresyItem } from '../documents/item.mjs';
 
-export function calculateAimBonus(rollData: RollData) {
+/**
+ * @param rollData {RollData}
+ */
+export function calculateAimBonus(rollData) {
     let actionItem: DarkHeresyItem = rollData.weapon ?? rollData.power;
-
-
-
 }
 
 export function aimModifiers() {

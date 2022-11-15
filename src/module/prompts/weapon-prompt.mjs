@@ -1,14 +1,13 @@
-import {
-    calculateCombatActionModifier,
-    combatActions,
-    updateAvailableCombatActions,
-} from '../rules/combat-actions.mjs';
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
-import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
-import { calculateRange, calculateWeaponRange } from '../rules/range.mjs';
-import { WeaponAttackData } from '../actions/weapon-attack-data.mjs';
+import { AttackData } from '../actions/weapon-attack-data.mjs';
+import { performAttack } from '../actions/actions-manager.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
+
+    /**
+     * @param weaponRollData {WeaponRollData}
+     * @param options
+     */
     constructor(weaponRollData = {}, options = {}) {
         super(weaponRollData, options);
         this.data = weaponRollData;
@@ -61,13 +60,17 @@ export class WeaponAttackDialog extends FormApplication {
 
     async _rollAttack(event) {
         await this.data.finalize();
-        const attackData = new WeaponAttackData();
+        const attackData = new AttackData();
         attackData.rollData = this.data;
-        await performRollAndSendToChat(attackData);
+        await performAttack(attackData);
         await this.close();
     }
 }
 
+/**
+ *
+ * @param weaponRollData {WeaponRollData}
+ */
 export async function prepareWeaponRoll(weaponRollData) {
     const prompt = new WeaponAttackDialog(weaponRollData);
     prompt.render(true);

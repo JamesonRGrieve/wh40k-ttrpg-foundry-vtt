@@ -1,6 +1,8 @@
 import { WeaponRollData } from '../rolls/roll-data.mjs';
 
-
+/**
+ * @param rollData {WeaponRollData}
+ */
 export async function calculateWeaponModifiers(rollData: WeaponRollData) {
     // Reset Data -- this prevents needing to ensure removal if modifiers change
     rollData.weaponModifiers = {};

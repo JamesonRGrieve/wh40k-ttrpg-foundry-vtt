@@ -1,24 +1,84 @@
-import { RollData } from './roll-data.mjs';
-import { DarkHeresyItem } from '../documents/item.mjs';
-
-
 export class DamageData {
     template = '';
     sourceActor;
     targetActor;
 
+    additionalHits = 0;
     hits = [];
 }
 
 export class Hit {
     location = '';
     damage = '';
+    damageRoll;
     modifiers = {};
     dos = 0;
     penetration = '';
     specials = [];
-    righteousFury = {};
+    righteousFury = [];
     scatter = {};
+
+    /**
+     * @param attackData {AttackData}
+     * @returns {Promise<void>}
+     */
+    static async createHit(attackData) {
+        const hit = new Hit();
+        await hit._calculateDamage(attackData);
+        return hit;
+    }
+
+    /**
+     * @param attackData {AttackData}
+     * @returns {Promise<void>}
+     */
+    async _calculateDamage(attackData) {
+        let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+
+        let righteousFuryThreshold = 10;
+        if(actionItem.hasAttackSpecial('Vengeful')) {
+            righteousFuryThreshold = actionItem.getAttackSpecial('Vengeful').system.level ?? 10;
+        }
+
+        const rollFormula = actionItem.system.damage;
+        this.damageRoll = new Roll(rollFormula, attackData.rollData);
+        await this.damageRoll.evaluate({ async: true });
+        this.damage = this.damageRoll.total;
+
+        for(const term of this.damageRoll.terms) {
+            if(!term.results) continue;
+            for(const result of term.results) {
+                if(result.discarded || !result.active) continue;
+                if(result.result >= righteousFuryThreshold) {
+                    // Righteous fury hit
+                    const righteousFuryRoll = new Roll("1d5", {});
+                    await righteousFuryRoll.evaluate({async: true});
+                    this.righteousFury.push(righteousFuryRoll);
+
+                    // DeathDealer
+                    if(attackData.rollData.sourceActor.hasTalent('Deathdealer')) {
+                        this.modifiers['deathdealer'] = attackData.rollData.sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                    }
+                }
+
+                if (actionItem.hasAttackSpecial('Primitive')) {
+                    const primitive = actionItem.getAttackSpecial('Primitive');
+                    if(result.result > primitive.system.level) {
+                        this.modifiers['primitive'] = primitive.system.level - result.result;
+                    }
+                }
+
+                if (actionItem.hasAttackSpecial('Proven')) {
+                    const proven = actionItem.getAttackSpecial('Proven');
+                    if(result.result < proven.system.level) {
+                        this.modifiers['proven'] = proven.system.level - result.result;
+                    }
+                }
+            }
+        }
+    }
+
+
 
     static determineHitLocation(roll) {
         const rollString = roll.toString().split('');
@@ -60,7 +120,6 @@ export class Hit {
 }
 
 export class WeaponDamageData extends DamageData {
-    weapon: DarkHeresyItem;
 
     constructor() {
         super();
@@ -69,7 +128,6 @@ export class WeaponDamageData extends DamageData {
 }
 
 export class PsychicDamageData extends DamageData {
-    power: DarkHeresyItem;
 
     constructor() {
         super();

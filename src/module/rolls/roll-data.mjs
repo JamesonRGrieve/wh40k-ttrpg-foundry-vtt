@@ -1,6 +1,6 @@
 import { rollDifficulties } from '../rules/difficulties.mjs';
 import { aimModifiers } from '../rules/aim.mjs';
-import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.mjs';
+import { calculatePsychicPowerRange } from '../rules/range.mjs';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
 import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
 import { calculateAmmoUsed } from '../rules/ammo.mjs';
@@ -53,6 +53,38 @@ export class RollData {
             }
         }
         return modifiers;
+    }
+
+    modifiersToRollData() {
+        let formula = '0 ';
+        const rollParams = {};
+        for (const modifier of Object.keys(modifiers)) {
+            if (modifiers[modifier] !== 0) {
+                if (modifiers[modifier] >= 0) {
+                    formula += ` + @${modifier}`;
+                } else {
+                    formula += ` - @${modifier}`;
+                }
+                rollParams[modifier] = Math.abs(modifiers[modifier]);
+            }
+        }
+        return {
+            formula: formula,
+            params: rollParams,
+        };
+    }
+
+    async calculateTotalModifiers() {
+        const rollDetails = this.modifiersToRollData();
+        const roll = new Roll(rollDetails.formula, rollDetails.params);
+        await roll.evaluate({ async: true });
+        if (roll.total > 60) {
+            this.modifierTotal = 60;
+        } else if (roll.total < -60) {
+            this.modifierTotal = -60;
+        } else {
+            this.modifierTotal = roll.total;
+        }
     }
 }
 
@@ -118,6 +150,7 @@ export class WeaponRollData extends RollData {
         calculateAmmoUsed(this);
         await calculateAttackSpecialModifiers(this);
         this.modifiers = {...this.modifiers, ...this.specialModifiers};
+        await this.calculateTotalModifiers();
     }
 }
 
@@ -168,5 +201,11 @@ export class PsychicRollData extends RollData {
         const actorCharacteristic = this.sourceActor.getCharacteristicFuzzy(characteristic);
         this.baseTarget = actorCharacteristic.total;
         this.baseChar = actorCharacteristic.short;
+    }
+
+    async finalize() {
+        await calculateAttackSpecialModifiers(this);
+        this.modifiers = {...this.modifiers, ...this.specialModifiers};
+        await this.calculateTotalModifiers();
     }
 }

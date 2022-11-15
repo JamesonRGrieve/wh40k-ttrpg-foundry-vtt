@@ -1,11 +1,13 @@
 import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
-import { rollDifficulties } from '../rules/difficulties.mjs';
-import { calculatePsychicPowerRange, calculateRange } from '../rules/range.mjs';
 import { PsychicRollData } from '../rolls/roll-data.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
-    constructor(psychicRollData: PsychicRollData = {}, options = {}) {
+
+    /**
+     * @param psychicRollData {PsychicRollData}
+     */
+    constructor(psychicRollData = {}, options = {}) {
         super(psychicRollData, options);
         this.data = psychicRollData;
         this.initialized = false;
@@ -56,12 +58,15 @@ export class PsychicPowerDialog extends FormApplication {
     }
 
     async _rollPower(event) {
-        await performRollAndSendToChat(this.data);
+        // await performRollAndSendToChat(this.data);
         await this.close();
     }
 }
 
-export async function preparePsychicPowerRoll(rollData: PsychicRollData) {
+/**
+ * @param rollData {PsychicRollData}
+ */
+export async function preparePsychicPowerRoll(rollData) {
     const prompt = new PsychicPowerDialog(rollData);
     prompt.render(true);
 }

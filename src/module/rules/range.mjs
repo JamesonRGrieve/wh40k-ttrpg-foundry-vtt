@@ -1,5 +1,8 @@
 import { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.mjs';
 
+/**
+ * @param rollData {WeaponRollData}
+ */
 async function calculateWeaponMaxRange(rollData: WeaponRollData) {
     const weapon = rollData.weapon;
     if (!weapon) return 0;
@@ -17,6 +20,9 @@ async function calculateWeaponMaxRange(rollData: WeaponRollData) {
     rollData.maxRange = range;
 }
 
+/**
+ * @param rollData {PsychicRollData}
+ */
 async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData) {
     const rangeCalculation = new Roll(rollData.power.system.range, rollData);
     await rangeCalculation.evaluate({ async: true });
@@ -25,6 +31,9 @@ async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData) {
     rollData.maxRange = range;
 }
 
+/**
+ * @param rollData {RollData}
+ */
 function calculateRangeNameAndBonus(rollData: RollData) {
     const targetDistance = rollData.distance ?? 0;
     const maxRange = rollData.maxRange ?? 0;
@@ -50,6 +59,9 @@ function calculateRangeNameAndBonus(rollData: RollData) {
     }
 }
 
+/**
+ * @param rollData {WeaponRollData}
+ */
 export async function calculateWeaponRange(rollData: WeaponRollData) {
     await calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
@@ -64,6 +76,9 @@ export async function calculateWeaponRange(rollData: WeaponRollData) {
     }
 }
 
+/**
+ * @param rollData {PsychicRollData}
+ */
 export async function calculatePsychicPowerRange(rollData: PsychicRollData) {
     await calculatePsychicAbilityMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
