@@ -6,6 +6,7 @@ import {
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { performRollAndSendToChat } from '../rolls/roll-manager.mjs';
 import { calculateRange, calculateWeaponRange } from '../rules/range.mjs';
+import { WeaponAttackData } from '../actions/weapon-attack-data.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
     constructor(weaponRollData = {}, options = {}) {
@@ -33,9 +34,7 @@ export class WeaponAttackDialog extends FormApplication {
         html.find('#attack-cancel').click(async (ev) => await this._cancelAttack(ev));
     }
 
-
     async _updateWeapon(event) {
-        console.log('Weapon Change', event);
         this.data.selectWeapon(event.target.name);
         this.data.update();
         this.render(true);
@@ -62,7 +61,9 @@ export class WeaponAttackDialog extends FormApplication {
 
     async _rollAttack(event) {
         await this.data.finalize();
-        await performRollAndSendToChat(this.data);
+        const attackData = new WeaponAttackData();
+        attackData.rollData = this.data;
+        await performRollAndSendToChat(attackData);
         await this.close();
     }
 }

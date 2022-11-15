@@ -4,4 +4,5 @@ import { WeaponDamageData } from '../rolls/damage-data.mjs';
 export class WeaponAttackData {
     rollData = WeaponRollData();
     damageData = WeaponDamageData();
+    effects = [];
 }

@@ -32,6 +32,32 @@ export class DarkHeresyItemContainer extends Item {
         return cls.createDocuments(toCreate, context);
     }
 
+    hasAttackSpecial(special) {
+        return this.hasEmbeddedItem(special, 'attackSpecial');
+    }
+
+    hasWeaponModification(mod) {
+        return this.hasEmbeddedItem(mod, 'weaponModification');
+    }
+
+    hasEmbeddedItem(item, type) {
+        if (!this.system.container) return false;
+        return !!this.items.find((i) => i.name === item && i.type === type && i.equipped);
+    }
+
+    getAttackSpecial(special) {
+        return this.getItemByName(special, 'attackSpecial');
+    }
+
+    getWeaponModification(mod) {
+        return this.getItemByName(mod, 'weaponModification');
+    }
+
+    getItemByName(item, type) {
+        if (!this.system.container) return;
+        return !!this.items.find((i) => i.name === item && i.type === type);
+    }
+
     getEmbeddedDocument(embeddedName, id, { strict = false } = {}) {
         if (!this.system.container) return super.getEmbeddedDocument(embeddedName, id, { strict });
         return this.items.get(id);

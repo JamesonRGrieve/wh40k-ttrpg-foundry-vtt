@@ -41,9 +41,38 @@ export async function roll1d100() {
     return roll;
 }
 
-export function determineSuccess(roll, target) {
+export async function determineSuccess(attackData) {
+    let roll = attackData.rollData.roll;
+    let rollTotal = roll.total;
+    const target = attackData.rollData.modifiedTarget;
+
+    let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+    let hit = rollTotal === 1 || rollTotal <= target && rollTotal !== 100;
+
+    // Ranged Weapon Checks
+    if (actionItem.isRanged) {
+        if(rollTotal > 91 && actionItem.hasAttackSpecial('Overheats')) {
+            attackData.effects.push('overheat');
+        }
+        if ((!actionItem.hasAttackSpecial('Reliable') && rollTotal > 96) || rollTotal === 100) {
+            attackData.effects.push('jam');
+        }
+    } else if (actionItem.isMelee) {
+        if(!hit) {
+            // Re-Roll Attack for Blademaster
+            if(attackData.rollData.sourceActor.hasTalent('Blademaster')) {
+                attackData.effects.push('blademaster');
+                attackData.rollData.previousRolls.push(roll);
+                attackData.rollData.roll = await roll1d100();
+                roll = attackData.rollData.roll;
+                rollTotal = roll.total;
+                hit = rollTotal === 1 || rollTotal <= target && rollTotal !== 100;
+            }
+        }
+    }
+
     const successData = {
-        success: roll.total <= target,
+        success: hit
     };
     if (successData.success) {
         successData.dof = 0;
