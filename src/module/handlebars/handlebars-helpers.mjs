@@ -3,7 +3,7 @@ export function capitalize(text) {
 }
 
 export function registerHandlebarsHelpers() {
-    game.dh.log('Registering Handlebars Helpers');
+    console.log('Registering Handlebars Helpers');
 
     Handlebars.registerHelper('concat', function () {
         var outStr = '';
