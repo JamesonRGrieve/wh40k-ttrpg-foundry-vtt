@@ -42,9 +42,7 @@ export class ActorContainerSheet extends ActorSheet {
                 }
             }
         } catch (err) {
-            game.dh.log('Actor Container | drop error');
-            game.dh.log(event.dataTransfer.getData('text/plain'));
-            game.dh.log(err);
+            game.dh.log('Actor Container | drop error', err);
             return false;
         }
     }
@@ -119,7 +117,7 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onItemDragStart(event) {
         event.stopPropagation();
-        game.dh.log('_onItemDragStart', event);
+        game.dh.log('Actor:_onItemDragStart', event);
 
         const element = event.currentTarget;
         if (!element.dataset?.itemId) {
@@ -128,7 +126,7 @@ export class ActorContainerSheet extends ActorSheet {
         }
 
         const itemId = element.dataset.itemId;
-        const item = this.actor.items.find((i) => i.id === itemId);
+        const item = this.actor.items.get(itemId);
         if (!item) {
             // Cannot find item on actor? Just let foundry handle it...
             game.dh.log('Default Foundry Handler');
