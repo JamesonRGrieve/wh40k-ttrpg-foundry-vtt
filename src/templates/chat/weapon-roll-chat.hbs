@@ -57,25 +57,39 @@
                     <div id="{{@root.id}}" style="display: none">
                         <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
-                            <h3>Hit {{@index}}</h3>
+                            <h2>Hit {{@index}}</h2>
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Base Damage:</div>
+                                <div class="dh-roll__value">{{hit.damageRoll.result}}</div>
+                            </div>
                             {{#each modifiers}}
                                 <div class="dh-roll__row dh-roll__row--number">
                                     <div class="dh-roll__label">Modifier: {{@key}}</div>
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
-                            <span class="dh-roll__success">
+                            <div class="dh-roll__target">
                                 <span>{{hit.totalDamage}} Damage to {{hit.location}}</span>
-                            </span>
+                            </div>
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Base Penetration:</div>
+                                <div class="dh-roll__value">
+                                    {{#if hit.penetrationRoll}}
+                                        {{hit.penetrationRoll?.result}}
+                                    {{else}}
+                                        {{hit.penetration}}
+                                    {{/if}}
+                                </div>
+                            </div>
                             {{#each penetrationModifiers}}
                                 <div class="dh-roll__row dh-roll__row--number">
                                     <div class="dh-roll__label">Modifier: {{@key}}</div>
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
-                            <span class="dh-roll__success">
+                            <div class="dh-roll__target">
                                 <span>{{hit.totalPenetration}} Penetration</span>
-                            </span>
+                            </div>
                             <div class="dh-roll__divider"></div>
                         {{/each}}
                     </div>
