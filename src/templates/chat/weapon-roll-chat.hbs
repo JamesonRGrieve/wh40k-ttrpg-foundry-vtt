@@ -24,7 +24,7 @@
                     </div>
 
                     {{#if success}}
-                        <button class="dh-roll__success roll-control__hide-control" data-toggle="{{@root.rollId}}">
+                        <button class="dh-roll__success roll-control__hide-control" data-toggle="{{@root.id}}">
                             <span>Success</span>
                             <span>{{roll.total}}</span>
                         </button>
@@ -54,9 +54,13 @@
             {{/with}}
             {{#if rollData.success}}
                 {{#with damageData}}
-                    <div class="dh-roll__divider"></div>
-                    <div id="{{@root.rollId}}" style="display: none">
+                    <div id="{{@root.id}}" style="display: none">
+                        <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
+                            <button class="dh-roll__success">
+                                <span>Hit</span>
+                                <span>{{@index}}</span>
+                            </button>
                             {{#each modifiers}}
                                 <div class="dh-roll__row dh-roll__row--number">
                                     <div class="dh-roll__label">Modifier: {{@key}}</div>
@@ -77,6 +81,7 @@
                                 <div class="dh-roll__label">Penetration</div>
                                 <div class="dh-roll__value">{{hit.totalPenetration}}</div>
                             </div>
+                            <div class="dh-roll__divider"></div>
                         {{/each}}
                     </div>
                 {{/with}}

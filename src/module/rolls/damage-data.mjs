@@ -161,11 +161,35 @@ export class Hit {
         }
 
         if(actionItem.isMelee) {
-
             if(this.penetration && actionItem.hasAttackSpecial('Lance')) {
-                
+                this.penetrationModifiers['lance'] = this.penetration * attackData.rollData.dos;
             }
 
+            if(actionItem.hasAttackSpecial('Mono')) {
+                this.penetrationModifiers['mono'] = 2;
+            }
+
+            if(attackData.rollData.dos > 2 && actionItem.hasAttackSpecial('Razer Sharp')) {
+                this.penetrationModifiers['razer sharp'] = this.penetration * 2;
+            }
+
+            if(attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
+                this.penetrationModifiers['hammer blow'] = sourceActor.getCharacteristicFuzzy('strength').bonus;
+            }
+        } else if (actionItem.isRanged) {
+            if(attackData.rollData.eyeOfVengeance) {
+                this.penetrationModifiers['eye of vengeance'] = attackData.rollData.dos;
+            }
+
+            if(attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
+                if(actionItem.hasAttackSpecial('Melta')) {
+                    this.penetrationModifiers['melta'] = this.penetration * 2;
+                }
+            }
+
+            if(actionItem.hasAttackSpecial('Maximal')) {
+                this.penetrationModifiers['maximal'] = 2;
+            }
         }
     }
 
