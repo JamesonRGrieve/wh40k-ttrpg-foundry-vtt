@@ -19,7 +19,7 @@ export async function calculateWeaponModifiers(rollData) {
                 }
                 break;
             case 'Custom Grip':
-                rollData.weaponModifiers['Custom Grip'] = 5;
+                rollData.weaponModifiers['Custom-Grip'] = 5;
                 break;
         }
     }
