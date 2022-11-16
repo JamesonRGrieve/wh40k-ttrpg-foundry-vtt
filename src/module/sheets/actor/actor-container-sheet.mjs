@@ -140,7 +140,7 @@ export class ActorContainerSheet extends ActorSheet {
             actorId: this.actor.id,
             sceneId: this.actor.isToken ? canvas.scene?.id : null,
             tokenId: this.actor.isToken ? this.actor.token?.id : null,
-            type: 'item',
+            type: 'Item',
             data: item,
         };
         event.dataTransfer.setData('text/plain', JSON.stringify(dragData));

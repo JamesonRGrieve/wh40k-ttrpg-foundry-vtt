@@ -4,12 +4,14 @@ export async function updateWeaponModifiers(rollData) {
     rollData.weaponModifiers = [];
 
     let actionItem = rollData.weapon ?? rollData.power;
-    actionItem.items.find(i => i.isWeaponModification && (i.system.equipped || i.system.enabled)).forEach(i => {
-        rollData.weaponModifiers.push({
-            name: i.name,
-            level: i.level
-        });
-    });
+    for(const item of actionItem.items) {
+        if(i.isWeaponModification && (i.system.equipped || i.system.enabled)) {
+            rollData.weaponModifiers.push({
+                name: i.name,
+                level: i.level
+            });
+        }
+    }
 }
 
 /**
