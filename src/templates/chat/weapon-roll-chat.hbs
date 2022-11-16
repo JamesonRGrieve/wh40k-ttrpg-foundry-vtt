@@ -57,30 +57,25 @@
                     <div id="{{@root.id}}" style="display: none">
                         <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
-                            <button class="dh-roll__success">
-                                <span>Hit</span>
-                                <span>{{@index}}</span>
-                            </button>
+                            <h3>Hit {{@index}}</h3>
                             {{#each modifiers}}
                                 <div class="dh-roll__row dh-roll__row--number">
                                     <div class="dh-roll__label">Modifier: {{@key}}</div>
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
-                            <div class="dh-roll__row dh-roll__row--number">
-                                <div class="dh-roll__label">Damage to {{hit.location}}</div>
-                                <div class="dh-roll__value">{{hit.totalDamage}}</div>
-                            </div>
+                            <span class="dh-roll__success">
+                                <span>{{hit.totalDamage}} Damage to {{hit.location}}</span>
+                            </span>
                             {{#each penetrationModifiers}}
                                 <div class="dh-roll__row dh-roll__row--number">
                                     <div class="dh-roll__label">Modifier: {{@key}}</div>
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
-                            <div class="dh-roll__row dh-roll__row--number">
-                                <div class="dh-roll__label">Penetration</div>
-                                <div class="dh-roll__value">{{hit.totalPenetration}}</div>
-                            </div>
+                            <span class="dh-roll__success">
+                                <span>{{hit.totalPenetration}} Penetration</span>
+                            </span>
                             <div class="dh-roll__divider"></div>
                         {{/each}}
                     </div>

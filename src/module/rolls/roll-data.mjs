@@ -5,6 +5,7 @@ import { calculateCombatActionModifier, updateAvailableCombatActions } from '../
 import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
 import { calculateAmmoUsed } from '../rules/ammo.mjs';
 import { uuid } from './roll-helpers.mjs';
+import { calculateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 
 export class RollData {
     template = '';
@@ -151,7 +152,8 @@ export class WeaponRollData extends RollData {
     async finalize() {
         calculateAmmoUsed(this);
         await calculateAttackSpecialModifiers(this);
-        this.modifiers = { ...this.modifiers, ...this.specialModifiers, 'range': this.rangeBonus };
+        await calculateWeaponModifiers(this);
+        this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.weaponModifiers, 'range': this.rangeBonus };
         await this.calculateTotalModifiers();
     }
 }
