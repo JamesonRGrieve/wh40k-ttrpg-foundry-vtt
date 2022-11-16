@@ -1,6 +1,6 @@
 import { DHTargetedActionManager } from './targetted-action-manager.mjs';
 import { DHBasicActionManager } from './basic-action-manager.mjs';
-import { sendRollDataToChat } from '../rolls/roll-helpers.mjs';
+import { sendAttackDataToChat } from '../rolls/roll-helpers.mjs';
 
 export function initializeActorActions() {
     DHBasicActionManager.initializeHooks();
@@ -27,5 +27,5 @@ export async function performAttack(attackData) {
     attackData.template = attackData.rollData.template;
 
     // Send to Chat
-    await sendRollDataToChat(attackData.rollData);
+    await sendAttackDataToChat(attackData);
 }

@@ -1,3 +1,24 @@
+export function uuid()
+{
+    const chars = '0123456789abcdef'.split('');
+
+    let uuid = [], rnd = Math.random, r;
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+    uuid[14] = '4'; // version 4
+
+    for (const i = 0; i < 36; i++)
+    {
+        if (!uuid[i])
+        {
+            r = 0 | rnd()*16;
+
+            uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r & 0xf];
+        }
+    }
+
+    return uuid.join('');
+}
+
 export function getDegree(a, b) {
     return Math.floor(a / 10) - Math.floor(b / 10);
 }
@@ -9,16 +30,16 @@ export async function roll1d100() {
     return roll;
 }
 
-export async function sendRollDataToChat(rollData) {
-    const html = await renderTemplate(rollData.template, rollData);
+export async function sendAttackDataToChat(attackData) {
+    const html = await renderTemplate(attackData.rollData.template, attackData);
     let chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
         type: CONST.CHAT_MESSAGE_TYPES.ROLL,
     };
-    if (rollData.roll) {
-        chatData.roll = rollData.roll;
+    if (attackData.rollData.roll) {
+        chatData.roll = attackData.rollData.roll;
     }
     if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
         chatData.whisper = ChatMessage.getWhisperRecipients('GM');

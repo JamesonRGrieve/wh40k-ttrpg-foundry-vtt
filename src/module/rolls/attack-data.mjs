@@ -84,11 +84,16 @@ export class AttackData {
     }
 
     async calculateHits() {
+        let lastLocation = '';
         if(this.rollData.success) {
-            this.damageData.hits.push(await Hit.createHit(this));
+            let hit = await Hit.createHit(this);
+            lastLocation = hit.location;
+            this.damageData.hits.push(hit);
 
             for(let i = 0; i< this.damageData.additionalHits; i++) {
-                this.damageData.hits.push(await Hit.createHit(this));
+                hit = await Hit.createHit(this, lastLocation);
+                lastLocation = hit.location;
+                this.damageData.hits.push(hit);
             }
         }
     }

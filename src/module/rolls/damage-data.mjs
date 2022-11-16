@@ -9,24 +9,44 @@ export class DamageData {
 
 export class Hit {
     location = '';
-    damage = '';
+
+    damage = 0;
     damageRoll;
     modifiers = {};
+    totalDamage = 0;
+
     dos = 0;
-    penetration = '';
+
+    penetration = 0;
+    penetrationRoll;
+    penetrationModifiers = {}
+    totalPenetration = 0;
+
     specials = [];
     righteousFury = [];
     scatter = {};
 
     /**
      * @param attackData {AttackData}
+     * @param lastHit
      * @returns {Promise<void>}
      */
-    static async createHit(attackData) {
+    static async createHit(attackData, lastHit = undefined) {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
-        hit.location = this.determineHitLocation(attackData.rollData.roll.total);
+        hit._totalDamage();
+        await hit._calculatePenetration(attackData);
+        hit._totalPenetration();
+        hit.location = this.determineHitLocation(lastHit ? lastHit : attackData.rollData.roll.total);
         return hit;
+    }
+
+    _totalDamage() {
+        this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a+b, 0);
+    }
+
+    _totalPenetration() {
+        this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a+b, 0);
     }
 
     /**
@@ -40,6 +60,7 @@ export class Hit {
         let righteousFuryThreshold = 10;
         if (actionItem.hasAttackSpecial('Vengeful')) {
             righteousFuryThreshold = actionItem.getAttackSpecial('Vengeful').system.level ?? 10;
+            game.dh.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
         const rollFormula = actionItem.system.damage;
@@ -50,6 +71,7 @@ export class Hit {
         for (const term of this.damageRoll.terms) {
             if (!term.results) continue;
             for (const result of term.results) {
+                game.dh.log('_calculateDamage result:', result);
                 if (result.discarded || !result.active) continue;
                 if (result.result >= righteousFuryThreshold) {
                     // Righteous fury hit
@@ -82,12 +104,60 @@ export class Hit {
         if (actionItem.isMelee) {
             this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
 
-            if(sourceActor.hasTalent('Crushing Blow')) {
+            if (sourceActor.hasTalent('Crushing Blow')) {
                 const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus
                 this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
             }
         } else if (actionItem.isRanged) {
 
+            // Scatter
+            if (actionItem.hasAttackSpecial('Scatter')) {
+                if (attackData.rollData.rangeName === 'Point Blank') {
+                    this.modifiers['scatter'] = 3;
+                } else if (attackData.rollData.rangeName !== 'Short Range') {
+                    this.modifiers['scatter'] = -3;
+                }
+            }
+
+            // Add Accurate
+            if (actionItem.hasAttackSpecial('Accurate')) {
+                if (attackData.rollData.dos >= 3) {
+                    const accurateRoll = new Roll('1d10', {});
+                    await accurateRoll.evaluate({ async: true });
+                    this.modifiers['accurate'] = accurateRoll.total;
+                }
+                if (attackData.rollData.dos >= 5) {
+                    const accurateRoll = new Roll('1d10', {});
+                    await accurateRoll.evaluate({ async: true });
+                    this.modifiers['accurate x 2'] = accurateRoll.total;
+                }
+            }
+
+            // Eye of Vengeance
+            if (attackData.rollData.eyeOfVengeance) {
+                this.modifiers['eye of vengeance'] = attackData.rollData.dos;
+            }
+
+            // Maximal
+            if (actionItem.hasAttackSpecial('Maximal')) {
+                const maximalRoll = new Roll('1d10', {});
+                await maximalRoll.evaluate({ async: true });
+                this.modifiers['maximal'] = maximalRoll.total;
+            }
+        }
+    }
+
+    async _calculatePenetration(attackData) {
+        let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const sourceActor = attackData.rollData.sourceActor;
+
+        const rollFormula = actionItem.system.penetration;
+        if(Number.isInteger(rollFormula)) {
+            this.penetration = rollFormula;
+        } else {
+            this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
+            await this.penetrationRoll.evaluate({ async: true });
+            this.penetration = this.penetrationRoll.total;
         }
     }
 

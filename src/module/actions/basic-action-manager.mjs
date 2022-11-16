@@ -1,5 +1,18 @@
 export class BasicActionManager {
-    initializeHooks() {}
+    initializeHooks() {
+        // Add show/hide support for chat messages
+        Hooks.on('renderChatMessage', async (message, html, data) => {
+            game.dh.log('renderChatMessage');
+            html.find('.roll-control__hide-control').click(async (ev) => {
+                game.dh.log('roll-control-toggle');
+                ev.preventDefault();
+                const displayToggle = $(ev.currentTarget);
+                $('span:first', displayToggle).toggleClass('active');
+                const target = displayToggle.data('toggle');
+                $('#' + target).toggle();
+            });
+        });
+    }
 
     /**
      * Data Expected to vocalize item:

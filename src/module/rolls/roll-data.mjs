@@ -4,9 +4,11 @@ import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
 import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
 import { calculateAmmoUsed } from '../rules/ammo.mjs';
+import { uuid } from './roll-helpers.mjs';
 
 export class RollData {
     template = '';
+    rollId = uuid();
     difficulties = rollDifficulties();
     aims = aimModifiers();
 
@@ -31,6 +33,7 @@ export class RollData {
     };
     specialModifiers = {};
     modifierTotal = 0;
+    eyeOfVengeance = false;
 
     roll;
     render;
@@ -149,7 +152,7 @@ export class WeaponRollData extends RollData {
     async finalize() {
         calculateAmmoUsed(this);
         await calculateAttackSpecialModifiers(this);
-        this.modifiers = { ...this.modifiers, ...this.specialModifiers };
+        this.modifiers = { ...this.modifiers, ...this.specialModifiers, 'range': this.rangeBonus };
         await this.calculateTotalModifiers();
     }
 }
