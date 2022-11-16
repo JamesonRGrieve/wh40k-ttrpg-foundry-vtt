@@ -1,3 +1,5 @@
+import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
+
 export class DamageData {
     template = '';
     sourceActor;
@@ -37,7 +39,17 @@ export class Hit {
         hit._totalDamage();
         await hit._calculatePenetration(attackData);
         hit._totalPenetration();
-        hit.location = this.determineHitLocation(lastHit ? lastHit : attackData.rollData.roll.total);
+
+        if (attackData.rollData.isCalledShot) {
+            hit.location = attackData.rollData.calledShotLocation;
+        } else {
+            if(lastHit) {
+                hit.location = getNextHitLocation(lastHit);
+            } else {
+                hit.location = getHitLocationForRoll(attackData.rollData.roll.total);
+            }
+        }
+
         return hit;
     }
 
@@ -190,44 +202,6 @@ export class Hit {
             if(actionItem.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
             }
-        }
-    }
-
-    static determineHitLocation(roll) {
-        const rollString = roll.toString().split('');
-        const reverseArray = rollString.reverse();
-        const joinArray = reverseArray.join('');
-
-        const reverseInt = parseInt(joinArray);
-
-        if (reverseInt <= 10) {
-            return 'head';
-        } else if (reverseInt <= 20) {
-            return 'right arm';
-        } else if (reverseInt <= 30) {
-            return 'left arm';
-        } else if (reverseInt <= 70) {
-            return 'body';
-        } else if (reverseInt <= 85) {
-            return 'right leg';
-        } else {
-            return 'left leg';
-        }
-    }
-
-    static nextHitLocation(location) {
-        if (location === 'head') {
-            return 'right arm';
-        } else if (location === 'right arm') {
-            return 'left arm';
-        } else if (location === 'left arm') {
-            return 'body';
-        } else if (location === 'body') {
-            return 'right leg';
-        } else if (location === 'right leg') {
-            return 'left leg';
-        } else {
-            return 'head';
         }
     }
 }

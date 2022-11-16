@@ -1,10 +1,19 @@
 import { WeaponRollData } from '../rolls/roll-data.mjs';
+import { hitLocationNames } from './hit-locations.mjs';
 
 /**
  * @param rollData {WeaponRollData}
  */
 export function calculateCombatActionModifier(rollData) {
     const currentAction = rollData.actions[rollData.action];
+
+    if (currentAction.name === 'Called Shot') {
+        rollData.isCalledShot = true;
+        rollData.calledShotLocation = hitLocationNames()[0];
+    } else {
+        rollData.isCalledShot = false;
+    }
+
     if (currentAction?.attack?.modifier) {
         rollData.modifiers['attack'] = currentAction.attack.modifier;
     } else {

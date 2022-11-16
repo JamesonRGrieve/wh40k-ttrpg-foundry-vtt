@@ -1,35 +1,10 @@
 import { sendAttackDataToChat } from '../rolls/roll-helpers.mjs';
-
-export class ListeningDialog extends Dialog {
-    constructor(data, options) {
-        super(data, options);
-    }
-
-    otherListeners(html) {
-        html.find('.roll-control__hide-control').click(async (ev) => {
-            game.dh.log('roll-control-toggle');
-            this.sheetControlHideToggle(ev);
-        });
-    }
-
-    activateListeners(html) {
-        super.activateListeners(html);
-        this.otherListeners(html);
-    }
-
-    sheetControlHideToggle(event) {
-        event.preventDefault();
-        const displayToggle = $(event.currentTarget);
-        $('span:first', displayToggle).toggleClass('active');
-        const target = displayToggle.data('toggle');
-        $('.' + target).toggle();
-    }
-}
+import { AttackData } from '../rolls/attack-data.mjs';
 
 export async function prepareDamageRoll(rollData) {
     rollData.dh = CONFIG.dh;
     const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/damage-roll-prompt.hbs', rollData);
-    let dialog = new ListeningDialog(
+    let dialog = new Dialog(
         {
             title: 'Damage Roll',
             content: html,
@@ -44,7 +19,9 @@ export async function prepareDamageRoll(rollData) {
                         rollData.pr = html.find('#pr')[0]?.value;
                         rollData.template = 'systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs';
                         rollData.roll = new Roll(rollData.damage, rollData);
-                        await sendAttackDataToChat(rollData);
+                        const attackData = new AttackData();
+                        attackData.rollData = rollData;
+                        await sendAttackDataToChat(attackData);
                     },
                 },
                 cancel: {

@@ -1,6 +1,6 @@
-import { PsychicRollData, WeaponRollData } from '../rolls/roll-data.mjs';
-import { Hit, PsychicDamageData, WeaponDamageData } from '../rolls/damage-data.mjs';
-import { getDegree, roll1d100, uuid } from '../rolls/roll-helpers.mjs';
+import { PsychicRollData, WeaponRollData } from './roll-data.mjs';
+import { Hit, PsychicDamageData, WeaponDamageData } from './damage-data.mjs';
+import { getDegree, roll1d100, uuid } from './roll-helpers.mjs';
 
 export class AttackData {
     id = uuid();
@@ -52,9 +52,9 @@ export class AttackData {
                     this.damageData.additionalHits *= 2;
                 }
 
-                // But Max at weapon rate
-                if (actionItem.isRanged && this.damageData.additionalHits > actionItem.system.rateOfFire.burst - 1) {
-                    this.damageData.additionalHits = actionItem.system.rateOfFire.burst - 1;
+                // But Max at fire rate (Ammo available / ammo per shot || rate of fire - whichever is lower)
+                if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                    this.damageData.additionalHits = this.rollData.fireRate - 1;
                 }
             } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || actionItem.isPsychicStorm) {
                 // Possible Full Rate
@@ -66,8 +66,8 @@ export class AttackData {
                 }
 
                 // But Max at weapon rate
-                if (actionItem.isRanged && this.damageData.additionalHits > actionItem.system.rateOfFire.full - 1) {
-                    this.damageData.additionalHits = actionItem.system.rateOfFire.full - 1;
+                if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                    this.damageData.additionalHits = this.rollData.fireRate - 1;
                 }
             }
 

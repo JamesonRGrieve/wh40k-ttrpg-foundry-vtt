@@ -3,14 +3,16 @@ import { aimModifiers } from '../rules/aim.mjs';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.mjs';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
 import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
-import { calculateAmmoUsed } from '../rules/ammo.mjs';
+import { calculateAmmoInformation } from '../rules/ammo.mjs';
 import { uuid } from './roll-helpers.mjs';
 import { calculateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
+import { creatureHitLocations, hitLocationNames } from '../rules/hit-locations.mjs';
 
 export class RollData {
     template = '';
     difficulties = rollDifficulties();
     aims = aimModifiers();
+    locations = hitLocationNames();
 
     sourceActor;
     targetActor;
@@ -105,7 +107,15 @@ export class WeaponRollData extends RollData {
     weapons = [];
     weapon;
     weaponSelect = false;
+
+    isCalledShot = false;
+    calledShotLocation;
+
+    ammoText = '';
+    ammoPerShot = 1;
+    fireRate = 1;
     ammoUsed = 0;
+
     weaponModifiers = {};
 
     constructor() {
@@ -150,7 +160,7 @@ export class WeaponRollData extends RollData {
     }
 
     async finalize() {
-        calculateAmmoUsed(this);
+        calculateAmmoInformation(this);
         await calculateAttackSpecialModifiers(this);
         await calculateWeaponModifiers(this);
         this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.weaponModifiers, 'range': this.rangeBonus };
