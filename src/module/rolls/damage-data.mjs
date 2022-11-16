@@ -159,6 +159,14 @@ export class Hit {
             await this.penetrationRoll.evaluate({ async: true });
             this.penetration = this.penetrationRoll.total;
         }
+
+        if(actionItem.isMelee) {
+
+            if(this.penetration && actionItem.hasAttackSpecial('Lance')) {
+                
+            }
+
+        }
     }
 
     static determineHitLocation(roll) {

@@ -47,11 +47,12 @@ _  /_/ /_  __  / _  __/
 Enable Debug with: game.dh.debug = true           
 `);
 
+        const consolePrefix = 'Dark Heresy | ';
         game.dh = {
             debug: false,
-            log: (s,o) => !!game.dh.debug ? console.log(`DH2:: ${s}`, o) : undefined,
-            warn: (s,o) => console.warn(`DH2:: ${s}`, o),
-            error: (s,o) => console.error(`DH2:: ${s}`, o),
+            log: (s,o) => !!game.dh.debug ? console.log(`${consolePrefix}${s}`, o) : undefined,
+            warn: (s,o) => console.warn(`${consolePrefix}${s}`, o),
+            error: (s,o) => console.error(`${consolePrefix}${s}`, o),
             dhActor: DarkHeresyActor,
             dhItem: DarkHeresyItem,
             rollItemMacro,

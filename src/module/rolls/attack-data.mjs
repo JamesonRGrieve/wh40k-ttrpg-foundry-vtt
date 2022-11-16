@@ -1,8 +1,9 @@
 import { PsychicRollData, WeaponRollData } from '../rolls/roll-data.mjs';
 import { Hit, PsychicDamageData, WeaponDamageData } from '../rolls/damage-data.mjs';
-import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
+import { getDegree, roll1d100, uuid } from '../rolls/roll-helpers.mjs';
 
 export class AttackData {
+    id = uuid();
     template = ''
     rollData;
     damageData;

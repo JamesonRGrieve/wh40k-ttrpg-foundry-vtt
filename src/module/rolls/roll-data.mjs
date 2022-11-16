@@ -8,7 +8,6 @@ import { uuid } from './roll-helpers.mjs';
 
 export class RollData {
     template = '';
-    rollId = uuid();
     difficulties = rollDifficulties();
     aims = aimModifiers();
 
