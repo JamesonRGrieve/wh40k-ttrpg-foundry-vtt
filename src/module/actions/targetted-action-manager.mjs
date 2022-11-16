@@ -9,7 +9,7 @@ export class TargetedActionManager {
     initializeHooks() {
         // Controlled Tokens have changed
         Hooks.on('controlToken', async (token, selected) => {
-            console.log('controlTokenEvent');
+            game.dh.log('controlTokenEvent');
             if (selected) {
                 this.selectedTokens[token.id] = token;
             } else {
@@ -17,7 +17,7 @@ export class TargetedActionManager {
                     delete this.selectedTokens[token.id];
                 }
             }
-            console.log(this.selectedTokens);
+            game.dh.log(this.selectedTokens);
         });
 
         // Targets have changed
@@ -29,7 +29,7 @@ export class TargetedActionManager {
                     delete this.targetedTokens[token.id];
                 }
             }
-            console.log(this.targetedTokens);
+            game.dh.log(this.targetedTokens);
         });
 
         // Initialize Hotbar Button
@@ -63,7 +63,7 @@ export class TargetedActionManager {
     }
 
     getSourceToken(source) {
-        console.log('getSourceToken', source);
+        game.dh.log('getSourceToken', source);
         let sourceToken;
         if (source) {
             sourceToken = source.token ?? source.getActiveTokens()[0];
@@ -84,7 +84,7 @@ export class TargetedActionManager {
     }
 
     getTargetToken(target) {
-        console.log('getSourceToken', target);
+        game.dh.log('getSourceToken', target);
         let targetToken;
         if (target) {
             targetToken = target.token ?? target.getActiveTokens()[0];
@@ -105,7 +105,7 @@ export class TargetedActionManager {
     }
 
     createSourceAndTargetData(source, target) {
-        console.log('createSourceAndTargetData', { source, target });
+        game.dh.log('createSourceAndTargetData', { source, target });
         // Source
         const sourceToken = this.getSourceToken(source);
         if (!sourceToken) return;
@@ -124,7 +124,7 @@ export class TargetedActionManager {
     }
 
     async performWeaponAttack(source = null, target = null, weapon = null) {
-        console.log('performWeaponAttack');
+        game.dh.log('performWeaponAttack');
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 
@@ -145,7 +145,7 @@ export class TargetedActionManager {
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
-        console.log('performPsychicAttack');
+        game.dh.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 

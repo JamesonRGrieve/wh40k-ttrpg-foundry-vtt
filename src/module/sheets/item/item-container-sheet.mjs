@@ -8,7 +8,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
     getData() {
         const context = super.getData();
         if (!context.item.system.container) {
-            console.warn('Unexpected Sheet Type: Item has container sheet but is not container?', context);
+            game.dh.warn('Unexpected Sheet Type: Item has container sheet but is not container?', context);
             this.options.editable = false;
             return context;
         }
@@ -80,7 +80,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
 
         const element = event.currentTarget;
         if (!element.dataset?.itemId) {
-            console.log('No Item Id - Cancelling Drag');
+            game.dh.log('No Item Id - Cancelling Drag');
             return;
         }
 
@@ -107,15 +107,15 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
         try {
             data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type !== 'Item') {
-                console.log('ItemCollection | Containers only accept items');
+                game.dh.log('ItemCollection | Containers only accept items');
                 return false;
             }
         } catch (err) {
-            console.log('Item Container | drop error', err);
+            game.dh.log('Item Container | drop error', err);
             return false;
         }
 
-        console.log('_onDrop data: ', data);
+        game.dh.log('_onDrop data: ', data);
         const item = await fromUuid(data.uuid);
         const actor = item.actor;
 
@@ -131,7 +131,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
                 parent = parent.parent;
             }
             if (!canAdd) {
-                console.log('ItemCollection | Cant drop on yourself');
+                game.dh.log('ItemCollection | Cant drop on yourself');
                 ui.notifications.info('Cannot drop item into itself');
                 throw new Error('Dragging bag onto itself or ancestor opens a planar vortex and you are sucked into it');
             }

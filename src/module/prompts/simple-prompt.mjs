@@ -12,7 +12,7 @@ export async function prepareSimpleRoll(rollData) {
                     icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
                     callback: async (html) => {
-                        console.log(html.find('[name=difficulty] :selected'));
+                        game.dh.log(html.find('[name=difficulty] :selected'));
                         rollData.modifiers['difficulty'] = parseInt(html.find('[name=difficulty] :selected').val());
                         rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
                         rollData.roll = await roll1d100();

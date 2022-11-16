@@ -58,7 +58,7 @@ export async function createItemMacro(data, slot) {
 }
 
 export function rollItemMacro(actorId, itemId) {
-    console.log('RollItemMacro');
+    game.dh.log('RollItemMacro');
     if (!checkCanRollMacro(itemId)) return;
     const actor = getTokenActor(actorId);
     if (!actor) return;

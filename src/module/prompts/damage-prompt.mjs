@@ -7,7 +7,7 @@ export class ListeningDialog extends Dialog {
 
     otherListeners(html) {
         html.find('.roll-control__hide-control').click(async (ev) => {
-            console.log('roll-control-toggle');
+            game.dh.log('roll-control-toggle');
             this.sheetControlHideToggle(ev);
         });
     }

@@ -172,7 +172,7 @@ export class DarkHeresyActor extends Actor {
     }
 
     async rollItem(itemId) {
-        console.log('RollItem', itemId);
+        game.dh.log('RollItem', itemId);
         const item = this.items.get(itemId);
         switch (item.type) {
             case 'weapon':

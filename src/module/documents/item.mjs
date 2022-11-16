@@ -151,10 +151,10 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
         // Check for specials
         if (this.system.special) {
-            console.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
+            game.dh.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('dark-heresy-2nd.weapons', this.system.special);
             if (this.isAmmunition) await this._updateSpecialsFromPack('dark-heresy-2nd.ammo', this.system.special);
-            console.log('Special migrated for item: ' + this.name);
+            game.dh.log('Special migrated for item: ' + this.name);
             this.system.special = undefined;
         }
     }

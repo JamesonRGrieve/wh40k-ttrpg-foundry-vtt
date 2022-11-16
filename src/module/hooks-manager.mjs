@@ -37,15 +37,21 @@ export class HooksManager {
 
     static init() {
         console.log(`Loading Dark Heresy 2nd Edition System
-______________  _______ 
-___  __ \__  / / /_|__ \
+______________  _________ 
+___  __ \__  / / /_|__  /
 __  / / /_  /_/ /____/ /
 _  /_/ /_  __  / _  __/ 
 /_____/ /_/ /_/  /____/ 
-                        
+
+"Only in death does duty end"
+Enable Debug with: game.dh.debug = true           
 `);
 
         game.dh = {
+            debug: false,
+            log: (s,o) => !!game.dh.debug ? console.log(`DH2:: ${s}`, o) : undefined,
+            warn: (s,o) => console.warn(`DH2:: ${s}`, o),
+            error: (s,o) => console.error(`DH2:: ${s}`, o),
             dhActor: DarkHeresyActor,
             dhItem: DarkHeresyItem,
             rollItemMacro,
@@ -90,7 +96,7 @@ _  /_/ /_  __  / _  __/
     }
 
     static hotbarDrop(bar, data, slot) {
-        console.log('Hotbar Drop:', data);
+        game.dh.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
                 createCharacteristicMacro(data, slot);

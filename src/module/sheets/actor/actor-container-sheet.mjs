@@ -35,16 +35,16 @@ export class ActorContainerSheet extends ActorSheet {
             if (data.type === 'Item') {
                 // Check if Item already Exists
                 if (this.actor.items.find((i) => i._id === data._id)) {
-                    console.log('Item already exists on Actor -- ignoring');
+                    game.dh.log('Item already exists on Actor -- ignoring');
                     return false;
                 } else {
                     return super._onDrop(event);
                 }
             }
         } catch (err) {
-            console.log('Actor Container | drop error');
-            console.log(event.dataTransfer.getData('text/plain'));
-            console.log(err);
+            game.dh.log('Actor Container | drop error');
+            game.dh.log(event.dataTransfer.getData('text/plain'));
+            game.dh.log(err);
             return false;
         }
     }
@@ -119,11 +119,11 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onItemDragStart(event) {
         event.stopPropagation();
-        console.log('_onItemDragStart', event);
+        game.dh.log('_onItemDragStart', event);
 
         const element = event.currentTarget;
         if (!element.dataset?.itemId) {
-            console.warn('No Item Id - Cancelling Drag');
+            game.dh.warn('No Item Id - Cancelling Drag');
             return;
         }
 
@@ -131,7 +131,7 @@ export class ActorContainerSheet extends ActorSheet {
         const item = this.actor.items.find((i) => i.id === itemId);
         if (!item) {
             // Cannot find item on actor? Just let foundry handle it...
-            console.log('Default Foundry Handler');
+            game.dh.log('Default Foundry Handler');
             return super._onDragStart(event);
         }
 

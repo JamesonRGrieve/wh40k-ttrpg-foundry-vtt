@@ -54,10 +54,10 @@ export class AcolyteSheet extends ActorContainerSheet {
 
     async _onActorDragStart(event) {
         event.stopPropagation();
-        console.log('_onActorDragStart', event);
+        game.dh.log('_onActorDragStart', event);
         const element = event.currentTarget;
         if (!element.dataset?.itemType) {
-            console.warn('No Drag Type - Cancelling Drag');
+            game.dh.warn('No Drag Type - Cancelling Drag');
             return;
         }
 
@@ -96,7 +96,7 @@ export class AcolyteSheet extends ActorContainerSheet {
                 return;
             default:
                 // Let default Foundry handler deal with default drag cases.
-                console.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
+                game.dh.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
                 return super._onDragStart(event);
         }
     }

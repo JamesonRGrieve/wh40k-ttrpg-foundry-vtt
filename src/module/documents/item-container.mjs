@@ -27,7 +27,7 @@ export class DarkHeresyItemContainer extends Item {
             }
         }
         if (!toCreate.length) return [];
-        console.log('ItemContainer: ' + this.name + ' _onCreateDocuments');
+        game.dh.log('ItemContainer: ' + this.name + ' _onCreateDocuments');
         const cls = getDocumentClass('ActiveEffect');
         return cls.createDocuments(toCreate, context);
     }
@@ -66,7 +66,7 @@ export class DarkHeresyItemContainer extends Item {
     async createEmbeddedDocuments(embeddedName, data, context) {
         if (!this.system.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
         if (!Array.isArray(data)) data = [data];
-        console.log('ItemContainer: ' + this.name + ' createEmbeddedDocuments', data);
+        game.dh.log('ItemContainer: ' + this.name + ' createEmbeddedDocuments', data);
         const currentItems = duplicate(getProperty(this, 'flags.itemcollection.contentsData') ?? []);
 
         if (data.length) {
@@ -89,7 +89,7 @@ export class DarkHeresyItemContainer extends Item {
 
     async deleteEmbeddedDocuments(embeddedName, ids = [], options = {}) {
         if (!this.system.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
-        console.log('ItemContainer: ' + this.name + ' deleteEmbeddedDocuments', ids);
+        game.dh.log('ItemContainer: ' + this.name + ' deleteEmbeddedDocuments', ids);
         const containedItems = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id));
@@ -110,7 +110,7 @@ export class DarkHeresyItemContainer extends Item {
         if (!this.system.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
         const contained = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
         if (!Array.isArray(data)) data = [data];
-        console.log('ItemContainer: ' + this.name + ' updateEmbeddedDocuments');
+        game.dh.log('ItemContainer: ' + this.name + ' updateEmbeddedDocuments');
         let updated = [];
         let newContained = contained.map((existing) => {
             let theUpdate = data.find((update) => update._id === existing._id);
@@ -145,7 +145,7 @@ export class DarkHeresyItemContainer extends Item {
     prepareEmbeddedDocuments() {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
-        console.log('ItemContainer: ' + this.name + ' prepareEmbeddedDocuments');
+        game.dh.log('ItemContainer: ' + this.name + ' prepareEmbeddedDocuments');
         const containedItems = getProperty(this.flags, 'itemcollection.contentsData') ?? [];
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();
@@ -172,7 +172,7 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     async update(data, context) {
-        console.log('ItemContainer: ' + this.name + ' update', data);
+        game.dh.log('ItemContainer: ' + this.name + ' update', data);
         if (!(this.parent instanceof Item)) return super.update(data, context);
         data = foundry.utils.expandObject(data);
         data._id = this.id;

@@ -20,7 +20,7 @@ export async function performAttack(attackData) {
     // Calculate Hits
     await attackData.calculateHits();
 
-    console.log('Attack Data', attackData);
+    game.dh.log('Attack Data', attackData);
 
     // Render Attack Roll
     attackData.rollData.render = await attackData.rollData.roll.render();
