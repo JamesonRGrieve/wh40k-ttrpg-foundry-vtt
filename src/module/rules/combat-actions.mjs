@@ -7,6 +7,7 @@ import { hitLocationNames } from './hit-locations.mjs';
 export function calculateCombatActionModifier(rollData) {
     const currentAction = rollData.actions[rollData.action];
 
+    game.dh.log('calculateCombatActionModifier', currentAction);
     if (currentAction.name === 'Called Shot') {
         rollData.isCalledShot = true;
         rollData.calledShotLocation = hitLocationNames()[0];
@@ -35,7 +36,7 @@ export function updateAvailableCombatActions(rollData) {
             }
         });
 
-    if (rollData.weapon.hasAttackSpecial('Unbalanced') || rollData.weapon.hasAttackSpecial('Unwieldy')) {
+    if (rollData.hasAttackSpecial('Unbalanced') || rollData.hasAttackSpecial('Unwieldy')) {
         actions.findSplice((action) => action.name === 'Lightning Attack');
     }
 

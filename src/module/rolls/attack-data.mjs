@@ -31,10 +31,10 @@ export class AttackData {
             }
         } else if (actionItem.isRanged) {
             const rollTotal = this.rollData.roll.total;
-            if (rollTotal > 91 && actionItem.hasAttackSpecial('Overheats')) {
+            if (rollTotal > 91 && this.rollData.hasAttackSpecial('Overheats')) {
                 this.effects.push('overheat');
             }
-            if ((!actionItem.hasAttackSpecial('Reliable') && rollTotal > 96) || rollTotal === 100) {
+            if ((!this.rollData.hasAttackSpecial('Reliable') && rollTotal > 96) || rollTotal === 100) {
                 this.effects.push('jam');
             }
         }
@@ -48,7 +48,7 @@ export class AttackData {
                 this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
 
                 // Storm
-                if (actionItem.hasAttackSpecial('Storm')) {
+                if (this.rollData.hasAttackSpecial('Storm')) {
                     this.damageData.additionalHits *= 2;
                 }
 
@@ -61,7 +61,7 @@ export class AttackData {
                 this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
 
                 // Storm
-                if (actionItem.hasAttackSpecial('Storm')) {
+                if (this.rollData.hasAttackSpecial('Storm')) {
                     this.damageData.additionalHits *= 2;
                 }
 
@@ -71,7 +71,7 @@ export class AttackData {
                 }
             }
 
-            if (this.rollData.dos > 1 && actionItem.hasAttackSpecial('Twin-Linked')) {
+            if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked')) {
                 this.damageData.additionalHits++;
             }
         } else {

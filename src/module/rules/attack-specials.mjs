@@ -1,4 +1,19 @@
 import { RollData } from '../rolls/roll-data.mjs';
+import { calculateAmmoAttackSpecials } from './ammo.mjs';
+
+export async function updateAttackSpecials(rollData) {
+    rollData.attackSpecials = [];
+
+    let actionItem = rollData.weapon ?? rollData.power;
+    actionItem.items.find(i => i.isAttackSpecial && (i.system.equipped || i.system.enabled)).forEach(i => {
+        rollData.attackSpecials.push({
+            name: i.name,
+            level: i.level
+        });
+    });
+
+    await calculateAmmoAttackSpecials(rollData);
+}
 
 /**
  * @param rollData {RollData}

@@ -1,4 +1,9 @@
 import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
+import {
+    calculateAmmoAttackBonuses,
+    calculateAmmoDamageBonuses,
+    calculateAmmoPenetrationBonuses, calculateAmmoSpecials,
+} from '../rules/ammo.mjs';
 
 export class DamageData {
     template = '';
@@ -14,6 +19,7 @@ export class Hit {
 
     damage = 0;
     damageRoll;
+    damageType = '';
     modifiers = {};
     totalDamage = 0;
 
@@ -39,6 +45,7 @@ export class Hit {
         hit._totalDamage();
         await hit._calculatePenetration(attackData);
         hit._totalPenetration();
+        await hit._calculateSpecials(attackData);
 
         if (attackData.rollData.isCalledShot) {
             hit.location = attackData.rollData.calledShotLocation;
@@ -70,7 +77,7 @@ export class Hit {
         const sourceActor = attackData.rollData.sourceActor;
 
         let righteousFuryThreshold = 10;
-        if (actionItem.hasAttackSpecial('Vengeful')) {
+        if (this.rollData.hasAttackSpecial('Vengeful')) {
             righteousFuryThreshold = actionItem.getAttackSpecial('Vengeful').system.level ?? 10;
             game.dh.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
@@ -97,14 +104,14 @@ export class Hit {
                     }
                 }
 
-                if (actionItem.hasAttackSpecial('Primitive')) {
+                if (attackData.rollData.hasAttackSpecial('Primitive')) {
                     const primitive = actionItem.getAttackSpecial('Primitive');
                     if (result.result > primitive.system.level) {
                         this.modifiers['primitive'] = primitive.system.level - result.result;
                     }
                 }
 
-                if (actionItem.hasAttackSpecial('Proven')) {
+                if (attackData.rollData.hasAttackSpecial('Proven')) {
                     const proven = actionItem.getAttackSpecial('Proven');
                     if (result.result < proven.system.level) {
                         this.modifiers['proven'] = proven.system.level - result.result;
@@ -123,7 +130,7 @@ export class Hit {
         } else if (actionItem.isRanged) {
 
             // Scatter
-            if (actionItem.hasAttackSpecial('Scatter')) {
+            if (attackData.rollData.hasAttackSpecial('Scatter')) {
                 if (attackData.rollData.rangeName === 'Point Blank') {
                     this.modifiers['scatter'] = 3;
                 } else if (attackData.rollData.rangeName !== 'Short Range') {
@@ -132,7 +139,7 @@ export class Hit {
             }
 
             // Add Accurate
-            if (actionItem.hasAttackSpecial('Accurate')) {
+            if (attackData.rollData.hasAttackSpecial('Accurate')) {
                 if (attackData.rollData.dos >= 3) {
                     const accurateRoll = new Roll('1d10', {});
                     await accurateRoll.evaluate({ async: true });
@@ -151,11 +158,14 @@ export class Hit {
             }
 
             // Maximal
-            if (actionItem.hasAttackSpecial('Maximal')) {
+            if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 const maximalRoll = new Roll('1d10', {});
                 await maximalRoll.evaluate({ async: true });
                 this.modifiers['maximal'] = maximalRoll.total;
             }
+
+            // Ammo
+            await calculateAmmoDamageBonuses(attackData, this);
         }
     }
 
@@ -173,15 +183,15 @@ export class Hit {
         }
 
         if(actionItem.isMelee) {
-            if(this.penetration && actionItem.hasAttackSpecial('Lance')) {
+            if(this.penetration && attackData.rollData.hasAttackSpecial('Lance')) {
                 this.penetrationModifiers['lance'] = this.penetration * attackData.rollData.dos;
             }
 
-            if(actionItem.hasAttackSpecial('Mono')) {
+            if(attackData.rollData.hasAttackSpecial('Mono')) {
                 this.penetrationModifiers['mono'] = 2;
             }
 
-            if(attackData.rollData.dos > 2 && actionItem.hasAttackSpecial('Razer Sharp')) {
+            if(attackData.rollData.dos > 2 && attackData.rollData.hasAttackSpecial('Razer Sharp')) {
                 this.penetrationModifiers['razer sharp'] = this.penetration * 2;
             }
 
@@ -194,14 +204,28 @@ export class Hit {
             }
 
             if(attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
-                if(actionItem.hasAttackSpecial('Melta')) {
+                if(attackData.rollData.hasAttackSpecial('Melta')) {
                     this.penetrationModifiers['melta'] = this.penetration * 2;
                 }
             }
 
-            if(actionItem.hasAttackSpecial('Maximal')) {
+            if(attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
             }
+
+            // Ammo
+            await calculateAmmoPenetrationBonuses(attackData, this);
+        }
+    }
+
+    async _calculateSpecials(attackData) {
+        let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const sourceActor = attackData.rollData.sourceActor;
+
+        this.damageType = actionItem.system.damageType;
+
+        if(actionItem.isRanged) {
+            await calculateAmmoSpecials(attackData, this);
         }
     }
 }

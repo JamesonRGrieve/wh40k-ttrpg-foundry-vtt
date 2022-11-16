@@ -20,7 +20,7 @@ async function calculateWeaponMaxRange(rollData) {
     }
 
     // Check Maximal
-    if (weapon.hasAttackSpecial('Maximal')) {
+    if (rollData.hasAttackSpecial('Maximal')) {
         range += 10;
     }
 
@@ -82,7 +82,7 @@ export async function calculateWeaponRange(rollData) {
     if (rollData.rangeBonus < 0) {
         const aiming = rollData.modifiers['aim'] > 0;
         const weapon = rollData.weapon;
-        if (aiming && (weapon.hasWeaponModification('Telescopic Sight') || weapon.hasWeaponModification('Omni-Scope'))) {
+        if (aiming && (rollData.hasWeaponModification('Telescopic Sight') || rollData.hasWeaponModification('Omni-Scope'))) {
             rollData.rangeBonus = 0;
         }
     }

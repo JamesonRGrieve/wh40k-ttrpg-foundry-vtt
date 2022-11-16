@@ -32,10 +32,6 @@ export class DarkHeresyItemContainer extends Item {
         return cls.createDocuments(toCreate, context);
     }
 
-    hasAttackSpecial(special) {
-        return this.hasEmbeddedItem(special, 'attackSpecial');
-    }
-
     hasWeaponModification(mod) {
         return this.hasEmbeddedItem(mod, 'weaponModification');
     }
@@ -44,10 +40,6 @@ export class DarkHeresyItemContainer extends Item {
         game.dh.log('Check for Has Embedded', item);
         if (!this.system.container) return false;
         return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
-    }
-
-    getAttackSpecial(special) {
-        return this.getItemByName(special, 'attackSpecial');
     }
 
     getWeaponModification(mod) {

@@ -2,10 +2,10 @@ import { rollDifficulties } from '../rules/difficulties.mjs';
 import { aimModifiers } from '../rules/aim.mjs';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.mjs';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
-import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
-import { calculateAmmoInformation } from '../rules/ammo.mjs';
+import { attackSpecials, calculateAttackSpecialModifiers, updateAttackSpecials } from '../rules/attack-specials.mjs';
+import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
 import { uuid } from './roll-helpers.mjs';
-import { calculateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
+import { calculateWeaponModifiers, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { creatureHitLocations, hitLocationNames } from '../rules/hit-locations.mjs';
 
 export class RollData {
@@ -36,6 +36,14 @@ export class RollData {
     specialModifiers = {};
     modifierTotal = 0;
     eyeOfVengeance = false;
+
+    attackSpecials = [];
+    hasAttackSpecial(special) {
+        return !!attackSpecials.find(s => s.name === special);
+    }
+    getAttackSpecial(special) {
+        return attackSpecials.find(s => s.name === special);
+    }
 
     roll;
     render;
@@ -108,6 +116,14 @@ export class WeaponRollData extends RollData {
     weapon;
     weaponSelect = false;
 
+    weaponModifications = [];
+    hasWeaponModification(special) {
+        return !!weaponModifications.find(s => s.name === special);
+    }
+    getWeaponModification(special) {
+        return weaponModifications.find(s => s.name === special);
+    }
+
     isCalledShot = false;
     calledShotLocation;
 
@@ -124,8 +140,11 @@ export class WeaponRollData extends RollData {
     }
 
     async update() {
+        await updateWeaponModifiers(this);
+        await updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
+        calculateAmmoInformation(this);
         await calculateWeaponRange(this);
         this.updateBaseTarget();
     }
@@ -160,7 +179,7 @@ export class WeaponRollData extends RollData {
     }
 
     async finalize() {
-        calculateAmmoInformation(this);
+        await calculateAmmoAttackBonuses(this);
         await calculateAttackSpecialModifiers(this);
         await calculateWeaponModifiers(this);
         this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.weaponModifiers, 'range': this.rangeBonus };
@@ -206,6 +225,7 @@ export class PsychicRollData extends RollData {
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = this.power.system.target.bonus ?? 0;
 
+        await updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);
     }
