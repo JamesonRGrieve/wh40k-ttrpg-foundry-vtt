@@ -107,7 +107,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
         try {
             data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type !== 'Item') {
-                game.dh.log('ItemCollection | Containers only accept items');
+                game.dh.log('ItemCollection | Containers only accept items', data);
                 return false;
             }
         } catch (err) {

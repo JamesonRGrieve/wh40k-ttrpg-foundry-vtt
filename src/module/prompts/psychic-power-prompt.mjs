@@ -50,6 +50,7 @@ export class PsychicPowerDialog extends FormApplication {
 
     async _updateObject(event, formData) {
         recursiveUpdate(this.data, formData);
+        await this.data.update();
         this.render(true);
     }
 

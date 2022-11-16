@@ -2,9 +2,11 @@ import { WeaponRollData } from '../rolls/roll-data.mjs';
 
 
 export function ammoText(item) {
+    game.dh.log('ammoText', item);
     if (item.isRanged) {
         const ammo = item.items.find(i => i.isAmmunition);
         const name = ammo ? ammo.name : 'Standard'
+        game.dh.log('ammoName', name);
         return `${name} ${item.system.clip.value}/${item.system.clip.max}`
     }
 }

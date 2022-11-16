@@ -1,4 +1,5 @@
 import { roll1d100, sendAttackDataToChat } from '../rolls/roll-helpers.mjs';
+import { AttackData } from '../rolls/attack-data.mjs';
 
 
 export async function prepareSimpleRoll(rollData) {
@@ -16,7 +17,9 @@ export async function prepareSimpleRoll(rollData) {
                         rollData.modifiers['difficulty'] = parseInt(html.find('[name=difficulty] :selected').val());
                         rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
                         rollData.roll = await roll1d100();
-                        await sendAttackDataToChat(rollData);
+                        const ad = new AttackData();
+                        ad.rollData = rollData;
+                        await sendAttackDataToChat(ad);
                     },
                 },
                 cancel: {
