@@ -39,10 +39,10 @@ export class RollData {
 
     attackSpecials = [];
     hasAttackSpecial(special) {
-        return !!attackSpecials.find(s => s.name === special);
+        return !!this.attackSpecials.find(s => s.name === special);
     }
     getAttackSpecial(special) {
-        return attackSpecials.find(s => s.name === special);
+        return this.attackSpecials.find(s => s.name === special);
     }
 
     roll;
@@ -118,10 +118,10 @@ export class WeaponRollData extends RollData {
 
     weaponModifications = [];
     hasWeaponModification(special) {
-        return !!weaponModifications.find(s => s.name === special);
+        return !!this.weaponModifications.find(s => s.name === special);
     }
     getWeaponModification(special) {
-        return weaponModifications.find(s => s.name === special);
+        return this.weaponModifications.find(s => s.name === special);
     }
 
     isCalledShot = false;

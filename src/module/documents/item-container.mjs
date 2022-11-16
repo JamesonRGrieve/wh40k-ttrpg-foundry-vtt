@@ -65,9 +65,10 @@ export class DarkHeresyItemContainer extends Item {
 
         if (data.length) {
             for (let itemData of data) {
-                itemData._id = randomID();
-                itemData = new CONFIG.Item.documentClass(itemData, { parent: this }).toJSON();
-                currentItems.push(itemData);
+                let clone = JSON.parse(JSON.stringify(itemData));
+                clone._id = randomID();
+                clone = new CONFIG.Item.documentClass(clone, { parent: this }).toJSON();
+                currentItems.push(clone);
             }
             if (this.parent)
                 return await this.parent.updateEmbeddedDocuments('Item', [

@@ -4,7 +4,7 @@ export class DarkHeresyStorageLocationSheet extends DarkHeresyItemContainerSheet
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             width: 800,
-            height: 340,
+            height: 500,
             tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'items' }],
         });
     }
