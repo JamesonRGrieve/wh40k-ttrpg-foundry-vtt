@@ -8,9 +8,7 @@ export async function calculateWeaponModifiers(rollData) {
     rollData.weaponModifiers = {};
     const weapon = rollData.weapon;
 
-    game.dh.log('calculateWeaponModifiers', Object.values(weapon.items));
-
-    for (const item of Object.values(weapon.items)) {
+    for (const item of weapon.items) {
         game.dh.log('calculateWeaponModifiers', item);
         if (!item.system.equipped) continue;
         if (!item.isWeaponModification) continue;
