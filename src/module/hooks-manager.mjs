@@ -22,6 +22,7 @@ import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/item/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';
 import { DarkHeresyPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
+import { DarkHeresyStorageLocationSheet } from './sheets/item/storage-location-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -88,6 +89,7 @@ Enable Debug with: game.dh.debug = true
         Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyStorageLocationSheet, { types: ['storageLocation'], makeDefault: true });
 
         HandlebarManager.loadTemplates();
     }
