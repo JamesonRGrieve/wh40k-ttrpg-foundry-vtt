@@ -15,11 +15,11 @@ export async function calculateWeaponModifiers(rollData) {
         switch (item.name) {
             case 'Red-Dot Laser Sight':
                 if (rollData.action === 'Standard Attack' && weapon.isRanged) {
-                    rollData.weaponModifiers.weaponModifiers['Red-Dot'] = 10;
+                    rollData.weaponModifiers['Red-Dot'] = 10;
                 }
                 break;
             case 'Custom Grip':
-                rollData.weaponModifiers.weaponModifiers['Custom Grip'] = 10;
+                rollData.weaponModifiers['Custom Grip'] = 5;
                 break;
         }
     }

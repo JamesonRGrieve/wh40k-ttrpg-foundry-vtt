@@ -90,6 +90,11 @@
                             <div class="dh-roll__target">
                                 <span>{{hit.totalPenetration}} Penetration</span>
                             </div>
+                            {{#each righteousFury as |fury|}}
+                                <div class="dh-roll__success">
+                                    <span>Righteous fury hits for {{fury.total}} critical damage!</span>
+                                </div>
+                            {{/each}}
                             <div class="dh-roll__divider"></div>
                         {{/each}}
                     </div>
