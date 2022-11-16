@@ -41,7 +41,9 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     hasEmbeddedItem(item, type) {
+        game.dh.log('Check for Has Embedded', item);
         if (!this.system.container) return false;
+        game.dh.log('Found?', !!this.items.find((i) => i.name === item && i.type === type && i.equipped));
         return !!this.items.find((i) => i.name === item && i.type === type && i.equipped);
     }
 
@@ -54,8 +56,10 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     getItemByName(item, type) {
+        game.dh.log('Check for item by name', item);
         if (!this.system.container) return;
-        return !!this.items.find((i) => i.name === item && i.type === type);
+        game.dh.log('Found?', !!this.items.find((i) => i.name === item && i.type === type && i.equipped));
+        return this.items.find((i) => i.name === item && i.type === type);
     }
 
     getEmbeddedDocument(embeddedName, id, { strict = false } = {}) {
