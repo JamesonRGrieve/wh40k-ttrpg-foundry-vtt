@@ -43,11 +43,7 @@ export class DarkHeresyItemContainer extends Item {
     hasEmbeddedItem(item, type) {
         game.dh.log('Check for Has Embedded', item);
         if (!this.system.container) return false;
-        game.dh.log('Found?', !!this.items.find((i) => {
-            game.dh.log('Item', i);
-            return i.name === item && i.type === type && (i.equipped || i.enabled);
-        }));
-        return !!this.items.find((i) => i.name === item && i.type === type && (i.equipped || i.enabled));
+        return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
     }
 
     getAttackSpecial(special) {
@@ -61,7 +57,6 @@ export class DarkHeresyItemContainer extends Item {
     getItemByName(item, type) {
         game.dh.log('Check for item by name', item);
         if (!this.system.container) return;
-        game.dh.log('Found?', !!this.items.find((i) => i.name === item && i.type === type));
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
