@@ -56,7 +56,12 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
                     item = data.data;
                 }
 
-                actor = item.actor;
+                if(data.actor) {
+                    actor = data.actor;
+                } else if (data.actorId) {
+                    actor = game.actors.get(data.actorId);
+                }
+
                 // Check if Item already Exists
                 if (this.item.items.find((i) => i._id === item._id)) {
                     game.dh.log('Item already exists in container -- ignoring');
