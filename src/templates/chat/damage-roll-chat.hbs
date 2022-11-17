@@ -1,4 +1,3 @@
-{{log this}}
 <div class="dh-wrapper">
     <div class="dh-chat">
         <h3>Damage Roll</h3>
@@ -15,7 +14,7 @@
                 <div class="dh-roll__value">{{damageType}}</div>
             </div>
 
-            <div class="dh-roll__notice roll-control__hide-control" data-toggle="dice-rolls">
+            <div class="dh-roll__notice">
                 <span>Damage</span>
                 <span>{{roll.total}}</span>
             </div>
@@ -23,11 +22,6 @@
             <div class="dh-roll__notice">
                 <span>Penetration</span>
                 <span>{{penetration}}</span>
-            </div>
-        </div>
-        <div class="dice-rolls" style="display:none; margin-top: 5px">
-            <div class="dice-roll-render">
-                {{{render}}}
             </div>
         </div>
     </div>

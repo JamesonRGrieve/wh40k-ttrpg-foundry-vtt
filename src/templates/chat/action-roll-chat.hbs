@@ -1,10 +1,11 @@
 <div class="dh-wrapper">
     <div class="dh-chat">
+        {{#if label}}<h3>{{label}}</h3>{{/if}}
         <div class="dh-roll">
             {{#with rollData}}
                 <div>
-                    <h1>{{weapon.name}}</h1>
-                    <h2>{{action}}</h2>
+                    <h1>{{name}}</h1>
+                    {{#if action}}<h2>{{action}}</h2>{{/if}}
                     <h2>{{lookup difficulties difficulty}}</h2>
                     <div class="dh-roll__divider"></div>
 
@@ -24,13 +25,34 @@
                     </div>
 
                     {{#if success}}
-                        <button class="dh-roll__success roll-control__hide-control" data-toggle="{{@root.id}}">
-                            <span>Success</span>
-                            <span>{{roll.total}}</span>
-                        </button>
+                        {{#if @root.hasDamage}}
+                            <button class="dh-roll__success roll-control__hide-control" data-toggle="{{@root.id}}">
+                                <span>Success</span>
+                                <span>{{roll.total}}</span>
+                            </button>
+                        {{else}}
+                            <div class="dh-roll__success">
+                                <span>Success</span>
+                                <span>{{roll.total}}</span>
+                            </div>
+                        {{/if}}
                         <div class="dh-roll__row dh-roll__row--number">
                             <div class="dh-roll__label">Degrees of Success</div>
                             <div class="dh-roll__value">{{dos}}</div>
+                        </div>
+                        <div class='dh-roll__controls'>
+                            <div class="dh-control-button">
+                                <span class="dh-control-button__span material-icons">casino</span>
+                            </div>
+                            <div class="dh-control-button">
+                                <span class="dh-control-button__span material-icons">casino</span>
+                            </div>
+                            <div class="dh-control-button">
+                                <span class="dh-control-button__span material-icons">casino</span>
+                            </div>
+                            <div class="dh-control-button">
+                                <span class="dh-control-button__span material-icons">casino</span>
+                            </div>
                         </div>
                     {{else}}
                         <div class="dh-roll__fail">
@@ -57,7 +79,7 @@
                     <div id="{{@root.id}}" style="display: none">
                         <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
-                            <h2 style='margin-top: .5rem'>Hit {{@index}}</h2>
+                            <h2 style='margin-top: .5rem'>Hit {{inc @index}}</h2>
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Base Damage:</div>
                                 <div class="dh-roll__value">{{hit.damageRoll.result}}</div>
@@ -68,7 +90,7 @@
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
-                            <div class="dh-roll__target">
+                            <div class="dh-roll__notice">
                                 <span>{{hit.totalDamage}} Damage to {{hit.location}}</span>
                             </div>
                             <div class="dh-roll__row dh-roll__row--number">
@@ -87,7 +109,7 @@
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
-                            <div class="dh-roll__target">
+                            <div class="dh-roll__notice">
                                 <span>{{hit.totalPenetration}} Penetration</span>
                             </div>
                             {{#each righteousFury as |fury|}}

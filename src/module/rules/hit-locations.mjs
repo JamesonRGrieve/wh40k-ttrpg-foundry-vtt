@@ -19,9 +19,11 @@ export function getNextHitLocation(previousHit) {
 }
 
 export function hitDropdown() {
-    return creatureHitLocations().map(i => {
-        return { [i.name] : i.name }
-    })
+    const dropdown = {};
+    creatureHitLocations().forEach(i => {
+        dropdown[i.name] = i.name;
+    });
+    return dropdown;
 }
 
 export function hitLocationNames() {

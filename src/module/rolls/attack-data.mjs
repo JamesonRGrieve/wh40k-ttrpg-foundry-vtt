@@ -5,6 +5,7 @@ import { getDegree, roll1d100, uuid } from './roll-helpers.mjs';
 export class AttackData {
     id = uuid();
     template = ''
+    hasDamage = false;
     rollData;
     damageData;
     effects = [];

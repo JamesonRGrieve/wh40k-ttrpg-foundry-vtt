@@ -137,7 +137,7 @@ export class WeaponRollData extends RollData {
 
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';
+        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
     }
 
     async update() {
@@ -199,7 +199,7 @@ export class PsychicRollData extends RollData {
 
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-power-roll-chat.hbs';
+        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
     }
 
     initialize() {

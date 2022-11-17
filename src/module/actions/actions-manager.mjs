@@ -30,6 +30,9 @@ export async function performAttack(attackData) {
     attackData.rollData.render = await attackData.rollData.roll.render();
     attackData.template = attackData.rollData.template;
 
+    // This is an attack
+    attackData.hasDamage = true;
+
     // Send to Chat
     await sendAttackDataToChat(attackData);
 }

@@ -98,6 +98,10 @@ export function registerHandlebarsHelpers() {
         return value ? 'success' : '';
     });
 
+    Handlebars.registerHelper('inc', function (value) {
+        return Number.parseInt(value) + 1;
+    });
+
     Handlebars.registerHelper('colorCode', function (positive, negative) {
         // Positive Precedence
         if (positive) {
