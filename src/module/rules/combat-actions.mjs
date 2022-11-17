@@ -8,7 +8,7 @@ export function calculateCombatActionModifier(rollData) {
     const currentAction = rollData.actions[rollData.action];
 
     game.dh.log('calculateCombatActionModifier', currentAction);
-    if (currentAction.name === 'Called Shot') {
+    if (rollData.action === 'Called Shot') {
         rollData.isCalledShot = true;
         rollData.calledShotLocation = hitLocationNames()[0];
     } else {
@@ -51,7 +51,7 @@ export function updateAvailableCombatActions(rollData) {
 
     rollData.actions = {};
     for (let action of actions) {
-        rollData.actions[action.name] = action.name;
+        rollData.actions[action.name] = action;
     }
 
     // If action no longer exists -- set to first available

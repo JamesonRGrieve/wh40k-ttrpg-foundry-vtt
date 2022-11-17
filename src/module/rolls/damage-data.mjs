@@ -77,7 +77,7 @@ export class Hit {
         const sourceActor = attackData.rollData.sourceActor;
 
         let righteousFuryThreshold = 10;
-        if (this.rollData.hasAttackSpecial('Vengeful')) {
+        if (attackData.rollData.hasAttackSpecial('Vengeful')) {
             righteousFuryThreshold = actionItem.getAttackSpecial('Vengeful').system.level ?? 10;
             game.dh.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }

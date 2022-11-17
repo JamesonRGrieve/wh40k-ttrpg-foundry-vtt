@@ -23,14 +23,14 @@
                     <div class="tab" data-group="primary" data-tab="items">
                         <div class="dh-panel dh-grid-col-6">
                             <h1 class="dh-panel__header">Stored Items</h1>
-                            <div class="dh-table--border dh-storageloctable--border">
+                            <div class="dh-table--border dh-storagegeartable--border">
                                 <div class="table-row--head">
                                     <div class="table-cell--span2">Name</div>
                                     <div class="table-cell">Type</div>
                                     <div class="table-cell--last"></div>
                                 </div>
                                 {{#each item.items as | embedded |}}
-                                    <div class="table-row">
+                                    <div class="table-row item-drag" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
                                         <div class="table-cell--settingstoggle">
                                             <label class="dh-control-button item-edit" data-item-id="{{embedded.id}}">
                                                 <span class="dh-control-button__span material-icons">{{defaultVal icon

@@ -141,9 +141,17 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
 
     _onItemDelete(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        this.item.deleteEmbeddedDocuments('Item', [div.data('itemId')]);
-        div.slideUp(200, () => this.render(false));
+        Dialog.confirm({
+            title: 'Confirm Delete',
+            content: '<p>Are you sure you would like to delete this?</p>',
+            yes: () => {
+                const div = $(event.currentTarget);
+                this.item.deleteEmbeddedDocuments('Item', [div.data('itemId')]);
+                div.slideUp(200, () => this.render(false));
+            },
+            no: () => {},
+            defaultYes: false,
+        });
     }
 
     async _onItemDragStart(event) {

@@ -11,12 +11,18 @@ export function ammoText(item) {
     }
 }
 
-
 /**
  * @param attackData {AttackData}
  */
 export async function useAmmo(attackData) {
-
+    let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+    if(actionItem.isRanged) {
+        actionItem.system.clip.value -= attackData.rollData.ammoUsed;
+        // Reset to 0 if there was a problem
+        if(actionItem.system.clip.value < 0) {
+            actionItem.system.clip.value = 0;
+        }
+    }
 }
 
 /**

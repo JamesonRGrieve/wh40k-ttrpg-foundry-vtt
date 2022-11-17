@@ -14,7 +14,9 @@ export async function updateAttackSpecials(rollData) {
         }
     }
 
-    await calculateAmmoAttackSpecials(rollData);
+    if (actionItem.isRanged) {
+        await calculateAmmoAttackSpecials(rollData);
+    }
 }
 
 /**
