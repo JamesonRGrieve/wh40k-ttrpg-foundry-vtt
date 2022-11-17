@@ -57,7 +57,7 @@
                     <div id="{{@root.id}}" style="display: none">
                         <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
-                            <h2 style='margin-top: .5rem'>Hit {{math @index "+" 1}}</h2>
+                            <h2 style='margin-top: .5rem'>Hit {{@index}}</h2>
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Base Damage:</div>
                                 <div class="dh-roll__value">{{hit.damageRoll.result}}</div>
