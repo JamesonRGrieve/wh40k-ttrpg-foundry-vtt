@@ -61,7 +61,7 @@ export class PsychicPowerDialog extends FormApplication {
 
     async _rollPower(event) {
         await this.data.finalize();
-        await this.weaponAttackData.performAttackAndSendToChat();
+        await this.psychicAttackData.performAttackAndSendToChat();
         await this.close();
     }
 }

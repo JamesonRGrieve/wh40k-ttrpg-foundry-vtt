@@ -108,6 +108,7 @@ Enable Debug with: game.dh.debug = true
                 createCharacteristicMacro(data, slot);
                 return false;
             case 'item':
+            case 'Item':
                 createItemMacro(data, slot);
                 return false;
             case 'skill':

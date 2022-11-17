@@ -18,7 +18,7 @@ export class BasicActionManager {
         game.dh.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = $(event.currentTarget);
-        $('span:first', displayToggle).toggleClass('active');
+        $('span', displayToggle).toggleClass('active');
         const target = displayToggle.data('toggle');
         $('#' + target).toggle();
     }
