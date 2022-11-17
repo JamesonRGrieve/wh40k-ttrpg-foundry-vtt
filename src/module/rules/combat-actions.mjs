@@ -9,8 +9,10 @@ export function calculateCombatActionModifier(rollData) {
 
     game.dh.log('calculateCombatActionModifier', currentAction);
     if (rollData.action === 'Called Shot') {
-        rollData.isCalledShot = true;
-        rollData.calledShotLocation = hitLocationNames()[0];
+        if(rollData.isCalledShot === false) {
+            rollData.isCalledShot = true;
+            rollData.calledShotLocation = hitLocationNames()[0];
+        }
     } else {
         rollData.isCalledShot = false;
     }
