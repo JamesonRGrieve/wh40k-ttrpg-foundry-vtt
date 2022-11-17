@@ -6,13 +6,13 @@ import { attackSpecials, calculateAttackSpecialModifiers, updateAttackSpecials }
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
 import { uuid } from './roll-helpers.mjs';
 import { calculateWeaponModifiers, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
-import { creatureHitLocations, hitLocationNames } from '../rules/hit-locations.mjs';
+import { creatureHitLocations, hitDropdown, hitLocationNames } from '../rules/hit-locations.mjs';
 
 export class RollData {
     template = '';
     difficulties = rollDifficulties();
     aims = aimModifiers();
-    locations = hitLocationNames();
+    locations = hitDropdown();
 
     sourceActor;
     targetActor;

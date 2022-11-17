@@ -37,7 +37,6 @@ export async function calculateAmmoAttackBonuses(rollData) {
         case 'Explosive Arrows/Quarrels':
             rollData.specialModifiers['explosive arrows'] = -10;
             break;
-
     }
 }
 

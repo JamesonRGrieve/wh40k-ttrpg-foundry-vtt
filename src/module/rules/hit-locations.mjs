@@ -18,6 +18,10 @@ export function getNextHitLocation(previousHit) {
     return hitArray[nextIndex];
 }
 
+export function hitDropdown() {
+    return hitLocationNames().map(l => {l});
+}
+
 export function hitLocationNames() {
     return creatureHitLocations().map(i => i.name);
 }
