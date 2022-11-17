@@ -1,9 +1,10 @@
 export function getHitLocationForRoll(roll) {
+    game.dh.log('getHitLocationForRoll', roll);
     const rollString = roll.toString().split('');
     const reverseArray = rollString.reverse();
     const joinArray = reverseArray.join('');
     const reverseInt = parseInt(joinArray);
-    return creatureHitLocations().find((i) => reverseInt >= i.min && reverseInt <= i.max);
+    return creatureHitLocations().first((i) => (reverseInt >= i.min) && (reverseInt <= i.max))?.name;
 }
 
 export function getNextHitLocation(previousHit) {

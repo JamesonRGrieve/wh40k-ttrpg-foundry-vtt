@@ -22,6 +22,7 @@ export class Hit {
     dos = 0;
 
     penetration = 0;
+    hasPenetrationRoll = false;
     penetrationRoll;
     penetrationModifiers = {};
     totalPenetration = 0;
@@ -176,6 +177,7 @@ export class Hit {
         if (Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
         } else {
+            this.hasPenetrationRoll = true;
             this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
             await this.penetrationRoll.evaluate({ async: true });
             this.penetration = this.penetrationRoll.total;
@@ -202,18 +204,18 @@ export class Hit {
                 this.penetrationModifiers['eye of vengeance'] = attackData.rollData.dos;
             }
 
-            if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
-                if (attackData.rollData.hasAttackSpecial('Melta')) {
-                    this.penetrationModifiers['melta'] = this.penetration * 2;
-                }
-            }
-
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
             }
 
             // Ammo
             await calculateAmmoPenetrationBonuses(attackData, this);
+        }
+
+        if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
+            if (attackData.rollData.hasAttackSpecial('Melta')) {
+                this.penetrationModifiers['melta'] = this.penetration * 2;
+            }
         }
     }
 

@@ -45,6 +45,12 @@ export class RollData {
     dos = 0;
     dof = 0;
 
+    get name() {
+        let actionItem = this.weapon ?? this.power;
+        if (actionItem) return actionItem.name;
+        else return '';
+    }
+
     get modifiedTarget() {
         return this.baseTarget + this.modifierTotal;
     }

@@ -108,8 +108,8 @@
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Base Penetration:</div>
                                 <div class="dh-roll__value">
-                                    {{#if hit.penetrationRoll}}
-                                        {{hit.penetrationRoll?.result}}
+                                    {{#if hit.hasPenetrationRoll}}
+                                        {{hit.penetrationRoll.result}}
                                     {{else}}
                                         {{hit.penetration}}
                                     {{/if}}

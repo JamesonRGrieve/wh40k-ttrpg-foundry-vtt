@@ -51,7 +51,7 @@ export class WeaponAttackDialog extends FormApplication {
     async _updateObject(event, formData) {
         game.dh.log('_updateObject', { event, formData });
         recursiveUpdate(this.data, formData);
-        game.dh.log('_updateObject complete', { data, formData });
+        game.dh.log('_updateObject complete', { 'data': this.data, formData });
         await this.data.update();
         this.render(true);
     }
