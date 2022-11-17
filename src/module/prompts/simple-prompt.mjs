@@ -16,9 +16,10 @@ export async function prepareSimpleRoll(simpleSkillData) {
                     icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
                     callback: async (html) => {
-                        game.dh.log(html.find('[name=difficulty] :selected'));
+                        game.dh.log('prepareSimpleRoll', JSON.stringify(simpleSkillData));
+                        game.dh.log(html.find('[id=difficulty] :selected'));
                         const rollData = simpleSkillData.rollData;
-                        rollData.modifiers['difficulty'] = parseInt(html.find('[name=difficulty] :selected').val());
+                        rollData.modifiers['difficulty'] = parseInt(html.find('[id=difficulty] :selected').val());
                         rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
                         rollData.roll = await roll1d100();
                         await rollData.calculateTotalModifiers();

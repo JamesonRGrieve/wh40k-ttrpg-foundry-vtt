@@ -129,6 +129,9 @@ export class AcolyteSheet extends ActorContainerSheet {
             title: 'Roll Characteristics?',
             content: '<p>Would you like to roll Wounds and Fate for this homeworld?</p>',
             yes: async () => {
+                // Something is probably wrong -- we will skip this
+                if(!this.actor.backgroundEffects?.homeworld) return;
+
                 // Roll Wounds
                 let woundRoll = new Roll(this.actor.backgroundEffects.homeworld.wounds);
                 await woundRoll.evaluate({ async: true });

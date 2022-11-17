@@ -8,13 +8,13 @@
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__span">Difficulty</span>
-                <select class="dh-field__input" name="difficulty">
-                    {{selectOptions difficulties selected=0}}
+                <select class="dh-field__input" data-dtype="Number" name="modifiers.difficulty" id='difficulty'>
+                    {{selectOptions difficulties selected=modifiers.difficulty}}
                 </select>
             </div>
             <div class="dh-field__wrapper">
                 <span class="dh-field__span">Modifier</span>
-                <input class="dh-field__input" type="number" data-dtype="Number" id="modifier" value="0" />
+                <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
             </div>
         </div>
     </form>

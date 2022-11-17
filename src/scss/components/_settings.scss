@@ -23,6 +23,10 @@
             @extend .dh-settings;
             gap: 0;
 
+            .clean {
+                border-top: none;
+            }
+
             .dh-settings {
                 &__row--xlarge,
                 &__row--large,

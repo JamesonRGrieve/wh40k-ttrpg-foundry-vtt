@@ -158,7 +158,7 @@ export class DarkHeresyActor extends Actor {
         rollData.type = 'Skill';
         rollData.baseTarget = skill.current;
         rollData.modifiers.modifier = 0;
-        await prepareSimpleRoll(rollData);
+        await prepareSimpleRoll(simpleSkillData);
     }
 
     async rollCharacteristic(characteristicName) {
@@ -171,7 +171,7 @@ export class DarkHeresyActor extends Actor {
         rollData.type = 'Characteristic';
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
-        await prepareSimpleRoll(rollData);
+        await prepareSimpleRoll(simpleSkillData);
     }
 
     async rollItem(itemId) {
