@@ -19,7 +19,7 @@ export class AttackData {
     async calculateSuccessOrFailure() {
         await this._calculateHit();
         let actionItem = this.rollData.weapon ?? this.rollData.power;
-        if (actionItem) return;
+        if (!actionItem) return;
 
         if (actionItem.isMelee) {
             if (!this.rollData.success) {
