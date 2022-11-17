@@ -1,9 +1,5 @@
 import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
-import {
-    calculateAmmoAttackBonuses,
-    calculateAmmoDamageBonuses,
-    calculateAmmoPenetrationBonuses, calculateAmmoSpecials,
-} from '../rules/ammo.mjs';
+import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 
 export class DamageData {
     template = '';
@@ -27,7 +23,7 @@ export class Hit {
 
     penetration = 0;
     penetrationRoll;
-    penetrationModifiers = {}
+    penetrationModifiers = {};
     totalPenetration = 0;
 
     specials = [];
@@ -50,7 +46,7 @@ export class Hit {
         if (attackData.rollData.isCalledShot) {
             hit.location = attackData.rollData.calledShotLocation;
         } else {
-            if(lastHit) {
+            if (lastHit) {
                 hit.location = getNextHitLocation(lastHit);
             } else {
                 hit.location = getHitLocationForRoll(attackData.rollData.roll.total);
@@ -61,11 +57,11 @@ export class Hit {
     }
 
     _totalDamage() {
-        this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a+b, 0);
+        this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
     }
 
     _totalPenetration() {
-        this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a+b, 0);
+        this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a + b, 0);
     }
 
     /**
@@ -74,7 +70,7 @@ export class Hit {
      */
     async _calculateDamage(attackData) {
         let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
-        if(actionItem) return;
+        if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
         let righteousFuryThreshold = 10;
@@ -125,11 +121,10 @@ export class Hit {
             this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
 
             if (sourceActor.hasTalent('Crushing Blow')) {
-                const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus
+                const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus;
                 this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
             }
         } else if (actionItem.isRanged) {
-
             // Scatter
             if (attackData.rollData.hasAttackSpecial('Scatter')) {
                 if (attackData.rollData.rangeName === 'Point Blank') {
@@ -174,10 +169,11 @@ export class Hit {
 
     async _calculatePenetration(attackData) {
         let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
         const rollFormula = actionItem.system.penetration;
-        if(Number.isInteger(rollFormula)) {
+        if (Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
         } else {
             this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
@@ -185,34 +181,34 @@ export class Hit {
             this.penetration = this.penetrationRoll.total;
         }
 
-        if(actionItem.isMelee) {
-            if(this.penetration && attackData.rollData.hasAttackSpecial('Lance')) {
+        if (actionItem.isMelee) {
+            if (this.penetration && attackData.rollData.hasAttackSpecial('Lance')) {
                 this.penetrationModifiers['lance'] = this.penetration * attackData.rollData.dos;
             }
 
-            if(attackData.rollData.hasAttackSpecial('Mono')) {
+            if (attackData.rollData.hasAttackSpecial('Mono')) {
                 this.penetrationModifiers['mono'] = 2;
             }
 
-            if(attackData.rollData.dos > 2 && attackData.rollData.hasAttackSpecial('Razer Sharp')) {
+            if (attackData.rollData.dos > 2 && attackData.rollData.hasAttackSpecial('Razer Sharp')) {
                 this.penetrationModifiers['razer sharp'] = this.penetration * 2;
             }
 
-            if(attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
+            if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
                 this.penetrationModifiers['hammer blow'] = sourceActor.getCharacteristicFuzzy('strength').bonus;
             }
         } else if (actionItem.isRanged) {
-            if(attackData.rollData.eyeOfVengeance) {
+            if (attackData.rollData.eyeOfVengeance) {
                 this.penetrationModifiers['eye of vengeance'] = attackData.rollData.dos;
             }
 
-            if(attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
-                if(attackData.rollData.hasAttackSpecial('Melta')) {
+            if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
+                if (attackData.rollData.hasAttackSpecial('Melta')) {
                     this.penetrationModifiers['melta'] = this.penetration * 2;
                 }
             }
 
-            if(attackData.rollData.hasAttackSpecial('Maximal')) {
+            if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
             }
 
@@ -223,11 +219,12 @@ export class Hit {
 
     async _calculateSpecials(attackData) {
         let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
         this.damageType = actionItem.system.damageType;
 
-        if(actionItem.isRanged) {
+        if (actionItem.isRanged) {
             await calculateAmmoSpecials(attackData, this);
         }
     }

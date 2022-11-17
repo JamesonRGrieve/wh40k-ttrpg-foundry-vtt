@@ -5,4 +5,3 @@ export function initializeActorActions() {
     DHBasicActionManager.initializeHooks();
     DHTargetedActionManager.initializeHooks();
 }
-

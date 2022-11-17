@@ -1,5 +1,4 @@
 import { RollData } from '../rolls/roll-data.mjs';
-import { DarkHeresyItem } from '../documents/item.mjs';
 
 /**
  * @param rollData {RollData}

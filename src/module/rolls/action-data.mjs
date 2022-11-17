@@ -1,10 +1,12 @@
-import { PsychicRollData, WeaponRollData } from './roll-data.mjs';
+import { PsychicRollData, RollData, WeaponRollData } from './roll-data.mjs';
 import { Hit, PsychicDamageData, WeaponDamageData } from './damage-data.mjs';
-import { getDegree, roll1d100, uuid } from './roll-helpers.mjs';
+import { getDegree, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
+import { useAmmo } from '../rules/ammo.mjs';
+import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
-export class AttackData {
+export class ActionData {
     id = uuid();
-    template = ''
+    template = '';
     hasDamage = false;
     rollData;
     damageData;
@@ -88,32 +90,80 @@ export class AttackData {
 
     async calculateHits() {
         let lastLocation = '';
-        if(this.rollData.success) {
+        if (this.rollData.success) {
             let hit = await Hit.createHit(this);
             lastLocation = hit.location;
             this.damageData.hits.push(hit);
 
-            for(let i = 0; i< this.damageData.additionalHits; i++) {
+            for (let i = 0; i < this.damageData.additionalHits; i++) {
                 hit = await Hit.createHit(this, lastLocation);
                 lastLocation = hit.location;
                 this.damageData.hits.push(hit);
             }
         }
     }
+
+    async performAttackAndSendToChat() {
+        // Store Roll Information
+        DHBasicActionManager.storeActionData(this);
+
+        // Finalize Modifiers
+        await this.rollData.calculateTotalModifiers();
+
+        // Determine Success/Hits
+        await this.calculateSuccessOrFailure();
+
+        // Calculate Hits
+        await this.calculateHits();
+
+        game.dh.log('Perform Attack', this);
+
+        // Expend Ammo
+        await useAmmo(this);
+
+        // Render Attack Roll
+        this.rollData.render = await this.rollData.roll.render();
+        this.template = this.rollData.template;
+
+        // Send to Chat
+        await sendActionDataToChat(this);
+    }
 }
 
-export class WeaponAttackData extends AttackData {
+export class WeaponAttackData extends ActionData {
     constructor() {
         super();
+        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.hasDamage = true;
         this.rollData = new WeaponRollData();
         this.damageData = new WeaponDamageData();
     }
 }
 
-export class PsychicAttackData extends AttackData {
+export class PsychicAttackData extends ActionData {
     constructor() {
         super();
+        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.hasDamage = true;
         this.rollData = new PsychicRollData();
         this.damageData = new PsychicDamageData();
+    }
+}
+
+export class PsychicSkillData extends ActionData {
+    constructor() {
+        super();
+        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.hasDamage = false;
+        this.rollData = new PsychicRollData();
+    }
+}
+
+export class SimpleSkillData extends ActionData {
+    constructor() {
+        super();
+        this.template = 'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs';
+        this.hasDamage = false;
+        this.rollData = new RollData();
     }
 }

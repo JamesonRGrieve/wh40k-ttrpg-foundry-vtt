@@ -62,18 +62,18 @@
                                 <span class="dh-control-button__label">Damage</span>
                             </button>
                         {{else}}
-                            <button class="dh-control-button disabled" disabled>
+                            <button class="dh-control-button__disabled">
                                 <span class="dh-control-button__span material-icons">bolt</span>
                                 <span class="dh-control-button__label">Damage</span>
                             </button>
                         {{/if}}
                         <div class="dh-control-button roll-control__refund-ammo" data-roll-id="{{@root.id}}">
                             <span class="dh-control-button__span material-icons">deblur</span>
-                            <span class="dh-control-button__label">Refund Ammo</span>
+                            <span class="dh-control-button__label">Refund</span>
                         </div>
                         <div class="dh-control-button roll-control__fate-reroll" data-roll-id="{{@root.id}}">
                             <span class="dh-control-button__span material-icons">casino</span>
-                            <span class="dh-control-button__label">Fate Point</span>
+                            <span class="dh-control-button__label">Re-roll</span>
                         </div>
                     </div>
 

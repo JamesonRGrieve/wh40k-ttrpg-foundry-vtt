@@ -6,8 +6,8 @@ import { eliteAdvances } from '../rules/elite-advances.mjs';
 import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { DHTargetedActionManager } from '../actions/targetted-action-manager.mjs';
-import { SimpleRollData } from '../rolls/roll-data.mjs';
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
+import { SimpleSkillData } from '../rolls/action-data.mjs';
 
 export class DarkHeresyActor extends Actor {
     get backpack() {
@@ -151,7 +151,8 @@ export class DarkHeresyActor extends Actor {
             skill = skill.specialities[specialityName];
             label = `${label}: ${skill.label}`;
         }
-        const rollData = new SimpleRollData();
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
         rollData.actor = this;
         rollData.name = label;
         rollData.type = 'Skill';
@@ -162,7 +163,9 @@ export class DarkHeresyActor extends Actor {
 
     async rollCharacteristic(characteristicName) {
         const characteristic = this.characteristics[characteristicName];
-        const rollData = new SimpleRollData();
+
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
         rollData.actor = this;
         rollData.name = characteristic.label;
         rollData.type = 'Characteristic';

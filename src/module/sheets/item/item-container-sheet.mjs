@@ -50,13 +50,13 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             } else {
                 game.dh.log('_onDrop data: ', data);
 
-                if(data.uuid) {
+                if (data.uuid) {
                     item = await fromUuid(data.uuid);
                 } else {
                     item = data.data;
                 }
 
-                if(data.actor) {
+                if (data.actor) {
                     actor = data.actor;
                 } else if (data.actorId) {
                     actor = game.actors.get(data.actorId);

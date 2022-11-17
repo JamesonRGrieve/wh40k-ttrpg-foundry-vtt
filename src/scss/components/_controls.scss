@@ -19,7 +19,15 @@
     &-control-button {
         cursor: pointer;
 
-        .disabled {
+        .active {
+            opacity: 1;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &__disabled {
             cursor: unset;
             opacity: 1;
             text-decoration: line-through;
@@ -36,14 +44,6 @@
             white-space: nowrap;
             word-wrap: normal;
             -webkit-font-smoothing: antialiased;
-
-            .active {
-                opacity: 1;
-            }
-
-            &:hover {
-                opacity: 1;
-            }
         }
 
         &__span {
@@ -51,14 +51,6 @@
             padding-left: 2px;
             @extend .dh-material;
             opacity: 0.5;
-
-            .active {
-                opacity: 1;
-            }
-
-            &:hover {
-                opacity: 1;
-            }
         }
     }
 

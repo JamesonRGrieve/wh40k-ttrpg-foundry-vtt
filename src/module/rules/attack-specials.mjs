@@ -4,12 +4,12 @@ import { calculateAmmoAttackSpecials } from './ammo.mjs';
 export async function updateAttackSpecials(rollData) {
     rollData.attackSpecials = [];
     let actionItem = rollData.weapon ?? rollData.power;
-    if(!actionItem) return;
-    for(const i of actionItem.items) {
+    if (!actionItem) return;
+    for (const i of actionItem.items) {
         if (i.isAttackSpecial && (i.system.equipped || i.system.enabled)) {
             rollData.attackSpecials.push({
                 name: i.name,
-                level: i.level
+                level: i.level,
             });
         }
     }
@@ -26,7 +26,7 @@ export async function calculateAttackSpecialModifiers(rollData) {
     // Reset Attack Specials
     rollData.specialModifiers = {};
     let actionItem = rollData.weapon ?? rollData.power;
-    if(!actionItem) return;
+    if (!actionItem) return;
 
     for (const item of actionItem.items) {
         if (!item.isAttackSpecial) continue;

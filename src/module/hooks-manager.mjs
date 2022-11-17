@@ -51,9 +51,9 @@ Enable Debug with: game.dh.debug = true
         const consolePrefix = 'Dark Heresy | ';
         game.dh = {
             debug: false,
-            log: (s,o) => !!game.dh.debug ? console.log(`${consolePrefix}${s}`, o) : undefined,
-            warn: (s,o) => console.warn(`${consolePrefix}${s}`, o),
-            error: (s,o) => console.error(`${consolePrefix}${s}`, o),
+            log: (s, o) => (!!game.dh.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
+            error: (s, o) => console.error(`${consolePrefix}${s}`, o),
             dhActor: DarkHeresyActor,
             dhItem: DarkHeresyItem,
             rollItemMacro,
@@ -89,7 +89,10 @@ Enable Debug with: game.dh.debug = true
         Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyStorageLocationSheet, { types: ['storageLocation'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyStorageLocationSheet, {
+            types: ['storageLocation'],
+            makeDefault: true,
+        });
 
         HandlebarManager.loadTemplates();
     }

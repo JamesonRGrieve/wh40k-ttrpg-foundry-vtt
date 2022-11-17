@@ -1,8 +1,6 @@
-import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
-import { sendAttackDataToChat } from '../rolls/roll-helpers.mjs';
+import { refundAmmo } from '../rules/ammo.mjs';
 
 export class BasicActionManager {
-
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
     storedRolls = {};
 
@@ -31,7 +29,7 @@ export class BasicActionManager {
         const rollId = div.data('rollId');
         const actionData = this.getActionData(rollId);
 
-        if(!actionData) {
+        if (!actionData) {
             ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
@@ -46,7 +44,6 @@ export class BasicActionManager {
             no: () => {},
             defaultYes: false,
         });
-
     }
 
     async _fateReroll(event) {
@@ -55,7 +52,7 @@ export class BasicActionManager {
         const rollId = div.data('rollId');
         const actionData = this.getActionData(rollId);
 
-        if(!actionData) {
+        if (!actionData) {
             ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
@@ -65,7 +62,7 @@ export class BasicActionManager {
             content: '<p>Are you sure you would like to use a fate point to re-roll action?</p>',
             yes: async () => {
                 await refundAmmo(actionData);
-                await this.performAttack(actionData);
+                await actionData.performAttackAndSendToChat();
             },
             no: () => {},
             defaultYes: false,
@@ -79,38 +76,6 @@ export class BasicActionManager {
     storeActionData(actionData) {
         //TODO: Cleanup all rolls older than ? minutes
         this.storedRolls[actionData.id] = actionData;
-    }
-
-    /**
-     * @param attackData {AttackData}
-     */
-    async performAttack(attackData) {
-        // Store Roll Information
-        this.storeActionData(attackData);
-
-        // Finalize Modifiers
-        await attackData.rollData.calculateTotalModifiers();
-
-        // Determine Success/Hits
-        await attackData.calculateSuccessOrFailure();
-
-        // Calculate Hits
-        await attackData.calculateHits();
-
-        game.dh.log('Attack Data', attackData);
-
-        // Expend Ammo
-        await useAmmo(attackData);
-
-        // Render Attack Roll
-        attackData.rollData.render = await attackData.rollData.roll.render();
-        attackData.template = attackData.rollData.template;
-
-        // This is an attack
-        attackData.hasDamage = true;
-
-        // Send to Chat
-        await sendAttackDataToChat(attackData);
     }
 
     /**

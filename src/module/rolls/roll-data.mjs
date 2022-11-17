@@ -2,14 +2,12 @@ import { rollDifficulties } from '../rules/difficulties.mjs';
 import { aimModifiers } from '../rules/aim.mjs';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.mjs';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
-import { attackSpecials, calculateAttackSpecialModifiers, updateAttackSpecials } from '../rules/attack-specials.mjs';
+import { calculateAttackSpecialModifiers, updateAttackSpecials } from '../rules/attack-specials.mjs';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
-import { uuid } from './roll-helpers.mjs';
 import { calculateWeaponModifiers, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
-import { creatureHitLocations, hitDropdown, hitLocationNames } from '../rules/hit-locations.mjs';
+import { hitDropdown } from '../rules/hit-locations.mjs';
 
 export class RollData {
-    template = '';
     difficulties = rollDifficulties();
     aims = aimModifiers();
     locations = hitDropdown();
@@ -39,17 +37,9 @@ export class RollData {
     eyeOfVengeance = false;
 
     attackSpecials = [];
-    hasAttackSpecial(special) {
-        return !!this.attackSpecials.find(s => s.name === special);
-    }
-    getAttackSpecial(special) {
-        return this.attackSpecials.find(s => s.name === special);
-    }
-
     roll;
     render;
     previousRolls = [];
-
     automatic = false;
     success = false;
     dos = 0;
@@ -67,6 +57,14 @@ export class RollData {
             }
         }
         return modifiers;
+    }
+
+    hasAttackSpecial(special) {
+        return !!this.attackSpecials.find((s) => s.name === special);
+    }
+
+    getAttackSpecial(special) {
+        return this.attackSpecials.find((s) => s.name === special);
     }
 
     modifiersToRollData() {
@@ -102,42 +100,31 @@ export class RollData {
     }
 }
 
-export class SimpleRollData extends RollData {
-    name = '';
-    type = '';
-
-    constructor() {
-        super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs';
-    }
-}
-
 export class WeaponRollData extends RollData {
     weapons = [];
     weapon;
     weaponSelect = false;
 
     weaponModifications = [];
-    hasWeaponModification(special) {
-        return !!this.weaponModifications.find(s => s.name === special);
-    }
-    getWeaponModification(special) {
-        return this.weaponModifications.find(s => s.name === special);
-    }
-
     isCalledShot = false;
     calledShotLocation;
-
     ammoText = '';
     ammoPerShot = 1;
     fireRate = 1;
     ammoUsed = 0;
-
     weaponModifiers = {};
 
     constructor() {
         super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+    }
+
+    hasWeaponModification(special) {
+        return !!this.weaponModifications.find((s) => s.name === special);
+    }
+
+    getWeaponModification(special) {
+        return this.weaponModifications.find((s) => s.name === special);
     }
 
     async update() {
@@ -165,7 +152,7 @@ export class WeaponRollData extends RollData {
     selectWeapon(weaponName) {
         // Unselect All
         this.weapons.filter((weapon) => weapon.id !== weaponName).forEach((weapon) => (weapon.isSelected = false));
-        this.weapon = this.data.weapons.find((weapon) => weapon.id === weaponName);
+        this.weapon = this.weapons.find((weapon) => weapon.id === weaponName);
         this.weapon.isSelected = true;
     }
 
@@ -183,7 +170,12 @@ export class WeaponRollData extends RollData {
         await calculateAmmoAttackBonuses(this);
         await calculateAttackSpecialModifiers(this);
         await calculateWeaponModifiers(this);
-        this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.weaponModifiers, 'range': this.rangeBonus };
+        this.modifiers = {
+            ...this.modifiers,
+            ...this.specialModifiers,
+            ...this.weaponModifiers,
+            range: this.rangeBonus,
+        };
         await this.calculateTotalModifiers();
     }
 }

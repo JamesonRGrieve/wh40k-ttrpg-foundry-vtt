@@ -1,6 +1,6 @@
 import { prepareWeaponRoll } from '../prompts/weapon-prompt.mjs';
 import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
-import { PsychicRollData, WeaponRollData } from '../rolls/roll-data.mjs';
+import { PsychicAttackData, WeaponAttackData } from '../rolls/action-data.mjs';
 
 export class TargetedActionManager {
     selectedTokens = {};
@@ -124,7 +124,7 @@ export class TargetedActionManager {
     }
 
     async performWeaponAttack(source = null, target = null, weapon = null) {
-        game.dh.log('performWeaponAttack');
+        game.dh.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 
@@ -135,13 +135,13 @@ export class TargetedActionManager {
             return;
         }
 
-        const weaponRollData = new WeaponRollData();
+        const weaponAttack = new WeaponAttackData();
+        const weaponRollData = weaponAttack.rollData;
         weaponRollData.weapons = weapons;
         weaponRollData.sourceActor = rollData.actor;
         weaponRollData.targetActor = rollData.target;
         weaponRollData.distance = rollData.distance;
-
-        await prepareWeaponRoll(weaponRollData);
+        await prepareWeaponRoll(weaponAttack);
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
@@ -156,13 +156,14 @@ export class TargetedActionManager {
             return;
         }
 
-        const psychicRollData = new PsychicRollData();
+        const psychicAttack = new PsychicAttackData();
+        const psychicRollData = psychicAttack.rollData;
         psychicRollData.psychicPowers = powers;
         psychicRollData.sourceActor = rollData.actor;
         psychicRollData.targetActor = rollData.target;
         psychicRollData.distance = rollData.distance;
 
-        await preparePsychicPowerRoll(psychicRollData);
+        await preparePsychicPowerRoll(psychicAttack);
     }
 }
 

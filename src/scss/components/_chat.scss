@@ -73,7 +73,7 @@
     &__controls {
       grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       padding: 0.2rem;
       background: url('../images/chat-control.png') no-repeat center/100% 100%;
       font-weight: bold;

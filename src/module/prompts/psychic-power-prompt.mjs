@@ -1,15 +1,15 @@
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { PsychicRollData } from '../rolls/roll-data.mjs';
-import { PsychicAttackData } from '../rolls/attack-data.mjs';
-import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
+import { PsychicAttackData } from '../rolls/action-data.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
     /**
-     * @param psychicRollData {PsychicRollData}
+     * @param psychicAttackData {PsychicAttackData}
      */
-    constructor(psychicRollData = {}, options = {}) {
-        super(psychicRollData, options);
-        this.data = psychicRollData;
+    constructor(psychicAttackData = {}, options = {}) {
+        super(psychicAttackData.rollData, options);
+        this.psychicAttackData = psychicAttackData;
+        this.data = psychicAttackData.rollData;
         this.initialized = false;
     }
 
@@ -49,6 +49,7 @@ export class PsychicPowerDialog extends FormApplication {
     }
 
     async _updateObject(event, formData) {
+        game.dh.log('_updateObject', { event, formData });
         recursiveUpdate(this.data, formData);
         await this.data.update();
         this.render(true);
@@ -60,9 +61,7 @@ export class PsychicPowerDialog extends FormApplication {
 
     async _rollPower(event) {
         await this.data.finalize();
-        const attackData = new PsychicAttackData();
-        attackData.rollData = this.data;
-        await DHBasicActionManager.performAttack(attackData);
+        await this.weaponAttackData.performAttackAndSendToChat();
         await this.close();
     }
 }

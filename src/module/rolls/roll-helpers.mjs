@@ -29,16 +29,16 @@ export async function roll1d100() {
     return roll;
 }
 
-export async function sendAttackDataToChat(attackData) {
-    const html = await renderTemplate(attackData.rollData.template, attackData);
+export async function sendActionDataToChat(actionData) {
+    const html = await renderTemplate(actionData.template, actionData);
     let chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
         type: CONST.CHAT_MESSAGE_TYPES.ROLL,
     };
-    if (attackData.rollData.roll) {
-        chatData.roll = attackData.rollData.roll;
+    if (actionData.rollData.roll) {
+        chatData.roll = actionData.rollData.roll;
     }
     if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
         chatData.whisper = ChatMessage.getWhisperRecipients('GM');

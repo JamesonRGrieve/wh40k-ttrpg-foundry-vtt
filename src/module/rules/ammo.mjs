@@ -1,37 +1,34 @@
 import { WeaponRollData } from '../rolls/roll-data.mjs';
 
-
 export function ammoText(item) {
     game.dh.log('ammoText', item);
     if (item.isRanged) {
-        const ammo = item.items.find(i => i.isAmmunition);
-        const name = ammo ? ammo.name : 'Standard'
+        const ammo = item.items.find((i) => i.isAmmunition);
+        const name = ammo ? ammo.name : 'Standard';
         game.dh.log('ammoName', name);
-        return `${name} (${item.system.clip.value}/${item.system.clip.max})`
+        return `${name} (${item.system.clip.value}/${item.system.clip.max})`;
     }
 }
 
-/**
- * @param attackData {AttackData}
- */
-export async function useAmmo(attackData) {
-    let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
-    if(actionItem.isRanged) {
-        actionItem.system.clip.value -= attackData.rollData.ammoUsed;
+export async function useAmmo(actionData) {
+    let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
+    if (!actionItem) return;
+    if (actionItem.isRanged) {
+        actionItem.system.clip.value -= actionData.rollData.ammoUsed;
         // Reset to 0 if there was a problem
-        if(actionItem.system.clip.value < 0) {
+        if (actionItem.system.clip.value < 0) {
             actionItem.system.clip.value = 0;
         }
     }
 }
 
 /**
- * @param attackData {AttackData}
+ * @param actionData {WeaponAttackData}
  */
-export async function refundAmmo(attackData) {
-    let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
-    if(actionItem.isRanged) {
-        actionItem.system.clip.value += attackData.rollData.ammoUsed;
+export async function refundAmmo(actionData) {
+    let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
+    if (actionItem.isRanged) {
+        actionItem.system.clip.value += actionData.rollData.ammoUsed;
     }
 }
 
@@ -40,10 +37,10 @@ export async function refundAmmo(attackData) {
  */
 export async function calculateAmmoAttackBonuses(rollData) {
     const weapon = rollData.weapon;
-    const ammo = weapon.items.find(i => i.isAmmunition);
-    if(!ammo) return;
+    const ammo = weapon.items.find((i) => i.isAmmunition);
+    if (!ammo) return;
 
-    switch(ammo.name) {
+    switch (ammo.name) {
         case 'Explosive Arrows/Quarrels':
             rollData.specialModifiers['explosive arrows'] = -10;
             break;
@@ -52,31 +49,31 @@ export async function calculateAmmoAttackBonuses(rollData) {
 
 export async function calculateAmmoAttackSpecials(rollData) {
     const weapon = rollData.weapon;
-    const ammo = weapon.items.find(i => i.isAmmunition);
-    if(!ammo) return;
+    const ammo = weapon.items.find((i) => i.isAmmunition);
+    if (!ammo) return;
 
-    switch(ammo.name) {
+    switch (ammo.name) {
         case 'Explosive Arrows/Quarrels':
-            rollData.attackSpecials.findSplice(i => i.name === 'Primitive');
+            rollData.attackSpecials.findSplice((i) => i.name === 'Primitive');
             rollData.attackSpecials.push({
                 name: 'Blast',
-                level: 1
-            })
+                level: 1,
+            });
             break;
     }
 }
 
-export async function calculateAmmoSpecials(attackData, hit) {
-    const weapon = attackData.rollData.weapon;
-    const ammo = weapon.items.find(i => i.isAmmunition);
-    if(!ammo) return;
+export async function calculateAmmoSpecials(actionData, hit) {
+    const weapon = actionData.rollData.weapon;
+    const ammo = weapon.items.find((i) => i.isAmmunition);
+    if (!ammo) return;
 
-    switch(ammo.name) {
+    switch (ammo.name) {
         case 'Dumdum Bullets':
             hit.specials.push({
-                'name': 'dumdum bullets',
-                'special': 'Armour points count double against this hit.'
-            })
+                name: 'dumdum bullets',
+                special: 'Armour points count double against this hit.',
+            });
             break;
         case 'Explosive Arrows/Quarrels':
             hit.damageType = 'Explosive';
@@ -84,17 +81,16 @@ export async function calculateAmmoSpecials(attackData, hit) {
     }
 }
 
-
 /**
- * @param attackData {AttackData}
+ * @param actionData {WeaponAttackData}
  * @param hit {Hit}
  */
-export async function calculateAmmoDamageBonuses(attackData, hit) {
-    const weapon = attackData.rollData.weapon;
-    const ammo = weapon.items.find(i => i.isAmmunition);
-    if(!ammo) return;
+export async function calculateAmmoDamageBonuses(actionData, hit) {
+    const weapon = actionData.rollData.weapon;
+    const ammo = weapon.items.find((i) => i.isAmmunition);
+    if (!ammo) return;
 
-    switch(ammo.name) {
+    switch (ammo.name) {
         case 'Amputator Shells':
             hit.modifiers['amputator shells'] = 2;
             break;
@@ -108,21 +104,20 @@ export async function calculateAmmoDamageBonuses(attackData, hit) {
 }
 
 /**
- * @param attackData {AttackData}
+ * @param actionData {actionData}
  * @param hit {Hit}
  */
-export async function calculateAmmoPenetrationBonuses(attackData, hit) {
-    const weapon = attackData.rollData.weapon;
-    const ammo = weapon.items.find(i => i.isAmmunition);
-    if(!ammo) return;
+export async function calculateAmmoPenetrationBonuses(actionData, hit) {
+    const weapon = actionData.rollData.weapon;
+    const ammo = weapon.items.find((i) => i.isAmmunition);
+    if (!ammo) return;
 
-    switch(ammo.name) {
+    switch (ammo.name) {
         case 'Expander Rounds':
             hit.penetrationModifiers['expander rounds'] = 1;
             break;
     }
 }
-
 
 /**
  * @param rollData {WeaponRollData}
@@ -160,9 +155,9 @@ export function calculateAmmoInformation(rollData) {
     }
 
     // Ammunition Modification
-    const ammunition = rollData.weapon.items.find(i => i.isAmmunition);
-    if(ammunition) {
-        switch(ammunition.name) {
+    const ammunition = rollData.weapon.items.find((i) => i.isAmmunition);
+    if (ammunition) {
+        switch (ammunition.name) {
             case 'Hot-Shot Charge Packs':
                 fireRate = 1;
         }

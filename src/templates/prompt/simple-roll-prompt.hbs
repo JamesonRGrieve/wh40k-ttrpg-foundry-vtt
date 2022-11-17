@@ -1,19 +1,21 @@
-<form class="dh-wrapper">
-    <div class="dh-panel prompt">
-        <h1 class="dh-panel__header">{{name}} Roll</h1>
-        <div class="dh-field__wrapper">
-            <span class="dh-field__span">Base</span>
-            <span class="dh-field__span">{{baseTarget}}</span>
+{{#with rollData}}
+    <form class="dh-wrapper">
+        <div class="dh-panel prompt">
+            <h1 class="dh-panel__header">{{name}} Roll</h1>
+            <div class="dh-field__wrapper">
+                <span class="dh-field__span">Base</span>
+                <span class="dh-field__span">{{baseTarget}}</span>
+            </div>
+            <div class="dh-field__wrapper">
+                <span class="dh-field__span">Difficulty</span>
+                <select class="dh-field__input" name="difficulty">
+                    {{selectOptions difficulties selected=0}}
+                </select>
+            </div>
+            <div class="dh-field__wrapper">
+                <span class="dh-field__span">Modifier</span>
+                <input class="dh-field__input" type="number" data-dtype="Number" id="modifier" value="0" />
+            </div>
         </div>
-        <div class="dh-field__wrapper">
-            <span class="dh-field__span">Difficulty</span>
-            <select class="dh-field__input" name="difficulty">
-                {{selectOptions difficulties selected=0}}
-            </select>
-        </div>
-        <div class="dh-field__wrapper">
-            <span class="dh-field__span">Modifier</span>
-            <input class="dh-field__input" type="number" data-dtype="Number" id="modifier" value="0" />
-        </div>
-    </div>
-</form>
+    </form>
+{{/with}}

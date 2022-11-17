@@ -1,9 +1,12 @@
-import { roll1d100, sendAttackDataToChat } from '../rolls/roll-helpers.mjs';
-import { AttackData } from '../rolls/attack-data.mjs';
+import { roll1d100, sendActionDataToChat } from '../rolls/roll-helpers.mjs';
 
-
-export async function prepareSimpleRoll(rollData) {
-    const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs', rollData);
+/**
+ *
+ * @param simpleSkillData {SimpleSkillData}
+ * @returns {Promise<void>}
+ */
+export async function prepareSimpleRoll(simpleSkillData) {
+    const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs', simpleSkillData);
     let dialog = new Dialog(
         {
             title: 'Roll Modifier',
@@ -14,14 +17,13 @@ export async function prepareSimpleRoll(rollData) {
                     label: 'Roll',
                     callback: async (html) => {
                         game.dh.log(html.find('[name=difficulty] :selected'));
+                        const rollData = simpleSkillData.rollData;
                         rollData.modifiers['difficulty'] = parseInt(html.find('[name=difficulty] :selected').val());
                         rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
                         rollData.roll = await roll1d100();
                         await rollData.calculateTotalModifiers();
-                        const ad = new AttackData();
-                        ad.rollData = rollData;
-                        await ad.calculateSuccessOrFailure();
-                        await sendAttackDataToChat(ad);
+                        await simpleSkillData.calculateSuccessOrFailure();
+                        await sendActionDataToChat(simpleSkillData);
                     },
                 },
                 cancel: {

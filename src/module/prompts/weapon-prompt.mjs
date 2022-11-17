@@ -1,15 +1,15 @@
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
-import { WeaponAttackData } from '../rolls/attack-data.mjs';
-import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
+import { WeaponAttackData } from '../rolls/action-data.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
     /**
-     * @param weaponRollData {WeaponRollData}
+     * @param weaponAttackData {WeaponAttackData}
      * @param options
      */
-    constructor(weaponRollData = {}, options = {}) {
-        super(weaponRollData, options);
-        this.data = weaponRollData;
+    constructor(weaponAttackData = {}, options = {}) {
+        super(weaponAttackData, options);
+        this.weaponAttackData = weaponAttackData;
+        this.data = weaponAttackData.rollData;
         this.initialized = false;
     }
 
@@ -49,6 +49,7 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     async _updateObject(event, formData) {
+        game.dh.log('_updateObject', { event, formData });
         recursiveUpdate(this.data, formData);
         await this.data.update();
         this.render(true);
@@ -60,9 +61,7 @@ export class WeaponAttackDialog extends FormApplication {
 
     async _rollAttack(event) {
         await this.data.finalize();
-        const attackData = new WeaponAttackData();
-        attackData.rollData = this.data;
-        await DHBasicActionManager.performAttack(attackData);
+        await this.weaponAttackData.performAttackAndSendToChat();
         await this.close();
     }
 }

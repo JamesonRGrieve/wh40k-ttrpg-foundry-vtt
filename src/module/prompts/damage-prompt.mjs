@@ -1,5 +1,5 @@
-import { sendAttackDataToChat } from '../rolls/roll-helpers.mjs';
-import { AttackData } from '../rolls/attack-data.mjs';
+import { sendActionDataToChat } from '../rolls/roll-helpers.mjs';
+import { ActionData } from '../rolls/action-data.mjs';
 
 export async function prepareDamageRoll(rollData) {
     rollData.dh = CONFIG.dh;
@@ -13,15 +13,18 @@ export async function prepareDamageRoll(rollData) {
                     icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
                     callback: async (html) => {
+                        const actionData = new ActionData();
+                        actionData.template = 'systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs';
+
                         rollData.damage = html.find('#damage')[0].value;
                         rollData.penetration = html.find('#penetration')[0].value;
                         rollData.damageType = html.find('[name=damageType] :selected').val();
                         rollData.pr = html.find('#pr')[0]?.value;
                         rollData.template = 'systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs';
                         rollData.roll = new Roll(rollData.damage, rollData);
-                        const attackData = new AttackData();
-                        attackData.rollData = rollData;
-                        await sendAttackDataToChat(attackData);
+
+                        actionData.rollData = rollData;
+                        await sendActionDataToChat(actionData);
                     },
                 },
                 cancel: {
