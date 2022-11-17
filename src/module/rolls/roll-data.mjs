@@ -45,10 +45,14 @@ export class RollData {
     dos = 0;
     dof = 0;
 
+    nameOverride;
     get name() {
+        if(this.nameOverride) return this.nameOverride;
+
         let actionItem = this.weapon ?? this.power;
         if (actionItem) return actionItem.name;
-        else return '';
+
+        return '';
     }
 
     get modifiedTarget() {

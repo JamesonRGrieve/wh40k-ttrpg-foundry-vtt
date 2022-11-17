@@ -193,7 +193,7 @@ export class Hit {
             }
 
             if (attackData.rollData.dos > 2 && attackData.rollData.hasAttackSpecial('Razer Sharp')) {
-                this.penetrationModifiers['razer sharp'] = this.penetration * 2;
+                this.penetrationModifiers['razer sharp'] = this.penetration;
             }
 
             if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
@@ -214,7 +214,7 @@ export class Hit {
 
         if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
             if (attackData.rollData.hasAttackSpecial('Melta')) {
-                this.penetrationModifiers['melta'] = this.penetration * 2;
+                this.penetrationModifiers['melta'] = this.penetration;
             }
         }
     }

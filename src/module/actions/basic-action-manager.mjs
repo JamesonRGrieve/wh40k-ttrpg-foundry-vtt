@@ -1,4 +1,5 @@
 import { refundAmmo } from '../rules/ammo.mjs';
+import { uuid } from '../rolls/roll-helpers.mjs';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -51,6 +52,8 @@ export class BasicActionManager {
         const div = $(event.currentTarget);
         const rollId = div.data('rollId');
         const actionData = this.getActionData(rollId);
+        // Generate new ID for action data
+        actionData.id = uuid();
 
         if (!actionData) {
             ui.notifications.warn(`Action data expired. Unable to perform action.`);

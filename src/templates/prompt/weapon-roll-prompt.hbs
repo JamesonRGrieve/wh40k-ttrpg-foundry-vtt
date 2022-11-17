@@ -53,10 +53,12 @@
                         <span class="dh-field__span">Weapon</span>
                         <span class="dh-field__span">{{weapon.name}}</span>
                     </div>
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Ammunition</span>
-                        <span class="dh-field__span">{{ammoText}}</span>
-                    </div>
+                    {{#if weapon.isRanged}}
+                        <div class="dh-field__wrapper">
+                            <span class="dh-field__span">Ammunition</span>
+                            <span class="dh-field__span">{{ammoText}}</span>
+                        </div>
+                    {{/if}}
                     {{#each weapon.items as |item|}}
                         {{#if item.isAttackSpecial}}
                             <div class="dh-field__wrapper">
@@ -90,7 +92,7 @@
                     <span class="dh-field__span">{{baseTarget}}</span>
                 </div>
                 <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Attack Type ({{fireRate}} hit(s) max)</span>
+                    <span class="dh-field__span">Attack Type{{#if weapon.isRanged}} ({{fireRate}} hit(s) max){{/if}}</span>
                     <select class="dh-field__input" name="action" id="action">
                         {{selectOptions actions selected=this.action}}
                     </select>

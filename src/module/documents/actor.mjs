@@ -154,7 +154,7 @@ export class DarkHeresyActor extends Actor {
         const simpleSkillData = new SimpleSkillData();
         const rollData = simpleSkillData.rollData;
         rollData.actor = this;
-        rollData.name = label;
+        rollData.nameOverride = label;
         rollData.type = 'Skill';
         rollData.baseTarget = skill.current;
         rollData.modifiers.modifier = 0;
@@ -167,7 +167,7 @@ export class DarkHeresyActor extends Actor {
         const simpleSkillData = new SimpleSkillData();
         const rollData = simpleSkillData.rollData;
         rollData.actor = this;
-        rollData.name = characteristic.label;
+        rollData.nameOverride = characteristic.label;
         rollData.type = 'Characteristic';
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
