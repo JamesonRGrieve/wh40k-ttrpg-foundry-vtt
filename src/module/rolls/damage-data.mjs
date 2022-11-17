@@ -139,16 +139,18 @@ export class Hit {
             }
 
             // Add Accurate
-            if (attackData.rollData.hasAttackSpecial('Accurate')) {
-                if (attackData.rollData.dos >= 3) {
-                    const accurateRoll = new Roll('1d10', {});
-                    await accurateRoll.evaluate({ async: true });
-                    this.modifiers['accurate'] = accurateRoll.total;
-                }
-                if (attackData.rollData.dos >= 5) {
-                    const accurateRoll = new Roll('1d10', {});
-                    await accurateRoll.evaluate({ async: true });
-                    this.modifiers['accurate x 2'] = accurateRoll.total;
+            if (attackData.rollData.action === 'Standard Attack' || attackData.rollData.action === 'Called Shot') {
+                if (attackData.rollData.hasAttackSpecial('Accurate')) {
+                    if (attackData.rollData.dos >= 3) {
+                        const accurateRoll = new Roll('1d10', {});
+                        await accurateRoll.evaluate({ async: true });
+                        this.modifiers['accurate'] = accurateRoll.total;
+                    }
+                    if (attackData.rollData.dos >= 5) {
+                        const accurateRoll = new Roll('1d10', {});
+                        await accurateRoll.evaluate({ async: true });
+                        this.modifiers['accurate x 2'] = accurateRoll.total;
+                    }
                 }
             }
 

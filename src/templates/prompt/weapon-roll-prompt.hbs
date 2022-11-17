@@ -95,6 +95,14 @@
                         {{selectOptions actions selected=this.action}}
                     </select>
                 </div>
+                {{#if this.isCalledShot}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Called Shot Location</span>
+                        <select class="dh-field__input" name="calledShotLocation" id="calledShotLocation">
+                            {{selectOptions locations selected=this.calledShotLocation}}
+                        </select>
+                    </div>
+                {{/if}}
                 {{#if this.modifiers.attack}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Attack Modifier</span>

@@ -7,7 +7,7 @@ export function ammoText(item) {
         const ammo = item.items.find(i => i.isAmmunition);
         const name = ammo ? ammo.name : 'Standard'
         game.dh.log('ammoName', name);
-        return `${name} ${item.system.clip.value}/${item.system.clip.max}`
+        return `${name} (${item.system.clip.value}/${item.system.clip.max})`
     }
 }
 

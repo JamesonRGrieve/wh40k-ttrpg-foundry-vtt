@@ -8,11 +8,13 @@ export function getHitLocationForRoll(roll) {
 }
 
 export function getNextHitLocation(previousHit) {
+    game.dh.log('getNextHitLocation', previousHit);
     const hitArray = hitLocationNames();
     let nextIndex = hitLocationNames().indexOf(previousHit) + 1;
     if (nextIndex > hitArray.length) {
         nextIndex = 0;
     }
+    game.dh.log('getNextHitLocation', {hitArray, nextIndex});
     return hitArray[nextIndex];
 }
 
