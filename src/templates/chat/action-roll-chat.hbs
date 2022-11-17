@@ -24,36 +24,26 @@
                         <div class="dh-roll__value">{{modifiedTarget}}</div>
                     </div>
 
+                    {{#if ammoUsed}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Ammo Used</div>
+                            <div class="dh-roll__value">{{ammoUsed}}</div>
+                        </div>
+                    {{/if}}
+
+
                     {{#if success}}
                         {{#if @root.hasDamage}}
-                            <button class="dh-roll__success roll-control__hide-control" data-toggle="{{@root.id}}">
+                            <div class="dh-roll__success" >
                                 <span>Success</span>
                                 <span>{{roll.total}}</span>
-                            </button>
+                            </div>
                         {{else}}
                             <div class="dh-roll__success">
                                 <span>Success</span>
                                 <span>{{roll.total}}</span>
                             </div>
                         {{/if}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Degrees of Success</div>
-                            <div class="dh-roll__value">{{dos}}</div>
-                        </div>
-                        <div class='dh-roll__controls'>
-                            <div class="dh-control-button">
-                                <span class="dh-control-button__span material-icons">casino</span>
-                            </div>
-                            <div class="dh-control-button">
-                                <span class="dh-control-button__span material-icons">casino</span>
-                            </div>
-                            <div class="dh-control-button">
-                                <span class="dh-control-button__span material-icons">casino</span>
-                            </div>
-                            <div class="dh-control-button">
-                                <span class="dh-control-button__span material-icons">casino</span>
-                            </div>
-                        </div>
                     {{else}}
                         <div class="dh-roll__fail">
                             <span>Fail</span>
@@ -64,6 +54,28 @@
                             <div class="dh-roll__value">{{dof}}</div>
                         </div>
                     {{/if}}
+
+                    <div class='dh-roll__controls'>
+                        {{#if success}}
+                            <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
+                                <span class="dh-control-button__span material-icons">bolt</span>
+                                <span class="dh-control-button__label">Damage</span>
+                            </button>
+                        {{else}}
+                            <button class="dh-control-button disabled" disabled>
+                                <span class="dh-control-button__span material-icons">bolt</span>
+                                <span class="dh-control-button__label">Damage</span>
+                            </button>
+                        {{/if}}
+                        <div class="dh-control-button roll-control__refund-ammo" data-roll-id="{{@root.id}}">
+                            <span class="dh-control-button__span material-icons">deblur</span>
+                            <span class="dh-control-button__label">Refund Ammo</span>
+                        </div>
+                        <div class="dh-control-button roll-control__fate-reroll" data-roll-id="{{@root.id}}">
+                            <span class="dh-control-button__span material-icons">casino</span>
+                            <span class="dh-control-button__label">Fate Point</span>
+                        </div>
+                    </div>
 
                     {{#each @root.effects as |effect|}}
                         <div class="dh-roll__row dh-roll__row--number">

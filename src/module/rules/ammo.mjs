@@ -26,6 +26,16 @@ export async function useAmmo(attackData) {
 }
 
 /**
+ * @param attackData {AttackData}
+ */
+export async function refundAmmo(attackData) {
+    let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+    if(actionItem.isRanged) {
+        actionItem.system.clip.value += attackData.rollData.ammoUsed;
+    }
+}
+
+/**
  * @param rollData {WeaponRollData}
  */
 export async function calculateAmmoAttackBonuses(rollData) {

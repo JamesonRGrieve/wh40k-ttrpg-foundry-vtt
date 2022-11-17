@@ -1,7 +1,7 @@
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { PsychicRollData } from '../rolls/roll-data.mjs';
-import { performAttack } from '../actions/actions-manager.mjs';
 import { PsychicAttackData } from '../rolls/attack-data.mjs';
+import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
 export class PsychicPowerDialog extends FormApplication {
     /**
@@ -62,7 +62,7 @@ export class PsychicPowerDialog extends FormApplication {
         await this.data.finalize();
         const attackData = new PsychicAttackData();
         attackData.rollData = this.data;
-        await performAttack(attackData);
+        await DHBasicActionManager.performAttack(attackData);
         await this.close();
     }
 }

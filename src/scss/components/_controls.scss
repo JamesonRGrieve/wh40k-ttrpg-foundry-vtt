@@ -19,6 +19,33 @@
     &-control-button {
         cursor: pointer;
 
+        .disabled {
+            cursor: unset;
+            opacity: 1;
+            text-decoration: line-through;
+        }
+
+        &__label {
+            padding-top: 1px;
+            padding-left: 5px;
+            vertical-align: text-top;
+            opacity: .5;
+            font-size: 12px;
+            line-height: 1;
+            display: inline-grid;
+            white-space: nowrap;
+            word-wrap: normal;
+            -webkit-font-smoothing: antialiased;
+
+            .active {
+                opacity: 1;
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
         &__span {
             padding-top: 3px;
             padding-left: 2px;

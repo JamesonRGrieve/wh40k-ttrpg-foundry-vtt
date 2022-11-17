@@ -1,6 +1,6 @@
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
-import { performAttack } from '../actions/actions-manager.mjs';
 import { WeaponAttackData } from '../rolls/attack-data.mjs';
+import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
     /**
@@ -62,7 +62,7 @@ export class WeaponAttackDialog extends FormApplication {
         await this.data.finalize();
         const attackData = new WeaponAttackData();
         attackData.rollData = this.data;
-        await performAttack(attackData);
+        await DHBasicActionManager.performAttack(attackData);
         await this.close();
     }
 }
