@@ -78,7 +78,7 @@ export class Hit {
 
         let righteousFuryThreshold = 10;
         if (attackData.rollData.hasAttackSpecial('Vengeful')) {
-            righteousFuryThreshold = attackData.rollData.getAttackSpecial('Vengeful').system.level ?? 10;
+            righteousFuryThreshold = attackData.rollData.getAttackSpecial('Vengeful').level ?? 10;
             game.dh.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
@@ -106,15 +106,15 @@ export class Hit {
 
                 if (attackData.rollData.hasAttackSpecial('Primitive')) {
                     const primitive = attackData.rollData.getAttackSpecial('Primitive');
-                    if (result.result > primitive.system.level) {
-                        this.modifiers['primitive'] = primitive.system.level - result.result;
+                    if (result.result > primitive.level) {
+                        this.modifiers['primitive'] = primitive.level - result.result;
                     }
                 }
 
                 if (attackData.rollData.hasAttackSpecial('Proven')) {
                     const proven = attackData.rollData.getAttackSpecial('Proven');
-                    if (result.result < proven.system.level) {
-                        this.modifiers['proven'] = proven.system.level - result.result;
+                    if (result.result < proven.level) {
+                        this.modifiers['proven'] = proven.level - result.result;
                     }
                 }
             }
