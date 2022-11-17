@@ -1,50 +1,52 @@
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        <h3>Psychic Power</h3>
-        <div class="dh-roll">
-            <h1>{{power.name}}</h1>
-            <h2>{{lookup difficulties difficulty}}</h2>
-            <div class="dh-roll__divider"></div>
+{{#with rollData}}
+    <div class="dh-wrapper">
+        <div class="dh-chat">
+            <h3>Psychic Power</h3>
+            <div class="dh-roll">
+                <h1>{{power.name}}</h1>
+                <h2>{{lookup difficulties difficulty}}</h2>
+                <div class="dh-roll__divider"></div>
 
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Base</div>
-                <div class="dh-roll__value">{{baseTarget}}</div>
-            </div>
-            {{#each (lookup this activeModifiers)}}
                 <div class="dh-roll__row dh-roll__row--number">
-                    <div class="dh-roll__label">Modifier: {{@key}}</div>
-                    <div class="dh-roll__value">{{this}}</div>
+                    <div class="dh-roll__label">Base</div>
+                    <div class="dh-roll__value">{{baseTarget}}</div>
                 </div>
-            {{/each}}
-            <div class="dh-roll__target">
-                <div class="dh-roll__label">Target</div>
-                <div class="dh-roll__value">{{lookup this modifiedTarget}}</div>
-            </div>
+                {{#each (lookup this activeModifiers)}}
+                    <div class="dh-roll__row dh-roll__row--number">
+                        <div class="dh-roll__label">Modifier: {{@key}}</div>
+                        <div class="dh-roll__value">{{this}}</div>
+                    </div>
+                {{/each}}
+                <div class="dh-roll__target">
+                    <div class="dh-roll__label">Target</div>
+                    <div class="dh-roll__value">{{lookup this modifiedTarget}}</div>
+                </div>
 
-            {{#if success}}
-                <div class="dh-roll__success">
-                    <span>Success</span>
-                    <span>{{roll.total}}</span>
+                {{#if success}}
+                    <div class="dh-roll__success">
+                        <span>Success</span>
+                        <span>{{roll.total}}</span>
+                    </div>
+                    <div class="dh-roll__row dh-roll__row--number">
+                        <div class="dh-roll__label">Degrees of Success</div>
+                        <div class="dh-roll__value">{{dos}}</div>
+                    </div>
+                {{else}}
+                    <div class="dh-roll__fail">
+                        <span>Fail</span>
+                        <span>{{roll.total}}</span>
+                    </div>
+                    <div class="dh-roll__row dh-roll__row--number">
+                        <div class="dh-roll__label">Degrees of Failure</div>
+                        <div class="dh-roll__value">{{dof}}</div>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="dice-rolls" style="display:none">
+                <div class="dice-roll-render">
+                    {{{render}}}
                 </div>
-                <div class="dh-roll__row dh-roll__row--number">
-                    <div class="dh-roll__label">Degrees of Success</div>
-                    <div class="dh-roll__value">{{dos}}</div>
-                </div>
-            {{else}}
-                <div class="dh-roll__fail">
-                    <span>Fail</span>
-                    <span>{{roll.total}}</span>
-                </div>
-                <div class="dh-roll__row dh-roll__row--number">
-                    <div class="dh-roll__label">Degrees of Failure</div>
-                    <div class="dh-roll__value">{{dof}}</div>
-                </div>
-            {{/if}}
-        </div>
-        <div class="dice-rolls" style="display:none">
-            <div class="dice-roll-render">
-                {{{render}}}
             </div>
         </div>
     </div>
-</div>
+{{/with}}

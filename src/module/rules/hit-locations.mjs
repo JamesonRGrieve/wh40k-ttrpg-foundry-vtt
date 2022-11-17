@@ -20,7 +20,7 @@ export function getNextHitLocation(previousHit) {
 
 export function hitDropdown() {
     return creatureHitLocations().map(i => {
-        return { [i.min] : i.name}
+        return { [i.name] : i.name }
     })
 }
 
