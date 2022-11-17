@@ -17,8 +17,10 @@ export async function prepareSimpleRoll(rollData) {
                         rollData.modifiers['difficulty'] = parseInt(html.find('[name=difficulty] :selected').val());
                         rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
                         rollData.roll = await roll1d100();
+                        await rollData.calculateTotalModifiers();
                         const ad = new AttackData();
                         ad.rollData = rollData;
+                        await ad.calculateSuccessOrFailure();
                         await sendAttackDataToChat(ad);
                     },
                 },
