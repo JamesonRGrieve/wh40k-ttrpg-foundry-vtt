@@ -74,6 +74,7 @@ export class Hit {
      */
     async _calculateDamage(attackData) {
         let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        if(actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
         let righteousFuryThreshold = 10;
