@@ -22,6 +22,7 @@ export class RollData {
     rangeName = '';
     rangeBonus = 0;
 
+    combatActionInformation = {};
     actions = {};
     action = '';
     baseTarget = 0;

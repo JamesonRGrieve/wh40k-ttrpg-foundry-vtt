@@ -50,8 +50,9 @@ export function updateAvailableCombatActions(rollData) {
     }
 
     rollData.actions = {};
+    rollData.combatActionInformation = actions;
     for (let action of actions) {
-        rollData.actions[action.name] = action;
+        rollData.actions[action.name] = action.name;
     }
 
     // If action no longer exists -- set to first available
