@@ -84,7 +84,7 @@ export class TargetedActionManager {
     }
 
     getTargetToken(target) {
-        game.dh.log('getSourceToken', target);
+        game.dh.log('getTargetToken', target);
         let targetToken;
         if (target) {
             targetToken = target.token ?? target.getActiveTokens()[0];
@@ -108,7 +108,11 @@ export class TargetedActionManager {
         game.dh.log('createSourceAndTargetData', { source, target });
         // Source
         const sourceToken = this.getSourceToken(source);
-        if (!sourceToken) return;
+        if (!sourceToken) return {
+            actor: source,
+            target: undefined,
+            distance: 0
+        }
         const sourceActorData = sourceToken.actor;
 
         // Target

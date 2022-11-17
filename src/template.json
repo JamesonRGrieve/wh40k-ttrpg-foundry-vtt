@@ -992,6 +992,7 @@
                 "inBackpack": false
             },
             "armourPoints": {
+                "type": "",
                 "armourPoints": {
                     "head": 0,
                     "leftArm": 0,

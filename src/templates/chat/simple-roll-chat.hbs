@@ -12,7 +12,7 @@
                     <div class="dh-roll__label">Base</div>
                     <div class="dh-roll__value">{{baseTarget}}</div>
                 </div>
-                {{#each (lookup this activeModifiers)}}
+                {{#each activeModifiers}}
                     <div class="dh-roll__row dh-roll__row--number">
                         <div class="dh-roll__label">Modifier: {{@key}}</div>
                         <div class="dh-roll__value">{{this}}</div>

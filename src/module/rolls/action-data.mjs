@@ -22,56 +22,61 @@ export class ActionData {
     async calculateSuccessOrFailure() {
         await this._calculateHit();
         let actionItem = this.rollData.weapon ?? this.rollData.power;
-        if (!actionItem) return;
 
-        if (actionItem.isMelee) {
-            if (!this.rollData.success) {
-                // Re-Roll Attack for Blademaster
-                if (this.rollData.sourceActor.hasTalent('Blademaster')) {
-                    this.effects.push('blademaster');
-                    this.rollData.previousRolls.push(this.rollData.roll);
-                    await this._calculateHit();
+        // Action Item
+        if (actionItem) {
+            if (actionItem.isMelee) {
+                if (!this.rollData.success) {
+                    // Re-Roll Attack for Blademaster
+                    if (this.rollData.sourceActor.hasTalent('Blademaster')) {
+                        this.effects.push('blademaster');
+                        this.rollData.previousRolls.push(this.rollData.roll);
+                        await this._calculateHit();
+                    }
+                }
+            } else if (actionItem.isRanged) {
+                const rollTotal = this.rollData.roll.total;
+                if (rollTotal > 91 && this.rollData.hasAttackSpecial('Overheats')) {
+                    this.effects.push('overheat');
+                }
+                if ((!this.rollData.hasAttackSpecial('Reliable') && rollTotal > 96) || rollTotal === 100) {
+                    this.effects.push('jam');
                 }
             }
-        } else if (actionItem.isRanged) {
-            const rollTotal = this.rollData.roll.total;
-            if (rollTotal > 91 && this.rollData.hasAttackSpecial('Overheats')) {
-                this.effects.push('overheat');
-            }
-            if ((!this.rollData.hasAttackSpecial('Reliable') && rollTotal > 96) || rollTotal === 100) {
-                this.effects.push('jam');
-            }
         }
+
 
         if (this.rollData.success) {
             this.rollData.dof = 0;
             this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll.total);
 
-            if (this.rollData.action === 'Semi-Auto Burst' || this.rollData.action === 'Swift Attack' || actionItem.isPsychicBarrage) {
-                // Possible Semi Rate
-                this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
+            if (actionItem) {
+                if (this.rollData.action === 'Semi-Auto Burst' || this.rollData.action === 'Swift Attack' || actionItem.isPsychicBarrage) {
+                    // Possible Semi Rate
+                    this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
 
-                // Storm
-                if (this.rollData.hasAttackSpecial('Storm')) {
-                    this.damageData.additionalHits *= 2;
-                }
+                    // Storm
+                    if (this.rollData.hasAttackSpecial('Storm')) {
+                        this.damageData.additionalHits *= 2;
+                    }
 
-                // But Max at fire rate (Ammo available / ammo per shot || rate of fire - whichever is lower)
-                if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
-                    this.damageData.additionalHits = this.rollData.fireRate - 1;
-                }
-            } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || actionItem.isPsychicStorm) {
-                // Possible Full Rate
-                this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
+                    // But Max at fire rate (Ammo available / ammo per shot || rate of fire - whichever is lower)
+                    if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                        this.damageData.additionalHits = this.rollData.fireRate - 1;
+                    }
+                } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || actionItem.isPsychicStorm) {
+                    // Possible Full Rate
+                    this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
 
-                // Storm
-                if (this.rollData.hasAttackSpecial('Storm')) {
-                    this.damageData.additionalHits *= 2;
-                }
+                    // Storm
+                    if (this.rollData.hasAttackSpecial('Storm')) {
+                        this.damageData.additionalHits *= 2;
+                    }
 
-                // But Max at weapon rate
-                if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
-                    this.damageData.additionalHits = this.rollData.fireRate - 1;
+                    // But Max at weapon rate
+                    if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                        this.damageData.additionalHits = this.rollData.fireRate - 1;
+                    }
                 }
             }
 

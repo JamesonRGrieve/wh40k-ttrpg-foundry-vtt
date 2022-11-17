@@ -1,4 +1,7 @@
 import { roll1d100, sendActionDataToChat } from '../rolls/roll-helpers.mjs';
+import { calculateAmmoAttackBonuses } from '../rules/ammo.mjs';
+import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
+import { calculateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 
 /**
  *
@@ -16,12 +19,9 @@ export async function prepareSimpleRoll(simpleSkillData) {
                     icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
                     callback: async (html) => {
-                        game.dh.log('prepareSimpleRoll', JSON.stringify(simpleSkillData));
-                        game.dh.log(html.find('[id=difficulty] :selected'));
                         const rollData = simpleSkillData.rollData;
                         rollData.modifiers['difficulty'] = parseInt(html.find('[id=difficulty] :selected').val());
                         rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
-                        rollData.roll = await roll1d100();
                         await rollData.calculateTotalModifiers();
                         await simpleSkillData.calculateSuccessOrFailure();
                         await sendActionDataToChat(simpleSkillData);
