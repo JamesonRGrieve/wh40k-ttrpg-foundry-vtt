@@ -29,10 +29,12 @@ export class ActorContainerSheet extends ActorSheet {
     _onDrop(event) {
         event.preventDefault();
         event.stopPropagation();
+        game.dh.log('Actor _onDrop', event);
 
         try {
             const data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type === 'Item') {
+                game.dh.log('Checking if item already exists', data);
                 // Check if Item already Exists
                 if (this.actor.items.find((i) => i._id === data._id)) {
                     game.dh.log('Item already exists on Actor -- ignoring');

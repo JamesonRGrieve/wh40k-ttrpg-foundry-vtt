@@ -10,6 +10,23 @@ import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 
 export class DarkHeresyActor extends Actor {
+
+    async _preCreate(data, options, user) {
+        let initData = {
+            "token.bar1": { "attribute": "wounds" },
+            "token.bar2": { "attribute": "fate" },
+            "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            "token.displayBars": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+            "token.name": data.name
+        }
+        if (data.type === "acolyte") {
+            initData["token.vision"] =  true;
+            initData["token.actorLink"] = true;
+        }
+        this.data.update(initData)
+    }
+
     get backpack() {
         return this.system.backpack;
     }
@@ -419,7 +436,7 @@ export class DarkHeresyActor extends Actor {
         let backpackMaxWeight = 0;
         if (this.backpack.hasBackpack) {
             backpackMaxWeight = this.backpack.weight.max;
-            this.items.forEach((item) => {
+            this.items.filter((item) => !item.isStorageLocation).forEach((item) => {
                 if (item.system.backpack?.inBackpack) {
                     backpackCurrentWeight += item.totalWeight;
                 } else {
@@ -432,7 +449,7 @@ export class DarkHeresyActor extends Actor {
             }
         } else {
             // No backpack -- add everything
-            this.items.forEach((item) => (currentWeight += item.totalWeight));
+            this.items.filter((item) => !item.isStorageLocation).forEach((item) => (currentWeight += item.totalWeight));
         }
 
         const attributeBonus = this.characteristics.strength.bonus + this.characteristics.toughness.bonus;

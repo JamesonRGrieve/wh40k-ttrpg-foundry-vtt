@@ -11,6 +11,7 @@
         .dh-chartable__cell--head {
             height: 100%;
             text-align: center !important;
+            text-align-last: center !important;
         }
 
         &__cell {
@@ -18,19 +19,23 @@
             border-top: $grid-border;
             font-family: $font-family-alt;
 
+            .dh-field__input {
+                border-right: none !important;
+            }
+
             &--left {
-                font-weight: bold;
+                // font-weight: bold;
                 border-top: $grid-border;
             }
 
             &--head {
-                font-weight: bold;
+                // font-weight: bold;
                 border-left: $grid-border;
             }
 
-            &--highlight {
-                font-weight: bold;
-            }
+            //&--highlight {
+            //    font-weight: bold;
+            //}
         }
     }
 }

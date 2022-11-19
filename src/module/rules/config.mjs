@@ -14,11 +14,23 @@ DarkHeresy.bio = {
     elite: eliteAdvancesNames(),
     divination: divinationNames(),
     primary: ['background', 'role', 'elite', 'homeWorld', 'divination'],
+    size: {
+        4: 'Average',
+        1: 'Minuscule',
+        2: 'Puny',
+        3: 'Scrawny',
+        5: 'Hulking',
+        6: 'Enormous',
+        7: 'Massive',
+        8: 'Immense',
+        9: 'Monumental',
+        10: 'Titanic',
+    }
 };
 
 DarkHeresy.items = {
-    availability: ['', 'Ubiquitous', 'Abundant', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
-    craftsmanship: ['', 'Poor', 'Common', 'Good', 'Best'],
+    availability: ['Ubiquitous', 'Abundant', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
+    craftsmanship: ['Poor', 'Common', 'Good', 'Best'],
 };
 
 DarkHeresy.combat = {
@@ -44,6 +56,18 @@ DarkHeresy.combat = {
         'Shock',
     ],
     armour_type: ['Basic', 'Flak', 'Mesh', 'Carapace', 'Power'],
+    characteristics: {
+        'WS': 'weaponSkill',
+        'BS': 'ballisticSkill',
+        'S': 'strength',
+        'T': 'toughness',
+        'Ag': 'agility',
+        'Int': 'intelligence',
+        'Per': 'perception',
+        'WP': 'willpower',
+        'Fel': 'fellowship',
+        'Inf': 'influence'
+    }
 };
 
 DarkHeresy.ui = {

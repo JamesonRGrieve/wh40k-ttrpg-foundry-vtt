@@ -73,7 +73,7 @@
 
 %grid-row-head {
     @extend %grid-row;
-    font-weight: bold;
+    // font-weight: bold;
 
     &:first-child {
         text-align: left;
@@ -103,6 +103,7 @@
 
     &:not(:first-child) {
         text-align: center;
+        text-align-last: center !important;
     }
 }
 

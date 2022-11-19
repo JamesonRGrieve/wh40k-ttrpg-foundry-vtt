@@ -1,0 +1,13 @@
+<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
+    <h1 class="dh-panel__header">Initiative</h1>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Base</span>
+        <input type="text" class="dh-field__input" name="system.initiative.base" value="{{actor.initiative.base}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Characteristic</span>
+        <select class="dh-field__input" name="system.initiative.characteristic">
+            {{selectOptions dh.combat.characteristics selected=actor.initiative.characteristic}}
+        </select>
+    </div>
+</div>
