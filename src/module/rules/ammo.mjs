@@ -52,6 +52,7 @@ export async function calculateAmmoAttackSpecials(rollData) {
     const ammo = weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
 
+    game.dh.log('calculateAmmoAttackSpecials', ammo.name);
     switch (ammo.name) {
         case 'Explosive Arrows/Quarrels':
             rollData.attackSpecials.findSplice((i) => i.name === 'Primitive');
@@ -70,10 +71,7 @@ export async function calculateAmmoSpecials(actionData, hit) {
 
     switch (ammo.name) {
         case 'Dumdum Bullets':
-            hit.specials.push({
-                name: 'dumdum bullets',
-                special: 'Armour points count double against this hit.',
-            });
+            hit.addSpecial('Dumdum Bullets', 'Armour points count double against this hit.');
             break;
         case 'Explosive Arrows/Quarrels':
             hit.damageType = 'Explosive';

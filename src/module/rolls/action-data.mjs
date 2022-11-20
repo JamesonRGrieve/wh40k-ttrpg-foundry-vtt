@@ -11,6 +11,7 @@ export class ActionData {
     rollData;
     damageData;
     effects = [];
+    effectOutput = [];
 
     async _calculateHit() {
         this.rollData.roll = await roll1d100();
@@ -41,6 +42,7 @@ export class ActionData {
                 }
                 if ((!this.rollData.hasAttackSpecial('Reliable') && rollTotal > 96) || rollTotal === 100) {
                     this.effects.push('jam');
+                    this.rollData.success = false;
                 }
             }
         }
@@ -88,7 +90,7 @@ export class ActionData {
             this.rollData.dof = 1 + getDegree(this.rollData.roll.total, this.rollData.modifiedTarget);
 
             if (this.rollData.roll.total === 100) {
-                this.effects.push('Automatic Failure');
+                this.effects.push('auto-failure');
             }
         }
     }
@@ -108,6 +110,32 @@ export class ActionData {
         }
     }
 
+    addEffect(name, effect) {
+        this.effectOutput.push({
+            name: name,
+            effect: effect
+        })
+    }
+
+    async createEffectData() {
+        for (const effect of this.effects) {
+            switch(effect){
+                case 'auto-failure':
+                    this.addEffect('Auto Failure', `The roll resulted in an automatic failure!`);
+                    break;
+                case 'blademaster':
+                    this.addEffect('Blademaster', `Original roll of ${this.rollData.previousRolls[0].total} rerolled.`);
+                    break;
+                case 'overheat':
+                    this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
+                    break;
+                case 'jam':
+                    this.addEffect('Jam', `The weapon jams!`);
+                    break;
+            }
+        }
+    }
+
     async performAttackAndSendToChat() {
         // Store Roll Information
         DHBasicActionManager.storeActionData(this);
@@ -120,6 +148,9 @@ export class ActionData {
 
         // Calculate Hits
         await this.calculateHits();
+
+        // Create Specials
+        await this.createEffectData();
 
         game.dh.log('Perform Attack', this);
 

@@ -31,6 +31,11 @@
                         </div>
                     {{/if}}
 
+                    {{#each @root.effectOutput as |effect|}}
+                        <div class="dh-roll__row--full">
+                            {{effect.name}} - {{effect.effect}}
+                        </div>
+                    {{/each}}
 
                     {{#if success}}
                         <div class="dh-roll__row dh-roll__row--number">
@@ -103,6 +108,13 @@
                                 <div class="dh-roll__label">Damage Type:</div>
                                 <div class="dh-roll__value">{{hit.damageType}}</div>
                             </div>
+
+                            {{#each hit.effects as |effect|}}
+                                <div class="dh-roll__row--full">
+                                    {{effect.name}} - {{effect.effect}}
+                                </div>
+                            {{/each}}
+
                             <div class="dh-roll__notice">
                                 <span>{{hit.totalDamage}} Damage to {{hit.location}}</span>
                             </div>

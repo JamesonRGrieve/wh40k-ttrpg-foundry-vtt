@@ -329,6 +329,7 @@ export class DarkHeresyActor extends Actor {
     }
 
     _computeExperience() {
+        if(!this.experience) return;
         this.experience.spentCharacteristics = 0;
         this.experience.spentSkills = 0;
         this.experience.spentTalents = 0;
