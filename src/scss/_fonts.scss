@@ -11,6 +11,11 @@ $font-family-alt: 'Lusitana', serif;
 * {
     font-family: $font-family-general;
     font-size: $font-general-medium;
+
+    .fas {
+        font-family: "Font Awesome 6 Pro" !important;
+        --font-family-classic: "Font Awesome 6 Pro" !important;
+    }
 }
 
 button,

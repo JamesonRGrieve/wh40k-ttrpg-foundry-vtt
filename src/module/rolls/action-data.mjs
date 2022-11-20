@@ -26,6 +26,13 @@ export class ActionData {
 
         // Action Item
         if (actionItem) {
+            if(this.rollData.hasAttackSpecial('Spray')) {
+                this.rollData.success = true;
+                this.rollData.dos = 1;
+                this.rollData.dof = 0;
+                this.addEffect('Spray', 'Everyone in 30 degree arc must pass an agility test or be hit.')
+            }
+
             if (actionItem.isMelee) {
                 if (!this.rollData.success) {
                     // Re-Roll Attack for Blademaster

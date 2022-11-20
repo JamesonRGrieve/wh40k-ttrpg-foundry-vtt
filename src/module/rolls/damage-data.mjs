@@ -277,7 +277,7 @@ export class Hit {
                     break;
                 case 'indirect':
                     const bs = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
-                    this.addEffect(special.name, `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!'`);
+                    this.addEffect(special.name, `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`);
                     break;
                 case 'snare':
                     this.addEffect(special.name, `Target must pass Agility test with ${special.level * -10} or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${special.level * -10} to burst free or wriggle out.`);
