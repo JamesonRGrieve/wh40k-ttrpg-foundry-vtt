@@ -545,7 +545,7 @@ export class DarkHeresyActor extends Actor {
     hasTalentFuzzyWords(words) {
         return !!this.items.filter((i) => i.type === 'talent').find((t) => {
             for(const word in words) {
-                if (!t.includes(word)) return false;
+                if (!t.name.includes(word)) return false;
             }
             return true;
         });
