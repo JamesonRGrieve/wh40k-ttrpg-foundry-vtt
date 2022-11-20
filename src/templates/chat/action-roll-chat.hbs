@@ -33,25 +33,22 @@
 
 
                     {{#if success}}
-                        {{#if @root.hasDamage}}
-                            <div class="dh-roll__success" >
-                                <span>Success</span>
-                                <span>{{roll.total}}</span>
-                            </div>
-                        {{else}}
-                            <div class="dh-roll__success">
-                                <span>Success</span>
-                                <span>{{roll.total}}</span>
-                            </div>
-                        {{/if}}
-                    {{else}}
-                        <div class="dh-roll__fail">
-                            <span>Fail</span>
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Degrees of Success</div>
+                            <div class="dh-roll__value">{{dos}}</div>
+                        </div>
+                        <div class="dh-roll__success">
+                            <span>Success</span>
                             <span>{{roll.total}}</span>
                         </div>
+                    {{else}}
                         <div class="dh-roll__row dh-roll__row--number">
                             <div class="dh-roll__label">Degrees of Failure</div>
                             <div class="dh-roll__value">{{dof}}</div>
+                        </div>
+                        <div class="dh-roll__fail">
+                            <span>Fail</span>
+                            <span>{{roll.total}}</span>
                         </div>
                     {{/if}}
 
@@ -102,6 +99,10 @@
                                     <div class="dh-roll__value">{{this}}</div>
                                 </div>
                             {{/each}}
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Damage Type:</div>
+                                <div class="dh-roll__value">{{hit.damageType}}</div>
+                            </div>
                             <div class="dh-roll__notice">
                                 <span>{{hit.totalDamage}} Damage to {{hit.location}}</span>
                             </div>
