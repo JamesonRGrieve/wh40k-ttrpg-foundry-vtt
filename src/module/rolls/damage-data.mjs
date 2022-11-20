@@ -94,7 +94,7 @@ export class Hit {
             this.damageRoll.terms.filter(term => term instanceof Die).forEach(die => {
                 if (die.modifiers.includes('kh')) return;
                 die.modifiers.push('kh' + die.number);
-                die.number *= 2;
+                die.number += 1;
             });
         }
 

@@ -6,7 +6,7 @@
                 <div>
                     <h1>{{name}}</h1>
                     {{#if action}}<h2>{{action}}</h2>{{/if}}
-                    <h2>{{lookup difficulties difficulty}}</h2>
+                    <h3>{{effectString}}</h3>
                     <div class="dh-roll__divider"></div>
 
                     <div class="dh-roll__row dh-roll__row--number">
@@ -86,6 +86,10 @@
                         <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
                             <h2 style='margin-top: .5rem'>Hit {{inc @index}}</h2>
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Base Formula:</div>
+                                <div class="dh-roll__value">{{hit.damageRoll.formula}}</div>
+                            </div>
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Base Damage:</div>
                                 <div class="dh-roll__value">{{hit.damageRoll.result}}</div>

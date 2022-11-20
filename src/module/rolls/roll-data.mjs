@@ -55,6 +55,31 @@ export class RollData {
         return '';
     }
 
+    get effectString() {
+        let actionItem = this.weapon ?? this.power;
+        if(!actionItem) return '';
+
+        const str = [];
+
+        const ammo = actionItem.items.find((i) => i.isAmmunition);
+        if (ammo) {
+            str.push(ammo.name)
+        }
+
+        const specials = this.attackSpecials.map(s => s.name).join(',')
+        if(specials) {
+            str.push(specials);
+        }
+
+        if(this.hasWeaponModification) {
+            const mods = this.weaponModifications.map(m => m.name).join(',');
+            if(mods) {
+                str.push(mods);
+            }
+        }
+        return str.join(' | ');
+    }
+
     get modifiedTarget() {
         return this.baseTarget + this.modifierTotal;
     }
