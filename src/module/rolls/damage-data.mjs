@@ -88,7 +88,19 @@ export class Hit {
 
         const rollFormula = actionItem.system.damage;
         this.damageRoll = new Roll(rollFormula, attackData.rollData);
+
+        if (attackData.rollData.hasAttackSpecial('Tearing')) {
+            game.dh.log('Modifying dice due to tearing');
+            this.damageRoll.terms.filter(term => term instanceof Die).forEach(die => {
+                if (die.modifiers.includes('kh')) return;
+                die.modifiers.push('kh' + die.number);
+                die.number *= 2;
+            });
+        }
+
         await this.damageRoll.evaluate({ async: true });
+        game.dh.log('Damage Roll', this.damageRoll);
+
         this.damage = this.damageRoll.total;
 
         for (const term of this.damageRoll.terms) {

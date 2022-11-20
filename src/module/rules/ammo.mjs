@@ -65,6 +65,25 @@ export async function calculateAmmoAttackSpecials(rollData) {
                 level: 1,
             });
             break;
+        case 'Hot-Shot Charge Packs':
+            rollData.attackSpecials.findSplice((i) => i.name === 'Reliable');
+            rollData.attackSpecials.push({
+                name: 'Tearing',
+                level: true,
+            });
+            break;
+        case 'Inferno Shells':
+            rollData.attackSpecials.push({
+                name: 'Flame',
+                level: true,
+            });
+            break;
+        case 'Tox Rounds':
+            rollData.attackSpecials.push({
+                name: 'Toxic',
+                level: 1,
+            });
+            break;
     }
 }
 
@@ -74,8 +93,11 @@ export async function calculateAmmoSpecials(actionData, hit) {
     if (!ammo) return;
 
     switch (ammo.name) {
+        case 'Bleeder Rounds':
+            hit.addEffect('Bleeder Rounds', 'If the target takes damage, they suffer blood loss for [[1d5]] rounds.');
+            break;
         case 'Dumdum Bullets':
-            hit.addSpecial('Dumdum Bullets', 'Armour points count double against this hit.');
+            hit.addEffect('Dumdum Bullets', 'Armour points count double against this hit.');
             break;
         case 'Explosive Arrows/Quarrels':
             hit.damageType = 'Explosive';
@@ -102,6 +124,12 @@ export async function calculateAmmoDamageBonuses(actionData, hit) {
         case 'Expander Rounds':
             hit.modifiers['expander rounds'] = 1;
             break;
+        case 'Hot-Shot Charge Packs':
+            hit.modifiers['hot-shot charge pack'] = 1;
+            break;
+        case 'Tox Rounds':
+            hit.modifiers['tox rounds'] = -1;
+            break;
     }
 }
 
@@ -117,6 +145,12 @@ export async function calculateAmmoPenetrationBonuses(actionData, hit) {
     switch (ammo.name) {
         case 'Expander Rounds':
             hit.penetrationModifiers['expander rounds'] = 1;
+            break;
+        case 'Hot-Shot Charge Packs':
+            hit.penetrationModifiers['hot-shot charge pack'] = 4;
+            break;
+        case 'Man-Stopper Bullets':
+            hit.penetrationModifiers['man-stopper bullets'] = 3;
             break;
     }
 }
