@@ -15,16 +15,16 @@ DarkHeresy.bio = {
     divination: divinationNames(),
     primary: ['background', 'role', 'elite', 'homeWorld', 'divination'],
     size: {
-        4: 'Average',
-        1: 'Minuscule',
-        2: 'Puny',
-        3: 'Scrawny',
-        5: 'Hulking',
-        6: 'Enormous',
-        7: 'Massive',
-        8: 'Immense',
-        9: 'Monumental',
-        10: 'Titanic',
+        4: 'Average (4)',
+        1: 'Minuscule (1)',
+        2: 'Puny (2)',
+        3: 'Scrawny (3)',
+        5: 'Hulking (5)',
+        6: 'Enormous (6)',
+        7: 'Massive (7)',
+        8: 'Immense (8)',
+        9: 'Monumental (9)',
+        10: 'Titanic (10)',
     }
 };
 
@@ -57,16 +57,16 @@ DarkHeresy.combat = {
     ],
     armour_type: ['Basic', 'Flak', 'Mesh', 'Carapace', 'Power'],
     characteristics: {
-        'WS': 'weaponSkill',
-        'BS': 'ballisticSkill',
-        'S': 'strength',
-        'T': 'toughness',
-        'Ag': 'agility',
-        'Int': 'intelligence',
-        'Per': 'perception',
-        'WP': 'willpower',
-        'Fel': 'fellowship',
-        'Inf': 'influence'
+        'weaponSkill': 'WS',
+        'ballisticSkill': 'BS',
+        'strength': 'S',
+        'toughness': 'T',
+        'agility': 'Ag',
+        'intelligence': 'Int',
+        'perception': 'Per',
+        'willpower': 'WP',
+        'fellowship': 'Fel',
+        'influence': 'Inf'
     }
 };
 

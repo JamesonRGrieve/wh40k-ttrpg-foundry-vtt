@@ -1,5 +1,11 @@
-<div class="dh-panel dh-grid-col-2">
+<div class="dh-panel spacer dh-grid-col-2">
     <h1 class="dh-panel__header">Movement</h1>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Size</span>
+        <select class="dh-field__input" name="system.size">
+            {{selectOptions dh.bio.size selected=actor.size}}
+        </select>
+    </div>
     <div class="dh-field__wrapper">
         <span class="dh-field__header">Half</span>
         <span class="dh-field__span">{{actor.movement.half}}m</span>
