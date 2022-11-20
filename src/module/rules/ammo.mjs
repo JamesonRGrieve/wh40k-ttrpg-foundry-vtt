@@ -19,6 +19,10 @@ export async function useAmmo(actionData) {
         if (actionItem.system.clip.value < 0) {
             actionItem.system.clip.value = 0;
         }
+
+        if (actionItem.system.clip.value) {
+            ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
+        }
     }
 }
 

@@ -8,6 +8,11 @@ export class DamageData {
 
     additionalHits = 0;
     hits = [];
+
+    reset() {
+        this.hits = [];
+        this.additionalHits = 0;
+    }
 }
 
 export class Hit {

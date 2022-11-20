@@ -65,6 +65,7 @@ export class BasicActionManager {
             content: '<p>Are you sure you would like to use a fate point to re-roll action?</p>',
             yes: async () => {
                 await refundAmmo(actionData);
+                actionData.damageData.reset();
                 await actionData.performAttackAndSendToChat();
             },
             no: () => {},

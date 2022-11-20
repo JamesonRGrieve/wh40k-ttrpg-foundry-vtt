@@ -61,6 +61,11 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     async _rollAttack(event) {
+        if(this.data.fireRate === 0) {
+            ui.notifications.warn(`Not enough ammo to perform action. Do you need to reload?`);
+            return;
+        }
+
         await this.data.finalize();
         await this.weaponAttackData.performAttackAndSendToChat();
         await this.close();
