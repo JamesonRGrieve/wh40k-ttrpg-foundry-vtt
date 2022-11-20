@@ -142,7 +142,9 @@ export class WeaponRollData extends RollData {
         await updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
-        calculateAmmoInformation(this);
+        if (this.weapon.isRanged) {
+            calculateAmmoInformation(this);
+        }
         await calculateWeaponRange(this);
         this.updateBaseTarget();
     }

@@ -247,6 +247,15 @@ export class Hit {
 
         this.damageType = actionItem.system.damageType;
 
+        if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
+            if(!attackData.rollData.attackSpecials.find(s => s.name === 'Concussive')) {
+                attackData.rollData.attackSpecials.push({
+                    name: 'Concussive',
+                    level: 2
+                });
+            }
+        }
+
         if (actionItem.isRanged) {
             await calculateAmmoSpecials(attackData, this);
         }

@@ -17,8 +17,9 @@ export function calculateCombatActionModifier(rollData) {
         rollData.isCalledShot = false;
     }
 
-    if (currentAction?.attack?.modifier) {
-        rollData.modifiers['attack'] = currentAction.attack.modifier;
+    const actionInfo = allCombatActions().find(action => action.name === currentAction);
+    if (actionInfo && actionInfo.attack?.modifier) {
+        rollData.modifiers['attack'] = actionInfo.attack.modifier;
     } else {
         rollData.modifiers['attack'] = 0;
     }

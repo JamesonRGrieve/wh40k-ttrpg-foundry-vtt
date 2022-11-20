@@ -78,14 +78,6 @@
                             <span class="dh-control-button__label">Re-roll</span>
                         </div>
                     </div>
-
-                    {{#each @root.effects as |effect|}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">{{effect}}</div>
-                            <div class="dh-roll__value"></div>
-                        </div>
-                    {{/each}}
-
                 </div>
             {{/with}}
             {{#if rollData.success}}
