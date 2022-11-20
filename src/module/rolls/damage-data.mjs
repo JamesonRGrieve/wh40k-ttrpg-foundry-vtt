@@ -255,7 +255,7 @@ export class Hit {
                     this.addEffect(special.name, `Target must pass Toughness test with ${special.level * -10} or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`);
                     break;
                 case 'corrosive':
-                    this.addEffect(special.name, `The targets armor melts with **[[1d10]]** of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`);
+                    this.addEffect(special.name, `The targets armor melts with [[1d10]] of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`);
                     break;
                 case 'crippling':
                     this.addEffect(special.name, `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${special.level} damage not reduced by Armour or Toughness!`);
@@ -264,7 +264,7 @@ export class Hit {
                     this.addEffect(special.name, `The targets unnatural toughness is reduced by ${special.level} while calculating wounds!`);
                     break;
                 case 'flame':
-                    this.addEffect(special.name, `The target must make an Agility test or be set on //fire//!`);
+                    this.addEffect(special.name, `The target must make an Agility test or be set on fire!`);
                     break;
                 case 'graviton':
                     this.addEffect(special.name, `This attack deals additional damage equal to the targets Armour points on the struck location!`);

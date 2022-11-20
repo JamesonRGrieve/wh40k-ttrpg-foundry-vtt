@@ -33,7 +33,7 @@
 
                     {{#each @root.effectOutput as |effect|}}
                         <div class="dh-roll__row--full">
-                            {{effect.name}} - {{effect.effect}}
+                            <span class='dh-roll__label'>{{effect.name}}</span> - {{effect.effect}}
                         </div>
                     {{/each}}
 
@@ -111,7 +111,7 @@
 
                             {{#each hit.effects as |effect|}}
                                 <div class="dh-roll__row--full">
-                                    {{effect.name}} - {{effect.effect}}
+                                    <span class='dh-roll__label'>{{effect.name}}</span> - {{effect.effect}}
                                 </div>
                             {{/each}}
 
