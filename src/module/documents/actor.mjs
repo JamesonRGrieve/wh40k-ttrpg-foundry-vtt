@@ -80,7 +80,7 @@ export class DarkHeresyActor extends Actor {
     }
 
     get size() {
-        return this.system.size;
+        return Number.parseInt(this.system.size);
     }
 
     get faction() {
