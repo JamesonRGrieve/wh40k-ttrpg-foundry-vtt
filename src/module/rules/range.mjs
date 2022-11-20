@@ -10,6 +10,11 @@ async function calculateWeaponMaxRange(rollData) {
         return;
     }
 
+    if (weapon.isMelee) {
+        rollData.maxRange = 1;
+        return;
+    }
+
     let range;
     if (Number.isInteger(weapon.system.range)) {
         range = weapon.system.range;
@@ -47,6 +52,11 @@ async function calculatePsychicAbilityMaxRange(rollData) {
  * @param rollData {RollData}
  */
 function calculateRangeNameAndBonus(rollData) {
+    if(rollData.weapon && rollData.weapon.isMelee) {
+        rollData.rangeName = 'Melee';
+        rollData.rangeBonus = 0;
+    }
+
     const targetDistance = rollData.distance ?? 0;
     const maxRange = rollData.maxRange ?? 0;
 

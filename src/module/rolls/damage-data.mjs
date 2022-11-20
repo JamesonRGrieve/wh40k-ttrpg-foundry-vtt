@@ -121,10 +121,18 @@ export class Hit {
         if (actionItem.isMelee) {
             this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
 
+            // Crushing Blow
             if (sourceActor.hasTalent('Crushing Blow')) {
                 const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus;
                 this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
             }
+
+            // Deathdealer
+            if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Melee'])) {
+                const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                this.modifiers['deathdealer melee'] = Math.ceil(perBonus / 2);
+            }
+
         } else if (actionItem.isRanged) {
             // Scatter
             if (attackData.rollData.hasAttackSpecial('Scatter')) {
@@ -161,6 +169,12 @@ export class Hit {
                 const maximalRoll = new Roll('1d10', {});
                 await maximalRoll.evaluate({ async: true });
                 this.modifiers['maximal'] = maximalRoll.total;
+            }
+
+            // Deathdealer
+            if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Ranged'])) {
+                const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                this.modifiers['deathdealer ranged'] = Math.ceil(perBonus / 2);
             }
 
             // Ammo
