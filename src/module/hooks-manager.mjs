@@ -23,6 +23,7 @@ import { DarkHeresyAmmoSheet } from './sheets/item/ammo-sheet.mjs';
 import { initializeActorActions } from './actions/actions-manager.mjs';
 import { DarkHeresyPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
 import { DarkHeresyStorageLocationSheet } from './sheets/item/storage-location-sheet.mjs';
+import { DarkHeresyTraitSheet } from './sheets/item/trait-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -77,22 +78,17 @@ Enable Debug with: game.dh.debug = true
 
         Items.unregisterSheet('core', ItemSheet);
         Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponModSheet, {
-            types: ['weaponModification'],
-            makeDefault: true,
-        });
-        Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyStorageLocationSheet, {
-            types: ['storageLocation'],
-            makeDefault: true,
-        });
+        Items.registerSheet(MODULE_NAME, DarkHeresyStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
+        Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyTraitSheet, {types: ['trait'],makeDefault: true,});
+        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
+        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
 
         HandlebarManager.loadTemplates();
     }

@@ -66,6 +66,10 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         return this.type === 'weapon' && this.system.class.toLowerCase() !== 'melee';
     }
 
+    get usesAmmo() {
+        return this.isRanged && this.system.reload && this.system.reload !== 'N/A';
+    }
+
     get isMelee() {
         return this.type === 'weapon' && this.system.class.toLowerCase() === 'melee';
     }

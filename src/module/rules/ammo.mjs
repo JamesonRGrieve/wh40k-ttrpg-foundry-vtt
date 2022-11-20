@@ -2,7 +2,7 @@ import { WeaponRollData } from '../rolls/roll-data.mjs';
 
 export function ammoText(item) {
     game.dh.log('ammoText', item);
-    if (item.isRanged) {
+    if (item.usesAmmo) {
         const ammo = item.items.find((i) => i.isAmmunition);
         const name = ammo ? ammo.name : 'Standard';
         game.dh.log('ammoName', name);
@@ -13,14 +13,14 @@ export function ammoText(item) {
 export async function useAmmo(actionData) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
-    if (actionItem.isRanged) {
+    if (actionItem.usesAmmo) {
         actionItem.system.clip.value -= actionData.rollData.ammoUsed;
         // Reset to 0 if there was a problem
         if (actionItem.system.clip.value < 0) {
             actionItem.system.clip.value = 0;
         }
 
-        if (actionItem.system.clip.value) {
+        if (actionItem.system.clip.value === 0) {
             ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
         }
     }
@@ -31,7 +31,7 @@ export async function useAmmo(actionData) {
  */
 export async function refundAmmo(actionData) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
-    if (actionItem.isRanged) {
+    if (actionItem.usesAmmo) {
         actionItem.system.clip.value += actionData.rollData.ammoUsed;
     }
 }
@@ -160,6 +160,10 @@ export async function calculateAmmoPenetrationBonuses(actionData, hit) {
  */
 export function calculateAmmoInformation(rollData) {
     const availableAmmo = rollData.weapon.system.clip.value;
+
+    if(!rollData.weapon.usesAmmo) {
+        return;
+    }
 
     // Calculate Ammo *PER* shot
     let ammoPerShot = 1;

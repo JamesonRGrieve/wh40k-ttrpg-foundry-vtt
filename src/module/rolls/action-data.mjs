@@ -83,7 +83,7 @@ export class ActionData {
                     }
 
                     // But Max at weapon rate
-                    if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                    if (actionItem.usesAmmo && this.damageData.additionalHits > this.rollData.fireRate - 1) {
                         this.damageData.additionalHits = this.rollData.fireRate - 1;
                     }
                 }
