@@ -143,6 +143,7 @@ export class WeaponRollData extends RollData {
     weaponModifications = [];
     isCalledShot = false;
     calledShotLocation;
+    usesAmmo = false;
     ammoText = '';
     ammoPerShot = 1;
     fireRate = 1;
@@ -167,8 +168,11 @@ export class WeaponRollData extends RollData {
         await updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
-        if (this.weapon.isRanged) {
+        if (this.weapon.usesAmmo) {
+            this.usesAmmo = true;
             calculateAmmoInformation(this);
+        } else {
+            this.usesAmmo = false;
         }
         await calculateWeaponRange(this);
         this.updateBaseTarget();

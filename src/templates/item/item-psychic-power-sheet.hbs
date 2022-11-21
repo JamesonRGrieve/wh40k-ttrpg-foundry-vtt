@@ -86,6 +86,13 @@
                         <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                             <h1 class="dh-panel__header">Damage</h1>
                             <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Attack</span>
+                                <select class="dh-field__input" name="system.attackType">
+                                    {{selectOptions (arrayToObject dh.combat.psychic_attacks)
+                                                    selected=item.system.attackType}}
+                                </select>
+                            </div>
+                            <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Roll</span>
                                 <input class="dh-field__input" type="text" name="system.damage"
                                        value="{{item.system.damage}}" />

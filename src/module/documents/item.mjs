@@ -140,6 +140,16 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
     async prepareData() {
         super.prepareData();
+
+        if (this.isPsychicPower) {
+            if(!this.system.damage || this.system.damage === '') {
+                this.system.damage = 0;
+            }
+            if(!this.system.penetration || this.system.penetration === '') {
+                this.system.penetration = 0;
+            }
+        }
+
         if (game.ready) {
             await this._determineNestedItems();
         }
