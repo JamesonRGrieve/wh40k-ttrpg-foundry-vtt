@@ -93,6 +93,7 @@ export class BasicActionManager {
         let chatData = {
             user: game.user.id,
             content: html,
+            rollMode: game.settings.get('core', 'rollMode'),
             type: CONST.CHAT_MESSAGE_TYPES.IC,
         };
         if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
