@@ -3,25 +3,14 @@ import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
 import { PsychicAttackData, WeaponAttackData } from '../rolls/action-data.mjs';
 
 export class TargetedActionManager {
-    selectedTokens = {};
     targetedTokens = {};
 
     initializeHooks() {
-        // Controlled Tokens have changed
-        Hooks.on('controlToken', async (token, selected) => {
-            game.dh.log('controlTokenEvent');
-            if (selected) {
-                this.selectedTokens[token.id] = token;
-            } else {
-                if (this.selectedTokens[token.id]) {
-                    delete this.selectedTokens[token.id];
-                }
-            }
-            game.dh.log(this.selectedTokens);
-        });
-
         // Targets have changed
         Hooks.on('targetToken', async (user, token, selected) => {
+            if(user.id !== game.user.id) {
+                console.log('targetToken but not this user...');
+            }
             if (selected) {
                 this.targetedTokens[token.id] = token;
             } else {
@@ -68,11 +57,12 @@ export class TargetedActionManager {
         if (source) {
             sourceToken = source.token ?? source.getActiveTokens()[0];
         } else {
-            if (Object.keys(this.selectedTokens).length !== 1) {
+            const controlledObjects = game.canvas.tokens.controlledObjects
+            if (Object.keys(controlledObjects).length !== 1) {
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return;
             }
-            sourceToken = this.selectedTokens[Object.keys(this.selectedTokens)[0]];
+            sourceToken = controlledObjects[Object.keys(controlledObjects)[0]];
         }
 
         if (sourceToken && !sourceToken.actor) {
