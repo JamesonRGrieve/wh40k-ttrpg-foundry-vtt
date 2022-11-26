@@ -120,6 +120,7 @@
                 "psy": {
                     "rating": 0,
                     "sustained": 0,
+                    "defaultPR": 0,
                     "class": "bound",
                     "cost": 0,
                     "hasFocus": false
@@ -942,7 +943,10 @@
             },
             "insanity": 0,
             "corruption": 0,
-            "aptitudes": {}
+            "aptitudes": {},
+            "backgroundEffects": {
+                "abilities": []
+            }
         },
         "npc": {
             "templates": ["base", "creature", "npc"]
@@ -1056,6 +1060,11 @@
             "hasLevel": false,
             "level": 0
         },
+        "bonus": {
+            "source": "",
+            "name": "",
+            "benefit": ""
+        },
         "criticalInjury": {
             "templates": ["itemDescription"],
             "type": "impact",
@@ -1104,10 +1113,11 @@
             "templates": ["itemDescription", "damage", "attack", "action"],
             "container": true,
             "containerTypes": ["attackSpecial"],
-            "attackType": "",
             "cost": 0,
-            "sustained": "",
-            "discipline": ""
+            "sustained": "No",
+            "discipline": "",
+            "subtype": "Concentration",
+            "action": "Half Action"
         },
         "specialAbility": {
             "templates": ["itemDescription"],

@@ -164,6 +164,8 @@ export class WeaponRollData extends RollData {
     }
 
     async update() {
+        this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
+
         await updateWeaponModifiers(this);
         await updateAttackSpecials(this);
         updateAvailableCombatActions(this);

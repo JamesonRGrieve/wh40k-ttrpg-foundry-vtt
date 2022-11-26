@@ -95,6 +95,11 @@ export class BasicActionManager {
             content: html,
             type: CONST.CHAT_MESSAGE_TYPES.IC,
         };
+        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        } else if (chatData.rollMode === 'selfroll') {
+            chatData.whisper = [game.user];
+        }
         ChatMessage.create(chatData);
     }
 }

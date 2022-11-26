@@ -12,7 +12,7 @@
                     </div>
                     <div class="dh-header__item-wrapper--span-2">
                         <span class="dh-header__title">Class</span>
-                        <select class="dh-header__select" name="data.class">
+                        <select class="dh-header__select" name="system.class">
                             {{selectOptions (arrayToObject dh.combat.weapon_class) selected=item.system.class}}
                         </select>
                     </div>
@@ -64,6 +64,7 @@
                 </div>
                 <section class="dh-body">
                     <div class="tab" data-group="primary" data-tab="stats">
+
                         <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                             <h1 class="dh-panel__header">Damage</h1>
                             <div class="dh-field__wrapper">
@@ -83,7 +84,15 @@
                                 <input class="dh-field__input" type="text" name="system.penetration"
                                        value="{{item.system.penetration}}" />
                             </div>
+
+                            <h1 class="dh-panel__header">Attack</h1>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Bonus</span>
+                                <input class="dh-field__input" type="text" name="system.attackBonus"
+                                       value="{{item.system.attackBonus}}" />
+                            </div>
                         </div>
+
                         {{#if item.isRanged}}
                             <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                                 <h1 class="dh-panel__header">Ranged Attack</h1>
@@ -112,8 +121,9 @@
                                 <h1 class="dh-panel__header">Ammo</h1>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Reload</span>
-                                    <input class="dh-field__input" type="text" name="system.reload"
-                                           value="{{item.system.reload}}" />
+                                    <select class="dh-field__input" name="system.reload">
+                                        {{selectOptions (arrayToObject dh.combat.action_speeds) selected=item.system.reload}}
+                                    </select>
                                 </div>
                                 <div class="dh-field__wrapper">
                                     <span class="dh-field__header">Current</span>

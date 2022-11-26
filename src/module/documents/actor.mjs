@@ -5,7 +5,7 @@ import { roles } from '../rules/roles.mjs';
 import { eliteAdvances } from '../rules/elite-advances.mjs';
 import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
-import { DHTargetedActionManager } from '../actions/targetted-action-manager.mjs';
+import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 

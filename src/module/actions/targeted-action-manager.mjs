@@ -32,7 +32,7 @@ export class TargetedActionManager {
             game.dh.log(this.targetedTokens);
         });
 
-        // Initialize Hotbar Button
+        // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls) => {
             const bar = controls.find((c) => c.name === 'token');
             bar.tools.push({

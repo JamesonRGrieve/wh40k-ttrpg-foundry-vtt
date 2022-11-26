@@ -1,4 +1,4 @@
-import { DHTargetedActionManager } from './targetted-action-manager.mjs';
+import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { DHBasicActionManager } from './basic-action-manager.mjs';
 
 export function initializeActorActions() {

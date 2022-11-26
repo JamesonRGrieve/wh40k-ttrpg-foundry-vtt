@@ -33,19 +33,23 @@
                         <span class='dh-header__title'>Range</span>
                         <input class='dh-header__input' name='system.range' type='text' value='{{item.system.range}}' />
                     </div>
-                    <div class='dh-header__item-wrapper--span-2'>
-                        <span class='dh-header__title'>Speed</span>
-                        <input class='dh-header__input' name='system.speed' type='text' value='{{item.system.speed}}' />
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Action</span>
+                        <select class="dh-header__select" name="system.action">
+                            {{selectOptions (arrayToObject dh.combat.action_speeds) selected=item.system.action}}
+                        </select>
                     </div>
-                    <div class='dh-header__item-wrapper--span-2'>
-                        <span class='dh-header__title'>Sustained</span>
-                        <input class='dh-header__input' name='system.sustained' type='text'
-                               value='{{item.system.sustained}}' />
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Sustained</span>
+                        <select class="dh-header__select" name="system.sustained">
+                            {{selectOptions (arrayToObject dh.combat.sustained_speeds) selected=item.system.sustained}}
+                        </select>
                     </div>
-                    <div class='dh-header__item-wrapper--span-2'>
-                        <span class='dh-header__title'>Subtype</span>
-                        <input class='dh-header__input' name='system.subtype' type='text'
-                               value='{{item.system.subtype}}' />
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Subtype</span>
+                        <select class="dh-header__select" name="system.subtype">
+                            {{selectOptions (arrayToObject dh.combat.psychic_subtypes) selected=item.system.subtype}}
+                        </select>
                     </div>
                 </div>
                 <div class="dh-navigation" data-group="primary">
@@ -62,8 +66,9 @@
                             <h1 class="dh-panel__header">Action</h1>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Characteristic</span>
-                                <input class="dh-field__input" type="text" name="system.target.characteristic"
-                                       value="{{item.system.target.characteristic}}" />
+                                <select class="dh-field__input" name="system.target.characteristic">
+                                    {{selectOptions dh.combat.characteristics selected=item.system.target.characteristic}}
+                                </select>
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Bonus</span>
@@ -79,8 +84,9 @@
                             </div>
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Opposed Characteristic</span>
-                                <input class="dh-field__input" type="text" name="system.target.opposed"
-                                       value="{{item.system.target.opposed}}" />
+                                <select class="dh-field__input" name="system.target.opposed">
+                                    {{selectOptions dh.combat.characteristics selected=item.system.target.opposed}}
+                                </select>
                             </div>
                         </div>
                         <div class="dh-panel dh-grid-col-2 dh-grid-row-1">

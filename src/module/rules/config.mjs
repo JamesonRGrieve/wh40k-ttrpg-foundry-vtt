@@ -36,6 +36,9 @@ DarkHeresy.items = {
 DarkHeresy.combat = {
     psychic_attacks: ['Psychic Bolt', 'Psychic Blast', 'Psychic Barrage', 'Psychic Storm'],
     damage_types: ['Energy', 'Impact', 'Rending', 'Explosive'],
+    action_speeds: ['Free Action', 'Half Action', 'Full Action', '2 Full Actions'],
+    sustained_speeds: ['No', 'Free Action', 'Half Action', 'Full Action', '2 Full Actions'],
+    psychic_subtypes: ['Concentration', 'Attack', 'Attack, Concentration'],
     special: attackSpecialsNames(),
     weapon_class: ['Pistol', 'Basic', 'Heavy', 'Thrown', 'Melee'],
     weapon_type: [
