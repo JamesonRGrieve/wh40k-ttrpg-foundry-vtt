@@ -57,12 +57,12 @@ export class TargetedActionManager {
         if (source) {
             sourceToken = source.token ?? source.getActiveTokens()[0];
         } else {
-            const controlledObjects = game.canvas.tokens.controlledObjects
-            if (Object.keys(controlledObjects).length !== 1) {
+            const controlledObjects = game.canvas.tokens.controlledObjects;
+            if (controlledObjects.size !== 1) {
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return;
             }
-            sourceToken = controlledObjects[Object.keys(controlledObjects)[0]];
+            sourceToken = [...controlledObjects.values()][0];
         }
 
         if (sourceToken && !sourceToken.actor) {
