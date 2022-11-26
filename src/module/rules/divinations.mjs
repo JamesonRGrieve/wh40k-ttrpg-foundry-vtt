@@ -52,7 +52,7 @@ export function divinations() {
         },
         {
             name: 'The wise learn from the deaths of others.',
-            effect: "Increase this character's Agility or Intelligence Characteristic by 3. Reduce his Weapon Skill of Ballistic skill characteristic by 3.",
+            effect: "Increase this character's Agility or Intelligence Characteristic by 3. Reduce his Weapon Skill or Ballistic skill characteristic by 3.",
             roll: '18-21',
         },
         {

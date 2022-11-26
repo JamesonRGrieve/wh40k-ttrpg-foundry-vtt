@@ -6,6 +6,12 @@ export function capitalize(text) {
 export function registerHandlebarsHelpers() {
     console.log('Registering Handlebars Helpers');
 
+    Handlebars.registerHelper('dhlog', function (object) {
+        if (object) {
+            game.dh.log('hb template', object);
+        }
+    });
+
     Handlebars.registerHelper('concat', function () {
         var outStr = '';
         for (var arg in arguments) {
