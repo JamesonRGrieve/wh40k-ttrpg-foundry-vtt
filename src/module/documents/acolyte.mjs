@@ -8,43 +8,16 @@ import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
+import { DarkHeresyBaseActor } from './base-actor.mjs';
 
-export class DarkHeresyActor extends Actor {
-
-    async _preCreate(data, options, user) {
-        let initData = {
-            "token.bar1": { "attribute": "wounds" },
-            "token.bar2": { "attribute": "fate" },
-            "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            "token.displayBars": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            "token.name": data.name
-        }
-        if (data.type === "acolyte") {
-            initData["token.vision"] =  true;
-            initData["token.actorLink"] = true;
-        }
-        this.data.update(initData)
-    }
+export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
 
     get backpack() {
         return this.system.backpack;
     }
 
-    get characteristics() {
-        return this.system.characteristics;
-    }
-
     get skills() {
         return this.system.skills;
-    }
-
-    get initiative() {
-        return this.system.initiative;
-    }
-
-    get wounds() {
-        return this.system.wounds;
     }
 
     get fatigue() {
@@ -79,36 +52,12 @@ export class DarkHeresyActor extends Actor {
         return this.system.aptitudes;
     }
 
-    get size() {
-        return Number.parseInt(this.system.size);
-    }
-
-    get faction() {
-        return this.system.faction;
-    }
-
-    get subfaction() {
-        return this.system.subfaction;
-    }
-
-    get subtype() {
-        return this.system.type;
-    }
-
-    get threatLevel() {
-        return this.system.threatLevel;
-    }
-
     get armour() {
         return this.system.armour;
     }
 
     get encumbrance() {
         return this.system.encumbrance;
-    }
-
-    get movement() {
-        return this.system.movement;
     }
 
     get backgroundEffects() {
@@ -174,19 +123,6 @@ export class DarkHeresyActor extends Actor {
         rollData.nameOverride = label;
         rollData.type = 'Skill';
         rollData.baseTarget = skill.current;
-        rollData.modifiers.modifier = 0;
-        await prepareSimpleRoll(simpleSkillData);
-    }
-
-    async rollCharacteristic(characteristicName) {
-        const characteristic = this.characteristics[characteristicName];
-
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.nameOverride = characteristic.label;
-        rollData.type = 'Characteristic';
-        rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
         await prepareSimpleRoll(simpleSkillData);
     }
@@ -260,15 +196,6 @@ export class DarkHeresyActor extends Actor {
         }
         if (this.bio?.elite) {
             this.backgroundEffects.eliteAdvance = eliteAdvances().find((h) => h.name === this.bio.elite);
-        }
-    }
-
-    getCharacteristicFuzzy(char) {
-        // This tries to account for case sensitivity and abbreviations
-        for (const [name, characteristic] of Object.entries(this.characteristics)) {
-            if (char.toUpperCase() === name.toUpperCase() || char.toLocaleString() === characteristic.short.toUpperCase()) {
-                return characteristic;
-            }
         }
     }
 
@@ -406,26 +333,6 @@ export class DarkHeresyActor extends Actor {
         this.armour.body.total += this.armour.body.value;
         this.armour.leftLeg.total += this.armour.leftLeg.value;
         this.armour.rightLeg.total += this.armour.rightLeg.value;
-    }
-
-    _computeMovement() {
-        let agility = this.characteristics.agility;
-        let size = this.size;
-        this.system.movement = {
-            half: agility.bonus + size - 4,
-            full: (agility.bonus + size - 4) * 2,
-            charge: (agility.bonus + size - 4) * 3,
-            run: (agility.bonus + size - 4) * 6,
-        };
-    }
-
-    _findCharacteristic(short) {
-        for (let characteristic of Object.values(this.characteristics)) {
-            if (characteristic.short === short) {
-                return characteristic;
-            }
-        }
-        return { total: 0 };
     }
 
     _computeEncumbrance() {

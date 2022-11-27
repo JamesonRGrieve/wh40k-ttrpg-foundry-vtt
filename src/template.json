@@ -1,6 +1,6 @@
 {
     "Actor": {
-        "types": ["acolyte", "npc"],
+        "types": ["acolyte", "npc", "vehicle"],
         "templates": {
             "base": {
                 "wounds": {
@@ -914,9 +914,14 @@
                     "cruising": 0,
                     "tactical": 0
                 },
+                "crew": "",
                 "manoeuverability": 0,
                 "carryingCapacity": 0,
-                "integrity": 0
+                "integrity": {
+                    "max": 0,
+                    "value": 0,
+                    "critical": 0
+                }
             }
         },
         "acolyte": {

@@ -1,0 +1,21 @@
+<div class="dh-panel spacer dh-grid-col-2">
+    <h1 class="dh-panel__header">Movement</h1>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Size</span>
+        <select class="dh-field__input" name="system.size">
+            {{selectOptions dh.bio.size selected=actor.size}}
+        </select>
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Cruising Speed</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.speed.cruising" value="{{actor.system.speed.cruising}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Tactical Speed</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.speed.tactical" value="{{actor.system.speed.tactical}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">Manoeuverability</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.manoeuverability" value="{{actor.system.manoeuverability}}" />
+    </div>
+</div>

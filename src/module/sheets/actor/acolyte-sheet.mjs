@@ -5,7 +5,6 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
 export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            template: 'systems/dark-heresy-2nd/templates/actor/actor-sheet.hbs',
             width: 1000,
             height: 750,
             resizable: true,
@@ -14,7 +13,7 @@ export class AcolyteSheet extends ActorContainerSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/actor/actor-${this.actor.type}-sheet.hbs`;
+        return `systems/dark-heresy-2nd/templates/actor/actor-acolyte-sheet.hbs`;
     }
 
     getData() {
@@ -112,15 +111,6 @@ export class AcolyteSheet extends ActorContainerSheet {
         const skillName = $(event.currentTarget).data('skill');
         const specialtyName = $(event.currentTarget).data('specialty');
         await this.actor.rollSkill(skillName, specialtyName);
-    }
-
-    async _sheetControlHideToggle(event) {
-        event.preventDefault();
-        const displayToggle = $(event.currentTarget);
-        $('span:first', displayToggle).toggleClass('active');
-        const target = displayToggle.data('toggle');
-        $('.' + target).toggle();
-        toggleUIExpanded(target);
     }
 
     _onHomeworldChange(event) {

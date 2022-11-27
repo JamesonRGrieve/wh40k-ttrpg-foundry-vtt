@@ -1,4 +1,3 @@
-import { DarkHeresyActor } from './documents/actor.mjs';
 import { DarkHeresyItem } from './documents/item.mjs';
 import { DarkHeresy } from './rules/config.mjs';
 import { AcolyteSheet } from './sheets/actor/acolyte-sheet.mjs';
@@ -24,6 +23,10 @@ import { initializeActorActions } from './actions/actions-manager.mjs';
 import { DarkHeresyPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
 import { DarkHeresyStorageLocationSheet } from './sheets/item/storage-location-sheet.mjs';
 import { DarkHeresyTraitSheet } from './sheets/item/trait-sheet.mjs';
+import { DarkHeresyActorProxy } from './documents/actor-proxy.mjs';
+import { DarkHeresyAcolyte } from './documents/acolyte.mjs';
+import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
+import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -55,8 +58,6 @@ Enable Debug with: game.dh.debug = true
             log: (s, o) => (!!game.dh.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
             error: (s, o) => console.error(`${consolePrefix}${s}`, o),
-            dhActor: DarkHeresyActor,
-            dhItem: DarkHeresyItem,
             rollItemMacro,
             rollSkillMacro,
             rollCharacteristicMacro,
@@ -69,12 +70,14 @@ Enable Debug with: game.dh.debug = true
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
 
         // Define custom Document classes
-        CONFIG.Actor.documentClass = DarkHeresyActor;
+        CONFIG.Actor.documentClass = DarkHeresyActorProxy;
         CONFIG.Item.documentClass = DarkHeresyItem;
 
         // Register sheet application classes
         Actors.unregisterSheet('core', ActorSheet);
         Actors.registerSheet(MODULE_NAME, AcolyteSheet, { makeDefault: true });
+        Actors.registerSheet(MODULE_NAME, NpcSheet, {types: ['npc'], makeDefault: true });
+        Actors.registerSheet(MODULE_NAME, VehicleSheet, {types: ['vehicle'], makeDefault: true });
 
         Items.unregisterSheet('core', ItemSheet);
         Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });

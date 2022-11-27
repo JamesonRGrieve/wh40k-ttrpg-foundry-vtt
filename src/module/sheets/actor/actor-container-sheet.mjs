@@ -145,4 +145,13 @@ export class ActorContainerSheet extends ActorSheet {
         };
         event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
     }
+
+    async _sheetControlHideToggle(event) {
+        event.preventDefault();
+        const displayToggle = $(event.currentTarget);
+        $('span:first', displayToggle).toggleClass('active');
+        const target = displayToggle.data('toggle');
+        $('.' + target).toggle();
+        toggleUIExpanded(target);
+    }
 }
