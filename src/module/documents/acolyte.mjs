@@ -65,7 +65,6 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
     }
 
     prepareData() {
-        super.prepareData();
         this.system.backgroundEffects = {
             abilities: [],
         };

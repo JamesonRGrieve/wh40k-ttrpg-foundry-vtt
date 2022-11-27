@@ -43,6 +43,10 @@ export class HandlebarManager {
             'systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/wounds-panel.hbs',
 
+            'systems/dark-heresy-2nd/templates/actor/panel/vehicle-armour-panel.hbs',
+            'systems/dark-heresy-2nd/templates/actor/panel/vehicle-integrity-panel.hbs',
+            'systems/dark-heresy-2nd/templates/actor/panel/vehicle-movement-panel.hbs',
+
             'systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs',
             'systems/dark-heresy-2nd/templates/actor/partial/display-toggle.hbs',
             'systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs',
