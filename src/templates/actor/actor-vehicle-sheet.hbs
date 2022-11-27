@@ -13,7 +13,7 @@
                 <div class="dh-header__item-wrapper--span-2">
                     <span class="dh-header__title">Type</span>
                     <select class="dh-header__input" name="system.type">
-                        {{selectOptions dh.items.vehicle_types selected=actor.system.type}}
+                        {{selectOptions (arrayToObject dh.items.vehicle_types) selected=actor.system.type}}
                     </select>
                 </div>
                 <div class="dh-header__item-wrapper--span-2">
@@ -26,14 +26,11 @@
                 </div>
             </div>
         </div>
-
-        <section class="dh-body">
-                {{> systems/dark-heresy-2nd/templates/actor/panel/vehicle-armour-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/vehicle-integrity-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/vehicle-movement-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs}}
-        </section>
+        {{> systems/dark-heresy-2nd/templates/actor/panel/vehicle-armour-panel.hbs}}
+        {{> systems/dark-heresy-2nd/templates/actor/panel/vehicle-integrity-panel.hbs}}
+        {{> systems/dark-heresy-2nd/templates/actor/panel/vehicle-movement-panel.hbs}}
+        {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
+        {{> systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs}}
     </form>
 </div>
 

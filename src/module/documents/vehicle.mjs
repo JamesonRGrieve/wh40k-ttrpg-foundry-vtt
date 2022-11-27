@@ -10,7 +10,7 @@ export class DarkHeresyVehicle extends DarkHeresyBaseActor {
             "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             "token.name": data.name
         }
-        this.data.update(initData)
+        this.system.update(initData)
     }
 
     prepareData() {

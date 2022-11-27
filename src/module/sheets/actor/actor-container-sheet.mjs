@@ -24,6 +24,12 @@ export class ActorContainerSheet extends ActorSheet {
                 item.addEventListener('dragstart', this._onItemDragStart.bind(this), false);
             }
         });
+        html.find('.actor-drag').each((i, item) => {
+            if (item.dataset && item.dataset.itemId) {
+                item.setAttribute('draggable', true);
+                item.addEventListener('dragstart', this._onActorDragStart.bind(this), false);
+            }
+        });
     }
 
     _onDrop(event) {
@@ -154,4 +160,55 @@ export class ActorContainerSheet extends ActorSheet {
         $('.' + target).toggle();
         toggleUIExpanded(target);
     }
+
+
+    async _onActorDragStart(event) {
+        event.stopPropagation();
+        game.dh.log('_onActorDragStart', event);
+        const element = event.currentTarget;
+        if (!element.dataset?.itemType) {
+            game.dh.warn('No Drag Type - Cancelling Drag');
+            return;
+        }
+
+        // Create drag data
+        const dragType = element.dataset.itemType;
+        const dragData = {
+            actorId: this.actor.id,
+            sceneId: this.actor.isToken ? canvas.scene?.id : null,
+            tokenId: this.actor.isToken ? this.actor.token?.id : null,
+            type: dragType,
+            data: {},
+        };
+
+        switch (dragType) {
+            case 'characteristic':
+                const characteristic = this.actor.characteristics[element.dataset.itemId];
+                dragData.data = {
+                    name: characteristic.label,
+                    characteristic: element.dataset.itemId,
+                };
+                event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+                return;
+            case 'skill':
+                const skill = this.actor.skills[element.dataset.itemId];
+                let name = skill.label;
+                if (element.dataset.speciality) {
+                    const speciality = skill.specialities[element.dataset.speciality];
+                    name = `${name}: ${speciality.label}`;
+                }
+                dragData.data = {
+                    name,
+                    skill: element.dataset.itemId,
+                    speciality: element.dataset.speciality,
+                };
+                event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+                return;
+            default:
+                // Let default Foundry handler deal with default drag cases.
+                game.dh.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
+                return super._onDragStart(event);
+        }
+    }
+
 }

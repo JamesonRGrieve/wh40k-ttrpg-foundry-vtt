@@ -2,14 +2,14 @@
     <h1 class="dh-panel__header">Armour</h1>
     <div class="dh-field__wrapper">
         <span class="dh-field__header">Front</span>
-        <span class="dh-field__span">{{actor.movement.half}}m</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.front" value="{{actor.front}}" />
     </div>
     <div class="dh-field__wrapper">
         <span class="dh-field__header">Side</span>
-        <span class="dh-field__span">{{actor.movement.full}}m</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.side" value="{{actor.side}}" />
     </div>
     <div class="dh-field__wrapper">
         <span class="dh-field__header">Rear</span>
-        <span class="dh-field__span">{{actor.movement.charge}}m</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rear" value="{{actor.side}}" />
     </div>
 </div>

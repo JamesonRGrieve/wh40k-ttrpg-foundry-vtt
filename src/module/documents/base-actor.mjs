@@ -16,7 +16,7 @@ export class DarkHeresyBaseActor extends Actor {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
         }
-        this.data.update(initData);
+        this.system.update(initData);
     }
 
     get characteristics() {

@@ -19,4 +19,16 @@ export class VehicleSheet extends ActorContainerSheet {
         context.dh = CONFIG.dh;
         return context;
     }
+
+    async _onItemDamage(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        game.dh.warn('Not Implemented for Vehicles Yet');
+    }
+
+    async _onItemRoll(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        game.dh.warn('Not Implemented for Vehicles Yet');
+    }
 }
