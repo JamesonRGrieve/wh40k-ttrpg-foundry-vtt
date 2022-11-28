@@ -101,14 +101,6 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         });
     }
 
-    async rollWeaponAttack(weapon) {
-        if (!weapon.system.equipped) {
-            ui.notifications.warn('Actor must have weapon equipped!');
-            return;
-        }
-        await DHTargetedActionManager.performWeaponAttack(this, null, weapon);
-    }
-
     async rollSkill(skillName, specialityName) {
         let skill = this.skills[skillName];
         let label = skill.label;
@@ -131,7 +123,11 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         const item = this.items.get(itemId);
         switch (item.type) {
             case 'weapon':
-                await this.rollWeaponAttack(item);
+                if (!item.system.equipped) {
+                    ui.notifications.warn('Actor must have weapon equipped!');
+                    return;
+                }
+                await DHTargetedActionManager.performWeaponAttack(this, null, item);
                 return;
             case 'psychicPower':
                 await DHTargetedActionManager.performPsychicAttack(this, null, item);

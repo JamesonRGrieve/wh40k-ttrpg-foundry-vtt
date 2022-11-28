@@ -12,6 +12,10 @@ export class DarkHeresyBaseActor extends Actor {
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             'token.name': data.name,
         };
+        if (data.type === 'vehicle') {
+            initData['token.bar1'] = { 'attribute': 'integrity' };
+            initData['token.bar2'] = undefined;
+        }
         if (data.type === 'acolyte') {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
