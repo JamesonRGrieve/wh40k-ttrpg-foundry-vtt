@@ -39,7 +39,7 @@ export class ActorContainerSheet extends ActorSheet {
 
         try {
             const data = JSON.parse(event.dataTransfer.getData('text/plain'));
-            if (data.type === 'Item') {
+            if (data.type === 'Item' || data.type === 'item') {
                 game.dh.log('Checking if item already exists', data);
                 // Check if Item already Exists
                 if (this.actor.items.find((i) => i._id === data._id)) {
