@@ -105,6 +105,14 @@
                         </select>
                     </div>
                 {{/if}}
+                {{#if this.isLasWeapon}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Las Firing Mode</span>
+                        <select class="dh-field__input" name="lasMode" id="lasMode">
+                            {{selectOptions (arrayToObject locations) selected=this.lasMode}}
+                        </select>
+                    </div>
+                {{/if}}
                 {{#if this.modifiers.attack}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Attack Modifier</span>

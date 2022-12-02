@@ -11,6 +11,7 @@ export class RollData {
     difficulties = rollDifficulties();
     aims = aimModifiers();
     locations = hitDropdown();
+    lasModes = DarkHeresy.combat.las_fire_modes;
 
     sourceActor;
     targetActor;
@@ -150,6 +151,9 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
+    isLasWeapon = false;
+    lasMode = 'Standard';
+
     constructor() {
         super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
@@ -165,6 +169,7 @@ export class WeaponRollData extends RollData {
 
     async update() {
         this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
+        this.isLasWeapon = this.weapon.system.type === 'Las';
 
         await updateWeaponModifiers(this);
         await updateAttackSpecials(this);

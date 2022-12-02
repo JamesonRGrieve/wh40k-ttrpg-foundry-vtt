@@ -3,24 +3,8 @@ import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
 import { PsychicAttackData, WeaponAttackData } from '../rolls/action-data.mjs';
 
 export class TargetedActionManager {
-    targetedTokens = {};
 
     initializeHooks() {
-        // Targets have changed
-        Hooks.on('targetToken', async (user, token, selected) => {
-            if(user.id !== game.user.id) {
-                console.log('targetToken but not this user...');
-            }
-            if (selected) {
-                this.targetedTokens[token.id] = token;
-            } else {
-                if (this.targetedTokens[token.id]) {
-                    delete this.targetedTokens[token.id];
-                }
-            }
-            game.dh.log(this.targetedTokens);
-        });
-
         // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls) => {
             const bar = controls.find((c) => c.name === 'token');
@@ -36,7 +20,7 @@ export class TargetedActionManager {
     }
 
     tokenDistance(token1, token2) {
-        if (!token1 || !token2) return;
+        if (!token1 || !token2) return 0;
 
         let distance = canvas.grid.measureDistance(token1, token2);
         if (token1.document.elevation !== token2.document.elevation) {
@@ -79,11 +63,12 @@ export class TargetedActionManager {
         if (target) {
             targetToken = target.token ?? target.getActiveTokens()[0];
         } else {
-            if (Object.keys(this.targetedTokens).length > 1) {
+            const targetedObjects = game.user.targets;
+            if (targetedObjects.size !== 1) {
                 ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return;
             }
-            targetToken = this.targetedTokens[Object.keys(this.targetedTokens)[0]];
+            targetToken = [...targetedObjects.values()][0];
         }
 
         if (targetToken && !targetToken.actor) {
@@ -96,19 +81,17 @@ export class TargetedActionManager {
 
     createSourceAndTargetData(source, target) {
         game.dh.log('createSourceAndTargetData', { source, target });
+
         // Source
         const sourceToken = this.getSourceToken(source);
-        if (!sourceToken) return {
-            actor: source,
-            target: undefined,
-            distance: 0
-        }
-        const sourceActorData = sourceToken.actor;
+        const sourceActorData = sourceToken ? sourceToken.actor : source;
 
         // Target
         const targetToken = this.getTargetToken(target);
-        const targetDistance = targetToken ? this.tokenDistance(sourceToken, targetToken) : 0;
-        const targetActorData = targetToken ? targetToken.actor : null;
+        const targetActorData = targetToken ? targetToken.actor : target;
+
+        // Distance
+        const targetDistance = sourceToken && targetToken ? this.tokenDistance(sourceToken, targetToken) : 0;
 
         return {
             actor: sourceActorData,
@@ -156,7 +139,6 @@ export class TargetedActionManager {
         psychicRollData.sourceActor = rollData.actor;
         psychicRollData.targetActor = rollData.target;
         psychicRollData.distance = rollData.distance;
-
         await preparePsychicPowerRoll(psychicAttack);
     }
 }

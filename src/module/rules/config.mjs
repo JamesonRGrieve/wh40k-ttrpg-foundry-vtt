@@ -35,6 +35,7 @@ DarkHeresy.items = {
 };
 
 DarkHeresy.combat = {
+    las_fire_modes: ['Standard', 'Overcharge', 'Overload'],
     psychic_attacks: ['Psychic Bolt', 'Psychic Blast', 'Psychic Barrage', 'Psychic Storm'],
     damage_types: ['Energy', 'Impact', 'Rending', 'Explosive'],
     action_speeds: ['Free Action', 'Half Action', 'Full Action', '2 Full Actions'],

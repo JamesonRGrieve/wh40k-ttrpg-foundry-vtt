@@ -67,9 +67,9 @@ export class PsychicPowerDialog extends FormApplication {
 }
 
 /**
- * @param rollData {PsychicRollData}
+ * @param psychicAttackData {PsychicAttackData}
  */
-export async function preparePsychicPowerRoll(rollData) {
-    const prompt = new PsychicPowerDialog(rollData);
+export async function preparePsychicPowerRoll(psychicAttackData) {
+    const prompt = new PsychicPowerDialog(psychicAttackData);
     prompt.render(true);
 }

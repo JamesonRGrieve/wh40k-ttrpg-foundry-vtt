@@ -167,6 +167,12 @@ export function calculateAmmoInformation(rollData) {
 
     // Calculate Ammo *PER* shot
     let ammoPerShot = 1;
+    if (rollData.hasAttackSpecial('Overcharge')) {
+        ammoPerShot = 2;
+    } else if (rollData.hasAttackSpecial('Overload')) {
+        ammoPerShot = 4;
+    }
+
     if (rollData.hasAttackSpecial('Twin-Linked')) {
         ammoPerShot *= 2;
     }

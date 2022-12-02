@@ -14,6 +14,31 @@ export async function updateAttackSpecials(rollData) {
         }
     }
 
+    // Las Variable Setting
+    if(rollData.lasMode) {
+        switch(rollData.lasMode) {
+            case 'Standard':
+                break;
+            case 'Overload':
+                rollData.attackSpecials.findSplice((i) => i.name === 'Reliable');
+                rollData.attackSpecials.push({
+                    name: 'Unreliable',
+                    level: true,
+                });
+                rollData.attackSpecials.push({
+                    name: rollData.lasMode,
+                    level: true
+                });
+                break;
+            case 'Overcharge':
+                rollData.attackSpecials.push({
+                    name: rollData.lasMode,
+                    level: true
+                });
+                break;
+        }
+    }
+
     if (actionItem.isRanged) {
         await calculateAmmoAttackSpecials(rollData);
     }

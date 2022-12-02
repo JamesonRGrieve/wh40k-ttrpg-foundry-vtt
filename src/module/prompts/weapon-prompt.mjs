@@ -74,9 +74,9 @@ export class WeaponAttackDialog extends FormApplication {
 
 /**
  *
- * @param weaponRollData {WeaponRollData}
+ * @param weaponAttackData {WeaponAttackData}
  */
-export async function prepareWeaponRoll(weaponRollData) {
-    const prompt = new WeaponAttackDialog(weaponRollData);
+export async function prepareWeaponRoll(weaponAttackData) {
+    const prompt = new WeaponAttackDialog(weaponAttackData);
     prompt.render(true);
 }

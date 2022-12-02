@@ -182,6 +182,13 @@ export class Hit {
                 this.modifiers['eye of vengeance'] = attackData.rollData.dos;
             }
 
+            // Las Modes
+            if (attackData.rollData.hasAttackSpecial('Overcharge')) {
+                this.modifiers['overcharge'] = 1;
+            } else if (attackData.rollData.hasAttackSpecial('Overload')) {
+                this.modifiers['overload'] = 2;
+            }
+
             // Maximal
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 const maximalRoll = new Roll('1d10', {});
@@ -239,6 +246,11 @@ export class Hit {
 
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
+            }
+
+            // Las Modes
+            if (attackData.rollData.hasAttackSpecial('Overload')) {
+                this.penetrationModifiers['overload'] = 2;
             }
 
             // Ammo
