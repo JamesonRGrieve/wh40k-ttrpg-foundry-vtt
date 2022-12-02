@@ -27,6 +27,7 @@ import { DarkHeresyActorProxy } from './documents/actor-proxy.mjs';
 import { DarkHeresyAcolyte } from './documents/acolyte.mjs';
 import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
 import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
+import { DarkHeresyCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
 
 export const MODULE_NAME = 'dh';
 
@@ -84,6 +85,7 @@ Enable Debug with: game.dh.debug = true
         Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
+        Items.registerSheet(MODULE_NAME, DarkHeresyCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
         Items.registerSheet(MODULE_NAME, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
