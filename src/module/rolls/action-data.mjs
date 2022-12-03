@@ -196,7 +196,7 @@ export class PsychicActionData extends ActionData {
 
     async performActionAndSendToChat() {
         if(this.rollData.power) {
-            this.psychicEffect = TextEditor.enrichHTML(this.rollData.power.system.description, {rollData: this.rollData});
+            this.psychicEffect = await TextEditor.enrichHTML(this.rollData.power.system.description, {rollData: this.rollData});
         }
         if(!this.rollData.hasDamage) {
             this.rollData.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
