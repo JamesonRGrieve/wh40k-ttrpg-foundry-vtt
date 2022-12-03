@@ -6,6 +6,7 @@ import { calculateAttackSpecialModifiers, updateAttackSpecials } from '../rules/
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
 import { calculateWeaponModifiers, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { hitDropdown } from '../rules/hit-locations.mjs';
+import { DarkHeresy } from '../rules/config.mjs';
 
 export class RollData {
     difficulties = rollDifficulties();
