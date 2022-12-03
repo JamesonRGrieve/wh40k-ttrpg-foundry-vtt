@@ -143,7 +143,7 @@ export class ActionData {
         }
     }
 
-    async performAttackAndSendToChat() {
+    async performActionAndSendToChat() {
         // Store Roll Information
         DHBasicActionManager.storeActionData(this);
 
@@ -173,7 +173,7 @@ export class ActionData {
     }
 }
 
-export class WeaponAttackData extends ActionData {
+export class WeaponActionData extends ActionData {
     constructor() {
         super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
@@ -183,13 +183,25 @@ export class WeaponAttackData extends ActionData {
     }
 }
 
-export class PsychicAttackData extends ActionData {
+export class PsychicActionData extends ActionData {
+    psychicEffect = '';
+
     constructor() {
         super();
         this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
         this.hasDamage = true;
         this.rollData = new PsychicRollData();
         this.damageData = new PsychicDamageData();
+    }
+
+    async performActionAndSendToChat() {
+        if(this.rollData.power) {
+            this.psychicEffect = this.rollData.power.system.description;
+        }
+        if(!this.rollData.hasDamage) {
+            this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
+        }
+        await super.performActionAndSendToChat();
     }
 }
 

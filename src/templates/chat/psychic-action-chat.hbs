@@ -1,0 +1,80 @@
+<div class="dh-wrapper">
+    <div class="dh-chat">
+        {{#if label}}<h3>{{label}}</h3>{{/if}}
+        <div class="dh-roll">
+            {{#with rollData}}
+                <div>
+                    <h1>{{name}}</h1>
+                    {{#if action}}<h2>{{action}}</h2>{{/if}}
+                    <h3>{{effectString}}</h3>
+                    <div class="dh-roll__divider"></div>
+
+                    <div class="dh-roll__row dh-roll__row--number">
+                        <div class="dh-roll__label">Base</div>
+                        <div class="dh-roll__value">{{baseTarget}}</div>
+                    </div>
+                    {{#each activeModifiers}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Modifier: {{@key}}</div>
+                            <div class="dh-roll__value">{{this}}</div>
+                        </div>
+                    {{/each}}
+                    <div class="dh-roll__target">
+                        <div class="dh-roll__label">Target</div>
+                        <div class="dh-roll__value">{{modifiedTarget}}</div>
+                    </div>
+
+                    {{#each @root.effectOutput as |effect|}}
+                        <div class="dh-roll__row--full">
+                            <span class='dh-roll__label'>{{effect.name}}</span> - {{effect.effect}}
+                        </div>
+                    {{/each}}
+
+                    {{#if success}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Degrees of Success</div>
+                            <div class="dh-roll__value">{{dos}}</div>
+                        </div>
+                        <div class="dh-roll__success">
+                            <span>Success</span>
+                            <span>{{roll.total}}</span>
+                        </div>
+                    {{else}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Degrees of Failure</div>
+                            <div class="dh-roll__value">{{dof}}</div>
+                        </div>
+                        <div class="dh-roll__fail">
+                            <span>Fail</span>
+                            <span>{{roll.total}}</span>
+                        </div>
+                    {{/if}}
+
+                    <div class='dh-roll__controls-2'>
+                        {{#if success}}
+                            <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
+                                <span class="dh-control-button__span material-icons">bolt</span>
+                                <span class="dh-control-button__label">Effect</span>
+                            </button>
+                        {{else}}
+                            <button class="dh-control-button__disabled">
+                                <span class="dh-control-button__span material-icons">bolt</span>
+                                <span class="dh-control-button__label">Effect</span>
+                            </button>
+                        {{/if}}
+                        <div class="dh-control-button roll-control__fate-reroll" data-roll-id="{{@root.id}}">
+                            <span class="dh-control-button__span material-icons">casino</span>
+                            <span class="dh-control-button__label">Re-roll</span>
+                        </div>
+                    </div>
+                </div>
+            {{/with}}
+            {{#if rollData.success}}
+                <div id="{{@root.id}}" style="display: none">
+                    <div class="dh-roll__divider"></div>
+                    <div class="dh-roll__label">{{psychicEffect}}</div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

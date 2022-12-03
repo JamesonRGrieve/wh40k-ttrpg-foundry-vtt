@@ -6,6 +6,14 @@ export function capitalize(text) {
 export function registerHandlebarsHelpers() {
     console.log('Registering Handlebars Helpers');
 
+    Handlebars.registerHelper('isPsychicAttack', function (power) {
+        if (power && power.system.subtype) {
+            return power.system.subtype.includes('Attack');
+        } else {
+            return false;
+        }
+    });
+
     Handlebars.registerHelper('dhlog', function (object) {
         if (object) {
             game.dh.log('hb template', object);

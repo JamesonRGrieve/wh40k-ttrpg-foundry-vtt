@@ -1,9 +1,9 @@
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
-import { WeaponAttackData } from '../rolls/action-data.mjs';
+import { WeaponActionData } from '../rolls/action-data.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
     /**
-     * @param weaponAttackData {WeaponAttackData}
+     * @param weaponAttackData {WeaponActionData}
      * @param options
      */
     constructor(weaponAttackData = {}, options = {}) {
@@ -67,14 +67,14 @@ export class WeaponAttackDialog extends FormApplication {
         }
 
         await this.data.finalize();
-        await this.weaponAttackData.performAttackAndSendToChat();
+        await this.weaponAttackData.performActionAndSendToChat();
         await this.close();
     }
 }
 
 /**
  *
- * @param weaponAttackData {WeaponAttackData}
+ * @param weaponAttackData {WeaponActionData}
  */
 export async function prepareWeaponRoll(weaponAttackData) {
     const prompt = new WeaponAttackDialog(weaponAttackData);

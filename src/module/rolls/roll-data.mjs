@@ -235,6 +235,8 @@ export class PsychicRollData extends RollData {
     powerSelect = false;
     hasFocus = false;
 
+    hasDamage = false;
+
     maxPr = 0;
     pr = 0;
 
@@ -254,6 +256,7 @@ export class PsychicRollData extends RollData {
         this.powerSelect = this.psychicPowers.length > 1;
         this.power = this.psychicPowers[0];
         this.power.isSelected = true;
+        this.hasDamage = this.power.system.subtype.includes('Attack');
     }
 
     selectPower(powerName) {
@@ -266,6 +269,7 @@ export class PsychicRollData extends RollData {
         this.modifiers['bonus'] = 10 * Math.floor(this.sourceActor.psy.rating - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = this.power.system.target.bonus ?? 0;
+        this.hasDamage = this.power.system.subtype.includes('Attack');
 
         await updateAttackSpecials(this);
         this.updateBaseTarget();

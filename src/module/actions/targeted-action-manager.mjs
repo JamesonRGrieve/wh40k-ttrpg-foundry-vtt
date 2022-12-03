@@ -1,6 +1,6 @@
 import { prepareWeaponRoll } from '../prompts/weapon-prompt.mjs';
 import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
-import { PsychicAttackData, WeaponAttackData } from '../rolls/action-data.mjs';
+import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
 
 export class TargetedActionManager {
 
@@ -42,7 +42,11 @@ export class TargetedActionManager {
             sourceToken = source.token ?? source.getActiveTokens()[0];
         } else {
             const controlledObjects = game.canvas.tokens.controlledObjects;
-            if (controlledObjects.size !== 1) {
+            if (!controlledObjects || controlledObjects.size === 0) {
+                ui.notifications.warn('You need to control a token!');
+                return
+            }
+            if (controlledObjects.size > 1) {
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return;
             }
@@ -86,6 +90,7 @@ export class TargetedActionManager {
         // Source
         const sourceToken = this.getSourceToken(source);
         const sourceActorData = sourceToken ? sourceToken.actor : source;
+        if(!sourceActorData) return;
 
         // Target
         const targetToken = this.getTargetToken(target);
@@ -113,7 +118,7 @@ export class TargetedActionManager {
             return;
         }
 
-        const weaponAttack = new WeaponAttackData();
+        const weaponAttack = new WeaponActionData();
         const weaponRollData = weaponAttack.rollData;
         weaponRollData.weapons = weapons;
         weaponRollData.sourceActor = rollData.actor;
@@ -134,7 +139,7 @@ export class TargetedActionManager {
             return;
         }
 
-        const psychicAttack = new PsychicAttackData();
+        const psychicAttack = new PsychicActionData();
         const psychicRollData = psychicAttack.rollData;
         psychicRollData.psychicPowers = powers;
         psychicRollData.sourceActor = rollData.actor;
