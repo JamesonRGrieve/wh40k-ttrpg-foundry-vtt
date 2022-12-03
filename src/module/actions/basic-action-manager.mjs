@@ -66,7 +66,7 @@ export class BasicActionManager {
             yes: async () => {
                 await refundAmmo(actionData);
                 actionData.damageData.reset();
-                await actionData.performAttackAndSendToChat();
+                await actionData.performActionAndSendToChat();
             },
             no: () => {},
             defaultYes: false,
