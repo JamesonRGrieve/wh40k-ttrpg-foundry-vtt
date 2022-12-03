@@ -152,6 +152,7 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
+    isSpray = false;
     isLasWeapon = false;
     lasMode = 'Standard';
 
@@ -171,6 +172,7 @@ export class WeaponRollData extends RollData {
     async update() {
         this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
         this.isLasWeapon = this.weapon.system.type === 'Las';
+        this.isSpray = this.hasAttackSpecial('Spray');
 
         await updateWeaponModifiers(this);
         await updateAttackSpecials(this);

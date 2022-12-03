@@ -9,27 +9,29 @@
                     <h3>{{effectString}}</h3>
                     <div class="dh-roll__divider"></div>
 
-                    <div class="dh-roll__row dh-roll__row--number">
-                        <div class="dh-roll__label">Base</div>
-                        <div class="dh-roll__value">{{baseTarget}}</div>
-                    </div>
-                    {{#each activeModifiers}}
+                    {{#unless isSpray}}
                         <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Modifier: {{@key}}</div>
-                            <div class="dh-roll__value">{{this}}</div>
+                            <div class="dh-roll__label">Base</div>
+                            <div class="dh-roll__value">{{baseTarget}}</div>
                         </div>
-                    {{/each}}
-                    <div class="dh-roll__target">
-                        <div class="dh-roll__label">Target</div>
-                        <div class="dh-roll__value">{{modifiedTarget}}</div>
-                    </div>
+                        {{#each activeModifiers}}
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Modifier: {{@key}}</div>
+                                <div class="dh-roll__value">{{this}}</div>
+                            </div>
+                        {{/each}}
+                        <div class="dh-roll__target">
+                            <div class="dh-roll__label">Target</div>
+                            <div class="dh-roll__value">{{modifiedTarget}}</div>
+                        </div>
 
-                    {{#if ammoUsed}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Ammo Used</div>
-                            <div class="dh-roll__value">{{ammoUsed}}</div>
-                        </div>
-                    {{/if}}
+                        {{#if ammoUsed}}
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Ammo Used</div>
+                                <div class="dh-roll__value">{{ammoUsed}}</div>
+                            </div>
+                        {{/if}}
+                    {{/unless}}
 
                     {{#each @root.effectOutput as |effect|}}
                         <div class="dh-roll__row--full">
@@ -37,25 +39,27 @@
                         </div>
                     {{/each}}
 
-                    {{#if success}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Degrees of Success</div>
-                            <div class="dh-roll__value">{{dos}}</div>
-                        </div>
-                        <div class="dh-roll__success">
-                            <span>Success</span>
-                            <span>{{roll.total}}</span>
-                        </div>
-                    {{else}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Degrees of Failure</div>
-                            <div class="dh-roll__value">{{dof}}</div>
-                        </div>
-                        <div class="dh-roll__fail">
-                            <span>Fail</span>
-                            <span>{{roll.total}}</span>
-                        </div>
-                    {{/if}}
+                    {{#unless isSpray}}
+                        {{#if success}}
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Degrees of Success</div>
+                                <div class="dh-roll__value">{{dos}}</div>
+                            </div>
+                            <div class="dh-roll__success">
+                                <span>Success</span>
+                                <span>{{roll.total}}</span>
+                            </div>
+                        {{else}}
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Degrees of Failure</div>
+                                <div class="dh-roll__value">{{dof}}</div>
+                            </div>
+                            <div class="dh-roll__fail">
+                                <span>Fail</span>
+                                <span>{{roll.total}}</span>
+                            </div>
+                        {{/if}}
+                    {{/unless}}
 
                     <div class='dh-roll__controls'>
                         {{#if success}}

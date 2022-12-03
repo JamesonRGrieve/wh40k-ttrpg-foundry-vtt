@@ -199,6 +199,7 @@ export class PsychicActionData extends ActionData {
             this.psychicEffect = this.rollData.power.system.description;
         }
         if(!this.rollData.hasDamage) {
+            this.rollData.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
             this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
         }
         await super.performActionAndSendToChat();
