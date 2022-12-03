@@ -64,7 +64,8 @@ export class TargetedActionManager {
             targetToken = target.token ?? target.getActiveTokens()[0];
         } else {
             const targetedObjects = game.user.targets;
-            if (targetedObjects.size !== 1) {
+            if (!targetedObjects || targetedObjects.size === 0) return;
+            if (targetedObjects.size > 1) {
                 ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return;
             }

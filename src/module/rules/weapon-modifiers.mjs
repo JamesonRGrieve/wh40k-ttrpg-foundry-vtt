@@ -5,6 +5,7 @@ export async function updateWeaponModifiers(rollData) {
 
     let actionItem = rollData.weapon ?? rollData.power;
     game.dh.log('updateWeaponModifiers', actionItem);
+    game.dh.log('updateWeaponModifiers items', actionItem.items);
     for (const i of actionItem.items) {
         if (i.isWeaponModification && (i.system.equipped || i.system.enabled)) {
             rollData.weaponModifiers.push({

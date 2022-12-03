@@ -140,6 +140,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
     async prepareData() {
         super.prepareData();
+        game.dh.log('Item prepare data', this);
 
         if (this.isPsychicPower) {
             if(!this.system.damage || this.system.damage === '') {
@@ -151,6 +152,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         }
 
         if (game.ready) {
+            game.dh.log('Determining nested items');
             await this._determineNestedItems();
         }
     }
