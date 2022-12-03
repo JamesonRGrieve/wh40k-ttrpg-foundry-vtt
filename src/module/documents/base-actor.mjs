@@ -43,8 +43,8 @@ export class DarkHeresyBaseActor extends Actor {
         return this.system.movement;
     }
 
-    prepareData() {
-        super.prepareData();
+    async prepareData() {
+        await super.prepareData();
         this._computeCharacteristics();
         this._computeMovement();
     }

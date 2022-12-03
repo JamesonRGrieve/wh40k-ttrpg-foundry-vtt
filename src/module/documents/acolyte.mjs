@@ -64,7 +64,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         return this.system.backgroundEffects;
     }
 
-    prepareData() {
+    async prepareData() {
         this.system.backgroundEffects = {
             abilities: [],
         };
@@ -75,6 +75,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         this._computeArmour();
         this._computeMovement();
         this._computeEncumbrance();
+        await super.prepareData();
     }
 
     async rollWeaponDamage(weapon) {
