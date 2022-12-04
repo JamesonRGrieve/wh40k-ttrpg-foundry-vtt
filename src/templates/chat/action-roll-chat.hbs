@@ -40,19 +40,18 @@
                     {{/each}}
 
                     {{#unless isSpray}}
+                        {{#if isOpposed}}
+                            <div class="dh-roll__row dh-roll__row--number">
+                                <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
+                                <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}}){{/if}}</div>
+                            </div>
+                        {{/if}}
+
                         {{#if success}}
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Degrees of Success</div>
                                 <div class="dh-roll__value">{{dos}}</div>
                             </div>
-
-                            {{#if isOpposed}}
-                                <div class="dh-roll__row dh-roll__row--number">
-                                    <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
-                                    <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}}</div>
-                                </div>
-                            {{/if}}
-
                             <div class="dh-roll__success">
                                 <span>Success</span>
                                 <span>{{roll.total}}</span>
@@ -62,14 +61,6 @@
                                 <div class="dh-roll__label">Degrees of Failure</div>
                                 <div class="dh-roll__value">{{dof}}</div>
                             </div>
-
-                            {{#if isOpposed}}
-                                <div class="dh-roll__row dh-roll__row--number">
-                                    <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
-                                    <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}}</div>
-                                </div>
-                            {{/if}}
-
                             <div class="dh-roll__fail">
                                 <span>Fail</span>
                                 <span>{{roll.total}}</span>

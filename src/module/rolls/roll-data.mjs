@@ -56,6 +56,11 @@ export class RollData {
     dos = 0;
     dof = 0;
 
+    reset() {
+        this.automatic = false;
+        this.success = false;
+        this.opposedSuccess = false;
+    }
 
     nameOverride;
     get name() {

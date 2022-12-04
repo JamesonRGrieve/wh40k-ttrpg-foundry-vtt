@@ -30,6 +30,13 @@
                         </div>
                     {{/each}}
 
+                    {{#if isOpposed}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
+                            <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}}){{/if}}</div>
+                        </div>
+                    {{/if}}
+
                     {{#if success}}
                         <div class="dh-roll__row dh-roll__row--number">
                             <div class="dh-roll__label">Degrees of Success</div>

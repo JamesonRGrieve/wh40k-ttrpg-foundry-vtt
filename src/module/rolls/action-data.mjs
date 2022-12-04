@@ -13,6 +13,11 @@ export class ActionData {
     effects = [];
     effectOutput = [];
 
+    reset() {
+        this.damageData.reset();
+        this.rollData.reset();
+    }
+
     async checkForOpposed() {
         if(this.rollData.isOpposed) {
             this.rollData.opposedRoll = await roll1d100();
