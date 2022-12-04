@@ -4,6 +4,7 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs'
 export class DarkHeresyVehicle extends DarkHeresyBaseActor {
 
     async _preCreate(data, options, user) {
+        await super._preCreate(data, options, user);
         let initData = {
             "token.bar1": { "attribute": "integrity" },
             "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -11,7 +12,7 @@ export class DarkHeresyVehicle extends DarkHeresyBaseActor {
             "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             "token.name": data.name
         }
-        this.system.update(initData)
+        this.updateSource(initData)
     }
 
     async prepareData() {

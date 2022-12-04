@@ -4,6 +4,7 @@ import { SimpleSkillData } from '../rolls/action-data.mjs';
 export class DarkHeresyBaseActor extends Actor {
 
     async _preCreate(data, options, user) {
+        await super._preCreate(data, options, user);
         let initData = {
             'token.bar1': { 'attribute': 'wounds' },
             'token.bar2': { 'attribute': 'fate' },
@@ -20,7 +21,7 @@ export class DarkHeresyBaseActor extends Actor {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
         }
-        this.system.update(initData);
+        this.updateSource(initData);
     }
 
     get characteristics() {
