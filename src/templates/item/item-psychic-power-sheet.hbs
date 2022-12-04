@@ -65,16 +65,33 @@
                         <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                             <h1 class="dh-panel__header">Action</h1>
                             <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Characteristic</span>
-                                <select class="dh-field__input" name="system.target.characteristic">
-                                    {{selectOptions dh.combat.characteristics selected=item.system.target.characteristic}}
-                                </select>
-                            </div>
-                            <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Bonus</span>
                                 <input class="dh-field__input" type="text" name="system.target.bonus"
                                        value="{{item.system.target.bonus}}" />
                             </div>
+
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Use Skill</span>
+                                <div class='dh-field__input check'>
+                                    <input name="system.target.useSkill" type="checkbox" data-dtype="Boolean" {{checked
+                                        item.system.target.useSkill}}/>
+                                </div>
+                            </div>
+                            {{#if item.system.target.useSkill}}
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Skill</span>
+                                    <input class="dh-field__input" type="text" name="system.target.skill"
+                                           value="{{item.system.target.skill}}" />
+                                </div>
+                            {{else}}
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Characteristic</span>
+                                    <select class="dh-field__input" name="system.target.characteristic">
+                                        {{selectOptions dh.combat.characteristics selected=item.system.target.characteristic}}
+                                    </select>
+                                </div>
+                            {{/if}}
+
                             <div class="dh-field__wrapper">
                                 <span class="dh-field__header">Is Opposed</span>
                                 <div class='dh-field__input check'>
@@ -83,11 +100,28 @@
                                 </div>
                             </div>
                             <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Opposed Characteristic</span>
-                                <select class="dh-field__input" name="system.target.opposed">
-                                    {{selectOptions dh.combat.characteristics selected=item.system.target.opposed}}
-                                </select>
+                                <span class="dh-field__header">Use Opposed Skill</span>
+                                <div class='dh-field__input check'>
+                                    <input name="system.target.useOpposedSkill" type="checkbox" data-dtype="Boolean" {{checked
+                                        item.system.target.useOpposedSkill}}/>
+                                </div>
                             </div>
+
+                            {{#if item.system.target.useOpposedSkill}}
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Opposed Skill</span>
+                                    <input class="dh-field__input" type="text" name="system.target.opposedSkill"
+                                           value="{{item.system.target.opposedSkill}}" />
+                                </div>
+                            {{else}}
+                                <div class="dh-field__wrapper">
+                                    <span class="dh-field__header">Opposed Characteristic</span>
+                                    <select class="dh-field__input" name="system.target.opposed">
+                                        {{selectOptions dh.combat.characteristics selected=item.system.target.opposed}}
+                                    </select>
+                                </div>
+                            {{/if}}
+
                         </div>
                         <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                             <h1 class="dh-panel__header">Damage</h1>
