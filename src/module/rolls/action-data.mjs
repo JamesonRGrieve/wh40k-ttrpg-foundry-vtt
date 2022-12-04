@@ -13,6 +13,27 @@ export class ActionData {
     effects = [];
     effectOutput = [];
 
+    async checkForOpposed() {
+        if(this.rollData.isOpposed) {
+            this.rollData.opposedRoll = await roll1d100();
+            let rollTotal = this.rollData.opposedRoll.total;
+            const target  = this.rollData.opposedTarget;
+            this.rollData.opposedSuccess = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
+
+            if(this.rollData.opposedSuccess) {
+                this.rollData.opposedDof = 0;
+                this.rollData.opposedDos = 1 + getDegree(this.rollData.opposedTarget, this.rollData.opposedRoll.total);
+
+                if(this.rollData.opposedDos >= this.rollData.dos) {
+                    this.rollData.success = false;
+                }
+            } else {
+                this.rollData.opposedDos = 0;
+                this.rollData.opposedDof = 1 + getDegree(this.rollData.opposedRoll.total, this.rollData.opposedTarget);
+            }
+        }
+    }
+
     async _calculateHit() {
         this.rollData.roll = await roll1d100();
         let rollTotal = this.rollData.roll.total;
@@ -143,6 +164,8 @@ export class ActionData {
         }
     }
 
+    async descriptionText() {}
+
     async performActionAndSendToChat() {
         // Store Roll Information
         DHBasicActionManager.storeActionData(this);
@@ -152,6 +175,7 @@ export class ActionData {
 
         // Determine Success/Hits
         await this.calculateSuccessOrFailure();
+        await this.checkForOpposed();
 
         // Calculate Hits
         await this.calculateHits();
@@ -159,7 +183,10 @@ export class ActionData {
         // Create Specials
         await this.createEffectData();
 
-        game.dh.log('Perform Attack', this);
+        game.dh.log('Perform Action', this);
+
+        // Description Text
+        await this.descriptionText();
 
         // Expend Ammo
         await useAmmo(this);
@@ -195,14 +222,17 @@ export class PsychicActionData extends ActionData {
     }
 
     async performActionAndSendToChat() {
-        if(this.rollData.power) {
-            this.psychicEffect = await TextEditor.enrichHTML(this.rollData.power.system.description, {rollData: this.rollData});
-        }
         if(!this.rollData.hasDamage) {
             this.rollData.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
             this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
         }
         await super.performActionAndSendToChat();
+    }
+
+    async descriptionText() {
+        if(this.rollData.power) {
+            this.psychicEffect = await TextEditor.enrichHTML(this.rollData.power.system.description, {rollData: this.rollData});
+        }
     }
 }
 

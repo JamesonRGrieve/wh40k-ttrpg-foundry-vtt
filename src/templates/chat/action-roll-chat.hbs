@@ -45,6 +45,14 @@
                                 <div class="dh-roll__label">Degrees of Success</div>
                                 <div class="dh-roll__value">{{dos}}</div>
                             </div>
+
+                            {{#if isOpposed}}
+                                <div class="dh-roll__row dh-roll__row--number">
+                                    <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
+                                    <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}}</div>
+                                </div>
+                            {{/if}}
+
                             <div class="dh-roll__success">
                                 <span>Success</span>
                                 <span>{{roll.total}}</span>
@@ -54,6 +62,14 @@
                                 <div class="dh-roll__label">Degrees of Failure</div>
                                 <div class="dh-roll__value">{{dof}}</div>
                             </div>
+
+                            {{#if isOpposed}}
+                                <div class="dh-roll__row dh-roll__row--number">
+                                    <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
+                                    <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}}</div>
+                                </div>
+                            {{/if}}
+
                             <div class="dh-roll__fail">
                                 <span>Fail</span>
                                 <span>{{roll.total}}</span>
@@ -87,6 +103,10 @@
             {{#if rollData.success}}
                 {{#with damageData}}
                     <div id="{{@root.id}}" style="display: none">
+                        {{#if @root.psychicEffect}}
+                            <div class="dh-roll__divider"></div>
+                            <div class="dh-roll__label">{{{psychicEffect}}}</div>
+                        {{/if}}
                         <div class="dh-roll__divider"></div>
                         {{#each hits as |hit|}}
                             <h2 style='margin-top: .5rem'>Hit {{inc @index}}</h2>

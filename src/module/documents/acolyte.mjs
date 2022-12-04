@@ -236,6 +236,14 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         }
     }
 
+    getSkillFuzzy(skillName) {
+        for (const [name, skill] of Object.entries(this.skills)) {
+            if (skillName.toUpperCase() === name.toUpperCase()) {
+                return skill;
+            }
+        }
+    }
+
     _skillAdvanceToValue(adv) {
         let advance = 1 * adv;
         let training = -20;

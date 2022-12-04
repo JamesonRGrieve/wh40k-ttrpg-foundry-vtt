@@ -25,9 +25,18 @@ export class RollData {
     combatActionInformation = {};
     actions = {};
     action = '';
-    baseTarget = 0;
 
+    baseTarget = 0;
     baseChar = '';
+
+    isOpposed = false;
+    opposedTarget = 0;
+    opposedChar = '';
+    opposedSuccess = false;
+    opposedDof = 0;
+    opposedDos = 0;
+    opposedRoll;
+
     baseAim = 0;
     modifiers = {
         difficulty: 0,
@@ -46,6 +55,7 @@ export class RollData {
     success = false;
     dos = 0;
     dof = 0;
+
 
     nameOverride;
     get name() {
@@ -272,17 +282,42 @@ export class PsychicRollData extends RollData {
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = this.power.system.target.bonus ?? 0;
         this.hasDamage = this.power.system.subtype.includes('Attack');
-
         await updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);
     }
 
     updateBaseTarget() {
-        const characteristic = this.power.system.target.characteristic;
-        const actorCharacteristic = this.sourceActor.getCharacteristicFuzzy(characteristic);
-        this.baseTarget = actorCharacteristic.total;
-        this.baseChar = actorCharacteristic.short;
+        const target = this.power.system.target;
+        if(!target) return;
+
+        if(target.useSkill) {
+            const skill = target.skill;
+            const actorSkill = this.sourceActor.getSkillFuzzy(skill);
+            this.baseTarget = actorSkill.current;
+            this.baseChar = actorSkill.label;
+        } else {
+            const characteristic = target.characteristic;
+            const actorCharacteristic = this.sourceActor.getCharacteristicFuzzy(characteristic);
+            this.baseTarget = actorCharacteristic.total;
+            this.baseChar = actorCharacteristic.short;
+        }
+
+        if(target.isOpposed && this.targetActor) {
+            this.isOpposed = true;
+
+            if(target.useOpposedSkill) {
+                const skill = target.opposedSkill;
+                const actorSkill = this.targetActor.getSkillFuzzy(skill);
+                this.opposedTarget = actorSkill.current;
+                this.opposedChar = actorSkill.label;
+            } else {
+                const characteristic = target.opposed;
+                const actorCharacteristic = this.targetActor.getCharacteristicFuzzy(characteristic);
+                this.opposedTarget = actorCharacteristic.total;
+                this.opposedChar = actorCharacteristic.short;
+            }
+        }
     }
 
     async finalize() {
