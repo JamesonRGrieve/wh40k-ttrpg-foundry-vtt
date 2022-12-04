@@ -1122,7 +1122,18 @@
             "sustained": "No",
             "discipline": "",
             "subtype": "Concentration",
-            "action": "Half Action"
+            "action": "Half Action",
+            "target": {
+                "bonus": 0,
+                "useSkill": false,
+                "characteristic": "willpower",
+                "skill": "None",
+                "opposedBonus": 0,
+                "isOpposed": false,
+                "useOpposedSkill": false,
+                "opposed": "willpower",
+                "opposedSkill": "None"
+            }
         },
         "specialAbility": {
             "templates": ["itemDescription"],
