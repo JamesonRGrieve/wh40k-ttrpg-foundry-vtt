@@ -215,11 +215,18 @@ export class Hit {
         const rollFormula = actionItem.system.penetration;
         if (Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
-        } else {
+        } else if (rollFormula === '') {
+            this.penetration = 0;
+        }  else {
             this.hasPenetrationRoll = true;
-            this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
-            await this.penetrationRoll.evaluate({ async: true });
-            this.penetration = this.penetrationRoll.total;
+            try {
+                this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
+                await this.penetrationRoll.evaluate({ async: true });
+                this.penetration = this.penetrationRoll.total;
+            } catch (error) {
+                ui.notifications.warn('Penetration formula failed - setting to 0');
+                this.penetration = 0;
+            }
         }
 
         if (actionItem.isMelee) {

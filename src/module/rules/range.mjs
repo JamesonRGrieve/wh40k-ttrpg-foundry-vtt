@@ -21,9 +21,14 @@ async function calculateWeaponMaxRange(rollData) {
     } else if (weapon.system.range === '') {
         range = 0;
     } else {
-        const rangeCalculation = new Roll(weapon.system.range, rollData);
-        await rangeCalculation.evaluate({ async: true });
-        range = rangeCalculation.total ?? 0;
+        try {
+            const rangeCalculation = new Roll(weapon.system.range, rollData);
+            await rangeCalculation.evaluate({ async: true });
+            range = rangeCalculation.total ?? 0;
+        } catch (error) {
+            ui.notifications.warn('Range formula failed - setting to 0');
+            range = 0;
+        }
     }
 
     // Check Maximal
@@ -43,10 +48,22 @@ async function calculatePsychicAbilityMaxRange(rollData) {
         return;
     }
 
-    const rangeCalculation = new Roll(rollData.power.system.range, rollData);
-    await rangeCalculation.evaluate({ async: true });
+    let range;
+    if (Number.isInteger(rollData.power.system.range)) {
+        range = rollData.power.system.range;
+    } else if (rollData.power.system.range === '') {
+        range = 0;
+    } else {
+        try {
+            const rangeCalculation = new Roll(rollData.power.system.range, rollData);
+            await rangeCalculation.evaluate({ async: true });
+            range = rangeCalculation.total ?? 0;
+        } catch (error) {
+            ui.notifications.warn('Range formula failed - setting to 0');
+            range = 0;
+        }
+    }
 
-    let range = rangeCalculation.total ?? 0;
     rollData.maxRange = range;
 }
 

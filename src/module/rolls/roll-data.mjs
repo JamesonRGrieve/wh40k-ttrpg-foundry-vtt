@@ -140,14 +140,18 @@ export class RollData {
 
     async calculateTotalModifiers() {
         const rollDetails = this.modifiersToRollData();
-        const roll = new Roll(rollDetails.formula, rollDetails.params);
-        await roll.evaluate({ async: true });
-        if (roll.total > 60) {
-            this.modifierTotal = 60;
-        } else if (roll.total < -60) {
-            this.modifierTotal = -60;
-        } else {
-            this.modifierTotal = roll.total;
+        try {
+            const roll = new Roll(rollDetails.formula, rollDetails.params);
+            await roll.evaluate({ async: true });
+            if (roll.total > 60) {
+                this.modifierTotal = 60;
+            } else if (roll.total < -60) {
+                this.modifierTotal = -60;
+            } else {
+                this.modifierTotal = roll.total;
+            }
+        } catch (error) {
+            this.modifierTotal = 0;
         }
     }
 }
