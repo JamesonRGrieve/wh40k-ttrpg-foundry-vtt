@@ -18,6 +18,8 @@ async function calculateWeaponMaxRange(rollData) {
     let range;
     if (Number.isInteger(weapon.system.range)) {
         range = weapon.system.range;
+    } else if (weapon.system.range === '') {
+        range = 0;
     } else {
         const rangeCalculation = new Roll(weapon.system.range, rollData);
         await rangeCalculation.evaluate({ async: true });
