@@ -22,8 +22,10 @@
     "eslint": "8.27.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
+    "decode-uri-component": "0.2.2",
     "fancy-log": "2.0.0",
     "fs": "0.0.1-security",
+    "glob-parent": "6.0.2",
     "gulp": "4.0.2",
     "gulp-autoprefixer": "8.0.0",
     "gulp-clean": "0.4.0",
@@ -37,6 +39,7 @@
     "path": "0.12.7",
     "prettier": "2.7.1",
     "sass": "1.56.0",
+    "underscore": "1.13.6",
     "through2": "4.0.2"
   }
 }
