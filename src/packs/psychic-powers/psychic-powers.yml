@@ -593,7 +593,7 @@ system:
     attackBonus: 0
     attackType: 'Psychic Barrage'
     cost: 200
-    damage: '1d10*@pr'
+    damage: '1d10+@pr'
     damageType: 'Energy'
     discipline: Biomancy
     description: 'Drawing on the electric eld of his own body, the psyker projects crackling
