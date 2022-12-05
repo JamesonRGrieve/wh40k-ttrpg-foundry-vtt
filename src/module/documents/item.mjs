@@ -151,6 +151,14 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
             }
         }
 
+        // Fix Broken Selects
+        if(!this.system.craftsmanship || this.system.craftsmanship === '') {
+            this.system.craftsmanship = 'Common';
+        }
+        if(!this.system.availability || this.system.availability === '') {
+            this.system.availability = 'Common';
+        }
+
         if (game.ready) {
             game.dh.log('Determining nested items');
             await this._determineNestedItems();
