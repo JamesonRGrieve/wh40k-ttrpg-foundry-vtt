@@ -23,15 +23,19 @@ export class TargetedActionManager {
         if (!token1 || !token2) return 0;
 
         let distance = canvas.grid.measureDistance(token1, token2);
-        if (token1.document.elevation !== token2.document.elevation) {
-            let h_diff =
-                token2.document.elevation > token1.document.elevation
-                    ? token2.document.elevation - token1.document.elevation
-                    : token1.document.elevation - token2.document.elevation;
+        if (token1.document && token2.document) {
+            if (token1.document.elevation !== token2.document.elevation) {
+                let h_diff =
+                    token2.document.elevation > token1.document.elevation
+                        ? token2.document.elevation - token1.document.elevation
+                        : token1.document.elevation - token2.document.elevation;
 
-            return Math.floor(Math.sqrt(Math.pow(h_diff, 2) + Math.pow(distance, 2)));
+                return Math.floor(Math.sqrt(Math.pow(h_diff, 2) + Math.pow(distance, 2)));
+            } else {
+                return Math.floor(distance);
+            }
         } else {
-            return Math.floor(distance);
+            return 0;
         }
     }
 

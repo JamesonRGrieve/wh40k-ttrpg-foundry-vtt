@@ -86,7 +86,10 @@ export class Hit {
             game.dh.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
-        const rollFormula = actionItem.system.damage;
+        let rollFormula = actionItem.system.damage;
+        if(!rollFormula || rollFormula === '') {
+            rollFormula = 0;
+        }
         this.damageRoll = new Roll(rollFormula, attackData.rollData);
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {

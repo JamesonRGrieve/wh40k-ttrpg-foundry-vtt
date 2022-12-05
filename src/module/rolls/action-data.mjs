@@ -14,6 +14,7 @@ export class ActionData {
     effectOutput = [];
 
     reset() {
+        this.effects = [];
         this.damageData.reset();
         this.rollData.reset();
     }
