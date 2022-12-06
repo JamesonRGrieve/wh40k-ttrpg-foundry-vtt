@@ -29,7 +29,7 @@ export const DarkHeresyActorProxy = new Proxy(function () {}, {
                 return function (data, options) {
                     if (data.constructor === Array) {
                         //Array of data, this happens when creating Actors imported from a compendium
-                        return data.map(i => NumeneraActor.create(i, options));
+                        return data.map(i => DarkHeresyAcolyte.create(i, options));
                     }
 
                     if (!actorMappings.hasOwnProperty(data.type))
