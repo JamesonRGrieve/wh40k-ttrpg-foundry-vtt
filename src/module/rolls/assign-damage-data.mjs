@@ -16,12 +16,17 @@ export class AssignDamageData {
     async update() {
         const location = this.hit?.location;
         if(location) {
-           const locationArmour = this.actor.system.armour[location];
-           if(locationArmour) {
-               this.armour = locationArmour.value;
-               this.tb = locationArmour.toughnessBonus;
-           }
+            for(const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
+                if(location.toUpperCase() === name.toUpperCase()) {
+                    this.armour = locationArmour.value;
+                    this.tb = locationArmour.toughnessBonus;
+                }
+            }
         }
+    }
+
+    async finalize() {
+
     }
 
     async performActionAndSendToChat() {
