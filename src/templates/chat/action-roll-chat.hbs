@@ -150,8 +150,9 @@
                             </div>
                             {{#each righteousFury as |fury|}}
                                 <div class="dh-roll__success">
-                                    <span>Righteous fury hits for {{fury.total}} critical damage!</span>
+                                    <span>Righteous fury hits for a level {{fury.roll.total}} critical effect!</span>
                                 </div>
+                                <div class="dh-roll__label">{{fury.effect}}</div>
                             {{/each}}
 
                             {{#if @root.rollData.targetActor}}
