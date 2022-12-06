@@ -101,6 +101,16 @@
       margin-top: .3rem;
     }
 
+    &__controls-1 {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 0.2rem;
+      background: url('../images/chat-control.png') no-repeat center/100% 100%;
+      font-weight: bold;
+      margin-top: .3rem;
+    }
+
     &__result {
       grid-column: 1 / -1;
 
