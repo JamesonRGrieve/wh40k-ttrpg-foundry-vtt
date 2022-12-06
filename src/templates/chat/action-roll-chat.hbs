@@ -153,6 +153,15 @@
                                     <span>Righteous fury hits for {{fury.total}} critical damage!</span>
                                 </div>
                             {{/each}}
+
+                            {{#if @root.rollData.targetActor}}
+                                <div class='dh-roll__controls-1'>
+                                    <div class="dh-control-button roll-control__assign-damage" data-roll-id="{{@root.id}}" data-hit-index="{{@index}}">
+                                        <span class="dh-control-button__span material-icons">api</span>
+                                        <span class="dh-control-button__label">Assign Damage</span>
+                                    </div>
+                                </div>
+                            {{/if}}
                             <div class="dh-roll__divider"></div>
                         {{/each}}
                     </div>

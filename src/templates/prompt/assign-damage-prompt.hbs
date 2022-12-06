@@ -1,0 +1,78 @@
+{{dhlog this}}
+<div class="dialog-content">
+    <form class="dh-wrapper" autocomplete="off">
+        <div class="dh-attack">
+            <!-- Header -->
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__prompt dh-header__logo">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <img class="dh-header__logo-image-small" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                            <span class="dh-header__title">Assign Damage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Character</span>
+                    <span class="dh-field__span">{{this.actor.name}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Wounds</span>
+                    <span class="dh-field__span">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Critical</span>
+                    <span class="dh-field__span">{{this.actor.system.wounds.critical}}</span>
+                </div>
+            </div>
+
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Damage</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Damage</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Penetration</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="hit.totalPenetration" value="{{this.hit.totalPenetration}}" />
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Hit Location</span>
+                    <select class="dh-field__input" name="hit.location" id="location">
+                        {{selectOptions locations selected=this.hit.location}}
+                    </select>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Location Armour</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Toughness Bonus</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="tb" value="{{this.tb}}" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Buttons -->
+<div class="dialog-buttons">
+    <button class="dialog-button roll default" data-button="roll" id="attack-roll">
+        <i class="dh-material">casino</i>
+        Apply
+    </button>
+    <button class="dialog-button cancel" data-button="cancel" id="attack-cancel">
+        <i class="dh-material">close</i>
+        Cancel
+    </button>
+</div>

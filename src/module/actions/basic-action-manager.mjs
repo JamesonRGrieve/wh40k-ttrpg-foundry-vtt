@@ -1,5 +1,7 @@
 import { refundAmmo } from '../rules/ammo.mjs';
 import { uuid } from '../rolls/roll-helpers.mjs';
+import { AssignDamageData } from '../rolls/assign-damage-data.mjs';
+import { prepareAssignDamageRoll } from '../prompts/assign-damage-prompt.mjs';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -12,6 +14,7 @@ export class BasicActionManager {
             html.find('.roll-control__hide-control').click(async (ev) => await this._toggleExpandChatMessage(ev));
             html.find('.roll-control__refund-ammo').click(async (ev) => await this._refundAmmo(ev));
             html.find('.roll-control__fate-reroll').click(async (ev) => await this._fateReroll(ev));
+            html.find('.roll-control__assign-damage').click(async (ev) => await this._assignDamage(ev));
         });
     }
 
@@ -71,6 +74,39 @@ export class BasicActionManager {
             no: () => {},
             defaultYes: false,
         });
+    }
+
+    async _assignDamage(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const rollId = div.data('rollId');
+        const hit = div.data('hitIndex');
+        const actionData = this.getActionData(rollId);
+
+        if (!actionData) {
+            ui.notifications.warn(`Action data expired. Unable to perform action.`);
+            return;
+        }
+
+        if (!actionData.rollData?.targetActor) {
+            ui.notifications.warn(`Cannot determine target actor to assign hit.`);
+            return;
+        }
+
+        if(!Number.isInteger(hit)) {
+            ui.notifications.warn(`Unable to determine hit to assign.`);
+            return;
+        }
+        const hitIndex = Number.parseInt(hit);
+
+        if(hitIndex >= actionData.damageData.hits.length) {
+            ui.notifications.warn(`Unable to determine hit to assign.`);
+            return;
+        }
+
+        const hitData = actionData.damageData.hits[hitIndex];
+        const assignData = new AssignDamageData(actionData.rollData.targetActor, hitData);
+        await prepareAssignDamageRoll(assignData);
     }
 
     getActionData(id) {
