@@ -8,16 +8,22 @@ export class AssignDamageData {
     armour = 0;
     tb = 0;
 
+    damageTaken = 0;
+    hasCriticalDamage = false;
+    criticalDamageTaken = 0;
+
     constructor(actor, hit) {
         this.actor = actor;
         this.hit = hit;
     }
 
     async update() {
+        this.armour = 0;
+        this.tb = 0;
         const location = this.hit?.location;
         if(location) {
             for(const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
-                if(location.toUpperCase() === name.toUpperCase()) {
+                if(location.replace(/\s/g, "").toUpperCase() === name.toUpperCase()) {
                     this.armour = locationArmour.value;
                     this.tb = locationArmour.toughnessBonus;
                 }
@@ -26,10 +32,59 @@ export class AssignDamageData {
     }
 
     async finalize() {
+        let totalDamage = Number.parseInt(this.hit.totalDamage);
+        let totalPenetration = Number.parseInt(this.hit.totalPenetration);
 
+        // Reduce Armour by Penetration
+        let usableArmour = this.armour;
+        usableArmour = usableArmour - totalPenetration;
+        if (usableArmour < 0) {
+            usableArmour = 0;
+        }
+
+        const reduction = usableArmour + this.tb;
+        const reducedDamage = totalDamage - reduction;
+        // We have damage to process
+        if(reducedDamage > 0) {
+            // No Wounds Available
+            if(this.actor.system.wounds.value <= 0) {
+                // All applied as critical
+                this.hasCriticalDamage = true;
+                this.criticalDamageTaken = reducedDamage;
+            } else {
+                //Reduce Wounds First
+                if(this.actor.system.wounds.value >= reducedDamage) {
+                    // Only Wound Damage
+                    this.damageTaken = reducedDamage;
+                } else {
+                    // Wound and Critical
+                    this.damageTaken = this.actor.system.wounds.value;
+                    this.hasCriticalDamage = true;
+                    this.criticalDamageTaken = reducedDamage - this.damageTaken;
+                }
+            }
+        }
     }
 
     async performActionAndSendToChat() {
+        // Assign Damage
+        this.actor.system.wounds.value = this.actor.system.wounds.value - this.damageTaken;
+        this.actor.system.wounds.critical = this.actor.system.wounds.critical + this.criticalDamageTaken;
+
         game.dh.log('performActionAndSendToChat', this)
+
+        const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/assign-damage-chat.hbs', this);
+        let chatData = {
+            user: game.user.id,
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: html,
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        };
+        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        } else if (chatData.rollMode === 'selfroll') {
+            chatData.whisper = [game.user];
+        }
+        ChatMessage.create(chatData);
     }
 }

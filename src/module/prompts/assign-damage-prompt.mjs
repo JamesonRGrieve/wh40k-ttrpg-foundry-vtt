@@ -46,7 +46,7 @@ export class AssignDamageDialog extends FormApplication {
 
     async _assignDamage(event) {
         await this.data.finalize();
-        await this.performActionAndSendToChat();
+        await this.data.performActionAndSendToChat();
         await this.close();
     }
 }

@@ -1,0 +1,29 @@
+<div class="dh-wrapper">
+    <div class="dh-chat">
+        <div class="dh-roll">
+            <h1>{{this.actor.name}}</h1>
+            <h2>{{this.hit.location}} Hit</h2>
+            <div class="dh-roll__divider"></div>
+
+            <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Wounds</div>
+                <div class="dh-roll__value">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</div>
+            </div>
+            <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Critical</div>
+                <div class="dh-roll__value">{{this.actor.system.wounds.critical}}</div>
+            </div>
+
+            <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Wound Damage</div>
+                <div class="dh-roll__value">{{this.damageTaken}}</div>
+            </div>
+            {{#if this.hasCriticalDamage}}
+                <div class="dh-roll__row dh-roll__row--number">
+                    <div class="dh-roll__label">Critical Damage</div>
+                    <div class="dh-roll__value">{{this.criticalDamageTaken}}</div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
