@@ -16,11 +16,11 @@ export class DamageData {
 }
 
 export class Hit {
-    location = '';
+    location = 'Body';
 
     damage = 0;
     damageRoll;
-    damageType = '';
+    damageType = 'Impact';
     modifiers = {};
     totalDamage = 0;
 
