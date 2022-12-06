@@ -19,6 +19,7 @@ export class AcolyteSheet extends ActorContainerSheet {
     getData() {
         const context = super.getData();
         context.dh = CONFIG.dh;
+        context.effects = this.actor.getEmbeddedCollection('ActiveEffect').contents;
         return context;
     }
 

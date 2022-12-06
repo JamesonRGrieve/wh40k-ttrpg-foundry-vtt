@@ -30,6 +30,11 @@ export class ActorContainerSheet extends ActorSheet {
                 item.addEventListener('dragstart', this._onActorDragStart.bind(this), false);
             }
         });
+        html.find('.effect-delete').click(async (ev) => await this._effectDelete(ev));
+        html.find('.effect-edit').click(async (ev) => await this._effectEdit(ev));
+        html.find('.effect-create').click(async (ev) => await this._effectCreate(ev));
+        html.find('.effect-enable').click(async (ev) => await this._effectEnable(ev));
+        html.find('.effect-disable').click(async (ev) => await this._effectDisable(ev));
     }
 
     _onDrop(event) {
@@ -209,6 +214,44 @@ export class ActorContainerSheet extends ActorSheet {
                 game.dh.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
                 return super._onDragStart(event);
         }
+    }
+
+    async _effectDisable(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.actor.effects.get(div.data('effectId'));
+        effect.update({disabled: true});
+    }
+
+    async _effectEnable(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.actor.effects.get(div.data('effectId'));
+        effect.update({disabled: false});
+    }
+
+    async _effectDelete(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.actor.effects.get(div.data('effectId'));
+        effect.delete();
+    }
+
+    async _effectEdit(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.actor.effects.get(div.data('effectId'));
+        effect.sheet.render(true);
+    }
+
+    async _effectCreate(event) {
+        event.preventDefault();
+        return this.actor.createEmbeddedDocuments('ActiveEffect', [{
+            label: 'New Effect',
+            icon: 'icons/svg/aura.svg',
+            origin: this.actor.uuid,
+            disabled: true
+        }], { renderSheet: true })
     }
 
 }
