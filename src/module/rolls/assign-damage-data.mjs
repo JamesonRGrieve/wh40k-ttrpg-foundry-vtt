@@ -1,4 +1,5 @@
 import { hitDropdown } from '../rules/hit-locations.mjs';
+import { getCriticalDamage } from '../rules/critical-damage.mjs';
 
 export class AssignDamageData {
     locations = hitDropdown();
@@ -11,6 +12,7 @@ export class AssignDamageData {
     damageTaken = 0;
     hasCriticalDamage = false;
     criticalDamageTaken = 0;
+    criticalEffect = '';
 
     constructor(actor, hit) {
         this.actor = actor;
@@ -63,6 +65,10 @@ export class AssignDamageData {
                     this.criticalDamageTaken = reducedDamage - this.damageTaken;
                 }
             }
+        }
+
+        if(this.criticalDamageTaken > 0) {
+            this.criticalEffect = getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
         }
     }
 

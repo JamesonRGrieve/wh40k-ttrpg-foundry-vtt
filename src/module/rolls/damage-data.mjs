@@ -1,5 +1,6 @@
 import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
+import { getCriticalDamage } from '../rules/critical-damage.mjs';
 
 export class DamageData {
     template = '';
@@ -40,7 +41,7 @@ export class Hit {
     /**
      * @param attackData {AttackData}
      * @param lastHit
-     * @returns {Promise<void>}
+     * @returns {Promise<Hit>}
      */
     static async createHit(attackData, lastHit = undefined) {
         const hit = new Hit();
@@ -58,6 +59,11 @@ export class Hit {
             } else {
                 hit.location = getHitLocationForRoll(attackData.rollData.roll.total);
             }
+        }
+
+        // Determine Righteous Fury Effects
+        for(const righteousFury of hit.righteousFury) {
+            righteousFury.effect = getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total);
         }
 
         return hit;
@@ -115,7 +121,7 @@ export class Hit {
                     // Righteous fury hit
                     const righteousFuryRoll = new Roll('1d5', {});
                     await righteousFuryRoll.evaluate({ async: true });
-                    this.righteousFury.push(righteousFuryRoll);
+                    this.righteousFury.push({roll: righteousFuryRoll, effect: ''});
 
                     // DeathDealer
                     if (sourceActor.hasTalent('Deathdealer')) {
