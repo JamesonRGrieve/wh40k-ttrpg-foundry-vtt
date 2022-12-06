@@ -11,7 +11,7 @@ export class TargetedActionManager {
             bar.tools.push({
                 name: 'Attack',
                 title: 'Attack',
-                icon: 'fas fa-hand-fist',
+                icon: 'fas fa-swords',
                 visible: true,
                 onClick: async () => DHTargetedActionManager.performWeaponAttack(),
                 button: true,

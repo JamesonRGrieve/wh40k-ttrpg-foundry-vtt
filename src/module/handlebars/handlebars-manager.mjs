@@ -12,6 +12,7 @@ export class HandlebarManager {
     static preloadHandlebarsTemplates() {
         return loadTemplates([
             // Actor partials.
+            'systems/dark-heresy-2nd/templates/actor/panel/active-effects-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/aptitude-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs',
