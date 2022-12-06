@@ -25,7 +25,7 @@ export class BasicActionManager {
             bar.tools.push({
                 name: 'Assign Damage',
                 title: 'Assign Damage',
-                icon: 'fas fa-wand-magic-sparkles',
+                icon: 'fas fa-shield-slash',
                 visible: true,
                 onClick: async () => DHBasicActionManager.assignDamageTool(),
                 button: true,
