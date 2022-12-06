@@ -2,6 +2,8 @@ import { refundAmmo } from '../rules/ammo.mjs';
 import { uuid } from '../rolls/roll-helpers.mjs';
 import { AssignDamageData } from '../rolls/assign-damage-data.mjs';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-prompt.mjs';
+import { DHTargetedActionManager } from './targeted-action-manager.mjs';
+import { Hit } from '../rolls/damage-data.mjs';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -15,6 +17,19 @@ export class BasicActionManager {
             html.find('.roll-control__refund-ammo').click(async (ev) => await this._refundAmmo(ev));
             html.find('.roll-control__fate-reroll').click(async (ev) => await this._fateReroll(ev));
             html.find('.roll-control__assign-damage').click(async (ev) => await this._assignDamage(ev));
+        });
+
+        // Initialize Scene Control Buttons
+        Hooks.on('getSceneControlButtons', (controls) => {
+            const bar = controls.find((c) => c.name === 'token');
+            bar.tools.push({
+                name: 'Assign Damage',
+                title: 'Assign Damage',
+                icon: 'fas fa-wand-magic-sparkles',
+                visible: true,
+                onClick: async () => DHBasicActionManager.assignDamageTool(),
+                button: true,
+            });
         });
     }
 
@@ -106,6 +121,16 @@ export class BasicActionManager {
 
         const hitData = actionData.damageData.hits[hitIndex];
         const assignData = new AssignDamageData(actionData.rollData.targetActor, hitData);
+        await prepareAssignDamageRoll(assignData);
+    }
+
+    async assignDamageTool() {
+        const sourceToken = DHTargetedActionManager.getSourceToken();
+        const sourceActorData = sourceToken ? sourceToken.actor : source;
+        if(!sourceActorData) return;
+
+        const hitData = new Hit();
+        const assignData = new AssignDamageData(sourceActorData, hitData);
         await prepareAssignDamageRoll(assignData);
     }
 

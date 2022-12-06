@@ -14,14 +14,14 @@
                 <div class="dh-roll__value">{{this.actor.system.wounds.critical}}</div>
             </div>
 
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Wound Damage</div>
-                <div class="dh-roll__value">{{this.damageTaken}}</div>
+            <div class="dh-roll__fail">
+                <span>{{this.damageTaken}}</span>
+                <span>Wound Damage</span>
             </div>
             {{#if this.hasCriticalDamage}}
-                <div class="dh-roll__row dh-roll__row--number">
-                    <div class="dh-roll__label">Critical Damage</div>
-                    <div class="dh-roll__value">{{this.criticalDamageTaken}}</div>
+                <div class="dh-roll__fail">
+                    <span>{{this.criticalDamageTaken}}</span>
+                    <span>Critical Damage</span>
                 </div>
             {{/if}}
         </div>
