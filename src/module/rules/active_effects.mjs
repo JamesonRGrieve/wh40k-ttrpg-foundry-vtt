@@ -1,5 +1,12 @@
 import { roll1d100 } from '../rolls/roll-helpers.mjs';
 
+export async function handleBleeding(actor) {
+    const context = {
+        template: 'systems/dark-heresy-2nd/templates/chat/bleeding-chat.hbs',
+        actor: actor
+    }
+    await sendActiveEffectMessage(context);
+}
 
 export async function handleOnFire(actor) {
     const context = {

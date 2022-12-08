@@ -1,4 +1,4 @@
-import { handleOnFire } from '../rules/active_effects.mjs';
+import { handleBleeding, handleOnFire } from '../rules/active_effects.mjs';
 
 export class CombatActionManager {
     combatTurnHook;
@@ -37,6 +37,8 @@ export class CombatActionManager {
                     // On Fire!
                     if(effect.label === 'Burning') {
                         await handleOnFire(currentCombatant.actor);
+                    } else if (effect.label === 'Bleeding') {
+                        await handleBleeding(currentCombatant.actor);
                     }
                 }
             }

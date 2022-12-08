@@ -2,7 +2,7 @@
     <div class="dh-chat">
         <div class="dh-roll">
             <h1>{{this.actor.name}}</h1>
-            <h2>{{this.hit.location}} Hit</h2>
+            {{#if hasDamage}}<h2>{{this.hit.location}} Hit</h2>{{/if}}
             <div class="dh-roll__divider"></div>
 
             <div class="dh-roll__row dh-roll__row--number">
@@ -18,10 +18,12 @@
                 <div class="dh-roll__value">{{this.actor.system.wounds.critical}}</div>
             </div>
 
-            <div class="dh-roll__fail">
-                <span>{{this.damageTaken}}</span>
-                <span>{{this.hit.damageType}} Damage</span>
-            </div>
+            {{#if this.hasDamage}}
+                <div class="dh-roll__fail">
+                    <span>{{this.damageTaken}}</span>
+                    <span>{{this.hit.damageType}} Damage</span>
+                </div>
+            {{/if}}
             {{#if this.hasFatigueDamage}}
                 <div class="dh-roll__fail">
                     <span>{{this.fatigueTaken}}</span>
