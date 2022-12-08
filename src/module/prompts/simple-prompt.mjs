@@ -1,7 +1,4 @@
-import { roll1d100, sendActionDataToChat } from '../rolls/roll-helpers.mjs';
-import { calculateAmmoAttackBonuses } from '../rules/ammo.mjs';
-import { calculateAttackSpecialModifiers } from '../rules/attack-specials.mjs';
-import { calculateWeaponModifiersAttackBonuses } from '../rules/weapon-modifiers.mjs';
+import { sendActionDataToChat } from '../rolls/roll-helpers.mjs';
 
 /**
  *

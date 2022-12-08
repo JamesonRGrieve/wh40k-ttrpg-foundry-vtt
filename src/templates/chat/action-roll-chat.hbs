@@ -69,7 +69,7 @@
                     {{/unless}}
 
                     <div class='dh-roll__controls'>
-                        {{#if success}}
+                        {{#if showDamage}}
                             <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
                                 <span class="dh-control-button__span material-icons">bolt</span>
                                 <span class="dh-control-button__label">Damage</span>
@@ -91,7 +91,7 @@
                     </div>
                 </div>
             {{/with}}
-            {{#if rollData.success}}
+            {{#if rollData.showDamage}}
                 {{#with damageData}}
                     <div id="{{@root.id}}" style="display: none">
                         {{#if @root.psychicEffect}}
@@ -168,7 +168,6 @@
                     </div>
                 {{/with}}
             {{/if}}
-
         </div>
     </div>
 </div>

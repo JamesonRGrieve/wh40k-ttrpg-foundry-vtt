@@ -50,7 +50,7 @@ export async function updateAttackSpecials(rollData) {
 /**
  * @param rollData {RollData}
  */
-export async function calculateAttackSpecialModifiers(rollData) {
+export async function calculateAttackSpecialAttackBonuses(rollData) {
     // Reset Attack Specials
     rollData.specialModifiers = {};
     let actionItem = rollData.weapon ?? rollData.power;

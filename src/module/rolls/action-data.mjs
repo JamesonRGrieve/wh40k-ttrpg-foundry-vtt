@@ -1,5 +1,5 @@
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.mjs';
-import { Hit, PsychicDamageData, WeaponDamageData } from './damage-data.mjs';
+import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.mjs';
 import { getDegree, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
 import { useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
@@ -119,9 +119,14 @@ export class ActionData {
             if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked')) {
                 this.damageData.additionalHits++;
             }
+
         } else {
             this.rollData.dos = 0;
             this.rollData.dof = 1 + getDegree(this.rollData.roll.total, this.rollData.modifiedTarget);
+
+            if(this.rollData.isThrown) {
+                this.addEffect('Deviation', `The attack deviates [[ 1d5 ]]m off course to the ${scatterDirection()}!`);
+            }
 
             if (this.rollData.roll.total === 100) {
                 this.effects.push('auto-failure');
@@ -131,7 +136,7 @@ export class ActionData {
 
     async calculateHits() {
         let lastLocation = '';
-        if (this.rollData.success) {
+        if (this.rollData.success || this.rollData.isThrown) {
             let hit = await Hit.createHit(this);
             lastLocation = hit.location;
             this.damageData.hits.push(hit);
