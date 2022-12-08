@@ -292,13 +292,31 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
     _computeArmour() {
         let locations = game.system.template.Item.templates.armourPoints.armourPoints;
         let toughness = this.characteristics.toughness;
+        let traitBonus = 0;
+
+        const traits = this.items.filter((item) => item.type === 'trait');
+        for (const trait of traits) {
+            switch(trait.name) {
+                case 'Machine':
+                    if(trait.system.level > traitBonus) {
+                        traitBonus = trait.system.level;
+                    }
+                    break;
+                case 'Natural Armor':
+                    if(trait.system.level > traitBonus) {
+                        traitBonus = trait.system.level;
+                    }
+                    break;
+            }
+        }
 
         this.system.armour = Object.keys(locations).reduce(
             (accumulator, location) =>
                 Object.assign(accumulator, {
                     [location]: {
-                        total: toughness.bonus,
+                        total: toughness.bonus + traitBonus,
                         toughnessBonus: toughness.bonus,
+                        traitBonus: traitBonus,
                         value: 0,
                     },
                 }),

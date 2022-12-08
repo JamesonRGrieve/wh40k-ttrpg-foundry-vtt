@@ -22,11 +22,13 @@
             &--body,
             &--rightleg,
             &--leftleg,
-            &--toughness {
+            &--toughness,
+            &--trait {
                 @extend .dh-armour__block;
             }
 
-            &--toughness {
+            &--toughness,
+            &--trait {
                 margin-top: 1em;
             }
         }

@@ -10,6 +10,12 @@ export class CombatActionManager {
         this.combatRoundHook = Hooks.on('combatRound', async (combat, data) => await this.updateCombat(combat, data));
     }
 
+    disableHooks() {
+        game.dh.log('Disabling Hooks', {'cth': this.combatTurnHook, 'crh': this.combatRoundHook})
+        Hooks.off('combatTurn', this.combatTurnHook);
+        Hooks.off('combatRound', this.combatRoundHook);
+    }
+
     async updateCombat(combat, data) {
         console.log(combat);
         console.log(data);
