@@ -4,7 +4,7 @@ import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
 import { calculateAttackSpecialModifiers, updateAttackSpecials } from '../rules/attack-specials.mjs';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
-import { calculateWeaponModifiers, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
+import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { hitDropdown } from '../rules/hit-locations.mjs';
 import { DarkHeresy } from '../rules/config.mjs';
 
@@ -239,7 +239,7 @@ export class WeaponRollData extends RollData {
     async finalize() {
         await calculateAmmoAttackBonuses(this);
         await calculateAttackSpecialModifiers(this);
-        await calculateWeaponModifiers(this);
+        await calculateWeaponModifiersAttackBonuses(this);
         this.modifiers = {
             ...this.modifiers,
             ...this.specialModifiers,
