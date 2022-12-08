@@ -1,4 +1,4 @@
-import { handleBleeding, handleOnFire } from '../rules/active_effects.mjs';
+import { handleBleeding, handleOnFire } from '../rules/active-effects.mjs';
 
 export class CombatActionManager {
     combatTurnHook;
