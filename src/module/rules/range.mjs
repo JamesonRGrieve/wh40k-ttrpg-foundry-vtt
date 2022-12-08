@@ -18,7 +18,7 @@ async function calculateWeaponMaxRange(rollData) {
     let range;
     if (Number.isInteger(weapon.system.range)) {
         range = weapon.system.range;
-    } else if (weapon.system.range === '') {
+    } else if (weapon.system.range === '' || weapon.system.range === 'N/A') {
         range = 0;
     } else {
         try {

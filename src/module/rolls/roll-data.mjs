@@ -2,7 +2,7 @@ import { rollDifficulties } from '../rules/difficulties.mjs';
 import { aimModifiers } from '../rules/aim.mjs';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.mjs';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.mjs';
-import { calculateAttackSpecialModifiers, updateAttackSpecials } from '../rules/attack-specials.mjs';
+import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.mjs';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { hitDropdown } from '../rules/hit-locations.mjs';
@@ -55,6 +55,10 @@ export class RollData {
     success = false;
     dos = 0;
     dof = 0;
+
+    get showDamage() {
+        return this.success || this.isThrown;
+    }
 
     reset() {
         this.automatic = false;
@@ -171,6 +175,7 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
+    isThrown = false;
     isSpray = false;
     isLasWeapon = false;
     lasMode = 'Standard';
@@ -192,6 +197,7 @@ export class WeaponRollData extends RollData {
         this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
+        this.isThrown = this.weapon.isThrown;
 
         await updateWeaponModifiers(this);
         await updateAttackSpecials(this);
@@ -238,7 +244,7 @@ export class WeaponRollData extends RollData {
 
     async finalize() {
         await calculateAmmoAttackBonuses(this);
-        await calculateAttackSpecialModifiers(this);
+        await calculateAttackSpecialAttackBonuses(this);
         await calculateWeaponModifiersAttackBonuses(this);
         this.modifiers = {
             ...this.modifiers,
@@ -330,7 +336,7 @@ export class PsychicRollData extends RollData {
     }
 
     async finalize() {
-        await calculateAttackSpecialModifiers(this);
+        await calculateAttackSpecialAttackBonuses(this);
         this.modifiers = { ...this.modifiers, ...this.specialModifiers };
         await this.calculateTotalModifiers();
     }
