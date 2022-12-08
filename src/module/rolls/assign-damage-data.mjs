@@ -6,8 +6,13 @@ export class AssignDamageData {
     actor;
     hit;
 
+    ignoreArmour = false;
+
     armour = 0;
     tb = 0;
+
+    hasFatigueDamage = false;
+    fatigueTaken = 0;
 
     damageTaken = 0;
     hasCriticalDamage = false;
@@ -43,6 +48,9 @@ export class AssignDamageData {
         if (usableArmour < 0) {
             usableArmour = 0;
         }
+        if (this.ignoreArmour) {
+            usableArmour = 0;
+        }
 
         const reduction = usableArmour + this.tb;
         const reducedDamage = totalDamage - reduction;
@@ -70,12 +78,18 @@ export class AssignDamageData {
         if(this.criticalDamageTaken > 0) {
             this.criticalEffect = getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
         }
+
+        if(this.hit.totalFatigue > 0) {
+            this.hasFatigueDamage = true;
+            this.fatigueTaken = this.hit.totalFatigue;
+        }
     }
 
     async performActionAndSendToChat() {
         // Assign Damage
         this.actor.system.wounds.value = this.actor.system.wounds.value - this.damageTaken;
         this.actor.system.wounds.critical = this.actor.system.wounds.critical + this.criticalDamageTaken;
+        this.actor.system.fatigue.value = this.actor.system.fatigue.value + this.fatigueTaken;
 
         game.dh.log('performActionAndSendToChat', this)
 

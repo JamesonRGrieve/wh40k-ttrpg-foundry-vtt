@@ -10,14 +10,24 @@
                 <div class="dh-roll__value">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</div>
             </div>
             <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Fatigue</div>
+                <div class="dh-roll__value">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</div>
+            </div>
+            <div class="dh-roll__row dh-roll__row--number">
                 <div class="dh-roll__label">Critical Wounds</div>
                 <div class="dh-roll__value">{{this.actor.system.wounds.critical}}</div>
             </div>
 
             <div class="dh-roll__fail">
                 <span>{{this.damageTaken}}</span>
-                <span>Wound Damage</span>
+                <span>{{this.hit.damageType}} Damage</span>
             </div>
+            {{#if this.hasFatigueDamage}}
+                <div class="dh-roll__fail">
+                    <span>{{this.fatigueTaken}}</span>
+                    <span>Fatigue</span>
+                </div>
+            {{/if}}
             {{#if this.hasCriticalDamage}}
                 <div class="dh-roll__fail">
                     <span>{{this.criticalDamageTaken}}</span>

@@ -9,7 +9,7 @@ export async function updateAttackSpecials(rollData) {
         if (i.isAttackSpecial && (i.system.equipped || i.system.enabled)) {
             rollData.attackSpecials.push({
                 name: i.name,
-                level: i.level,
+                level: i.system.level,
             });
         }
     }
