@@ -92,13 +92,15 @@ export class AssignDamageData {
 
     async performActionAndSendToChat() {
         // Assign Damage
-        this.actor.update({
-            wounds: {
-                value: this.actor.system.wounds.value - this.damageTaken,
-                critical: this.actor.system.wounds.critical + this.criticalDamageTaken
-            },
-            fatigue: {
-                value: this.actor.system.fatigue.value + this.fatigueTaken
+        this.actor = await this.actor.update({
+            system: {
+                wounds: {
+                    value: this.actor.system.wounds.value - this.damageTaken,
+                    critical: this.actor.system.wounds.critical + this.criticalDamageTaken,
+                },
+                fatigue: {
+                    value: this.actor.system.fatigue.value + this.fatigueTaken
+                }
             }
         });
         game.dh.log('performActionAndSendToChat', this)
