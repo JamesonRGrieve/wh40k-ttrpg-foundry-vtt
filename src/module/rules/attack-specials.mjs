@@ -1,5 +1,6 @@
 import { RollData } from '../rolls/roll-data.mjs';
 import { calculateAmmoAttackSpecials } from './ammo.mjs';
+import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.mjs';
 
 export async function updateAttackSpecials(rollData) {
     rollData.attackSpecials = [];
@@ -42,6 +43,8 @@ export async function updateAttackSpecials(rollData) {
     if (actionItem.isRanged) {
         await calculateAmmoAttackSpecials(rollData);
     }
+
+    await calculateWeaponModifiersAttackSpecials(rollData);
 }
 
 /**

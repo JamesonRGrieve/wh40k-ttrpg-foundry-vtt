@@ -1,6 +1,7 @@
 import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
+import { calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.mjs';
 
 export class DamageData {
     template = '';
@@ -245,10 +246,6 @@ export class Hit {
                 this.penetrationModifiers['lance'] = this.penetration * attackData.rollData.dos;
             }
 
-            if (attackData.rollData.hasAttackSpecial('Mono')) {
-                this.penetrationModifiers['mono'] = 2;
-            }
-
             if (attackData.rollData.dos > 2 && attackData.rollData.hasAttackSpecial('Razer Sharp')) {
                 this.penetrationModifiers['razer sharp'] = this.penetration;
             }
@@ -280,6 +277,8 @@ export class Hit {
                 this.penetrationModifiers['melta'] = this.penetration;
             }
         }
+
+        await calculateWeaponModifiersPenetrationBonuses(attackData, this);
     }
 
     async _calculateSpecials(attackData) {

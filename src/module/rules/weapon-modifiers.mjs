@@ -16,10 +16,39 @@ export async function updateWeaponModifiers(rollData) {
     }
 }
 
+export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
+    const weapon = actionData.rollData.weapon;
+    for (const item of weapon.items) {
+        game.dh.log('calculateWeaponModifiersPenetrationBonuses', item);
+        if (!item.system.equipped) continue;
+        if (!item.isWeaponModification) continue;
+        switch (item.name) {
+            case 'Mono':
+                hit.penetrationModifiers['mono'] = 2;
+                break;
+        }
+    }
+}
+
+export async function calculateWeaponModifiersAttackSpecials(rollData) {
+    const weapon = rollData.weapon;
+
+    for (const item of weapon.items) {
+        game.dh.log('calculateWeaponModifiersAttackSpecials', item);
+        if (!item.system.equipped) continue;
+        if (!item.isWeaponModification) continue;
+        switch (item.name) {
+            case 'Mono':
+                rollData.attackSpecials.findSplice((i) => i.name === 'Primitive');
+                break;
+        }
+    }
+}
+
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateWeaponModifiers(rollData) {
+export async function calculateWeaponModifiersAttackBonuses(rollData) {
     // Reset Data -- this prevents needing to ensure removal if modifiers change
     rollData.weaponModifiers = {};
     const weapon = rollData.weapon;
