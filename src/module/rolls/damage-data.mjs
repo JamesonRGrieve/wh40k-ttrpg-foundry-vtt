@@ -19,6 +19,8 @@ export class DamageData {
 export class Hit {
     location = 'Body';
 
+    totalFatigue = 0;
+
     damage = 0;
     damageRoll;
     damageType = 'Impact';
@@ -337,7 +339,7 @@ export class Hit {
                     this.addEffect(special.name, `Target must pass Agility test with ${special.level * -10} or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${special.level * -10} to burst free or wriggle out.`);
                     break;
                 case 'toxic':
-                    this.addEffect(special.name, `Target must pass Toughness test with ${special.level * -10} or suffer [[1d10]] ${actionItem.damageType} damage.`);
+                    this.addEffect(special.name, `Target must pass Toughness test with ${special.level * -10} or suffer [[1d10]] ${actionItem.system.damageType} damage.`);
                     break;
                 case 'warp':
                     this.addEffect(special.name, `Ignores mundane armor and cover! Holy armor negates this.`);

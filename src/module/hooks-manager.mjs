@@ -29,8 +29,9 @@ import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
 import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
 import { DarkHeresyCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
 import { DarkHeresyGearSheet } from './sheets/item/gear-sheet.mjs';
+import { DarkHeresySettings } from './dark-heresy-settings.mjs';
 
-export const MODULE_NAME = 'dh';
+export const SYSTEM_ID = 'dark-heresy-2nd';
 
 export class HooksManager {
     static registerHooks() {
@@ -39,7 +40,6 @@ export class HooksManager {
         Hooks.once('init', HooksManager.init);
         Hooks.on('ready', HooksManager.ready);
         Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
-        initializeActorActions();
     }
 
     static init() {
@@ -77,31 +77,33 @@ Enable Debug with: game.dh.debug = true
 
         // Register sheet application classes
         Actors.unregisterSheet('core', ActorSheet);
-        Actors.registerSheet(MODULE_NAME, AcolyteSheet, { makeDefault: true });
-        Actors.registerSheet(MODULE_NAME, NpcSheet, {types: ['npc'], makeDefault: true });
-        Actors.registerSheet(MODULE_NAME, VehicleSheet, {types: ['vehicle'], makeDefault: true });
+        Actors.registerSheet(SYSTEM_ID, AcolyteSheet, { makeDefault: true });
+        Actors.registerSheet(SYSTEM_ID, NpcSheet, {types: ['npc'], makeDefault: true });
+        Actors.registerSheet(SYSTEM_ID, VehicleSheet, {types: ['vehicle'], makeDefault: true });
 
         Items.unregisterSheet('core', ItemSheet);
-        Items.registerSheet(MODULE_NAME, DarkHeresyItemSheet, { makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyGearSheet, { types: ['gear', 'drug', 'tool', 'forceField'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
-        Items.registerSheet(MODULE_NAME, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
-        Items.registerSheet(MODULE_NAME, DarkHeresyTraitSheet, {types: ['trait'],makeDefault: true,});
-        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
-        Items.registerSheet(MODULE_NAME, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyItemSheet, { makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyAmmoSheet, { types: ['ammunition'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyArmourSheet, { types: ['armour'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyGearSheet, { types: ['gear', 'drug', 'tool', 'forceField'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
+        Items.registerSheet(SYSTEM_ID, DarkHeresyTalentSheet, { types: ['talent'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyTraitSheet, {types: ['trait'],makeDefault: true,});
+        Items.registerSheet(SYSTEM_ID, DarkHeresyWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
+        Items.registerSheet(SYSTEM_ID, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
 
         HandlebarManager.loadTemplates();
     }
 
     static async ready() {
         console.log(`DH2e Loaded!`);
+        DarkHeresySettings.registerSettings();
+        initializeActorActions();
     }
 
     static hotbarDrop(bar, data, slot) {

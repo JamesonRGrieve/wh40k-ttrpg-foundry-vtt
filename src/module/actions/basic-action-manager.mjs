@@ -17,6 +17,7 @@ export class BasicActionManager {
             html.find('.roll-control__refund-ammo').click(async (ev) => await this._refundAmmo(ev));
             html.find('.roll-control__fate-reroll').click(async (ev) => await this._fateReroll(ev));
             html.find('.roll-control__assign-damage').click(async (ev) => await this._assignDamage(ev));
+            html.find('.roll-control__apply-damage').click(async (ev) => await this._applyDamage(ev));
         });
 
         // Initialize Scene Control Buttons
@@ -70,13 +71,14 @@ export class BasicActionManager {
         const div = $(event.currentTarget);
         const rollId = div.data('rollId');
         const actionData = this.getActionData(rollId);
-        // Generate new ID for action data
-        actionData.id = uuid();
 
         if (!actionData) {
             ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
+
+        // Generate new ID for action data
+        actionData.id = uuid();
 
         Dialog.confirm({
             title: 'Confirm Re-Roll',
@@ -122,6 +124,60 @@ export class BasicActionManager {
         const hitData = actionData.damageData.hits[hitIndex];
         const assignData = new AssignDamageData(actionData.rollData.targetActor, hitData);
         await prepareAssignDamageRoll(assignData);
+    }
+
+    async _applyDamage(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        console.log(div);
+        const actorId = div.data('actorId');
+        const damageType = div.data('type');
+        const ignoreArmour = div.data('ignoreArmour');
+        const location = div.data('location');
+        const damage = div.data('damage');
+        const penetration = div.data('penetration');
+        const fatigue = div.data('fatigue');
+
+        const actor = game.actors.get(actorId);
+        if (!actor) {
+            ui.notifications.warn(`Cannot determine actor to assign hit.`);
+            return;
+        }
+        for(const field of [damage, penetration, fatigue]) {
+            if(field && !Number.isInteger(field)) {
+                ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
+                return;
+            }
+        }
+
+        const assignDamageData = new AssignDamageData();
+        assignDamageData.actor = actor;
+        if(ignoreArmour || "true" === ignoreArmour || "TRUE" === ignoreArmour) {
+            assignDamageData.ignoreArmour = true;
+        }
+
+        const hit = new Hit();
+        if(location) {
+            hit.location = location;
+        }
+        if(damage) {
+            hit.totalDamage = Number.parseInt(damage);
+        }
+        if(penetration) {
+            hit.totalPenetration = Number.parseInt(penetration);
+        }
+        if(fatigue) {
+            hit.totalFatigue = Number.parseInt(fatigue);
+        }
+        if(damageType) {
+            hit.damageType = damageType;
+        }
+
+        assignDamageData.hit = hit;
+
+        await assignDamageData.update();
+        await assignDamageData.finalize();
+        await assignDamageData.performActionAndSendToChat();
     }
 
     async assignDamageTool() {
