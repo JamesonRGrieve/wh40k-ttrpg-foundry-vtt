@@ -1,0 +1,31 @@
+<div class="dh-wrapper">
+    <div class="dh-chat">
+        <div class="dh-roll">
+            <h1>{{actor.name}}</h1>
+            <h2>Bleeding!</h2>
+            <div class="dh-roll__divider"></div>
+
+            <div class="dh-roll__row dh-roll__row--number">
+                <div class="dh-roll__label">Fatigue</div>
+                <div class="dh-roll__value">{{actor.system.fatigue.value}} / {{actor.system.fatigue.max}}</div>
+            </div>
+
+            <div class="dh-roll__label">Once per round as a Free Action, he (or another character who can reach him) can attempt a Difficult (–10) Medicae test to remove this condition.</div>
+
+            <div class="dh-roll__fail">
+                <span>1</span>
+                <span>Fatigue</span>
+            </div>
+
+            <div class='dh-roll__controls-1'>
+                <div class="dh-control-button roll-control__apply-damage"
+                     data-actor-id="{{actor.id}}"
+                     data-damage="0"
+                     data-fatigue="1">
+                    <span class="dh-control-button__span material-icons">api</span>
+                    <span class="dh-control-button__label">Apply Fatigue</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

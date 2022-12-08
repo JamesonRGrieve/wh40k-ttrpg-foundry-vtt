@@ -14,6 +14,7 @@ export class AssignDamageData {
     hasFatigueDamage = false;
     fatigueTaken = 0;
 
+    hasDamage = false;
     damageTaken = 0;
     hasCriticalDamage = false;
     criticalDamageTaken = 0;
@@ -82,6 +83,10 @@ export class AssignDamageData {
         if(this.hit.totalFatigue > 0) {
             this.hasFatigueDamage = true;
             this.fatigueTaken = this.hit.totalFatigue;
+        }
+
+        if(this.damageTaken > 0){
+            this.hasDamage = true;
         }
     }
 
