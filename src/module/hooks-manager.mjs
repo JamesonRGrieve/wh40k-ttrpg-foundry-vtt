@@ -19,12 +19,10 @@ import {
 } from './macros/macro-manager.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
 import { DarkHeresyAmmoSheet } from './sheets/item/ammo-sheet.mjs';
-import { initializeActorActions } from './actions/actions-manager.mjs';
 import { DarkHeresyPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
 import { DarkHeresyStorageLocationSheet } from './sheets/item/storage-location-sheet.mjs';
 import { DarkHeresyTraitSheet } from './sheets/item/trait-sheet.mjs';
 import { DarkHeresyActorProxy } from './documents/actor-proxy.mjs';
-import { DarkHeresyAcolyte } from './documents/acolyte.mjs';
 import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
 import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
 import { DarkHeresyCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
@@ -111,9 +109,9 @@ Enable Debug with: game.dh.debug = true
         console.log(`DH2e Loaded!`);
         DarkHeresySettings.registerSettings();
 
-        console.log('Initialize:', game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat));
+        console.log('Initializing with:', game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat));
         if (!game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat)) {
-            //TODO: Disable
+            DHCombatActionManager.disableHooks();
         }
     }
 
