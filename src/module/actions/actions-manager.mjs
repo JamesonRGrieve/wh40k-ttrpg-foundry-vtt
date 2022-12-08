@@ -5,11 +5,5 @@ import { SYSTEM_ID } from '../hooks-manager.mjs';
 import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
 
 export function initializeActorActions() {
-    DHTargetedActionManager.initializeHooks();
-    DHBasicActionManager.initializeHooks();
 
-    console.log('Initialize:', game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat));
-    if (game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat)) {
-        DHCombatActionManager.initializeHooks();
-    }
 }

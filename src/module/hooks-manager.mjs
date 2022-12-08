@@ -30,6 +30,9 @@ import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
 import { DarkHeresyCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
 import { DarkHeresyGearSheet } from './sheets/item/gear-sheet.mjs';
 import { DarkHeresySettings } from './dark-heresy-settings.mjs';
+import { DHTargetedActionManager } from './actions/targeted-action-manager.mjs';
+import { DHBasicActionManager } from './actions/basic-action-manager.mjs';
+import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
 
 export const SYSTEM_ID = 'dark-heresy-2nd';
 
@@ -40,6 +43,10 @@ export class HooksManager {
         Hooks.once('init', HooksManager.init);
         Hooks.on('ready', HooksManager.ready);
         Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
+
+        DHTargetedActionManager.initializeHooks();
+        DHBasicActionManager.initializeHooks();
+        DHCombatActionManager.initializeHooks();
     }
 
     static init() {
@@ -103,7 +110,11 @@ Enable Debug with: game.dh.debug = true
     static async ready() {
         console.log(`DH2e Loaded!`);
         DarkHeresySettings.registerSettings();
-        initializeActorActions();
+
+        console.log('Initialize:', game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat));
+        if (!game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat)) {
+            //TODO: Disable
+        }
     }
 
     static hotbarDrop(bar, data, slot) {
