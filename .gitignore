@@ -17,3 +17,8 @@ backup
 
 ## Secrets
 .env.secret
+
+
+## Docker Development
+docker-compose.yml
+conf

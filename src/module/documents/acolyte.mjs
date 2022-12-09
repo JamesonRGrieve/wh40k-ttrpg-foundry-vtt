@@ -340,8 +340,6 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         // object for storing the max armour
         let maxArmour = Object.keys(locations).reduce((acc, location) => Object.assign(acc, { [location]: 0 }), {});
 
-        //(item.type === 'cybernetic' && item.system.hasArmourPoints)
-
         // for each item, find the maximum armour val per location
         this.items
             .filter((item) => item.type === 'armour' )
