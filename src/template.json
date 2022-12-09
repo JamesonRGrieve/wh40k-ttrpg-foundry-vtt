@@ -1076,7 +1076,8 @@
             "part": "body"
         },
         "cybernetic": {
-            "templates": ["physicalItem", "itemDescription", "backpack", "armourPoints"]
+            "templates": ["physicalItem", "itemDescription", "backpack", "armourPoints"],
+            "hasArmourPoints": false
         },
         "drug": {
             "templates": ["physicalItem", "itemDescription", "backpack"]
