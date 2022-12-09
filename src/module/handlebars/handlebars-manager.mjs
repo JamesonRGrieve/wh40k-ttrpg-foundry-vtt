@@ -28,6 +28,7 @@ export class HandlebarManager {
             'systems/dark-heresy-2nd/templates/actor/panel/experience-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs',
+            'systems/dark-heresy-2nd/templates/actor/panel/force-field-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/initiative-panel.hbs',
             'systems/dark-heresy-2nd/templates/actor/panel/insanity-panel.hbs',

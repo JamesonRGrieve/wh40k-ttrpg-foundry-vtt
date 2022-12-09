@@ -32,6 +32,7 @@ import { DHTargetedActionManager } from './actions/targeted-action-manager.mjs';
 import { DHBasicActionManager } from './actions/basic-action-manager.mjs';
 import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
 import { DarkHeresyCyberneticSheet } from './sheets/item/cybernetic-sheet.mjs';
+import { DarkHeresyForceFieldSheet } from './sheets/item/force-field-sheet.mjs';
 
 export const SYSTEM_ID = 'dark-heresy-2nd';
 
@@ -95,7 +96,8 @@ Enable Debug with: game.dh.debug = true
         Items.registerSheet(SYSTEM_ID, DarkHeresyCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
         Items.registerSheet(SYSTEM_ID, DarkHeresyCyberneticSheet, { types: ['cybernetic'], makeDefault: true });
         Items.registerSheet(SYSTEM_ID, DarkHeresyJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, DarkHeresyGearSheet, { types: ['gear', 'drug', 'tool', 'forceField'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyForceFieldSheet, { types: ['forceField'], makeDefault: true });
+        Items.registerSheet(SYSTEM_ID, DarkHeresyGearSheet, { types: ['gear', 'drug', 'tool'], makeDefault: true });
         Items.registerSheet(SYSTEM_ID, DarkHeresyPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
         Items.registerSheet(SYSTEM_ID, DarkHeresyPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
         Items.registerSheet(SYSTEM_ID, DarkHeresyStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});

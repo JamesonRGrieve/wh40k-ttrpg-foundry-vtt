@@ -1,0 +1,74 @@
+{{dhlog this}}
+<div class="dh-wrapper">
+    <form class="dh-item" autocomplete="off">
+        <div class="dh-panel dh-grid-col-6">
+            <div class="dh-header">
+                <div class="dh-header__info">
+                    <div class="dh-header__logo dh-header__item-wrapper--span-4">
+                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+                    </div>
+                    <div class="dh-header__item-wrapper--span-4">
+                        <span class="dh-header__title">Name</span>
+                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Source</span>
+                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Weight</span>
+                        <input class="dh-header__input" name="system.weight" type="number" data-dtype="Number"
+                               value="{{item.system.weight}}" />
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Equipped</span>
+                        <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked
+                            item.system.equipped}}/>
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">In Backpack</span>
+                        <input name="system.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
+                            item.system.backpack.inBackpack}}/>
+                    </div>
+
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Availability</span>
+                        <select class="dh-header__select" name="system.availability">
+                            {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                        </select>
+                    </div>
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Craftsmanship</span>
+                        <select class="dh-header__select" name="system.craftsmanship">
+                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                        </select>
+                    </div>
+
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Overloaded</span>
+                        <input name="system.overloaded" type="checkbox" data-dtype="Boolean" {{checked
+                            item.system.overloaded}}/>
+                    </div>
+                    <div class="dh-header__item-wrapper">
+                        <span class="dh-header__title">Activated</span>
+                        <input name="system.activated" type="checkbox" data-dtype="Boolean" {{checked
+                            item.system.activated}}/>
+                    </div>
+                    <div class="dh-header__item-wrapper--span-2">
+                        <span class="dh-header__title">Protection Rating</span>
+                        <input class="dh-header__input" name="system.protectionRating" type="number" data-dtype="Number"
+                               value="{{item.system.protectionRating}}" />
+                    </div>
+
+                    <div class="dh-header__item-wrapper--text-area">
+                        <span class="dh-header__title">Description</span>
+                        <textarea class="dh-header__textarea"
+                                  name="system.description">{{item.system.description}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
