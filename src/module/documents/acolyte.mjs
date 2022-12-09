@@ -294,6 +294,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         let toughness = this.characteristics.toughness;
         let traitBonus = 0;
 
+        // Compute Top Trait Bonus
         const traits = this.items.filter((item) => item.type === 'trait');
         for (const trait of traits) {
             switch(trait.name) {
@@ -310,6 +311,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
             }
         }
 
+        // Create Basic Armour Point Object
         this.system.armour = Object.keys(locations).reduce(
             (accumulator, location) =>
                 Object.assign(accumulator, {
@@ -323,12 +325,26 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
             {},
         );
 
+        // Add Cybernetics -- these are cumulative?
+        this.items
+            .filter((item) => item.type === 'cybernetic' )
+            .filter((item) => item.system.equipped)
+            .filter((item) => item.system.hasArmourPoints)
+            .forEach((cybernetic) => {
+                Object.keys(locations).forEach((location) => {
+                    let armourVal = cybernetic.system.armourPoints[location] || 0;
+                    this.armour[location].total += Number(armourVal);
+                });
+            });
+
         // object for storing the max armour
         let maxArmour = Object.keys(locations).reduce((acc, location) => Object.assign(acc, { [location]: 0 }), {});
 
+        //(item.type === 'cybernetic' && item.system.hasArmourPoints)
+
         // for each item, find the maximum armour val per location
         this.items
-            .filter((item) => item.type === 'armour')
+            .filter((item) => item.type === 'armour' )
             .filter((item) => item.system.equipped)
             .reduce((acc, armour) => {
                 Object.keys(locations).forEach((location) => {
