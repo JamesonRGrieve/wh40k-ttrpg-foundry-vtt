@@ -39,3 +39,35 @@ export async function prepareSimpleRoll(simpleSkillData) {
     );
     dialog.render(true);
 }
+
+export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
+    const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/add-speciality-prompt.hbs', simpleSkillData);
+    let dialog = new Dialog(
+        {
+            title: 'Create Specialist Skill',
+            content: html,
+            buttons: {
+                add: {
+                    icon: "<i class='dh-material'>add</i>",
+                    label: 'Add',
+                    callback: async (html) => {
+                        const speciality = html.find('#speciality-name')[0].value;
+                        await simpleSkillData.actor.addSpecialitySkill(simpleSkillData.skillName, speciality);
+                    },
+                },
+                cancel: {
+                    icon: "<i class='dh-material'>close</i>",
+                    label: 'Cancel',
+                    callback: () => {},
+                },
+            },
+            default: 'add',
+            close: () => {},
+        },
+        {
+            width: 300,
+        },
+    );
+    dialog.render(true);
+}
+

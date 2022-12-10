@@ -1,5 +1,6 @@
 import { toggleUIExpanded } from '../../rules/config.mjs';
 import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
+import { prepareCreateSpecialistSkillPrompt } from '../../prompts/simple-prompt.mjs';
 
 /**
  * Shared Actor functions for Actor that contains embedded items
@@ -35,6 +36,8 @@ export class ActorContainerSheet extends ActorSheet {
         html.find('.effect-create').click(async (ev) => await this._effectCreate(ev));
         html.find('.effect-enable').click(async (ev) => await this._effectEnable(ev));
         html.find('.effect-disable').click(async (ev) => await this._effectDisable(ev));
+
+        html.find('.add-skill').click(async (ev) => await this._addSpecialistSkill(ev));
     }
 
     _onDrop(event) {
@@ -58,6 +61,22 @@ export class ActorContainerSheet extends ActorSheet {
             game.dh.log('Actor Container | drop error', err);
             return false;
         }
+    }
+
+    async _addSpecialistSkill(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const specialistSkill = div.data('skill');
+        const skill = this.actor.system.skills[specialistSkill];
+        if(!skill) {
+            ui.notifications.warn(`Skill not specified -- unexpected error.`);
+            return;
+        }
+        await prepareCreateSpecialistSkillPrompt({
+            actor: this.actor,
+            skill: skill,
+            skillName: specialistSkill
+        });
     }
 
     async _onItemDamage(event) {

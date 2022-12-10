@@ -3,10 +3,21 @@ export function capitalize(text) {
     return text[0].toUpperCase() + text.substring(1);
 }
 
+export function toCamelCase(str) {
+    return str
+        .replace(/\s(.)/g, function($1) {
+            return $1.toUpperCase();
+        })
+        .replace(/\s/g, '')
+        .replace(/^(.)/, function($1) {
+            return $1.toLowerCase();
+        });
+}
+
 export function registerHandlebarsHelpers() {
     console.log('Registering Handlebars Helpers');
 
-    Handlebars.registerHelper('isPsychicAttack', function (power) {
+    Handlebars.registerHelper('isPsychicAttack', function(power) {
         if (power && power.system.subtype) {
             return power.system.subtype.includes('Attack');
         } else {
@@ -14,13 +25,13 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('dhlog', function (object) {
+    Handlebars.registerHelper('dhlog', function(object) {
         if (object) {
             game.dh.log('hb template', object);
         }
     });
 
-    Handlebars.registerHelper('concat', function () {
+    Handlebars.registerHelper('concat', function() {
         var outStr = '';
         for (var arg in arguments) {
             if (typeof arguments[arg] != 'object') {
@@ -30,52 +41,52 @@ export function registerHandlebarsHelpers() {
         return outStr;
     });
 
-    Handlebars.registerHelper('hideIf', function (check) {
+    Handlebars.registerHelper('hideIf', function(check) {
         if (check) {
             return new Handlebars.SafeString('style="display:none;"');
         }
     });
 
-    Handlebars.registerHelper('hideIfNot', function (check) {
+    Handlebars.registerHelper('hideIfNot', function(check) {
         if (!check) {
             return new Handlebars.SafeString('style="display:none;"');
         }
     });
 
-    Handlebars.registerHelper('isExpanded', function (field) {
+    Handlebars.registerHelper('isExpanded', function(field) {
         return CONFIG.dh.ui.expanded ? CONFIG.dh.ui.expanded.includes(field) : false;
     });
 
-    Handlebars.registerHelper('toLowerCase', function (str) {
+    Handlebars.registerHelper('toLowerCase', function(str) {
         return str.toLowerCase();
     });
 
-    Handlebars.registerHelper('removeMarkup', function (text) {
+    Handlebars.registerHelper('removeMarkup', function(text) {
         const markup = /<(.*?)>/gi;
         return text.replace(markup, '');
     });
 
-    Handlebars.registerHelper('cleanFieldName', function (text) {
+    Handlebars.registerHelper('cleanFieldName', function(text) {
         return text === 'Name' ? 'character_name' : text.toLowerCase().replace(/ /g, '_');
     });
 
-    Handlebars.registerHelper('capitalize', function (text) {
+    Handlebars.registerHelper('capitalize', function(text) {
         return capitalize(text);
     });
 
-    Handlebars.registerHelper('getBioOptions', function (field) {
+    Handlebars.registerHelper('getBioOptions', function(field) {
         return CONFIG.dh.bio[field];
     });
 
-    Handlebars.registerHelper('and', function (obj1, obj2) {
+    Handlebars.registerHelper('and', function(obj1, obj2) {
         return obj1 && obj2;
     });
 
-    Handlebars.registerHelper('arrayIncludes', function (field, array) {
+    Handlebars.registerHelper('arrayIncludes', function(field, array) {
         return array.includes(field);
     });
 
-    Handlebars.registerHelper('arrayToObject', function (array) {
+    Handlebars.registerHelper('arrayToObject', function(array) {
         const obj = {};
         if (array == null || typeof array[Symbol.iterator] !== 'function') return obj;
         for (let a of array) {
@@ -84,7 +95,7 @@ export function registerHandlebarsHelpers() {
         return obj;
     });
 
-    Handlebars.registerHelper('option', function (option, current, name) {
+    Handlebars.registerHelper('option', function(option, current, name) {
         const selected = current === option ? 'selected="selected"' : '';
         let optionValue;
         if (Number.isInteger(option)) {
@@ -95,7 +106,7 @@ export function registerHandlebarsHelpers() {
         return new Handlebars.SafeString('<option value=' + optionValue + ' ' + selected + '>' + (name ? name : option) + '</option>');
     });
 
-    Handlebars.registerHelper('getCharacteristicValue', function (name, characteristics) {
+    Handlebars.registerHelper('getCharacteristicValue', function(name, characteristics) {
         for (let key of Object.keys(characteristics)) {
             if (characteristics[key].short === name) {
                 return characteristics[key].total;
@@ -104,19 +115,19 @@ export function registerHandlebarsHelpers() {
         return 0;
     });
 
-    Handlebars.registerHelper('isError', function (value) {
+    Handlebars.registerHelper('isError', function(value) {
         return value ? 'error' : '';
     });
 
-    Handlebars.registerHelper('isSuccess', function (value) {
+    Handlebars.registerHelper('isSuccess', function(value) {
         return value ? 'success' : '';
     });
 
-    Handlebars.registerHelper('inc', function (value) {
+    Handlebars.registerHelper('inc', function(value) {
         return Number.parseInt(value) + 1;
     });
 
-    Handlebars.registerHelper('colorCode', function (positive, negative) {
+    Handlebars.registerHelper('colorCode', function(positive, negative) {
         // Positive Precedence
         if (positive) {
             return 'success';
@@ -125,11 +136,11 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('defaultVal', function (value, defaultVal) {
+    Handlebars.registerHelper('defaultVal', function(value, defaultVal) {
         return value || defaultVal;
     });
 
-    Handlebars.registerHelper('armourDisplay', function (armour) {
+    Handlebars.registerHelper('armourDisplay', function(armour) {
         let first = armour.armourPoints.body;
         const same = Object.keys(armour.armourPoints).every((p) => armour.armourPoints[p] === first);
         if (same) {
@@ -151,23 +162,23 @@ export function registerHandlebarsHelpers() {
                     (item.toLowerCase() === 'head'
                         ? 'H'
                         : item.toLowerCase() === 'leftarm'
-                        ? 'LA'
-                        : item.toLowerCase() === 'rightarm'
-                        ? 'RA'
-                        : item.toLowerCase() === 'body'
-                        ? 'B'
-                        : item.toLowerCase() === 'leftleg'
-                        ? 'LL'
-                        : item.toLowerCase() === 'rightleg'
-                        ? 'RL'
-                        : '')
+                            ? 'LA'
+                            : item.toLowerCase() === 'rightarm'
+                                ? 'RA'
+                                : item.toLowerCase() === 'body'
+                                    ? 'B'
+                                    : item.toLowerCase() === 'leftleg'
+                                        ? 'LL'
+                                        : item.toLowerCase() === 'rightleg'
+                                            ? 'RL'
+                                            : '')
                 );
             })
             .filter((item) => item !== '')
             .join(', ');
     });
 
-    Handlebars.registerHelper('damageTypeLong', function (damageType) {
+    Handlebars.registerHelper('damageTypeLong', function(damageType) {
         damageType = (damageType || 'i').toLowerCase();
         switch (damageType) {
             case 'e':
