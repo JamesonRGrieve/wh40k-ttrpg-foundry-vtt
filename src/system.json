@@ -56,6 +56,14 @@
       "entity": "Item"
     },
     {
+      "name": "consumables",
+      "system": "dark-heresy-2nd",
+      "label": "Drugs and Consumables",
+      "path": "./packs/consumables.db",
+      "type": "Item",
+      "entity": "Item"
+    },
+    {
       "name": "cybernetics",
       "system": "dark-heresy-2nd",
       "label": "Cybernetics",
