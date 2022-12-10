@@ -33,6 +33,7 @@ import { DHBasicActionManager } from './actions/basic-action-manager.mjs';
 import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
 import { DarkHeresyCyberneticSheet } from './sheets/item/cybernetic-sheet.mjs';
 import { DarkHeresyForceFieldSheet } from './sheets/item/force-field-sheet.mjs';
+import { checkAndMigrateWorld } from './dark-heresy-migrations.mjs';
 
 export const SYSTEM_ID = 'dark-heresy-2nd';
 
@@ -106,12 +107,13 @@ Enable Debug with: game.dh.debug = true
         Items.registerSheet(SYSTEM_ID, DarkHeresyWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
         Items.registerSheet(SYSTEM_ID, DarkHeresyWeaponSheet, { types: ['weapon'], makeDefault: true });
 
+        DarkHeresySettings.registerSettings();
         HandlebarManager.loadTemplates();
     }
 
     static async ready() {
         console.log(`DH2e Loaded!`);
-        DarkHeresySettings.registerSettings();
+        await checkAndMigrateWorld();
 
         console.log('Initializing with:', game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat));
         if (!game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat)) {
