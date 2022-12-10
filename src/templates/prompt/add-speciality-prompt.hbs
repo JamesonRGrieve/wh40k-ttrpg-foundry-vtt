@@ -1,0 +1,29 @@
+{{dhlog this}}
+<div class="dialog-content">
+    <form class="dh-wrapper" autocomplete="off">
+        <div class="dh-attack">
+            <!-- Header -->
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__prompt dh-header__logo">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <img class="dh-header__logo-image-small" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                            <span class="dh-header__title">Create Speciality</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Skill</span>
+                    <span class="dh-field__span">{{this.skill.label}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Speciality</span>
+                    <input class="dh-field__input" type="text" id="speciality-name" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

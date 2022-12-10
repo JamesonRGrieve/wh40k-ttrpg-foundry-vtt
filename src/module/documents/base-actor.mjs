@@ -1,5 +1,6 @@
 import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
+import { toCamelCase } from '../handlebars/handlebars-helpers.mjs';
 
 export class DarkHeresyBaseActor extends Actor {
 
@@ -99,6 +100,34 @@ export class DarkHeresyBaseActor extends Actor {
             }
         }
         return { total: 0 };
+    }
+
+    async addSpecialitySkill(skill, speciality) {
+        const parent = this.system.skills[skill];
+        const specialityKey = toCamelCase(speciality);
+
+        if(parent.specialities[specialityKey]) {
+            ui.notifications.warn(`Speciality already exists. Unable to create.`);
+            return;
+        }
+
+        await this.update({
+            system: {
+                skills: {
+                    [skill]: {
+                        specialities:{
+                            [specialityKey]: {
+                                label: speciality,
+                                advance: 0,
+                                cost: 0,
+                                taken: true,
+                                custom: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
 }

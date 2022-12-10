@@ -1,6 +1,6 @@
 {
   "name": "dark-heresy-2nd",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "Dark Heresy 2nd Edition Foundry VTT",
   "scripts": {
     "version": "json -I -f package.json -e \"this.version='$npm_config_next'\" && json -I -f src/system.json -e \"this.version='$npm_config_next'\"",
