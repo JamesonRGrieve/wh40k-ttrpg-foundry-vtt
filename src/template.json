@@ -972,6 +972,7 @@
             "armourModification",
             "attackSpecial",
             "backpack",
+            "consumable",
             "criticalInjury",
             "cybernetic",
             "drug",
@@ -1079,6 +1080,9 @@
             "templates": ["physicalItem", "itemDescription", "backpack", "armourPoints"],
             "hasArmourPoints": false
         },
+        "consumable": {
+            "templates": ["physicalItem", "itemDescription", "backpack"]
+        },
         "drug": {
             "templates": ["physicalItem", "itemDescription", "backpack"]
         },
@@ -1175,7 +1179,7 @@
             "templates": ["itemDescription"],
             "location": "",
             "container": true,
-            "containerTypes": ["ammunition", "armour", "armourModification", "cybernetic", "drug", "forceField", "gear", "tool", "weapon", "weaponModification"]
+            "containerTypes": ["ammunition", "armour", "armourModification", "cybernetic", "consumable", "drug", "forceField", "gear", "tool", "weapon", "weaponModification"]
         }
     }
 }
