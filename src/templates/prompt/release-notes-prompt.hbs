@@ -1,0 +1,10 @@
+<form class="dh-wrapper">
+    <div class="dh-panel spacer">
+        <h1 class="dh-panel__header">Release Notes: {{version}}</h1>
+        <ul>
+            {{#each notes as |note|}}
+                <li>{{note}}</li>
+            {{/each}}
+        </ul>
+    </div>
+</form>

@@ -87,11 +87,15 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     }
 
     get isGear() {
-        return this.type === 'gear' || this.isDrug || this.isAmmunition || this.isTool;
+        return this.type === 'gear' || this.isConsumable || this.isDrug || this.isAmmunition || this.isTool;
     }
 
     get isDrug() {
         return this.type === 'drug';
+    }
+
+    get isConsumable() {
+        return this.type === 'consumable';
     }
 
     get isTool() {
