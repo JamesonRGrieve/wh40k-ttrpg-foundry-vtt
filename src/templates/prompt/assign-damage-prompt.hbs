@@ -27,6 +27,10 @@
                     <span class="dh-field__span">Critical</span>
                     <span class="dh-field__span">{{this.actor.system.wounds.critical}}</span>
                 </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Fatigue</span>
+                    <span class="dh-field__span">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</span>
+                </div>
             </div>
 
             <div class="dh-panel dh-grid-col-6">
@@ -45,6 +49,10 @@
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Penetration</span>
                     <input class="dh-field__input" type="number" data-dtype="Number" name="hit.totalPenetration" value="{{this.hit.totalPenetration}}" />
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Fatigue</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="hit.totalFatigue" value="{{this.hit.totalFatigue}}" />
                 </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Hit Location</span>
@@ -71,7 +79,7 @@
         <i class="dh-material">casino</i>
         Apply
     </button>
-    <button class="dialog-button cancel" data-button="cancel" id="attack-cancel">
+    <button class="dialog-button cancel" data-button="cancel" id="cancel-prompt">
         <i class="dh-material">close</i>
         Cancel
     </button>

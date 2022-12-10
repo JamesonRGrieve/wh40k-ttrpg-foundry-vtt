@@ -1,19 +1,19 @@
 import { recursiveUpdate } from '../rolls/roll-helpers.mjs';
 import { WeaponActionData } from '../rolls/action-data.mjs';
 
-export class AssignDamageDialog extends FormApplication {
+export class ForceFieldDialog extends FormApplication {
 
-    constructor(assignDamageData = {}, options = {}) {
-        super(assignDamageData, options);
-        this.data = assignDamageData;
+    constructor(forceFieldData = {}, options = {}) {
+        super(forceFieldData, options);
+        this.data = forceFieldData;
         this.initialized = false;
     }
 
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            title: 'Assign Damage',
-            id: 'dh-assign-damage-dialog',
-            template: 'systems/dark-heresy-2nd/templates/prompt/assign-damage-prompt.hbs',
+            title: 'Force Field',
+            id: 'dh-force-field-dialog',
+            template: 'systems/dark-heresy-2nd/templates/prompt/force-field-prompt.hbs',
             width: 500,
             closeOnSubmit: false,
             submitOnChange: true,
@@ -23,7 +23,7 @@ export class AssignDamageDialog extends FormApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
-        html.find('#assign-damage').click(async (ev) => await this._assignDamage(ev));
+        html.find('#roll-force-field').click(async (ev) => await this._rollForceField(ev));
         html.find('#cancel-prompt').click(async (ev) => await this._cancelPrompt(ev));
     }
 
@@ -44,14 +44,24 @@ export class AssignDamageDialog extends FormApplication {
         await this.close();
     }
 
-    async _assignDamage(event) {
+    async _rollForceField(event) {
+        if(!this.data.forceField.system.activated) {
+            ui.notifications.warn(`Force Field not activated!`);
+            return;
+        }
+
+        if(this.data.forceField.system.overloaded) {
+            ui.notifications.warn(`Force Field currently overloaded!`);
+            return;
+        }
+
         await this.data.finalize();
         await this.data.performActionAndSendToChat();
         await this.close();
     }
 }
 
-export async function prepareAssignDamageRoll(assignDamageData) {
-    const prompt = new AssignDamageDialog(assignDamageData);
+export async function prepareForceFieldRoll(forceFieldData) {
+    const prompt = new ForceFieldDialog(forceFieldData);
     prompt.render(true);
 }

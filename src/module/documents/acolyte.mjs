@@ -9,6 +9,9 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs'
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { DarkHeresyBaseActor } from './base-actor.mjs';
+import { ForceFieldData } from '../rolls/force-field-data.mjs';
+import { prepareForceFieldRoll } from '../prompts/force-field-prompt.mjs';
+import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
 export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
 
@@ -133,8 +136,26 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
             case 'psychicPower':
                 await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 return;
+            case 'forceField':
+                if (!item.system.equipped || !item.system.activated) {
+                    ui.notifications.warn('Actor must have force field equipped and activated!');
+                    return;
+                }
+                await prepareForceFieldRoll(new ForceFieldData(this, item));
+                return;
             default:
-                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+                await DHBasicActionManager.sendItemVocalizeChat({
+                    actor: this.name,
+                    name: item.name,
+                    type: item.type?.toUpperCase(),
+                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description, {
+                        rollData: {
+                            actor: this,
+                            item: item,
+                            pr: this.psy.rating
+                        }
+                    }),
+                });
         }
     }
 
