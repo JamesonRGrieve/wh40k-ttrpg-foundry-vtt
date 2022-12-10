@@ -1,0 +1,30 @@
+<div class="dh-wrapper">
+    <div class="dh-chat">
+        <div class="dh-roll">
+            <h1>{{actor.name}}</h1>
+            <h2>{{forceField.name}}</h2>
+            <div class="dh-roll__divider"></div>
+            {{#if overload}}
+                <div class="dh-roll__label">The field overloads! It ceases to function until it is recharged or repaired, requiring a successful Very Hard (–30) Tech-Use test.</div>
+            {{/if}}
+            {{#if success}}
+                <div class="dh-roll__success">
+                    <span>Success</span>
+                    <span>{{roll.total}}</span>
+                </div>
+                <div class="dh-roll__label">The field activates successfully!</div>
+            {{else}}
+                <div class="dh-roll__fail">
+                    <span>Fail</span>
+                    <span>{{roll.total}}</span>
+                </div>
+                <div class="dh-roll__label">The field fails to protect and the attack proceeds as normal.</div>
+            {{/if}}
+
+            {{#if forceField.system.description}}
+                <div class="dh-roll__divider"></div>
+                <div class="dh-roll__label">{{forceField.system.description}}</div>
+            {{/if}}
+        </div>
+    </div>
+</div>

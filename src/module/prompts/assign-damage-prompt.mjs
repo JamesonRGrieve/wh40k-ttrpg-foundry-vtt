@@ -24,7 +24,7 @@ export class AssignDamageDialog extends FormApplication {
     activateListeners(html) {
         super.activateListeners(html);
         html.find('#assign-damage').click(async (ev) => await this._assignDamage(ev));
-        html.find('#attack-cancel').click(async (ev) => await this._cancelAttack(ev));
+        html.find('#cancel-prompt').click(async (ev) => await this._cancelPrompt(ev));
     }
 
     async getData() {
@@ -40,7 +40,7 @@ export class AssignDamageDialog extends FormApplication {
         this.render(true);
     }
 
-    async _cancelAttack(event) {
+    async _cancelPrompt(event) {
         await this.close();
     }
 

@@ -1,0 +1,72 @@
+{{dhlog this}}
+<div class="dialog-content">
+    <form class="dh-wrapper" autocomplete="off">
+        <div class="dh-attack">
+            <!-- Header -->
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__prompt dh-header__logo">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <img class="dh-header__logo-image-small" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                            <span class="dh-header__title">Force Field</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Character</span>
+                    <span class="dh-field__span">{{this.actor.name}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Force Field</span>
+                    <span class="dh-field__span">{{this.forceField.name}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Quality</span>
+                    <span class="dh-field__span">{{this.forceField.system.protectionRating}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Activated</span>
+                    <span class="dh-field__span">{{this.forceField.system.activated}}</span>
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Overloaded</span>
+                    <span class="dh-field__span">{{this.forceField.system.overloaded}}</span>
+                </div>
+            </div>
+
+            <div class="dh-panel dh-grid-col-6">
+                <div class="dh-header">
+                    <div class="dh-header__info">
+                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
+                            <span class="dh-header__subtitle">Protection</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Rating</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
+                </div>
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Overload</span>
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Buttons -->
+<div class="dialog-buttons">
+    <button class="dialog-button roll default" data-button="roll" id="roll-force-field">
+        <i class="dh-material">casino</i>
+        Roll
+    </button>
+    <button class="dialog-button cancel" data-button="cancel" id="cancel-prompt">
+        <i class="dh-material">close</i>
+        Cancel
+    </button>
+</div>

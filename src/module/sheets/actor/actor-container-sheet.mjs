@@ -149,6 +149,7 @@ export class ActorContainerSheet extends ActorSheet {
         // Create drag data
         const dragData = {
             actorId: this.actor.id,
+            actorName: this.actor.name,
             sceneId: this.actor.isToken ? canvas.scene?.id : null,
             tokenId: this.actor.isToken ? this.actor.token?.id : null,
             type: 'Item',
@@ -180,6 +181,7 @@ export class ActorContainerSheet extends ActorSheet {
         const dragType = element.dataset.itemType;
         const dragData = {
             actorId: this.actor.id,
+            actorName: this.actor.name,
             sceneId: this.actor.isToken ? canvas.scene?.id : null,
             tokenId: this.actor.isToken ? this.actor.token?.id : null,
             type: dragType,

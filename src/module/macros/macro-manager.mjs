@@ -43,12 +43,13 @@ function checkExistingMacro(name, command) {
 export async function createItemMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
+    let macroName = `${data.actorName}: ${data.data.name}`;
     // Create the macro command
     const command = `game.dh.rollItemMacro("${data.actorId}", "${data.data._id}");`;
-    if (checkExistingMacro(data.data.name, command)) return;
+    if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        name: data.data.name,
+        name: macroName,
         type: 'script',
         img: data.data.img,
         command: command,
@@ -72,16 +73,17 @@ export async function createSkillMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
     const { skill, speciality, name } = data.data;
+    let macroName = `${data.actorName}: ${name}`;
 
     // Setup macro data.
     let command = `game.dh.rollSkillMacro("${data.actorId}", "${skill}");`;
     if (speciality) {
         command = `game.dh.rollSkillMacro("${data.actorId}", "${skill}", "${speciality}");`;
     }
-    if (checkExistingMacro(name, command)) return;
+    if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        name,
+        macroName,
         img: 'systems/dark-heresy-2nd/icons/talents/red/r_36.png',
         type: 'script',
         command,
@@ -104,13 +106,14 @@ export async function createCharacteristicMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
     const { characteristic, name } = data.data;
+    const macroName = `${data.actorName}: ${name}`;
 
     // Create the macro command
     const command = `game.dh.rollCharacteristicMacro("${data.actorId}","${characteristic}");`;
-    if (checkExistingMacro(name, command)) return;
+    if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        name,
+        macroName,
         img: 'systems/dark-heresy-2nd/icons/talents/violet/p_05.png',
         type: 'script',
         command,
