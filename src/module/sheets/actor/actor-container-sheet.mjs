@@ -50,7 +50,7 @@ export class ActorContainerSheet extends ActorSheet {
             if (data.type === 'Item' || data.type === 'item') {
                 game.dh.log('Checking if item already exists', data);
                 // Check if Item already Exists
-                if (this.actor.items.find((i) => i._id === data.data._id)) {
+                if (this.actor.items.find((i) => i._id === data?.data?._id)) {
                     game.dh.log('Item already exists on Actor -- ignoring');
                     return false;
                 } else {
