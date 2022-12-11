@@ -45,7 +45,7 @@ export async function checkAndMigrateWorld() {
                         'Fixed duplication bug when dropping the same item on an actor.',
                         'Added missing plentiful availability.',
                         'Added Drugs and Consumables compendium with information from the core book.',
-                        'Added support to creating new specialist skills.'
+                        'Added support for creating new specialist skills.'
                     ]
                 });
                 break;
