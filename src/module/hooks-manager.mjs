@@ -34,6 +34,7 @@ import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
 import { DarkHeresyCyberneticSheet } from './sheets/item/cybernetic-sheet.mjs';
 import { DarkHeresyForceFieldSheet } from './sheets/item/force-field-sheet.mjs';
 import { checkAndMigrateWorld } from './dark-heresy-migrations.mjs';
+import { DHTourMain } from './tours/main-tour.mjs';
 
 export const SYSTEM_ID = 'dark-heresy-2nd';
 
@@ -114,6 +115,8 @@ Enable Debug with: game.dh.debug = true
     static async ready() {
         console.log(`DH2e Loaded!`);
         await checkAndMigrateWorld();
+
+        game.tours.register(SYSTEM_ID, "main-tour", new DHTourMain());
 
         console.log('Initializing with:', game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat));
         if (!game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat)) {
