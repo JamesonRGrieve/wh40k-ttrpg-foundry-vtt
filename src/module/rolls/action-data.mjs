@@ -19,6 +19,18 @@ export class ActionData {
         this.rollData.reset();
     }
 
+    async checkForPerils() {
+        if (this.rollData.power) {
+            if(this.rollData.sourceActor.psy.rating < this.rollData.pr) {
+                if (!/^(.)\1+$/.test(this.rollData.roll.total)) {
+                    this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+                }
+            } else if (/^(.)\1+$/.test(this.rollData.roll.total)) {
+                this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+            }
+        }
+    }
+
     async checkForOpposed() {
         if(this.rollData.isOpposed) {
             this.rollData.opposedRoll = await roll1d100();
@@ -191,6 +203,7 @@ export class ActionData {
         // Determine Success/Hits
         await this.calculateSuccessOrFailure();
         await this.checkForOpposed();
+        await this.checkForPerils();
 
         // Calculate Hits
         await this.calculateHits();
