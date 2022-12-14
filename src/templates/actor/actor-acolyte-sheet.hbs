@@ -32,9 +32,6 @@
                 <a class="item" data-tab="gear" data-group="primary">gear</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="tech" data-group="primary">tech</a>
-            </label>
-            <label class="dh-navigation__item">
                 <a class="item" data-tab="psychic" data-group="primary">psychic powers</a>
             </label>
             <label class="dh-navigation__item">
@@ -51,10 +48,12 @@
                 {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/combat-controls-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/initiative-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/active-effects-panel.hbs}}
+
             </div>
             <div class="tab" data-group="primary" data-tab="main">
                 {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs}}
@@ -63,7 +62,6 @@
                 {{> systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
-
             </div>
             <div class="tab" data-group="primary" data-tab="bio">
                 <div class="dh-panel dh-grid-col-6">
@@ -80,14 +78,12 @@
             <div class="tab" data-group="primary" data-tab="gear">
                 {{> systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs}}
-            </div>
-            <div class="tab" data-group="primary" data-tab="tech">
                 {{> systems/dark-heresy-2nd/templates/actor/panel/cybernetic-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs}}
                 {{> systems/dark-heresy-2nd/templates/actor/panel/force-field-panel.hbs}}
+                {{> systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="psychic">
                 {{> systems/dark-heresy-2nd/templates/actor/panel/psychic-powers-panel.hbs}}

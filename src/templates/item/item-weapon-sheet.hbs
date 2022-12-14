@@ -55,6 +55,9 @@
                     </div>
                 </div>
                 <div class="dh-navigation" data-group="primary">
+                    <label class="dh-navigation__item dh-navigation__item-left">
+                        <a class="item" data-tab="active-effects" data-group="primary">active effects</a>
+                    </label>
                     <label class="dh-navigation__item">
                         <a class="item" data-tab="stats" data-group="primary">stats</a>
                     </label>
@@ -63,8 +66,11 @@
                     </label>
                 </div>
                 <section class="dh-body">
-                    <div class="tab" data-group="primary" data-tab="stats">
+                    <div class="tab" data-group="primary" data-tab="active-effects">
+                        {{> systems/dark-heresy-2nd/templates/item/panel/active-effects-panel.hbs}}
+                    </div>
 
+                    <div class="tab" data-group="primary" data-tab="stats">
                         <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
                             <h1 class="dh-panel__header">Damage</h1>
                             <div class="dh-field__wrapper">
