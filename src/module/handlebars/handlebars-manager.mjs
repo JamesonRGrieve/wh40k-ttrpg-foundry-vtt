@@ -53,14 +53,8 @@ export class HandlebarManager {
             'systems/dark-heresy-2nd/templates/actor/partial/display-toggle.hbs',
             'systems/dark-heresy-2nd/templates/actor/partial/trait-toggle.hbs',
 
-            // Prompts
-            'systems/dark-heresy-2nd/templates/prompt/simple-roll-prompt.hbs',
-            'systems/dark-heresy-2nd/templates/prompt/weapon-roll-prompt.hbs',
-
-            // Chats
-            'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs',
-            'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs',
-            'systems/dark-heresy-2nd/templates/chat/item-vocalize-chat.hbs',
+            // Item Panels
+            'systems/dark-heresy-2nd/templates/item/panel/active-effects-panel.hbs',
         ]);
     }
 }

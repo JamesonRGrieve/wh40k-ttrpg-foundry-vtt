@@ -1,6 +1,10 @@
 import { toggleUIExpanded } from '../../rules/config.mjs';
 import { ActorContainerSheet } from './actor-container-sheet.mjs';
 import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
+import { DHTargetedActionManager } from '../../actions/targeted-action-manager.mjs';
+import { Hit } from '../../rolls/damage-data.mjs';
+import { AssignDamageData } from '../../rolls/assign-damage-data.mjs';
+import { prepareAssignDamageRoll } from '../../prompts/assign-damage-prompt.mjs';
 
 export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
@@ -30,6 +34,31 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('.roll-skill').click(async (ev) => await this._prepareRollSkill(ev));
         html.find('.acolyte-homeWorld').change((ev) => this._onHomeworldChange(ev));
         html.find('.bonus-vocalize').click(async (ev) => await this._onBonusVocalize(ev));
+
+        html.find('.combat-control').click(async (ev) => await this._combatControls(ev));
+    }
+
+    async _combatControls(event) {
+        event.preventDefault();
+        const target = event.currentTarget;
+
+        switch(target.dataset.action) {
+            case 'attack':
+                await DHTargetedActionManager.performWeaponAttack(this.actor);
+                break;
+            case 'assign-damage':
+                const hitData = new Hit();
+                const assignData = new AssignDamageData(this.actor, hitData);
+                await prepareAssignDamageRoll(assignData);
+                break;
+            case 'dodge':
+                await this.actor.rollSkill('dodge');
+                break;
+            case 'parry':
+                await this.actor.rollSkill('parry');
+                break;
+
+        }
     }
 
     async _onBonusVocalize(event) {
