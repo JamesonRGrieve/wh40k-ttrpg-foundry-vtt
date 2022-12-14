@@ -1,7 +1,10 @@
 import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
-import { calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.mjs';
+import {
+    calculateWeaponModifiersDamageBonuses,
+    calculateWeaponModifiersPenetrationBonuses,
+} from '../rules/weapon-modifiers.mjs';
 
 export class DamageData {
     template = '';
@@ -217,6 +220,8 @@ export class Hit {
             // Ammo
             await calculateAmmoDamageBonuses(attackData, this);
         }
+
+        await calculateWeaponModifiersDamageBonuses(attackData, this);
     }
 
     async _calculatePenetration(attackData) {
