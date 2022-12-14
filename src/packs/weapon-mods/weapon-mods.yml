@@ -1,15 +1,4 @@
 data:
-    availability: Availability
-    craftsmanship: Common
-    description: Description
-    installed: false
-    upgrades: Upgrades
-    weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
-name: Weapon Mods
-type: weaponModification
----
-data:
     availability: Rare
     craftsmanship: Common
     description: Canfire either the launcher or the weaponattached to, but not both.

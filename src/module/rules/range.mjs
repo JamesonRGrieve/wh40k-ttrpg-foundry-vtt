@@ -36,6 +36,16 @@ async function calculateWeaponMaxRange(rollData) {
         range += 10;
     }
 
+    //Check Forearm Mounting
+    if (rollData.hasWeaponModification('Forearm Weapon Mounting')) {
+        range = Math.floor(range * .66);
+    }
+
+    //Check Pistol Grip
+    if (rollData.hasWeaponModification('Pistol Grip')) {
+        range = Math.floor(range * .5);
+    }
+
     rollData.maxRange = range;
 }
 

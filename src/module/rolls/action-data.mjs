@@ -88,6 +88,10 @@ export class ActionData {
 
             if (actionItem) {
                 if (this.rollData.action === 'Semi-Auto Burst' || this.rollData.action === 'Swift Attack' || actionItem.isPsychicBarrage) {
+                    if (this.rollData.hasWeaponModification('Fluid Action')) {
+                        this.rollData.dos += 1;
+                    }
+
                     // Possible Semi Rate
                     this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
 
