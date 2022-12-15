@@ -84,6 +84,7 @@ function calculateRangeNameAndBonus(rollData) {
     if(rollData.weapon && rollData.weapon.isMelee) {
         rollData.rangeName = 'Melee';
         rollData.rangeBonus = 0;
+        return;
     }
 
     const targetDistance = rollData.distance ?? 0;
@@ -120,7 +121,6 @@ export async function calculateWeaponRange(rollData) {
     // Ignore Negative Range Bonus for certain modifications
     if (rollData.rangeBonus < 0) {
         const aiming = rollData.modifiers['aim'] > 0;
-        const weapon = rollData.weapon;
         if (aiming && (rollData.hasWeaponModification('Telescopic Sight') || rollData.hasWeaponModification('Omni-Scope'))) {
             rollData.rangeBonus = 0;
         }
