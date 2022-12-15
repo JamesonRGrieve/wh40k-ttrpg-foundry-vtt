@@ -1081,9 +1081,7 @@ type: talent
 ---
 data:
     aptitudes: Perception, Finesse
-    benefit: Selects the Specialisation that matches the prerequisite used in purchase
-        (Melee with Weapon Skill, Ranged with Ballistic Skill). Attack in that combat
-        type inflicts Critical damage, add his Perception bonus to the damage result.
+    benefit: 'The Acolyte can place his hits where they inflict maximum harm, such as gaps or joints in armour. When this talent is taken, the character selects the Specialisation that matches the prerequisite used in purchase (Melee with Weapon Skill, Ranged with Ballistic Skill). When the character’s attack in that combat type inflicts Critical damage, he adds his Perception bonus to the damage result.'
     cost: 0
     prerequisites: ''
     source: PG 125 CB

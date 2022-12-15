@@ -515,4 +515,14 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
             return true;
         });
     }
+
+    async spendFate() {
+        await this.update({
+            system: {
+                fate: {
+                    value: this.system.fate.value - 1
+                }
+            }
+        });
+    }
 }

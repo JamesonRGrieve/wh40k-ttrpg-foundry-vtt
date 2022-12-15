@@ -1,7 +1,7 @@
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.mjs';
 import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.mjs';
 import { getDegree, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
-import { useAmmo } from '../rules/ammo.mjs';
+import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
 export class ActionData {
@@ -193,6 +193,32 @@ export class ActionData {
 
     async descriptionText() {}
 
+    async useResources() {
+        // Expend Ammo
+        await useAmmo(this);
+
+        // Use a Fate for Eye of Vengeance
+        if(this.rollData.eyeOfVengeance) {
+            await this.rollData.sourceActor.spendFate();
+        }
+    }
+
+    async refundResources() {
+        // Refund Ammo
+        await refundAmmo(this);
+
+        // Use a Fate for Eye of Vengeance
+        if(this.rollData.eyeOfVengeance) {
+            await this.rollData.sourceActor.update({
+                system: {
+                    fate: {
+                        value: this.rollData.sourceActor.system.fate.value + 1
+                    }
+                }
+            });
+        }
+    }
+
     async performActionAndSendToChat() {
         // Store Roll Information
         DHBasicActionManager.storeActionData(this);
@@ -216,8 +242,8 @@ export class ActionData {
         // Description Text
         await this.descriptionText();
 
-        // Expend Ammo
-        await useAmmo(this);
+        // Use Resources
+        await this.useResources();
 
         // Render Attack Roll
         this.rollData.render = await this.rollData.roll.render();

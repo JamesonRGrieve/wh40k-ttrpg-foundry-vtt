@@ -45,6 +45,7 @@ export class RollData {
     };
     specialModifiers = {};
     modifierTotal = 0;
+    hasEyeOfVengeanceAvailable = false;
     eyeOfVengeance = false;
 
     attackSpecials = [];
@@ -228,6 +229,11 @@ export class WeaponRollData extends RollData {
             } catch (error) {
                 ui.notifications.warn('Target size is not a number. Unexpected error.');
             }
+        }
+
+        // Talents
+        if(this.sourceActor.hasTalent('Eye of Vengeance') && this.sourceActor.system.fate.value > 0) {
+            this.hasEyeOfVengeanceAvailable = true;
         }
 
         this.weaponSelect = this.weapons.length > 1;
