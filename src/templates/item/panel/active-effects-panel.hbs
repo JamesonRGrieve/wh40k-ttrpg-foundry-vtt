@@ -1,0 +1,45 @@
+<div class="dh-panel dh-grid-col-6">
+    <h1 class="dh-panel__header">Active Effects</h1>
+    <div class="dh-table--border dh-activeeffectstable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">Name</div>
+            <div class="table-cell--last">
+                {{#unless item.isEmbedded}}
+                    <label class="dh-control-button effect-create">
+                        <span class="dh-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
+                    </label>
+                {{/unless}}
+            </div>
+        </div>
+        {{#each effects as |effect|}}
+            <div class="table-row">
+                <div class="table-cell--settingstoggle">
+                {{#unless @root.item.isEmbedded}}
+                    <label class="dh-control-button effect-edit" data-effect-id="{{effect.id}}">
+                        <span class="dh-control-button__span material-icons">settings</span>
+                    </label>
+                {{/unless}}
+                </div>
+                <div class="table-cell">
+                    <span class="table-cell--description">{{effect.label}}</span>
+                </div>
+                <div class="table-cell">
+                {{#unless @root.item.isEmbedded}}
+                    {{#if disabled}}
+                        <label class="dh-control-button effect-enable" data-effect-id="{{effect.id}}">
+                            <span class="dh-control-button__span material-icons">flash_on</span>
+                        </label>
+                    {{else}}
+                        <label class="dh-control-button effect-disable" data-effect-id="{{effect.id}}">
+                            <span class="dh-control-button__span material-icons">flash_off</span>
+                        </label>
+                    {{/if}}
+                    <label class="dh-control-button effect-delete" data-effect-id="{{effect.id}}">
+                        <span class="dh-control-button__span material-icons">delete</span>
+                    </label>
+                {{/unless}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>

@@ -14,11 +14,19 @@ export async function useAmmo(actionData) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
     if (actionItem.usesAmmo) {
-        actionItem.system.clip.value -= actionData.rollData.ammoUsed;
+        let newValue = actionItem.system.clip.value -= actionData.rollData.ammoUsed;
         // Reset to 0 if there was a problem
-        if (actionItem.system.clip.value < 0) {
-            actionItem.system.clip.value = 0;
+        if (newValue < 0) {
+            newValue = 0;
         }
+
+        await actionItem.update({
+            system: {
+                clip: {
+                    value: newValue
+                }
+            }
+        });
 
         if (actionItem.system.clip.value === 0) {
             ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
@@ -26,13 +34,16 @@ export async function useAmmo(actionData) {
     }
 }
 
-/**
- * @param actionData {WeaponAttackData}
- */
 export async function refundAmmo(actionData) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (actionItem.usesAmmo) {
-        actionItem.system.clip.value += actionData.rollData.ammoUsed;
+        await actionItem.update({
+            system: {
+                clip: {
+                    value: actionItem.system.clip.value += actionData.rollData.ammoUsed
+                }
+            }
+        });
     }
 }
 

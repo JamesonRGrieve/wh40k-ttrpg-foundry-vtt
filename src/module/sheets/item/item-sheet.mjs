@@ -17,6 +17,7 @@ export class DarkHeresyItemSheet extends ItemSheet {
         const context = super.getData();
         context.flags = context.item.flags;
         context.dh = CONFIG.dh;
+        context.effects = this.item.getEmbeddedCollection('ActiveEffect').contents;
         return context;
     }
 
@@ -25,6 +26,11 @@ export class DarkHeresyItemSheet extends ItemSheet {
         if (!this.isEditable) return;
 
         html.find('.sheet-control__hide-control').click(async (ev) => await this._sheetControlHideToggle(ev));
+        html.find('.effect-delete').click(async (ev) => await this._effectDelete(ev));
+        html.find('.effect-edit').click(async (ev) => await this._effectEdit(ev));
+        html.find('.effect-create').click(async (ev) => await this._effectCreate(ev));
+        html.find('.effect-enable').click(async (ev) => await this._effectEnable(ev));
+        html.find('.effect-disable').click(async (ev) => await this._effectDisable(ev));
     }
 
     async _sheetControlHideToggle(event) {
@@ -34,5 +40,43 @@ export class DarkHeresyItemSheet extends ItemSheet {
         const target = displayToggle.data('toggle');
         $('.' + target).toggle();
         toggleUIExpanded(target);
+    }
+
+    async _effectDisable(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.item.effects.get(div.data('effectId'));
+        effect.update({disabled: true});
+    }
+
+    async _effectEnable(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.item.effects.get(div.data('effectId'));
+        effect.update({disabled: false});
+    }
+
+    async _effectDelete(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.item.effects.get(div.data('effectId'));
+        effect.delete();
+    }
+
+    async _effectEdit(event) {
+        event.preventDefault();
+        const div = $(event.currentTarget);
+        const effect = this.item.effects.get(div.data('effectId'));
+        effect.sheet.render(true);
+    }
+
+    async _effectCreate(event) {
+        event.preventDefault();
+        return this.item.createEmbeddedDocuments('ActiveEffect', [{
+            label: 'New Effect',
+            icon: 'icons/svg/aura.svg',
+            origin: this.item.uuid,
+            disabled: true
+        }], { renderSheet: true })
     }
 }

@@ -1,7 +1,10 @@
 import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
-import { calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.mjs';
+import {
+    calculateWeaponModifiersDamageBonuses,
+    calculateWeaponModifiersPenetrationBonuses,
+} from '../rules/weapon-modifiers.mjs';
 
 export class DamageData {
     template = '';
@@ -127,8 +130,14 @@ export class Hit {
                     this.righteousFury.push({roll: righteousFuryRoll, effect: ''});
 
                     // DeathDealer
-                    if (sourceActor.hasTalent('Deathdealer')) {
-                        this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                    if (actionItem.isMelee) {
+                        if (sourceActor.hasTalentFuzzyWords('Deathdealer', 'Melee')) {
+                            this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                        }
+                    } else if (actionItem.isRanged) {
+                        if (sourceActor.hasTalentFuzzyWords('Deathdealer', 'Ranged')) {
+                            this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+                        }
                     }
                 }
 
@@ -217,6 +226,8 @@ export class Hit {
             // Ammo
             await calculateAmmoDamageBonuses(attackData, this);
         }
+
+        await calculateWeaponModifiersDamageBonuses(attackData, this);
     }
 
     async _calculatePenetration(attackData) {
@@ -255,10 +266,6 @@ export class Hit {
                 this.penetrationModifiers['hammer blow'] = Math.ceil(strBonus / 2);
             }
         } else if (actionItem.isRanged) {
-            if (attackData.rollData.eyeOfVengeance) {
-                this.penetrationModifiers['eye of vengeance'] = attackData.rollData.dos;
-            }
-
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
             }
@@ -270,6 +277,10 @@ export class Hit {
 
             // Ammo
             await calculateAmmoPenetrationBonuses(attackData, this);
+        }
+
+        if (attackData.rollData.eyeOfVengeance) {
+            this.penetrationModifiers['eye of vengeance'] = attackData.rollData.dos;
         }
 
         if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {

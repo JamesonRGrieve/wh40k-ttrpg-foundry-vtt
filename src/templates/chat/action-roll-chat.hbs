@@ -9,7 +9,7 @@
                     <h3>{{effectString}}</h3>
                     <div class="dh-roll__divider"></div>
 
-                    {{#unless isSpray}}
+                    {{#unless ignoreRolls}}
                         <div class="dh-roll__row dh-roll__row--number">
                             <div class="dh-roll__label">Base</div>
                             <div class="dh-roll__value">{{baseTarget}}</div>
@@ -39,7 +39,7 @@
                         </div>
                     {{/each}}
 
-                    {{#unless isSpray}}
+                    {{#unless ignoreRolls}}
                         {{#if isOpposed}}
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
@@ -68,27 +68,43 @@
                         {{/if}}
                     {{/unless}}
 
-                    <div class='dh-roll__controls'>
-                        {{#if showDamage}}
-                            <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
-                                <span class="dh-control-button__span material-icons">bolt</span>
-                                <span class="dh-control-button__label">Damage</span>
-                            </button>
+                    {{#if isStun}}
+                        {{#if success}}
+                            <div class="dh-roll__success">
+                                <span>Success</span>
+                                <span>{{roll.total}}</span>
+                            </div>
                         {{else}}
-                            <button class="dh-control-button__disabled">
-                                <span class="dh-control-button__span material-icons">bolt</span>
-                                <span class="dh-control-button__label">Damage</span>
-                            </button>
+                            <div class="dh-roll__fail">
+                                <span>Fail</span>
+                                <span>{{roll.total}}</span>
+                            </div>
                         {{/if}}
-                        <div class="dh-control-button roll-control__refund-ammo" data-roll-id="{{@root.id}}">
-                            <span class="dh-control-button__span material-icons">deblur</span>
-                            <span class="dh-control-button__label">Refund</span>
+                    {{/if}}
+
+                    {{#unless ignoreDamage}}
+                        <div class='dh-roll__controls'>
+                            {{#if showDamage}}
+                                <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
+                                    <span class="dh-control-button__span material-icons">bolt</span>
+                                    <span class="dh-control-button__label">Damage</span>
+                                </button>
+                            {{else}}
+                                <button class="dh-control-button__disabled">
+                                    <span class="dh-control-button__span material-icons">bolt</span>
+                                    <span class="dh-control-button__label">Damage</span>
+                                </button>
+                            {{/if}}
+                            <div class="dh-control-button roll-control__refund" data-roll-id="{{@root.id}}">
+                                <span class="dh-control-button__span material-icons">deblur</span>
+                                <span class="dh-control-button__label">Refund</span>
+                            </div>
+                            <div class="dh-control-button roll-control__fate-reroll" data-roll-id="{{@root.id}}">
+                                <span class="dh-control-button__span material-icons">casino</span>
+                                <span class="dh-control-button__label">Re-roll</span>
+                            </div>
                         </div>
-                        <div class="dh-control-button roll-control__fate-reroll" data-roll-id="{{@root.id}}">
-                            <span class="dh-control-button__span material-icons">casino</span>
-                            <span class="dh-control-button__label">Re-roll</span>
-                        </div>
-                    </div>
+                    {{/unless}}
                 </div>
             {{/with}}
             {{#if rollData.showDamage}}

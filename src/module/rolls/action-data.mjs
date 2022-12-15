@@ -1,7 +1,7 @@
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.mjs';
 import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.mjs';
 import { getDegree, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
-import { useAmmo } from '../rules/ammo.mjs';
+import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
 export class ActionData {
@@ -15,8 +15,21 @@ export class ActionData {
 
     reset() {
         this.effects = [];
+        this.effectOutput = [];
         this.damageData.reset();
         this.rollData.reset();
+    }
+
+    async checkForPerils() {
+        if (this.rollData.power) {
+            if(this.rollData.sourceActor.psy.rating < this.rollData.pr) {
+                if (!/^(.)\1+$/.test(this.rollData.roll.total)) {
+                    this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+                }
+            } else if (/^(.)\1+$/.test(this.rollData.roll.total)) {
+                this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+            }
+        }
     }
 
     async checkForOpposed() {
@@ -53,6 +66,29 @@ export class ActionData {
 
         // Action Item
         if (actionItem) {
+            // Stun Action
+            if(this.rollData.action === 'Stun') {
+                const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
+                await stunRoll.evaluate({ async: true });
+                this.rollData.roll = stunRoll;
+
+                if(this.rollData.targetActor) {
+                    const defense = this.rollData.targetActor.system.armour.head.total;
+                    if(stunRoll.total >= defense) {
+                        this.rollData.success = true;
+                        this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. Target is stunned for ${stunRoll.total - defense} rounds and gains 1 level of fatigue.`);
+                    } else {
+                        this.rollData.success = false;
+                        this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. The attack fails to stun the target!`);
+                    }
+                } else {
+                    this.rollData.success = true;
+                    this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total}. Compare to the target’s total of his Toughness bonus +1 per Armour point protecting his head. If the attacker’s roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`);
+                }
+                return;
+            }
+
+
             if(this.rollData.hasAttackSpecial('Spray')) {
                 this.rollData.success = true;
                 this.rollData.dos = 1;
@@ -70,6 +106,13 @@ export class ActionData {
                     }
                 }
             } else if (actionItem.isRanged) {
+                // Suppressing Fire
+                if (this.rollData.action === 'Suppressing Fire - Semi') {
+                    this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.')
+                } else if (this.rollData.action === 'Suppressing Fire - Full') {
+                    this.addEffect('Suppressing', 'All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned.')
+                }
+
                 const rollTotal = this.rollData.roll.total;
                 if (rollTotal > 91 && this.rollData.hasAttackSpecial('Overheats')) {
                     this.effects.push('overheat');
@@ -87,7 +130,15 @@ export class ActionData {
             this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll.total);
 
             if (actionItem) {
-                if (this.rollData.action === 'Semi-Auto Burst' || this.rollData.action === 'Swift Attack' || actionItem.isPsychicBarrage) {
+                if (this.rollData.action === 'Semi-Auto Burst' ||
+                    this.rollData.action === 'Swift Attack' ||
+                    actionItem.isPsychicBarrage ||
+                    this.rollData.action === 'Suppressing Fire - Semi' ||
+                    this.rollData.action === 'Suppressing Fire - Full') {
+                    if (this.rollData.hasWeaponModification('Fluid Action')) {
+                        this.rollData.dos += 1;
+                    }
+
                     // Possible Semi Rate
                     this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
 
@@ -177,6 +228,32 @@ export class ActionData {
 
     async descriptionText() {}
 
+    async useResources() {
+        // Expend Ammo
+        await useAmmo(this);
+
+        // Use a Fate for Eye of Vengeance
+        if(this.rollData.eyeOfVengeance) {
+            await this.rollData.sourceActor.spendFate();
+        }
+    }
+
+    async refundResources() {
+        // Refund Ammo
+        await refundAmmo(this);
+
+        // Use a Fate for Eye of Vengeance
+        if(this.rollData.eyeOfVengeance) {
+            await this.rollData.sourceActor.update({
+                system: {
+                    fate: {
+                        value: this.rollData.sourceActor.system.fate.value + 1
+                    }
+                }
+            });
+        }
+    }
+
     async performActionAndSendToChat() {
         // Store Roll Information
         DHBasicActionManager.storeActionData(this);
@@ -186,21 +263,25 @@ export class ActionData {
 
         // Determine Success/Hits
         await this.calculateSuccessOrFailure();
-        await this.checkForOpposed();
 
-        // Calculate Hits
-        await this.calculateHits();
+        if (this.rollData.action !== 'Stun') {
+            await this.checkForOpposed();
+            await this.checkForPerils();
 
-        // Create Specials
-        await this.createEffectData();
+            // Calculate Hits
+            await this.calculateHits();
 
-        game.dh.log('Perform Action', this);
+            // Create Specials
+            await this.createEffectData();
 
-        // Description Text
-        await this.descriptionText();
+            game.dh.log('Perform Action', this);
 
-        // Expend Ammo
-        await useAmmo(this);
+            // Description Text
+            await this.descriptionText();
+
+            // Use Resources
+            await this.useResources();
+        }
 
         // Render Attack Roll
         this.rollData.render = await this.rollData.roll.render();
