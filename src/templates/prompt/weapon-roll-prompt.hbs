@@ -92,7 +92,9 @@
                     <span class="dh-field__span">{{baseTarget}}</span>
                 </div>
                 <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Attack Type{{#if weapon.usesAmmo}} ({{fireRate}} hit(s) max){{/if}}</span>
+                    <span class="dh-field__span">Attack Type{{#if weapon.usesAmmo}}
+                            ({{fireRate}}
+                            hit(s) max){{/if}}</span>
                     <select class="dh-field__input" name="action" id="action">
                         {{selectOptions actions selected=this.action}}
                     </select>
@@ -111,6 +113,14 @@
                         <select class="dh-field__input" name="lasMode" id="lasMode">
                             {{selectOptions (arrayToObject lasModes) selected=this.lasMode}}
                         </select>
+                    </div>
+                {{/if}}
+                {{#if this.hasEyeOfVengeanceAvailable}}
+                    <div class="dh-field__wrapper">
+                        <span class="dh-field__span">Use Eye of Vengeance</span>
+                        <span class="dh-field__input check">
+                            <input data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
+                        </span>
                     </div>
                 {{/if}}
                 {{#if this.modifiers.attack}}

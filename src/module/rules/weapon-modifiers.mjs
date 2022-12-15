@@ -16,6 +16,22 @@ export async function updateWeaponModifiers(rollData) {
     }
 }
 
+export async function calculateWeaponModifiersDamageBonuses(actionData, hit) {
+    let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
+    if(!actionItem) return;
+
+    for (const item of actionItem.items) {
+        game.dh.log('calculateWeaponModifiersDamageBonuses', item);
+        if (!item.system.equipped) continue;
+        if (!item.isWeaponModification) continue;
+        switch (item.name) {
+            case 'Compact':
+                hit.penetrationModifiers['compact'] = -1;
+                break;
+        }
+    }
+}
+
 export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if(!actionItem) return;
@@ -69,6 +85,18 @@ export async function calculateWeaponModifiersAttackBonuses(rollData) {
                 break;
             case 'Custom Grip':
                 rollData.weaponModifiers['Custom-Grip'] = 5;
+                break;
+            case 'Modified Stock':
+                if (rollData.modifiers['aim'] === 10) {
+                    rollData.weaponModifiers['Modified-Stock'] = 2;
+                } else if (rollData.modifiers['aim'] === 20) {
+                    rollData.weaponModifiers['Modified-Stock'] = 4;
+                }
+                break;
+            case 'Motion Predictor':
+                if (rollData.action === 'Full Auto Burst' || rollData.action === 'Semi-Auto Burst') {
+                    rollData.weaponModifiers['Motion-Predictor'] = 10;
+                }
                 break;
         }
     }

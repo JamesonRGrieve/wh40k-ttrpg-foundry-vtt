@@ -45,6 +45,7 @@ export class RollData {
     };
     specialModifiers = {};
     modifierTotal = 0;
+    hasEyeOfVengeanceAvailable = false;
     eyeOfVengeance = false;
 
     attackSpecials = [];
@@ -175,6 +176,9 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
+    ignoreDamage = false;
+    ignoreRolls = false;
+    isStun = false;
     isThrown = false;
     isSpray = false;
     isLasWeapon = false;
@@ -197,6 +201,10 @@ export class WeaponRollData extends RollData {
         this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
+        this.isStun = this.action === 'Stun';
+        this.ignoreRolls = this.isSpray || this.isStun;
+        this.ignoreDamage = this.isStun;
+
         this.isThrown = this.weapon.isThrown;
 
         await updateWeaponModifiers(this);
@@ -219,6 +227,21 @@ export class WeaponRollData extends RollData {
         this.modifiers['difficulty'] = 0;
         this.modifiers['aim'] = 0;
         this.modifiers['modifier'] = 0;
+
+        // Size Bonus should not change after initial targeting
+        if(this.targetActor && this.targetActor.system.size) {
+            try {
+                const size = Number.parseInt(this.targetActor.system.size);
+                this.modifiers['target-size'] = (size - 4) * 10;
+            } catch (error) {
+                ui.notifications.warn('Target size is not a number. Unexpected error.');
+            }
+        }
+
+        // Talents
+        if(this.sourceActor.hasTalent('Eye of Vengeance') && this.sourceActor.system.fate.value > 0) {
+            this.hasEyeOfVengeanceAvailable = true;
+        }
 
         this.weaponSelect = this.weapons.length > 1;
         this.weapon = this.weapons[0];
@@ -252,6 +275,17 @@ export class WeaponRollData extends RollData {
             ...this.weaponModifiers,
             range: this.rangeBonus,
         };
+
+        // Unselect Weapon -- UI issues if it's selected on start
+        this.weapon.isSelected = false;
+
+        // Suppressing Fire ignores other modifiers
+        if (this.action.includes('Suppressing Fire')) {
+            this.modifiers = {
+                'attack': -20
+            }
+        }
+
         await this.calculateTotalModifiers();
     }
 }

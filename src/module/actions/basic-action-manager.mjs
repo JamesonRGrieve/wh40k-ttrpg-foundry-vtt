@@ -14,7 +14,7 @@ export class BasicActionManager {
         Hooks.on('renderChatMessage', async (message, html, data) => {
             game.dh.log('renderChatMessage', { message, html, data });
             html.find('.roll-control__hide-control').click(async (ev) => await this._toggleExpandChatMessage(ev));
-            html.find('.roll-control__refund-ammo').click(async (ev) => await this._refundAmmo(ev));
+            html.find('.roll-control__refund').click(async (ev) => await this._refundResources(ev));
             html.find('.roll-control__fate-reroll').click(async (ev) => await this._fateReroll(ev));
             html.find('.roll-control__assign-damage').click(async (ev) => await this._assignDamage(ev));
             html.find('.roll-control__apply-damage').click(async (ev) => await this._applyDamage(ev));
@@ -43,7 +43,7 @@ export class BasicActionManager {
         $('#' + target).toggle();
     }
 
-    async _refundAmmo(event) {
+    async _refundResources(event) {
         event.preventDefault();
         const div = $(event.currentTarget);
         const rollId = div.data('rollId');
@@ -56,10 +56,10 @@ export class BasicActionManager {
 
         Dialog.confirm({
             title: 'Confirm Refund',
-            content: '<p>Are you sure you would like to refund ammo for this action?</p>',
+            content: '<p>Are you sure you would like to refund ammo, fate, etc for this action?</p>',
             yes: async () => {
-                await refundAmmo(actionData);
-                ui.notifications.info(`Ammo refunded`);
+                await actionData.refundResources();
+                ui.notifications.info(`Resources refunded`);
             },
             no: () => {},
             defaultYes: false,
@@ -77,15 +77,24 @@ export class BasicActionManager {
             return;
         }
 
-        // Generate new ID for action data
-        actionData.id = uuid();
+        if (actionData.rollData?.sourceActor?.system?.fate?.value <= 0) {
+            ui.notifications.warn(`Actor does not have enough fate points!`);
+            return;
+        }
 
         Dialog.confirm({
             title: 'Confirm Re-Roll',
             content: '<p>Are you sure you would like to use a fate point to re-roll action?</p>',
             yes: async () => {
-                await refundAmmo(actionData);
+                // Generate new ID for action data
+                actionData.id = uuid();
+                // Use a FP
+                await actionData.rollData.sourceActor.spendFate();
+                // Refund Initial Resources
+                await actionData.refundResources();
+                // Reset
                 actionData.reset();
+                // Run it back
                 await actionData.performActionAndSendToChat();
             },
             no: () => {},
