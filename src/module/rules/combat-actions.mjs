@@ -46,9 +46,11 @@ export function updateAvailableCombatActions(rollData) {
     if (rollData.weapon.isRanged) {
         if (rollData.weapon.system.rateOfFire.burst <= 0) {
             actions.findSplice((action) => action.name === 'Semi-Auto Burst');
+            actions.findSplice((action) => action.name === 'Suppressing Fire - Semi');
         }
         if (rollData.weapon.system.rateOfFire.full <= 0) {
             actions.findSplice((action) => action.name === 'Full Auto Burst');
+            actions.findSplice((action) => action.name === 'Suppressing Fire - Full');
         }
     }
 
@@ -232,11 +234,21 @@ function allCombatActions() {
                 'Using melee weapon, WS test with -20. Success is 1d10+SB, vs targets TB+(AP on head). If success, target is stunned for the number of rounds equal to difference.',
         },
         {
-            name: 'Suppressing Fire',
+            name: 'Suppressing Fire - Semi',
             type: ['Full'],
             subtype: ['Attack', 'Ranged'],
             description:
-                'Fires a semi-auto (in 30 degree arc) or full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 (if semi-auto) or -20 (if full-auto) Pinning save or become pinned.',
+                'Fires a semi-auto (in 30 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 Pinning save or become pinned.',
+            attack: {
+                modifier: -20,
+            },
+        },
+        {
+            name: 'Suppressing Fire - Full',
+            type: ['Full'],
+            subtype: ['Attack', 'Ranged'],
+            description:
+                'Fires a full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -20 Pinning save or become pinned.',
             attack: {
                 modifier: -20,
             },

@@ -15,6 +15,7 @@ export class ActionData {
 
     reset() {
         this.effects = [];
+        this.effectOutput = [];
         this.damageData.reset();
         this.rollData.reset();
     }
@@ -82,6 +83,13 @@ export class ActionData {
                     }
                 }
             } else if (actionItem.isRanged) {
+                // Suppressing Fire
+                if (this.rollData.action === 'Suppressing Fire - Semi') {
+                    this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.')
+                } else if (this.rollData.action === 'Suppressing Fire - Full') {
+                    this.addEffect('Suppressing', 'All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned.')
+                }
+
                 const rollTotal = this.rollData.roll.total;
                 if (rollTotal > 91 && this.rollData.hasAttackSpecial('Overheats')) {
                     this.effects.push('overheat');
@@ -99,7 +107,11 @@ export class ActionData {
             this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll.total);
 
             if (actionItem) {
-                if (this.rollData.action === 'Semi-Auto Burst' || this.rollData.action === 'Swift Attack' || actionItem.isPsychicBarrage) {
+                if (this.rollData.action === 'Semi-Auto Burst' ||
+                    this.rollData.action === 'Swift Attack' ||
+                    actionItem.isPsychicBarrage ||
+                    this.rollData.action === 'Suppressing Fire - Semi' ||
+                    this.rollData.action === 'Suppressing Fire - Full') {
                     if (this.rollData.hasWeaponModification('Fluid Action')) {
                         this.rollData.dos += 1;
                     }

@@ -268,6 +268,17 @@ export class WeaponRollData extends RollData {
             ...this.weaponModifiers,
             range: this.rangeBonus,
         };
+
+        // Unselect Weapon -- UI issues if it's selected on start
+        this.weapon.isSelected = false;
+
+        // Suppressing Fire ignores other modifiers
+        if (this.action.includes('Suppressing Fire')) {
+            this.modifiers = {
+                'attack': -20
+            }
+        }
+
         await this.calculateTotalModifiers();
     }
 }
