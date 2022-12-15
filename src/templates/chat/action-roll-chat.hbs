@@ -9,7 +9,7 @@
                     <h3>{{effectString}}</h3>
                     <div class="dh-roll__divider"></div>
 
-                    {{#unless ignoreRolls}}
+                    {{#unless ignoreModifiers}}
                         <div class="dh-roll__row dh-roll__row--number">
                             <div class="dh-roll__label">Base</div>
                             <div class="dh-roll__value">{{baseTarget}}</div>
@@ -24,14 +24,14 @@
                             <div class="dh-roll__label">Target</div>
                             <div class="dh-roll__value">{{modifiedTarget}}</div>
                         </div>
-
-                        {{#if ammoUsed}}
-                            <div class="dh-roll__row dh-roll__row--number">
-                                <div class="dh-roll__label">Ammo Used</div>
-                                <div class="dh-roll__value">{{ammoUsed}}</div>
-                            </div>
-                        {{/if}}
                     {{/unless}}
+
+                    {{#if usesAmmo}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Ammo Used</div>
+                            <div class="dh-roll__value">{{ammoUsed}}</div>
+                        </div>
+                    {{/if}}
 
                     {{#each @root.effectOutput as |effect|}}
                         <div class="dh-roll__row--full">
@@ -39,28 +39,34 @@
                         </div>
                     {{/each}}
 
-                    {{#unless ignoreRolls}}
-                        {{#if isOpposed}}
-                            <div class="dh-roll__row dh-roll__row--number">
-                                <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
-                                <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}}){{/if}}</div>
-                            </div>
-                        {{/if}}
+                    {{#if isOpposed}}
+                        <div class="dh-roll__row dh-roll__row--number">
+                            <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
+                            <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}}){{/if}}</div>
+                        </div>
+                    {{/if}}
 
+                    {{#unless ignoreDegrees}}
                         {{#if success}}
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Degrees of Success</div>
                                 <div class="dh-roll__value">{{dos}}</div>
-                            </div>
-                            <div class="dh-roll__success">
-                                <span>Success</span>
-                                <span>{{roll.total}}</span>
                             </div>
                         {{else}}
                             <div class="dh-roll__row dh-roll__row--number">
                                 <div class="dh-roll__label">Degrees of Failure</div>
                                 <div class="dh-roll__value">{{dof}}</div>
                             </div>
+                        {{/if}}
+                    {{/unless}}
+
+                    {{#unless ignoreSuccess}}
+                        {{#if success}}
+                            <div class="dh-roll__success">
+                                <span>Success</span>
+                                <span>{{roll.total}}</span>
+                            </div>
+                        {{else}}
                             <div class="dh-roll__fail">
                                 <span>Fail</span>
                                 <span>{{roll.total}}</span>
@@ -68,21 +74,7 @@
                         {{/if}}
                     {{/unless}}
 
-                    {{#if isStun}}
-                        {{#if success}}
-                            <div class="dh-roll__success">
-                                <span>Success</span>
-                                <span>{{roll.total}}</span>
-                            </div>
-                        {{else}}
-                            <div class="dh-roll__fail">
-                                <span>Fail</span>
-                                <span>{{roll.total}}</span>
-                            </div>
-                        {{/if}}
-                    {{/if}}
-
-                    {{#unless ignoreDamage}}
+                    {{#unless ignoreControls}}
                         <div class='dh-roll__controls'>
                             {{#if showDamage}}
                                 <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
@@ -107,7 +99,7 @@
                     {{/unless}}
                 </div>
             {{/with}}
-            {{#if rollData.showDamage}}
+            {{#unless rollData.ignoreDamage}}
                 {{#with damageData}}
                     <div id="{{@root.id}}" style="display: none">
                         {{#if @root.psychicEffect}}
@@ -183,7 +175,7 @@
                         {{/each}}
                     </div>
                 {{/with}}
-            {{/if}}
+            {{/unless}}
         </div>
     </div>
 </div>

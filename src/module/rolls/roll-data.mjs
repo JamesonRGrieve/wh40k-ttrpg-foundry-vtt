@@ -14,6 +14,13 @@ export class RollData {
     locations = hitDropdown();
     lasModes = DarkHeresy.combat.las_fire_modes;
 
+    // Chat Controls
+    ignoreModifiers = false;
+    ignoreDegrees = false;
+    ignoreSuccess = false;
+    ignoreControls = false;
+    ignoreDamage = false;
+
     sourceActor;
     targetActor;
 
@@ -176,8 +183,7 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
-    ignoreDamage = false;
-    ignoreRolls = false;
+    isFeint = false;
     isStun = false;
     isThrown = false;
     isSpray = false;
@@ -202,8 +208,13 @@ export class WeaponRollData extends RollData {
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
         this.isStun = this.action === 'Stun';
-        this.ignoreRolls = this.isSpray || this.isStun;
-        this.ignoreDamage = this.isStun;
+        this.isFeint = this.action === 'Feint';
+
+        this.ignoreModifiers = this.isSpray || this.isStun;
+        this.ignoreDegrees = this.isSpray || this.isStun;
+        this.ignoreSuccess = this.isSpray;
+        this.ignoreControls = this.isFeint || this.isStun;
+        this.ignoreDamage = this.isStun || this.isFeint;
 
         this.isThrown = this.weapon.isThrown;
 
@@ -284,6 +295,11 @@ export class WeaponRollData extends RollData {
             this.modifiers = {
                 'attack': -20
             }
+        }
+
+        // Feint is base WS
+        if (this.action.includes('Feint')) {
+            this.modifiers = {}
         }
 
         await this.calculateTotalModifiers();
