@@ -220,6 +220,16 @@ export class WeaponRollData extends RollData {
         this.modifiers['aim'] = 0;
         this.modifiers['modifier'] = 0;
 
+        // Size Bonus should not change after initial targeting
+        if(this.targetActor && this.targetActor.system.size) {
+            try {
+                const size = Number.parseInt(this.targetActor.system.size);
+                this.modifiers['target-size'] = (size - 4) * 10;
+            } catch (error) {
+                ui.notifications.warn('Target size is not a number. Unexpected error.');
+            }
+        }
+
         this.weaponSelect = this.weapons.length > 1;
         this.weapon = this.weapons[0];
         this.weapon.isSelected = true;
