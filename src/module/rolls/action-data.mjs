@@ -1,6 +1,6 @@
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.mjs';
 import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.mjs';
-import { getDegree, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
+import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
 import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 
@@ -33,13 +33,49 @@ export class ActionData {
     }
 
     async checkForOpposed() {
-        if(this.rollData.isOpposed) {
-            const opposedRoll = this.rollData.targetActor.rollCheck(this.rollData.opposedTarget);
-            this.rollData.opposedDos = opposedRoll.dos;
-            this.rollData.opposedDof = opposedRoll.dof;
-            if(opposedRoll.success) {
+        console.log('check for opposed');
+        if(this.rollData.isOpposed && this.rollData.targetActor) {
+            const rollCheck = await this.rollData.targetActor.rollCheck(this.rollData.opposedTarget);
+            this.rollData.opposedRoll = rollCheck.roll;
+            this.rollData.opposedDos = rollCheck.dos;
+            this.rollData.opposedDof = rollCheck.dof;
+            if(rollCheck.success) {
                 if(this.rollData.opposedDos >= this.rollData.dos) {
                     this.rollData.success = false;
+                }
+            }
+        }
+
+        if (this.rollData.isFeint) {
+            if(!this.rollData.success) {
+                this.addEffect('Feint', `The character fails to feint against the target!`);
+            } else {
+                if (this.rollData.targetActor) {
+                    this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
+                } else {
+                    this.addEffect('Feint', `Compare to targets Weapon Skill check. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded.`);
+                }
+            }
+        }
+
+        if (this.rollData.isKnockDown) {
+            if(this.rollData.targetActor) {
+                const opposedDegrees = getOpposedDegrees(this.rollData.dos, this.rollData.dof, this.rollData.opposedDos, this.rollData.opposedDof);
+                if(opposedDegrees >= 2) {
+                    const strengthBonus = this.rollData.sourceActor?.characteristics?.strength?.bonus ?? 0;
+                    this.addEffect('Knock Down', `The target is knocked Prone and must use a Stand action in his turn to regain his feet! The impact deals [[1d5-3+${strengthBonus}]] (min 0) damage and one level of fatigue to the target!`);
+                } else if (opposedDegrees > 0) {
+                    this.addEffect('Knock Down', `The target is knocked Prone and must use a Stand action in his turn to regain his feet!`);
+                } else if (opposedDegrees > -2) {
+                    this.addEffect('Knock Down', `The character fails to knock down the target!`);
+                } else {
+                    this.addEffect('Knock Down', `The character fails to knock down the target and in the failure knocks themselves prone instead!`);
+                }
+            } else {
+                if(this.rollData.success) {
+                    this.addEffect('Knock Down', `Compare to targets Strength check. If the attacker wins, the target is knocked Prone and must use a Stand action in his turn to regain his feet. If the attacker succeeds by two or more degrees of success, he can choose to inflict 1d5–3+SB Impact damage and one level of Fatigue on the target. If the target wins the test, he keeps his footing. If the target wins by two or more degrees of success, the attacker is knocked Prone instead.`);
+                } else {
+                    this.addEffect('Knock Down', `The character fails to knock down the target!`);
                 }
             }
         }
@@ -59,6 +95,11 @@ export class ActionData {
         // Action Item
         if (actionItem) {
 
+            // All Out Attack
+            if(this.rollData.action === 'All Out Attack') {
+                this.addEffect('All Out Attack', 'The character cannot attempt Evasion reactions until the beginning of his next turn.');
+            }
+
             // Stun Action
             if(this.rollData.isStun) {
                 const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
@@ -77,36 +118,6 @@ export class ActionData {
                 } else {
                     this.rollData.success = true;
                     this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total}. Compare to the target’s total of his Toughness bonus +1 per Armour point protecting his head. If the attacker’s roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`);
-                }
-                return;
-            }
-
-            // Feint Action
-            if(this.rollData.isFeint) {
-                const feintData = await this.rollData.sourceActor.opposedCharacteristicTest(this.rollData.targetActor, 'WeaponSkill');
-                if(feintData) {
-                    this.rollData.baseTarget = feintData.source.target;
-                    this.rollData.roll = feintData.source.roll;
-                    this.rollData.success = feintData.success;
-                    this.rollData.dos = feintData.source.dos;
-                    this.rollData.dof = feintData.source.dof;
-                    if(feintData.target) {
-                        this.rollData.isOpposed = true;
-                        this.rollData.opposedChar = 'WS';
-                        this.rollData.opposedRoll = feintData.target.roll;
-                        this.rollData.opposedTarget = feintData.target.target;
-                        this.rollData.opposedDos = feintData.target.dos;
-                        this.rollData.opposedDof = feintData.target.dof;
-                        if(this.rollData.success) {
-                            this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
-                        } else {
-                            this.addEffect('Feint', `The character fails to feint against the target!`);
-                        }
-                    } else {
-                        this.addEffect('Feint', `Compare to targets WS roll. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded.`);
-                    }
-                } else {
-                    ui.notifications.warn(`Unexpected error while performing WeaponSkill check`);
                 }
                 return;
             }
