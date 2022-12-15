@@ -34,21 +34,13 @@ export class ActionData {
 
     async checkForOpposed() {
         if(this.rollData.isOpposed) {
-            this.rollData.opposedRoll = await roll1d100();
-            let rollTotal = this.rollData.opposedRoll.total;
-            const target  = this.rollData.opposedTarget;
-            this.rollData.opposedSuccess = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
-
-            if(this.rollData.opposedSuccess) {
-                this.rollData.opposedDof = 0;
-                this.rollData.opposedDos = 1 + getDegree(this.rollData.opposedTarget, this.rollData.opposedRoll.total);
-
+            const opposedRoll = this.rollData.targetActor.rollCheck(this.rollData.opposedTarget);
+            this.rollData.opposedDos = opposedRoll.dos;
+            this.rollData.opposedDof = opposedRoll.dof;
+            if(opposedRoll.success) {
                 if(this.rollData.opposedDos >= this.rollData.dos) {
                     this.rollData.success = false;
                 }
-            } else {
-                this.rollData.opposedDos = 0;
-                this.rollData.opposedDof = 1 + getDegree(this.rollData.opposedRoll.total, this.rollData.opposedTarget);
             }
         }
     }
@@ -66,8 +58,9 @@ export class ActionData {
 
         // Action Item
         if (actionItem) {
+
             // Stun Action
-            if(this.rollData.action === 'Stun') {
+            if(this.rollData.isStun) {
                 const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
                 await stunRoll.evaluate({ async: true });
                 this.rollData.roll = stunRoll;
@@ -88,6 +81,35 @@ export class ActionData {
                 return;
             }
 
+            // Feint Action
+            if(this.rollData.isFeint) {
+                const feintData = await this.rollData.sourceActor.opposedCharacteristicTest(this.rollData.targetActor, 'WeaponSkill');
+                if(feintData) {
+                    this.rollData.baseTarget = feintData.source.target;
+                    this.rollData.roll = feintData.source.roll;
+                    this.rollData.success = feintData.success;
+                    this.rollData.dos = feintData.source.dos;
+                    this.rollData.dof = feintData.source.dof;
+                    if(feintData.target) {
+                        this.rollData.isOpposed = true;
+                        this.rollData.opposedChar = 'WS';
+                        this.rollData.opposedRoll = feintData.target.roll;
+                        this.rollData.opposedTarget = feintData.target.target;
+                        this.rollData.opposedDos = feintData.target.dos;
+                        this.rollData.opposedDof = feintData.target.dof;
+                        if(this.rollData.success) {
+                            this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
+                        } else {
+                            this.addEffect('Feint', `The character fails to feint against the target!`);
+                        }
+                    } else {
+                        this.addEffect('Feint', `Compare to targets WS roll. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded.`);
+                    }
+                } else {
+                    ui.notifications.warn(`Unexpected error while performing WeaponSkill check`);
+                }
+                return;
+            }
 
             if(this.rollData.hasAttackSpecial('Spray')) {
                 this.rollData.success = true;
