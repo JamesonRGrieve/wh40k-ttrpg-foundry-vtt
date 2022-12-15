@@ -176,6 +176,9 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
+    ignoreDamage = false;
+    ignoreRolls = false;
+    isStun = false;
     isThrown = false;
     isSpray = false;
     isLasWeapon = false;
@@ -198,6 +201,10 @@ export class WeaponRollData extends RollData {
         this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
+        this.isStun = this.action === 'Stun';
+        this.ignoreRolls = this.isSpray || this.isStun;
+        this.ignoreDamage = this.isStun;
+
         this.isThrown = this.weapon.isThrown;
 
         await updateWeaponModifiers(this);
