@@ -66,6 +66,29 @@ export class ActionData {
 
         // Action Item
         if (actionItem) {
+            // Stun Action
+            if(this.rollData.action === 'Stun') {
+                const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
+                await stunRoll.evaluate({ async: true });
+                this.rollData.roll = stunRoll;
+
+                if(this.rollData.targetActor) {
+                    const defense = this.rollData.targetActor.system.armour.head.total;
+                    if(stunRoll.total >= defense) {
+                        this.rollData.success = true;
+                        this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. Target is stunned for ${stunRoll.total - defense} rounds and gains 1 level of fatigue.`);
+                    } else {
+                        this.rollData.success = false;
+                        this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. The attack fails to stun the target!`);
+                    }
+                } else {
+                    this.rollData.success = true;
+                    this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total}. Compare to the target’s total of his Toughness bonus +1 per Armour point protecting his head. If the attacker’s roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`);
+                }
+                return;
+            }
+
+
             if(this.rollData.hasAttackSpecial('Spray')) {
                 this.rollData.success = true;
                 this.rollData.dos = 1;
@@ -240,22 +263,25 @@ export class ActionData {
 
         // Determine Success/Hits
         await this.calculateSuccessOrFailure();
-        await this.checkForOpposed();
-        await this.checkForPerils();
 
-        // Calculate Hits
-        await this.calculateHits();
+        if (this.rollData.action !== 'Stun') {
+            await this.checkForOpposed();
+            await this.checkForPerils();
 
-        // Create Specials
-        await this.createEffectData();
+            // Calculate Hits
+            await this.calculateHits();
 
-        game.dh.log('Perform Action', this);
+            // Create Specials
+            await this.createEffectData();
 
-        // Description Text
-        await this.descriptionText();
+            game.dh.log('Perform Action', this);
 
-        // Use Resources
-        await this.useResources();
+            // Description Text
+            await this.descriptionText();
+
+            // Use Resources
+            await this.useResources();
+        }
 
         // Render Attack Roll
         this.rollData.render = await this.rollData.roll.render();

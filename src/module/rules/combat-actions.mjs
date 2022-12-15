@@ -232,6 +232,9 @@ function allCombatActions() {
             subtype: ['Attack', 'Melee'],
             description:
                 'Using melee weapon, WS test with -20. Success is 1d10+SB, vs targets TB+(AP on head). If success, target is stunned for the number of rounds equal to difference.',
+            attack: {
+                modifier: -20,
+            },
         },
         {
             name: 'Suppressing Fire - Semi',
