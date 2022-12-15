@@ -116,8 +116,14 @@ export class RollData {
     get activeModifiers() {
         const modifiers = {};
         for (const m of Object.keys(this.modifiers)) {
-            if (this.modifiers[m] !== 0) {
-                modifiers[m.toUpperCase()] = this.modifiers[m];
+            try {
+                const value = Number.parseInt(this.modifiers[m]);
+                if (value !== 0) {
+                    console.log(`Modifier ${m.toUpperCase()} value ${value}`, value !== 0);
+                    modifiers[m.toUpperCase()] = value;
+                }
+            } catch (err) {
+                game.dh.error('Error while calculate roll data modifiers:', err);
             }
         }
         return modifiers;
@@ -183,6 +189,8 @@ export class WeaponRollData extends RollData {
     ammoUsed = 0;
     weaponModifiers = {};
 
+    canAim = true;
+    isKnockDown = false;
     isFeint = false;
     isStun = false;
     isThrown = false;
@@ -204,19 +212,33 @@ export class WeaponRollData extends RollData {
     }
 
     async update() {
-        this.modifiers['weapon'] = this.weapon.system.attackBonus ?? 0;
+        if(this.weapon.system.attackBonus) {
+            this.modifiers['weapon'] = this.weapon.system.attackBonus;
+        }
+        this.canAim = this.action !== 'All Out Attack';
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
         this.isStun = this.action === 'Stun';
         this.isFeint = this.action === 'Feint';
+        this.isKnockDown = this.action === 'Knock Down';
 
         this.ignoreModifiers = this.isSpray || this.isStun;
         this.ignoreDegrees = this.isSpray || this.isStun;
         this.ignoreSuccess = this.isSpray;
-        this.ignoreControls = this.isFeint || this.isStun;
-        this.ignoreDamage = this.isStun || this.isFeint;
-
+        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
+        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
         this.isThrown = this.weapon.isThrown;
+
+        this.isOpposed = this.isKnockDown || this.isFeint;
+        if(this.isOpposed && this.targetActor) {
+            if(this.isFeint) {
+                this.opposedTarget = this.targetActor?.characteristics?.weaponSkill?.total ?? 0;
+                this.opposedChar = 'WS';
+            } else if (this.isKnockDown) {
+                this.opposedTarget = this.targetActor?.characteristics?.strength?.total ?? 0;
+                this.opposedChar = 'S';
+            }
+        }
 
         await updateWeaponModifiers(this);
         await updateAttackSpecials(this);
@@ -274,9 +296,20 @@ export class WeaponRollData extends RollData {
             this.baseTarget = this.sourceActor?.characteristics?.weaponSkill?.total ?? 0;
             this.baseChar = 'WS';
         }
+
+        if (this.action === 'Knock Down') {
+            this.baseTarget = this.sourceActor?.characteristics?.strength?.total ?? 0;
+            this.baseChar = 'S';
+        }
     }
 
     async finalize() {
+        // Remove Aim Modifier for All out attack in the case
+        // where aim was selected and then the attack changed
+        if(this.action === 'All Out Attack') {
+            this.modifiers['aim'] = 0;
+        }
+
         await calculateAmmoAttackBonuses(this);
         await calculateAttackSpecialAttackBonuses(this);
         await calculateWeaponModifiersAttackBonuses(this);
@@ -295,11 +328,6 @@ export class WeaponRollData extends RollData {
             this.modifiers = {
                 'attack': -20
             }
-        }
-
-        // Feint is base WS
-        if (this.action.includes('Feint')) {
-            this.modifiers = {}
         }
 
         await this.calculateTotalModifiers();
