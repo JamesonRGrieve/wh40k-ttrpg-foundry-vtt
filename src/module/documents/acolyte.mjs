@@ -12,6 +12,9 @@ import { DarkHeresyBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
 import { prepareForceFieldRoll } from '../prompts/force-field-prompt.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
+import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
+import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
 
 export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
 
@@ -131,10 +134,22 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
                     ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
-                await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                if(game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.simpleAttackRolls)) {
+                    if(item.isRanged) {
+                        await this.rollCharacteristic('ballisticSkill', item.name);
+                    } else {
+                        await this.rollCharacteristic('weaponSkill',  item.name);
+                    }
+                } else {
+                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                }
                 return;
             case 'psychicPower':
-                await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                if(game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.simplePsychicRolls)) {
+                    await this.rollCharacteristic('willpower',  item.name)
+                } else {
+                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                }
                 return;
             case 'forceField':
                 if (!item.system.equipped || !item.system.activated) {
@@ -524,5 +539,67 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
                 }
             }
         });
+    }
+
+    async rollCharacteristicCheck(characteristic) {
+        const char = this.getCharacteristicFuzzy(characteristic);
+        if(!char) {
+            game.dh.error('Unable to perform characteristic test. Could now find provided characteristic.', char);
+            return null;
+        }
+        return await this.rollCheck(char.total);
+    }
+
+    async opposedCharacteristicTest(targetActor, characteristic) {
+        const sourceRoll = await this.rollCharacteristicCheck(characteristic);
+        const targetRoll = targetActor ? await targetActor.rollCharacteristicCheck(characteristic) : null;
+        return await this.opposedTest(sourceRoll, targetRoll);
+    }
+
+    async rollCheck(targetNumber) {
+        const roll = await roll1d100();
+        const success = roll.total === 1 || (roll.total <= targetNumber && roll.total !== 100);
+        let dos = 0;
+        let dof = 0;
+
+        if(success) {
+            dos = 1 + getDegree(targetNumber, roll.total);
+        } else {
+            dof = 1 + getDegree(roll.total, targetNumber);
+        }
+
+        return {
+            roll: roll,
+            target: targetNumber,
+            success: success,
+            dos: dos,
+            dof: dof
+        }
+    }
+
+    async opposedTest(rollCheckSource, rollCheckTarget) {
+        if(!rollCheckSource) {
+            return null;
+        }
+        if(rollCheckTarget) {
+            let success = false;
+            if(rollCheckSource.success) {
+                if(!rollCheckTarget.success) {
+                    success = true;
+                } else {
+                    success = rollCheckSource.dos >= rollCheckTarget.dos;
+                }
+            }
+            return {
+                source: rollCheckSource,
+                target: rollCheckTarget,
+                success: success
+            }
+        } else {
+            return {
+                source: rollCheckSource,
+                success: true
+            };
+        }
     }
 }

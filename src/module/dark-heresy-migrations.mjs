@@ -2,7 +2,7 @@ import { DarkHeresySettings } from './dark-heresy-settings.mjs';
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 157;
+    const worldVersion = 161;
     const currentVersion = game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.worldVersion);
     if(worldVersion !== currentVersion && game.user.isGM) {
         ui.notifications.info("Upgrading the world, please wait...");
@@ -46,6 +46,19 @@ export async function checkAndMigrateWorld() {
                         'Added missing plentiful availability.',
                         'Added Drugs and Consumables compendium with information from the core book.',
                         'Added support for creating new specialist skills.'
+                    ]
+                });
+                break;
+            case 161:
+                await releaseNotes({
+                    version: '1.6.1',
+                    notes: [
+                        'Added Game Settings -> Configure Settings -> Options to enable simple attack and psychic rolls if preferred.',
+                        'Added support for Knockdown, Feint, Suppressing Fire, and Stun attack actions.',
+                        'Added Fluid Action, Forearm Weapon Mounting, Pistol Grip, Compact, Modified-Stock, and Motion Predictor automation.',
+                        'Added active effect support for weapons and armour.',
+                        'Added Eye of Vengeance support for attacks.',
+                        'Added target size to automated modifiers for attacks.'
                     ]
                 });
                 break;

@@ -144,7 +144,7 @@ function allCombatActions() {
         {
             name: 'Feint',
             type: ['Half'],
-            subtype: ['Melee'],
+            subtype: ['Attack', 'Melee'],
             description: 'Opposed WS test; if character wins, his next Melee attack cannot be Evaded.',
         },
         {

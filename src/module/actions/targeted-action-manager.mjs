@@ -1,6 +1,8 @@
 import { prepareWeaponRoll } from '../prompts/weapon-prompt.mjs';
 import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
+import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
+import { SYSTEM_ID } from '../hooks-manager.mjs';
 
 export class TargetedActionManager {
 
@@ -8,14 +10,16 @@ export class TargetedActionManager {
         // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls) => {
             const bar = controls.find((c) => c.name === 'token');
-            bar.tools.push({
-                name: 'Attack',
-                title: 'Attack',
-                icon: 'fas fa-swords',
-                visible: true,
-                onClick: async () => DHTargetedActionManager.performWeaponAttack(),
-                button: true,
-            });
+            if (!game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.simpleAttackRolls)) {
+                bar.tools.push({
+                    name: 'Attack',
+                    title: 'Attack',
+                    icon: 'fas fa-swords',
+                    visible: true,
+                    onClick: async () => DHTargetedActionManager.performWeaponAttack(),
+                    button: true,
+                });
+            }
         });
     }
 
