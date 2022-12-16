@@ -3,6 +3,8 @@ import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './da
 import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.mjs';
 import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
+import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
 
 export class ActionData {
     id = uuid();
