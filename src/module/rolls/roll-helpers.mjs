@@ -22,6 +22,22 @@ export function getDegree(a, b) {
     return Math.floor(a / 10) - Math.floor(b / 10);
 }
 
+export function getOpposedDegrees(dos, dof, opposedDos, opposedDof) {
+    if(dos > 0) {
+        if(opposedDos > 0) {
+            return dos - opposedDos;
+        } else {
+            return dos + opposedDof;
+        }
+    } else {
+        if (opposedDos > 0) {
+            return -1 * (dof + opposedDos);
+        } else {
+            return -1 * (dof - opposedDof);
+        }
+    }
+}
+
 export async function roll1d100() {
     let formula = '1d100';
     const roll = new Roll(formula, {});

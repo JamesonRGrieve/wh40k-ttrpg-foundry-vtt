@@ -145,12 +145,14 @@
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Aim</span>
-                        <select class="dh-field__input" data-dtype="Number" name="modifiers.aim">
-                            {{selectOptions @root.aims selected=aim}}
-                        </select>
-                    </div>
+                    {{#if @root.canAim}}
+                        <div class="dh-field__wrapper">
+                            <span class="dh-field__span">Aim</span>
+                            <select class="dh-field__input" data-dtype="Number" name="modifiers.aim">
+                                {{selectOptions @root.aims selected=aim}}
+                            </select>
+                        </div>
+                    {{/if}}
                     <div class="dh-field__wrapper">
                         <span class="dh-field__span">Modifier</span>
                         <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />

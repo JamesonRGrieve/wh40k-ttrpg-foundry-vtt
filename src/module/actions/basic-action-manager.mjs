@@ -4,6 +4,8 @@ import { AssignDamageData } from '../rolls/assign-damage-data.mjs';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-prompt.mjs';
 import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { Hit } from '../rolls/damage-data.mjs';
+import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
+import { SYSTEM_ID } from '../hooks-manager.mjs';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
