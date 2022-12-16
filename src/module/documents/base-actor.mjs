@@ -51,14 +51,14 @@ export class DarkHeresyBaseActor extends Actor {
         this._computeMovement();
     }
 
-    async rollCharacteristic(characteristicName) {
+    async rollCharacteristic(characteristicName, override) {
         const characteristic = this.characteristics[characteristicName];
 
         const simpleSkillData = new SimpleSkillData();
         const rollData = simpleSkillData.rollData;
         rollData.actor = this;
         rollData.nameOverride = characteristic.label;
-        rollData.type = 'Characteristic';
+        rollData.type = override ? override : 'Characteristic';
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
         await prepareSimpleRoll(simpleSkillData);
