@@ -7,17 +7,6 @@ export function getHitLocationForRoll(roll) {
     return creatureHitLocations().find((i) => (reverseInt >= i.min) && (reverseInt <= i.max))?.name;
 }
 
-export function getNextHitLocation(previousHit) {
-    game.dh.log('getNextHitLocation', previousHit);
-    const hitArray = hitLocationNames();
-    let nextIndex = hitLocationNames().indexOf(previousHit) + 1;
-    if (nextIndex >= hitArray.length) {
-        nextIndex = 0;
-    }
-    game.dh.log('getNextHitLocation', { hitArray, nextIndex });
-    return hitArray[nextIndex];
-}
-
 export function hitDropdown() {
     const dropdown = {};
     creatureHitLocations().forEach((i) => {
@@ -28,6 +17,59 @@ export function hitDropdown() {
 
 export function hitLocationNames() {
     return creatureHitLocations().map((i) => i.name);
+}
+
+export function additionalHitLocations() {
+    return {
+        'Head': [
+            'Head',
+            'Head',
+            'Right Arm',
+            'Body',
+            'Left Arm',
+            'Body'
+        ],
+        'Right Arm': [
+            'Right Arm',
+            'Right Arm',
+            'Body',
+            'Head',
+            'Body',
+            'Right Arm'
+        ],
+        'Left Arm': [
+            'Left Arm',
+            'Left Arm',
+            'Body',
+            'Head',
+            'Body',
+            'Left Arm'
+        ],
+        'Body': [
+            'Body',
+            'Body',
+            'Left Arm',
+            'Head',
+            'Right Arm',
+            'Body'
+        ],
+        'Right Leg': [
+            'Right Leg',
+            'Right Leg',
+            'Body',
+            'Right Arm',
+            'Head',
+            'Body'
+        ],
+        'Left Leg': [
+            'Left Leg',
+            'Left Leg',
+            'Body',
+            'Left Arm',
+            'Head',
+            'Body'
+        ]
+    }
 }
 
 export function creatureHitLocations() {
