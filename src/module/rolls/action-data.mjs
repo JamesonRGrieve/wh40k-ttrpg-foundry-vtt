@@ -221,15 +221,12 @@ export class ActionData {
     }
 
     async calculateHits() {
-        let lastLocation = '';
         if (this.rollData.success || this.rollData.isThrown) {
-            let hit = await Hit.createHit(this);
-            lastLocation = hit.location;
+            let hit = await Hit.createHit(this, 0);
             this.damageData.hits.push(hit);
 
             for (let i = 0; i < this.damageData.additionalHits; i++) {
-                hit = await Hit.createHit(this, lastLocation);
-                lastLocation = hit.location;
+                hit = await Hit.createHit(this, i + 1);
                 this.damageData.hits.push(hit);
             }
         }

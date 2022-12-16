@@ -1,4 +1,4 @@
-import { getHitLocationForRoll, getNextHitLocation } from '../rules/hit-locations.mjs';
+import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.mjs';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
 import {
@@ -45,11 +45,11 @@ export class Hit {
     scatter = {};
 
     /**
-     * @param attackData {AttackData}
-     * @param lastHit
+     * @param attackData
+     * @param hitNumber
      * @returns {Promise<Hit>}
      */
-    static async createHit(attackData, lastHit = undefined) {
+    static async createHit(attackData, hitNumber) {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
         hit._totalDamage();
@@ -60,11 +60,8 @@ export class Hit {
         if (attackData.rollData.isCalledShot) {
             hit.location = attackData.rollData.calledShotLocation;
         } else {
-            if (lastHit) {
-                hit.location = getNextHitLocation(lastHit);
-            } else {
-                hit.location = getHitLocationForRoll(attackData.rollData.roll.total);
-            }
+            const initialHit = getHitLocationForRoll(attackData.rollData.roll.total);
+            hit.location = additionalHitLocations()[initialHit][hitNumber <= 5 ? hitNumber : 5];
         }
 
         // Determine Righteous Fury Effects
