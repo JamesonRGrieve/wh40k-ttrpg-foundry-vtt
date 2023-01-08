@@ -170,7 +170,7 @@ export class ActionData {
                     actionItem.isPsychicBarrage ||
                     this.rollData.action === 'Suppressing Fire - Semi' ||
                     this.rollData.action === 'Suppressing Fire - Full') {
-                    if (this.rollData.hasWeaponModification('Fluid Action')) {
+                    if (actionItem.isRanged && this.rollData.hasWeaponModification('Fluid Action')) {
                         this.rollData.dos += 1;
                     }
 
