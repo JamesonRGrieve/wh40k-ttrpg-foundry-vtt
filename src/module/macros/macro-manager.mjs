@@ -74,6 +74,7 @@ export async function createSkillMacro(data, slot) {
 
     const { skill, speciality, name } = data.data;
     let macroName = `${data.actorName}: ${name}`;
+    game.dh.debug('Creating macro with name: ' + macroName);
 
     // Setup macro data.
     let command = `game.dh.rollSkillMacro("${data.actorId}", "${skill}");`;
@@ -83,10 +84,10 @@ export async function createSkillMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        macroName,
+        name: macroName,
         img: 'systems/dark-heresy-2nd/icons/talents/red/r_36.png',
         type: 'script',
-        command,
+        command: command,
         flags: { 'dh.skillMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
@@ -113,10 +114,10 @@ export async function createCharacteristicMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        macroName,
+        name: macroName,
         img: 'systems/dark-heresy-2nd/icons/talents/violet/p_05.png',
         type: 'script',
-        command,
+        command: command,
         flags: { 'dh.characteristicMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
