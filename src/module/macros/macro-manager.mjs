@@ -74,7 +74,7 @@ export async function createSkillMacro(data, slot) {
 
     const { skill, speciality, name } = data.data;
     let macroName = `${data.actorName}: ${name}`;
-    game.dh.debug('Creating macro with name: ' + macroName);
+    game.dh.log('Creating macro with name: ' + macroName);
 
     // Setup macro data.
     let command = `game.dh.rollSkillMacro("${data.actorId}", "${skill}");`;
