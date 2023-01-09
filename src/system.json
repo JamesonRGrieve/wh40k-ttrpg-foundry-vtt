@@ -2,7 +2,7 @@
   "id": "dark-heresy-2nd",
   "title": "Dark Heresy 2nd Edition",
   "description": "Dark Heresy 2nd Edition - Foundry VTT",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "compatibility": {
     "minimum": 10,
     "verified": "10.291",
@@ -134,7 +134,7 @@
   "secondaryTokenAttribute": "fate",
   "url": "https://github.com/mrkeathley/dark-heresy-2nd-vtt",
   "manifest": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/system.json",
-  "download": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/dark-heresy-2nd-1.6.2.zip",
+  "download": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/dark-heresy-2nd-1.6.3.zip",
   "license": "LICENSE.txt",
   "bugs": "https://github.com/mrkeathley/dark-heresy-2nd-vtt/issues"
 }
