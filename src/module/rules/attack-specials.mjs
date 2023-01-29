@@ -60,7 +60,7 @@ export async function calculateAttackSpecialAttackBonuses(rollData) {
         if (!item.isAttackSpecial) continue;
         switch (item.name) {
             case 'Scatter':
-                if (this.data.rangeName === 'Point Blank' || this.data.rangeName === 'Short Range') {
+                if (rollData.rangeName === 'Point Blank' || rollData.rangeName === 'Short Range') {
                     rollData.specialModifiers['Scatter'] = 10;
                 }
                 break;
