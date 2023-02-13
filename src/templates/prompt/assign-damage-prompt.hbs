@@ -41,7 +41,12 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="dh-field__wrapper">
+                    <span class="dh-field__span">Damage Type</span>
+                    <select class="dh-field__input" name="hit.damageType" id="damageType">
+                        {{selectOptions damageType selected=this.hit.damageType}}
+                    </select>
+                </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Damage</span>
                     <input class="dh-field__input" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
