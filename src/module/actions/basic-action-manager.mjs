@@ -107,33 +107,38 @@ export class BasicActionManager {
     async _assignDamage(event) {
         event.preventDefault();
         const div = $(event.currentTarget);
-        const rollId = div.data('rollId');
-        const hit = div.data('hitIndex');
-        const actionData = this.getActionData(rollId);
 
-        if (!actionData) {
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
-            return;
+        const location = div.data('location');
+        const totalDamage = div.data('totalDamage');
+        const totalPenetration = div.data('totalPenetration');
+        const totalFatigue = div.data('totalFatigue');
+        const damageType = div.data('damageType');
+
+        const hitData = new Hit();
+        hitData.location = location;
+        hitData.totalDamage = totalDamage;
+        hitData.totalPenetration = totalPenetration;
+        hitData.totalFatigue = totalFatigue;
+        hitData.damageType = damageType;
+
+        const targetActorId = div.data('targetActorId');
+
+        let targetActor;
+        if(targetActorId) {
+            targetActor = game.actors.get(targetActorId);
+        } else {
+            const targetedObjects = game.user.targets;
+            if (targetedObjects && targetedObjects.size > 0) {
+                const target = targetedObjects.values().next().value;
+                targetActor = target.actor;
+            }
         }
-
-        if (!actionData.rollData?.targetActor) {
+        if (!targetActor) {
             ui.notifications.warn(`Cannot determine target actor to assign hit.`);
             return;
         }
 
-        if(!Number.isInteger(hit)) {
-            ui.notifications.warn(`Unable to determine hit to assign.`);
-            return;
-        }
-        const hitIndex = Number.parseInt(hit);
-
-        if(hitIndex >= actionData.damageData.hits.length) {
-            ui.notifications.warn(`Unable to determine hit to assign.`);
-            return;
-        }
-
-        const hitData = actionData.damageData.hits[hitIndex];
-        const assignData = new AssignDamageData(actionData.rollData.targetActor, hitData);
+        const assignData = new AssignDamageData(targetActor, hitData);
         await prepareAssignDamageRoll(assignData);
     }
 
