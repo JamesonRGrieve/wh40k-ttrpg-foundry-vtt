@@ -1,11 +1,12 @@
 import { hitDropdown } from '../rules/hit-locations.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
+import { damageTypeDropdown } from '../rules/damage-type.mjs';
 
 export class AssignDamageData {
     locations = hitDropdown();
     actor;
     hit;
-
+    damageType = damageTypeDropdown();
     ignoreArmour = false;
 
     armour = 0;
