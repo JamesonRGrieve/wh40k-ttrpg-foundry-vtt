@@ -94,6 +94,13 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
             damage: weapon.system.damage,
             damageType: weapon.system.damageType,
             penetration: weapon.system.penetration,
+            targetActor: () => {
+                const targetedObjects = game.user.targets;
+                if (targetedObjects && targetedObjects.size > 0) {
+                    const target = targetedObjects.values().next().value;
+                    return target.actor;
+                }
+            }
         });
     }
 
