@@ -79,6 +79,7 @@ Enable Debug with: game.dh.debug = true
         // Add custom constants for configuration.
         CONFIG.dh = DarkHeresy;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
+        CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Define custom Document classes
         CONFIG.Actor.documentClass = DarkHeresyActorProxy;
