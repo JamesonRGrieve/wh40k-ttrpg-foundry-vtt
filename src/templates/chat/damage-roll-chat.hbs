@@ -24,6 +24,20 @@
                 <span>Penetration</span>
                 <span>{{penetration}}</span>
             </div>
+
+            {{#if targetActor}}
+                <div class='dh-roll__controls-1'>
+                    <div class="dh-control-button roll-control__assign-damage"
+                            data-location="Body"
+                            data-total-damage="{{roll.total}}"
+                            data-total-penetration="{{penetration}}"
+                            data-target-uuid="{{targetActor.uuid}}"
+                            data-damage-type="{{damageType}}">
+                        <span class="dh-control-button__span material-icons">api</span>
+                        <span class="dh-control-button__label">Assign Damage</span>
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
     {{/with}}
