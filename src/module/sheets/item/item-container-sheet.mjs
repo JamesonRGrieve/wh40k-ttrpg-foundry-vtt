@@ -58,8 +58,8 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
 
                 if (data.actor) {
                     actor = data.actor;
-                } else if (data.actorId) {
-                    actor = game.actors.get(data.actorId);
+                } else if (data.uuid) {
+                    actor = await fromUuid(data.uuid);
                 }
 
                 // Check if Item already Exists

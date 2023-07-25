@@ -121,11 +121,14 @@ export class BasicActionManager {
         hitData.totalFatigue = totalFatigue;
         hitData.damageType = damageType;
 
-        const targetActorId = div.data('targetActorId');
+        const targetUuid = div.data('targetUuid');
 
         let targetActor;
-        if(targetActorId) {
-            targetActor = game.actors.get(targetActorId);
+        if (targetUuid) {
+            targetActor = await fromUuid(targetUuid);
+            if (targetActor.actor != undefined) {
+                targetActor = targetActor.actor;
+            }
         } else {
             const targetedObjects = game.user.targets;
             if (targetedObjects && targetedObjects.size > 0) {
@@ -146,7 +149,7 @@ export class BasicActionManager {
         event.preventDefault();
         const div = $(event.currentTarget);
         console.log(div);
-        const actorId = div.data('actorId');
+        const uuid = div.data('uuid');
         const damageType = div.data('type');
         const ignoreArmour = div.data('ignoreArmour');
         const location = div.data('location');
@@ -154,7 +157,7 @@ export class BasicActionManager {
         const penetration = div.data('penetration');
         const fatigue = div.data('fatigue');
 
-        const actor = game.actors.get(actorId);
+        const actor = (await fromUuid(uuid)).actor;
         if (!actor) {
             ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
