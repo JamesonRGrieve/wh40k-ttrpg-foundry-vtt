@@ -36,6 +36,8 @@ import { DarkHeresyForceFieldSheet } from './sheets/item/force-field-sheet.mjs';
 import { checkAndMigrateWorld } from './dark-heresy-migrations.mjs';
 import { DHTourMain } from './tours/main-tour.mjs';
 
+import * as documents from './documents/_module.mjs'
+
 export const SYSTEM_ID = 'dark-heresy-2nd';
 
 export class HooksManager {
@@ -65,7 +67,7 @@ Enable Debug with: game.dh.debug = true
 
         const consolePrefix = 'Dark Heresy | ';
         game.dh = {
-            debug: false,
+            debug: true,
             log: (s, o) => (!!game.dh.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
             error: (s, o) => console.error(`${consolePrefix}${s}`, o),
@@ -74,7 +76,7 @@ Enable Debug with: game.dh.debug = true
             rollCharacteristicMacro,
         };
 
-        // CONFIG.debug.hooks = true;
+        CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
         CONFIG.dh = DarkHeresy;
@@ -83,11 +85,17 @@ Enable Debug with: game.dh.debug = true
 
         // Define custom Document classes
         CONFIG.Actor.documentClass = DarkHeresyActorProxy;
+        CONFIG.Actor.documentClasses = {
+            acolyte: documents.DarkHeresyAcolyte,
+            npc: documents.DarkHeresyNPC,
+            vehicle: documents.DarkHeresyVehicle,
+
+        };
         CONFIG.Item.documentClass = DarkHeresyItem;
 
         // Register sheet application classes
         Actors.unregisterSheet('core', ActorSheet);
-        Actors.registerSheet(SYSTEM_ID, AcolyteSheet, { makeDefault: true });
+        Actors.registerSheet(SYSTEM_ID, AcolyteSheet, {types: ["acolyte"], makeDefault: true });
         Actors.registerSheet(SYSTEM_ID, NpcSheet, {types: ['npc'], makeDefault: true });
         Actors.registerSheet(SYSTEM_ID, VehicleSheet, {types: ['vehicle'], makeDefault: true });
 
