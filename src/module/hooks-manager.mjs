@@ -67,7 +67,7 @@ Enable Debug with: game.dh.debug = true
 
         const consolePrefix = 'Dark Heresy | ';
         game.dh = {
-            debug: true,
+            debug: false,
             log: (s, o) => (!!game.dh.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
             error: (s, o) => console.error(`${consolePrefix}${s}`, o),
@@ -76,7 +76,7 @@ Enable Debug with: game.dh.debug = true
             rollCharacteristicMacro,
         };
 
-        CONFIG.debug.hooks = true;
+        //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
         CONFIG.dh = DarkHeresy;
