@@ -130,6 +130,20 @@ export function homeworlds() {
             source: 'PG 24 EI',
         },
         {
+            name: 'Agri-World (Novo Arcadia)',
+            bonus_characteristics: ['Fellowship', 'Strength'],
+            negative_characteristic: 'Agility',
+            fate_threshold: 2,
+            emperors_blessing: 7,
+            home_world_bonus: {
+                name: 'An Unforgetable Encounter',
+                benefit: 'Due to a unfortunate encounter during warp travel which left this character scarred if they are surprised, non-surprised attackers do not gain the normal +30 bonus to their Weapon Skill and Ballistic Skill tests when targeting this character.',
+            },
+            aptitude: 'Strength',
+            wounds: '8+1d5',
+            source: 'PG 24 EI',
+        },
+        {
             name: 'Feudal World',
             bonus_characteristics: ['Perception', 'Weapon Skill'],
             negative_characteristic: 'Intelligence',
