@@ -214,6 +214,12 @@ export class Hit {
                 this.modifiers['maximal'] = maximalRoll.total;
             }
 
+            // Mighty Shot
+            if (sourceActor.hasTalent('Mighty Shot')) {
+                const bsBonus = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
+                this.modifiers['mighty shot'] = Math.ceil(bsBonus / 2);
+            }
+
             // Deathdealer
             if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Ranged'])) {
                 const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
