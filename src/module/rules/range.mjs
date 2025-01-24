@@ -23,7 +23,7 @@ async function calculateWeaponMaxRange(rollData) {
     } else {
         try {
             const rangeCalculation = new Roll(weapon.system.range, rollData);
-            await rangeCalculation.evaluate({ async: true });
+            rangeCalculation.evaluateSync();
             range = rangeCalculation.total ?? 0;
         } catch (error) {
             ui.notifications.warn('Range formula failed - setting to 0');

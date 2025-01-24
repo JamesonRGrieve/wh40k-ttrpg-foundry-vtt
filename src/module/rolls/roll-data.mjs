@@ -160,7 +160,7 @@ export class RollData {
         const rollDetails = this.modifiersToRollData();
         try {
             const roll = new Roll(rollDetails.formula, rollDetails.params);
-            await roll.evaluate({ async: true });
+            roll.evaluateSync();
             if (roll.total > 60) {
                 this.modifierTotal = 60;
             } else if (roll.total < -60) {

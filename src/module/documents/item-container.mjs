@@ -11,11 +11,11 @@ export class DarkHeresyItemContainer extends Item {
         return true;
     }
 
-    static async _onCreateDocuments(items, context) {
+    static async _onCreateOperation(items, context, user) {
         // Parent is not an item -- ignore
-        if (!(context.parent instanceof Item)) return super._onCreateDocuments(items, context);
+        if (!(context.parent instanceof Item)) return super._onCreateOperation(items, context, user);
         // None of the items being created are containers -- ignore
-        if (items.filter((item) => item.system.container).length === 0) return super._onCreateDocuments(items, context);
+        if (items.filter((item) => item.system.container).length === 0) return super._onCreateOperation(items, context, user);
 
         const toCreate = [];
         for (const item of items) {
