@@ -333,7 +333,14 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
     }
 
     _computeArmour() {
-        let locations = game.system.documentTypes.Item.templates.armourPoints.armourPoints;
+        let locations = [
+            'body',
+            'head',
+            'leftArm',
+            'rightArm',
+            'leftLeg',
+            'rightLeg'
+        ]
         let toughness = this.characteristics.toughness;
         let traitBonus = 0;
 
@@ -355,7 +362,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
         }
 
         // Create Basic Armour Point Object
-        this.system.armour = Object.keys(locations).reduce(
+        this.system.armour = locations.reduce(
             (accumulator, location) =>
                 Object.assign(accumulator, {
                     [location]: {
@@ -374,21 +381,21 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
             .filter((item) => item.system.equipped)
             .filter((item) => item.system.hasArmourPoints)
             .forEach((cybernetic) => {
-                Object.keys(locations).forEach((location) => {
+                locations.forEach((location) => {
                     let armourVal = cybernetic.system.armourPoints[location] || 0;
                     this.armour[location].total += Number(armourVal);
                 });
             });
 
         // object for storing the max armour
-        let maxArmour = Object.keys(locations).reduce((acc, location) => Object.assign(acc, { [location]: 0 }), {});
+        let maxArmour = locations.reduce((acc, location) => Object.assign(acc, { [location]: 0 }), {});
 
         // for each item, find the maximum armour val per location
         this.items
             .filter((item) => item.type === 'armour' )
             .filter((item) => item.system.equipped)
             .reduce((acc, armour) => {
-                Object.keys(locations).forEach((location) => {
+                locations.forEach((location) => {
                     let armourVal = armour.system.armourPoints[location] || 0;
                     // Coerce -- sometimes this is a string??
                     armourVal = Number(armourVal);
