@@ -78,6 +78,13 @@ export class AssignDamageData {
         }
 
         if(this.criticalDamageTaken > 0) {
+
+            // Handle True Grit Talent
+            if(this.actor.system.talents.includes('True Grit')) {
+                // Reduces by Toughness Bonus to minimum of 1
+                this.criticalDamageTaken = this.criticalDamageTaken - this.tb < 1 ? 1 : this.criticalDamageTaken - this.tb;
+            }
+
             this.criticalEffect = getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
         }
 
