@@ -10,7 +10,7 @@ export class ForceFieldDialog extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             title: 'Force Field',
             id: 'dh-force-field-dialog',
             template: 'systems/dark-heresy-2nd/templates/prompt/force-field-prompt.hbs',

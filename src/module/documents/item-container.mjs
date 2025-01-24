@@ -109,7 +109,7 @@ export class DarkHeresyItemContainer extends Item {
         let newContained = contained.map((existing) => {
             let theUpdate = data.find((update) => update._id === existing._id);
             if (theUpdate) {
-                const newData = mergeObject(theUpdate, existing, {
+                const newData = foundry.utils.mergeObject(theUpdate, existing, {
                     overwrite: false,
                     insertKeys: true,
                     insertValues: true,
