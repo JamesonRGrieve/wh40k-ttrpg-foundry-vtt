@@ -10,7 +10,7 @@ export class AssignDamageDialog extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             title: 'Assign Damage',
             id: 'dh-assign-damage-dialog',
             template: 'systems/dark-heresy-2nd/templates/prompt/assign-damage-prompt.hbs',

@@ -14,7 +14,7 @@ export class WeaponAttackDialog extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             title: 'Weapon Attack',
             id: 'dh-weapon-attack-dialog',
             template: 'systems/dark-heresy-2nd/templates/prompt/weapon-roll-prompt.hbs',

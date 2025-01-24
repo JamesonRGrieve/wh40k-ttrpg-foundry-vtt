@@ -8,7 +8,7 @@ import { prepareAssignDamageRoll } from '../../prompts/assign-damage-prompt.mjs'
 
 export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             width: 1000,
             height: 750,
             resizable: true,

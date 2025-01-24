@@ -2,7 +2,7 @@ import { toggleUIExpanded } from '../../rules/config.mjs';
 
 export class DarkHeresyItemSheet extends ItemSheet {
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             width: 650,
             height: 500,
             tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'description' }],

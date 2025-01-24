@@ -2,7 +2,7 @@ import { DarkHeresyItemSheet } from './item-sheet.mjs';
 
 export class DarkHeresyJournalEntrySheet extends DarkHeresyItemSheet {
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             width: 800,
             height: 350,
             tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'stats' }],
