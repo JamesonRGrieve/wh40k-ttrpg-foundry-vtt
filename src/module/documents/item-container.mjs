@@ -140,7 +140,7 @@ export class DarkHeresyItemContainer extends Item {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
         game.dh.log('ItemContainer: ' + this.name + ' prepareEmbeddedDocuments');
-        const containedItems = getProperty(this.flags, 'itemcollection.contentsData') ?? [];
+        const containedItems = foundry.utils.getProperty(this.flags, 'itemcollection.contentsData') ?? [];
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
