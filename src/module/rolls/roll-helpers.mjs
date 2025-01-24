@@ -51,7 +51,7 @@ export async function sendActionDataToChat(actionData) {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        type: CONST.CHAT_MESSAGE_STYLES.OTHER,
     };
     if (actionData.rollData.roll) {
         chatData.roll = actionData.rollData.roll;
