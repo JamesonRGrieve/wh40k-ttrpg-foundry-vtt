@@ -333,7 +333,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
     }
 
     _computeArmour() {
-        let locations = game.system.template.Item.templates.armourPoints.armourPoints;
+        let locations = game.system.documentTypes.Item.templates.armourPoints.armourPoints;
         let toughness = this.characteristics.toughness;
         let traitBonus = 0;
 
