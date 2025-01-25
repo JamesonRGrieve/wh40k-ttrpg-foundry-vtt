@@ -103,7 +103,7 @@ export class Hit {
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {
             game.dh.log('Modifying dice due to tearing');
-            this.damageRoll.terms.filter(term => term instanceof Die).forEach(die => {
+            this.damageRoll.terms.filter(term => term instanceof foundry.dice.terms.Die).forEach(die => {
                 if (die.modifiers.includes('kh')) return;
                 die.modifiers.push('kh' + die.number);
                 die.number += 1;
