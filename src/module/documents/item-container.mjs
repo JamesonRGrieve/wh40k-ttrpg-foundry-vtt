@@ -61,12 +61,12 @@ export class DarkHeresyItemContainer extends Item {
         if (!this.system.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
         if (!Array.isArray(data)) data = [data];
         game.dh.log('ItemContainer: ' + this.name + ' createEmbeddedDocuments', data);
-        const currentItems = duplicate(getProperty(this, 'flags.itemcollection.contentsData') ?? []);
+        const currentItems = foundry.utils.duplicate(foundry.utils.getProperty(this, 'flags.itemcollection.contentsData') ?? []);
 
         if (data.length) {
             for (let itemData of data) {
                 let clone = JSON.parse(JSON.stringify(itemData));
-                clone._id = randomID();
+                clone._id = foundry.utils.randomID();
                 clone = new CONFIG.Item.documentClass(clone, { parent: this }).toJSON();
                 currentItems.push(clone);
             }
@@ -200,6 +200,6 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     async setCollection(item, contents) {
-        await item.update({ 'flags.itemcollection.contentsData': duplicate(contents) });
+        await item.update({ 'flags.itemcollection.contentsData': foundry.utils.duplicate(contents) });
     }
 }
