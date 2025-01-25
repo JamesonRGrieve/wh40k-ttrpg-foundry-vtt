@@ -16,7 +16,7 @@ data:
         burst: 2
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 151
     special:
         tearing: true
@@ -44,7 +44,7 @@ data:
         burst: 3
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 151
     special:
         tearing: true
@@ -72,7 +72,7 @@ data:
         burst: 2
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: PG 42 EI
     special:
         reliable: true
@@ -101,7 +101,7 @@ data:
         burst: 2
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: PG 42 EI
     special:
         reliable: true
@@ -130,7 +130,7 @@ data:
         burst: 0
         full: 6
         single: 0
-    reload: Full
+    reload: 'Full Action'
     source: PG 42 EI
     special:
         reliable: true
@@ -159,7 +159,7 @@ data:
         burst: 2
         full: 4
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: PG 42 EI
     special:
         reliable: true
@@ -189,7 +189,7 @@ data:
         burst: 0
         full: 6
         single: 0
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 151
     special:
         tearing: true
@@ -217,7 +217,7 @@ data:
         burst: 2
         full: 5
         single: 0
-    reload: 3 Full
+    reload: '3 Full Actions'
     source: PG 41 EB
     special:
         daemonbane: true
@@ -247,7 +247,7 @@ data:
         burst: 2
         full: 4
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 151
     special:
         storm: true
@@ -508,7 +508,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 156
     special:
         concussive: 1
@@ -653,7 +653,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 3 Full
+    reload: '3 Full Actions'
     source: PG 43 EO
     special:
         blast: 5
@@ -683,7 +683,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 156
     special:
         accurate: true
@@ -771,7 +771,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: PG 43 EO
     special: {}
     type: Exotic
@@ -857,7 +857,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 156
     special:
         snare: 0
@@ -2140,7 +2140,7 @@ data:
         burst: 3
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 153
     special:
         reliable: true
@@ -2168,7 +2168,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Half
+    reload: 'Half Action'
     source: DH2 - 153
     special:
         unreliable: true
@@ -2196,7 +2196,7 @@ data:
         burst: 2
         full: 0
         single: 1
-    reload: Half
+    reload: 'Half Action'
     source: DH2 - 153
     special:
         reliable: true
@@ -2224,7 +2224,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 154
     special:
         accurate: true
@@ -2281,7 +2281,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 154
     special: {}
     type: Launcher
@@ -2308,7 +2308,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: PG 42 EI
     special:
         concussive: 1
@@ -2396,7 +2396,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Half
+    reload: 'Half Action'
     source: DH2 - 154
     special:
         primitive: 6
@@ -2425,7 +2425,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: PG 44 EI
     special:
         concussive: 2
@@ -2454,7 +2454,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: DH2 - 154
     special:
         primitive: 7
@@ -2482,7 +2482,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Half
+    reload: 'Half Action'
     source: PG 42 EI
     special:
         primitive: 7
@@ -2573,7 +2573,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: PG 42 EI
     special:
         inaccurate: true
@@ -2803,7 +2803,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: PG 44 EI
     special:
         inaccurate: true
@@ -2920,7 +2920,7 @@ data:
         burst: 2
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: PG 44 EI
     special:
         inaccurate: true
@@ -3213,7 +3213,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 155
     special:
         melta: true
@@ -3241,7 +3241,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 155
     special:
         melta: true
@@ -3298,7 +3298,7 @@ data:
         burst: 2
         full: 0
         single: 1
-    reload: 3 Full
+    reload: '3 Full Actions'
     source: DH2 - 155
     special:
         maximal: true
@@ -3327,7 +3327,7 @@ data:
         burst: 5
         full: 10
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: PG 44 EI
     special:
         reliable: true
@@ -3822,7 +3822,7 @@ data:
         burst: 3
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: DH2 - 155
     special:
         reliable: true
@@ -3850,7 +3850,7 @@ data:
         burst: 3
         full: 10
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 155
     special: {}
     type: Solid Projectile
@@ -3877,7 +3877,7 @@ data:
         burst: 0
         full: 6
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 155
     special: {}
     type: Solid Projectile
@@ -3904,7 +3904,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: DH2 - 155
     special:
         '!': true
@@ -3932,7 +3932,7 @@ data:
         burst: 0
         full: 8
         single: 0
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: DH2 - 156
     special: {}
     type: Solid Projectile
@@ -3959,7 +3959,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: DH2 - 156
     special:
         scatter: true
@@ -3987,7 +3987,7 @@ data:
         burst: 3
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 156
     special:
         scatter: true
@@ -4015,7 +4015,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 156
     special:
         accurate: true
@@ -4044,7 +4044,7 @@ data:
         burst: 3
         full: 0
         single: 1
-    reload: Full
+    reload: 'Full Action'
     source: DH2 - 156
     special: {}
     type: Solid Projectile
@@ -4071,7 +4071,7 @@ data:
         burst: 0
         full: 0
         single: 1
-    reload: 2 Full
+    reload: '2 Full Actions'
     source: DH2 - 156
     special:
         reliable: true
