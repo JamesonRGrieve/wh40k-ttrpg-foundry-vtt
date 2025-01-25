@@ -99,12 +99,12 @@ export class AcolyteSheet extends ActorContainerSheet {
 
                 // Roll Wounds
                 let woundRoll = new Roll(this.actor.backgroundEffects.homeworld.wounds);
-                await woundRoll.evaluate({ async: true });
+                await woundRoll.evaluate();
                 this.actor.wounds.max = woundRoll.total;
 
                 // Roll Fate
                 let fateRoll = new Roll('1d10');
-                await fateRoll.evaluate({ async: true });
+                await fateRoll.evaluate();
                 this.actor.fate.max =
                     parseInt(this.actor.backgroundEffects.homeworld.fate_threshold) +
                     (fateRoll.total >= this.actor.backgroundEffects.homeworld.emperors_blessing ? 1 : 0);

@@ -105,7 +105,7 @@ export class ActionData {
             // Stun Action
             if(this.rollData.isStun) {
                 const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
-                await stunRoll.evaluate({ async: true });
+                await stunRoll.evaluate();
                 this.rollData.roll = stunRoll;
 
                 if(this.rollData.targetActor) {
