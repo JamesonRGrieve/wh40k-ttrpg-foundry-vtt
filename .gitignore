@@ -14,10 +14,10 @@ archive
 db-conversion
 **/foundry-core/**
 backup
+docker-data
 
 ## Secrets
 .env.secret
-
 
 ## Docker Development
 docker-compose.yml
