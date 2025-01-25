@@ -22,7 +22,7 @@ export async function prepareDamageRoll(rollData) {
                         rollData.pr = html.find('#pr')[0]?.value;
                         rollData.template = 'systems/dark-heresy-2nd/templates/chat/damage-roll-chat.hbs';
                         rollData.roll = new Roll(rollData.damage, rollData);
-                        await rollData.roll.evaluate({ async: true });
+                        await rollData.roll.evaluate();
 
                         actionData.rollData = rollData;
                         await sendActionDataToChat(actionData);

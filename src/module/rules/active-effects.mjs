@@ -19,7 +19,7 @@ export async function handleOnFire(actor) {
     context.success = rollTotal === 1 || (rollTotal <= context.target && rollTotal !== 100);
 
     const damageRoll = new Roll('1d10', {});
-    await damageRoll.evaluate({ async: true });
+    await damageRoll.evaluate();
     context.damage = damageRoll.total;
     await sendActiveEffectMessage(context);
 }

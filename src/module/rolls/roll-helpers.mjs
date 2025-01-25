@@ -41,7 +41,7 @@ export function getOpposedDegrees(dos, dof, opposedDos, opposedDof) {
 export async function roll1d100() {
     let formula = '1d100';
     const roll = new Roll(formula, {});
-    await roll.evaluate({ async: true });
+    await roll.evaluate();
     return roll;
 }
 

@@ -110,7 +110,7 @@ export class Hit {
             });
         }
 
-        await this.damageRoll.evaluate({ async: true });
+        await this.damageRoll.evaluate();
         game.dh.log('Damage Roll', this.damageRoll);
 
         this.damage = this.damageRoll.total;
@@ -123,7 +123,7 @@ export class Hit {
                 if (result.result >= righteousFuryThreshold) {
                     // Righteous fury hit
                     const righteousFuryRoll = new Roll('1d5', {});
-                    await righteousFuryRoll.evaluate({ async: true });
+                    await righteousFuryRoll.evaluate();
                     this.righteousFury.push({roll: righteousFuryRoll, effect: ''});
 
                     // DeathDealer
@@ -184,12 +184,12 @@ export class Hit {
                 if (attackData.rollData.hasAttackSpecial('Accurate')) {
                     if (attackData.rollData.dos >= 3) {
                         const accurateRoll = new Roll('1d10', {});
-                        await accurateRoll.evaluate({ async: true });
+                        await accurateRoll.evaluate();
                         this.modifiers['accurate'] = accurateRoll.total;
                     }
                     if (attackData.rollData.dos >= 5) {
                         const accurateRoll = new Roll('1d10', {});
-                        await accurateRoll.evaluate({ async: true });
+                        await accurateRoll.evaluate();
                         this.modifiers['accurate x 2'] = accurateRoll.total;
                     }
                 }
@@ -210,7 +210,7 @@ export class Hit {
             // Maximal
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 const maximalRoll = new Roll('1d10', {});
-                await maximalRoll.evaluate({ async: true });
+                await maximalRoll.evaluate();
                 this.modifiers['maximal'] = maximalRoll.total;
             }
 
@@ -247,7 +247,7 @@ export class Hit {
             this.hasPenetrationRoll = true;
             try {
                 this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
-                await this.penetrationRoll.evaluate({ async: true });
+                await this.penetrationRoll.evaluate();
                 this.penetration = this.penetrationRoll.total;
             } catch (error) {
                 ui.notifications.warn('Penetration formula failed - setting to 0');
