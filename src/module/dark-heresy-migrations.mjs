@@ -62,6 +62,14 @@ export async function checkAndMigrateWorld() {
                     ]
                 });
                 break;
+            case 180:
+                await releaseNotes({
+                    version: '1.8.0',
+                    notes: [
+                        'Added Foundry 12 support.',
+                        'Added True Grit talent support when assigning critical damage.'
+                    ]
+                });
             default:
                 break;
         }
