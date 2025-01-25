@@ -12,6 +12,11 @@ const fs = require("fs");
 const path = require("path");
 const zip = require("gulp-zip");
 
+const util = require('util');
+if (!util.isDate) {
+  util.isDate = (d) => Object.prototype.toString.call(d) === '[object Date]';
+}
+
 const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
 const SYSTEM_SCSS = ["src/scss/**/*.scss"];
 const STATIC_FILES = [
@@ -41,9 +46,19 @@ function compilePacks() {
     const db = new Datastore({ filename: path.resolve(__dirname, BUILD_DIR, "packs", `${folder}.db`), autoload: true });
     return gulp.src(path.join(PACK_SRC, folder, "/**/*.yml")).pipe(
         through2.obj((file, enc, cb) => {
-          let json = yaml.loadAll(file.contents.toString());
-          db.insert(json);
-          cb(null, file);
+          try {
+            const fileContents = file.contents.toString();
+            let json = yaml.loadAll(fileContents);
+            db.insert(json, (err, newDoc) => {
+              if (err) {
+                console.error(`Error inserting into Datastore:`, err);
+              }
+            });
+            cb(null, file);
+          } catch (err) {
+            console.error(`Error processing file ${file.path}:`, err);
+            cb(err, file);
+          }
         })
     );
   });

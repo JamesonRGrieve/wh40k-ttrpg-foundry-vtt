@@ -3,13 +3,13 @@ import { WeaponActionData } from '../rolls/action-data.mjs';
 
 export class WeaponAttackDialog extends FormApplication {
     /**
-     * @param weaponAttackData {WeaponActionData}
+     * @param weaponActionData {WeaponActionData}
      * @param options
      */
-    constructor(weaponAttackData = {}, options = {}) {
-        super(weaponAttackData, options);
-        this.weaponAttackData = weaponAttackData;
-        this.data = weaponAttackData.rollData;
+    constructor(weaponActionData = {}, options = {}) {
+        super(weaponActionData, options);
+        this.weaponAttackData = weaponActionData;
+        this.data = weaponActionData.rollData;
         this.initialized = false;
     }
 

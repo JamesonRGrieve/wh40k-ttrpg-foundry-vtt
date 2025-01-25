@@ -66,7 +66,7 @@ async function calculatePsychicAbilityMaxRange(rollData) {
     } else {
         try {
             const rangeCalculation = new Roll(rollData.power.system.range, rollData);
-            await rangeCalculation.evaluate({ async: true });
+            await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
         } catch (error) {
             ui.notifications.warn('Range formula failed - setting to 0');
