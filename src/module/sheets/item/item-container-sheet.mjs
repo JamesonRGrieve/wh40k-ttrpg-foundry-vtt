@@ -50,15 +50,11 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             } else {
                 game.dh.log('_onDrop data: ', data);
 
-                if (data.uuid) {
-                    item = await fromUuid(data.uuid);
-                } else {
-                    item = data.data;
-                }
+                item = data.data;
 
                 if (data.actor) {
                     actor = data.actor;
-                } else if (data.uuid) {
+                } else if (data.uuid && data.uuid.startsWith('Actor.')) {
                     actor = await fromUuid(data.uuid);
                 }
 
@@ -91,7 +87,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             }
             // drop from player characters or another bag.
             if (this.canAdd(item)) {
-                await this.item.createEmbeddedDocuments('Item', [item]);
+                await this.item.createNestedDocuments([item]);
                 if (actor && (actor.type === 'acolyte' || actor.isToken)) await actor.deleteEmbeddedDocuments('Item', [item._id]);
                 return false;
             }
@@ -99,7 +95,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             else if (this.item.parent) {
                 // this bag is owned by an actor - drop into the inventory instead.
                 if (actor && actor.type === 'acolyte') await actor.deleteEmbeddedDocuments('Item', [item._id]);
-                await this.item.parent.createEmbeddedDocuments('Item', [item]);
+                await this.item.parent.createNestedDocuments([item]);
                 ui.notifications.info('Item dropped back into actor.');
                 return false;
             }
@@ -129,7 +125,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             name: `New ${div.data('type').capitalize()}`,
             type: div.data('type'),
         };
-        await this.item.createEmbeddedDocuments('Item', [data]);
+        await this.item.createNestedDocuments([data]);
     }
 
     _onItemEdit(event) {
@@ -146,7 +142,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             content: '<p>Are you sure you would like to delete this?</p>',
             yes: () => {
                 const div = $(event.currentTarget);
-                this.item.deleteEmbeddedDocuments('Item', [div.data('itemId')]);
+                this.item.deleteNestedDocuments([div.data('itemId')]);
                 div.slideUp(200, () => this.render(false));
             },
             no: () => {},
@@ -179,7 +175,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
             data: item,
         };
         event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
-        await this.item.deleteEmbeddedDocuments('Item', [itemId]);
+        await this.item.deleteNestedDocuments([itemId]);
     }
 
     canAdd(itemData) {

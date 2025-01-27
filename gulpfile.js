@@ -22,7 +22,7 @@ const SYSTEM_SCSS = ["src/scss/**/*.scss"];
 const STATIC_FILES = [
   "src/icons/**/*",
   "src/module/**/*",
-  "!src/module/foundry-core/*",
+  "!src/module/foundry-core/**",
   "src/templates/**/*",
   "src/images/**/*",
   "src/*.json",
@@ -109,11 +109,11 @@ function cleanBuild() {
 }
 
 function watchUpdates() {
-  return gulp.watch("src/**/*", gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
+  return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
 }
 
 function watchCopy() {
-  return gulp.watch("src/**/*", gulp.series(copyFiles));
+  return gulp.watch(STATIC_FILES, gulp.series(copyFiles));
 }
 
 function createArchive() {
@@ -130,5 +130,5 @@ exports.clean = gulp.series(cleanBuild);
 exports.scss = gulp.series(compileScss);
 exports.packs = gulp.series(compilePacks);
 exports.copy = gulp.series(copyFiles, watchCopy);
-exports.build = gulp.series(cleanBuild, compileScss, copyFiles, createArchive);
-exports.default = gulp.series(cleanBuild, compileScss, copyFiles, watchUpdates);
+exports.build = gulp.series(cleanBuild, compileScss, copyFiles, compilePacks, createArchive);
+exports.default = gulp.series(cleanBuild, compileScss, copyFiles, compilePacks, watchUpdates);

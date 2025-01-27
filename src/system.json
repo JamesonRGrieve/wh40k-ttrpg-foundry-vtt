@@ -4,7 +4,7 @@
   "description": "Dark Heresy 2nd Edition - Foundry VTT",
   "version": "1.8.0",
   "compatibility": {
-    "minimum": 10,
+    "minimum": 12,
     "verified": "12.331",
     "maximum": 12
   },
