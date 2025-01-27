@@ -1,14 +1,50 @@
+import { SYSTEM_ID } from '../hooks-manager.mjs';
+
+export const DH_CONTAINER_ID = 'nested';
+
 export class DarkHeresyItemContainer extends Item {
     get actor() {
         if (this.parent instanceof Item) return null;
         return this.parent;
     }
 
-    get isEmbedded() {
-        // for items with an item parent we need to relax the definition a bit.
-        // TODO find out how to do this with proper wrapping
-        if (!(this.parent instanceof Item)) return this.parent !== null && this.documentName in this.parent.constructor.metadata.embedded;
-        return true;
+    isNestedItem() {
+        return this.parent instanceof Item;
+    }
+
+    setNestedManual(data) {
+        // Check if each layer of the object exists, and create it if it doesn't
+        if (!this.flags[SYSTEM_ID]) this.flags[SYSTEM_ID] = {};
+        if (!this.flags[SYSTEM_ID][DH_CONTAINER_ID]) this.flags[SYSTEM_ID][DH_CONTAINER_ID] = [];
+        // Set the value at the deepest level of the object
+        // Make array if not
+        if (!Array.isArray(data)) data = [data];
+        this.flags[SYSTEM_ID][DH_CONTAINER_ID] = data;
+    }
+
+    async setNested(data) {
+        // Make array if not
+        if (!Array.isArray(data)) data = [data];
+        return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, data);
+    }
+
+    getNested() {
+        return this.getFlag(SYSTEM_ID, DH_CONTAINER_ID) ?? [];
+    }
+
+    hasNested() {
+        return this.getNested().length > 0;
+    }
+
+    async convertNestedToItems() {
+        // Convert Nested to Items
+        game.dh.log('Convert ' + this.name + ' Nested', this.hasNested());
+        this.items = new foundry.utils.Collection();
+        for (const nestedData of this.getNested()) {
+            const item = new CONFIG.Item.documentClass(nestedData, { parent: this });
+            await this.items.set(nestedData._id, item);
+        }
+        game.dh.log('Item ' + this.name + ' items:', this.items);
     }
 
     static async _onCreateOperation(items, context, user) {
@@ -33,11 +69,11 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     hasWeaponModification(mod) {
-        return this.hasEmbeddedItem(mod, 'weaponModification');
+        return this.hasItemByType(mod, 'weaponModification');
     }
 
-    hasEmbeddedItem(item, type) {
-        game.dh.log('Check for Has Embedded', item);
+    hasItemByType(item, type) {
+        game.dh.log('Check for Has Nested Item', item);
         if (!this.system.container) return false;
         return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
     }
@@ -52,59 +88,36 @@ export class DarkHeresyItemContainer extends Item {
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
-    getEmbeddedDocument(embeddedName, id, { strict = false } = {}) {
-        if (!this.system.container) return super.getEmbeddedDocument(embeddedName, id, { strict });
-        return this.items.get(id);
-    }
-
-    async createEmbeddedDocuments(embeddedName, data, context) {
-        if (!this.system.container || embeddedName !== 'Item') return await super.createEmbeddedDocuments(embeddedName, data, context);
+    async createNestedDocuments(data) {
         if (!Array.isArray(data)) data = [data];
-        game.dh.log('ItemContainer: ' + this.name + ' createEmbeddedDocuments', data);
-        const currentItems = foundry.utils.duplicate(foundry.utils.getProperty(this, 'flags.itemcollection.contentsData') ?? []);
+        game.dh.log('ItemContainer: ' + this.name + ' createNestedDocuments', data);
+        const currentItems = this.getNested();
 
-        if (data.length) {
+        if (data.length > 0) {
             for (let itemData of data) {
                 let clone = JSON.parse(JSON.stringify(itemData));
                 clone._id = foundry.utils.randomID();
                 clone = new CONFIG.Item.documentClass(clone, { parent: this }).toJSON();
                 currentItems.push(clone);
             }
-            if (this.parent)
-                return await this.parent.updateEmbeddedDocuments('Item', [
-                    {
-                        '_id': this.id,
-                        'flags.itemcollection.contentsData': currentItems,
-                    },
-                ]);
-            else await this.setCollection(this, currentItems);
+
+            await this.setNested(currentItems);
         }
     }
 
-    async deleteEmbeddedDocuments(embeddedName, ids = [], options = {}) {
-        if (!this.system.container || embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, options);
-        game.dh.log('ItemContainer: ' + this.name + ' deleteEmbeddedDocuments', ids);
-        const containedItems = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
+    async deleteNestedDocuments(ids = []) {
+        game.dh.log('ItemContainer: ' + this.name + ' deleteNestedDocuments', ids);
+        const containedItems = this.getNested();
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id));
-        if (this.parent) {
-            await this.parent.updateEmbeddedDocuments('Item', [
-                {
-                    '_id': this.id,
-                    'flags.itemcollection.contentsData': newContained,
-                },
-            ]);
-        } else {
-            await this.setCollection(this, newContained);
-        }
+        await this.setNested(newContained);
         return deletedItems;
     }
 
-    async updateEmbeddedDocuments(embeddedName, data, options) {
-        if (!this.system.container || embeddedName !== 'Item') return await super.updateEmbeddedDocuments(embeddedName, data, options);
-        const contained = getProperty(this, 'flags.itemcollection.contentsData') ?? [];
+    async updateNestedDocuments(data) {
+        const contained = this.getNested();
         if (!Array.isArray(data)) data = [data];
-        game.dh.log('ItemContainer: ' + this.name + ' updateEmbeddedDocuments');
+        game.dh.log('ItemContainer: ' + this.name + ' updateNestedDocuments', data);
         let updated = [];
         let newContained = contained.map((existing) => {
             let theUpdate = data.find((update) => update._id === existing._id);
@@ -122,16 +135,7 @@ export class DarkHeresyItemContainer extends Item {
         });
 
         if (updated.length > 0) {
-            if (this.parent) {
-                await this.parent.updateEmbeddedDocuments('Item', [
-                    {
-                        '_id': this.id,
-                        'flags.itemcollection.contentsData': newContained,
-                    },
-                ]);
-            } else {
-                await this.setCollection(this, newContained);
-            }
+            await this.setNested(newContained);
         }
         return updated;
     }
@@ -139,8 +143,8 @@ export class DarkHeresyItemContainer extends Item {
     prepareEmbeddedDocuments() {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
-        game.dh.log('ItemContainer: ' + this.name + ' prepareEmbeddedDocuments');
-        const containedItems = foundry.utils.getProperty(this.flags, 'itemcollection.contentsData') ?? [];
+        game.dh.log('ItemContainer: ' + this.name, 'prepareEmbeddedDocuments');
+        const containedItems = this.getNested();
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
@@ -160,46 +164,4 @@ export class DarkHeresyItemContainer extends Item {
         });
     }
 
-    getEmbeddedCollection(type) {
-        if (type === 'Item' && this.system.container) return this.items;
-        return super.getEmbeddedCollection(type);
-    }
-
-    async update(data, context) {
-        game.dh.log('ItemContainer: ' + this.name + ' update', data);
-        if (!(this.parent instanceof Item)) return super.update(data, context);
-        data = foundry.utils.expandObject(data);
-        data._id = this.id;
-        await this.parent.updateEmbeddedDocuments('Item', [data]);
-        this.render(false, { action: 'update', data: data });
-    }
-
-    async delete(data) {
-        if (!(this.parent instanceof Item)) return super.delete(data);
-        return this.parent.deleteEmbeddedDocuments('Item', [this.id]);
-    }
-
-    async createDocuments(data = [], context = { parent: {}, pack: {}, options: {} }) {
-        const { parent, pack, options } = context;
-        if (!(this.system.container && parent instanceof Item)) return super.createDocuments(data, context);
-        await parent.createEmbeddedDocuments('Item', data, options);
-    }
-
-    async deleteDocuments(ids = [], context = { parent: {}, pack: {}, options: {} }) {
-        const { parent, pack, options } = context;
-        if (!(this.system.container && parent instanceof Item)) return super.deleteDocuments(ids, context);
-        // an Item whose parent is an item only exists in the embedded documents
-        return parent.deleteEmbeddedDocuments('Item', ids);
-    }
-
-    async updateDocuments(updates = [], context = { parent: {}, pack: {}, options: {} }) {
-        const { parent, pack, options } = context;
-        // An item whose parent is an item only exists in the parents embedded documents
-        if (!(this.system.container && parent instanceof Item)) return super.updateDocuments(updates, context);
-        return parent.updateEmbeddedDocuments('Item', updates, options);
-    }
-
-    async setCollection(item, contents) {
-        await item.update({ 'flags.itemcollection.contentsData': foundry.utils.duplicate(contents) });
-    }
 }

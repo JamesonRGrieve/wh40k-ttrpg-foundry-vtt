@@ -146,9 +146,17 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         return this.type === 'peer';
     }
 
+    _onCreate(data, options, user) {
+        game.dh.log('Determining nested items for', this);
+        this._determineNestedItems();
+        return super._onCreate(data, options, user);
+    }
+
     async prepareData() {
         super.prepareData();
         game.dh.log('Item prepare data', this);
+
+        this.convertNestedToItems();
 
         if (this.isPsychicPower) {
             if(!this.system.damage || this.system.damage === '') {
@@ -166,11 +174,6 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         if(!this.system.availability || this.system.availability === '') {
             this.system.availability = 'Common';
         }
-
-        if (game.ready) {
-            game.dh.log('Determining nested items');
-            await this._determineNestedItems();
-        }
     }
 
     /**
@@ -179,15 +182,17 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
      */
     async _determineNestedItems() {
         // Already has items just skip
-        if (this.items && this.items.size > 0) return;
+        if ((this.items && this.items.size > 0) || this.hasNested()) return;
 
         // Check for specials
         if (this.system.special) {
             game.dh.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('dark-heresy-2nd.weapons', this.system.special);
             if (this.isAmmunition) await this._updateSpecialsFromPack('dark-heresy-2nd.ammo', this.system.special);
-            game.dh.log('Special migrated for item: ' + this.name);
+            game.dh.log('Special migrated for item: ' + this.name, this.system.special);
             this.system.special = undefined;
+
+            await this.convertNestedToItems();
         }
     }
 
@@ -197,7 +202,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
         await compendium.configure({ locked: false });
         const attackSpecials = await this._getAttackSpecials(data);
         if (attackSpecials.length > 0) {
-            await this.createEmbeddedDocuments('Item', attackSpecials);
+            await this.createNestedDocuments(attackSpecials);
         }
         await compendium.configure({ locked: true });
     }
