@@ -1,6 +1,6 @@
 # Dark Heresy 2nd Edition
 
-This is an _unofficial_ system for playing Dark Heresy 2nd Edition on [Foundry VTT](https://foundryvtt.com/). 
+This is an _unofficial_ system for playing Dark Heresy 2nd Edition on [Foundry VTT](https://foundryvtt.com/). This requires >= Foundry 12.
 
 It offers extensive support for character sheets, compendium packs, and automated management to save you time and allow you to focus on role playing. The existing system listed on Foundry was character sheet only and thus this system was created to facilitate the automation features I desired.
 
