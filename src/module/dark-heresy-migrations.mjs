@@ -96,7 +96,7 @@ export async function checkAndMigrateWorld() {
                 await releaseNotes({
                     version: '1.8.0',
                     notes: [
-                        'Added Foundry 12 support.',
+                        'Added Foundry 12 support. Nested items (like ammunition or weapon specials on items) were drastically changed. I have done my best to migrate the data, but please check your items and actors for any issues.',
                         'Added True Grit talent support when assigning critical damage.'
                     ]
                 });
