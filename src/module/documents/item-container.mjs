@@ -8,6 +8,16 @@ export class DarkHeresyItemContainer extends Item {
         return this.parent;
     }
 
+    async update(data={}, options={}) {
+        console.log('DarkHeresyItemContainer: ' + this.name + ' update', data);
+        data._id = this.id;
+        if (this.isNestedItem()) {
+            await this.parent.updateNestedDocuments(data);
+        } else {
+            return super.update(data, options);
+        }
+    }
+
     isNestedItem() {
         return this.parent instanceof Item;
     }
@@ -122,12 +132,14 @@ export class DarkHeresyItemContainer extends Item {
         let newContained = contained.map((existing) => {
             let theUpdate = data.find((update) => update._id === existing._id);
             if (theUpdate) {
+                game.dh.log('Found Update object', theUpdate);
                 const newData = foundry.utils.mergeObject(theUpdate, existing, {
                     overwrite: false,
                     insertKeys: true,
                     insertValues: true,
                     inplace: false,
                 });
+                game.dh.log('Merged Update object', newData);
                 updated.push(newData);
                 return newData;
             }
