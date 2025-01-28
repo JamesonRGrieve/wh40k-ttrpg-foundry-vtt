@@ -2,7 +2,7 @@ import { DarkHeresySettings } from './dark-heresy-settings.mjs';
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 161;
+    const worldVersion = 180;
     const currentVersion = game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.worldVersion);
     if(worldVersion !== currentVersion && game.user.isGM) {
         ui.notifications.info("Upgrading the world, please wait...");
@@ -16,11 +16,30 @@ export async function checkAndMigrateWorld() {
             }
         }
 
+        // Update Items
+        for (let item of game.items.contents) {
+            try {
+                await migrateItemData(item, currentVersion);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         // Display Release Notes
         await displayReleaseNotes(worldVersion);
 
         game.settings.set(SYSTEM_ID, DarkHeresySettings.SETTINGS.worldVersion, worldVersion);
         ui.notifications.info("Upgrade complete!");
+    }
+
+    async function migrateItemData(item, currentVersion) {
+        if(currentVersion < 180) {
+            // Get itemcollection.contentsData flag
+            const itemCollection = item.flags['itemcollection'];
+            if (itemCollection && itemCollection.contentsData) {
+                await item.createNestedDocuments(itemCollection.contentsData);
+            }
+        }
     }
 
     async function migrateActorData(actor, currentVersion) {
@@ -32,6 +51,17 @@ export async function checkAndMigrateWorld() {
                         containerTypes: ["ammunition", "armour", "armourModification", "cybernetic", "consumable", "drug", "forceField", "gear", "tool", "weapon", "weaponModification"]
                     }
                 });
+            }
+        }
+
+        if(currentVersion < 180) {
+            // Update User Items to be Nested
+            for(const item of actor.items) {
+                // Get itemcollection.contentsData flag
+                const itemCollection = item.flags['itemcollection'];
+                if (itemCollection && itemCollection.contentsData) {
+                    await item.createNestedDocuments(itemCollection.contentsData);
+                }
             }
         }
     }
@@ -70,6 +100,7 @@ export async function checkAndMigrateWorld() {
                         'Added True Grit talent support when assigning critical damage.'
                     ]
                 });
+                break;
             default:
                 break;
         }
