@@ -36,7 +36,7 @@ export class DarkHeresyItemSheet extends ItemSheet {
     async _sheetControlHideToggle(event) {
         event.preventDefault();
         const displayToggle = $(event.currentTarget);
-        $('span:first', displayToggle).toggleClass('active');
+        $('span', displayToggle).first().toggleClass('active');
         const target = displayToggle.data('toggle');
         $('.' + target).toggle();
         toggleUIExpanded(target);

@@ -141,7 +141,7 @@ export class ActorContainerSheet extends ActorSheet {
     async _sheetControlHideToggle(event) {
         event.preventDefault();
         const displayToggle = $(event.currentTarget);
-        $('span:first', displayToggle).toggleClass('active');
+        $('span', displayToggle).first().toggleClass('active');
         const target = displayToggle.data('toggle');
         $('.' + target).toggle();
         toggleUIExpanded(target);
@@ -181,7 +181,7 @@ export class ActorContainerSheet extends ActorSheet {
     async _sheetControlHideToggle(event) {
         event.preventDefault();
         const displayToggle = $(event.currentTarget);
-        $('span:first', displayToggle).toggleClass('active');
+        $('span', displayToggle).first().toggleClass('active');
         const target = displayToggle.data('toggle');
         $('.' + target).toggle();
         toggleUIExpanded(target);

@@ -128,8 +128,10 @@
       "entity": "Item"
     }
   ],
-  "gridDistance": 1,
-  "gridUnits": "m",
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
   "primaryTokenAttribute": "wounds",
   "secondaryTokenAttribute": "fate",
   "url": "https://github.com/mrkeathley/dark-heresy-2nd-vtt",
