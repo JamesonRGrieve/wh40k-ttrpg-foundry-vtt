@@ -49,8 +49,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
                 return false;
             } else {
                 game.dh.log('_onDrop data: ', data);
-
-                item = data.data;
+                item = fromUuidSync(data.uuid)
 
                 if (data.actor) {
                     actor = data.actor;
