@@ -18,7 +18,7 @@
                 </div>
                 <div class="table-cell--last rt-specialist-add">
                     <button class="dh-settings__label--add add-skill rt-add-specialization" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
-                        <i class="fas fa-plus-circle"></i> Add
+                        <span class="material-icons">add_box</span> Add
                     </button>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                         <div class="table-cell rt-skill-name rt-specialist-name">
                             <input type="text" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.name" value="{{speciality.name}}" class="rt-specialization-input" placeholder="Enter specialization..." />
                             <button class="roll-skill rt-skill-button" data-skill="{{../entry.[0]}}" data-specialty="{{idx}}" type="roll" title="Roll {{../entry.[1].label}}: {{speciality.name}}">
-                                <i class="fas fa-dice-d20"></i>
+                                <span class="material-icons">casino</span>
                             </button>
                         </div>
                         <div class="table-cell rt-skill-char">
@@ -59,7 +59,7 @@
             {{else}}
                 <div class="table-row rt-no-specializations">
                     <div class="table-cell--grouped rt-empty-message">
-                        <i class="fas fa-info-circle"></i> Click "Add" to create a {{entry.[1].label}} specialization
+                        <span class="material-icons">info</span> Click "Add" to create a {{entry.[1].label}} specialization
                     </div>
                 </div>
             {{/if}}

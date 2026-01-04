@@ -72,8 +72,8 @@
       border-radius: 3px;
     }
     
-    i {
-      font-size: 0.9em;
+    .material-icons {
+      font-size: 1em;
       opacity: 0.7;
     }
   }
@@ -200,7 +200,7 @@
         transform: translateY(0);
       }
       
-      i {
+      .material-icons {
         font-size: 1em;
       }
     }
@@ -232,7 +232,7 @@
     padding: 0.35rem 0.5rem;
     min-width: auto;
     
-    i {
+    .material-icons {
       margin: 0;
     }
   }
@@ -252,8 +252,9 @@
     justify-content: center;
     gap: 0.5rem;
     
-    i {
+    .material-icons {
       opacity: 0.6;
+      font-size: 1.2em;
     }
   }
 }
