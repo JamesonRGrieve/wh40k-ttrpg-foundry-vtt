@@ -25,7 +25,6 @@ import { RogueTraderTraitSheet } from './sheets/item/trait-sheet.mjs';
 import { RogueTraderActorProxy } from './documents/actor-proxy.mjs';
 import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
 import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
-import { RogueTraderCharacterSheet } from './sheets/actor/rogue-trader-character-sheet.mjs';
 import { RogueTraderCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
 import { RogueTraderGearSheet } from './sheets/item/gear-sheet.mjs';
 import { RogueTraderSettings } from './rogue-trader-settings.mjs';
@@ -88,19 +87,17 @@ Enable Debug with: game.rt.debug = true
         CONFIG.Actor.documentClass = RogueTraderActorProxy;
         CONFIG.Actor.documentClasses = {
             acolyte: documents.RogueTraderAcolyte,
+            character: documents.RogueTraderAcolyte,
             npc: documents.RogueTraderNPC,
             vehicle: documents.RogueTraderVehicle,
-            character: documents.RogueTraderCharacter,
-
         };
         CONFIG.Item.documentClass = RogueTraderItem;
 
         // Register sheet application classes
         Actors.unregisterSheet('core', ActorSheet);
-        Actors.registerSheet(SYSTEM_ID, AcolyteSheet, {types: ["acolyte"], makeDefault: true });
+        Actors.registerSheet(SYSTEM_ID, AcolyteSheet, {types: ["acolyte", "character"], makeDefault: true });
         Actors.registerSheet(SYSTEM_ID, NpcSheet, {types: ['npc'], makeDefault: true });
         Actors.registerSheet(SYSTEM_ID, VehicleSheet, {types: ['vehicle'], makeDefault: true });
-        Actors.registerSheet(SYSTEM_ID, RogueTraderCharacterSheet, {types: ['character'], makeDefault: true });
 
         Items.unregisterSheet('core', ItemSheet);
         Items.registerSheet(SYSTEM_ID, RogueTraderItemSheet, { makeDefault: true });
