@@ -35,7 +35,9 @@ export class AcolyteSheet extends ActorContainerSheet {
             label: c.short,
             value: c.short,
         }));
-        context.system.rogueTrader = this._prepareRogueTraderFields(context.system.rogueTrader ?? {});
+        if (context.system) {
+            context.system.rogueTrader = this._prepareRogueTraderFields(context.system.rogueTrader ?? {});
+        }
         return context;
     }
 
