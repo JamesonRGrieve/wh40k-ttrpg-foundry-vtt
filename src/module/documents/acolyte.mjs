@@ -271,9 +271,67 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         }
     }
 
+    /**
+     * Gets the total characteristic modifier from all origin path items.
+     * @param {string} charKey - The characteristic key (e.g., 'strength', 'willpower')
+     * @returns {number} The total modifier from origin path items
+     */
+    _getOriginPathCharacteristicModifier(charKey) {
+        let total = 0;
+        const originItems = this.items.filter((item) => item.isOriginPath);
+        
+        for (const item of originItems) {
+            const mods = item.system?.modifiers?.characteristics;
+            if (mods && mods[charKey]) {
+                total += mods[charKey];
+            }
+        }
+        
+        return total;
+    }
+
+    /**
+     * Gets the total wound modifier from all origin path items.
+     * @returns {number} The total wound modifier
+     */
+    _getOriginPathWoundsModifier() {
+        let total = 0;
+        const originItems = this.items.filter((item) => item.isOriginPath);
+        
+        for (const item of originItems) {
+            if (item.system?.modifiers?.wounds) {
+                total += item.system.modifiers.wounds;
+            }
+        }
+        
+        return total;
+    }
+
+    /**
+     * Gets the total fate modifier from all origin path items.
+     * @returns {number} The total fate modifier
+     */
+    _getOriginPathFateModifier() {
+        let total = 0;
+        const originItems = this.items.filter((item) => item.isOriginPath);
+        
+        for (const item of originItems) {
+            if (item.system?.modifiers?.fate) {
+                total += item.system.modifiers.fate;
+            }
+        }
+        
+        return total;
+    }
+
     _computeCharacteristics() {
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
-            characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier;
+            // Get origin path modifier for this characteristic
+            const originPathMod = this._getOriginPathCharacteristicModifier(name);
+            
+            // Calculate total: base + advances + manual modifier + origin path modifier
+            characteristic.originPathModifier = originPathMod;
+            characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier + originPathMod;
             characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
 
             if (this.fatigue.value > characteristic.bonus) {
@@ -287,6 +345,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         this.psy.currentRating = this.psy.rating - this.psy.sustained;
         this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
         this.fatigue.max = this.characteristics.toughness.bonus + this.characteristics.willpower.bonus;
+        
+        // Apply origin path wounds and fate modifiers
+        this.system.originPathWoundsModifier = this._getOriginPathWoundsModifier();
+        this.system.originPathFateModifier = this._getOriginPathFateModifier();
     }
 
     _computeSkills() {

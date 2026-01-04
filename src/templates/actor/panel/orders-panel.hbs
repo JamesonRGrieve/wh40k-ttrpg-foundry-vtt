@@ -1,0 +1,32 @@
+<div class="dh-panel spacer dh-grid-col-3 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.Orders.Header"}}</h1>
+    <div class="dh-table--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">{{localize "RT.Orders.Name"}}</div>
+            <div class="table-cell">{{localize "RT.Orders.Action"}}</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button item-create" data-type="order">
+                    <span class="dh-control-button__span material-icons">add_circle</span>
+                </label>
+            </div>
+        </div>
+        {{#each actor.items as |item|}}
+            {{#if item.isOrder}}
+                <div class="table-row">
+                    <div class="table-cell--span2">
+                        <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
+                            <img class="dh-item-img" src="{{item.img}}" alt="{{item.name}}" />
+                            {{item.name}}
+                        </button>
+                    </div>
+                    <div class="table-cell rt-action-cell">{{item.system.typeAndAction}}</div>
+                    <div class="table-cell--last">
+                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="dh-control-button__span material-icons">delete</span>
+                        </label>
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>

@@ -56,15 +56,6 @@
       }
     },
     {
-      "name": "rt-items-actions",
-      "label": "RT Items: Actions",
-      "path": "packs/rt-items-actions",
-      "type": "Item",
-      "ownership": {
-        "default": 0
-      }
-    },
-    {
       "name": "rt-items-ammo",
       "label": "RT Items: Ammo",
       "path": "packs/rt-items-ammo",
@@ -249,6 +240,24 @@
       "label": "RT Items: Weapons",
       "path": "packs/rt-items-weapons",
       "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-journals-character-actions",
+      "label": "RT Journals: Character Actions",
+      "path": "packs/rt-journals-character-actions",
+      "type": "JournalEntry",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-journals-character-creation",
+      "label": "RT Journals: Character Creation",
+      "path": "packs/rt-journals-character-creation",
+      "type": "JournalEntry",
       "ownership": {
         "default": 0
       }

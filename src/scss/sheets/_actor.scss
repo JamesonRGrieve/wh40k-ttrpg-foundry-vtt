@@ -11,104 +11,451 @@
     }
 }
 
-// Origin Path Panel Styles
-.rt-origin-path-grid {
+// ============================================
+// ROGUE TRADER CHARACTER SHEET STYLES
+// ============================================
+
+.rt-sheet {
+    font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+}
+
+// Character Header
+.rt-character-header {
+    grid-column: span 6;
+    
+    .dh-header__info {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 15px;
+        align-items: center;
+    }
+}
+
+.rt-portrait-container {
+    grid-row: span 2;
+}
+
+.rt-portrait {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid #4a3728;
+    border-radius: 4px;
+}
+
+.rt-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rt-header-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.rt-header-label {
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #4a3728;
+    min-width: 80px;
+}
+
+.rt-header-value {
+    font-size: 1em;
+    color: #2a1a0a;
+}
+
+.rt-name-input {
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid #4a3728;
+    padding: 2px 5px;
+    min-width: 200px;
+}
+
+.rt-quick-stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.rt-origin-path-step {
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    padding: 8px;
-
-    &__header {
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #4a3728;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        padding-bottom: 3px;
-    }
-
-    &__label {
-        font-size: 0.9em;
-    }
-
-    &__value {
-        min-height: 40px;
-    }
-}
-
-.rt-origin-path-item {
-    display: flex;
-    align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.3);
-    padding: 5px;
-    border-radius: 3px;
-
-    &__img {
-        width: 24px;
-        height: 24px;
-        border-radius: 2px;
-    }
-
-    &__name {
-        flex: 1;
-        font-size: 0.9em;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
-    &__remove {
-        cursor: pointer;
-        opacity: 0.6;
-
-        &:hover {
-            opacity: 1;
-            color: #c00;
-        }
-    }
 }
 
-.rt-origin-path-dropzone {
+.rt-stat-box {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(74, 55, 40, 0.3);
+    border-radius: 4px;
+    padding: 5px 8px;
+    text-align: center;
+}
+
+.rt-wounds-box { border-left: 3px solid #8B0000; }
+.rt-fate-box { border-left: 3px solid #DAA520; }
+.rt-insanity-box { border-left: 3px solid #4B0082; }
+.rt-corruption-box { border-left: 3px solid #2F4F4F; }
+
+.rt-stat-label {
+    display: block;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    color: #4a3728;
+    margin-bottom: 2px;
+}
+
+.rt-stat-values {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    border: 2px dashed rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    color: rgba(0, 0, 0, 0.4);
-    font-style: italic;
-    font-size: 0.85em;
+    gap: 3px;
+}
 
-    &:hover {
-        border-color: rgba(0, 0, 0, 0.4);
-        background: rgba(255, 255, 255, 0.2);
+.rt-stat-input {
+    width: 35px;
+    text-align: center;
+    border: none;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 2px;
+    padding: 2px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.rt-stat-single {
+    width: 50px;
+}
+
+.rt-stat-separator {
+    color: #666;
+}
+
+// Navigation
+.rt-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    padding: 5px 0;
+}
+
+.rt-nav-item {
+    a {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 10px;
+        font-size: 0.85em;
+        
+        .material-icons {
+            font-size: 16px;
+        }
     }
 }
 
-.rt-origin-path-empty {
-    text-align: center;
-    color: rgba(0, 0, 0, 0.5);
-    font-style: italic;
-    padding: 20px;
+// Tab Content
+.rt-body {
+    min-height: 400px;
 }
 
-.rt-origin-effect-text {
+.rt-tab {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+}
+
+// ============================================
+// ORIGIN PATH STYLES
+// ============================================
+
+.rt-origin-description {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin: 5px 0 15px;
+    font-size: 0.9em;
+}
+
+.rt-origin-path-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.rt-origin-step {
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(240,235,225,0.6) 100%);
+    border: 2px solid rgba(74, 55, 40, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        border-color: rgba(74, 55, 40, 0.5);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    &.rt-origin-step--filled {
+        border-color: #4a3728;
+        background: linear-gradient(135deg, rgba(218,165,32,0.1) 0%, rgba(240,235,225,0.8) 100%);
+    }
+}
+
+.rt-origin-step-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(74, 55, 40, 0.1);
+    border-bottom: 1px solid rgba(74, 55, 40, 0.2);
+}
+
+.rt-origin-step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: #4a3728;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.75em;
+    font-weight: bold;
+}
+
+.rt-origin-step-label {
+    font-weight: bold;
+    color: #4a3728;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+.rt-origin-step-content {
+    padding: 10px;
+    min-height: 60px;
+}
+
+.rt-origin-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rt-origin-item-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+.rt-origin-item-info {
+    flex: 1;
+}
+
+.rt-origin-item-name {
+    font-weight: bold;
+    color: #2a1a0a;
+    cursor: pointer;
+    
+    &:hover {
+        text-decoration: underline;
+        color: #8B4513;
+    }
+}
+
+.rt-origin-item-delete {
+    opacity: 0.5;
+    cursor: pointer;
+    
+    &:hover {
+        opacity: 1;
+        color: #8B0000;
+    }
+    
+    .material-icons {
+        font-size: 18px;
+    }
+}
+
+.rt-origin-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    border: 2px dashed rgba(74, 55, 40, 0.3);
+    border-radius: 4px;
+    color: rgba(74, 55, 40, 0.5);
+    transition: all 0.2s ease;
+    
+    &:hover {
+        border-color: rgba(74, 55, 40, 0.6);
+        background: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.rt-dropzone-icon {
+    font-size: 24px;
+    margin-bottom: 3px;
+}
+
+.rt-dropzone-text {
+    font-size: 0.8em;
+    font-style: italic;
+}
+
+// Effects List
+.rt-effects-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.rt-effect-card {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(74, 55, 40, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.rt-effect-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: rgba(74, 55, 40, 0.1);
+    border-bottom: 1px solid rgba(74, 55, 40, 0.15);
+}
+
+.rt-effect-source {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.rt-effect-name {
+    font-weight: bold;
+    color: #4a3728;
+    font-size: 0.9em;
+}
+
+.rt-effect-body {
+    padding: 8px 10px;
+}
+
+.rt-effect-benefit {
     font-size: 0.85em;
     line-height: 1.4;
-    max-height: 100px;
+    color: #333;
+    margin: 0;
+    max-height: 80px;
     overflow-y: auto;
 }
 
-// Ship Role Panel Styles
+.rt-origin-empty {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    
+    .rt-empty-icon {
+        font-size: 48px;
+        opacity: 0.3;
+        margin-bottom: 10px;
+    }
+    
+    p {
+        font-style: italic;
+        margin: 0;
+    }
+}
+
+// ============================================
+// SHIP & DYNASTY STYLES
+// ============================================
+
+.rt-profit-factor-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.rt-profit-current {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.rt-full-width {
+    grid-column: span 2;
+}
+
+.rt-checkbox-cell {
+    text-align: center;
+}
+
+// ============================================
+// ITEM DISPLAY STYLES
+// ============================================
+
+.rt-item-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    text-align: left;
+    
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+    
+    .dh-item-img {
+        width: 20px;
+        height: 20px;
+        border-radius: 2px;
+    }
+}
+
+.rt-action-cell,
+.rt-test-cell {
+    font-size: 0.85em;
+    color: #666;
+}
+
+// Biography Grid
+.rt-bio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+// ============================================
+// CHARACTERISTIC MODIFIERS
+// ============================================
+
+.rt-char-bonus {
+    background-color: rgba(0, 128, 0, 0.15) !important;
+}
+
+.rt-char-penalty {
+    background-color: rgba(139, 0, 0, 0.15) !important;
+}
+
+.rt-origin-bonus {
+    color: #006400;
+    font-weight: bold;
+}
+
+.rt-origin-penalty {
+    color: #8B0000;
+    font-weight: bold;
+}
+
+// ============================================
+// SHIP ROLE STYLES
+// ============================================
+
 .rt-ship-role-details {
     margin-top: 10px;
     padding: 10px;

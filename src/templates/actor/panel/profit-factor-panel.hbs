@@ -1,0 +1,17 @@
+<div class="dh-panel spacer dh-grid-col-3 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.ProfitFactor.Header"}}</h1>
+    <div class="rt-profit-factor-display">
+        <div class="dh-field__wrapper">
+            <span class="dh-field__header">{{localize "RT.ProfitFactor.Starting"}}</span>
+            <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" />
+        </div>
+        <div class="dh-field__wrapper">
+            <span class="dh-field__header">{{localize "RT.ProfitFactor.Current"}}</span>
+            <input type="number" data-dtype="Number" class="dh-field__input rt-profit-current" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" />
+        </div>
+    </div>
+    <div class="dh-field__wrapper rt-full-width">
+        <span class="dh-field__header">{{localize "RT.ProfitFactor.Misfortunes"}}</span>
+        <textarea class="dh-field__input" name="system.rogueTrader.profitFactor.misfortunes" rows="2">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+    </div>
+</div>

@@ -9,15 +9,15 @@ import { prepareAssignDamageRoll } from '../../prompts/assign-damage-prompt.mjs'
 export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            width: 1000,
-            height: 750,
+            width: 1050,
+            height: 800,
             resizable: true,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'main' }],
+            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'overview' }],
         });
     }
 
     get template() {
-        return `systems/rogue-trader/templates/actor/actor-acolyte-sheet.hbs`;
+        return `systems/rogue-trader/templates/actor/actor-rt-sheet.hbs`;
     }
 
     getData() {
