@@ -1,19 +1,20 @@
-import { eliteAdvancesNames } from './elite-advances.mjs';
-import { homeworldNames } from './homeworlds.mjs';
-import { attackSpecialsNames } from './attack-specials.mjs';
-import { birthrightNames } from './birthrights.mjs';
-import { careerPathNames } from './career-paths.mjs';
-import { divinationNames } from './divinations.mjs';
-
 export const RogueTrader = {};
 
+// Origin Path steps for Rogue Trader character creation
+RogueTrader.originPath = {
+    steps: [
+        { key: 'homeWorld', label: 'Home World', choiceGroup: 'origin.home-world' },
+        { key: 'birthright', label: 'Birthright', choiceGroup: 'origin.birthright' },
+        { key: 'lureOfTheVoid', label: 'Lure of the Void', choiceGroup: 'origin.lure-of-the-void' },
+        { key: 'trialsAndTravails', label: 'Trials and Travails', choiceGroup: 'origin.trials-and-travails' },
+        { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
+        { key: 'career', label: 'Career', choiceGroup: 'origin.career' }
+    ],
+    compendium: 'rogue-trader.rt-items-origin-path'
+};
+
 RogueTrader.bio = {
-    homeWorld: homeworldNames(),
-    birthright: birthrightNames(),
-    careerPath: careerPathNames(),
-    elite: eliteAdvancesNames(),
-    divination: divinationNames(),
-    primary: ['birthright', 'careerPath', 'elite', 'homeWorld', 'divination'],
+    primary: [],
     size: {
         4: 'Average (4)',
         1: 'Minuscule (1)',
@@ -41,7 +42,6 @@ RogueTrader.combat = {
     action_speeds: ['N/A', 'Free Action', 'Half Action', 'Full Action', '2 Full Actions', '3 Full Actions', 'Special'],
     sustained_speeds: ['No', 'Free Action', 'Half Action', 'Full Action'],
     psychic_subtypes: ['Concentration', 'Attack', 'Attack, Concentration'],
-    special: attackSpecialsNames(),
     weapon_class: ['Pistol', 'Basic', 'Heavy', 'Thrown', 'Melee'],
     weapon_type: [
         'Bolt',
@@ -75,6 +75,12 @@ RogueTrader.combat = {
     }
 };
 
+// Ship-related configuration
+RogueTrader.ship = {
+    hullTypes: ['Transport', 'Raider', 'Frigate', 'Light Cruiser', 'Cruiser', 'Grand Cruiser', 'Battleship'],
+    componentTypes: ['Essential', 'Supplemental', 'Weapon', 'Hull']
+};
+
 RogueTrader.ui = {
     toggleExpanded: function (name) {
         if (RogueTrader.ui.expanded.includes(name)) {
@@ -94,6 +100,7 @@ export function toggleUIExpanded(name) {
 }
 
 export function fieldMatch(val1, val2) {
+    if (!val1 || !val2) return false;
     let one = val1.replace(/\s/g, '');
     let two = val2.replace(/\s/g, '');
     return one.toUpperCase() === two.toUpperCase();

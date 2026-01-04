@@ -1,5 +1,116 @@
 {
   "RT": {
+    "Character": {
+      "Name": "Name"
+    },
+    "Tabs": {
+      "Overview": "Overview",
+      "Combat": "Combat",
+      "Abilities": "Abilities",
+      "Powers": "Powers",
+      "Equipment": "Equipment",
+      "OriginPath": "Origin Path",
+      "Dynasty": "Dynasty",
+      "Biography": "Biography",
+      "Main": "Main",
+      "Gear": "Gear",
+      "Advances": "Advances",
+      "Ship": "Ship & Role"
+    },
+    "OriginPath": {
+      "Header": "Origin Path",
+      "Description": "Drag origin path items from the compendium to define your character's background. Each step grants unique abilities and bonuses.",
+      "HomeWorld": "Home World",
+      "Birthright": "Birthright",
+      "LureOfTheVoid": "Lure of the Void",
+      "TrialsAndTravails": "Trials and Travails",
+      "Motivation": "Motivation",
+      "Career": "Career",
+      "DropHere": "Drop origin item here",
+      "Remove": "Remove",
+      "EffectsHeader": "Origin Path Effects",
+      "Source": "Source",
+      "Name": "Name",
+      "Effect": "Effect",
+      "NoEffects": "No origin path items selected. Drag items from the Origin Path compendium to build your character's background."
+    },
+    "Biography": {
+      "Header": "Biography",
+      "Gender": "Gender",
+      "Age": "Age",
+      "Build": "Build",
+      "Complexion": "Complexion",
+      "Hair": "Hair",
+      "Quirks": "Quirks",
+      "Superstition": "Superstition",
+      "Mementos": "Mementos",
+      "Notes": "Notes"
+    },
+    "NavigatorPowers": {
+      "Header": "Navigator Powers",
+      "Name": "Power",
+      "Range": "Range",
+      "Test": "Test"
+    },
+    "ShipRole": {
+      "Header": "Ship Role",
+      "Role": "Role",
+      "Rank": "Rank",
+      "Purpose": "Purpose",
+      "Effect": "Effect"
+    },
+    "ProfitFactor": {
+      "Header": "Profit Factor",
+      "Starting": "Starting",
+      "Current": "Current",
+      "Misfortunes": "Misfortunes"
+    },
+    "Acquisitions": {
+      "Header": "Acquisitions",
+      "Name": "Name",
+      "Availability": "Availability",
+      "Modifier": "Modifier",
+      "Acquired": "Acquired",
+      "Notes": "Notes"
+    },
+    "Orders": {
+      "Header": "Orders",
+      "Name": "Order",
+      "Action": "Action"
+    },
+    "Rituals": {
+      "Header": "Rituals",
+      "Name": "Ritual",
+      "Test": "Test"
+    },
+    "QuickActions": {
+      "Header": "Quick Actions",
+      "RollTable": "Roll Tables",
+      "PsychicPhenomena": "Psychic Phenomena",
+      "PerilsOfTheWarp": "Perils of the Warp",
+      "FearEffects": "Fear Effects",
+      "Mutation": "Roll Mutation",
+      "Malignancy": "Roll Malignancy",
+      "NavigatorMutation": "Navigator Mutation",
+      "SpendFate": "Spend Fate",
+      "BurnFate": "Burn Fate",
+      "RecoverFate": "Recover Fate"
+    },
+    "Dynasty": {
+      "Header": "Dynasty",
+      "Name": "Dynasty Name",
+      "History": "Dynasty History",
+      "Reputation": "Reputation",
+      "ShipName": "Ship Name"
+    },
+    "Endeavours": {
+      "Header": "Endeavours",
+      "Current": "Current Endeavour",
+      "Objectives": "Objectives",
+      "AchievementPoints": "Achievement Points",
+      "Completed": "Completed Endeavours",
+      "AddObjective": "Add Objective"
+    },
     "RogueTrader": {
       "TabLabel": "Rogue Trader",
       "Header": "Rogue Trader",
@@ -41,7 +152,7 @@
       "MutationsHeader": "Mutations"
     },
     "Skills": {
-      "Header": "Rogue Trader Skills",
+      "Header": "Skills",
       "SpecialistHeader": "Specialist Skills",
       "Skill": "Skill",
       "Specialization": "Specialization",
@@ -56,6 +167,129 @@
       "NoSpecializations": "Click \"Add\" to create a {0} specialization",
       "RollSkillTitle": "Roll {0}",
       "AddSpecializationTitle": "Add {0} specialization"
+    },
+    "Items": {
+      "Weapon": "Weapon",
+      "Armour": "Armour",
+      "Gear": "Gear",
+      "Talent": "Talent",
+      "Trait": "Trait",
+      "Skill": "Skill",
+      "PsychicPower": "Psychic Power",
+      "NavigatorPower": "Navigator Power",
+      "ShipComponent": "Ship Component",
+      "ShipRole": "Ship Role",
+      "ShipWeapon": "Ship Weapon",
+      "Order": "Order",
+      "Ritual": "Ritual",
+      "OriginPath": "Origin Path",
+      "Condition": "Condition"
+    },
+    "Starship": {
+      "Name": "Ship Name",
+      "HullType": "Hull Type",
+      "HullClass": "Hull Class",
+      "Tabs": {
+        "Stats": "Stats",
+        "Components": "Components",
+        "Weapons": "Weapons",
+        "Crew": "Crew",
+        "History": "History"
+      },
+      "Combat": {
+        "Header": "Combat Statistics",
+        "Speed": "Speed",
+        "Manoeuvrability": "Manoeuvrability",
+        "Detection": "Detection",
+        "Armour": "Armour",
+        "VoidShields": "Void Shields",
+        "TurretRating": "Turret Rating"
+      },
+      "Resources": {
+        "Header": "Ship Resources",
+        "SpaceTotal": "Space (Total)",
+        "SpaceUsed": "Space (Used)",
+        "PowerTotal": "Power (Total)",
+        "PowerUsed": "Power (Used)",
+        "ShipPoints": "Ship Points"
+      },
+      "WeaponCapacity": {
+        "Header": "Weapon Capacity",
+        "Prow": "Prow",
+        "Dorsal": "Dorsal",
+        "Port": "Port",
+        "Starboard": "Starboard",
+        "Keel": "Keel"
+      },
+      "Physical": {
+        "Header": "Physical Details",
+        "Dimensions": "Dimensions"
+      },
+      "Components": {
+        "Header": "Ship Components",
+        "Name": "Component",
+        "Type": "Type",
+        "Power": "Power",
+        "Space": "Space",
+        "SP": "SP"
+      },
+      "Upgrades": {
+        "Header": "Ship Upgrades",
+        "Name": "Upgrade",
+        "Power": "Power",
+        "Space": "Space",
+        "Effect": "Effect"
+      },
+      "Weapons": {
+        "Header": "Ship Weapons",
+        "Name": "Weapon",
+        "Location": "Location",
+        "Strength": "Str",
+        "Damage": "Dmg",
+        "Crit": "Crit",
+        "Range": "Range"
+      },
+      "Crew": {
+        "Header": "Crew Statistics",
+        "Population": "Population",
+        "Rating": "Crew Rating",
+        "MoraleCurrent": "Morale (Current)",
+        "MoraleMax": "Morale (Max)",
+        "Officers": "Ship Officers",
+        "OfficersDesc": "Assign characters to ship roles for bonuses.",
+        "Role": "Role",
+        "Officer": "Officer",
+        "Bonus": "Bonus"
+      },
+      "History": {
+        "MachineSpirit": "Machine Spirit Oddities",
+        "PastHistory": "Past History",
+        "Complications": "Complications",
+        "Notes": "Notes"
+      }
+    },
+    "NPC": {
+      "Name": "Name",
+      "Type": "Type",
+      "Allegiance": "Allegiance",
+      "Notes": "Notes",
+      "Description": "Description",
+      "Tactics": "Tactics"
+    },
+    "Vehicle": {
+      "Name": "Vehicle Name",
+      "Type": "Type",
+      "Crew": "Crew",
+      "Tabs": {
+        "Stats": "Stats",
+        "Weapons": "Weapons",
+        "Traits": "Traits"
+      },
+      "Upgrades": {
+        "Header": "Vehicle Upgrades",
+        "Name": "Upgrade",
+        "Effect": "Effect"
+      }
     }
   }
 }

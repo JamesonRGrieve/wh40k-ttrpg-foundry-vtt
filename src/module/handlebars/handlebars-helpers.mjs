@@ -136,6 +136,31 @@ export function registerHandlebarsHelpers() {
         }
     });
 
+    // Comparison helpers
+    Handlebars.registerHelper('gt', function(a, b) {
+        return a > b;
+    });
+
+    Handlebars.registerHelper('lt', function(a, b) {
+        return a < b;
+    });
+
+    Handlebars.registerHelper('gte', function(a, b) {
+        return a >= b;
+    });
+
+    Handlebars.registerHelper('lte', function(a, b) {
+        return a <= b;
+    });
+
+    Handlebars.registerHelper('eq', function(a, b) {
+        return a === b;
+    });
+
+    Handlebars.registerHelper('neq', function(a, b) {
+        return a !== b;
+    });
+
     Handlebars.registerHelper('defaultVal', function(value, defaultVal) {
         return value || defaultVal;
     });

@@ -1,0 +1,179 @@
+{{!-- Rogue Trader Character Sheet - Redesigned for RT --}}
+<div class="dh-wrapper">
+    <form class="dh-actor rt-sheet" autocomplete="off">
+        {{!-- Character Header --}}
+        <div class="dh-header dh-grid-col-6 dh-panel rt-character-header">
+            <div class="dh-header__info">
+                <div class="dh-header__logo rt-portrait-container">
+                    <img class="dh-header__logo-image rt-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                </div>
+                <div class="rt-header-info">
+                    <div class="rt-header-row rt-name-row">
+                        <span class="rt-header-label">{{localize "RT.Character.Name"}}</span>
+                        <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
+                    </div>
+                    <div class="rt-header-row">
+                        <span class="rt-header-label">{{localize "RT.OriginPath.Career"}}</span>
+                        <span class="rt-header-value">{{system.originPath.career}}</span>
+                    </div>
+                    <div class="rt-header-row">
+                        <span class="rt-header-label">{{localize "RT.OriginPath.HomeWorld"}}</span>
+                        <span class="rt-header-value">{{system.originPath.homeWorld}}</span>
+                    </div>
+                </div>
+                <div class="rt-quick-stats">
+                    <div class="rt-stat-box rt-wounds-box">
+                        <span class="rt-stat-label">Wounds</span>
+                        <div class="rt-stat-values">
+                            <input type="number" class="rt-stat-input" name="system.wounds.value" value="{{system.wounds.value}}" title="Current" />
+                            <span class="rt-stat-separator">/</span>
+                            <input type="number" class="rt-stat-input" name="system.wounds.max" value="{{system.wounds.max}}" title="Max" />
+                        </div>
+                    </div>
+                    <div class="rt-stat-box rt-fate-box">
+                        <span class="rt-stat-label">Fate</span>
+                        <div class="rt-stat-values">
+                            <input type="number" class="rt-stat-input" name="system.fate.value" value="{{system.fate.value}}" title="Current" />
+                            <span class="rt-stat-separator">/</span>
+                            <input type="number" class="rt-stat-input" name="system.fate.max" value="{{system.fate.max}}" title="Max" />
+                        </div>
+                    </div>
+                    <div class="rt-stat-box rt-insanity-box">
+                        <span class="rt-stat-label">Insanity</span>
+                        <input type="number" class="rt-stat-input rt-stat-single" name="system.insanity" value="{{system.insanity}}" />
+                    </div>
+                    <div class="rt-stat-box rt-corruption-box">
+                        <span class="rt-stat-label">Corruption</span>
+                        <input type="number" class="rt-stat-input rt-stat-single" name="system.corruption" value="{{system.corruption}}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Navigation Tabs --}}
+        <div class="dh-navigation rt-navigation" data-group="primary">
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="overview" data-group="primary">
+                    <span class="material-icons">dashboard</span>
+                    {{localize "RT.Tabs.Overview"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="combat" data-group="primary">
+                    <span class="material-icons">gps_fixed</span>
+                    {{localize "RT.Tabs.Combat"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="abilities" data-group="primary">
+                    <span class="material-icons">psychology</span>
+                    {{localize "RT.Tabs.Abilities"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="powers" data-group="primary">
+                    <span class="material-icons">auto_fix_high</span>
+                    {{localize "RT.Tabs.Powers"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="equipment" data-group="primary">
+                    <span class="material-icons">inventory_2</span>
+                    {{localize "RT.Tabs.Equipment"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="origin" data-group="primary">
+                    <span class="material-icons">account_tree</span>
+                    {{localize "RT.Tabs.OriginPath"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="dynasty" data-group="primary">
+                    <span class="material-icons">sailing</span>
+                    {{localize "RT.Tabs.Dynasty"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="bio" data-group="primary">
+                    <span class="material-icons">person</span>
+                    {{localize "RT.Tabs.Biography"}}
+                </a>
+            </label>
+        </div>
+
+        {{!-- Tab Content --}}
+        <section class="dh-body rt-body">
+            {{!-- OVERVIEW TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="overview">
+                {{> systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/movement-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
+            </div>
+
+            {{!-- COMBAT TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="combat">
+                {{> systems/rogue-trader/templates/actor/panel/wounds-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/fatigue-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/fate-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/armour-display-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/combat-controls-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/initiative-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
+            </div>
+
+            {{!-- ABILITIES TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="abilities">
+                {{> systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/skills-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+            </div>
+
+            {{!-- POWERS TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="powers">
+                {{> systems/rogue-trader/templates/actor/panel/psy-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/navigator-powers-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/orders-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/rituals-panel.hbs}}
+            </div>
+
+            {{!-- EQUIPMENT TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="equipment">
+                {{> systems/rogue-trader/templates/actor/panel/encumbrance-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/armour-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/cybernetic-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/force-field-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/storage-location-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/backpack-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/gear-panel.hbs}}
+            </div>
+
+            {{!-- ORIGIN PATH TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="origin">
+                {{> systems/rogue-trader/templates/actor/panel/origin-path-panel.hbs}}
+            </div>
+
+            {{!-- DYNASTY TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="dynasty">
+                {{> systems/rogue-trader/templates/actor/panel/profit-factor-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/ship-role-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/acquisitions-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/experience-panel.hbs}}
+            </div>
+
+            {{!-- BIOGRAPHY TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="bio">
+                {{> systems/rogue-trader/templates/actor/panel/biography-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/journal-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/peer-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/enemy-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/corruption-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/insanity-panel.hbs}}
+            </div>
+        </section>
+    </form>
+</div>

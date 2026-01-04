@@ -1,0 +1,46 @@
+<div class="rt-chat-card rt-navigator-power">
+    <header class="card-header flexrow">
+        <img class="item-image" src="{{item.img}}" alt="{{item.name}}"/>
+        <h3 class="item-name">{{item.name}}</h3>
+        <span class="roll-type">Navigator Power</span>
+    </header>
+
+    <section class="card-content">
+        <div class="roll-result {{#if success}}success{{else}}failure{{/if}}">
+            <div class="roll-dice">
+                <span class="roll-total">{{roll.total}}</span>
+                <span class="roll-vs">vs</span>
+                <span class="target-value">{{targetValue}}</span>
+            </div>
+            <div class="result-text">
+                {{#if success}}
+                <span class="success-text"><i class="fas fa-eye"></i> Power Manifested!</span>
+                {{else}}
+                <span class="failure-text"><i class="fas fa-eye-slash"></i> Power Failed!</span>
+                {{/if}}
+                <span class="degrees">({{degrees}} Degrees)</span>
+            </div>
+        </div>
+
+        {{#if item.system.description}}
+        <div class="power-description">
+            {{{item.system.description}}}
+        </div>
+        {{/if}}
+
+        {{#if item.system.sideEffects}}
+        <div class="side-effects">
+            <strong>Side Effects:</strong> {{{item.system.sideEffects}}}
+        </div>
+        {{/if}}
+    </section>
+
+    <footer class="card-footer">
+        <span class="actor-name">{{actor}}</span>
+        {{#unless success}}
+        <button class="rt-chat-button" data-action="rollNavigatorMutation">
+            <i class="fas fa-dna"></i> Check Navigator Mutation
+        </button>
+        {{/unless}}
+    </footer>
+</div>

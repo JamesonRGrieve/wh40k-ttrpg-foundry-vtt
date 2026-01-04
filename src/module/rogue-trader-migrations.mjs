@@ -36,8 +36,8 @@ export async function checkAndMigrateWorld() {
         ui.notifications.info('Upgrade complete!');
     }
 
-    async function updateCompendiumPermissions(currentVersion) {
-        if (currentVersion < 181) {
+    async function updateCompendiumPermissions(version) {
+        if (version < 181) {
             // Every compendium in our system should be owned by everyone and have full owner permissions.
             // Otherwise, issues will occur when trying to create items from the compendium.
             const compendiums = game.packs.filter((p) => p.metadata.packageName === SYSTEM_ID);
@@ -62,8 +62,8 @@ export async function checkAndMigrateWorld() {
         }
     }
 
-    async function migrateItemData(item, currentVersion) {
-        if (currentVersion < 180) {
+    async function migrateItemData(item, version) {
+        if (version < 180) {
             // Get itemcollection.contentsData flag
             const itemCollection = item.flags['itemcollection'];
             if (itemCollection && itemCollection.contentsData) {
@@ -72,8 +72,8 @@ export async function checkAndMigrateWorld() {
         }
     }
 
-    async function migrateActorData(actor, currentVersion) {
-        if (currentVersion < 1) {
+    async function migrateActorData(actor, version) {
+        if (version < 1) {
             // Update Storage Locations to Hold Consumables
             for (const location of actor.items.filter((i) => i.isStorageLocation)) {
                 await location.update({

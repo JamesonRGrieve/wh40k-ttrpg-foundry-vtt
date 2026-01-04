@@ -1,0 +1,45 @@
+<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.Starship.Crew.Header"}}</h1>
+    <div class="rt-crew-grid">
+        <div class="rt-crew-stat">
+            <span class="rt-crew-stat-label">{{localize "RT.Starship.Crew.Population"}}</span>
+            <input type="number" class="rt-crew-stat-input" name="system.crew.population" value="{{system.crew.population}}" />
+        </div>
+        <div class="rt-crew-stat">
+            <span class="rt-crew-stat-label">{{localize "RT.Starship.Crew.Rating"}}</span>
+            <input type="number" class="rt-crew-stat-input" name="system.crew.crewRating" value="{{system.crew.crewRating}}" />
+        </div>
+        <div class="rt-crew-stat">
+            <span class="rt-crew-stat-label">{{localize "RT.Starship.Crew.MoraleCurrent"}}</span>
+            <input type="number" class="rt-crew-stat-input" name="system.crew.morale.value" value="{{system.crew.morale.value}}" />
+        </div>
+        <div class="rt-crew-stat">
+            <span class="rt-crew-stat-label">{{localize "RT.Starship.Crew.MoraleMax"}}</span>
+            <input type="number" class="rt-crew-stat-input" name="system.crew.morale.max" value="{{system.crew.morale.max}}" />
+        </div>
+    </div>
+</div>
+
+<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.Starship.Crew.Officers"}}</h1>
+    <p class="rt-crew-instructions">{{localize "RT.Starship.Crew.OfficersDesc"}}</p>
+    <div class="dh-table--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">{{localize "RT.Starship.Crew.Role"}}</div>
+            <div class="table-cell--span2">{{localize "RT.Starship.Crew.Officer"}}</div>
+            <div class="table-cell--span2">{{localize "RT.Starship.Crew.Bonus"}}</div>
+        </div>
+        {{#each shipRoles as |role|}}
+            <div class="table-row">
+                <div class="table-cell--span2">
+                    <button class="item-name rt-item-button" data-item-id="{{role.id}}" type="button">
+                        <img class="dh-item-img" src="{{role.img}}" alt="{{role.name}}" />
+                        {{role.name}}
+                    </button>
+                </div>
+                <div class="table-cell--span2">{{role.system.officer}}</div>
+                <div class="table-cell--span2">{{role.system.effect}}</div>
+            </div>
+        {{/each}}
+    </div>
+</div>

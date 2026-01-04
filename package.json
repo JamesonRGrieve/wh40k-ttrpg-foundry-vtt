@@ -19,6 +19,7 @@
   "dependencies": {
     "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",
     "cb": "0.1.0",
+    "classic-level": "^1.4.1",
     "decode-uri-component": "0.3.0",
     "eslint": "8.27.0",
     "eslint-config-prettier": "8.5.0",

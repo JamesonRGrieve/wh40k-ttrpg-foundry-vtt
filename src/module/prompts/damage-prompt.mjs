@@ -12,14 +12,14 @@ export async function prepareDamageRoll(rollData) {
                 roll: {
                     icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
-                    callback: async (html) => {
+                    callback: async (dialogHtml) => {
                         const actionData = new ActionData();
                         actionData.template = 'systems/rogue-trader/templates/chat/damage-roll-chat.hbs';
 
-                        rollData.damage = html.find('#damage')[0].value;
-                        rollData.penetration = html.find('#penetration')[0].value;
-                        rollData.damageType = html.find('[name=damageType] :selected').val();
-                        rollData.pr = html.find('#pr')[0]?.value;
+                        rollData.damage = dialogHtml.find('#damage')[0].value;
+                        rollData.penetration = dialogHtml.find('#penetration')[0].value;
+                        rollData.damageType = dialogHtml.find('[name=damageType] :selected').val();
+                        rollData.pr = dialogHtml.find('#pr')[0]?.value;
                         rollData.template = 'systems/rogue-trader/templates/chat/damage-roll-chat.hbs';
                         rollData.roll = new Roll(rollData.damage, rollData);
                         await rollData.roll.evaluate();

@@ -15,10 +15,10 @@ export async function prepareSimpleRoll(simpleSkillData) {
                 roll: {
                     icon: "<i class='dh-material'>casino</i>",
                     label: 'Roll',
-                    callback: async (html) => {
+                    callback: async (dialogHtml) => {
                         const rollData = simpleSkillData.rollData;
-                        rollData.modifiers['difficulty'] = parseInt(html.find('[id=difficulty] :selected').val());
-                        rollData.modifiers['modifier'] = html.find('#modifier')[0].value;
+                        rollData.modifiers['difficulty'] = parseInt(dialogHtml.find('[id=difficulty] :selected').val());
+                        rollData.modifiers['modifier'] = dialogHtml.find('#modifier')[0].value;
                         await rollData.calculateTotalModifiers();
                         await simpleSkillData.calculateSuccessOrFailure();
                         await sendActionDataToChat(simpleSkillData);
@@ -50,8 +50,8 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
                 add: {
                     icon: "<i class='dh-material'>add</i>",
                     label: 'Add',
-                    callback: async (html) => {
-                        const speciality = html.find('#speciality-name')[0].value;
+                    callback: async (dialogHtml) => {
+                        const speciality = dialogHtml.find('#speciality-name')[0].value;
                         await simpleSkillData.actor.addSpecialitySkill(simpleSkillData.skillName, speciality);
                     },
                 },

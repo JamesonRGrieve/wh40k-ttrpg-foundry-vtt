@@ -1,0 +1,39 @@
+<div class="rt-chat-card rt-talent-roll">
+    <header class="card-header flexrow">
+        <img class="item-image" src="{{item.img}}" alt="{{item.name}}"/>
+        <h3 class="item-name">{{item.name}}</h3>
+        <span class="roll-type">Talent Roll</span>
+    </header>
+
+    <section class="card-content">
+        {{#if rollDescription}}
+        <p class="roll-description">{{rollDescription}}</p>
+        {{/if}}
+
+        <div class="roll-result {{#if success}}success{{else}}failure{{/if}}">
+            <div class="roll-dice">
+                <span class="roll-total">{{roll.total}}</span>
+                <span class="roll-vs">vs</span>
+                <span class="target-value">{{targetValue}}</span>
+            </div>
+            <div class="result-text">
+                {{#if success}}
+                <span class="success-text"><i class="fas fa-check-circle"></i> Success!</span>
+                {{else}}
+                <span class="failure-text"><i class="fas fa-times-circle"></i> Failure!</span>
+                {{/if}}
+                <span class="degrees">({{degrees}} Degrees)</span>
+            </div>
+        </div>
+
+        {{#if item.system.effect}}
+        <div class="effect-text">
+            <strong>Effect:</strong> {{{item.system.effect}}}
+        </div>
+        {{/if}}
+    </section>
+
+    <footer class="card-footer">
+        <span class="actor-name">{{actor}}</span>
+    </footer>
+</div>

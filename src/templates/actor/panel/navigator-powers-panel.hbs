@@ -1,0 +1,32 @@
+<div class="dh-panel spacer dh-grid-col-3 dh-grid-row-2">
+    <h1 class="dh-panel__header">{{localize "RT.NavigatorPowers.Header"}}</h1>
+    <div class="dh-table--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">{{localize "RT.NavigatorPowers.Name"}}</div>
+            <div class="table-cell">{{localize "RT.NavigatorPowers.Range"}}</div>
+            <div class="table-cell">{{localize "RT.NavigatorPowers.Test"}}</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
+        </div>
+        {{#each navigatorPowers as |power|}}
+            <div class="table-row">
+                <div class="table-cell--span2">
+                    <button class="item-name" data-item-id="{{power._id}}" type="button">
+                        <img class="dh-item-img" src="{{power.img}}" alt="{{power.name}}" />
+                        {{power.name}}
+                    </button>
+                </div>
+                <div class="table-cell">{{power.system.range}}</div>
+                <div class="table-cell">{{power.system.test}}</div>
+                <div class="table-cell--last">
+                    <label class="dh-control-button item-delete" data-item-id="{{power._id}}">
+                        <span class="dh-control-button__span material-icons">delete</span>
+                    </label>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
