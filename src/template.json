@@ -1554,13 +1554,35 @@
             "current": 0,
             "misfortunes": ""
           },
+          "armour": {
+            "head": 0,
+            "rightArm": 0,
+            "leftArm": 0,
+            "body": 0,
+            "rightLeg": 0,
+            "leftLeg": 0
+          },
           "lifting": {
             "lift": 0,
             "carry": 0,
             "push": 0
           },
           "armourWeight": 0,
-          "acquisitions": "",
+          "weight": {
+            "total": 0,
+            "current": 0
+          },
+          "wounds": {
+            "total": 0,
+            "current": 0,
+            "critical": 0,
+            "fatigue": 0
+          },
+          "fate": {
+            "total": 0,
+            "current": 0
+          },
+          "acquisitions": [],
           "mutations": ""
         }
       }
