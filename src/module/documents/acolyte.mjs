@@ -16,6 +16,10 @@ import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 
+const SKILL_ALIASES = {
+    navigate: 'navigation',
+};
+
 export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
     get backpack() {
@@ -116,7 +120,8 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     }
 
     async rollSkill(skillName, specialityName) {
-        let skill = this.skills[skillName];
+        const resolvedSkillName = this._resolveSkillName(skillName);
+        let skill = this.skills[resolvedSkillName];
         let label = skill.label;
         if (specialityName) {
             skill = skill.specialities[specialityName];
@@ -280,11 +285,27 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     }
 
     getSkillFuzzy(skillName) {
+        const resolvedSkillName = this._resolveSkillName(skillName);
+        const skill = this.skills[resolvedSkillName];
+        if (skill) return skill;
+
         for (const [name, skill] of Object.entries(this.skills)) {
             if (skillName.toUpperCase() === name.toUpperCase()) {
                 return skill;
             }
         }
+    }
+
+    _resolveSkillName(skillName) {
+        if (!skillName) return skillName;
+        if (this.skills[skillName]) return skillName;
+
+        const alias = SKILL_ALIASES[skillName.toLowerCase()];
+        if (alias && this.skills[alias]) {
+            return alias;
+        }
+
+        return skillName;
     }
 
     _skillAdvanceToValue(adv) {
