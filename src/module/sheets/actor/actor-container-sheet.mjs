@@ -221,9 +221,11 @@ export class ActorContainerSheet extends ActorSheet {
             case 'skill':
                 const skill = this.actor.skills[element.dataset.itemId];
                 let name = skill.label;
-                if (element.dataset.speciality) {
-                    const speciality = skill.specialities[element.dataset.speciality];
-                    name = `${name}: ${speciality.label}`;
+                if (element.dataset.speciality && Array.isArray(skill.entries)) {
+                    const speciality = skill.entries[element.dataset.speciality];
+                    if (speciality) {
+                        name = `${name}: ${speciality.name ?? speciality.label ?? element.dataset.speciality}`;
+                    }
                 }
                 dragData.data = {
                     name,
