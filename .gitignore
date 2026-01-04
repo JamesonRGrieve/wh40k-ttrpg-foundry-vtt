@@ -23,6 +23,7 @@ backup
 docker-data
 foundrydata
 FoundryVTTData
+.npm-cache
 
 ## Secrets
 .env.secret
