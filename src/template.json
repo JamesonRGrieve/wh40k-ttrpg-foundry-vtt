@@ -910,7 +910,7 @@
             "isSpecialist": false,
             "specialities": {},
             "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Fel"
           },
           "chemUse": {
             "label": "Chem-Use",
@@ -1666,7 +1666,7 @@
             "isSpecialist": false,
             "specialities": {},
             "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Ag"
           },
           "secretTongue": {
             "label": "Secret Tongue",
@@ -1747,7 +1747,7 @@
             "isSpecialist": false,
             "specialities": {},
             "cost": 0,
-            "characteristic": "Per"
+            "characteristic": "Int"
           },
           "swim": {
             "label": "Swim",
