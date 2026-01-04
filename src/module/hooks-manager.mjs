@@ -36,6 +36,7 @@ import { RogueTraderCyberneticSheet } from './sheets/item/cybernetic-sheet.mjs';
 import { RogueTraderForceFieldSheet } from './sheets/item/force-field-sheet.mjs';
 import { checkAndMigrateWorld } from './rogue-trader-migrations.mjs';
 import { DHTourMain } from './tours/main-tour.mjs';
+import { RollTableUtils } from './utils/roll-table-utils.mjs';
 
 import * as documents from './documents/_module.mjs'
 
@@ -75,6 +76,15 @@ Enable Debug with: game.rt.debug = true
             rollItemMacro,
             rollSkillMacro,
             rollCharacteristicMacro,
+            // Roll table utilities
+            rollTable: RollTableUtils,
+            // Convenience methods for common roll tables
+            rollPsychicPhenomena: (actor, mod) => RollTableUtils.rollPsychicPhenomena(actor, mod),
+            rollPerilsOfTheWarp: (actor) => RollTableUtils.rollPerilsOfTheWarp(actor),
+            rollFearEffects: (fear, dof) => RollTableUtils.rollFearEffects(fear, dof),
+            rollMutation: () => RollTableUtils.rollMutation(),
+            rollMalignancy: () => RollTableUtils.rollMalignancy(),
+            showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
         };
 
         //CONFIG.debug.hooks = true;

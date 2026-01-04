@@ -72,6 +72,10 @@ export class HandlebarManager {
             // Chat Templates
             'systems/rogue-trader/templates/chat/item-card-chat.hbs',
             'systems/rogue-trader/templates/chat/ship-weapon-chat.hbs',
+            'systems/rogue-trader/templates/chat/talent-roll-chat.hbs',
+            'systems/rogue-trader/templates/chat/navigator-power-chat.hbs',
+            'systems/rogue-trader/templates/chat/order-roll-chat.hbs',
+            'systems/rogue-trader/templates/chat/ritual-roll-chat.hbs',
 
             // Item Panels
             'systems/rogue-trader/templates/item/panel/active-effects-panel.hbs',
