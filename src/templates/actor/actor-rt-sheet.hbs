@@ -53,59 +53,35 @@
         {{!-- Navigation Tabs --}}
         <div class="dh-navigation rt-navigation" data-group="primary">
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="overview" data-group="primary">
-                    <span class="material-icons">dashboard</span>
-                    {{localize "RT.Tabs.Overview"}}
-                </a>
+                <a class="item" data-tab="overview" data-group="primary">{{localize "RT.Tabs.Overview"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="combat" data-group="primary">
-                    <span class="material-icons">gps_fixed</span>
-                    {{localize "RT.Tabs.Combat"}}
-                </a>
+                <a class="item" data-tab="combat" data-group="primary">{{localize "RT.Tabs.Combat"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="abilities" data-group="primary">
-                    <span class="material-icons">psychology</span>
-                    {{localize "RT.Tabs.Abilities"}}
-                </a>
+                <a class="item" data-tab="abilities" data-group="primary">{{localize "RT.Tabs.Abilities"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="powers" data-group="primary">
-                    <span class="material-icons">auto_fix_high</span>
-                    {{localize "RT.Tabs.Powers"}}
-                </a>
+                <a class="item" data-tab="equipment" data-group="primary">{{localize "RT.Tabs.Equipment"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="equipment" data-group="primary">
-                    <span class="material-icons">inventory_2</span>
-                    {{localize "RT.Tabs.Equipment"}}
-                </a>
+                <a class="item" data-tab="powers" data-group="primary">{{localize "RT.Tabs.Powers"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="origin" data-group="primary">
-                    <span class="material-icons">account_tree</span>
-                    {{localize "RT.Tabs.OriginPath"}}
-                </a>
+                <a class="item" data-tab="origin" data-group="primary">{{localize "RT.Tabs.OriginPath"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="dynasty" data-group="primary">
-                    <span class="material-icons">sailing</span>
-                    {{localize "RT.Tabs.Dynasty"}}
-                </a>
+                <a class="item" data-tab="dynasty" data-group="primary">{{localize "RT.Tabs.Dynasty"}}</a>
             </label>
             <label class="dh-navigation__item rt-nav-item">
-                <a class="item" data-tab="bio" data-group="primary">
-                    <span class="material-icons">person</span>
-                    {{localize "RT.Tabs.Biography"}}
-                </a>
+                <a class="item" data-tab="bio" data-group="primary">{{localize "RT.Tabs.Biography"}}</a>
             </label>
         </div>
 
         {{!-- Tab Content --}}
         <section class="dh-body rt-body">
             {{!-- OVERVIEW TAB --}}
-            <div class="tab rt-tab" data-group="primary" data-tab="overview">
+            <div class="tab rt-tab rt-dashboard" data-group="primary" data-tab="overview">
                 {{> systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/movement-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs}}

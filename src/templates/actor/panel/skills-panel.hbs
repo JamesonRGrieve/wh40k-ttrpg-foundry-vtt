@@ -1,13 +1,10 @@
-<div class="dh-panel dh-grid-col-3 dh-grid-row-2 rt-skills-panel">
+<div class="dh-panel dh-grid-col-3 rt-skills-panel">
     <div class="dh-table--border dh-skilltable--border">
         <h1 class="dh-panel__header">{{localize "RT.Skills.Header"}}</h1>
         <div class="table-row--head rt-skills-header">
             <div class="table-cell rt-skill-name">{{localize "RT.Skills.Skill"}}</div>
             <div class="table-cell rt-skill-char">{{localize "RT.Skills.Characteristic"}}</div>
-            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Basic"}}</div>
-            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Trained"}}</div>
-            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus10"}}</div>
-            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus20"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Training"}}</div>
             <div class="table-cell rt-skill-bonus">{{localize "RT.Skills.Bonus"}}</div>
             <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
         </div>
@@ -24,16 +21,12 @@
                     </select>
                 </div>
                 <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.basic" data-dtype="Boolean" {{checked entry.[1].basic}} title="{{localize 'RT.Skills.Basic'}}" />
-                </div>
-                <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.trained" data-dtype="Boolean" {{checked entry.[1].trained}} title="{{localize 'RT.Skills.Trained'}}" />
-                </div>
-                <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus10" data-dtype="Boolean" {{checked entry.[1].plus10}} title="{{localize 'RT.Skills.Plus10'}}" />
-                </div>
-                <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus20" data-dtype="Boolean" {{checked entry.[1].plus20}} title="{{localize 'RT.Skills.Plus20'}}" />
+                    <div class="rt-training-select">
+                        <select class="rt-skill-training-select" data-skill="{{entry.[0]}}">
+                            {{selectOptions ../skillTrainingOptions selected=entry.[1].trainingLevel}}
+                        </select>
+                        <span class="rt-training-caret"></span>
+                    </div>
                 </div>
                 <div class="table-cell rt-skill-bonus">
                     <input type="number" data-dtype="Number" name="system.skills.{{entry.[0]}}.bonus" value="{{entry.[1].bonus}}" class="rt-bonus-input" />

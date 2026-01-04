@@ -27,14 +27,36 @@ export class AcolyteSheet extends ActorContainerSheet {
         const skills = Object.entries(this.actor.skills ?? {});
         const visibleSkills = skills.filter(([, data]) => !data.hidden);
         visibleSkills.sort((a, b) => a[1].label.localeCompare(b[1].label));
+        const trainingLevel = (skill) => {
+            if (skill.plus20) return 'plus20';
+            if (skill.plus10) return 'plus10';
+            if (skill.trained) return 'trained';
+            if (skill.basic) return 'basic';
+            return 'none';
+        };
         context.skillLists = {
             standard: visibleSkills.filter(([, data]) => !Array.isArray(data.entries)),
             specialist: visibleSkills.filter(([, data]) => Array.isArray(data.entries)),
         };
+        context.skillLists.standard.forEach(([, data]) => {
+            data.trainingLevel = trainingLevel(data);
+        });
+        context.skillLists.specialist.forEach(([, data]) => {
+            data.entries?.forEach((entry) => {
+                entry.trainingLevel = trainingLevel(entry);
+            });
+        });
         context.skillCharacteristicOptions = Object.values(this.actor.characteristics ?? {}).map((c) => ({
             label: c.short,
             value: c.short,
         }));
+        context.skillTrainingOptions = {
+            none: game.i18n.localize('RT.Skills.Untrained'),
+            basic: game.i18n.localize('RT.Skills.Basic'),
+            trained: game.i18n.localize('RT.Skills.Trained'),
+            plus10: game.i18n.localize('RT.Skills.Plus10'),
+            plus20: game.i18n.localize('RT.Skills.Plus20'),
+        };
         if (context.system) {
             context.system.rogueTrader = this._prepareRogueTraderFields(context.system.rogueTrader ?? {});
         }
@@ -93,6 +115,7 @@ export class AcolyteSheet extends ActorContainerSheet {
 
         html.find('.roll-characteristic').click(async (ev) => await this._prepareRollCharacteristic(ev));
         html.find('.roll-skill').click(async (ev) => await this._prepareRollSkill(ev));
+        html.find('.rt-skill-training-select').change(async (ev) => await this._onSkillTrainingChange(ev));
         html.find('.acolyte-homeWorld').change((ev) => this._onHomeworldChange(ev));
         html.find('.bonus-vocalize').click(async (ev) => await this._onBonusVocalize(ev));
 
@@ -149,6 +172,33 @@ export class AcolyteSheet extends ActorContainerSheet {
         const skillName = $(event.currentTarget).data('skill');
         const specialtyName = $(event.currentTarget).data('specialty');
         await this.actor.rollSkill(skillName, specialtyName);
+    }
+
+    async _onSkillTrainingChange(event) {
+        event.preventDefault();
+        const select = event.currentTarget;
+        const skillKey = select.dataset.skill;
+        const specialty = select.dataset.specialty;
+        const level = select.value;
+        if (!skillKey) return;
+
+        const basePath = specialty != null
+            ? `system.skills.${skillKey}.entries.${specialty}`
+            : `system.skills.${skillKey}`;
+
+        const flags = {
+            basic: level === 'basic',
+            trained: level === 'trained',
+            plus10: level === 'plus10',
+            plus20: level === 'plus20',
+        };
+
+        const updateData = {};
+        Object.entries(flags).forEach(([key, value]) => {
+            updateData[`${basePath}.${key}`] = value;
+        });
+
+        await this.actor.update(updateData);
     }
 
     _prepareRogueTraderFields(rogueTraderData) {

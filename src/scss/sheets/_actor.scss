@@ -17,6 +17,19 @@
 
 .rt-sheet {
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+
+    .dh-panel {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(74, 55, 40, 0.2);
+        border-radius: 6px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .dh-panel__header {
+        font-size: 1.05em;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
 }
 
 // Character Header
@@ -25,9 +38,9 @@
     
     .dh-header__info {
         display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 15px;
-        align-items: center;
+        grid-template-columns: auto minmax(260px, 1fr) minmax(320px, 1fr);
+        gap: 16px;
+        align-items: stretch;
     }
 }
 
@@ -80,16 +93,20 @@
 
 .rt-quick-stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(4, minmax(90px, 1fr));
+    gap: 10px;
+    align-content: center;
 }
 
 .rt-stat-box {
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(74, 55, 40, 0.3);
-    border-radius: 4px;
-    padding: 5px 8px;
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.6), rgba(222, 214, 198, 0.45));
+    border: 1px solid rgba(74, 55, 40, 0.25);
+    border-radius: 6px;
+    padding: 6px 8px;
     text-align: center;
+    display: grid;
+    gap: 4px;
+    min-height: 58px;
 }
 
 .rt-wounds-box { border-left: 3px solid #8B0000; }
@@ -102,7 +119,7 @@
     font-size: 0.75em;
     text-transform: uppercase;
     color: #4a3728;
-    margin-bottom: 2px;
+    letter-spacing: 0.08em;
 }
 
 .rt-stat-values {
@@ -113,18 +130,18 @@
 }
 
 .rt-stat-input {
-    width: 35px;
+    width: 44px;
     text-align: center;
     border: none;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 2px;
-    padding: 2px;
-    font-size: 1.1em;
+    padding: 3px;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .rt-stat-single {
-    width: 50px;
+    width: 60px;
 }
 
 .rt-stat-separator {
@@ -136,21 +153,17 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 2px;
-    padding: 5px 0;
+    gap: 4px;
+    padding: 6px 8px;
 }
 
 .rt-nav-item {
     a {
         display: flex;
         align-items: center;
-        gap: 4px;
-        padding: 5px 10px;
+        padding: 6px 12px;
         font-size: 0.85em;
-        
-        .material-icons {
-            font-size: 16px;
-        }
+        letter-spacing: 0.06em;
     }
 }
 
@@ -160,9 +173,27 @@
 }
 
 .rt-tab {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(6, 1fr);
-    gap: 0;
+    gap: 10px;
+}
+
+.rt-tab.active {
+    display: grid;
+}
+
+.rt-dashboard {
+    .dh-panel {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(238, 232, 220, 0.65));
+        border: 1px solid rgba(74, 55, 40, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .dh-panel__header {
+        border-bottom: 2px solid rgba(74, 55, 40, 0.2);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
 }
 
 // ============================================

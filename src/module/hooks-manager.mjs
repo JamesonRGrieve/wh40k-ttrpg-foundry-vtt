@@ -106,29 +106,34 @@ Enable Debug with: game.rt.debug = true
         CONFIG.Item.documentClass = RogueTraderItem;
 
         // Register sheet application classes
-        Actors.unregisterSheet('core', ActorSheet);
-        Actors.registerSheet(SYSTEM_ID, AcolyteSheet, {types: ["acolyte", "character"], makeDefault: true });
-        Actors.registerSheet(SYSTEM_ID, NpcSheet, {types: ['npc'], makeDefault: true });
-        Actors.registerSheet(SYSTEM_ID, VehicleSheet, {types: ['vehicle'], makeDefault: true });
-        Actors.registerSheet(SYSTEM_ID, StarshipSheet, {types: ['starship'], makeDefault: true });
+        const ActorCollection = foundry.documents.collections.Actors;
+        const ItemCollection = foundry.documents.collections.Items;
+        const BaseActorSheet = foundry.appv1.sheets.ActorSheet;
+        const BaseItemSheet = foundry.appv1.sheets.ItemSheet;
 
-        Items.unregisterSheet('core', ItemSheet);
-        Items.registerSheet(SYSTEM_ID, RogueTraderItemSheet, { makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderAmmoSheet, { types: ['ammunition'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderArmourSheet, { types: ['armour'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderCyberneticSheet, { types: ['cybernetic'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderForceFieldSheet, { types: ['forceField'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderGearSheet, { types: ['consumable', 'gear', 'drug', 'tool'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
-        Items.registerSheet(SYSTEM_ID, RogueTraderTalentSheet, { types: ['talent'], makeDefault: true });
-        Items.registerSheet(SYSTEM_ID, RogueTraderTraitSheet, {types: ['trait'],makeDefault: true,});
-        Items.registerSheet(SYSTEM_ID, RogueTraderWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
-        Items.registerSheet(SYSTEM_ID, RogueTraderWeaponSheet, { types: ['weapon'], makeDefault: true });
+        ActorCollection.unregisterSheet('core', BaseActorSheet);
+        ActorCollection.registerSheet(SYSTEM_ID, AcolyteSheet, {types: ["acolyte", "character"], makeDefault: true });
+        ActorCollection.registerSheet(SYSTEM_ID, NpcSheet, {types: ['npc'], makeDefault: true });
+        ActorCollection.registerSheet(SYSTEM_ID, VehicleSheet, {types: ['vehicle'], makeDefault: true });
+        ActorCollection.registerSheet(SYSTEM_ID, StarshipSheet, {types: ['starship'], makeDefault: true });
+
+        ItemCollection.unregisterSheet('core', BaseItemSheet);
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderItemSheet, { makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderAmmoSheet, { types: ['ammunition'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderArmourSheet, { types: ['armour'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderCyberneticSheet, { types: ['cybernetic'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderForceFieldSheet, { types: ['forceField'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderGearSheet, { types: ['consumable', 'gear', 'drug', 'tool'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderTalentSheet, { types: ['talent'], makeDefault: true });
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderTraitSheet, {types: ['trait'],makeDefault: true,});
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderWeaponSheet, { types: ['weapon'], makeDefault: true });
 
         RogueTraderSettings.registerSettings();
         HandlebarManager.loadTemplates();

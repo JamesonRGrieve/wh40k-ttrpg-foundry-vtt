@@ -157,6 +157,8 @@
       "Skill": "Skill",
       "Specialization": "Specialization",
       "Characteristic": "Char",
+      "Training": "Training",
+      "Untrained": "Untrained",
       "Basic": "Basic",
       "Trained": "Trained",
       "Plus10": "+10",
