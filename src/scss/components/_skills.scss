@@ -185,7 +185,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 
 // Specialist skills specific styling
 .rt-specialist-group {
-  background: rgba(36, 107, 131, 0.25) !important;
+  background: rgba(36, 107, 131, 0.25);
   border-top: 2px solid rgba(36, 107, 131, 0.4);
   border-bottom: 2px solid rgba(36, 107, 131, 0.4);
   margin-top: 0.5rem;
@@ -351,7 +351,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   // Common Lore - Golden/amber theme (knowledge of common topics)
   &[data-skill="commonLore"],
   &.spec_skills_commonLore {
-    background: linear-gradient(135deg, rgba(218, 165, 32, 0.2), rgba(218, 165, 32, 0.1)) !important;
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.2), rgba(218, 165, 32, 0.1));
     border-top-color: rgba(218, 165, 32, 0.5);
     border-bottom-color: rgba(218, 165, 32, 0.5);
     
@@ -371,7 +371,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   // Forbidden Lore - Dark purple/crimson theme (dangerous knowledge)
   &[data-skill="forbiddenLore"],
   &.spec_skills_forbiddenLore {
-    background: linear-gradient(135deg, rgba(128, 0, 64, 0.2), rgba(75, 0, 130, 0.15)) !important;
+    background: linear-gradient(135deg, rgba(128, 0, 64, 0.2), rgba(75, 0, 130, 0.15));
     border-top-color: rgba(139, 0, 0, 0.5);
     border-bottom-color: rgba(75, 0, 130, 0.5);
     
@@ -391,7 +391,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   // Scholastic Lore - Deep blue theme (academic knowledge)
   &[data-skill="scholasticLore"],
   &.spec_skills_scholasticLore {
-    background: linear-gradient(135deg, rgba(25, 25, 112, 0.15), rgba(0, 0, 128, 0.1)) !important;
+    background: linear-gradient(135deg, rgba(25, 25, 112, 0.15), rgba(0, 0, 128, 0.1));
     border-top-color: rgba(0, 0, 139, 0.5);
     border-bottom-color: rgba(0, 0, 139, 0.5);
     
