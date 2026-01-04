@@ -11,19 +11,19 @@ export class VehicleSheet extends ActorContainerSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/actor/actor-vehicle-sheet.hbs`;
+        return `systems/rogue-trader/templates/actor/actor-vehicle-sheet.hbs`;
     }
 
     getData() {
         const context = super.getData();
-        context.dh = CONFIG.dh;
+        context.dh = CONFIG.rt;
         return context;
     }
 
     async _onItemDamage(event) {
         event.preventDefault();
         const div = $(event.currentTarget);
-        game.dh.warn('Not Implemented for Vehicles Yet');
+        game.rt.warn('Not Implemented for Vehicles Yet');
     }
 
 }

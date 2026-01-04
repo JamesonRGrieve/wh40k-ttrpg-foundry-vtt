@@ -5,9 +5,9 @@ import { backgroundNames } from './backgrounds.mjs';
 import { roleNames } from './roles.mjs';
 import { divinationNames } from './divinations.mjs';
 
-export const DarkHeresy = {};
+export const RogueTrader = {};
 
-DarkHeresy.bio = {
+RogueTrader.bio = {
     homeWorld: homeworldNames(),
     background: backgroundNames(),
     role: roleNames(),
@@ -28,13 +28,13 @@ DarkHeresy.bio = {
     }
 };
 
-DarkHeresy.items = {
+RogueTrader.items = {
     availability: ['Ubiquitous', 'Abundant', 'Plentiful', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
     craftsmanship: ['Poor', 'Common', 'Good', 'Best'],
     vehicle_types: ['Walker', 'Wheeled', 'Tracked', 'Skimmer', 'Aircraft', 'Spacecraft']
 };
 
-DarkHeresy.combat = {
+RogueTrader.combat = {
     las_fire_modes: ['Standard', 'Overcharge', 'Overload'],
     psychic_attacks: ['Psychic Bolt', 'Psychic Blast', 'Psychic Barrage', 'Psychic Storm'],
     damage_types: ['Energy', 'Impact', 'Rending', 'Explosive'],
@@ -75,22 +75,22 @@ DarkHeresy.combat = {
     }
 };
 
-DarkHeresy.ui = {
+RogueTrader.ui = {
     toggleExpanded: function (name) {
-        if (DarkHeresy.ui.expanded.includes(name)) {
-            const index = DarkHeresy.ui.expanded.indexOf(name);
+        if (RogueTrader.ui.expanded.includes(name)) {
+            const index = RogueTrader.ui.expanded.indexOf(name);
             if (index > -1) {
-                DarkHeresy.ui.expanded.splice(index, 1);
+                RogueTrader.ui.expanded.splice(index, 1);
             }
         } else {
-            DarkHeresy.ui.expanded.push(name);
+            RogueTrader.ui.expanded.push(name);
         }
     },
     expanded: [],
 };
 
 export function toggleUIExpanded(name) {
-    CONFIG.dh.ui.toggleExpanded(name);
+    CONFIG.rt.ui.toggleExpanded(name);
 }
 
 export function fieldMatch(val1, val2) {

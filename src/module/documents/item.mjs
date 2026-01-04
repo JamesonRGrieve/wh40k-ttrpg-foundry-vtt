@@ -1,7 +1,7 @@
-import { DarkHeresyItemContainer } from './item-container.mjs';
+import { RogueTraderItemContainer } from './item-container.mjs';
 import { capitalize } from '../handlebars/handlebars-helpers.mjs';
 
-export class DarkHeresyItem extends DarkHeresyItemContainer {
+export class RogueTraderItem extends RogueTraderItemContainer {
     get totalWeight() {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
@@ -147,14 +147,14 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     }
 
     _onCreate(data, options, user) {
-        game.dh.log('Determining nested items for', this);
+        game.rt.log('Determining nested items for', this);
         this._determineNestedItems();
         return super._onCreate(data, options, user);
     }
 
     async prepareData() {
         super.prepareData();
-        game.dh.log('Item prepare data', this);
+        game.rt.log('Item prepare data', this);
 
         this.convertNestedToItems();
 
@@ -186,10 +186,10 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
 
         // Check for specials
         if (this.system.special) {
-            game.dh.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
-            if (this.isWeapon) await this._updateSpecialsFromPack('dark-heresy-2nd.weapons', this.system.special);
-            if (this.isAmmunition) await this._updateSpecialsFromPack('dark-heresy-2nd.ammo', this.system.special);
-            game.dh.log('Special migrated for item: ' + this.name, this.system.special);
+            game.rt.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
+            if (this.isWeapon) await this._updateSpecialsFromPack('rogue-trader.weapons', this.system.special);
+            if (this.isAmmunition) await this._updateSpecialsFromPack('rogue-trader.ammo', this.system.special);
+            game.rt.log('Special migrated for item: ' + this.name, this.system.special);
             this.system.special = undefined;
 
             await this.convertNestedToItems();
@@ -208,7 +208,7 @@ export class DarkHeresyItem extends DarkHeresyItemContainer {
     }
 
     async _getAttackSpecials(specialData) {
-        const attackSpecialPack = game.packs.find((p) => p.collection === 'dark-heresy-2nd.attack-specials');
+        const attackSpecialPack = game.packs.find((p) => p.collection === 'rogue-trader.attack-specials');
         if (!attackSpecialPack) return;
         const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
         const specials = [];

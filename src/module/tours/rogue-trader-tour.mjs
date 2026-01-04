@@ -1,4 +1,4 @@
-export class DarkHeresyTour extends Tour {
+export class RogueTraderTour extends Tour {
     //This class overcharge the "step" data structure with the following properties:
     // - action: "click" or "scrollTo"
     // - target: CSS selector of the element to use for the action. If not set, the selector is used for the action

@@ -1,6 +1,6 @@
-import { DarkHeresyItemContainerSheet } from './item-container-sheet.mjs';
+import { RogueTraderItemContainerSheet } from './item-container-sheet.mjs';
 
-export class DarkHeresyStorageLocationSheet extends DarkHeresyItemContainerSheet {
+export class RogueTraderStorageLocationSheet extends RogueTraderItemContainerSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 800,
@@ -10,6 +10,6 @@ export class DarkHeresyStorageLocationSheet extends DarkHeresyItemContainerSheet
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/item/item-storage-location-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-storage-location-sheet.hbs`;
     }
 }

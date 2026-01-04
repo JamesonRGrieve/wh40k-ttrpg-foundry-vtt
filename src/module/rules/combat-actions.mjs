@@ -7,7 +7,7 @@ import { hitLocationNames } from './hit-locations.mjs';
 export function calculateCombatActionModifier(rollData) {
     const currentAction = rollData.actions[rollData.action];
 
-    game.dh.log('calculateCombatActionModifier', currentAction);
+    game.rt.log('calculateCombatActionModifier', currentAction);
     if (rollData.action === 'Called Shot') {
         if(rollData.isCalledShot === false) {
             rollData.isCalledShot = true;

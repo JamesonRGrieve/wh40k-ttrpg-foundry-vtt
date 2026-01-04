@@ -1,6 +1,6 @@
 {
     "Actor": {
-        "types": ["acolyte", "npc", "vehicle"],
+        "types": ["acolyte", "npc", "vehicle", "character"],
         "templates": {
             "base": {
                 "wounds": {
@@ -105,6 +105,671 @@
                         "unnatural": 0,
                         "cost": 0
                     }
+                }
+            },
+            "rogueTraderCharacter": {
+                "bio": {
+                    "playerName": "",
+                    "careerPath": "",
+                    "rank": "",
+                    "homeWorld": "",
+                    "motivation": "",
+                    "description": ""
+                },
+                "wounds": {
+                    "max": 0,
+                    "value": 0
+                },
+                "size": 4,
+                "fate": {
+                    "max": 0,
+                    "value": 0
+                },
+                "fatigue": {
+                    "max": 0,
+                    "value": 0,
+                    "penaltyActive": false,
+                    "penalty": 0
+                },
+                "characteristics": {
+                    "weaponSkill": {
+                        "label": "Weapon Skill",
+                        "short": "WS",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "ballisticSkill": {
+                        "label": "Ballistic Skill",
+                        "short": "BS",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "strength": {
+                        "label": "Strength",
+                        "short": "S",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "toughness": {
+                        "label": "Toughness",
+                        "short": "T",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "agility": {
+                        "label": "Agility",
+                        "short": "Ag",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "intelligence": {
+                        "label": "Intelligence",
+                        "short": "Int",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "perception": {
+                        "label": "Perception",
+                        "short": "Per",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "willpower": {
+                        "label": "Willpower",
+                        "short": "WP",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    },
+                    "fellowship": {
+                        "label": "Fellowship",
+                        "short": "Fel",
+                        "starting": 0,
+                        "advances": 0,
+                        "modifier": 0,
+                        "total": 0,
+                        "bonus": 0
+                    }
+                },
+                "skills": {
+                    "awareness": {
+                        "label": "Awareness",
+                        "characteristic": "perception",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "acrobatics": {
+                        "label": "Acrobatics",
+                        "characteristic": "agility",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "barter": {
+                        "label": "Barter",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "blather": {
+                        "label": "Blather",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "carouse": {
+                        "label": "Carouse",
+                        "characteristic": "toughness",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "charm": {
+                        "label": "Charm",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "chemUse": {
+                        "label": "Chem-Use",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "ciphers": {
+                        "label": "Ciphers",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "climb": {
+                        "label": "Climb",
+                        "characteristic": "strength",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "commonLore": {
+                        "label": "Common Lore",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "command": {
+                        "label": "Command",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "commerce": {
+                        "label": "Commerce",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "concealment": {
+                        "label": "Concealment",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "contortionist": {
+                        "label": "Contortionist",
+                        "characteristic": "agility",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "deceive": {
+                        "label": "Deceive",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "demolition": {
+                        "label": "Demolition",
+                        "characteristic": "intelligence",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "disguise": {
+                        "label": "Disguise",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "dodge": {
+                        "label": "Dodge",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "drive": {
+                        "label": "Drive",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "evaluate": {
+                        "label": "Evaluate",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "forbiddenLore": {
+                        "label": "Forbidden Lore",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "gamble": {
+                        "label": "Gamble",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "intimidate": {
+                        "label": "Intimidate",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "inquiry": {
+                        "label": "Inquiry",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "interrogation": {
+                        "label": "Interrogation",
+                        "characteristic": "willpower",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "invocation": {
+                        "label": "Invocation",
+                        "characteristic": "willpower",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "literacy": {
+                        "label": "Literacy",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "logic": {
+                        "label": "Logic",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "medicae": {
+                        "label": "Medicae",
+                        "characteristic": "intelligence",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "navigation": {
+                        "label": "Navigation",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "parry": {
+                        "label": "Parry",
+                        "characteristic": "weaponSkill",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "search": {
+                        "label": "Search",
+                        "characteristic": "perception",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "performer": {
+                        "label": "Performer",
+                        "characteristic": "fellowship",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "pilot": {
+                        "label": "Pilot",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "psyniscience": {
+                        "label": "Psyniscience",
+                        "characteristic": "perception",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "scrutiny": {
+                        "label": "Scrutiny",
+                        "characteristic": "perception",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "security": {
+                        "label": "Security",
+                        "characteristic": "agility",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "shadowing": {
+                        "label": "Shadowing",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "silentMove": {
+                        "label": "Silent Move",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "sleightOfHand": {
+                        "label": "Sleight of Hand",
+                        "characteristic": "agility",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "speakLanguage": {
+                        "label": "Speak Language",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "scholasticLore": {
+                        "label": "Scholastic Lore",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "secretTongue": {
+                        "label": "Secret Tongue",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "stealth": {
+                        "label": "Stealth",
+                        "characteristic": "agility",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "survival": {
+                        "label": "Survival",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "swim": {
+                        "label": "Swim",
+                        "characteristic": "strength",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "trade": {
+                        "label": "Trade",
+                        "characteristic": "intelligence",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "tracking": {
+                        "label": "Tracking",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "techUse": {
+                        "label": "Tech-Use",
+                        "characteristic": "intelligence",
+                        "advanced": true,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    },
+                    "wrangling": {
+                        "label": "Wrangling",
+                        "characteristic": "intelligence",
+                        "advanced": false,
+                        "trained": false,
+                        "rank10": false,
+                        "rank20": false,
+                        "talentBonus": 0,
+                        "otherBonus": 0,
+                        "target": 0
+                    }
+                },
+                "notes": {
+                    "talentsTraits": "",
+                    "specialAbilities": "",
+                    "psychic": ""
                 }
             },
             "creature": {
@@ -952,6 +1617,9 @@
             "backgroundEffects": {
                 "abilities": []
             }
+        },
+        "character": {
+            "templates": ["rogueTraderCharacter"]
         },
         "npc": {
             "templates": ["base", "creature", "npc"]

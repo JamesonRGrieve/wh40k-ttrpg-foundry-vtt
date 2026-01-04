@@ -1,7 +1,7 @@
 {
-  "name": "dark-heresy-2nd",
+  "name": "rogue-trader",
   "version": "1.8.1",
-  "description": "Dark Heresy 2nd Edition Foundry VTT",
+  "description": "Rogue Trader Foundry VTT",
   "scripts": {
     "version": "json -I -f package.json -e \"this.version='$npm_config_next'\" && json -I -f src/system.json -e \"this.version='$npm_config_next'\"",
     "clean": "gulp clean",
@@ -13,7 +13,7 @@
   "browserslist": [
     "last 3 versions"
   ],
-  "author": "Matt Keathley",
+  "author": "Andru Quiroga",
   "license": "MIT",
   "private": true,
   "dependencies": {

@@ -1,6 +1,6 @@
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
-export class DarkHeresySettings {
+export class RogueTraderSettings {
 
     static SETTINGS = {
         worldVersion: 'world-version',
@@ -11,7 +11,7 @@ export class DarkHeresySettings {
     }
 
     static registerSettings() {
-        game.settings.register(SYSTEM_ID, DarkHeresySettings.SETTINGS.worldVersion, {
+        game.settings.register(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion, {
             name: 'World Version',
             hint: 'Used to handle data migration during system upgrades.',
             scope: 'world',
@@ -20,7 +20,7 @@ export class DarkHeresySettings {
             default: 0,
             type: Number,
         });
-        game.settings.register(SYSTEM_ID, DarkHeresySettings.SETTINGS.processActiveEffectsDuringCombat, {
+        game.settings.register(SYSTEM_ID, RogueTraderSettings.SETTINGS.processActiveEffectsDuringCombat, {
             name: 'Active Effect Processing',
             hint: 'Process effects like Fire or Blood Loss on combat turn change.',
             scope: 'world',
@@ -29,7 +29,7 @@ export class DarkHeresySettings {
             default: true,
             type: Boolean,
         });
-        game.settings.register(SYSTEM_ID, DarkHeresySettings.SETTINGS.simpleAttackRolls, {
+        game.settings.register(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls, {
             name: 'Simple Attack Rolls',
             hint: 'Changes the default weapon automation behavior to disabled. Attack rolls will trigger a WeaponSkill or BallisticSkill roll as needed.',
             scope: 'client',
@@ -38,7 +38,7 @@ export class DarkHeresySettings {
             default: false,
             type: Boolean,
         });
-        game.settings.register(SYSTEM_ID, DarkHeresySettings.SETTINGS.simplePsychicRolls, {
+        game.settings.register(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls, {
             name: 'Simple Psychic Rolls',
             hint: 'Changes the default psychic power automation behavior to disabled. Psychic rolls will trigger a simple WillPower roll.',
             scope: 'client',

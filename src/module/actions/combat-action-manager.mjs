@@ -11,7 +11,7 @@ export class CombatActionManager {
     }
 
     disableHooks() {
-        game.dh.log('Disabling Hooks', {'cth': this.combatTurnHook, 'crh': this.combatRoundHook})
+        game.rt.log('Disabling Hooks', {'cth': this.combatTurnHook, 'crh': this.combatRoundHook})
         Hooks.off('combatTurn', this.combatTurnHook);
         Hooks.off('combatRound', this.combatRoundHook);
     }
@@ -21,14 +21,14 @@ export class CombatActionManager {
         console.log(data);
         // Only Run on the first GM -- so it will only run once
         if(game.userId === this.getFirstGM()) {
-            game.dh.log('updateCombat - this should only be running on first GM');
+            game.rt.log('updateCombat - this should only be running on first GM');
             this.processCombatActiveEffects(combat, data);
         }
     }
 
     async processCombatActiveEffects(combat, data) {
         const currentCombatant = combat.turns[data.turn];
-        game.dh.log('processCombatActiveEffects', currentCombatant);
+        game.rt.log('processCombatActiveEffects', currentCombatant);
 
         if (currentCombatant) {
             // Handle Actor Effects

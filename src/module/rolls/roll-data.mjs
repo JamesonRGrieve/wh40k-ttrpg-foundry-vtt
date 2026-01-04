@@ -6,13 +6,13 @@ import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../ru
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { hitDropdown } from '../rules/hit-locations.mjs';
-import { DarkHeresy } from '../rules/config.mjs';
+import { RogueTrader } from '../rules/config.mjs';
 
 export class RollData {
     difficulties = rollDifficulties();
     aims = aimModifiers();
     locations = hitDropdown();
-    lasModes = DarkHeresy.combat.las_fire_modes;
+    lasModes = RogueTrader.combat.las_fire_modes;
 
     // Chat Controls
     ignoreModifiers = false;
@@ -123,7 +123,7 @@ export class RollData {
                     modifiers[m.toUpperCase()] = value;
                 }
             } catch (err) {
-                game.dh.error('Error while calculate roll data modifiers:', err);
+                game.rt.error('Error while calculate roll data modifiers:', err);
             }
         }
         return modifiers;
@@ -200,7 +200,7 @@ export class WeaponRollData extends RollData {
 
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
     }
 
     hasWeaponModification(special) {
@@ -347,7 +347,7 @@ export class PsychicRollData extends RollData {
 
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
     }
 
     initialize() {

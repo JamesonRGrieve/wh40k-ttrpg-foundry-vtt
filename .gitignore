@@ -1,5 +1,8 @@
 ## IDE
 .idea
+.vscode
+.DS_Store
+Thumbs.db
 
 ## Libraries
 src/module/foundry-core
@@ -9,12 +12,17 @@ node_modules
 css
 build
 archive
+dist
+*.zip
+*.log
 
 ## Development
 db-conversion
 **/foundry-core/**
 backup
 docker-data
+foundrydata
+FoundryVTTData
 
 ## Secrets
 .env.secret

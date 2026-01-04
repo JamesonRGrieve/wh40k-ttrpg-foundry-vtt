@@ -12,7 +12,7 @@
                 </div>
                 {{#each actor.bio}}
                     {{#if (arrayIncludes @key @root.dh.bio.primary)}}
-                        {{> systems/dark-heresy-2nd/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                        {{> systems/rogue-trader/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
                     {{/if}}
                 {{/each}}
             </div>
@@ -35,34 +35,34 @@
 
         <section class="dh-body">
             <div class="tab" data-group="primary" data-tab="combat">
-                {{> systems/dark-heresy-2nd/templates/actor/panel/wounds-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/fatigue-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/fate-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/armour-display-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/combat-controls-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-roller-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/movement-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/active-effects-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/wounds-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/fatigue-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/fate-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/armour-display-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/combat-controls-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/movement-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="main">
-                {{> systems/dark-heresy-2nd/templates/actor/panel/characteristic-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/trait-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/bonuses-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/skills-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/skills-specialist-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/talent-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/skills-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="gear">
-                {{> systems/dark-heresy-2nd/templates/actor/panel/weapon-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/encumbrance-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/armour-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/storage-location-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/backpack-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/gear-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/encumbrance-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/armour-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/storage-location-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/backpack-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/gear-panel.hbs}}
             </div>
             <div class="tab" data-group="primary" data-tab="psychic">
-                {{> systems/dark-heresy-2nd/templates/actor/panel/psychic-powers-panel.hbs}}
-                {{> systems/dark-heresy-2nd/templates/actor/panel/psy-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/psy-panel.hbs}}
             </div>
         </section>
     </form>

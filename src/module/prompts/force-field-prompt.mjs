@@ -13,7 +13,7 @@ export class ForceFieldDialog extends FormApplication {
         return foundry.utils.mergeObject(super.defaultOptions, {
             title: 'Force Field',
             id: 'dh-force-field-dialog',
-            template: 'systems/dark-heresy-2nd/templates/prompt/force-field-prompt.hbs',
+            template: 'systems/rogue-trader/templates/prompt/force-field-prompt.hbs',
             width: 500,
             closeOnSubmit: false,
             submitOnChange: true,
@@ -33,9 +33,9 @@ export class ForceFieldDialog extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        game.dh.log('_updateObject', { event, formData });
+        game.rt.log('_updateObject', { event, formData });
         recursiveUpdate(this.data, formData);
-        game.dh.log('_updateObject complete', { 'data': this.data, formData });
+        game.rt.log('_updateObject complete', { 'data': this.data, formData });
         await this.data.update();
         this.render(true);
     }

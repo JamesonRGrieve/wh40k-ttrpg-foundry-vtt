@@ -21,7 +21,7 @@ export async function calculateWeaponModifiersDamageBonuses(actionData, hit) {
     if(!actionItem) return;
 
     for (const item of actionItem.items) {
-        game.dh.log('calculateWeaponModifiersDamageBonuses', item);
+        game.rt.log('calculateWeaponModifiersDamageBonuses', item);
         if (!item.system.equipped) continue;
         if (!item.isWeaponModification) continue;
         switch (item.name) {
@@ -37,7 +37,7 @@ export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit
     if(!actionItem) return;
 
     for (const item of actionItem.items) {
-        game.dh.log('calculateWeaponModifiersPenetrationBonuses', item);
+        game.rt.log('calculateWeaponModifiersPenetrationBonuses', item);
         if (!item.system.equipped) continue;
         if (!item.isWeaponModification) continue;
         switch (item.name) {
@@ -53,7 +53,7 @@ export async function calculateWeaponModifiersAttackSpecials(rollData) {
     if(!actionItem) return;
 
     for (const item of actionItem.items) {
-        game.dh.log('calculateWeaponModifiersAttackSpecials', item);
+        game.rt.log('calculateWeaponModifiersAttackSpecials', item);
         if (!item.system.equipped) continue;
         if (!item.isWeaponModification) continue;
         switch (item.name) {
@@ -74,7 +74,7 @@ export async function calculateWeaponModifiersAttackBonuses(rollData) {
     if(!actionItem) return;
 
     for (const item of actionItem.items) {
-        game.dh.log('calculateWeaponModifiers', item);
+        game.rt.log('calculateWeaponModifiers', item);
         if (!item.system.equipped) continue;
         if (!item.isWeaponModification) continue;
         switch (item.name) {

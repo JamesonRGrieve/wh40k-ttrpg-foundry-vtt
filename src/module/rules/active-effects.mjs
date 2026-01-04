@@ -2,7 +2,7 @@ import { roll1d100 } from '../rolls/roll-helpers.mjs';
 
 export async function handleBleeding(actor) {
     const context = {
-        template: 'systems/dark-heresy-2nd/templates/chat/bleeding-chat.hbs',
+        template: 'systems/rogue-trader/templates/chat/bleeding-chat.hbs',
         actor: actor
     }
     await sendActiveEffectMessage(context);
@@ -10,7 +10,7 @@ export async function handleBleeding(actor) {
 
 export async function handleOnFire(actor) {
     const context = {
-        template: 'systems/dark-heresy-2nd/templates/chat/burning-chat.hbs',
+        template: 'systems/rogue-trader/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
         target: actor.characteristics.willpower.total

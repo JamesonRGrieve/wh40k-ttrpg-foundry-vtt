@@ -111,9 +111,9 @@ export class AssignDamageData {
                 }
             }
         });
-        game.dh.log('performActionAndSendToChat', this)
+        game.rt.log('performActionAndSendToChat', this)
 
-        const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/assign-damage-chat.hbs', this);
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/assign-damage-chat.hbs', this);
         let chatData = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),

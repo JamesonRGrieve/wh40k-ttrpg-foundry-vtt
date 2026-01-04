@@ -17,12 +17,12 @@ export class AcolyteSheet extends ActorContainerSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/actor/actor-acolyte-sheet.hbs`;
+        return `systems/rogue-trader/templates/actor/actor-acolyte-sheet.hbs`;
     }
 
     getData() {
         const context = super.getData();
-        context.dh = CONFIG.dh;
+        context.dh = CONFIG.rt;
         context.effects = this.actor.getEmbeddedCollection('ActiveEffect').contents;
         return context;
     }

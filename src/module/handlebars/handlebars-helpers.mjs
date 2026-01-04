@@ -27,7 +27,7 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('dhlog', function(object) {
         if (object) {
-            game.dh.log('hb template', object);
+            game.rt.log('hb template', object);
         }
     });
 
@@ -54,7 +54,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('isExpanded', function(field) {
-        return CONFIG.dh.ui.expanded ? CONFIG.dh.ui.expanded.includes(field) : false;
+        return CONFIG.rt.ui.expanded ? CONFIG.rt.ui.expanded.includes(field) : false;
     });
 
     Handlebars.registerHelper('toLowerCase', function(str) {
@@ -75,7 +75,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('getBioOptions', function(field) {
-        return CONFIG.dh.bio[field];
+        return CONFIG.rt.bio[field];
     });
 
     Handlebars.registerHelper('and', function(obj1, obj2) {

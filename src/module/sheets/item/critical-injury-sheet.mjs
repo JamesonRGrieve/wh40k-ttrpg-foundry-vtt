@@ -1,6 +1,6 @@
-import { DarkHeresyItemSheet } from './item-sheet.mjs';
+import { RogueTraderItemSheet } from './item-sheet.mjs';
 
-export class DarkHeresyCriticalInjurySheet extends DarkHeresyItemSheet {
+export class RogueTraderCriticalInjurySheet extends RogueTraderItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 820,
@@ -10,6 +10,6 @@ export class DarkHeresyCriticalInjurySheet extends DarkHeresyItemSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/item/item-critical-injury-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-critical-injury-sheet.hbs`;
     }
 }

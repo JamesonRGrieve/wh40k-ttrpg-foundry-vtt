@@ -1,31 +1,30 @@
 {
-  "id": "dark-heresy-2nd",
-  "title": "Dark Heresy 2nd Edition",
-  "description": "Dark Heresy 2nd Edition - Foundry VTT",
+  "id": "rogue-trader",
+  "title": "Rogue Trader",
+  "description": "Rogue Trader - Foundry VTT",
   "version": "1.8.1",
   "compatibility": {
-    "minimum": 12,
-    "verified": "12.331",
-    "maximum": 12
+    "minimum": 11,
+    "verified": "13.351",
+    "maximum": 13
   },
   "authors": [
     {
-      "name": "Matt Keathley",
-      "url": "https://www.keathley.co",
-      "discord": "mkea"
+      "name": "Andru Quiroga",
+      "url": "https://github.com/AndruQuiroga"
     }
   ],
   "esmodules": [
-    "module/dark-heresy-2nd.mjs"
+    "module/rogue-trader.mjs"
   ],
   "styles": [
-    "css/dark-heresy-2nd.css"
+    "css/rogue-trader.css"
   ],
   "scripts": [],
   "packs": [
     {
       "name": "ammo",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Ammo",
       "path": "./packs/ammo.db",
       "type": "Item",
@@ -33,7 +32,7 @@
     },
     {
       "name": "aptitudes",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Aptitudes",
       "path": "./packs/aptitudes.db",
       "type": "Item",
@@ -41,7 +40,7 @@
     },
     {
       "name": "armour",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Armour",
       "path": "./packs/armour.db",
       "type": "Item",
@@ -49,7 +48,7 @@
     },
     {
       "name": "attack-specials",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Specials",
       "path": "./packs/attack-specials.db",
       "type": "Item",
@@ -57,7 +56,7 @@
     },
     {
       "name": "consumables",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Drugs and Consumables",
       "path": "./packs/consumables.db",
       "type": "Item",
@@ -65,7 +64,7 @@
     },
     {
       "name": "cybernetics",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Cybernetics",
       "path": "./packs/cybernetics.db",
       "type": "Item",
@@ -73,7 +72,7 @@
     },
     {
       "name": "psychic-powers",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Psychic Powers",
       "path": "./packs/psychic-powers.db",
       "type": "Item",
@@ -81,7 +80,7 @@
     },
     {
       "name": "tables",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Tables",
       "path": "./packs/tables.db",
       "type": "RollTable",
@@ -89,7 +88,7 @@
     },
     {
       "name": "talents",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Talents",
       "path": "./packs/talents.db",
       "type": "Item",
@@ -97,7 +96,7 @@
     },
     {
       "name": "tools",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Tools",
       "path": "./packs/tools.db",
       "type": "Item",
@@ -105,7 +104,7 @@
     },
     {
       "name": "traits",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Traits",
       "path": "./packs/traits.db",
       "type": "Item",
@@ -113,7 +112,7 @@
     },
     {
       "name": "weapons",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Weapons",
       "path": "./packs/weapons.db",
       "type": "Item",
@@ -121,7 +120,7 @@
     },
     {
       "name": "weapon-mods",
-      "system": "dark-heresy-2nd",
+      "system": "rogue-trader",
       "label": "Weapon Mods",
       "path": "./packs/weapon-mods.db",
       "type": "Item",
@@ -134,9 +133,9 @@
   },
   "primaryTokenAttribute": "wounds",
   "secondaryTokenAttribute": "fate",
-  "url": "https://github.com/mrkeathley/dark-heresy-2nd-vtt",
-  "manifest": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/system.json",
-  "download": "https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/dark-heresy-2nd-1.8.1.zip",
+  "url": "https://github.com/AndruQuiroga/RogueTraderVTT",
+  "manifest": "https://github.com/AndruQuiroga/RogueTraderVTT/releases/latest/download/system.json",
+  "download": "https://github.com/AndruQuiroga/RogueTraderVTT/releases/latest/download/rogue-trader-1.8.1.zip",
   "license": "LICENSE.txt",
-  "bugs": "https://github.com/mrkeathley/dark-heresy-2nd-vtt/issues"
+  "bugs": "https://github.com/AndruQuiroga/RogueTraderVTT/issues"
 }

@@ -1,6 +1,6 @@
-import { DarkHeresyItemSheet } from './item-sheet.mjs';
+import { RogueTraderItemSheet } from './item-sheet.mjs';
 
-export class DarkHeresyTraitSheet extends DarkHeresyItemSheet {
+export class RogueTraderTraitSheet extends RogueTraderItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 650,
@@ -10,6 +10,6 @@ export class DarkHeresyTraitSheet extends DarkHeresyItemSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/item/item-trait-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-trait-sheet.hbs`;
     }
 }

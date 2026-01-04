@@ -4,7 +4,7 @@ import { AssignDamageData } from '../rolls/assign-damage-data.mjs';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-prompt.mjs';
 import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { Hit } from '../rolls/damage-data.mjs';
-import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
+import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
 
 export class BasicActionManager {
@@ -14,7 +14,7 @@ export class BasicActionManager {
     initializeHooks() {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessage', async (message, html, data) => {
-            game.dh.log('renderChatMessage', { message, html, data });
+            game.rt.log('renderChatMessage', { message, html, data });
             html.find('.roll-control__hide-control').click(async (ev) => await this._toggleExpandChatMessage(ev));
             html.find('.roll-control__refund').click(async (ev) => await this._refundResources(ev));
             html.find('.roll-control__fate-reroll').click(async (ev) => await this._fateReroll(ev));
@@ -37,7 +37,7 @@ export class BasicActionManager {
     }
 
     async _toggleExpandChatMessage(event) {
-        game.dh.log('roll-control-toggle');
+        game.rt.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = $(event.currentTarget);
         $('span', displayToggle).toggleClass('active');
@@ -225,7 +225,7 @@ export class BasicActionManager {
      * @returns {Promise<void>}
      */
     async sendItemVocalizeChat(data) {
-        const html = await renderTemplate('systems/dark-heresy-2nd/templates/chat/item-vocalize-chat.hbs', data);
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/item-vocalize-chat.hbs', data);
         let chatData = {
             user: game.user.id,
             content: html,
