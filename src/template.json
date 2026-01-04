@@ -1596,8 +1596,8 @@
       ],
       "bio": {
         "homeWorld": "",
-        "background": "",
-        "role": "",
+        "birthright": "",
+        "careerPath": "",
         "elite": "",
         "divination": "",
         "gender": "",
@@ -1629,8 +1629,8 @@
       ],
       "bio": {
         "homeWorld": "",
-        "background": "",
-        "role": "",
+        "birthright": "",
+        "careerPath": "",
         "elite": "",
         "divination": "",
         "gender": "",
