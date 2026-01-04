@@ -8,56 +8,58 @@
             <div class="table-cell--last">Total</div>
         </div>
         {{#each actor.skills as | skill name |}}
-            {{#if skill.isSpecialist}}
-                <div class="table-row--grouped">
-                    <div class="table-cell--settingstoggle">
-                        {{> systems/rogue-trader/templates/actor/partial/display-toggle.hbs toggle=(concat 'spec_skills_' name)}}
-                    </div>
-                    <div class="table-cell--grouped">
-                        <span>{{localize this.label}}</span>
-                    </div>
-                    <div class="dh-settings spec_skills_{{name}}" {{hideIfNot
-                        (isExpanded (concat 'spec_skills_' name ))}}>
-                        <h2>specialisation display</h2>
-                        {{#each this.specialities as | specialty skey |}}
-                            <div class="dh-settings__row--invert">
-                                <div class="dh-settings__label">{{this.label}}</div>
-                                <input class="dh-settings__checkbox" {{checked specialty.taken}} data-dtype="Boolean"
-                                       type="checkbox" name="system.skills.{{name}}.specialities.{{skey}}.taken" />
+            {{#unless skill.hidden}}
+                {{#if skill.isSpecialist}}
+                    <div class="table-row--grouped">
+                        <div class="table-cell--settingstoggle">
+                            {{> systems/rogue-trader/templates/actor/partial/display-toggle.hbs toggle=(concat 'spec_skills_' name)}}
+                        </div>
+                        <div class="table-cell--grouped">
+                            <span>{{localize this.label}}</span>
+                        </div>
+                        <div class="dh-settings spec_skills_{{name}}" {{hideIfNot
+                            (isExpanded (concat 'spec_skills_' name ))}}>
+                            <h2>specialisation display</h2>
+                            {{#each this.specialities as | specialty skey |}}
+                                <div class="dh-settings__row--invert">
+                                    <div class="dh-settings__label">{{this.label}}</div>
+                                    <input class="dh-settings__checkbox" {{checked specialty.taken}} data-dtype="Boolean"
+                                           type="checkbox" name="system.skills.{{name}}.specialities.{{skey}}.taken" />
+                                </div>
+                            {{/each}}
+                            <div class="dh-settings__row--invert add-skill" data-skill="{{name}}">
+                                <button class="dh-settings__label--add">add_box</button>
                             </div>
-                        {{/each}}
-                        <div class="dh-settings__row--invert add-skill" data-skill="{{name}}">
-                            <button class="dh-settings__label--add">add_box</button>
                         </div>
                     </div>
-                </div>
-                {{#each this.specialities as | specialty skey |}}
-                    {{#if specialty.taken }}
-                        <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}"
-                             data-speciality="{{skey}}">
-                            <div class="table-cell">
-                                <button class="roll-skill" data-skill="{{name}}" data-specialty="{{skey}}"
-                                        type="roll">{{localize this.label}}</button>
+                    {{#each this.specialities as | specialty skey |}}
+                        {{#if specialty.taken }}
+                            <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}"
+                                 data-speciality="{{skey}}">
+                                <div class="table-cell">
+                                    <button class="roll-skill" data-skill="{{name}}" data-specialty="{{skey}}"
+                                            type="roll">{{localize this.label}}</button>
+                                </div>
+                                <div class="table-cell">
+                                    <select name="system.skills.{{name}}.specialities.{{skey}}.advance">
+                                        {{option '0' this.advance 'Unknown'}}
+                                        {{option '1' this.advance 'Known'}}
+                                        {{option '2' this.advance 'Trained'}}
+                                        {{option '3' this.advance 'Experienced'}}
+                                        {{option '4' this.advance 'Veteran'}}
+                                    </select>
+                                </div>
+                                <div class="table-cell">
+                                    <span class="display">{{skill.characteristic}}</span>
+                                </div>
+                                <div class="table-cell--last table-cell--highlight">
+                                    <span class="display">{{this.current}}</span>
+                                </div>
                             </div>
-                            <div class="table-cell">
-                                <select name="system.skills.{{name}}.specialities.{{skey}}.advance">
-                                    {{option '0' this.advance 'Unknown'}}
-                                    {{option '1' this.advance 'Known'}}
-                                    {{option '2' this.advance 'Trained'}}
-                                    {{option '3' this.advance 'Experienced'}}
-                                    {{option '4' this.advance 'Veteran'}}
-                                </select>
-                            </div>
-                            <div class="table-cell">
-                                <span class="display">{{skill.characteristic}}</span>
-                            </div>
-                            <div class="table-cell--last table-cell--highlight">
-                                <span class="display">{{this.current}}</span>
-                            </div>
-                        </div>
-                    {{/if}}
-                {{/each}}
-            {{/if}}
+                        {{/if}}
+                    {{/each}}
+                {{/if}}
+            {{/unless}}
         {{/each}}
     </div>
 </div>

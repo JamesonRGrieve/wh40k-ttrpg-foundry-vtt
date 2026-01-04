@@ -818,6 +818,7 @@
           },
           "athletics": {
             "label": "Athletics",
+            "hidden": true,
             "characteristics": [
               "S",
               "T"
@@ -1345,6 +1346,7 @@
           },
           "linguistics": {
             "label": "Linguistics",
+            "hidden": true,
             "characteristics": [
               "Int",
               "Fel"
@@ -1470,6 +1472,7 @@
           },
           "operate": {
             "label": "Operate",
+            "hidden": true,
             "characteristics": [
               "Ag",
               "Int"
@@ -1500,6 +1503,7 @@
           },
           "parry": {
             "label": "Parry",
+            "hidden": true,
             "characteristics": [
               "WS"
             ],
@@ -1704,6 +1708,7 @@
           },
           "stealth": {
             "label": "Stealth",
+            "hidden": true,
             "characteristics": [
               "Ag",
               "Per"
