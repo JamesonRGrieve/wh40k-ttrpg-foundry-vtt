@@ -105,28 +105,32 @@ export class RogueTraderBaseActor extends Actor {
     async addSpecialitySkill(skill, speciality) {
         const parent = this.system.skills[skill];
         const specialityKey = toCamelCase(speciality);
+        if(!parent) {
+            ui.notifications.warn(`Skill not specified -- unexpected error.`);
+            return;
+        }
 
-        if(parent.specialities[specialityKey]) {
+        const entries = Array.isArray(parent.entries) ? [...parent.entries] : [];
+
+        if(entries.some((entry) => entry.name?.toLowerCase() === speciality.toLowerCase() || entry.slug === specialityKey)) {
             ui.notifications.warn(`Speciality already exists. Unable to create.`);
             return;
         }
 
+        entries.push({
+            name: speciality,
+            slug: specialityKey,
+            basic: true,
+            trained: false,
+            plus10: false,
+            plus20: false,
+            bonus: 0,
+            notes: '',
+            cost: 0
+        });
+
         await this.update({
-            system: {
-                skills: {
-                    [skill]: {
-                        specialities:{
-                            [specialityKey]: {
-                                label: speciality,
-                                advance: 0,
-                                cost: 0,
-                                taken: true,
-                                custom: true
-                            }
-                        }
-                    }
-                }
-            }
+            [`system.skills.${skill}.entries`]: entries
         });
     }
 

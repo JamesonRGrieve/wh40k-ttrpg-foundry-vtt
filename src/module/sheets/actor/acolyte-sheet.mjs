@@ -24,6 +24,17 @@ export class AcolyteSheet extends ActorContainerSheet {
         const context = super.getData();
         context.dh = CONFIG.rt;
         context.effects = this.actor.getEmbeddedCollection('ActiveEffect').contents;
+        const skills = Object.entries(this.actor.skills ?? {});
+        const visibleSkills = skills.filter(([, data]) => !data.hidden);
+        visibleSkills.sort((a, b) => a[1].label.localeCompare(b[1].label));
+        context.skillLists = {
+            standard: visibleSkills.filter(([, data]) => !Array.isArray(data.entries)),
+            specialist: visibleSkills.filter(([, data]) => Array.isArray(data.entries)),
+        };
+        context.skillCharacteristicOptions = Object.values(this.actor.characteristics ?? {}).map((c) => ({
+            label: c.short,
+            value: c.short,
+        }));
         return context;
     }
 

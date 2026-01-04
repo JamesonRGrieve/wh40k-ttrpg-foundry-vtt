@@ -122,11 +122,21 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     async rollSkill(skillName, specialityName) {
         const resolvedSkillName = this._resolveSkillName(skillName);
         let skill = this.skills[resolvedSkillName];
-        let label = skill.label;
-        if (specialityName) {
-            skill = skill.specialities[specialityName];
-            label = `${label}: ${skill.label}`;
+        if (!skill) {
+            ui.notifications.warn(`Unable to find skill ${skillName}`);
+            return;
         }
+        let label = skill.label;
+
+        if (specialityName !== undefined && Array.isArray(skill?.entries)) {
+            const speciality = this._findSpecialistSkill(skill, specialityName);
+            if (speciality) {
+                skill = speciality;
+                const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
+                label = `${label}: ${specialityLabel}`;
+            }
+        }
+
         const simpleSkillData = new SimpleSkillData();
         const rollData = simpleSkillData.rollData;
         rollData.actor = this;
@@ -271,14 +281,31 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     }
 
     _computeSkills() {
-        for (let skill of Object.values(this.skills)) {
-            let short = !skill.characteristic || skill.characteristic === '' ? skill.characteristics[0] : skill.characteristic;
-            let characteristic = this._findCharacteristic(short);
-            skill.current = characteristic.total + this._skillAdvanceToValue(skill.advance);
+        const trainingValue = (skill) => {
+            if (skill.plus20) return 30;
+            if (skill.plus10) return 20;
+            if (skill.trained) return 10;
+            if (skill.basic) return 0;
+            return -20;
+        };
 
-            if (skill.isSpecialist) {
-                for (let speciality of Object.values(skill.specialities)) {
-                    speciality.current = characteristic.total + this._skillAdvanceToValue(speciality.advance);
+        const characteristicTotal = (characteristicKey) => {
+            const characteristic = this._findCharacteristic(characteristicKey);
+            return characteristic?.total ?? 0;
+        };
+
+        for (let skill of Object.values(this.skills)) {
+            const baseCharacteristic = skill.characteristic;
+            const baseTotal = characteristicTotal(baseCharacteristic);
+            const bonus = Number(skill.bonus ?? 0);
+            skill.current = baseTotal + trainingValue(skill) + bonus;
+
+            if (Array.isArray(skill.entries)) {
+                for (let speciality of skill.entries) {
+                    if (!speciality.characteristic) speciality.characteristic = baseCharacteristic;
+                    const specialityCharacteristic = speciality.characteristic || baseCharacteristic;
+                    const specialityBonus = Number(speciality.bonus ?? 0);
+                    speciality.current = characteristicTotal(specialityCharacteristic) + trainingValue(speciality) + specialityBonus;
                 }
             }
         }
@@ -296,6 +323,16 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         }
     }
 
+    _findSpecialistSkill(skill, specialityName) {
+        if (!Array.isArray(skill?.entries)) return;
+        if (Number.isInteger(specialityName)) return skill.entries[specialityName];
+
+        const index = Number.parseInt(specialityName, 10);
+        if (!Number.isNaN(index) && skill.entries[index]) return skill.entries[index];
+
+        return skill.entries.find((entry) => entry.name?.toLowerCase() === `${specialityName}`.toLowerCase());
+    }
+
     _resolveSkillName(skillName) {
         if (!skillName) return skillName;
         if (this.skills[skillName]) return skillName;
@@ -308,21 +345,6 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         return skillName;
     }
 
-    _skillAdvanceToValue(adv) {
-        let advance = 1 * adv;
-        let training = -20;
-        if (advance === 1) {
-            training = 0;
-        } else if (advance === 2) {
-            training = 10;
-        } else if (advance === 3) {
-            training = 20;
-        } else if (advance >= 4) {
-            training = 30;
-        }
-        return training;
-    }
-
     _computeExperience() {
         if(!this.experience) return;
         this.experience.spentCharacteristics = 0;
@@ -333,12 +355,12 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             this.experience.spentCharacteristics += parseInt(characteristic.cost, 10);
         }
         for (let skill of Object.values(this.skills)) {
-            if (skill.isSpecialist) {
-                for (let speciality of Object.values(skill.specialities)) {
-                    this.experience.spentSkills += parseInt(speciality.cost, 10);
+            if (Array.isArray(skill.entries)) {
+                for (let speciality of skill.entries) {
+                    this.experience.spentSkills += parseInt(speciality.cost ?? 0, 10);
                 }
             } else {
-                this.experience.spentSkills += parseInt(skill.cost, 10);
+                this.experience.spentSkills += parseInt(skill.cost ?? 0, 10);
             }
         }
         for (let item of this.items) {
