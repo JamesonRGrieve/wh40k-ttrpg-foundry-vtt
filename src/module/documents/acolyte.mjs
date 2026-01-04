@@ -316,9 +316,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         const skill = this.skills[resolvedSkillName];
         if (skill) return skill;
 
-        for (const [name, skill] of Object.entries(this.skills)) {
+        for (const [name, foundSkill] of Object.entries(this.skills)) {
             if (skillName.toUpperCase() === name.toUpperCase()) {
-                return skill;
+                return foundSkill;
             }
         }
     }
