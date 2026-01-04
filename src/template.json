@@ -1954,13 +1954,14 @@
       },
       "rogueTraderExtras": {
         "rogueTrader": {
-          "rank": 1,
           "careerPath": "",
+          "rank": "",
+          "homeWorld": "",
           "motivation": "",
           "profitFactor": {
             "starting": 0,
             "current": 0,
-            "misfortunes": 0
+            "misfortunes": ""
           },
           "lifting": {
             "lift": 0,

@@ -25,6 +25,7 @@ const STATIC_FILES = [
   "!src/module/foundry-core/**",
   "src/templates/**/*",
   "src/images/**/*",
+  "src/lang/**/*",
   "src/*.json",
   "src/packs/*.db"
 ];

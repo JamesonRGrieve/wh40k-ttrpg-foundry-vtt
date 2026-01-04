@@ -14,6 +14,13 @@
       "url": "https://github.com/AndruQuiroga"
     }
   ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
   "esmodules": [
     "module/rogue-trader.mjs"
   ],

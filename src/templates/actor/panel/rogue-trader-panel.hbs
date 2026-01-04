@@ -1,61 +1,65 @@
 <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
-    <h1 class="dh-panel__header">Rogue Trader</h1>
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.Header"}}</h1>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Rank</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.rank" value="{{system.rogueTrader.rank}}" />
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Career Path</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.CareerPath"}}</span>
         <input type="text" class="dh-field__input" name="system.rogueTrader.careerPath" value="{{system.rogueTrader.careerPath}}" />
     </div>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Motivation</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.Rank"}}</span>
+        <input type="text" class="dh-field__input" name="system.rogueTrader.rank" value="{{system.rogueTrader.rank}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.HomeWorld"}}</span>
+        <input type="text" class="dh-field__input" name="system.rogueTrader.homeWorld" value="{{system.rogueTrader.homeWorld}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.Motivation"}}</span>
         <input type="text" class="dh-field__input" name="system.rogueTrader.motivation" value="{{system.rogueTrader.motivation}}" />
     </div>
 </div>
 
 <div class="dh-panel spacer dh-grid-col-3 dh-grid-row-1">
-    <h1 class="dh-panel__header">Profit Factor</h1>
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.ProfitFactorHeader"}}</h1>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Starting</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ProfitFactorStarting"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" />
     </div>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Current</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ProfitFactorCurrent"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" />
     </div>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Misfortunes</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.profitFactor.misfortunes" value="{{system.rogueTrader.profitFactor.misfortunes}}" />
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ProfitFactorMisfortunes"}}</span>
+        <input type="text" class="dh-field__input" name="system.rogueTrader.profitFactor.misfortunes" value="{{system.rogueTrader.profitFactor.misfortunes}}" />
     </div>
 </div>
 
 <div class="dh-panel spacer dh-grid-col-3 dh-grid-row-1">
-    <h1 class="dh-panel__header">Lifting &amp; Armour</h1>
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.LiftingHeader"}}</h1>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Lift</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.LiftingLift"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.lifting.lift" value="{{system.rogueTrader.lifting.lift}}" />
     </div>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Carry</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.LiftingCarry"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.lifting.carry" value="{{system.rogueTrader.lifting.carry}}" />
     </div>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Push</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.LiftingPush"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.lifting.push" value="{{system.rogueTrader.lifting.push}}" />
     </div>
     <div class="dh-field__wrapper">
-        <span class="dh-field__header">Armour Weight</span>
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourWeight"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armourWeight" value="{{system.rogueTrader.armourWeight}}" />
     </div>
 </div>
 
 <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
-    <h1 class="dh-panel__header">Acquisitions</h1>
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.AcquisitionsHeader"}}</h1>
     <textarea class="dh-header__textarea" name="system.rogueTrader.acquisitions" rows="6">{{system.rogueTrader.acquisitions}}</textarea>
 </div>
 
 <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
-    <h1 class="dh-panel__header">Mutations</h1>
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.MutationsHeader"}}</h1>
     <textarea class="dh-header__textarea" name="system.rogueTrader.mutations" rows="4">{{system.rogueTrader.mutations}}</textarea>
 </div>
