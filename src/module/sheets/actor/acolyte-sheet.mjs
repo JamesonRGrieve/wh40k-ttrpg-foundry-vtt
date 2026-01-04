@@ -35,6 +35,7 @@ export class AcolyteSheet extends ActorContainerSheet {
             label: c.short,
             value: c.short,
         }));
+        context.system.rogueTrader = this._prepareRogueTraderFields(context.system.rogueTrader ?? {});
         return context;
     }
 
@@ -47,6 +48,8 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('.bonus-vocalize').click(async (ev) => await this._onBonusVocalize(ev));
 
         html.find('.combat-control').click(async (ev) => await this._combatControls(ev));
+        html.find('.acquisition-add').click(async (ev) => await this._addAcquisition(ev));
+        html.find('.acquisition-remove').click(async (ev) => await this._removeAcquisition(ev));
     }
 
     async _combatControls(event) {
@@ -97,6 +100,55 @@ export class AcolyteSheet extends ActorContainerSheet {
         const skillName = $(event.currentTarget).data('skill');
         const specialtyName = $(event.currentTarget).data('specialty');
         await this.actor.rollSkill(skillName, specialtyName);
+    }
+
+    _prepareRogueTraderFields(rogueTraderData) {
+        const prepared = rogueTraderData ?? {};
+        prepared.armour = prepared.armour ?? { head: 0, rightArm: 0, leftArm: 0, body: 0, rightLeg: 0, leftLeg: 0 };
+        prepared.weight = prepared.weight ?? { total: 0, current: 0 };
+
+        const acquisitions = Array.isArray(prepared.acquisitions)
+            ? prepared.acquisitions
+            : (prepared.acquisitions ? [{ name: '', availability: '', modifier: 0, notes: prepared.acquisitions, acquired: false }] : []);
+        prepared.acquisitions = acquisitions;
+        prepared.wounds = {
+            total: this.actor.wounds?.max ?? 0,
+            current: this.actor.wounds?.value ?? 0,
+            critical: this.actor.wounds?.critical ?? 0,
+            fatigue: this.actor.fatigue?.value ?? 0,
+        };
+        prepared.fate = {
+            total: this.actor.fate?.max ?? 0,
+            current: this.actor.fate?.value ?? 0,
+        };
+        return prepared;
+    }
+
+    async _addAcquisition(event) {
+        event.preventDefault();
+        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
+        const acquisitionList = Array.isArray(acquisitions)
+            ? acquisitions
+            : (acquisitions ? [{ name: '', availability: '', modifier: 0, notes: acquisitions, acquired: false }] : []);
+        const updatedAcquisitions = foundry.utils.duplicate(acquisitionList);
+        updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false });
+        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+    }
+
+    async _removeAcquisition(event) {
+        event.preventDefault();
+        const index = Number.parseInt(event.currentTarget.dataset.index ?? '-1');
+        if (Number.isNaN(index) || index < 0) return;
+
+        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
+        if (!Array.isArray(acquisitions)) {
+            await this.actor.update({ 'system.rogueTrader.acquisitions': [] });
+            return;
+        }
+
+        const updatedAcquisitions = foundry.utils.duplicate(acquisitions);
+        updatedAcquisitions.splice(index, 1);
+        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
     }
 
     _onHomeworldChange(event) {

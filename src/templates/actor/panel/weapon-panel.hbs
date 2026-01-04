@@ -58,6 +58,26 @@
                                 <span class="dh-field__header">Pen</span>
                                 <span class="dh-field__span">{{item.system.penetration}}</span>
                             </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Range</span>
+                                <span class="dh-field__span">{{item.system.range}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">ROF (S/B/F)</span>
+                                <span class="dh-field__span">{{rateOfFireDisplay item.system.rateOfFire}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Clip</span>
+                                <span class="dh-field__span">{{item.system.clip.value}} / {{item.system.clip.max}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Reload</span>
+                                <span class="dh-field__span">{{item.system.reload}}</span>
+                            </div>
+                            <div class="dh-field__wrapper">
+                                <span class="dh-field__header">Special</span>
+                                <span class="dh-field__span">{{specialDisplay item.system.special}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
