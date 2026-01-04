@@ -1,19 +1,19 @@
 import { eliteAdvancesNames } from './elite-advances.mjs';
 import { homeworldNames } from './homeworlds.mjs';
 import { attackSpecialsNames } from './attack-specials.mjs';
-import { backgroundNames } from './backgrounds.mjs';
-import { roleNames } from './roles.mjs';
+import { birthrightNames } from './birthrights.mjs';
+import { careerPathNames } from './career-paths.mjs';
 import { divinationNames } from './divinations.mjs';
 
 export const RogueTrader = {};
 
 RogueTrader.bio = {
     homeWorld: homeworldNames(),
-    background: backgroundNames(),
-    role: roleNames(),
+    birthright: birthrightNames(),
+    careerPath: careerPathNames(),
     elite: eliteAdvancesNames(),
     divination: divinationNames(),
-    primary: ['background', 'role', 'elite', 'homeWorld', 'divination'],
+    primary: ['birthright', 'careerPath', 'elite', 'homeWorld', 'divination'],
     size: {
         4: 'Average (4)',
         1: 'Minuscule (1)',

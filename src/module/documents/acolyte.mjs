@@ -1,7 +1,7 @@
 import { homeworlds } from '../rules/homeworlds.mjs';
-import { backgrounds } from '../rules/backgrounds.mjs';
+import { birthrights } from '../rules/birthrights.mjs';
 import { divinations } from '../rules/divinations.mjs';
-import { roles } from '../rules/roles.mjs';
+import { careerPaths } from '../rules/career-paths.mjs';
 import { eliteAdvances } from '../rules/elite-advances.mjs';
 import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
@@ -220,21 +220,21 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 });
             }
         }
-        if (this.bio?.background) {
-            this.backgroundEffects.background = backgrounds().find((h) => h.name === this.bio.background);
-            if (this.backgroundEffects.background) {
+        if (this.bio?.birthright) {
+            this.backgroundEffects.birthright = birthrights().find((h) => h.name === this.bio.birthright);
+            if (this.backgroundEffects.birthright) {
                 this.backgroundEffects.abilities.push({
-                    source: 'Background',
-                    ...this.backgroundEffects.background.background_bonus,
+                    source: 'Birthright',
+                    ...this.backgroundEffects.birthright.birthright_bonus,
                 });
             }
         }
-        if (this.bio?.role) {
-            this.backgroundEffects.role = roles().find((h) => h.name === this.bio.role);
-            if (this.backgroundEffects.role) {
+        if (this.bio?.careerPath) {
+            this.backgroundEffects.careerPath = careerPaths().find((h) => h.name === this.bio.careerPath);
+            if (this.backgroundEffects.careerPath) {
                 this.backgroundEffects.abilities.push({
-                    source: 'Role',
-                    ...this.backgroundEffects.role.role_bonus,
+                    source: 'Career Path',
+                    ...this.backgroundEffects.careerPath.career_bonus,
                 });
             }
         }
