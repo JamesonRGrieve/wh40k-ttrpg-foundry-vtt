@@ -140,6 +140,27 @@ export function registerHandlebarsHelpers() {
         return value || defaultVal;
     });
 
+    Handlebars.registerHelper('rateOfFireDisplay', function(rateOfFire) {
+        if (!rateOfFire) return '';
+        const single = rateOfFire.single ?? '-';
+        const burst = rateOfFire.burst ?? '-';
+        const full = rateOfFire.full ?? '-';
+        return `${single}/${burst}/${full}`;
+    });
+
+    Handlebars.registerHelper('specialDisplay', function(special) {
+        if (!special) return '';
+        if (Array.isArray(special)) {
+            return special.filter(Boolean).join(', ');
+        }
+        if (typeof special === 'object') {
+            return Object.entries(special)
+                .map(([key, value]) => value ? `${key} ${value}`.trim() : key)
+                .join(', ');
+        }
+        return special;
+    });
+
     Handlebars.registerHelper('armourDisplay', function(armour) {
         let first = armour.armourPoints.body;
         const same = Object.keys(armour.armourPoints).every((p) => armour.armourPoints[p] === first);

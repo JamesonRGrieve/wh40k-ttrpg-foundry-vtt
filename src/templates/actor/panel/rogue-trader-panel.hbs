@@ -52,11 +52,112 @@
         <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourWeight"}}</span>
         <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armourWeight" value="{{system.rogueTrader.armourWeight}}" />
     </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.WeightTotal"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.weight.total" value="{{system.rogueTrader.weight.total}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.WeightCurrent"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.weight.current" value="{{system.rogueTrader.weight.current}}" />
+    </div>
+</div>
+
+<div class="dh-panel spacer dh-grid-col-3 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.ArmourHeader"}}</h1>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourHead"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armour.head" value="{{system.rogueTrader.armour.head}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourRightArm"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armour.rightArm" value="{{system.rogueTrader.armour.rightArm}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourLeftArm"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armour.leftArm" value="{{system.rogueTrader.armour.leftArm}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourBody"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armour.body" value="{{system.rogueTrader.armour.body}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourRightLeg"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armour.rightLeg" value="{{system.rogueTrader.armour.rightLeg}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.ArmourLeftLeg"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.rogueTrader.armour.leftLeg" value="{{system.rogueTrader.armour.leftLeg}}" />
+    </div>
+</div>
+
+<div class="dh-panel spacer dh-grid-col-3 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.RogueTrader.HealthHeader"}}</h1>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.WoundsTotal"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.max" value="{{system.wounds.max}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.WoundsCurrent"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.value" value="{{system.wounds.value}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.WoundsCritical"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.critical" value="{{system.wounds.critical}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.Fatigue"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.fatigue.value" value="{{system.fatigue.value}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.FateTotal"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.fate.max" value="{{system.fate.max}}" />
+    </div>
+    <div class="dh-field__wrapper">
+        <span class="dh-field__header">{{localize "RT.RogueTrader.FateCurrent"}}</span>
+        <input type="number" data-dtype="Number" class="dh-field__input" name="system.fate.value" value="{{system.fate.value}}" />
+    </div>
 </div>
 
 <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
     <h1 class="dh-panel__header">{{localize "RT.RogueTrader.AcquisitionsHeader"}}</h1>
-    <textarea class="dh-header__textarea" name="system.rogueTrader.acquisitions" rows="6">{{system.rogueTrader.acquisitions}}</textarea>
+    <div class="dh-table--border dh-weaponmodtable--border">
+        <div class="table-row--head">
+            <div class="table-cell--span2">{{localize "RT.RogueTrader.AcquisitionName"}}</div>
+            <div class="table-cell">{{localize "RT.RogueTrader.AcquisitionAvailability"}}</div>
+            <div class="table-cell">{{localize "RT.RogueTrader.AcquisitionModifier"}}</div>
+            <div class="table-cell">{{localize "RT.RogueTrader.AcquisitionAcquired"}}</div>
+            <div class="table-cell--span2">{{localize "RT.RogueTrader.AcquisitionNotes"}}</div>
+            <div class="table-cell--last">
+                <label class="dh-control-button acquisition-add">
+                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                </label>
+            </div>
+        </div>
+        {{#each system.rogueTrader.acquisitions as | acquisition index |}}
+            <div class="table-row">
+                <div class="table-cell--span2">
+                    <input class="dh-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
+                </div>
+                <div class="table-cell">
+                    <input class="dh-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.availability" value="{{acquisition.availability}}" />
+                </div>
+                <div class="table-cell">
+                    <input class="dh-field__input" type="number" data-dtype="Number" name="system.rogueTrader.acquisitions.{{index}}.modifier" value="{{acquisition.modifier}}" />
+                </div>
+                <div class="table-cell">
+                    <input class="dh-field__input" type="checkbox" data-dtype="Boolean" name="system.rogueTrader.acquisitions.{{index}}.acquired" {{checked acquisition.acquired}} />
+                </div>
+                <div class="table-cell--span2">
+                    <input class="dh-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.notes" value="{{acquisition.notes}}" />
+                </div>
+                <div class="table-cell--last">
+                    <label class="dh-control-button acquisition-remove" data-index="{{index}}">
+                        <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                    </label>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 </div>
 
 <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
