@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use either hand equally well for any task, and does not suffer -20 for using their offhand. When combined with Two-Weapon Wielder Talent, reduces the penalty for making an attack with both weapons to -10.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

@@ -9,6 +9,26 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).<br>2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.<br>3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 0,
+        "ballisticSkill": 0,
+        "strength": 0,
+        "toughness": 3,
+        "agility": 0,
+        "intelligence": 0,
+        "perception": 3,
+        "willpower": 3,
+        "fellowship": -3,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": -1,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

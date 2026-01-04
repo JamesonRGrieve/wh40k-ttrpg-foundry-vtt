@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Has secret \"Mirror Hold\" that is screened against Auspex. +50 Achievement Points towards Trade Objectives, +75 Achievement Points towards Criminal Objectives. Locating Bays while their systems are engaged requires -40 Scrutiny Test.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

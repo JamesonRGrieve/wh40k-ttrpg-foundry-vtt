@@ -6,6 +6,12 @@
     "descriptionText": "Must be a Living Mount, Creature will not flee as a result of their Bestial Trait, and instead auto-passess tests associated with it.",
     "description": {
       "value": "<p>Must be a Living Mount, Creature will not flee as a result of their Bestial Trait, and instead auto-passess tests associated with it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

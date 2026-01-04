@@ -6,6 +6,12 @@
     "descriptionText": "Wearer ignores any penalties they would suffer to Ballistic Skill Tests to hit a target due to the target's movement (such as if target took the Run Action). ",
     "description": {
       "value": "<p>Wearer ignores any penalties they would suffer to Ballistic Skill Tests to hit a target due to the target's movement (such as if target took the Run Action). </p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

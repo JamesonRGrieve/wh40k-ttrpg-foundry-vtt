@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>20 Metre Thick ship bow, +4 Armour on fore arc, and +1d10 damage when ramming. Cannot have Prow Macrobatteries or Lances. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

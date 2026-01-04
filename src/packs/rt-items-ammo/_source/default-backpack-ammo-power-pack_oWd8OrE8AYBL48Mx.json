@@ -12,7 +12,10 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Multiply weapon clip size by 5x and is linked to backpack. If weapon jams only use one clip's worth of ammo and don't need to reload.\nWeapon can't be reloaded during combat.</p><p><b>Qualities:</b> -</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

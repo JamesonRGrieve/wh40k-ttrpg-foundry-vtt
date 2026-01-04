@@ -12,7 +12,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Reduces range to 15 metres unless range was already lower than that. Change damage type to energy, add Flame, Spray, and Primitive Qualities.</p><p><b>Qualities:</b> Flame, Spray, Primitive</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

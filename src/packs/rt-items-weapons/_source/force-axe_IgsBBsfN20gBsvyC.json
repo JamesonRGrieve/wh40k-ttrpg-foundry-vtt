@@ -20,6 +20,12 @@
     "note": "Acts as Best Craftsmanship Mono Weapon to non-psyker.",
     "description": {
       "value": "<p><b>Special:</b> Force, Unbalanced</p><p><b>Note:</b> Acts as Best Craftsmanship Mono Weapon to non-psyker.</p>"
+    },
+    "damageFormula": "1d10+3",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

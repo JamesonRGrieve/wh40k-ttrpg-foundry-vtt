@@ -12,7 +12,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Change damage type to energy, can ignite flammable materials.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

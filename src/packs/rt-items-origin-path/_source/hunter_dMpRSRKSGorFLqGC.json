@@ -9,6 +9,28 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>1. Bounty Hunter (250xp): +3 Willpower, +3 Fellowship, and Bloodtracker Talent. Gain either 1d5 Corruption or 1d5 Insanity.<br>2. Xenos Hunter (250xp): +3 Weapon Skill or +3 Ballistic Skill. Gain either Leap Up or Sprint Talent. Gain either Scholastic Lore (Beasts) or Tracking as Trained Skills.<br>3. Hunted (100xp): +3 Perception. Gain either Paranoia or Light Sleeper Talents. Gain Enemy Talent for whichever group is hunting you (Subject to GM Approval)</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 3,
+        "ballisticSkill": 3,
+        "strength": 0,
+        "toughness": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "perception": 3,
+        "willpower": 3,
+        "fellowship": 3,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 0,
+      "skills": [],
+      "talents": [
+        "Enemy"
+      ],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> Leathering Wings, pinions of sinew and bone, or some other form sprout from the Daemonhost's back. They gain Flyer (X) trait.\nX = Agility Bonus x 2</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

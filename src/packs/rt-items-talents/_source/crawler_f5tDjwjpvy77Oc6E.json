@@ -9,7 +9,15 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Crawls and Slithers rather than uses walks. Base movement speed is half Agility Bonus rounded up. Doesn't take penalties to move across difficult terrain.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Allows wearer to fire Basic Weapons one-handed, although not in melee.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

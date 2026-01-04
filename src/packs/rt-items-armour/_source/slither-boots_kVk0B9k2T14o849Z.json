@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Provides +10 to Agility Tests to maintain footing in treacherous or slick conditions. Is 6AP vs corrosive effects.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

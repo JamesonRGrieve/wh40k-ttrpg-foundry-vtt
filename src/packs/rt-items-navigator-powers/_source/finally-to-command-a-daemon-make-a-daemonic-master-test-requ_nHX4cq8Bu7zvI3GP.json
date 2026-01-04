@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> - \"The Stars are Right\" - Ausicious Circumstances favour the Enactors\n- The Enactor has sworn allegiance/is devoted to the Daemon's/God's Cause\n- The Enactor is a Psyker with Psy Rating 7+\n- The Veil between Reality and the Warp is greatly weakened\n- Sacred Numbers are used correctly and appropriately as part of the Ritual</p><p><b>Adept:</b>  -60 to Curse Test: Character has never met or seen their target\n -50 to Curse Test: Character has seen or been in the presence of their target\n -40 to Curse Test: Character has spoken to their target at least once\n -30 to Curse Test: Character has had minor dealings with their target\n -20 to Curse Test: Character and target know one another in some capacity\n -10 to Curse Test: Character and target have had numerous dealings over several years\n +0  to Curse Test: Character and target have known one naother for many years</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

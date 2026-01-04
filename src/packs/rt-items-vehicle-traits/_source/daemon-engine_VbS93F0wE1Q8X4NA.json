@@ -6,6 +6,12 @@
     "descriptionText": "A Horrifying fusion of Machine and Daemonflesh.\nHas Protection 30 Forcefield, never overloads. Bypassed by Sanctified or Force Weapons, or Damaging Psychic Powers.\nRegains 1d5 Structural Integrity, or 1 Critical Damage per Round.",
     "description": {
       "value": "<p>A Horrifying fusion of Machine and Daemonflesh.\nHas Protection 30 Forcefield, never overloads. Bypassed by Sanctified or Force Weapons, or Damaging Psychic Powers.\nRegains 1d5 Structural Integrity, or 1 Critical Damage per Round.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

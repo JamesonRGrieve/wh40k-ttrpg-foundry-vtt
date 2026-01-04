@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Generates Power rather than uses it. If this component is damaged, it explodes, doing 1d5 Hull Damage to the ship and setting the plasma drive on fire.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

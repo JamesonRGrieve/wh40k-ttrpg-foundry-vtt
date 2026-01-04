@@ -10,7 +10,12 @@
     "useTime": "Half Action",
     "description": {
       "value": "<p>Ascending/Descending Ropes, pipes, walls, other surfaces that would be hard to climb due to lack of hand holds or difficult environmental conditions. Not neccesary for trivial climbing methods such as well-maintained ladders.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Strength",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

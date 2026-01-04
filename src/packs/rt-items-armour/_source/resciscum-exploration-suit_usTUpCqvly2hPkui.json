@@ -14,7 +14,9 @@
     "source": "RT: Stars of Inequity",
     "description": {
       "value": "<p>Designed for Exploration. Is sealed, contains sensitive sampling equipment to collect and analyse any material and record such data. Also has built-in Auspex, Vox, Rebreather, and microbead, and lasts one week before recharge. If power failiure, prioritises rebreather and sealing. -10 on Climb, Swim, WSkill, BSskill and Agility Tests whilst worn.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

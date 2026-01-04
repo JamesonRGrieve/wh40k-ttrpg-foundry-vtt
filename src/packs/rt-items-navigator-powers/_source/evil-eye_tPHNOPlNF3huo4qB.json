@@ -13,7 +13,14 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p><b>Novice:</b> If Navigator Wins Opposed Test, for 1d5 + 1 per Degree of Success days Target suffers from any weapon they use having the Unreliable Trait and any test they make having -10. The cursed character may spend a fate point to end the effect. Only one instance of this power can be in effect at a time.</p><p><b>Adept:</b> Target suffers -20 instead of -10 on all tests. If anyone uses a Psychic technique within 5 metres of them, it automatically manifests Psychic Phenomena even if it wouldn't normally do so (including Fettered Powers).</p><p><b>Master:</b> Anyone in 5 metres of target that uses a psychic power automatically rolls on Perils of the Warp instead of Psychic Phenomena.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

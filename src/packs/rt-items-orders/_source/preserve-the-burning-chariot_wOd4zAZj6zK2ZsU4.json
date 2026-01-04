@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can use Order to direct a comrade to put out a fire or assist in the effort. If comrade is assisting the Character in putting out a fire, they grant +20 to the test. If the comrade is doing it on their own, Player Character makes -20 Command Test to put it out. Can be used with Servitor Comrades in addition to normal ones. Note: Mechanicus Related = Any Tech-Priest or Regiment Sworn to the Mechanicus</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

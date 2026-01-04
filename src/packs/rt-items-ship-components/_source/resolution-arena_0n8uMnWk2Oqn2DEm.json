@@ -5,14 +5,22 @@
   "system": {
     "type": "Upgrade",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
     "effect": "Allows crew to settle their disputes in a fighting arena. Poor permenantly increases morale by +2, Common by +3, Good  also provides +10 to Commerce tests with trading partners on the vessel. Best gives same bonus by also permenantly increases morale by +5. Only one per vessel. ",
     "availability": "Scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Allows crew to settle their disputes in a fighting arena. Poor permenantly increases morale by +2, Common by +3, Good  also provides +10 to Commerce tests with trading partners on the vessel. Best gives same bonus by also permenantly increases morale by +5. Only one per vessel. </p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

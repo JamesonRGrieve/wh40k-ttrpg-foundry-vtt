@@ -16,14 +16,14 @@ export class RogueTraderTour extends Tour {
                 return;
             }
 
-            const observer = new MutationObserver((mutations, observer) => {
+            const mutationObserver = new MutationObserver((mutations, obs) => {
                 document.querySelectorAll(selector).forEach((el) => {
                     resolve(el);
-                    observer.disconnect();
+                    obs.disconnect();
                 });
             })
 
-            observer.observe(document.body, {
+            mutationObserver.observe(document.body, {
                 childList: true,
                 subtree: true
             });

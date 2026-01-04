@@ -20,6 +20,12 @@
     "note": "Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.",
     "description": {
       "value": "<p><b>Special:</b> Ogryn-Proof, Primitive (7), Unbalanced</p><p><b>Note:</b> Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.</p>"
+    },
+    "damageFormula": "1d10-2",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> - The Enactor knows the Allegiance of the Summoned Daemon</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

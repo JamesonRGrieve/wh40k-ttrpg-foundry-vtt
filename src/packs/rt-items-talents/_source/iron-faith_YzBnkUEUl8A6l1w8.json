@@ -9,7 +9,16 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

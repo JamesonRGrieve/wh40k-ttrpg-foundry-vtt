@@ -13,7 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Novice:</b> Navigator projects a 10 metre, 30 degree cone. All living creatures in range make +0 Agility Test or take 1d10+4 Energy Damage with Pen 2. Navigator makes +20 Toughness Test or suffers one fatigue.</p><p><b>Adept:</b> Acts as a Flamer (20m; 1d10+4 E; Pen 2; Flame, Spray), does +2 Damage per 10 Corruption target has. Doesn't cause fatigue on use.</p><p><b>Master:</b> Acts as Heavy Flamer (30m; 1d10+5; Pen 4; Flame, Spray), does +4 damage per 10 corruption  target has</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

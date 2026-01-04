@@ -9,7 +9,14 @@
     "source": "RT: Hostile Acquisitions \n(Page 36)",
     "description": {
       "value": "<p>A swindling individual who sees faith as an opportunity for manipulation. Be it selling fake charms, false visions, or the fast-talking predation on the suspicions and fears of the masses, all for their own benefit and all the while avoiding the ire of the Ecclesiarchy or other faithful individuals.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Drusian Charlatan\nAutomatically Gain Enemy (Ecclesiarchy) if does not already have it.\nAllows for the purchasing of the Unique Talent Cold Reading</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

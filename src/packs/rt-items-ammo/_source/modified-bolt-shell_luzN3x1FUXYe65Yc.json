@@ -12,7 +12,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Does 1d10+5 X, Pen 4, Tearing Damage, +30 Metres. However Shotgun Gains Unreliable quality (or loses reliable), and loses Scatter.</p><p><b>Qualities:</b> Tearing, Unreliable, Scatter (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

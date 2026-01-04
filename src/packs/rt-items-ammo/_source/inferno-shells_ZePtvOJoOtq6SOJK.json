@@ -12,7 +12,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)</p><p><b>Qualities:</b> Flame</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

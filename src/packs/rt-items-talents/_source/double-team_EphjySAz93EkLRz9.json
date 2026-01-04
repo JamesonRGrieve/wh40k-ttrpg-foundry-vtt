@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

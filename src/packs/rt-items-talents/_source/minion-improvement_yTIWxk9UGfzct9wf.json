@@ -9,7 +9,16 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Minion gains 500xp to spend on Advancements, and is spent as a player would. This talent can be bought multiple times but the total XP spent by the  Superior Minion cannot exceed 50% of the player's spent XP.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

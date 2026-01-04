@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Grants wearer Auto-Stabilised and Unnatural Strength (+1) Trait. Increases Size Trait by 1 (typically Average to Hulking). Environmentally sealed when helmet is on with its own Oxygen Supply. Power Supply lasts 2d5 Hours before needing recharging or refueling. Whilst powered doesn't count towards carry limit.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

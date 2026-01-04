@@ -17,7 +17,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> Cannot be unpowered, if destroyed, explodes, dealing 2d5 Hull Damage to ship, no reduction by shields or armour.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

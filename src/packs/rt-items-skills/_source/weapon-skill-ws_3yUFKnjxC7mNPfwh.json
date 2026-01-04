@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The Skill a Character possesses with Melee Weapons and Hand-to-Hand Combat\nUsed for making Melee Attacks.",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

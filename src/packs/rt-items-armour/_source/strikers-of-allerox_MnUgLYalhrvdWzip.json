@@ -14,7 +14,9 @@
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>Space Marines Only. Master-Crafted Relic Gauntlets of the Imperial Fists Chapter. Grants +5 Strength when fighting Unarmed, or +15 Strength when Grappling.\nOnce used to Strangle a Herald of Khorne.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "Usually Full Action",
     "description": {
       "value": "<p>The ability to perform precise bodily actions, such as leaping across gaps, perform flips, and contort oneself. More DoS means a more stylish or efficient result.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

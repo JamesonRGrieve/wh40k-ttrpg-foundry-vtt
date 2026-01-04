@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> Reduce target vessel's armour by 3 when calculating damage of salvos that include shots from this weapon (effectively, weapon has PEN 3). Armour reduction isn't permenant.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,15 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Creature's natural attacks do not have the Primitive Special Quality</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

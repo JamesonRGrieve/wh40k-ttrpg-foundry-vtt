@@ -6,7 +6,15 @@
     "effect": "When used against Daemons, this weapon gains Vengeful (8) Quality and its damage is not reduced by daemon's Toughness bonus.",
     "description": {
       "value": "<p>When used against Daemons, this weapon gains Vengeful (8) Quality and its damage is not reduced by daemon's Toughness bonus.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

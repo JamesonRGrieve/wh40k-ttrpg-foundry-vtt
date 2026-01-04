@@ -14,7 +14,9 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Heretical and incredibly rare armour composed of Tyranid Chitin. May attract unwanted attention from the Inquisition, Arbites, Ecclesiarchy, etc. </p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

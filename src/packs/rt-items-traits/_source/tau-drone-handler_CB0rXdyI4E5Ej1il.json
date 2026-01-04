@@ -9,7 +9,14 @@
     "source": "RT: Tau Character Guide (Page 22)",
     "description": {
       "value": "<p>Drone handlers, as their name implies, operate a number of the advanced Support and Gun Drones the Tau use ubiquitously. Giving orders to them such that they and their drones may most effectively support their comrades in battle.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Tau Drone Handler\nAllows for the purchasing of the Unique Talents Priority Fire and Swarm Protocols.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

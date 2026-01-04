@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character chooses one or more of their Comrades in Cohesion to Participate in this Order if they have more than one, each uses a Full Action to do so.\nMake a -10 Command Test, with +10 per Comrade Participating, if successful the Character's next ranged attack this turn gains Concussive(X), where X is equal to the number of Degrees of Success on test. Can only use this order once per combat Encounter.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

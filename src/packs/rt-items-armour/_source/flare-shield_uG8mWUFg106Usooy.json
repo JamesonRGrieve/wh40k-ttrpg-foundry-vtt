@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Protection Rating doubles against Spray and Blast Weapons. If shield overloads it inflicts 1d10 Energy damage to wearer that ignores Armour and Toughness</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

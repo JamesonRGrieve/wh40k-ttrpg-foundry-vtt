@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Rather than provide a protection rating, this forcefield imposes -20 to WS and BS for anyone targeting the user. Does little to protect against explosions or flame weapons.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

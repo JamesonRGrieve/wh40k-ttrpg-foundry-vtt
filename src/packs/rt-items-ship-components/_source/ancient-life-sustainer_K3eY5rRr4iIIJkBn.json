@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Permenantly Increases Morale by 2, reduces Crew Population Loss from non-combat sources by 1. Can be used as the Ship's Life Sustainer.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

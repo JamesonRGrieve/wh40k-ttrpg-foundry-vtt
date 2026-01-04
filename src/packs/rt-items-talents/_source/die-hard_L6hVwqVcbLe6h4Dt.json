@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Whenever Suffering Blood Loss, only test to avoid death every five rounds, instead of every round.\nDH 2E: Whenever character would suffer Fatigue due to Blood Loss can make a +0 Willpower Test, if successful they do not suffer Fatigue. (note, Blood Loss doesn't kill in DH 2E)</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

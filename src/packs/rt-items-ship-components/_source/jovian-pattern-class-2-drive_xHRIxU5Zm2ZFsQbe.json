@@ -7,12 +7,20 @@
     "hullType": "Raiders, Frigates",
     "powerUsage": -45,
     "spaceUsage": 10,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "Generates power rather than using it.",
     "availability": "Scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Generates power rather than using it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

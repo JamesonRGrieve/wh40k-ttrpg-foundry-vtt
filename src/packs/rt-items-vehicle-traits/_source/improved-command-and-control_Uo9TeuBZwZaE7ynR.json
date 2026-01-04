@@ -6,6 +6,12 @@
     "descriptionText": "The Commander or Driver if there is no Commander of this vehicle can use their Command Skill to affect a number of squads or units equal to their Fellowship Bonus, combines with Fellowship-based Talents. Also gives +20 to all Command Tests.",
     "description": {
       "value": "<p>The Commander or Driver if there is no Commander of this vehicle can use their Command Skill to affect a number of squads or units equal to their Fellowship Bonus, combines with Fellowship-based Talents. Also gives +20 to all Command Tests.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> Generate unholy changes based on bound-level. Either rolled for or simply chosen by GM. \nUnbound: Three Changes. Once-Bound: two Changes. Twice-Bound: two Changes. Thrice-Bound: one change.\nThese are examples, the GM is free to apply something else that is fitting.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "RT: Faith and Coin\n(Page 70)",
     "description": {
       "value": "<p>The hunter of the witch, psyker, and warp-spawn. Honed in mind, body, and soul to battle with the terrors of the warp. Some see the work as divine, some see it is a grim neccesity.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Witch Finder\nAllows for the purchasing of the Unique Talent Mind Sight, as well as the Psyniscience Skill, even though not a Psyker.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

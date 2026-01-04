@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Lathe-Pattern Breacher Servitor Primary Function. Servitor Comrade begins drilling through an obstruction, and will continue to do so until told otherwise or until successfully drilling a hole through the obstruction. Drilling 5cm or Rock per Round, or 3m per 5 minutes. Double or more Distance for soft matierals (EG:Wood/loose stone), Halve or more for harder like fortified stone/metal. Hole is 2m high, 1m wide, can collapse if weak material.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

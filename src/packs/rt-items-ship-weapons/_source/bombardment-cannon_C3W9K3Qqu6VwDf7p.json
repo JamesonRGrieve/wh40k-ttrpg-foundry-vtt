@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+6</p><p><b>Notes:</b> Must Occupy Prow, Dorsal, or Keel slots. +1 to crit rolls, +20 to Intimidate Tests vs planet-based characters, and +50 Achievement Points towards Military Objectives against planets. For Planetary Bombardment, double affected area, +20 damage to large units, +10 damage to individuals and vehicles.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

@@ -7,12 +7,20 @@
     "hullType": "All Ships",
     "powerUsage": 5,
     "spaceUsage": 0,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "The eyes and ears of the ship. +5 to BS Tests against Planetary Based Targets, +50 Achievement Points towards Military Objectives. Component can only be damaged or destroyed by a critical hit.",
     "availability": "Scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>The eyes and ears of the ship. +5 to BS Tests against Planetary Based Targets, +50 Achievement Points towards Military Objectives. Component can only be damaged or destroyed by a critical hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

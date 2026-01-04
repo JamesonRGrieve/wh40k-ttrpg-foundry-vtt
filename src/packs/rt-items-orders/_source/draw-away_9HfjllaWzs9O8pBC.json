@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character chooses target within line of sight and makes -10 Command or Scrutiny Test Opposed by Target's Intelligence Test. If Character succeeds, Comrade draws target's attention, target spends next turn moving towards or attacking Comrade. Comrade must be within Communication range to make Order.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

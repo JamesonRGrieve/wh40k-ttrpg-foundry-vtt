@@ -12,7 +12,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Does no damage, instead creates 10 metre radius smoke that blocks natural, thermal, and electronic visual devices from seeing though for 10 rounds.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

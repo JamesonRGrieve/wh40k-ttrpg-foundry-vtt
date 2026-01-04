@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Recycles the heavily wounded into Servitors. Reduce Crew Losses by 3, to a minimum of 1. Increase all Morale Losses by 1. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

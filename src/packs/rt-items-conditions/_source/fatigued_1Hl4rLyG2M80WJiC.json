@@ -9,7 +9,15 @@
     "source": "Character Actions and Rules (sheet)",
     "description": {
       "value": "<p>Any test while fatigued: -10</p>"
-    }
+    },
+    "severity": 1,
+    "stackable": false,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "autoRemove": false
   },
   "effects": [],
   "flags": {

@@ -7,12 +7,20 @@
     "hullType": "All Ships",
     "powerUsage": 1,
     "spaceUsage": 3,
-    "spCost": "N/A",
+    "spCost": 0,
     "effect": "An enormous library of knowledge on anything and everyting. Once per game session, a character who can access can spend one hour and a fate point to count all Common Lore and Scholastic Lore Skills as Basic Skills for the rest of the game session. Can be used as justification for acquiring Common Lore or Scholastic Lore Skills as Elite Advances. This component is a one of a kind relic, it cannot be acquired, and must be earned. Only fragments have ever been found...",
     "availability": "Unique",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>An enormous library of knowledge on anything and everyting. Once per game session, a character who can access can spend one hour and a fate point to count all Common Lore and Scholastic Lore Skills as Basic Skills for the rest of the game session. Can be used as justification for acquiring Common Lore or Scholastic Lore Skills as Elite Advances. This component is a one of a kind relic, it cannot be acquired, and must be earned. Only fragments have ever been found...</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

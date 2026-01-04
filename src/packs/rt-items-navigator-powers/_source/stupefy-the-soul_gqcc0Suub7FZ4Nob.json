@@ -13,7 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Novice:</b> Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it).  Targets that fail take 1d5+4 Levels of Fatigue, only reduced by target's Toughness Bonus. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.</p><p><b>Adept:</b> As Novice, but also Opponent must also make -10 Fear Test (Willpower). If Navigator Fails Opposed Test they suffer two Fatigue.</p><p><b>Master:</b> As Novice, but also Opponent must also make -20 Feat test (Willpower). If Navigator Fails Opposed Test they suffer two Fatigue which can't be avoided.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

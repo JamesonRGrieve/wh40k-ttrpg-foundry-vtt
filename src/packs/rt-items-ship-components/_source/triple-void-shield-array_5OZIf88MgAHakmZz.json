@@ -7,12 +7,20 @@
     "hullType": "Grand Cruisers",
     "powerUsage": 9,
     "spaceUsage": 3,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "Provides 3 Void Shields, absorbing 3 attacks from any attacking vessel each round.",
     "availability": "Scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Provides 3 Void Shields, absorbing 3 attacks from any attacking vessel each round.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

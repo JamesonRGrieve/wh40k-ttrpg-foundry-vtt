@@ -9,7 +9,15 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can make Psynscience Skill as a Free Action</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

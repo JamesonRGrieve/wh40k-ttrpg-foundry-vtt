@@ -12,7 +12,10 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Add +20m to Range</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

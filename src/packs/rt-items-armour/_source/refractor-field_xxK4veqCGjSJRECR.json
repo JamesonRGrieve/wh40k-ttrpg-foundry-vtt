@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Reduces damage from high-velocity impacts by 2d10. If rolling double 1's, attack bypasses shield. If double 0's field overloads and power cell burns out until repaired (but damage is reduced by 20). Ineffective against close range or slow moving attacks such as melee attacks or landmines. Power cells last 1 hour, are non rechargable, Rare, and 1,000 Thrones each</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

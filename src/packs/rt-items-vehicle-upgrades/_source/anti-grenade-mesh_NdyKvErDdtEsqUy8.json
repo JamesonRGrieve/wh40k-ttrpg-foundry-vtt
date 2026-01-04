@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Passive Grenade Defence. Whenever a Vehicle with this is struck by a grenade roll 1d10, on a 7+ Grenade scatters 1d5 metres away before exploding. On a 1, Mesh is damaged and ceases to function until repaired. Also imposes -20 to set up explosives on the vehicle, such as Melta Bombs.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

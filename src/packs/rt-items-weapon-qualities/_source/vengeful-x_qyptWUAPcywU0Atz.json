@@ -6,7 +6,15 @@
     "effect": "Weapon causes Righteous Fury on a value of X or higher.",
     "description": {
       "value": "<p>Weapon causes Righteous Fury on a value of X or higher.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

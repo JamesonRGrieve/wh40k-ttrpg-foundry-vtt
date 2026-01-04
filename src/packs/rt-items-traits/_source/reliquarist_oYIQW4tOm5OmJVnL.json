@@ -9,7 +9,14 @@
     "source": "RT: Faith and Coin\n(Page 72)",
     "description": {
       "value": "<p>A Somewhat Pious Treasure Hunter, delving into ancient and lost worlds searching for long-lost relics of the imperial faith. Studying diligently to comprehend ancient scriptures and scraps of forgotten text. </p><p><b>Effects:</b> Replace new Rank's Advances with that of the Reliquartist\nAllows for the purchasing of the Unique Talent Discerning Eye</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

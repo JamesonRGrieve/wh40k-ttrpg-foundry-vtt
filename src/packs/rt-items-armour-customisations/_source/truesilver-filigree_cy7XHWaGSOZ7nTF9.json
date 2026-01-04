@@ -10,6 +10,12 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Characters with the Daemonic trait engaged in melee with wearer suffers penalty to Weapon Skill Tests equal to -5 x Wearer's Willpower Bonus.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

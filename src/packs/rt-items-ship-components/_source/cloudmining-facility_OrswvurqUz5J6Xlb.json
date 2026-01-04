@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

@@ -5,14 +5,22 @@
   "system": {
     "type": "Upgrade",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
     "effect": "Provides +5 to BS Tests to Fire Macrocannons and Lances on the vessel (but not other weapon types). Poor Craftsmanship only benefits a single weapon chosen on installation (could pick it up multiple times for multiple weapons), Good and Best have no further bonuses. Only one per vessel.",
     "availability": "Extremely Rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Provides +5 to BS Tests to Fire Macrocannons and Lances on the vessel (but not other weapon types). Poor Craftsmanship only benefits a single weapon chosen on installation (could pick it up multiple times for multiple weapons), Good and Best have no further bonuses. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

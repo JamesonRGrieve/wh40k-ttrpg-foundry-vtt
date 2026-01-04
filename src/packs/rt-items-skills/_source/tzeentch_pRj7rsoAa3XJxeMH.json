@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": "<p>Slaanesh, Unaligned</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Tzeentch",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

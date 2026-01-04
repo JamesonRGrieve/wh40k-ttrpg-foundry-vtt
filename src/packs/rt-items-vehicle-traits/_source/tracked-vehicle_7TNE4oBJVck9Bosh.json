@@ -6,6 +6,12 @@
     "descriptionText": "-10 to Manoeuvrability and +10 to all tests involving Difficult Terrain. When suffering Critical Damage to Motive Sysems, halve the roll that determines whether Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.",
     "description": {
       "value": "<p>-10 to Manoeuvrability and +10 to all tests involving Difficult Terrain. When suffering Critical Damage to Motive Sysems, halve the roll that determines whether Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Adepta Sororitas Only. Grants Unnatural Strength (+1), wearer always counts as braced. Armour does not increase Size Trait.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

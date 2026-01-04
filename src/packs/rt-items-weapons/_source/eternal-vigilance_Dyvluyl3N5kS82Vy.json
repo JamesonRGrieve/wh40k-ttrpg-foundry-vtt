@@ -20,6 +20,12 @@
     "note": "Space Marines Only. Master-Crafted Relic Sword of the Knights of Blood Chapter. Two-Handed. Cannot be destroyed by Power Fields.",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Proven (3), Razor Sharp</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Sword of the Knights of Blood Chapter. Two-Handed. Cannot be destroyed by Power Fields.</p>"
+    },
+    "damageFormula": "2d10+5",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

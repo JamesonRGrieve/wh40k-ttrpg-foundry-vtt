@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> A Bound Daemon within a mortal shell is a powerful, yet incredibly dangerous being. Created only be mad cults and the most radical of Inquisitors.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

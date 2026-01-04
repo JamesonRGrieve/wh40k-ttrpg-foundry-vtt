@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

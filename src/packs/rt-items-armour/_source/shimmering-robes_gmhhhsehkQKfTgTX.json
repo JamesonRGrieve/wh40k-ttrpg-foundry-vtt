@@ -14,7 +14,9 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p>Protection Rating is the wearer's Psy Rating multiplied by 9. Overload is equal to wearer's Psy Rating. Does nothing but look pretty if not a Psyker. \nIf it ever overloads, must at some point within a day spend one hour in devout meditation to reinvigorate its powers. If not done it crumbles to dust.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

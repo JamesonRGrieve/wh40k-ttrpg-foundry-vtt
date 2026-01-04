@@ -14,7 +14,9 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -10,6 +10,12 @@
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Adds +10 to Wearer's Strength Characteristic, weight of armour doesn't count towards carrying capacity. Armour requires power supply that lasts 1d5 hours.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

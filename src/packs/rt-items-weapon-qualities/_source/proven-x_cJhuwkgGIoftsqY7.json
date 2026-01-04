@@ -6,7 +6,15 @@
     "effect": "Damage Rolls below X count as if X was Rolled",
     "description": {
       "value": "<p>Damage Rolls below X count as if X was Rolled</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

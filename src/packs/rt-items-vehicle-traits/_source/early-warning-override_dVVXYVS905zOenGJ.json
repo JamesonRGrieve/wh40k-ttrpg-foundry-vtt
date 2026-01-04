@@ -6,6 +6,12 @@
     "descriptionText": "Once per Encounter, the wearer can make the Overwatch Action as a Reaction.",
     "description": {
       "value": "<p>Once per Encounter, the wearer can make the Overwatch Action as a Reaction.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

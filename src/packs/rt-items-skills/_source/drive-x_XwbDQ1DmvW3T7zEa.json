@@ -10,7 +10,12 @@
     "useTime": "Half Action",
     "description": {
       "value": "<p>Drive Group Vehicle of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to drive under normal conditions without test.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

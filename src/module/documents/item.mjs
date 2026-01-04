@@ -46,6 +46,10 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         return this.type === 'psychicPower';
     }
 
+    get isNavigatorPower() {
+        return this.type === 'navigatorPower';
+    }
+
     get isPsychicBarrage() {
         return this.type === 'psychicPower' && this.system.attackType === 'Psychic Barrage';
     }
@@ -56,6 +60,58 @@ export class RogueTraderItem extends RogueTraderItemContainer {
 
     get isCriticalInjury() {
         return this.type === 'criticalInjury';
+    }
+
+    get isOriginPath() {
+        return this.type === 'originPath' || (this.type === 'trait' && this.flags?.rt?.kind === 'origin');
+    }
+
+    get isSkill() {
+        return this.type === 'skill';
+    }
+
+    get isOrder() {
+        return this.type === 'order';
+    }
+
+    get isRitual() {
+        return this.type === 'ritual';
+    }
+
+    get isShipComponent() {
+        return this.type === 'shipComponent';
+    }
+
+    get isShipRole() {
+        return this.type === 'shipRole';
+    }
+
+    get isShipUpgrade() {
+        return this.type === 'shipUpgrade';
+    }
+
+    get isShipWeapon() {
+        return this.type === 'shipWeapon';
+    }
+
+    get isVehicleTrait() {
+        return this.type === 'vehicleTrait';
+    }
+
+    get isVehicleUpgrade() {
+        return this.type === 'vehicleUpgrade';
+    }
+
+    get isWeaponQuality() {
+        return this.type === 'weaponQuality';
+    }
+
+    get isCondition() {
+        return this.type === 'trait' && this.flags?.rt?.kind === 'condition';
+    }
+
+    get originPathStep() {
+        return this.flags?.rt?.step || this.system?.step || '';
     }
 
     get isWeapon() {
@@ -225,5 +281,292 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             }
         }
         return specials;
+    }
+
+    /**
+     * Get the item type label for display
+     * @returns {string} The localized item type label
+     */
+    get itemTypeLabel() {
+        const typeLabels = {
+            weapon: 'Weapon',
+            armour: 'Armour',
+            talent: 'Talent',
+            trait: 'Trait',
+            skill: 'Skill',
+            psychicPower: 'Psychic Power',
+            navigatorPower: 'Navigator Power',
+            shipComponent: 'Ship Component',
+            shipRole: 'Ship Role',
+            shipWeapon: 'Ship Weapon',
+            order: 'Order',
+            ritual: 'Ritual',
+            originPath: 'Origin Path',
+            gear: 'Gear',
+            cybernetic: 'Cybernetic',
+            consumable: 'Consumable',
+            ammunition: 'Ammunition',
+            forceField: 'Force Field'
+        };
+        return typeLabels[this.type] || this.type;
+    }
+
+    /**
+     * Check if this item has actions available
+     * @returns {boolean}
+     */
+    get hasActions() {
+        return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || 
+               (this.isTalent && this.system?.isRollable);
+    }
+
+    /**
+     * Check if this item can be rolled
+     * @returns {boolean}
+     */
+    get isRollable() {
+        return (this.isTalent && this.system?.isRollable) || 
+               (this.isSkill && this.system?.rollConfig);
+    }
+
+    /**
+     * Send this item's details to chat as a card
+     * @param {Object} options - Options for the chat card
+     */
+    async sendToChat(options = {}) {
+        const cardData = {
+            item: this,
+            itemTypeLabel: this.itemTypeLabel,
+            isWeapon: this.isWeapon,
+            isNavigatorPower: this.isNavigatorPower,
+            isShipComponent: this.isShipComponent,
+            isPsychicPower: this.isPsychicPower,
+            isTalent: this.isTalent,
+            hasActions: this.hasActions,
+            isRollable: this.isRollable,
+            actor: this.actor?.name || '',
+            ...options
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/item-card-chat.hbs', cardData);
+        
+        const chatData = {
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        };
+
+        const rollMode = game.settings.get('core', 'rollMode');
+        if (['gmroll', 'blindroll'].includes(rollMode)) {
+            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        } else if (rollMode === 'selfroll') {
+            chatData.whisper = [game.user];
+        }
+
+        return ChatMessage.create(chatData);
+    }
+
+    /**
+     * Perform the default action for this item
+     */
+    async performAction() {
+        if (this.isWeapon) {
+            // Weapon attack - handled by the actor sheet
+            return this.actor?.rollWeaponAction?.(this) || this.sendToChat();
+        } else if (this.isPsychicPower) {
+            // Psychic power - handled by the actor sheet  
+            return this.actor?.rollPsychicPower?.(this) || this.sendToChat();
+        } else if (this.isNavigatorPower) {
+            // Navigator power - roll navigator power
+            return this.rollNavigatorPower();
+        } else if (this.isTalent && this.system?.isRollable) {
+            // Rollable talent
+            return this.rollTalent();
+        } else if (this.isOrder) {
+            // Ship order - roll order
+            return this.rollOrder();
+        } else if (this.isRitual) {
+            // Ritual - roll ritual
+            return this.rollRitual();
+        } else {
+            // Default - send to chat
+            return this.sendToChat();
+        }
+    }
+
+    /**
+     * Roll a talent that has a rollable action
+     */
+    async rollTalent() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        const rollConfig = this.system?.rollConfig;
+        if (!rollConfig?.characteristic) {
+            return this.sendToChat();
+        }
+
+        // Get the characteristic value
+        const charKey = rollConfig.characteristic.toLowerCase();
+        const characteristic = this.actor.characteristics?.[charKey];
+        if (!characteristic) {
+            return this.sendToChat();
+        }
+
+        const targetValue = characteristic.total + (rollConfig.modifier || 0);
+        
+        // Create the roll
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: this.itemTypeLabel,
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            characteristic: characteristic,
+            charKey: charKey,
+            actor: this.actor.name,
+            rollDescription: rollConfig.description || ''
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/talent-roll-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
+    }
+
+    /**
+     * Roll a navigator power
+     */
+    async rollNavigatorPower() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        // Navigator powers typically use Perception or Willpower
+        const perception = this.actor.characteristics?.perception;
+        const willpower = this.actor.characteristics?.willpower;
+        
+        // Use the higher of the two as base, modified by Navigator Rank
+        const navigatorRank = this.actor.system?.navigatorRank || 0;
+        const baseChar = perception?.total > willpower?.total ? perception : willpower;
+        const targetValue = (baseChar?.total || 30) + (navigatorRank * 5);
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: 'Navigator Power',
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor.name
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/navigator-power-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
+    }
+
+    /**
+     * Roll a ship order
+     */
+    async rollOrder() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        // Orders typically use Command or relevant skill
+        const command = this.actor.skills?.command;
+        const targetValue = command?.current || 50;
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: 'Ship Order',
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor.name
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/order-roll-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
+    }
+
+    /**
+     * Roll a ritual
+     */
+    async rollRitual() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        // Rituals typically use Willpower
+        const willpower = this.actor.characteristics?.willpower;
+        const targetValue = willpower?.total || 30;
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: 'Ritual',
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor.name
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/ritual-roll-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
     }
 }

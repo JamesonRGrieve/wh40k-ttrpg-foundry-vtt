@@ -9,7 +9,14 @@
     "source": "OW: Shield of Humanity (Page 78)",
     "description": {
       "value": "<p>The Small size of a Ratling makes it easier for them to keep themselves hidden, to keep their feet light and presence undetected. This aids both in navigating unknown terrain and in the confines of a camp, where illicit dealings are best made away from the eyes and ears of those more reverent.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Trailblazer. Apt: Agility, Fellowship, Fieldcraft, Finesse, Offence, Strength, Weapon Skill\nAdd. Equipment: Good Long Las or Good Sniper Rifle+Telescopic Sight or Good Shotgun, Mono Knife . Gain Talents: Catfall+Disarm or Surefoot Pathfinder\nCan Purchase Basic Orders: Convenient Distraction,  Blatant Theft, and Notorious Pilferer  </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -12,6 +12,16 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 50 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

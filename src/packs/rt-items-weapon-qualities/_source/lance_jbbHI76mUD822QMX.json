@@ -6,7 +6,15 @@
     "effect": "Increase penetration by base weapon PEN value with every Degree of Success on BS Test after first.",
     "description": {
       "value": "<p>Increase penetration by base weapon PEN value with every Degree of Success on BS Test after first.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

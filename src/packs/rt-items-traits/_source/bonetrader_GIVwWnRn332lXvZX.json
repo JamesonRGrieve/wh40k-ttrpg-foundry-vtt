@@ -9,7 +9,14 @@
     "source": "RT: The Navis Primer\n(Page 70)",
     "description": {
       "value": "<p>Bonetraders are those knowledgable in the ways of the psyker and the witch both human and otherwise, as well as of psychic relics and the myriad dangers associated with all of them. They use this, naturally, to best judge how to profit from such endeavours where their knowledge is essential.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Bonetrader\nAutomatically Gain Profit by the Witch Unique Talent\nAllows for the purchasing of the Unique Talent Mindtrap Maze </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

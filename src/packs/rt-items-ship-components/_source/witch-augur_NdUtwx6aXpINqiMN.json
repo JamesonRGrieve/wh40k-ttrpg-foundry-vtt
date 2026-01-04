@@ -13,6 +13,14 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>A Navigator can use this device by making +0 Awareness Test. If successful, can identify nearby vessels and where they might be out to about one hour's travel, +1 per DoS. Cannot be damaged or destroy except via a critical hit. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

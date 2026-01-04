@@ -20,6 +20,12 @@
     "note": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (3), Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.</p>"
+    },
+    "damageFormula": "2d10+12",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

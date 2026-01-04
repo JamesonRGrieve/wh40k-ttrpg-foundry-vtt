@@ -11,6 +11,13 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p><b>Effect:</b> Character creatures a window of up to 20m x 20m that looks into the future and shows what comes to pass at this exact location. The window is never perfectly clear, and sound echoes horribly requiring a -30 Perception Test to discern speech. Characters cannot interact with what they see. Window extends 1 Day, +1 per DoS on Test into the future. The vision is never 100% accurate. Lasts for WP Bonus/2 Minutes, +1 per DoS on Test.</p><p><b>Costs:</b> The character and any that helped them gain 1d10 Fatigue after window dissapears. Everyone that looked into the future must make +10 Willpower Test or take 1d5 Permenant Willpower Damage.</p><p><b>Failure:</b> Test causes one Psychic Phenomena per degree of Failiure. Test can be performed again for 1d10 hours.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

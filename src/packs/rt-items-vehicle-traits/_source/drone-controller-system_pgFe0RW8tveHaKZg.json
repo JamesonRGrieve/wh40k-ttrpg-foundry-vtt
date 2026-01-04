@@ -6,6 +6,12 @@
     "descriptionText": "Wearer counts as having a Tau Drone Controller Gear Item Equipped and gains the benefits of it.",
     "description": {
       "value": "<p>Wearer counts as having a Tau Drone Controller Gear Item Equipped and gains the benefits of it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

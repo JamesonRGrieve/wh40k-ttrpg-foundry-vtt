@@ -6,7 +6,15 @@
     "effect": "Creates X Metre diameter Smoke Screen that lasts 1d10+10 Rounds or less in adverse weather conditions. Smoke hampers vision.\nIf no X Value, Default to Smokescreen of 3d10 metre diameter for 2d10 Rounds, may be effected by bad weather",
     "description": {
       "value": "<p>Creates X Metre diameter Smoke Screen that lasts 1d10+10 Rounds or less in adverse weather conditions. Smoke hampers vision.\nIf no X Value, Default to Smokescreen of 3d10 metre diameter for 2d10 Rounds, may be effected by bad weather</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

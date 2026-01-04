@@ -9,7 +9,15 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whenever the Character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

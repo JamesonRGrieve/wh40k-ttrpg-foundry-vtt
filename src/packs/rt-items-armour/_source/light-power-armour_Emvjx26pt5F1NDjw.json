@@ -14,7 +14,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+10 to Strength, armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

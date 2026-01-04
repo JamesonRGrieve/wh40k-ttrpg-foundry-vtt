@@ -10,7 +10,12 @@
     "useTime": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Blinded by their exposure to the Emperor of Mankind, these truly divine psykers can communicate across the vast distances of the warp via Astral Telepathy, essential to maintain some level of cohesion throughout the galaxy.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "300xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

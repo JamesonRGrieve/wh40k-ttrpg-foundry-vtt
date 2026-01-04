@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm\n(Page 86)",
     "description": {
       "value": "<p>The Kroot begins to lead their Kindred in how best to choose their diets in order to safely shape their genes. \nThey also gain access to shamanic powers to bless their allies and kin with good fortune and fighting spirit.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Kroot Shaper\nGain unique traits Instinctual Understanding and Shamanic Powers. </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,15 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>When Determining Bonus Psy Rating from Power of Da Waaagh! Every two Friendly Non-Orks who do not have the Machine Trait, are not Wild Animals, or a Lesser Orkoid such as Squigs, Snotlings, or Gretchins, within 5 metres counts as a single Ork.\nAdditionally, any of the Character's Beneficial Psychic Powers that only affected Orks can now affect Non-Orks (But still not Lesser Orkoids).</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

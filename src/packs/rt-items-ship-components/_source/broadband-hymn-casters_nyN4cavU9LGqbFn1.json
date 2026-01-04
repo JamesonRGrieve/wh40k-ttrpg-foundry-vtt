@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Has two features. Deafen: All other ships in 30 VU's must make -10 Tech Use Test to use vox comms. Terrify: Characters on this ship gain +10 to Intimidate Tests against ships in 30 VU's. This component cannot be damaged/destroyed except via a critical hit. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

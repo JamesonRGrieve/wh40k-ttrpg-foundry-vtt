@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm\n(Page 84)",
     "description": {
       "value": "<p>The character transforms themselves via extensive surgery with vat grown organs and drug producing glands that can vastly increase their combat prowess at the cost of becoming dependent on them for survival.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Gland Warrior\nAutomatically gain the unique Trait Lostok Augmentation </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

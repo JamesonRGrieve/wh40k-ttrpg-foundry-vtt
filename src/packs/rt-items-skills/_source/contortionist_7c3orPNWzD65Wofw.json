@@ -10,7 +10,12 @@
     "useTime": "Full Action unless stated otherwise.",
     "description": {
       "value": "<p>Escaping bonds, squeezing through thin gaps, fitting into small areas not normally meant for the character.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

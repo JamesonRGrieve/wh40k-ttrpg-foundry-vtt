@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character adds 5xPsy Rating to any Opposed Test involving defending against Psychic powers</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

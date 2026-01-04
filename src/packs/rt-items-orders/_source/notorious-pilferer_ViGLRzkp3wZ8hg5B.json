@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Once per Game Session, Character can direct a Comrade in Cohesion to produce a single previously unmentioned item with Common Availability or better that was \"Borrowed\" from some best left unmentioned source. GM Determines what is an is not acceptable, and whether any consequences occur from performing such an action.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

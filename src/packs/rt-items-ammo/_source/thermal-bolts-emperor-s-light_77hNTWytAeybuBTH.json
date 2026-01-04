@@ -12,7 +12,10 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Lose Primitive and Accurate Qualities if weapon has them. Gain +1d10 Energy Damage and PEN 6, as well as Melta and Innaccurate Qualities. Bolts weigh 2x as much as regular Crossbow bolts.</p><p><b>Qualities:</b> Primitive (lose), Accurate (lose)\nMelta, Innaccurate.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

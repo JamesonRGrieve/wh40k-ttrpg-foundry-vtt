@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>For Orks, Plentiful. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

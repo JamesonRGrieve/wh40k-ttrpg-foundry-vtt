@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character makes +0 Charm or Command Test, if successful all Comrades in Comms range immediately overcome any ongoing Fear or Pinning Tests, and an act normally on subsequent turns.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

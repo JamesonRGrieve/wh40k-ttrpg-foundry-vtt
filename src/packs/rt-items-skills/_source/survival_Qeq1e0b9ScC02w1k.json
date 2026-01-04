@@ -10,7 +10,12 @@
     "useTime": "Full Action",
     "description": {
       "value": "<p>Enduring long periods of time in unusal, alien, and dangerous environments. Finding, hunting, and determining if food is safe to eat, constructing shelters, improvising substances or tools, etc. Can apply to natural or man-made environments.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Perception",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

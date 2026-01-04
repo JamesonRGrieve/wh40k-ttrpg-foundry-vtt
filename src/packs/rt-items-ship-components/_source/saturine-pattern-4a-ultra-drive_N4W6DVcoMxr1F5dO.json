@@ -7,12 +7,20 @@
     "hullType": "Battlecruisers",
     "powerUsage": -90,
     "spaceUsage": 14,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "Generates power rather than using it.",
     "availability": "Scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Generates power rather than using it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

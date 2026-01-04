@@ -12,7 +12,10 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.</p><p><b>Qualities:</b> Sanctified</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

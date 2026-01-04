@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>AP 6 vs Fire, Acids, and Corrosives. Imposes -10 to Agility Tests when worn.\nHas inbuilt Rebreather and Photovisor</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

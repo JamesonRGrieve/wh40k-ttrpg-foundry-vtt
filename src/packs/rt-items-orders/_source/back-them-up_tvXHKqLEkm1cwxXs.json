@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character Assigns any number of their Comrades to another Player Character. Until Reassigned, they act as if Comrades of that Player Character.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

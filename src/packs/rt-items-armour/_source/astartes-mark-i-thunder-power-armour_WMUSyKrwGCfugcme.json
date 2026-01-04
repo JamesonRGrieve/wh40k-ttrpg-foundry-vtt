@@ -14,7 +14,9 @@
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>The most ancient suits of armour from the days of the Thunder Warriors and the unification of Terra. Rarely complete, often missing the legs which were unpowered.\nEnhanced Strength: +15-+25 depending on suit, Subsystems: None. Manual Dexterity Modifier: -15. Additional -10 to Concealment and Silent Move. +15 to Tests to prevent Cohesion Damage, +30 Fellowship Bonus with Space Marines and Ecclesiarchy. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

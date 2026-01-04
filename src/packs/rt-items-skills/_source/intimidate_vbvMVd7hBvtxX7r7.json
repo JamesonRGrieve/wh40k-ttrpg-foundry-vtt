@@ -10,7 +10,12 @@
     "useTime": "Full Action",
     "description": {
       "value": "<p>The Application of pressure to make an individual give into to demands. Only required to make test when it involves coercion. Can use Strength, Intelligence, or Fellowship depending on the type of Intimidaiton (although normally Strength).</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Strength",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

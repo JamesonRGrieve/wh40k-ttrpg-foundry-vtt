@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Once per Encounter Character makes -20 Common Lore, Forbidden Lore, or Scholastic Lore Test for a specialisation that includes a type of enemy, such as Orks, Eldar, Chaos Space Marines, etc. If Successful each ally within comms range of the Character's Comrade may reroll one missed attack per Round against that foe for a number of rounds equal to the Degrees of Success on the Test.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

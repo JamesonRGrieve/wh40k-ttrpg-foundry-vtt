@@ -9,7 +9,14 @@
     "source": "OW: Hammer of the Emperor (Page 86)",
     "description": {
       "value": "<p>The Tank Ace lives and breaths within the vehicles they aid in the operation of. Through their commands even the slowest of vehicles can find finesse, and even the fastest cannot escape their sightlines.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Tank Ace. Apt: Agility, Fellowship, Leadership, Perception, Tech, Willpower \nAdd. Equipment: Auspex/Scanner, Combi-Tool, Data-Slate, Good Laspistol. Gain Talents: Lightning Reflexes+Technical Knock or Push the Limit\nCan Purchase Unique Talent: Crack Manoeuvring and Basic Order: Line Up the Shot </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

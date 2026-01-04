@@ -5,14 +5,22 @@
   "system": {
     "type": "Upgrade",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
     "effect": "Requires vessel to have component that offers cargo storage. If vessel is targeted by Focused Augury, identifying cargo requires 4 DoS. Additional +50 Achievement Points for Criminal Endeavours. Reduce Morale by 2 and -10 to repair attempts. Poor Version has -15 to repair, Good has -5, Best has -5 and +75 Achievement Points. Only one per vessel.",
     "availability": "Rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Requires vessel to have component that offers cargo storage. If vessel is targeted by Focused Augury, identifying cargo requires 4 DoS. Additional +50 Achievement Points for Criminal Endeavours. Reduce Morale by 2 and -10 to repair attempts. Poor Version has -15 to repair, Good has -5, Best has -5 and +75 Achievement Points. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

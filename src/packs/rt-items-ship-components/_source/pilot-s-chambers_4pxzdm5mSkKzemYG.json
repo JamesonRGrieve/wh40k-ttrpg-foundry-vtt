@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Provides proper ready rooms and training centres for pilots. Grants +2 to Attack Craft Rating of all squadrons on the ship. One per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

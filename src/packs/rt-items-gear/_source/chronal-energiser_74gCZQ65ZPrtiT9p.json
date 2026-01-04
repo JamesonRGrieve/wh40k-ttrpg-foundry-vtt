@@ -12,6 +12,16 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

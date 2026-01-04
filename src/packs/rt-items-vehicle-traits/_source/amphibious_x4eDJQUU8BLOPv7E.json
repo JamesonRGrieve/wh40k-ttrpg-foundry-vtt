@@ -6,6 +6,12 @@
     "descriptionText": "Vehicle Treats bodies of water as open ground, and is not slowed by them",
     "description": {
       "value": "<p>Vehicle Treats bodies of water as open ground, and is not slowed by them</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

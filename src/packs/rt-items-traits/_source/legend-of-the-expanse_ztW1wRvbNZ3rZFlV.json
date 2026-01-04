@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm \n(Page 88)",
     "description": {
       "value": "<p>The Legend is one whose name and glories are embedded into reality itself. Those who possess innummerable treasures and trophies, a lethally sharp mind and wit, and countless enemies who seek to take such things from them. Yet the Legend is undaunted, for they have seen and done more than than many would in a hundred lifetimes.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Legend of the Expanse.\nAllows for the purchasing of the Unique Talents Legendary and Watchful for Betrayal</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

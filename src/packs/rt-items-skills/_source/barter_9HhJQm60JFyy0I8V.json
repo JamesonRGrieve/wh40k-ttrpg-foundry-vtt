@@ -10,7 +10,12 @@
     "useTime": "~5 Minutes or more",
     "description": {
       "value": "<p>Negotiating better prices or exchanging goods and services. Could alter the Acquisition Modifier for an item without a set price.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

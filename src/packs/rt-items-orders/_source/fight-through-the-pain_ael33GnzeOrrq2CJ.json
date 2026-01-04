@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character chooses a Comrade in Cohesion who is Wounded and makes a +20 Charm or Intimidate Test. If successful Comrade regains the Ability to Run for the remainder of the encounter despite being wounded.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

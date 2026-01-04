@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>The Armour has two additional Power Armour Subsystems.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

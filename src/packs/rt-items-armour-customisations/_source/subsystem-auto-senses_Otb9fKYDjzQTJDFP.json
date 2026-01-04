@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Whilst Helmet is on, wearer has Dark Sight and Heightened Senses(Sight, Sound). Immune to Photon Flash and Stun Grenades. Can make a Called Shot as a Half Action.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

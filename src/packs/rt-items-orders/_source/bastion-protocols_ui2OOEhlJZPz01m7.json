@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character orders Servitor Comrade to protect them, on this and subsequent rounds, until told to stand down as a Free Action, As long as Comrade is in Cohesion whenever attack would strike Character it strikes servitor, and vice versa.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

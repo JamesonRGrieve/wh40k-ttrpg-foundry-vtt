@@ -11,6 +11,13 @@
     "source": "BC: Tome of Blood",
     "description": {
       "value": "<p><b>Effect:</b> If suitable preperations are made and the grand ritual completes with a successful test, a Greater Daemon of the relevent god is summoned. Those Foolish or brave enough may attempt a -60 Daemonic Mastery Test to control the Daemon, who will attack them if they fail. The Summoning of the Greater Daemon violently and instantly kills its host, the Daemon appearing in warpfire causing all involved to in the ritual to gain 2d10 Corruption and 2d10 Infamy. The Daemon remains corporeal for 1d10+10 hours, +2 per Degree of Success after first. If the characters have a particular purpose in mind that the Greater Daemon would agree to, it may remain for long enough to complete this task, or until it gets bored.</p><p><b>Costs:</b> Immediately cause 2 Perils of the Warp. Everyone within 100m makes four -20 Tests to avoid the following effects: Toughness (blinded for 1d10 mins), Agility (Knocked down, 1d10 Impact damage ignoring AP and T), Willpower (1d10 Permenant Willpower Damage,), and Strength (1d10 Fatigue and Stunned for 1d10 Rounds).</p><p><b>Failure:</b> Ritual Conductor tests Contempt of the warp with +20 per Degree of Failiure, everyone else involved tests Contempt of the Warp with +10 per Degree of Failiure. If the fates are cruel, the Daemon appears anyway and tries to kill everyone. Treat as a Suprise Attack.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

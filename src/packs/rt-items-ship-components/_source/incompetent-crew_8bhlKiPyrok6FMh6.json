@@ -5,14 +5,22 @@
   "system": {
     "type": "(es.) Crew",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
     "spCost": -5,
     "effect": "Crew Rating of 20, easier to find than Competent crew. (Suggestion: 2 Degrees Easier, Common-->Abundant)",
     "availability": "Special",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Crew Rating of 20, easier to find than Competent crew. (Suggestion: 2 Degrees Easier, Common-->Abundant)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

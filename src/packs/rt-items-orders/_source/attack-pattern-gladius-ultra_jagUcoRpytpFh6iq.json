@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Clipaeus-Class Combat Servitor's Primary Function. As Long as Character is within Comms Range, Comrade makes Standard Melee Attack against target in melee range. If Comrade is in Cohesion, gains +10 to Weapon Skill Test.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

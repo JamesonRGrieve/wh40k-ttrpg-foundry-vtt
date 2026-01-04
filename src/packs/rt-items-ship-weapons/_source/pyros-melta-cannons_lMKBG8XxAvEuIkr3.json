@@ -17,7 +17,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+4</p><p><b>Notes:</b> All inflicted Critical Hits are automatically \"Fire!\" Critical Hits</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

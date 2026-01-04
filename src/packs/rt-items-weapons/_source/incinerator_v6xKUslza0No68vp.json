@@ -20,6 +20,12 @@
     "note": "Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.",
     "description": {
       "value": "<p><b>Special:</b> Daemonbane, Flame, Spray</p><p><b>Note:</b> Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.</p>"
+    },
+    "damageFormula": "1d10+6",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

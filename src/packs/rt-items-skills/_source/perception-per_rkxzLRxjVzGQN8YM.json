@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The Character's awareness of their surroundings, and the acuteness of their senses. ",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

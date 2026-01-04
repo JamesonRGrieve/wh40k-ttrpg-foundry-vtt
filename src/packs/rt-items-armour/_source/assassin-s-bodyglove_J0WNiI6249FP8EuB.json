@@ -14,7 +14,9 @@
     "source": "RT: Stars of Inequity",
     "description": {
       "value": "<p>Found as Treasure via book's Treasure Generator.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Provides +10 to Agililty Tests to avoid catching fire.\nHalve primitive armour AP vs non primitive weapons</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

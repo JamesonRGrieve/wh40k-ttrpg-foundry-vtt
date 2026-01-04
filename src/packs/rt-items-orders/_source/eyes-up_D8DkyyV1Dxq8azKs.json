@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>At the start of a Combat Encounter, As long as the Character is not surprised the make +0 Perception Test. If successful, all Player Characters with a Comrade in Cohesion gain +2 to Initiative and do not count as being Surprised during their First Round of Combat.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

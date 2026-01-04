@@ -12,7 +12,10 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Crippling (2) and Tainted Quality. Lose Reliable and Sanctified Qualities if weapon has them</p><p><b>Qualities:</b> Crippling (2), Tainted, Reliable (lose), Sanctified (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

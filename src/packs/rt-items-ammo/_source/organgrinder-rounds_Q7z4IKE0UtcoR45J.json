@@ -12,7 +12,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage/Effect:</b> If target takes any damage, make Toughness test with -10 per point of damage taken. If fail, take additional 2d10 R damage, (ignores AP/T)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

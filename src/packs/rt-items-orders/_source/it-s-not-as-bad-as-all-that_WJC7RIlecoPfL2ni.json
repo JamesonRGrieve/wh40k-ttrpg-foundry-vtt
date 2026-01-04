@@ -1,5 +1,5 @@
 {
-  "name": "It's Not as Bad as all that…",
+  "name": "It's Not as Bad as all that\u2026",
   "type": "order",
   "img": "icons/svg/compass.svg",
   "system": {
@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character with Comrade in Cohesion chooses another character suffering Critical Damage, makes +0 Medicae Test. If successful target Temporarily Regains Character's Int Bonus Wounds, +1 per Degree of Success. These Temporary Wounds don't remove critical damage or any effects target is suffering, but are removed first instead of taking more Critical Damage. Cannot make order again on same target they've healed all Critical Damage.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

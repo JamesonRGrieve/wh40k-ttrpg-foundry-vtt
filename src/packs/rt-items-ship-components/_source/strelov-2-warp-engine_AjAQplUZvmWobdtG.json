@@ -7,12 +7,20 @@
     "hullType": "Light Cruisers, Cruisers",
     "powerUsage": 12,
     "spaceUsage": 12,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "Allows ship to enter and exit immaterium to cross interstellar distances. Consididered the Default Option",
     "availability": "Scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Allows ship to enter and exit immaterium to cross interstellar distances. Consididered the Default Option</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

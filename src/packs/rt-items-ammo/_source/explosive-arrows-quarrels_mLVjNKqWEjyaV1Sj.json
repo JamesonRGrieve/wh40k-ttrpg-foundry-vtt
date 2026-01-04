@@ -12,7 +12,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> -10 BS to attack, damage type explosive. Weapon loses Primitive Quality</p><p><b>Qualities:</b> Primitive (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>As a Half Action or Reaction, the vehicle's Commander or driver can trigger Smoke Launchers. This Creates a 15 Metre Radius Obscuring Smoke Cloud centered on the vehicle. Single Use Item, must be replaced afterwards.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

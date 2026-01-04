@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Counts as two void shields, absorbing two attacks from any attacking ship. Once during Opponent's turn, Enginseer Prime can make -10 Tech-Use Check to double Void Shields for that opponent's turn. Doesn't count as Extended Action. If component selected, must be used as Ship's Void Shield.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

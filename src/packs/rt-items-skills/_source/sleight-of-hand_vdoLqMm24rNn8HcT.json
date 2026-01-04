@@ -10,7 +10,12 @@
     "useTime": "Half Action, or Free Action but has -10",
     "description": {
       "value": "<p>Picking Pockets, palming small objects, performing tricks, and other stealthy acts made without the notice of others. </p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

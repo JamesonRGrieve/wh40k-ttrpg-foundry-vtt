@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Adept:</b> Effect of Navigation (Warp) Test to Steer the Vessel on voyage journey:\nSuccess: 1x Duration. 1 DoS: 3/4 Duration. 2 DoS: 1/2 Duration. 3 DoS: 1/4 Duration. Failiure: 2x Duration. 1 DoF: 3x Duration. 2 DoF: 4x Duration.\nEffect on Test based on passage condition (choose one most appropriate): Open Warp: +20. Established Route/Well documented: +30. Unknown      Route: -10. Adverse Conditions: -10 or more. Very Familiar, well established passage: Don't make test, just pass and don't roll for warp encounters.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

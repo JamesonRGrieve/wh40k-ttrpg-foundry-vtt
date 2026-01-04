@@ -6,6 +6,12 @@
     "descriptionText": "Can force Critical Damage as a result of Righteous Fury to be rerolled, but must accept the new roll even if it is worse. If a Vehicle with this trait is set on fire, putting it out is a Free Action.",
     "description": {
       "value": "<p>Can force Critical Damage as a result of Righteous Fury to be rerolled, but must accept the new roll even if it is worse. If a Vehicle with this trait is set on fire, putting it out is a Free Action.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

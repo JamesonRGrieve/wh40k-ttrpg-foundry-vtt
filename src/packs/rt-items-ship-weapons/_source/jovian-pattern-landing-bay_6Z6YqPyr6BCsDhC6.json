@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

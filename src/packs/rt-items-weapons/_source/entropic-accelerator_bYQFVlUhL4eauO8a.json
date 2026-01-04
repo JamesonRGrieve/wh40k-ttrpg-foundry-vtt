@@ -20,6 +20,12 @@
     "note": "A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.",
     "description": {
       "value": "<p><b>Special:</b> Recharge, Toxic</p><p><b>Note:</b> A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.</p>"
+    },
+    "damageFormula": "3d10+4",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

@@ -11,7 +11,15 @@
     "effect": "+10 to \"Evasive Manoeuvres\" Action",
     "description": {
       "value": "<p><b>Purpose:</b> Directs Vessel movements and the crew that make it so.</p><p><b>Effect:</b> +10 to \"Evasive Manoeuvres\" Action</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

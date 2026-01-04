@@ -10,7 +10,12 @@
     "useTime": "1 Minute (Basic)\nWeeks/Months (Advanced)",
     "description": {
       "value": "<p>Masking Features or assuming a different identity. Difficult varies on available materials and difference between character and any they would try to imitate.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

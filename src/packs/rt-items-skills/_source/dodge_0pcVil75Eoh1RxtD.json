@@ -10,7 +10,12 @@
     "useTime": "Reaction",
     "description": {
       "value": "<p>Nullify one Melee or Ranged attack by avoiding it +1 per Degree of Success, causing it to deal no damage. Not all attacks are dodgable.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

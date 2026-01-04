@@ -14,7 +14,9 @@
     "source": "ChatGPT",
     "description": {
       "value": "<p>Whilst wearing -10 to Agility Characteristic. Blessed by the Sanguinary Guard (may count as a warding effect vs Warp Weapons), provides +10 to Resist Fear Tests when worn.\nCan only be worn by Space Marines.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

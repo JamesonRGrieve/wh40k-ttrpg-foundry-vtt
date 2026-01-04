@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": "<p>Khorne, Tzeentch, Nurgle, and Slaanesh</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "None",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm \n(Page 82)",
     "description": {
       "value": "<p>Unlike many of the Mechanicus, the Genetor sees living flesh not as a weakness, but instead as another form of machine, one that through dedication may too be given strength and improved beyond its baseline form.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Genetor\nAllows for the purchasing of the Unique Talent A Machine of Flesh\nErrata Note: A Machine of Flesh's Talent Group should not include Multiple Arms or Winged.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

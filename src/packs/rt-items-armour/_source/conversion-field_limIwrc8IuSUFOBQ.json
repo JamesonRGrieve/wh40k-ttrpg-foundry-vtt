@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Contained in Rosarius Devices. Converts impacts into flashes of light, if field blocks 12 or more damage from one attack, releases flash of light that acts as Photon Flash Grenade centered on wearer (who is unaffected by it)</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Clad in Blessed Power Armour, utterly single minded in their zealous duty to smite the heretic, the xenos, and the daemon. They cause sacred dread in their enemies, and inspire those around them to greater acts of holy devotion.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "750xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Until the end of the Turn, as long as Comrade is within Comms Range, whenever Character uses the Inspire Special Use of the Command Skill, each ally affected gains +20 to Tests to Resist Fear, Pinning, and Mind-Altering Psychic Powers until the end of their next turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

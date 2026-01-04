@@ -20,6 +20,12 @@
     "note": "Considered by some as a \"Trophy  Weapon\" acquired through combat.",
     "description": {
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Considered by some as a \"Trophy  Weapon\" acquired through combat.</p>"
+    },
+    "damageFormula": "2d10",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

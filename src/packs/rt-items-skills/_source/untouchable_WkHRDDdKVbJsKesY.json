@@ -10,7 +10,12 @@
     "useTime": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Exceptionally rare, these soulles beings are voids in the warp who drain its strength by their mere presence, causing immense pain to Psykers and warp-creatures. Even those without psychic powers find their presence unpleasent.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "300xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

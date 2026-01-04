@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Adept:</b> Example Warp Travel Durations:\nShort, well-travelled Passage between close systems: ~1 day. Journey within the same sub-sector with good information: ~5-10 days. Journey across the Sector with good information: ~30-60 days. Journey across the Segmentum at good speed: 100+ Days. Odyssey across the galaxy: Several Years.\nNote: Time passes strangely between warp and real space, generally 1 Day in the Warp is 12 Days in Reality, but this can vary dramatically.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

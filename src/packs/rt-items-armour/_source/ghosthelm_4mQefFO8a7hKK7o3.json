@@ -14,7 +14,9 @@
     "source": "RT: Navis Primer",
     "description": {
       "value": "<p>Often worn by Farseers. Wearers can make -30 Willpower Test to remain unaffected by results of Psychic Phenomena or Perils of the Warp. Doesn't prevent others being affected.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

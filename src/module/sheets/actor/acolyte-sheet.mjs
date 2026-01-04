@@ -9,15 +9,15 @@ import { prepareAssignDamageRoll } from '../../prompts/assign-damage-prompt.mjs'
 export class AcolyteSheet extends ActorContainerSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            width: 1000,
-            height: 750,
+            width: 1050,
+            height: 800,
             resizable: true,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'main' }],
+            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'overview' }],
         });
     }
 
     get template() {
-        return `systems/rogue-trader/templates/actor/actor-acolyte-sheet.hbs`;
+        return `systems/rogue-trader/templates/actor/actor-rt-sheet.hbs`;
     }
 
     getData() {
@@ -38,7 +38,54 @@ export class AcolyteSheet extends ActorContainerSheet {
         if (context.system) {
             context.system.rogueTrader = this._prepareRogueTraderFields(context.system.rogueTrader ?? {});
         }
+
+        // Prepare origin path data for the template
+        context.originPathSteps = this._prepareOriginPathSteps();
+        
+        // Prepare navigator powers and ship roles
+        context.navigatorPowers = this.actor.items.filter((item) => item.type === 'navigatorPower' || item.isNavigatorPower);
+        context.shipRoles = this.actor.items.filter((item) => item.type === 'shipRole' || item.isShipRole);
+
         return context;
+    }
+
+    /**
+     * Prepares origin path step data for the template.
+     * Maps each step to its selected item (if any).
+     */
+    _prepareOriginPathSteps() {
+        const steps = CONFIG.rt.originPath?.steps || [
+            { key: 'homeWorld', label: 'Home World', choiceGroup: 'origin.home-world' },
+            { key: 'birthright', label: 'Birthright', choiceGroup: 'origin.birthright' },
+            { key: 'lureOfTheVoid', label: 'Lure of the Void', choiceGroup: 'origin.lure-of-the-void' },
+            { key: 'trialsAndTravails', label: 'Trials and Travails', choiceGroup: 'origin.trials-and-travails' },
+            { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
+            { key: 'career', label: 'Career', choiceGroup: 'origin.career' }
+        ];
+
+        // Get all origin path items from the actor
+        const originItems = this.actor.items.filter((item) => 
+            item.isOriginPath || 
+            (item.type === 'trait' && item.flags?.rt?.kind === 'origin')
+        );
+
+        return steps.map(step => {
+            // Find the item matching this step
+            const item = originItems.find(i => {
+                const itemStep = i.flags?.rt?.step || i.system?.step || '';
+                return itemStep === step.label || i.flags?.rt?.choiceGroup === step.choiceGroup;
+            });
+
+            return {
+                ...step,
+                item: item ? {
+                    _id: item.id,
+                    name: item.name,
+                    img: item.img,
+                    system: item.system
+                } : null
+            };
+        });
     }
 
     activateListeners(html) {

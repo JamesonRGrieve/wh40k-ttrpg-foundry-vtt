@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Standard armour of Imperial Navy Boarding Teams. Arms and Legs are Flak Armour rather than Carapace (and so get +1 AP vs Explosions that user is not at the centre of)\nHas Inbuilt Respirator and Photo-Visor.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -20,6 +20,12 @@
     "note": "One use weapon, as it explodes when it hits something. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
     "description": {
       "value": "<p><b>Special:</b> Unbalanced, Blast (1d5-3)</p><p><b>Note:</b> One use weapon, as it explodes when it hits something. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
+    },
+    "damageFormula": "2d10+3",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

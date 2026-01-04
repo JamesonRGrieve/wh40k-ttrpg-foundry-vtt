@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Allows wearer to survive without food for up to 2 weeks before having to make a -10 Toughness Test. Failing suffers one fatigue which cannot be eliminated until other nourishment is consumed.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

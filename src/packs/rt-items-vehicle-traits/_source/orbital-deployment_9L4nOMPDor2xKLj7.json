@@ -6,6 +6,12 @@
     "descriptionText": "Deployed from space. Choose location, scatter 2d10 metres. Shooting at vehicle being orbitally deployed has -30 to hit. Once landed, must wait a Full Round before disembarking, firing, or moving.",
     "description": {
       "value": "<p>Deployed from space. Choose location, scatter 2d10 metres. Shooting at vehicle being orbitally deployed has -30 to hit. Once landed, must wait a Full Round before disembarking, firing, or moving.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

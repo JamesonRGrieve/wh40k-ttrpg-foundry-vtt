@@ -11,6 +11,13 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p><b>Effect:</b> Minion is bound to the character permenantly, character can see through minion's eyes and vice versa, both can use the perception-based skills, talents, and traits of the other. Has range limit of 2d10km, May be blocked only by Psychic Wards unless character makes -20 WP Test. In combat, neither is suprised if the other isn't. Minion auto-passes Loyalty Tests, if minion is killed, Character makes -30 WP Test or suffer 2d10 Permenant WP Damage.</p><p><b>Costs:</b> All Participants gain Toguhness Bonus Fatigue and fall unconcious for 1d5 Hours. Once awoken, recovering from fatigue takes 4x longer than usual.</p><p><b>Failure:</b> Psyker makes -40 Willpower Test or can't use Psychic Powers for 1d5 Days. Character makes -20 Toughness Test or left unconcious for 1d5 hours, blind for 1d5 days, and suffers 1d10 wounds that ignore armour/toughness. Minion makes +0 Toughness Test, with -10 per DoF on Lore test, if failed, they die.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

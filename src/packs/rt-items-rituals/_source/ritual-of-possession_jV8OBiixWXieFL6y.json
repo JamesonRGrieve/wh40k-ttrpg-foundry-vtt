@@ -11,6 +11,13 @@
     "source": "BC: Tome of Decay",
     "description": {
       "value": "<p><b>Effect:</b> A Daemon attempts to possess the host, making an Opposed Willpower Test, the host has +20 if they are unwilling. If possessing a character has a variety of special effects. If possessing an NPC, if the daemon's WP is lower than the NPC's then the NPC lasts their WP Bonus hours, if the Daemon's WP is higher than the host then the host lasts half their WP Bonus hours. When time runs out the Daemon either bursts out from the host or returns to the warp, leaving the host scarred mentally and physically but alive.</p><p><b>Costs:</b> Ritual takes 2 hours. If the host survives possession they suffer permenant loss of 3d10 Fellowship and 1d5 Wounds, and gain 2d10 Corruption. They gain Rank 2 Psyniscience, Resistance (Psychic Powers), and the \"Dark Soul\" Gift of the Gods., and are immune to further Gifts of the Gods/Mutations.</p><p><b>Failure:</b> Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test beyond the first, or the Opposed Willpower Test if Daemon fails. If ritual fails Host makes +0 Willpower or Toughness Test to avoid instantly dying as their soul is dragged into the warp.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

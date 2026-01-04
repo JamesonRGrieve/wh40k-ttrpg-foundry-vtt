@@ -6,6 +6,12 @@
     "descriptionText": "Halve Critical Damage taken (rounding up), doesn't effect Critical damage from Righteous Fury.",
     "description": {
       "value": "<p>Halve Critical Damage taken (rounding up), doesn't effect Critical damage from Righteous Fury.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

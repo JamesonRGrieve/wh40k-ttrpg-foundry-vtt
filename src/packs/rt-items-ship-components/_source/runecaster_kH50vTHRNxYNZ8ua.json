@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>An Eldar Device that aids Navigation. +20 to all Navigation Tests, journeys through the warp are made in half the time when using this component. This Compoent can never become unpowered.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

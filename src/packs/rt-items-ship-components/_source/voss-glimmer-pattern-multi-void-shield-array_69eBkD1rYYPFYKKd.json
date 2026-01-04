@@ -7,12 +7,20 @@
     "hullType": "Cruisers",
     "powerUsage": 5,
     "spaceUsage": 1,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "Provdes 2 Void Shields, absorbing 2 attacks from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.",
     "availability": "Scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Provdes 2 Void Shields, absorbing 2 attacks from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

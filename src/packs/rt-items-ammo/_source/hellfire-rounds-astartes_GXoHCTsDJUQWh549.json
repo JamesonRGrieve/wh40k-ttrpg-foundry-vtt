@@ -12,7 +12,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Ignores Natural Armour, Inflicts Righteous Fury on 9 or 10. Gives Tearing Quality if weapon doesn't have it. +1 Damage vs Hordes.\nIf used with Heavy Bolter, change RoF to S/-/- and give Blast(3) Quality.</p><p><b>Qualities:</b> Tearing, Blast (3)(Conditional)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

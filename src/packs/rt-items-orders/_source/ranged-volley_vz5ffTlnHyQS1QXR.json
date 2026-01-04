@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade in Cohesion provides +5 to Ballistics Skill Tests for this turn, if Character has Multiple Comrades this Order can only be given to one each turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

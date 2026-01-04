@@ -9,7 +9,15 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade gains an extra Wound State, they can be Healthy, Lightly Wounded, Heavily Wounded, or Dead.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

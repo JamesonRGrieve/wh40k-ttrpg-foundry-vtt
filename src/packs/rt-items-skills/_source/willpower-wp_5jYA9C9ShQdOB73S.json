@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The character's mental strength and resilience, their ability of their mind to whether horrors and fear. For those that possess it, it is also the potency of their Psychic Might.",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

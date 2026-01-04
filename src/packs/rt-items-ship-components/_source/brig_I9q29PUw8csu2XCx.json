@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Permenant +1 to Morale, and +5 to Intimidate Tests on the ship made during Extended Actions. +25 Achievement Points towards an objective involving capturing, storing, or transporting prisoners.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

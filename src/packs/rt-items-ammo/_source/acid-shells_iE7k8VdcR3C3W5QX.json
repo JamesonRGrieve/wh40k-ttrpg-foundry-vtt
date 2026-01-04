@@ -12,7 +12,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Does 2d10 E Pen 0 Damage, if target takes damage suffers effects as if set on fire. Each hit reduces AP by 1 (down to min 0) until repaired.</p><p><b>Qualities:</b> Flame</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

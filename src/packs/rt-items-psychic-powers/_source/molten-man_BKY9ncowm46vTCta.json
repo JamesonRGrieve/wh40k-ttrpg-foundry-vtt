@@ -14,7 +14,9 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p>700xp</p>"
-    }
+    },
+    "focusTime": "Half Action",
+    "threshold": 0
   },
   "effects": [],
   "flags": {},

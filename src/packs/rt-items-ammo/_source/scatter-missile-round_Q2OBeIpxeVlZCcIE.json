@@ -12,7 +12,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Disperses micro-explosives doing 2d10 X, Pen 0, Blast (4) over a large area.</p><p><b>Qualities:</b> Blast (4)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

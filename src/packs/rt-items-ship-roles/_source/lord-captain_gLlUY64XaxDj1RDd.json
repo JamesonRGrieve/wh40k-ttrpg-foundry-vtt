@@ -11,7 +11,15 @@
     "effect": "+10 to \"Hold Fast!\" Extended Actions, can grant \"Exceptional Leader\" Ability to anyone on the ship as a free action if they have it.",
     "description": {
       "value": "<p><b>Purpose:</b> Commands the Vessel as its absolute leader.</p><p><b>Effect:</b> +10 to \"Hold Fast!\" Extended Actions, can grant \"Exceptional Leader\" Ability to anyone on the ship as a free action if they have it.</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

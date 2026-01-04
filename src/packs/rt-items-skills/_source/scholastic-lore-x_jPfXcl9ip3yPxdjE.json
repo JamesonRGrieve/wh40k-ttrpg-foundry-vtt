@@ -10,7 +10,12 @@
     "useTime": "Free Action",
     "description": {
       "value": "<p>In-depth, Academic Knowledge of a group that may be complex or esoteric, providing a depth of knowledge far more than that of Common Lore due to the Experience required to obtain it.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

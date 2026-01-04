@@ -9,6 +9,26 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)<br>Skills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).<br>Talents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).<br>Gear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.<br>Special Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 0,
+        "ballisticSkill": 0,
+        "strength": 0,
+        "toughness": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "perception": 0,
+        "willpower": 0,
+        "fellowship": 0,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 1,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

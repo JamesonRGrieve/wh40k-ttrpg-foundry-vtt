@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Until the Beginning of the Character's Next Turn, Servitor Comrade in Cohesion will move to and attack the first enemy that approaches wihtin 5 metres of the Character, making a +0 Weapon Skill Test. If succeeding it hits once with its melee weapon. If the enemy was making a charge action against the character, it must resolve its attack against the Servitor Comrade instead.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

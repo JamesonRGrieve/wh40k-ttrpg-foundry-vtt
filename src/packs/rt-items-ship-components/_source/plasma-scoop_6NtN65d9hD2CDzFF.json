@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>A Vessel with this can attempt to mine gas giants for plasma. Make +0 Pilot (Space Craft)+Maneuvrability Test, failiure causes 1d5 damage per DoF, ignoring shields. Success grants a months worth of fuel and +5 Achievement Points towards Endeavours requiring transporting or moving something. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

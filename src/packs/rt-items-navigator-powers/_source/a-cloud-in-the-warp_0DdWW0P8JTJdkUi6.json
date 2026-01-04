@@ -13,7 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Novice:</b> The Navigator is shrouded in an Immaterial cloak. Anyone that uses Psychic Sight, Detection, or Divination must make a    +0 Perception Test to successfully see the Navigator. This also applies to all Daemons and Warp Entities. Normal Sight is unaffected. The Power lasts as long as it is sustained, but doing so prevents the Navigator from using any other Navigator Powers.</p><p><b>Adept:</b> Perception Test becomes -10 instead of +0.</p><p><b>Master:</b> Power Extends to cover everyone in Willpower Bonus Metres of the Navigator.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

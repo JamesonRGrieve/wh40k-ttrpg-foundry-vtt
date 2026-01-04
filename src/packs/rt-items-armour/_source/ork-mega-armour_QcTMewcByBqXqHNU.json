@@ -14,7 +14,9 @@
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>For Orks Very Rare. Can't be worn by humans. Gives +30 to Strength Characteristics but -20 to Agility Tests and can't Run</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

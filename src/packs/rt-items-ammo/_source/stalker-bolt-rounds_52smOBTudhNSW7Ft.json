@@ -12,7 +12,10 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Awareness Tests to hear shots have -30, and can only be attempted within 30 metres of the firer. Reduce damage by 2.\nStacks with Stalker Boltgun such that no test to detect the shot can be made.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

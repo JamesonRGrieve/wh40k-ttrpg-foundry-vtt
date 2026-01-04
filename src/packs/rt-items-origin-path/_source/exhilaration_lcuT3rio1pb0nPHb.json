@@ -9,6 +9,26 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.<br>2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.<br>3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 3,
+        "ballisticSkill": 0,
+        "strength": 0,
+        "toughness": 3,
+        "agility": 0,
+        "intelligence": 0,
+        "perception": 0,
+        "willpower": -3,
+        "fellowship": 3,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 0,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

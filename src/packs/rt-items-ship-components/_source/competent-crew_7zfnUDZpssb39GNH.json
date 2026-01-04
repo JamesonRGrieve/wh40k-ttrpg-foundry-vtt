@@ -5,14 +5,22 @@
   "system": {
     "type": "(es.) Crew",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
     "effect": "Crew Rating of 30,  default crew competency. Availability varies on location, from Rare on barely inhabited rocks, to Abundant on Hive Worlds. Default to Common Availability.",
     "availability": "Special",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Crew Rating of 30,  default crew competency. Availability varies on location, from Rare on barely inhabited rocks, to Abundant on Hive Worlds. Default to Common Availability.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

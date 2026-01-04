@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can use Order when attempting to make a Tech-Use Test to fix or operate something. Comrade in Cohesion then assists them in the task, granting a +10 Bonus. Can be used with Servitor Comrades in addition to normal ones.\nNote: Mechanicus Related = Any Tech-Priest or Regiment Sworn to the Mechanicus</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

@@ -12,7 +12,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> If target takes any damage, also suffers 1d5 nonpermenant Agility Damage.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

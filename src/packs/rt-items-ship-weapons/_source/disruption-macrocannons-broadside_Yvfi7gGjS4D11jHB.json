@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> For every 5 damage that would be done to the ship, one random component of target ship is unpowered. This weapon ignores armour, but doesn't actually do hull damage, and cannot crit. Can only combine damage with other disruption macrocannons and vice versa. Must Occupy Port or Starboard Slots.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

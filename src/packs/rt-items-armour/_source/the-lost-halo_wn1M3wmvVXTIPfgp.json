@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Iron Halo of the Howling Griffons Chapter. Overload 01. Attacks not stopped by the Force Field halve their Penetration.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

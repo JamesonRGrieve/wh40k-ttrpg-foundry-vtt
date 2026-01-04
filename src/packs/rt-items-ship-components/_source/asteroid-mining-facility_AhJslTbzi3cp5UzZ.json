@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Allows Vessel to conduct mining operations in an asteroid field or similar location, and can construct Trade Endeavours around such operations. +200 Achievement Points towards a Trade Endeavour involving asteroid mining. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

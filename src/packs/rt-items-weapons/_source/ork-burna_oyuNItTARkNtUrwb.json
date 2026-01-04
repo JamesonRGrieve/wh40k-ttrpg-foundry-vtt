@@ -20,6 +20,12 @@
     "note": "For Orks, Scarce and not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Flame, Spray, Unreliable</p><p><b>Note:</b> For Orks, Scarce and not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
+    },
+    "damageFormula": "1d10+5",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

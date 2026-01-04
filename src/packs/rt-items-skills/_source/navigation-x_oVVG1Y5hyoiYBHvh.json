@@ -10,7 +10,12 @@
     "useTime": "1 Minute (Simple)\n1d5 Hours (Plot Course)",
     "description": {
       "value": "<p>Plot a Course between two points, be it across a continent or through the Warp. Successful test provides estimated navigation time, cosmography, conditions, weather, warp tides, and so on. Often makes use of maps, charts, or Innate Abilities.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm \n(Page 94)",
     "description": {
       "value": "<p>The Ork unlocks a previously dormant instinct for technology that was always present within them. Giving rise to ever maddening boughts of experimentation with technology to create new and often unstable wargear, vehicles, and explosions.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Ork Mekboy\nAllows for the purchasing of the Unique Talent Worky Gubbinz'</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

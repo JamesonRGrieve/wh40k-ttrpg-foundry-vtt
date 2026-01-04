@@ -12,7 +12,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Loses Scatter Quality, but +1 damage and +2 PEN</p><p><b>Qualities:</b> Scatter (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

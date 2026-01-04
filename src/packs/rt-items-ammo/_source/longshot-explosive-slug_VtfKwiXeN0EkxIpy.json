@@ -12,7 +12,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Comes in pack of 5. Deals 2d10 X Damage with Pen 0. Blast (2)</p><p><b>Qualities:</b> Blast (2)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

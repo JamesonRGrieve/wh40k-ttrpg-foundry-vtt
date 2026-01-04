@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade in Cohesion hunkers down behind nearby cover, for the next round all attacks that hit the comrade must roll damage, if it does not exceed 3+Cover AP the comrade is not damaged. Comrades will not use actively hide behind cover unless this order is given to them.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

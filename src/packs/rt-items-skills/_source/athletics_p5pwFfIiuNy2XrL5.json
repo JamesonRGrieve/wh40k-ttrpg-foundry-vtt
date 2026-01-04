@@ -10,7 +10,12 @@
     "useTime": "Usually Full Action",
     "description": {
       "value": "<p>The ability to properly use one's physical strength and endurance in physically intensive tasks such as climbing, swimming, or lifting heavy objects.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Strength",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

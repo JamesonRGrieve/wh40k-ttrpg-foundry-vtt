@@ -10,7 +10,12 @@
     "useTime": "1 Minute for basic search, more for larger area.",
     "description": {
       "value": "<p>The Active, concious ability to investigate and discover things about ones surroundings, as opposed to Awareness' Passive, subconcious detection. Used for finding hidden things or people.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Perception",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

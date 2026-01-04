@@ -11,6 +11,13 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p><b>Effect:</b> Target gains the Blinded and Deafened Conditions for the Target's Corruption Bonus number of Days. They may temporarily relieve these conditions by making a -20 Willpower Test to stop the effects for their Corruption Bonus number of Rounds, +1 per Degree of Success after first.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

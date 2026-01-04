@@ -4,7 +4,8 @@
       "acolyte",
       "character",
       "npc",
-      "vehicle"
+      "vehicle",
+      "starship"
     ],
     "templates": {
       "base": {
@@ -1553,7 +1554,20 @@
           "profitFactor": {
             "starting": 0,
             "current": 0,
+            "modifier": 0,
             "misfortunes": ""
+          },
+          "endeavours": {
+            "current": "",
+            "objectives": [],
+            "achievementPoints": 0,
+            "completed": []
+          },
+          "shipName": "",
+          "dynasty": {
+            "name": "",
+            "history": "",
+            "reputation": 0
           },
           "armour": {
             "head": 0,
@@ -1595,11 +1609,6 @@
         "rogueTraderExtras"
       ],
       "bio": {
-        "homeWorld": "",
-        "birthright": "",
-        "careerPath": "",
-        "elite": "",
-        "divination": "",
         "gender": "",
         "age": "",
         "build": "",
@@ -1609,6 +1618,14 @@
         "superstition": "",
         "mementos": "",
         "notes": ""
+      },
+      "originPath": {
+        "homeWorld": "",
+        "birthright": "",
+        "lureOfTheVoid": "",
+        "trialsAndTravails": "",
+        "motivation": "",
+        "career": ""
       },
       "experience": {
         "used": 0,
@@ -1628,11 +1645,6 @@
         "rogueTraderExtras"
       ],
       "bio": {
-        "homeWorld": "",
-        "birthright": "",
-        "careerPath": "",
-        "elite": "",
-        "divination": "",
         "gender": "",
         "age": "",
         "build": "",
@@ -1642,6 +1654,14 @@
         "superstition": "",
         "mementos": "",
         "notes": ""
+      },
+      "originPath": {
+        "homeWorld": "",
+        "birthright": "",
+        "lureOfTheVoid": "",
+        "trialsAndTravails": "",
+        "motivation": "",
+        "career": ""
       },
       "experience": {
         "used": 0,
@@ -1675,6 +1695,49 @@
         "vehicle",
         "npc"
       ]
+    },
+    "starship": {
+      "hullType": "",
+      "hullClass": "",
+      "dimensions": "",
+      "crew": {
+        "population": 100,
+        "crewRating": 30,
+        "morale": {
+          "max": 100,
+          "value": 100
+        }
+      },
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "voidShields": 0,
+      "hullIntegrity": {
+        "max": 0,
+        "value": 0
+      },
+      "space": {
+        "total": 0,
+        "used": 0
+      },
+      "power": {
+        "total": 0,
+        "used": 0
+      },
+      "turretRating": 0,
+      "shipPoints": 0,
+      "machineSpiritOddities": "",
+      "pastHistory": "",
+      "complications": "",
+      "weaponCapacity": {
+        "dorsal": 0,
+        "prow": 0,
+        "port": 0,
+        "starboard": 0,
+        "keel": 0
+      },
+      "notes": ""
     }
   },
   "Item": {
@@ -1696,15 +1759,27 @@
       "malignancy",
       "mentalDisorder",
       "mutation",
+      "navigatorPower",
+      "order",
+      "originPath",
       "peer",
       "psychicPower",
+      "ritual",
+      "shipComponent",
+      "shipRole",
+      "shipUpgrade",
+      "shipWeapon",
+      "skill",
       "specialAbility",
       "storageLocation",
       "talent",
       "tool",
       "trait",
+      "vehicleTrait",
+      "vehicleUpgrade",
       "weapon",
-      "weaponModification"
+      "weaponModification",
+      "weaponQuality"
     ],
     "templates": {
       "physicalItem": {
@@ -1936,7 +2011,21 @@
       "aptitudes": "",
       "benefit": "",
       "tier": 0,
-      "cost": 0
+      "cost": 0,
+      "category": "",
+      "isPassive": true,
+      "isRollable": false,
+      "rollConfig": {
+        "characteristic": "",
+        "modifier": 0,
+        "description": ""
+      },
+      "modifiers": {
+        "characteristics": {},
+        "skills": {},
+        "combat": {},
+        "other": []
+      }
     },
     "tool": {
       "templates": [
@@ -1984,7 +2073,27 @@
         "damage",
         "attack",
         "backpack"
-      ]
+      ],
+      "modifierType": "",
+      "modifiers": {
+        "damage": 0,
+        "penetration": 0,
+        "range": 0,
+        "rateOfFire": {
+          "single": 0,
+          "semi": 0,
+          "full": 0
+        },
+        "clip": 0,
+        "reliability": 0,
+        "weight": 0,
+        "toHit": 0,
+        "special": []
+      },
+      "restrictions": {
+        "weaponClass": [],
+        "weaponType": []
+      }
     },
     "storageLocation": {
       "templates": [
@@ -2005,6 +2114,154 @@
         "weapon",
         "weaponModification"
       ]
+    },
+    "navigatorPower": {
+      "templates": [
+        "itemDescription"
+      ],
+      "useTime": "",
+      "range": "",
+      "test": "",
+      "sustain": "",
+      "novice": "",
+      "adept": "",
+      "master": ""
+    },
+    "order": {
+      "templates": [
+        "itemDescription"
+      ],
+      "typeAndAction": "",
+      "requirements": "",
+      "descriptionText": ""
+    },
+    "originPath": {
+      "templates": [
+        "itemDescription"
+      ],
+      "step": "",
+      "stepIndex": 0,
+      "requirements": "",
+      "effects": "",
+      "descriptionText": "",
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0,
+        "skills": [],
+        "talents": [],
+        "traits": [],
+        "other": []
+      }
+    },
+    "ritual": {
+      "templates": [
+        "itemDescription"
+      ],
+      "test": "",
+      "requirements": "",
+      "effect": "",
+      "costs": "",
+      "failure": ""
+    },
+    "shipComponent": {
+      "templates": [
+        "itemDescription"
+      ],
+      "componentType": "",
+      "hullType": "",
+      "powerUsage": 0,
+      "spaceUsage": 0,
+      "spCost": 0,
+      "effect": "",
+      "availability": ""
+    },
+    "shipRole": {
+      "templates": [
+        "itemDescription"
+      ],
+      "rank": 0,
+      "purpose": "",
+      "careerPreferences": "",
+      "subordinates": "",
+      "importantSkills": "",
+      "effect": ""
+    },
+    "shipUpgrade": {
+      "templates": [
+        "itemDescription"
+      ],
+      "powerUsage": 0,
+      "spaceUsage": 0,
+      "spCost": 0,
+      "effect": "",
+      "availability": ""
+    },
+    "shipWeapon": {
+      "templates": [
+        "itemDescription"
+      ],
+      "weaponType": "",
+      "hullType": "",
+      "powerUsage": 0,
+      "spaceUsage": 0,
+      "spCost": 0,
+      "strength": 0,
+      "damage": "",
+      "crit": 0,
+      "range": "",
+      "special": "",
+      "availability": ""
+    },
+    "skill": {
+      "templates": [
+        "itemDescription"
+      ],
+      "skillType": "",
+      "characteristic": "",
+      "descriptor": "",
+      "uses": "",
+      "useTime": "",
+      "isBasic": false,
+      "aptitudes": [],
+      "specializations": [],
+      "rollConfig": {
+        "defaultModifier": 0,
+        "canBeUsedUntrained": true
+      }
+    },
+    "vehicleTrait": {
+      "templates": [
+        "itemDescription"
+      ],
+      "effect": "",
+      "level": 0
+    },
+    "vehicleUpgrade": {
+      "templates": [
+        "itemDescription"
+      ],
+      "effect": "",
+      "availability": ""
+    },
+    "weaponQuality": {
+      "templates": [
+        "itemDescription"
+      ],
+      "effect": "",
+      "hasLevel": false,
+      "level": 0
     }
   }
 }

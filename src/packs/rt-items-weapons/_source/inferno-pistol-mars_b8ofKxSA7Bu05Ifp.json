@@ -6,7 +6,7 @@
     "class": "Pistol",
     "type": "Melta",
     "range": "10m",
-    "rof": "S/–/–",
+    "rof": "S/\u2013/\u2013",
     "damage": "2d10+8",
     "damageType": "Energy",
     "penetration": 13,
@@ -20,6 +20,12 @@
     "note": null,
     "description": {
       "value": ""
+    },
+    "damageFormula": "2d10+8",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

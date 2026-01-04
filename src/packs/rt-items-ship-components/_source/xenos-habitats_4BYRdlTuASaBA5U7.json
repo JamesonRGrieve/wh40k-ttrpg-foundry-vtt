@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Quarters designed to simulate alien environments. +10 to Charm/Inquiry Tests made towards Xenos aboard the vessel. +50 Achievement Points towards Objectives involving Non-Hostile interactings with Xenos. Permenant -2 Morale due to Crew Suspicion</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

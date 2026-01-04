@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Requires two or more generators, activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between them that acts as cover. If a Wall Section Overloads, only the section between two generators shuts down, the rest are unaffected.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

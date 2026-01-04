@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

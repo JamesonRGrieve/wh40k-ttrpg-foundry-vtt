@@ -10,7 +10,12 @@
     "useTime": "Free Action",
     "description": {
       "value": "<p>Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

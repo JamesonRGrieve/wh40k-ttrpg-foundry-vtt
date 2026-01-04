@@ -10,7 +10,12 @@
     "useTime": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Inquisitors are utterly unique amongst the Imperium. They posses absolute, unending, near unquestionable authority sourced directly from sourced the Emperor of Mankind. At their word worlds burn, armies move, and all doors open.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "1000xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

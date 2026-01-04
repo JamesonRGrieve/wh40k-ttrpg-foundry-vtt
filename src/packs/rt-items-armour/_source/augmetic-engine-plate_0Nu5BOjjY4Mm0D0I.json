@@ -14,7 +14,9 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Environmentally Sealed, gives +30 to resist extreme environmental conditions and has 8 hours of air. Contains internal vox, mag-boots, and photo-visor. -10 to Agility and Further -10 for tests requiring fine manipulation using the gauntlets. Counts as AP 10 vs Flame/Energy weapons.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

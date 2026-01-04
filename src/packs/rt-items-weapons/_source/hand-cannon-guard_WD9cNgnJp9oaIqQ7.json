@@ -20,6 +20,12 @@
     "note": "-10 to Ballistic Test to fire unless used in two hands or with Recoil Gloves",
     "description": {
       "value": "<p><b>Note:</b> -10 to Ballistic Test to fire unless used in two hands or with Recoil Gloves</p>"
+    },
+    "damageFormula": "1d10+4",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

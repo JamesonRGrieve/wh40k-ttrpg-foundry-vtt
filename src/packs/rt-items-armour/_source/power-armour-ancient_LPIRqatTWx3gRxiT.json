@@ -14,7 +14,9 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Gain +20 to Strength, Has 24 Hour Power Supply, suffer -10 to fine manipulation tasks unless using something designed for power armour. +1 Size\nChoose 3 subsystems to add to Power Armour functions (see Armour Upgrades)</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

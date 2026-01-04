@@ -12,7 +12,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Comes in pack of 5. Deals 1d10+3 I Damage with Pen 4. Proven (4), Razor Sharp</p><p><b>Qualities:</b> Proven (4), Razor Sharp</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

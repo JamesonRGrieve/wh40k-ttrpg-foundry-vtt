@@ -6,6 +6,12 @@
     "descriptionText": "Vehicle is entirely enclosed, crew cannot attack enemies outside the vehicle using their own personal weapons unless they have a way to get outside such as via a hatch or firing slit. Similarly, they cannot be targeted by those outside. Exceptions may include appropriate Mind-Based Psychic Attacks.",
     "description": {
       "value": "<p>Vehicle is entirely enclosed, crew cannot attack enemies outside the vehicle using their own personal weapons unless they have a way to get outside such as via a hatch or firing slit. Similarly, they cannot be targeted by those outside. Exceptions may include appropriate Mind-Based Psychic Attacks.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

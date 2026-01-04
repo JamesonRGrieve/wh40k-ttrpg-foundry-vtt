@@ -6,7 +6,15 @@
     "effect": "If target takes any wounds, make Toughness Test with -10*X. Failiure means target takes extra 1d10 Damage not reduced by Armour or Toughness.",
     "description": {
       "value": "<p>If target takes any wounds, make Toughness Test with -10*X. Failiure means target takes extra 1d10 Damage not reduced by Armour or Toughness.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

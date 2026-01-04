@@ -9,7 +9,14 @@
     "source": "RT: Tau Character Guide (Page 24)",
     "description": {
       "value": "<p>A Fire Caste member who Pilots a Mighty Battlesuit is one seen as a hero amongst the Tau. These advanced wargear range from the Hulking Stealth Suits to the Truly Massive Riptides whose sheer firepower can tear even super-heavy tanks asunder. </p><p><b>Effects:</b> Replace new Rank's Advances with that of the Tau Battlesuit Pilot\nAllows for the purchasing of the Unique Talents Battlesuit Training and Veteran's Reflexes\nThe wearer is assigned the use of a Tau Battlesuit.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

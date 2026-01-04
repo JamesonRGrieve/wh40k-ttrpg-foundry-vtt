@@ -9,7 +9,15 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Always counts as braced, and may fire on semi or full-auto as a half action when firing heavy weapons. Also suffers no penalty for moving and firing on semi or full-auto.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

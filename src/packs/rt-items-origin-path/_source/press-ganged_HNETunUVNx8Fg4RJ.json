@@ -9,6 +9,26 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>Gain any one skill that has no prerequisites (GM has final say). Gain a single Common Lore Skill, or improve one you already have by one level. <br>You react violently to the concept of imprisonment or loss of your freedom, you may make a Willpower Test to avert this, difficult modified by GM.</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 0,
+        "ballisticSkill": 0,
+        "strength": 0,
+        "toughness": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "perception": 0,
+        "willpower": 0,
+        "fellowship": 0,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 0,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Proper Facilities to deal with severe injuries or disease. Adds +20 to Medicae Tests performed in this component, number of patients that can be treated without penalty is 3x Character's Intelligence Bonus. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

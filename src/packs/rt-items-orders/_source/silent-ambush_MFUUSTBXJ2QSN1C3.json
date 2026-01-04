@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>If Comrade is in Cohesion, the next Melee Attack made against an Unaware Target deals an additioanl 1d10 Damage and gains Concussive(2)</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

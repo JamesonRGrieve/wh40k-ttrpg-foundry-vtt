@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Reduce all Critical Damage by 4, gain +10 to Jink Actions. Suffer no Damage from Ram Actions. All Repair Tests have additional -20 as this is a sacred piece of technology.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

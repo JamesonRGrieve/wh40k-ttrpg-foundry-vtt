@@ -6,6 +6,12 @@
     "descriptionText": "Vehicle has its own Life Support and is sealed from the outside. Can become exposed through Critical Damage until armour repaired, or if a hatch is opened. Also counts as Enclosed while seal is in effect.",
     "description": {
       "value": "<p>Vehicle has its own Life Support and is sealed from the outside. Can become exposed through Critical Damage until armour repaired, or if a hatch is opened. Also counts as Enclosed while seal is in effect.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -9,7 +9,14 @@
     "source": "OW: Hammer of the Emperor (Page 74)",
     "description": {
       "value": "<p>The Scout desires to be at one with their environment, to move unseen and to lead the way for those behind them through hostile or arduous terrain. As little as a twitch of a leaf or abormal silence telling them all they need to know about an oncoming threat.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Scout. Apt: Agility, Fieldcraft, Strength, Perception, Offence, Weapon Skill\nAdd. Equipment: 4 Smoke Grenades, Cameleoline Cloak, Magnoculars, Best Mono-Knife. Gain Talents: Sure Strike+Quick Draw or Ambush\nCan Purchase Unique Talent: Terrain Expert and Basic Order: Silent Ambush </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -14,7 +14,9 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Can only be worn by (usually chaos) space marines. Designed for use with Legion Weapons. Choose 3 Subsystems to add to Power Armour functionality (see Armour Upgrades)\n+20 to Strength Characteristic, -10 to Fine Manipulation Tasks with anything not designed to be used with power armour. +1 Size, but enemies do not gain bonus to hit from size.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

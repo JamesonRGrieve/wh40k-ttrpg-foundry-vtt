@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Comrade in Cohesion keeps watch of surrounding area. Until beginning of next turn Character can spend a Reaction to make a single Standard Ranged Attack with -20 against one foe that has targeted them with a Ranged Attack. Their shot goes first, if it kills or incapacitates their attacker, their attack is canceled, otherwise the attack occurs normally.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

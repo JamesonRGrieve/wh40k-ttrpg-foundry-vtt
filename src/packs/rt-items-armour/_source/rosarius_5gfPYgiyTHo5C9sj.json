@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

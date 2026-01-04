@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 78)",
     "description": {
       "value": "<p>The Repentia of the Sisters of Battle seek to atone for their own sins. The Oblatia however seek to atone for the sins of another, perhaps a blood relative, an infamous ancestor, or a stain on their family line. They atone through deeeds, through slaying of humanities enemies, and sacrifice such as earn forgiveness in the eyes of The Emperor.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Sister Oblatia\nAllows for the purchasing of the Unique Talent Duty unto Death</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

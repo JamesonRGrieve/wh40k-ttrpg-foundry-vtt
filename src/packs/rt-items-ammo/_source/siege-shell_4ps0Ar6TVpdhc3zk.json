@@ -12,7 +12,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10+6 X, Pen 10, Concussive (2), Blast(3)\nDoes 4d10+6 Damage at Pen 20 when hitting a Building</p><p><b>Qualities:</b> Concussive (2), Blast(3)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

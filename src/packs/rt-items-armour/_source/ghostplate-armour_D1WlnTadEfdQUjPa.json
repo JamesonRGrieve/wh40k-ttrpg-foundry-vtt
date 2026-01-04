@@ -14,7 +14,9 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>Rare Availability if acquired from Dark Eldar Settlement.  Also has a Built-in forcefield with Protection Rating 20 which overloads if wearer rolls doubles on a roll to deflect an attack using the field, as opposed to normal overload rules. Likely Human Wearable, if uncomfortable.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

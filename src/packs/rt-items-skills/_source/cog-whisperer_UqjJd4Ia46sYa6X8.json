@@ -10,7 +10,12 @@
     "useTime": "RT: The Navis Primer",
     "description": {
       "value": "<p>Become associated and possibly obsessed with a specific machine, gaining an understanding of its deepest intricacies.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "300xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

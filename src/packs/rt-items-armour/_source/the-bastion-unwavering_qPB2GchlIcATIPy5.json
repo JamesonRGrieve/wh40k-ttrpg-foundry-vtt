@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

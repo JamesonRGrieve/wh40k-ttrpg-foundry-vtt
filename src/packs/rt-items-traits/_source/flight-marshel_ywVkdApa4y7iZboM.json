@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm\n(Page 80)",
     "description": {
       "value": "<p>A Void-Master has progressed their experience with void craft such as to know their every function and pilot them as extensions of themselves. Effortlessly guiding younger pilots and dominating air and space.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Flight Marshal\nAllows for the purchasing of the Unique Talent Best of the Best</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

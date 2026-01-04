@@ -9,7 +9,16 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can Orate to their Enemies as a Free Action after rolling initiative, they make a -20 Command Test, if successful enemies treat character as possessing Fear(1) Trait (+1 per three degrees of success, up to Fear(3)) for the remainder of the encounter.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": false,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

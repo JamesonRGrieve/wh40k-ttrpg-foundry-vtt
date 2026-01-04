@@ -14,7 +14,9 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p>Human sized power armour, has Power Armour Systems; Osmatic Gill Life Sustainer, Vox Link, Sustainable Power Source, and Recoil Suppression.\nGrants user Resistance(Heat) Talent whilst worn.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

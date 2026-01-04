@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade out of Cohesion perofmrs the Stand/Mount Action. They stand up from prone or mount/dismount a riding animal.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

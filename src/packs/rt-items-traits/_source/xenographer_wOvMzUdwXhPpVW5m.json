@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm \n(Page 100)",
     "description": {
       "value": "<p>The Xenographer desires to understand all that there is to know about Xenos culture, technology, strategy, history, and language in a scholarly depth. The Value of such knowledge may be the only reason some of them are still alive.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Xenographer\nCan purchase Peer(Xenos) Talent as an Elite Advance for 200xp, where \"Xenos\" Represents a Xenos species character has formed working relationship with.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

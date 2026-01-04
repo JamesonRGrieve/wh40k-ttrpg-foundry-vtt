@@ -9,7 +9,15 @@
     "source": "Character Actions and Rules (sheet)",
     "description": {
       "value": "<p>Attacks against surprised/unaware targets: +30</p>"
-    }
+    },
+    "severity": 1,
+    "stackable": false,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "autoRemove": false
   },
   "effects": [],
   "flags": {

@@ -14,7 +14,9 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Straps onto the arm. Acts as a Balanced weapon dealing 1d5+1 Impact Damage.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

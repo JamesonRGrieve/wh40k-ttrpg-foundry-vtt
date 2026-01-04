@@ -9,7 +9,15 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Once per session, the character can choose a single target individual within line of sight as the target of their vigil. They may only target one such character at a time. Once per encounter they may make a Standard Attack against this target as a Reaction whilst gaining the benefits of a Full Action Aim (+20 to WS/BS Test) for this attack.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": false,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

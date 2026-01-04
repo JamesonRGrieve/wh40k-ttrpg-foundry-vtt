@@ -13,7 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Novice:</b> Navigator makes Perception Test of varying difficult based on range and size of potential objects. Success Detects objects in space within range. Navigator learns any information about them they could gain from normally observing them.</p><p><b>Adept:</b> Increase Range to 2 VU/10,000km x Perception Bonus. Can make -10 Willpower test to gain additional info about objects nature, such as mineral composition, type of starship crew, etc.</p><p><b>Master:</b> Increase Range to 5 VU/100,000km x Perception Bonus. Test to gain additional information becomes +10 Willpower rather than -10.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

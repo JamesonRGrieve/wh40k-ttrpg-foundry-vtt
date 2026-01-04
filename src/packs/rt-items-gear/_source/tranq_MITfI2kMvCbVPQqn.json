@@ -12,6 +12,16 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

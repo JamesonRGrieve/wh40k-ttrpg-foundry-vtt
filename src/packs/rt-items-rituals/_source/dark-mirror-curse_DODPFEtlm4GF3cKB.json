@@ -11,6 +11,13 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p><b>Effect:</b> Whenever target causes any damage, they must make a -10 Willpower Test or a -30 Willpower Test if the damage they dealt killed their victim, or the target immediately suffers 1d5 Damage that ignores Armour, Forcefields, and Toughness.\nIf this curse was cast on the target's bloodline, they, and all who follow them, suffer this effect.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased. If cursing a bloodline, failing either test causes this result.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The social competence of the character, their ability to interact with others favourably and in ways to get what they want, be it through charm, commands, or deception.",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

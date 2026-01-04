@@ -9,7 +9,15 @@
     "source": "BC: Binding Contracts",
     "description": {
       "value": "<p>Tyranid Creatures within 20m of this one have their Instinctive Behaviour Trait Suppressed, and gain the Fearless Talent. They may perform complex behaviours due to being guided by the Hive Mind.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

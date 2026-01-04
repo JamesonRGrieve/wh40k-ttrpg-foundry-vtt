@@ -9,7 +9,7 @@
     "rof": "S/-/-",
     "damage": "-",
     "damageType": "Special",
-    "penetration": "-",
+    "penetration": 0,
     "clip": 1,
     "reload": "Full",
     "special": "Accurate",
@@ -20,6 +20,11 @@
     "note": "Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.",
     "description": {
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.</p>"
+    },
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

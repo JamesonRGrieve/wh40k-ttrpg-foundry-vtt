@@ -12,7 +12,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Adds +5 to all Critical Damage. Double damage after Armour and Toughness vs targets with Psy Rating, Daemons, and other Warp Entities. Has Sanctified Quality. Only obtainable from full Inquisitors, and not cheaply.</p><p><b>Qualities:</b> Sanctified</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

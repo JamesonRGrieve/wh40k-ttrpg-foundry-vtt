@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm\n(Page 74)",
     "description": {
       "value": "<p>An Individual whom has become obsessed with the replacement of their flesh with the certainty of steel. Frequently leading to close ties to the Mechanicus to better allow for their many further improvements.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Augmenticist.\nAllows for the purchasing of the Unique Talent Physical Perfection (X)</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

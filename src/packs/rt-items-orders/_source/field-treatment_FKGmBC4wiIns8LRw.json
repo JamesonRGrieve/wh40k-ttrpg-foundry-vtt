@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>If Comrade is in comms range, character remotely performs Medicae with -10 on target near Comrade.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

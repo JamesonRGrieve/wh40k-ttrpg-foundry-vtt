@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The Character's ability to move with speed and fluidity, as well as their ability to react to sudden events. Determines Movement Speeds and Initiative.",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> When firing at targets over 20 VU's, damage decreases to 1d10. Lance Weapons ignore armour.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

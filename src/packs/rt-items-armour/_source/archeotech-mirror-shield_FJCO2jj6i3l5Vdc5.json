@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>If it successfully blocks a ranged attack dealing energy damage, can use Reaction to make +0 Agility Test, on success, shot is reflected back at at target of choice within the ranged of the fired weapon, doing full damage to them.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

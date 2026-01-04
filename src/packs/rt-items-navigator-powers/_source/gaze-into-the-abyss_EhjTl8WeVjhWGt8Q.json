@@ -13,7 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Novice:</b> The Navigator determines if a creature or object has a Psy Rating or has some taint of the warp (20+ Corruption Points, Warp Mutations, possession, etc). Heretical Psykers or Daemons may try to hide themselves by turning the test into an Opposed Test, Navigator's Perception vs Hider's Willpower. The power can also track powerful psychic or warp creatures as if using the Tracking Skill.</p><p><b>Adept:</b> Can also detect major warp disturbances within 100km x Perception Bonus or Perception Bonus VU's, such as Warp Portals, ships entering/exiting the warp.</p><p><b>Master:</b> Can also detect the use of Psychic powers within 10m x Perception Bonus.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

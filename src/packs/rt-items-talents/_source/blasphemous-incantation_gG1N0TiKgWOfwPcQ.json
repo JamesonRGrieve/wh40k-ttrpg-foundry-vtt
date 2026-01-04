@@ -9,7 +9,16 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>When manifesting a Psychic Power that requires at least a Half Action, character can choose to speak an incantation to go along with it. This grants +1 Psy Rating applied after determining Unfettered, Fettered, Push Level (aka, if Psy Rating 4 is halved for Fettered level to 2, +1 is added after for Psy 3). However, the time taken to manifest the power increases by one Half Action, +20 is added to any Psychic Phenomena Rolls caused by the power, and if the Focus Power Test rolls a 91+ the test automatically fails and Perils of the Warp occurs. </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": false,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

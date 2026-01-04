@@ -9,7 +9,15 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Has X number of extra arms, gain +10 Bonus to Athletics Tests involving Climbing and Swimming. For each pair of arms it has (X/2) it can make an additional attack as if wielding multiple melee weapons, a creature must have Two-Weapon Wielder(Melee) in order to make multiple attacks on the same turn. If no X value, assume X = 2</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

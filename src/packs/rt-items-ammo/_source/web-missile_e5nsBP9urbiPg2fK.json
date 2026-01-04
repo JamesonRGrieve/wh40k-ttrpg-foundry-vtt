@@ -12,7 +12,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Blast (6), Snare</p><p><b>Qualities:</b> Blast (6), Snare</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

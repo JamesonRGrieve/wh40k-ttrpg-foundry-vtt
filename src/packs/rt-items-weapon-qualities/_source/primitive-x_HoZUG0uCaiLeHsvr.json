@@ -6,7 +6,15 @@
     "effect": "Damage Rolls above X count as if X was Rolled (although a roll of 0 still causes Righteous Fury). HB: Ignore if hitting Primitive/Natural Armour.",
     "description": {
       "value": "<p>Damage Rolls above X count as if X was Rolled (although a roll of 0 still causes Righteous Fury). HB: Ignore if hitting Primitive/Natural Armour.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

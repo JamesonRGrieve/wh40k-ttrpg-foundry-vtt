@@ -6,6 +6,12 @@
     "descriptionText": "Shields Pilot from Radiation Bursts and light that may impair vision. Acts as a Tau Blacksun Filter Gear Item.\n(Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.)",
     "description": {
       "value": "<p>Shields Pilot from Radiation Bursts and light that may impair vision. Acts as a Tau Blacksun Filter Gear Item.\n(Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -12,7 +12,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Bullets of one SP weapon type can only be used with weapons of that type (EG: Stub Revolver ammo could be used in Stub Automatics, but not in Autoguns)</p><p><b>Qualities:</b> -</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

@@ -13,7 +13,14 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p><b>Novice:</b> Navigator causes area within with radius of 5m x Perception Bonus to fall into a Warp Lull where Psykers have -10 to all Focus Power Tests, and all Daemons who end their turns within the area make +0 Toughness Tests or are Stunned for 1 Round. This area lasts  for 2 Rounds + 1 per DoF on Test, or whenever the Navigator chooses to dismiss it as a Free Action at the start of their turn. At the end of a turn where the area is active, the Navigator makes a +0 Toughness Tesr or gains one Fatigue.</p><p><b>Adept:</b> As Novice, but Psykers do not add any bonus from Psy Rating to Focus Power Tests, and Daemons who fail their Toughness Tests suffer 1d5+Perception Bonus Energy Damage that Ignores Armour, Toughness, and Daemonic Trait.</p><p><b>Master:</b> As Adept, but Warp Lull lasts four rounds, +2 per Degree of Success on Willpower Test. </p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

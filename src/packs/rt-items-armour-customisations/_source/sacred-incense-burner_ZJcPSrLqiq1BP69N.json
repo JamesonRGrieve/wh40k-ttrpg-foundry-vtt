@@ -10,6 +10,12 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Incense burner affixed to the backpack, helmet, or similar item. Setting it aflame with a Half Action allows it to burn for 1 hour. Whilst alight creatures with the Daemonic Trait within 3m of the bearer suffers -10 to Weapon Skill and -10 to Warp Instability Tests.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

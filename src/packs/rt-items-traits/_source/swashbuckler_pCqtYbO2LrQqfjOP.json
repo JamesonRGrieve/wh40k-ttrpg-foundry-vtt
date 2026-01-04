@@ -9,7 +9,14 @@
     "source": "RT: Hostile Acquisitions \n(Page 44)",
     "description": {
       "value": "<p>A Pirate is anyone willing to take goods without paying for them. To be Successful is to have reliable information networks, planning skills, contacts, and a trustworthy crew. To do all of this with bravado, style, and a dashing smile? That's a Swashbuckler.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Swashbuckler\nAutomatically Gain Enemy (Imperial Navy) Talent\nAllows for the purchasing of the Unique Talent Combat Flair</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

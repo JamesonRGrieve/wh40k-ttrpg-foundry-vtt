@@ -9,7 +9,14 @@
     "source": "OW: Hammer of the Emperor (Page 54)",
     "description": {
       "value": "<p>The Brawler Leads the charge into melee, brandishing Chainsword and knives as extensions of themselves. They are often Giants amongst men, barely feeling that which would fell many others.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Brawler. Apt: Agility, Finesse, Offence, Strength, Toughness, Weapon Skill\nAdd. Equipment: Best Great Weapon or Good Chainsword or Common Power Maul, Best Mono-Knife. Gain Talents: Ambidextrous+Street Fighting or Pugilist\nCan Purchase Unique Talent Two Against the Odds and Basic Order Watch My Back! </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

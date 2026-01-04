@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Can be useful for hiding or disguising more advanced items such as forcefields or comms devices.\nHalve primitive armour AP vs non primitive weapons</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "Half Action(Simple)\nFull Action(Involved)",
     "description": {
       "value": "<p>Directing those the user has authority over such that a group may perform more complex actions. Successful tests mean group is directed in timely manner, failure may mean group is confused, misinterpreted, unmotivated, etc.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "Full Action or More for complex problems",
     "description": {
       "value": "<p>Diagnosing and treating injuries and disease, performing first aid or extended care, as well as long-term treatments. Identifying, Creating, and Applying Chemicals.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

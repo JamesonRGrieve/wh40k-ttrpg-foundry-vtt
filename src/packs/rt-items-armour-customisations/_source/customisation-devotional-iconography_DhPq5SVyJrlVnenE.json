@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>The Armour is devoted to a God. Gain +10 to Command those devoted to this god (EG: Daemons, worshippers, priests, etc), and lessers not commanded by anyone else treat you as their commander. -10 to Fellowship tests with those opposed to this god.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

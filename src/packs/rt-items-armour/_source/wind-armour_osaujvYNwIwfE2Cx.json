@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Designed for places with winds of hundreds of kilometres per hour. Contains air filters and a rebreather with 3 hours of air. An Inbuilt Vox System and Photo-Visor. Wearer is immune to environmental effects of strong winds and powerful storms.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -5,14 +5,22 @@
   "system": {
     "type": "Upgrade",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
     "effect": "When a Vessel decelerates during an \"Adjust Speed and Bearing\" or \"Evasive Maneuvers\" Action, the helmsman gains +10 to the Pilot Test. If test failed by 3 or more degrees, it is damaged, and vessel loses one speed until repairs are made. Poor version is damaged on 2 DoF, Good adds +15 to Test, best adds +15 and is damaged on 4 DoF. Only one per vessel. ",
     "availability": "Rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>When a Vessel decelerates during an \"Adjust Speed and Bearing\" or \"Evasive Maneuvers\" Action, the helmsman gains +10 to the Pilot Test. If test failed by 3 or more degrees, it is damaged, and vessel loses one speed until repairs are made. Poor version is damaged on 2 DoF, Good adds +15 to Test, best adds +15 and is damaged on 4 DoF. Only one per vessel. </p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

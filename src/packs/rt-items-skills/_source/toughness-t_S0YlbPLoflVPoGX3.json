@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The ability for a character to shrug of injuries and ailments such as toxins, poisons, harmful environments, and disease. Toughness Bonus reduces damage taken and determiens starting health.",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

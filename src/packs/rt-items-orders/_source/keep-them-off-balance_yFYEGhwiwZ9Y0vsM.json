@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can use Order after inflicting damage on an enemy with an attack. If Comrade is in Cohesion, the damaged enemy must make a +0 Toughness Test, if failed they are Stunned for one Round.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

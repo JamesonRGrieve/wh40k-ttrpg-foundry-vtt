@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Combat Shield of the Brazen Claws Chapter. Overload 01. Weapons wielded by the bearer gain +10 to hit against foes who have previously had their attacks stopped by the Force Field.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

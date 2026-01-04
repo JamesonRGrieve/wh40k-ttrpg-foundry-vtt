@@ -10,7 +10,12 @@
     "useTime": "One Hour or more.",
     "description": {
       "value": "<p>Gaining information through asking questions, perusing data sources, eavesdropping, or picking up on news, recent events, and so on. </p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

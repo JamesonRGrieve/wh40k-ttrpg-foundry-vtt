@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Once per Combat Encounter, Character can spend their Full Action and make a +0 Intelligence Test. If Successful they inflict a single hit on a target within range of one of their weapons, +1 hit with another weapon on a target within range (not neccisarily the same one) per Degree of Success scored beyond the first. Each weapon can only inflict one hit. Servitor Comrade must be within Comms Range to provide target marks.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

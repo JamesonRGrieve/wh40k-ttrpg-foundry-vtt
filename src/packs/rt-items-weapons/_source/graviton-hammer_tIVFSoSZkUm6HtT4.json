@@ -20,6 +20,12 @@
     "note": "Two-Handed Weapon.",
     "description": {
       "value": "<p><b>Special:</b> Concussive (3), Graviton</p><p><b>Note:</b> Two-Handed Weapon.</p>"
+    },
+    "damageFormula": "2d10+5",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

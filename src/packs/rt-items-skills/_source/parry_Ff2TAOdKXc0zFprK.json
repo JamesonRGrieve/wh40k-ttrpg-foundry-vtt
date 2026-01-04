@@ -10,7 +10,12 @@
     "useTime": "Reaction",
     "description": {
       "value": "<p>Using a Melee Weapon to avoid being struck by a Melee Attack.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Weapon Skill",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

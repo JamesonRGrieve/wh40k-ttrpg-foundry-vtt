@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>All Player Characters within comms range can Re-roll Damage Rolls for the next round. Once per Encounter usage.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

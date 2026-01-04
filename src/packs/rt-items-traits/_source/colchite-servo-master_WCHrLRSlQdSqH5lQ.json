@@ -9,7 +9,14 @@
     "source": "RT: The Navis Primer\n(Page 72)",
     "description": {
       "value": "<p>This character has acquired a \"Colchite\" implant from a stryxis trader and had it implanted, allowing them to control the actions of a number of linked servitors as extensions of themselves. The Colchite implant requires implanting within both the controller and seperately within each servitor that is to be controlled.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Cikcgute Servo-Master\nAutomatically Gain Mastermind (1) Unique Trait. Servitors under control via the Colchite implant have Hatred (Eldar) for unknown reasons...\nAllows for the purchasing of the Unique Talent Mastermind (X) Unique Trait (can be purchased multiple times.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -5,13 +5,23 @@
   "system": {
     "type": "Cybernetic",
     "weight": "-",
-    "availability": "Shoulder mounted laspistol with Compact Upgrade, may use Half Action or Reaction to fire once per round. If used as a Reaction, doesn’t count towards the \"one attack action per turn\", as it isn't happening on your turn. Some versions allow later replacing the Compact Laspistol with any other Compact Pistol acquired seperately.",
+    "availability": "Shoulder mounted laspistol with Compact Upgrade, may use Half Action or Reaction to fire once per round. If used as a Reaction, doesn\u2019t count towards the \"one attack action per turn\", as it isn't happening on your turn. Some versions allow later replacing the Compact Laspistol with any other Compact Pistol acquired seperately.",
     "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
     "effects": "Very Rare",
     "notes": "600 T",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 600 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

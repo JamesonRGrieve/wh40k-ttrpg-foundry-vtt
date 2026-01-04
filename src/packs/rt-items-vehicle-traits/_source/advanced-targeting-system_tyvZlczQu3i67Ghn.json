@@ -6,6 +6,12 @@
     "descriptionText": "Allows the wearer to make a Called Shot Action as a Half Action",
     "description": {
       "value": "<p>Allows the wearer to make a Called Shot Action as a Half Action</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

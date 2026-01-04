@@ -10,7 +10,12 @@
     "useTime": "Half Action",
     "description": {
       "value": "<p>Hiding things, from small objects, to starships, to people, either somewhere or someplace. Requires appropriate environment to hide.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

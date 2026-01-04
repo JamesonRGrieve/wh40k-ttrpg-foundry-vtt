@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 64)",
     "description": {
       "value": "<p>Those entrusted with a fraction of the power of an Inquisitor, even strictly limited, have a terrifying authority to command local law enforcement, and detention and requisition as they need. They bear a document stating the locale and focus of their investigations, and a coded Sigil of Inquiry as proof of inquisitorial backing.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Legate Investigator</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+4</p><p><b>Notes:</b> Unless ship is Grand Cruiser size or Larger can only mount lance as \"Prow\" Weapon. If in prow slot, can only fire forwards. Lance Weapons Ignore Armour.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

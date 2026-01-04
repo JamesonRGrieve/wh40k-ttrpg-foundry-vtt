@@ -20,6 +20,12 @@
     "note": "Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.",
     "description": {
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.</p>"
+    },
+    "damageFormula": "1d10+4",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

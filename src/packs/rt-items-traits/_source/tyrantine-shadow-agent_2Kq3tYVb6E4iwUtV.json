@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 82)",
     "description": {
       "value": "<p>A Secret order that act to maintain an ignorance regarding a wandering celestial object known as the Tyrant Star, this black star brings madness and death, to the Tyrantine it is a source of concern, to be hidden from outsiders and to be studied by those in the know.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the \nAllows for the purchasing of the Unique Talent Labyrinth Conditioning</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

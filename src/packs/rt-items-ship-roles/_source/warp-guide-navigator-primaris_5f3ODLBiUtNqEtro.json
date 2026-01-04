@@ -11,7 +11,15 @@
     "effect": "+5 to Navigation (Stellar) Skill when steering the ship through the warp",
     "description": {
       "value": "<p><b>Purpose:</b> Guides the Vessel Through the Warp, avoiding its dangers.</p><p><b>Effect:</b> +5 to Navigation (Stellar) Skill when steering the ship through the warp</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

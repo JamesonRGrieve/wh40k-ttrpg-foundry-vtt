@@ -17,7 +17,9 @@
     "source": null,
     "description": {
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Vessels struck by this weapon (and not stopped by void shields), have their speed reduced by 1 and Manoeuvrability reduced by 5 per successful attack. Effects remain for 2 Strategic Turns. Weapon doesn't cause critical hits or reduce hull integrity.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

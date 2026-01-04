@@ -14,7 +14,9 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Sealed against the void. Provides Four hours of air, can replace air tank as full action without compromising seal.. Has integrated Vox, mag-boots, lamp-pack and clip harness. Breached if taking more than 2xAP damage, can be repaired as Full Action with tape, patches, etc)</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

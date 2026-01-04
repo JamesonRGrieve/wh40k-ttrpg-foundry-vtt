@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Resembles ornate jewels often worn on belt or arm.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

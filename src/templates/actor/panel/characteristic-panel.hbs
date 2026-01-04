@@ -5,11 +5,12 @@
         <div class="dh-chartable__cell--left">Initial</div>
         <div class="dh-chartable__cell--left">Advances</div>
         <div class="dh-chartable__cell--left">Modifier</div>
+        <div class="dh-chartable__cell--left">Origin</div>
         <div class="dh-chartable__cell--left">Current</div>
         <div class="dh-chartable__cell--left">Unnatural</div>
         <div class="dh-chartable__cell--left">Bonus</div>
         {{#each actor.characteristics as |characteristic name|}}
-            <div class="dh-chartable__cell--head {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell--head {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
                 <button
                     class="roll-characteristic actor-drag"
                     type="roll"
@@ -18,10 +19,10 @@
                     data-characteristic="{{name}}"
                 >{{this.short}}</button>
             </div>
-            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell">
                 <input name="system.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}" />
             </div>
-            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell">
                 <select name="system.characteristics.{{name}}.advance">
                     {{option "0" this.advance "None"}}
                     {{option "1" this.advance "Simple"}}
@@ -31,16 +32,19 @@
                     {{option "5" this.advance "Expert"}}
                 </select>
             </div>
-            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell">
                 <input class="dh-field__input" name="system.characteristics.{{name}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}" />
             </div>
-            <div class="dh-chartable__cell dh-chartable__cell--highlight {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell {{#if (gt this.originPathModifier 0)}}rt-origin-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-origin-penalty{{/if}}" title="From Origin Path">
+                <span class="display">{{#if (gt this.originPathModifier 0)}}+{{/if}}{{this.originPathModifier}}</span>
+            </div>
+            <div class="dh-chartable__cell dh-chartable__cell--highlight">
                 <span class="display">{{this.total}}</span>
             </div>
-            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell">
                 <input class="dh-field__input" name="system.characteristics.{{name}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}" />
             </div>
-            <div class="dh-chartable__cell {{colorCode this.has_bonus this.has_negative}}">
+            <div class="dh-chartable__cell">
                 <span class="display">{{this.bonus}}</span>
             </div>
         {{/each}}

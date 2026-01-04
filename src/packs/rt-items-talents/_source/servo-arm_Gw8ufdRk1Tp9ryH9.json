@@ -9,7 +9,15 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When Assisted by their Servitor Comrade, Character gains +10 to all Tech-Use Tests to make Repairs, and halves the time needed to do them.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

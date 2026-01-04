@@ -10,7 +10,12 @@
     "useTime": "Full Action for an entire day of gaming",
     "description": {
       "value": "<p>Winning in games of chance. Participants wager money, winner takes the pot. User can choose to lose as part of a Deceive Action.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

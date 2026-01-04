@@ -11,6 +11,13 @@
     "source": "BC: Tome of Blood",
     "description": {
       "value": "<p><b>Effect:</b> The Characters are granted some boon of Khorne that they asked for. These boons cannot be overgeneralised or ridiculous such as Immunity to damage, but here are some examples: \"Let our weapons sever the enemies!\" (Weapons gain Razor Sharp Quality), \"Let Khorne's armour protect our minds\" (reroll evasion tests), \"Let the Corpse-God's Power Wain in our presence!\" (Ignore Sanctified Quality and resist Psykers that pledge to him). These boons last as long for the time agreed or until whatever task is complete. </p><p><b>Costs:</b> The Favour of the blood god causes each character involved to gain 1d5 Corruption Points.</p><p><b>Failure:</b> No penalty for failing the test. However failing on the promise of violence and slaughter, or whatever else the promise entailed causes each character to test Contempt of the Warp, and lose 1d10 Infamy. They cannot perform this deed again until regaining this infamy or performing a great act in Khorne's name.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],
