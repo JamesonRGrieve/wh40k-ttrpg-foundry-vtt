@@ -1,6 +1,10 @@
 // Rogue Trader Skills Styling
 // Improved layout and readability for skills panels
 
+// Grid layout variables
+$rt-skill-grid: 2fr 0.6fr 0.5fr 0.5fr 0.5fr 0.5fr 0.6fr 0.7fr;
+$rt-skill-group-grid: 1fr auto;
+
 // Skills panel layout adjustments
 .rt-skills-panel,
 .rt-specialist-skills-panel {
@@ -265,7 +269,7 @@
   .table-row,
   .rt-skill-row,
   .rt-specialist-row {
-    grid-template-columns: 2fr 0.6fr 0.5fr 0.5fr 0.5fr 0.5fr 0.6fr 0.7fr;
+    grid-template-columns: $rt-skill-grid;
     display: grid;
     align-items: center;
   }
@@ -273,7 +277,7 @@
   .table-row--grouped,
   .rt-specialist-group,
   .rt-no-specializations {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: $rt-skill-group-grid;
     display: grid;
     align-items: center;
   }

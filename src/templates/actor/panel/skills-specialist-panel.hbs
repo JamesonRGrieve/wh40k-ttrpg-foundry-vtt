@@ -1,15 +1,15 @@
 <div class="dh-panel dh-grid-col-3 dh-grid-row-2 rt-specialist-skills-panel">
     <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">Specialist Skills</h1>
+        <h1 class="dh-panel__header">{{localize "RT.Skills.SpecialistHeader"}}</h1>
         <div class="table-row--head rt-skills-header">
-            <div class="table-cell rt-skill-name">Specialization</div>
-            <div class="table-cell rt-skill-char">Char</div>
-            <div class="table-cell rt-skill-trained">Basic</div>
-            <div class="table-cell rt-skill-trained">Trained</div>
-            <div class="table-cell rt-skill-trained">+10</div>
-            <div class="table-cell rt-skill-trained">+20</div>
-            <div class="table-cell rt-skill-bonus">Bonus</div>
-            <div class="table-cell--last rt-skill-total">Total</div>
+            <div class="table-cell rt-skill-name">{{localize "RT.Skills.Specialization"}}</div>
+            <div class="table-cell rt-skill-char">{{localize "RT.Skills.Characteristic"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Basic"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Trained"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus10"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus20"}}</div>
+            <div class="table-cell rt-skill-bonus">{{localize "RT.Skills.Bonus"}}</div>
+            <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
         </div>
         {{#each skillLists.specialist as |entry|}}
             <div class="table-row--grouped rt-specialist-group">
@@ -17,8 +17,8 @@
                     <span class="rt-group-label">{{entry.[1].label}}</span>
                 </div>
                 <div class="table-cell--last rt-specialist-add">
-                    <button class="dh-settings__label--add add-skill rt-add-specialization" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
-                        <span class="material-icons">add_box</span> Add
+                    <button class="dh-settings__label--add add-skill rt-add-specialization" data-skill="{{entry.[0]}}" title="{{localize 'RT.Skills.AddSpecializationTitle' entry.[1].label}}">
+                        <span class="material-icons">add_box</span> {{localize "RT.Skills.AddSpecialization"}}
                     </button>
                 </div>
             </div>
@@ -26,8 +26,8 @@
                 {{#each entry.[1].entries as |speciality idx|}}
                     <div class="table-row actor-drag rt-specialist-row" data-item-type="skill" data-item-id="{{../entry.[0]}}" data-speciality="{{idx}}">
                         <div class="table-cell rt-skill-name rt-specialist-name">
-                            <input type="text" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.name" value="{{speciality.name}}" class="rt-specialization-input" placeholder="Enter specialization..." />
-                            <button class="roll-skill rt-skill-button" data-skill="{{../entry.[0]}}" data-specialty="{{idx}}" type="roll" title="Roll {{../entry.[1].label}}: {{speciality.name}}">
+                            <input type="text" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.name" value="{{speciality.name}}" class="rt-specialization-input" placeholder="{{localize 'RT.Skills.Specialization'}}..." />
+                            <button class="roll-skill rt-skill-button" data-skill="{{../entry.[0]}}" data-specialty="{{idx}}" type="roll" title="{{localize 'RT.Skills.RollSkillTitle' speciality.name}}">
                                 <span class="material-icons">casino</span>
                             </button>
                         </div>
@@ -37,16 +37,16 @@
                             </select>
                         </div>
                         <div class="table-cell rt-skill-training">
-                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.basic" data-dtype="Boolean" {{checked speciality.basic}} title="Basic" />
+                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.basic" data-dtype="Boolean" {{checked speciality.basic}} title="{{localize 'RT.Skills.Basic'}}" />
                         </div>
                         <div class="table-cell rt-skill-training">
-                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.trained" data-dtype="Boolean" {{checked speciality.trained}} title="Trained" />
+                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.trained" data-dtype="Boolean" {{checked speciality.trained}} title="{{localize 'RT.Skills.Trained'}}" />
                         </div>
                         <div class="table-cell rt-skill-training">
-                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus10" data-dtype="Boolean" {{checked speciality.plus10}} title="+10" />
+                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus10" data-dtype="Boolean" {{checked speciality.plus10}} title="{{localize 'RT.Skills.Plus10'}}" />
                         </div>
                         <div class="table-cell rt-skill-training">
-                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus20" data-dtype="Boolean" {{checked speciality.plus20}} title="+20" />
+                            <input type="checkbox" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus20" data-dtype="Boolean" {{checked speciality.plus20}} title="{{localize 'RT.Skills.Plus20'}}" />
                         </div>
                         <div class="table-cell rt-skill-bonus">
                             <input type="number" data-dtype="Number" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.bonus" value="{{speciality.bonus}}" class="rt-bonus-input" />
@@ -59,7 +59,7 @@
             {{else}}
                 <div class="table-row rt-no-specializations">
                     <div class="table-cell--grouped rt-empty-message">
-                        <span class="material-icons">info</span> Click "Add" to create a {{entry.[1].label}} specialization
+                        <span class="material-icons">info</span> {{localize "RT.Skills.NoSpecializations" entry.[1].label}}
                     </div>
                 </div>
             {{/if}}
