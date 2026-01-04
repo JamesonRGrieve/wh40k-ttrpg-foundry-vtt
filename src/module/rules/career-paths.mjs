@@ -1,10 +1,10 @@
-export function roles() {
+export function careerPaths() {
     return [
         {
             name: 'Assassin',
-            role_aptitudes: ['Agility', 'Ballistic Skill or Weapon Skill', 'Fieldcraft', 'Finesse', 'Perception'],
-            role_talents: ['Jaded', 'Leap Up'],
-            role_bonus: {
+            career_aptitudes: ['Agility', 'Ballistic Skill or Weapon Skill', 'Fieldcraft', 'Finesse', 'Perception'],
+            career_talents: ['Jaded', 'Leap Up'],
+            career_bonus: {
                 name: 'Sure Kill',
                 benefit:
                     'In addition to the normal uses of Fate points(pg 293), when an Assassin successfully hits with an attack, he may spend a Fate point to inflict additional damage equal to his degrees of success on the attack roll on the first hit the attack inflicts.',
@@ -13,9 +13,9 @@ export function roles() {
         },
         {
             name: 'Chirurgeon',
-            role_aptitudes: ['Fieldcraft', 'Intelligence', 'Knowledge', 'Strength', 'Toughness'],
-            role_talents: ['Resistance (Pick One)', 'Takedown'],
-            role_bonus: {
+            career_aptitudes: ['Fieldcraft', 'Intelligence', 'Knowledge', 'Strength', 'Toughness'],
+            career_talents: ['Resistance (Pick One)', 'Takedown'],
+            career_bonus: {
                 name: 'Dedicated Healer',
                 benefit:
                     'In addition to the normal uses of Fate points (pg 293), when a Chirurgeon character fails a test to provide First Aid, he can spend a Fate point to automatically succeed instead with the degrees of success equal to his Intelligence bonus.',
@@ -24,9 +24,9 @@ export function roles() {
         },
         {
             name: 'Desperado',
-            role_aptitudes: ['Agility', 'Ballistic Skill', 'Defense', 'Fellowship', 'Finesse'],
-            role_talents: ['Catfall', 'Quick Draw'],
-            role_bonus: {
+            career_aptitudes: ['Agility', 'Ballistic Skill', 'Defense', 'Fellowship', 'Finesse'],
+            career_talents: ['Catfall', 'Quick Draw'],
+            career_bonus: {
                 name: 'Move and Shoot',
                 benefit:
                     'Once per round, after performing Move action, a Desperado character may perform a single Standard Attack with a Pistol weapon he is currently wielding as a Free Action.',
@@ -35,9 +35,9 @@ export function roles() {
         },
         {
             name: 'Hierophant',
-            role_aptitudes: ['Fellowship', 'Offence', 'Social', 'Toughness', 'Willpower'],
-            role_talents: ['Double Team', 'Hatred (Pick One)'],
-            role_bonus: {
+            career_aptitudes: ['Fellowship', 'Offence', 'Social', 'Toughness', 'Willpower'],
+            career_talents: ['Double Team', 'Hatred (Pick One)'],
+            career_bonus: {
                 name: 'Sway the Masses',
                 benefit:
                     'In addition to the normal uses of Fate points (pg 293), a Hierophant character may spend a Fate point to automatically succeed at a Charm, Command, or Intimidate skill test with a number of degrees of success equal to his Willpower bonus.',
@@ -46,9 +46,9 @@ export function roles() {
         },
         {
             name: 'Mystic',
-            role_aptitudes: ['Defense', 'Intelligence', 'Knowledge', 'Perception', 'Willpower'],
-            role_talents: ['Resistance (Psychic Powers)', 'Warp Sense'],
-            role_bonus: {
+            career_aptitudes: ['Defense', 'Intelligence', 'Knowledge', 'Perception', 'Willpower'],
+            career_talents: ['Resistance (Psychic Powers)', 'Warp Sense'],
+            career_bonus: {
                 name: 'Stare into the Warp',
                 benefit:
                     'A Mystic character starts the game with the Psyker elite advance (pg 90). It is recommended that a character who wishes to be a Mystic have a Willpower of at least 35.',
@@ -57,9 +57,9 @@ export function roles() {
         },
         {
             name: 'Sage',
-            role_aptitudes: ['Intelligence', 'Knowledge', 'Perception', 'Tech', 'Willpower'],
-            role_talents: ['Ambidextrous', 'Clues from the Crowds'],
-            role_bonus: {
+            career_aptitudes: ['Intelligence', 'Knowledge', 'Perception', 'Tech', 'Willpower'],
+            career_talents: ['Ambidextrous', 'Clues from the Crowds'],
+            career_bonus: {
                 name: 'Quest for Knowledge',
                 benefit:
                     'In addition to the normal uses of Fate points (pg 293), a Sage character may spend a Fate point to automatically succeed at a Logic or any Lore skill test with a number of degrees of success equal to his Intelligence bonus.',
@@ -68,9 +68,9 @@ export function roles() {
         },
         {
             name: 'Seeker',
-            role_aptitudes: ['Fellowship', 'Intelligence', 'Perception', 'Social', 'Tech'],
-            role_talents: ['Keen Intuition', 'Disarm'],
-            role_bonus: {
+            career_aptitudes: ['Fellowship', 'Intelligence', 'Perception', 'Social', 'Tech'],
+            career_talents: ['Keen Intuition', 'Disarm'],
+            career_bonus: {
                 name: 'Nothing Escapes My Sight',
                 benefit:
                     'In addition to the normal uses of Fate points (pg 293), a Seeker character may spend a Fate point to automatically succeed at an Awareness or Inquiry skill test with a number of degrees of success equal to his Perception bonus.',
@@ -79,9 +79,9 @@ export function roles() {
         },
         {
             name: 'Warrior',
-            role_aptitudes: ['Ballistic Skill', 'Defense', 'Offence', 'Strength', 'Weapon Skill'],
-            role_talents: ['Iron Jaw', 'Rapid Reload'],
-            role_bonus: {
+            career_aptitudes: ['Ballistic Skill', 'Defense', 'Offence', 'Strength', 'Weapon Skill'],
+            career_talents: ['Iron Jaw', 'Rapid Reload'],
+            career_bonus: {
                 name: 'Expert at Violence',
                 benefit:
                     'In addition to the normal uses of Fate points (pg 293), after making a successful attack test, but before determining hits, a Warrior character may spend a Fate point to substitute his Weapon Skill (for melee) or Ballistic Skill (for ranged) bonus for the degrees of success scored on the attack test.',
@@ -90,9 +90,9 @@ export function roles() {
         },
         {
             name: 'Fanatic',
-            role_aptitudes: ['Leadership', 'Offence', 'Toughness', 'Weapon Skill', 'Willpower'],
-            role_talents: ['Deny the Witch', 'Jaded'],
-            role_bonus: {
+            career_aptitudes: ['Leadership', 'Offence', 'Toughness', 'Weapon Skill', 'Willpower'],
+            career_talents: ['Deny the Witch', 'Jaded'],
+            career_bonus: {
                 name: 'Death to All Who Oppose Me!',
                 benefit:
                     'In addition to the normal uses of Fate points, a Fanatic character may spend a Fate point to count as having the Hatred talent against his current foe for the duration of the encounter. Should he choose to leave combat against a Hated foe in that encounter, however, he gains 1 Insanity point.',
@@ -101,9 +101,9 @@ export function roles() {
         },
         {
             name: 'Penitent',
-            role_aptitudes: ['Agility', 'Fieldcraft', 'Intelligence', 'Offence', 'Toughness'],
-            role_talents: ['Die Hard', 'Flagellant'],
-            role_bonus: {
+            career_aptitudes: ['Agility', 'Fieldcraft', 'Intelligence', 'Offence', 'Toughness'],
+            career_talents: ['Die Hard', 'Flagellant'],
+            career_bonus: {
                 name: 'Cleansing Pain',
                 benefit:
                     'Whenever a Penitent character suffers 1 or more points of damage (after reductions for Toughness bonus and Armour), he gains a +10 bonus to the first test he makes before the end of his next turn.',
@@ -112,9 +112,9 @@ export function roles() {
         },
         {
             name: 'Ace',
-            role_aptitudes: ['Agility', 'Finesse', 'Perception', 'Tech', 'Willpower'],
-            role_talents: ['Hard Target', 'Hotshot Pilot'],
-            role_bonus: {
+            career_aptitudes: ['Agility', 'Finesse', 'Perception', 'Tech', 'Willpower'],
+            career_talents: ['Hard Target', 'Hotshot Pilot'],
+            career_bonus: {
                 name: 'Right Stuff',
                 benefit:
                     'In addition to the normal uses of Fate points , an Ace character may spend a Fate point to automatically succeed at an Operate or Survival skill test involving vehicles or living steeds with a number of degrees of success equal to his Agility bonus.',
@@ -123,9 +123,9 @@ export function roles() {
         },
         {
             name: 'Crusader',
-            role_aptitudes: ['Knowledge', 'Offence', 'Strength', 'Toughness', 'Willpower'],
-            role_talents: ['Bodyguard', 'Deny the Witch'],
-            role_bonus: {
+            career_aptitudes: ['Knowledge', 'Offence', 'Strength', 'Toughness', 'Willpower'],
+            career_talents: ['Bodyguard', 'Deny the Witch'],
+            career_bonus: {
                 name: 'Smite the Unholy',
                 benefit:
                     'In addition to the normal uses of Fate Points (see pg 293CB), a Crusader character can also spend a Fate Point to automatically pass a Fear test with a number of degrees of success equal to his Willpower bonus. In addition, whenever he inflicts a hit with a melee attack against a target with the Fear (X) trait, he inflicts X additional damage and counts his weapons penetration as being X higher.',
@@ -135,6 +135,6 @@ export function roles() {
     ];
 }
 
-export function roleNames() {
-    return roles().map((r) => r.name);
+export function careerPathNames() {
+    return careerPaths().map((r) => r.name);
 }
