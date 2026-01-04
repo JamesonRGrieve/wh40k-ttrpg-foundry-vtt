@@ -92,7 +92,11 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         this.system.backgroundEffects = {
             abilities: [],
         };
+        // Initialize modifier tracking
+        this._initializeModifierTracking();
         this._computeOriginPathEffects();
+        // Apply modifiers from ALL item types (talents, traits, conditions, equipment)
+        this._computeItemModifiers();
         this._computeCharacteristics();
         this._computeSkills();
         this._computeExperience();
@@ -100,6 +104,186 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         this._computeMovement();
         this._computeEncumbrance();
         await super.prepareData();
+    }
+
+    /**
+     * Initialize tracking objects for modifiers from various sources.
+     * This allows displaying breakdowns of where bonuses come from.
+     */
+    _initializeModifierTracking() {
+        this.system.modifierSources = {
+            characteristics: {},
+            skills: {},
+            combat: {
+                toHit: [],
+                damage: [],
+                initiative: [],
+                defence: []
+            },
+            wounds: [],
+            fate: [],
+            movement: []
+        };
+    }
+
+    /**
+     * Compute modifiers from ALL item types - talents, traits, conditions, equipment.
+     * This provides universal dynamic stat injection across the board.
+     */
+    _computeItemModifiers() {
+        // Process each item type that can have modifiers
+        const modifierItems = this.items.filter(item => 
+            item.isTalent || 
+            item.isTrait || 
+            item.isCondition ||
+            (item.type === 'armour' && item.system.equipped) ||
+            (item.type === 'cybernetic' && item.system.equipped) ||
+            (item.type === 'gear' && item.system.equipped)
+        );
+
+        for (const item of modifierItems) {
+            this._applyItemModifiers(item);
+        }
+    }
+
+    /**
+     * Apply modifiers from a single item to the character.
+     * @param {Item} item - The item to process modifiers from
+     */
+    _applyItemModifiers(item) {
+        const mods = item.system?.modifiers;
+        if (!mods) return;
+
+        const source = {
+            name: item.name,
+            type: item.type,
+            id: item.id
+        };
+
+        // Characteristic modifiers
+        if (mods.characteristics) {
+            for (const [charKey, value] of Object.entries(mods.characteristics)) {
+                if (value && typeof value === 'number') {
+                    if (!this.system.modifierSources.characteristics[charKey]) {
+                        this.system.modifierSources.characteristics[charKey] = [];
+                    }
+                    this.system.modifierSources.characteristics[charKey].push({
+                        ...source,
+                        value: value
+                    });
+                }
+            }
+        }
+
+        // Skill modifiers
+        if (mods.skills) {
+            for (const [skillKey, value] of Object.entries(mods.skills)) {
+                if (value && typeof value === 'number') {
+                    if (!this.system.modifierSources.skills[skillKey]) {
+                        this.system.modifierSources.skills[skillKey] = [];
+                    }
+                    this.system.modifierSources.skills[skillKey].push({
+                        ...source,
+                        value: value
+                    });
+                }
+            }
+        }
+
+        // Combat modifiers
+        if (mods.combat) {
+            for (const [combatKey, value] of Object.entries(mods.combat)) {
+                if (value && typeof value === 'number' && this.system.modifierSources.combat[combatKey]) {
+                    this.system.modifierSources.combat[combatKey].push({
+                        ...source,
+                        value: value
+                    });
+                }
+            }
+        }
+
+        // Wounds modifier
+        if (mods.wounds && typeof mods.wounds === 'number') {
+            this.system.modifierSources.wounds.push({
+                ...source,
+                value: mods.wounds
+            });
+        }
+
+        // Fate modifier
+        if (mods.fate && typeof mods.fate === 'number') {
+            this.system.modifierSources.fate.push({
+                ...source,
+                value: mods.fate
+            });
+        }
+
+        // Movement modifier
+        if (mods.movement && typeof mods.movement === 'number') {
+            this.system.modifierSources.movement.push({
+                ...source,
+                value: mods.movement
+            });
+        }
+    }
+
+    /**
+     * Get the total modifier for a characteristic from all sources.
+     * @param {string} charKey - The characteristic key
+     * @returns {number} The total modifier
+     */
+    getTotalCharacteristicModifier(charKey) {
+        const sources = this.system.modifierSources?.characteristics?.[charKey] || [];
+        return sources.reduce((total, src) => total + (src.value || 0), 0);
+    }
+
+    /**
+     * Get the total modifier for a skill from all sources.
+     * @param {string} skillKey - The skill key
+     * @returns {number} The total modifier
+     */
+    getTotalSkillModifier(skillKey) {
+        const sources = this.system.modifierSources?.skills?.[skillKey] || [];
+        return sources.reduce((total, src) => total + (src.value || 0), 0);
+    }
+
+    /**
+     * Get the total modifier for a combat stat from all sources.
+     * @param {string} combatKey - The combat stat key (toHit, damage, initiative, defence)
+     * @returns {number} The total modifier
+     */
+    getTotalCombatModifier(combatKey) {
+        const sources = this.system.modifierSources?.combat?.[combatKey] || [];
+        return sources.reduce((total, src) => total + (src.value || 0), 0);
+    }
+
+    /**
+     * Get total wounds modifier from all sources (items + origin path).
+     * @returns {number} The total wounds modifier
+     */
+    getTotalWoundsModifier() {
+        const itemSources = this.system.modifierSources?.wounds || [];
+        const itemTotal = itemSources.reduce((total, src) => total + (src.value || 0), 0);
+        return itemTotal + this._getOriginPathWoundsModifier();
+    }
+
+    /**
+     * Get total fate modifier from all sources (items + origin path).
+     * @returns {number} The total fate modifier
+     */
+    getTotalFateModifier() {
+        const itemSources = this.system.modifierSources?.fate || [];
+        const itemTotal = itemSources.reduce((total, src) => total + (src.value || 0), 0);
+        return itemTotal + this._getOriginPathFateModifier();
+    }
+
+    /**
+     * Get total movement modifier from all sources.
+     * @returns {number} The total movement modifier
+     */
+    getTotalMovementModifier() {
+        const sources = this.system.modifierSources?.movement || [];
+        return sources.reduce((total, src) => total + (src.value || 0), 0);
     }
 
     async rollWeaponDamage(weapon) {
@@ -328,10 +512,14 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
             // Get origin path modifier for this characteristic
             const originPathMod = this._getOriginPathCharacteristicModifier(name);
+            // Get item modifiers (talents, traits, conditions, equipment)
+            const itemMod = this.getTotalCharacteristicModifier(name);
             
-            // Calculate total: base + advances + manual modifier + origin path modifier
+            // Calculate total: base + advances + manual modifier + origin path modifier + item modifiers
             characteristic.originPathModifier = originPathMod;
-            characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier + originPathMod;
+            characteristic.itemModifier = itemMod;
+            characteristic.totalModifier = originPathMod + itemMod;
+            characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier + originPathMod + itemMod;
             characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
 
             if (this.fatigue.value > characteristic.bonus) {
@@ -343,12 +531,25 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         this.system.insanityBonus = Math.floor(this.insanity / 10);
         this.system.corruptionBonus = Math.floor(this.corruption / 10);
         this.psy.currentRating = this.psy.rating - this.psy.sustained;
-        this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
+        
+        // Apply initiative modifier from items
+        const initMod = this.getTotalCombatModifier('initiative');
+        this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus + initMod;
+        this.initiative.itemModifier = initMod;
+        
         this.fatigue.max = this.characteristics.toughness.bonus + this.characteristics.willpower.bonus;
         
-        // Apply origin path wounds and fate modifiers
-        this.system.originPathWoundsModifier = this._getOriginPathWoundsModifier();
-        this.system.originPathFateModifier = this._getOriginPathFateModifier();
+        // Apply total wounds and fate modifiers from all sources
+        this.system.totalWoundsModifier = this.getTotalWoundsModifier();
+        this.system.totalFateModifier = this.getTotalFateModifier();
+        
+        // Store combat modifiers for display
+        this.system.combatModifiers = {
+            toHit: this.getTotalCombatModifier('toHit'),
+            damage: this.getTotalCombatModifier('damage'),
+            initiative: initMod,
+            defence: this.getTotalCombatModifier('defence')
+        };
     }
 
     _computeSkills() {
@@ -365,18 +566,21 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             return characteristic?.total ?? 0;
         };
 
-        for (let skill of Object.values(this.skills)) {
+        for (let [skillKey, skill] of Object.entries(this.skills)) {
             const baseCharacteristic = skill.characteristic;
             const baseTotal = characteristicTotal(baseCharacteristic);
             const bonus = Number(skill.bonus ?? 0);
-            skill.current = baseTotal + trainingValue(skill) + bonus;
+            // Get item modifiers for this skill
+            const itemMod = this.getTotalSkillModifier(skillKey);
+            skill.itemModifier = itemMod;
+            skill.current = baseTotal + trainingValue(skill) + bonus + itemMod;
 
             if (Array.isArray(skill.entries)) {
                 for (let speciality of skill.entries) {
                     if (!speciality.characteristic) speciality.characteristic = baseCharacteristic;
                     const specialityCharacteristic = speciality.characteristic || baseCharacteristic;
                     const specialityBonus = Number(speciality.bonus ?? 0);
-                    speciality.current = characteristicTotal(specialityCharacteristic) + trainingValue(speciality) + specialityBonus;
+                    speciality.current = characteristicTotal(specialityCharacteristic) + trainingValue(speciality) + specialityBonus + itemMod;
                 }
             }
         }

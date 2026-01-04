@@ -373,16 +373,200 @@ export class RogueTraderItem extends RogueTraderItemContainer {
     async performAction() {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
-            return this.actor?.rollWeaponAction(this);
+            return this.actor?.rollWeaponAction?.(this) || this.sendToChat();
         } else if (this.isPsychicPower) {
             // Psychic power - handled by the actor sheet  
-            return this.actor?.rollPsychicPower(this);
+            return this.actor?.rollPsychicPower?.(this) || this.sendToChat();
         } else if (this.isNavigatorPower) {
-            // Navigator power - send to chat
-            return this.sendToChat();
+            // Navigator power - roll navigator power
+            return this.rollNavigatorPower();
+        } else if (this.isTalent && this.system?.isRollable) {
+            // Rollable talent
+            return this.rollTalent();
+        } else if (this.isOrder) {
+            // Ship order - roll order
+            return this.rollOrder();
+        } else if (this.isRitual) {
+            // Ritual - roll ritual
+            return this.rollRitual();
         } else {
             // Default - send to chat
             return this.sendToChat();
         }
+    }
+
+    /**
+     * Roll a talent that has a rollable action
+     */
+    async rollTalent() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        const rollConfig = this.system?.rollConfig;
+        if (!rollConfig?.characteristic) {
+            return this.sendToChat();
+        }
+
+        // Get the characteristic value
+        const charKey = rollConfig.characteristic.toLowerCase();
+        const characteristic = this.actor.characteristics?.[charKey];
+        if (!characteristic) {
+            return this.sendToChat();
+        }
+
+        const targetValue = characteristic.total + (rollConfig.modifier || 0);
+        
+        // Create the roll
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: this.itemTypeLabel,
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            characteristic: characteristic,
+            charKey: charKey,
+            actor: this.actor.name,
+            rollDescription: rollConfig.description || ''
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/talent-roll-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
+    }
+
+    /**
+     * Roll a navigator power
+     */
+    async rollNavigatorPower() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        // Navigator powers typically use Perception or Willpower
+        const perception = this.actor.characteristics?.perception;
+        const willpower = this.actor.characteristics?.willpower;
+        
+        // Use the higher of the two as base, modified by Navigator Rank
+        const navigatorRank = this.actor.system?.navigatorRank || 0;
+        const baseChar = perception?.total > willpower?.total ? perception : willpower;
+        const targetValue = (baseChar?.total || 30) + (navigatorRank * 5);
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: 'Navigator Power',
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor.name
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/navigator-power-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
+    }
+
+    /**
+     * Roll a ship order
+     */
+    async rollOrder() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        // Orders typically use Command or relevant skill
+        const command = this.actor.skills?.command;
+        const targetValue = command?.current || 50;
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: 'Ship Order',
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor.name
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/order-roll-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
+    }
+
+    /**
+     * Roll a ritual
+     */
+    async rollRitual() {
+        if (!this.actor) {
+            return this.sendToChat();
+        }
+
+        // Rituals typically use Willpower
+        const willpower = this.actor.characteristics?.willpower;
+        const targetValue = willpower?.total || 30;
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        
+        const success = roll.total <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: 'Ritual',
+            roll: roll,
+            targetValue: targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor.name
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/ritual-roll-chat.hbs', cardData);
+        
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
+            roll: roll
+        });
     }
 }
