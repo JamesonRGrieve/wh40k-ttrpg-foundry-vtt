@@ -1,1853 +1,2096 @@
 {
-    "Actor": {
-        "types": ["acolyte", "npc", "vehicle", "character"],
-        "templates": {
-            "base": {
-                "wounds": {
-                    "max": 0,
-                    "value": 0,
-                    "critical": 0,
-                    "rolled": false
-                },
-                "initiative": {
-                    "characteristic": "agility",
-                    "base": "1d10"
-                },
-                "size": 4,
-                "characteristics": {
-                    "weaponSkill": {
-                        "label": "Weapon Skill",
-                        "short": "WS",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "ballisticSkill": {
-                        "label": "Ballistic Skill",
-                        "short": "BS",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "strength": {
-                        "label": "Strength",
-                        "short": "S",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "toughness": {
-                        "label": "Toughness",
-                        "short": "T",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "agility": {
-                        "label": "Agility",
-                        "short": "Ag",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "intelligence": {
-                        "label": "Intelligence",
-                        "short": "Int",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "perception": {
-                        "label": "Perception",
-                        "short": "Per",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "willpower": {
-                        "label": "Willpower",
-                        "short": "WP",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "fellowship": {
-                        "label": "Fellowship",
-                        "short": "Fel",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    },
-                    "influence": {
-                        "label": "Influence",
-                        "short": "Inf",
-                        "base": 0,
-                        "advance": 0,
-                        "modifier": 0,
-                        "unnatural": 0,
-                        "cost": 0
-                    }
-                }
-            },
-            "rogueTraderCharacter": {
-                "bio": {
-                    "playerName": "",
-                    "careerPath": "",
-                    "rank": "",
-                    "homeWorld": "",
-                    "motivation": "",
-                    "description": ""
-                },
-                "wounds": {
-                    "max": 0,
-                    "value": 0
-                },
-                "size": 4,
-                "fate": {
-                    "max": 0,
-                    "value": 0
-                },
-                "fatigue": {
-                    "max": 0,
-                    "value": 0,
-                    "penaltyActive": false,
-                    "penalty": 0
-                },
-                "characteristics": {
-                    "weaponSkill": {
-                        "label": "Weapon Skill",
-                        "short": "WS",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "ballisticSkill": {
-                        "label": "Ballistic Skill",
-                        "short": "BS",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "strength": {
-                        "label": "Strength",
-                        "short": "S",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "toughness": {
-                        "label": "Toughness",
-                        "short": "T",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "agility": {
-                        "label": "Agility",
-                        "short": "Ag",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "intelligence": {
-                        "label": "Intelligence",
-                        "short": "Int",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "perception": {
-                        "label": "Perception",
-                        "short": "Per",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "willpower": {
-                        "label": "Willpower",
-                        "short": "WP",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    },
-                    "fellowship": {
-                        "label": "Fellowship",
-                        "short": "Fel",
-                        "starting": 0,
-                        "advances": 0,
-                        "modifier": 0,
-                        "total": 0,
-                        "bonus": 0
-                    }
-                },
-                "skills": {
-                    "awareness": {
-                        "label": "Awareness",
-                        "characteristic": "perception",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "acrobatics": {
-                        "label": "Acrobatics",
-                        "characteristic": "agility",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "barter": {
-                        "label": "Barter",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "blather": {
-                        "label": "Blather",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "carouse": {
-                        "label": "Carouse",
-                        "characteristic": "toughness",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "charm": {
-                        "label": "Charm",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "chemUse": {
-                        "label": "Chem-Use",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "ciphers": {
-                        "label": "Ciphers",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "climb": {
-                        "label": "Climb",
-                        "characteristic": "strength",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "commonLore": {
-                        "label": "Common Lore",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "command": {
-                        "label": "Command",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "commerce": {
-                        "label": "Commerce",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "concealment": {
-                        "label": "Concealment",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "contortionist": {
-                        "label": "Contortionist",
-                        "characteristic": "agility",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "deceive": {
-                        "label": "Deceive",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "demolition": {
-                        "label": "Demolition",
-                        "characteristic": "intelligence",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "disguise": {
-                        "label": "Disguise",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "dodge": {
-                        "label": "Dodge",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "drive": {
-                        "label": "Drive",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "evaluate": {
-                        "label": "Evaluate",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "forbiddenLore": {
-                        "label": "Forbidden Lore",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "gamble": {
-                        "label": "Gamble",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "intimidate": {
-                        "label": "Intimidate",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "inquiry": {
-                        "label": "Inquiry",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "interrogation": {
-                        "label": "Interrogation",
-                        "characteristic": "willpower",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "invocation": {
-                        "label": "Invocation",
-                        "characteristic": "willpower",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "literacy": {
-                        "label": "Literacy",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "logic": {
-                        "label": "Logic",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "medicae": {
-                        "label": "Medicae",
-                        "characteristic": "intelligence",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "navigation": {
-                        "label": "Navigation",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "parry": {
-                        "label": "Parry",
-                        "characteristic": "weaponSkill",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "search": {
-                        "label": "Search",
-                        "characteristic": "perception",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "performer": {
-                        "label": "Performer",
-                        "characteristic": "fellowship",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "pilot": {
-                        "label": "Pilot",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "psyniscience": {
-                        "label": "Psyniscience",
-                        "characteristic": "perception",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "scrutiny": {
-                        "label": "Scrutiny",
-                        "characteristic": "perception",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "security": {
-                        "label": "Security",
-                        "characteristic": "agility",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "shadowing": {
-                        "label": "Shadowing",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "silentMove": {
-                        "label": "Silent Move",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "sleightOfHand": {
-                        "label": "Sleight of Hand",
-                        "characteristic": "agility",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "speakLanguage": {
-                        "label": "Speak Language",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "scholasticLore": {
-                        "label": "Scholastic Lore",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "secretTongue": {
-                        "label": "Secret Tongue",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "stealth": {
-                        "label": "Stealth",
-                        "characteristic": "agility",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "survival": {
-                        "label": "Survival",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "swim": {
-                        "label": "Swim",
-                        "characteristic": "strength",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "trade": {
-                        "label": "Trade",
-                        "characteristic": "intelligence",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "tracking": {
-                        "label": "Tracking",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "techUse": {
-                        "label": "Tech-Use",
-                        "characteristic": "intelligence",
-                        "advanced": true,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    },
-                    "wrangling": {
-                        "label": "Wrangling",
-                        "characteristic": "intelligence",
-                        "advanced": false,
-                        "trained": false,
-                        "rank10": false,
-                        "rank20": false,
-                        "talentBonus": 0,
-                        "otherBonus": 0,
-                        "target": 0
-                    }
-                },
-                "notes": {
-                    "talentsTraits": "",
-                    "specialAbilities": "",
-                    "psychic": ""
-                }
-            },
-            "creature": {
-                "fatigue": {
-                    "max": 0,
-                    "value": 0
-                },
-                "fate": {
-                    "max": 0,
-                    "value": 0,
-                    "rolled": false
-                },
-                "psy": {
-                    "rating": 0,
-                    "sustained": 0,
-                    "defaultPR": 0,
-                    "class": "bound",
-                    "cost": 0,
-                    "hasFocus": false
-                },
-                "backpack": {
-                    "hasBackpack": false,
-                    "name": "Backpack",
-                    "isCombatVest": false,
-                    "weight": {
-                        "max": 30
-                    }
-                },
-                "skills": {
-                    "acrobatics": {
-                        "label": "Acrobatics",
-                        "characteristics": ["Ag", "S"],
-                        "selectedCharacteristic": "",
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Ag"
-                    },
-                    "athletics": {
-                        "label": "Athletics",
-                        "characteristics": ["S", "T"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "S"
-                    },
-                    "awareness": {
-                        "label": "Awareness",
-                        "characteristics": ["Per", "Fel", "Int"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Per"
-                    },
-                    "charm": {
-                        "label": "Charm",
-                        "characteristics": ["Fel", "Inf"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Fel"
-                    },
-                    "command": {
-                        "label": "Command",
-                        "characteristics": ["Fel", "Int", "S", "WP"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Fel"
-                    },
-                    "commerce": {
-                        "label": "Commerce",
-                        "characteristics": ["Int", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Int"
-                    },
-                    "commonLore": {
-                        "label": "Common Lore",
-                        "characteristics": ["Int", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "adeptaSororitas": {
-                                "label": "Adepta Sororitas",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "adeptusArbites": {
-                                "label": "Adeptus Arbites",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "adeptusAstartes": {
-                                "label": "Adeptus Astartes",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "adeptusAstraTelepathica": {
-                                "label": "Adeptus Astra Telepathica",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "adeptusMechanicus": {
-                                "label": "Adeptus Mechanicus",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "administratum": {
-                                "label": "Administratum",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "askellonSector": {
-                                "label": "Askellon Sector",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "chartistCaptains": {
-                                "label": "Chartist Captains",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "collegiaTitanicu": {
-                                "label": "Collegia Titanicu",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "ecclesiarchy": {
-                                "label": "Ecclesiarchy",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "imperialCreed": {
-                                "label": "Imperial Creed",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "imperialGuard": {
-                                "label": "Imperial Guard",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "imperialNavy": {
-                                "label": "Imperial Navy",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "imperium": {
-                                "label": "Imperium",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "navigators": {
-                                "label": "Navigators",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "planetaryDefenceForces": {
-                                "label": "Planetary Defence Forces",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "rogueTraders": {
-                                "label": "Rogue Traders",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "scholaProgenium": {
-                                "label": "Schola Progenium",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "tech": {
-                                "label": "Tech",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "underworld": {
-                                "label": "Underworld",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "war": {
-                                "label": "War",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Int"
-                    },
-                    "deceive": {
-                        "label": "Deceive",
-                        "characteristics": ["Fel", "Int"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Fel"
-                    },
-                    "dodge": {
-                        "label": "Dodge",
-                        "characteristics": ["Ag"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Ag"
-                    },
-                    "forbiddenLore": {
-                        "label": "Forbidden Lore",
-                        "characteristics": ["Int", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "archaeotech": {
-                                "label": "Archaeotech",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "chaosSpaceMarines": {
-                                "label": "Chaos Space Marines",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "criminalCartelsAndSmugglers": {
-                                "label": "Criminal Cartels and Smugglers",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "daemonology": {
-                                "label": "Daemonology",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "heresy": {
-                                "label": "Heresy",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "theHorusHeresyAndTheLongWar": {
-                                "label": "The Horus Heresy and the Long War",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "inquisition": {
-                                "label": "Inquisition",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "mutants": {
-                                "label": "Mutants",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "officioAssassinorum": {
-                                "label": "Officio Assassinorum",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "pirates": {
-                                "label": "Pirates",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "psykers": {
-                                "label": "Psykers",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "theWarp": {
-                                "label": "The Warp",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "xenos": {
-                                "label": "Xenos",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Int"
-                    },
-                    "inquiry": {
-                        "label": "Inquiry",
-                        "characteristics": ["Fel", "Int", "Per"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Fel"
-                    },
-                    "interrogation": {
-                        "label": "Interrogation",
-                        "characteristics": ["WP", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "WP"
-                    },
-                    "intimidate": {
-                        "label": "Intimidate",
-                        "characteristics": ["S", "WP"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "S"
-                    },
-                    "linguistics": {
-                        "label": "Linguistics",
-                        "characteristics": ["Int", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "chapterRunes": {
-                                "label": "Chapter Runes",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "chaosMarks": {
-                                "label": "Chaos Marks",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "eldar": {
-                                "label": "Eldar",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "highGothic": {
-                                "label": "High Gothic",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "imperialCodes": {
-                                "label": "Imperial Codes",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "lowGothic": {
-                                "label": "Low Gothic",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "mercenary": {
-                                "label": "Mercenary",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "necrontyr": {
-                                "label": "Necrontyr",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "ork": {
-                                "label": "Ork",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "technaLingua": {
-                                "label": "Techna-Lingua",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "tau": {
-                                "label": "Tau",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "underworld": {
-                                "label": "Underworld",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "xenosMarkings": {
-                                "label": "Xenos Markings",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Int"
-                    },
-                    "logic": {
-                        "label": "Logic",
-                        "characteristics": ["Int", "Ag"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Int"
-                    },
-                    "medicae": {
-                        "label": "Medicae",
-                        "characteristics": ["Int", "Ag", "Per"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Int"
-                    },
-                    "navigate": {
-                        "label": "Navigate",
-                        "characteristics": ["Int", "Per"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "surface": {
-                                "label": "Surface",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "stellar": {
-                                "label": "Stellar",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "warp": {
-                                "label": "Warp",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Int"
-                    },
-                    "operate": {
-                        "label": "Operate",
-                        "characteristics": ["Ag", "Int"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "surface": {
-                                "label": "Surface",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "aeronautica": {
-                                "label": "Aeronautica",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "voidship": {
-                                "label": "Voidship",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Ag"
-                    },
-                    "parry": {
-                        "label": "Parry",
-                        "characteristics": ["WS"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "WS"
-                    },
-                    "psyniscience": {
-                        "label": "Psyniscience",
-                        "characteristics": ["Per", "WP"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Per"
-                    },
-                    "scholasticLore": {
-                        "label": "Scholastic Lore",
-                        "characteristics": ["Int", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "astromancy": {
-                                "label": "Astromancy",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "beasts": {
-                                "label": "Beasts",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "bureaucracy": {
-                                "label": "Bureaucracy",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "chymistry": {
-                                "label": "Chymistry",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "cryptology": {
-                                "label": "Cryptology",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "heraldry": {
-                                "label": "Heraldry",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "imperialWarrants": {
-                                "label": "Imperial Warrants",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "judgement": {
-                                "label": "Judgement",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "legend": {
-                                "label": "Legend",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "numerology": {
-                                "label": "Numerology",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "occult": {
-                                "label": "Occult",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "philosophy": {
-                                "label": "Philosophy",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "tacticaImperialis": {
-                                "label": "Tactica Imperialis",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Int"
-                    },
-                    "scrutiny": {
-                        "label": "Scrutiny",
-                        "characteristics": ["Per", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Per"
-                    },
-                    "security": {
-                        "label": "Security",
-                        "characteristics": ["Int", "Ag"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Int"
-                    },
-                    "sleightOfHand": {
-                        "label": "Sleight of Hand",
-                        "characteristics": ["Ag", "Int"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Ag"
-                    },
-                    "stealth": {
-                        "label": "Stealth",
-                        "characteristics": ["Ag", "Per"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Ag"
-                    },
-                    "survival": {
-                        "label": "Survival",
-                        "characteristics": ["Per", "Ag", "Int"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Per"
-                    },
-                    "techUse": {
-                        "label": "Tech Use",
-                        "characteristics": ["Int", "Ag"],
-                        "advance": 0,
-                        "isSpecialist": false,
-                        "specialities": {},
-                        "cost": 0,
-                        "characteristic": "Int"
-                    },
-                    "trade": {
-                        "label": "Trade",
-                        "characteristics": ["Int", "Ag", "Fel"],
-                        "advance": 0,
-                        "isSpecialist": true,
-                        "specialities": {
-                            "agri": {
-                                "label": "Agri",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "archaeologist": {
-                                "label": "Archaeologist",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "armourer": {
-                                "label": "Armourer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "astrographer": {
-                                "label": "Astrographer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "chymist": {
-                                "label": "Chymist",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "cryptographer": {
-                                "label": "Cryptographer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "cook": {
-                                "label": "Cook",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "explorator": {
-                                "label": "Explorator",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "linguist": {
-                                "label": "Linguist",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "loremancer": {
-                                "label": "Loremancer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "morticator": {
-                                "label": "Morticator",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "performancer": {
-                                "label": "Performancer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "prospector": {
-                                "label": "Prospector",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "scrimshawer": {
-                                "label": "Scrimshawer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "sculptor": {
-                                "label": "Sculptor",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "shipwright": {
-                                "label": "Shipwright",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "soothsayer": {
-                                "label": "Soothsayer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "technomat": {
-                                "label": "Technomat",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            },
-                            "voidfarer": {
-                                "label": "Voidfarer",
-                                "advance": 0,
-                                "cost": 0,
-                                "taken": false
-                            }
-                        },
-                        "characteristic": "Int"
-                    }
-                }
-            },
-            "npc": {
-                "faction": "",
-                "subfaction": "",
-                "type": "troop",
-                "threatLevel": 0
-            },
-            "vehicle": {
-                "front": "",
-                "side": "",
-                "rear": "",
-                "availability": "",
-                "speed": {
-                    "cruising": 0,
-                    "tactical": 0
-                },
-                "crew": "",
-                "manoeuverability": 0,
-                "carryingCapacity": 0,
-                "integrity": {
-                    "max": 0,
-                    "value": 0,
-                    "critical": 0
-                }
-            }
+  "Actor": {
+    "types": [
+      "acolyte",
+      "npc",
+      "vehicle"
+    ],
+    "templates": {
+      "base": {
+        "wounds": {
+          "max": 0,
+          "value": 0,
+          "critical": 0,
+          "rolled": false
         },
-        "acolyte": {
-            "templates": ["base", "creature"],
-            "bio": {
-                "homeWorld": "",
-                "background": "",
-                "role": "",
-                "elite": "",
-                "divination": "",
-                "gender": "",
-                "age": "",
-                "build": "",
-                "complexion": "",
-                "hair": "",
-                "quirks": "",
-                "superstition": "",
-                "mementos": "",
-                "notes": ""
-            },
-            "experience": {
-                "used": 0,
-                "total": 0
-            },
-            "insanity": 0,
-            "corruption": 0,
-            "aptitudes": {},
-            "backgroundEffects": {
-                "abilities": []
-            }
+        "initiative": {
+          "characteristic": "agility",
+          "base": "1d10"
         },
-        "character": {
-            "templates": ["rogueTraderCharacter"]
-        },
-        "npc": {
-            "templates": ["base", "creature", "npc"]
-        },
-        "xenos": {
-            "templates": ["base", "creature", "npc"],
-            "species": ""
-        },
-        "vehicle": {
-            "templates": ["base", "vehicle", "npc"]
-        }
-    },
-    "Item": {
-        "types": [
-            "ammunition",
-            "aptitude",
-            "armour",
-            "armourModification",
-            "attackSpecial",
-            "backpack",
-            "consumable",
-            "criticalInjury",
-            "cybernetic",
-            "drug",
-            "enemy",
-            "forceField",
-            "gear",
-            "journalEntry",
-            "malignancy",
-            "mentalDisorder",
-            "mutation",
-            "peer",
-            "psychicPower",
-            "specialAbility",
-            "storageLocation",
-            "talent",
-            "tool",
-            "trait",
-            "weapon",
-            "weaponModification"
-        ],
-        "templates": {
-            "physicalItem": {
-                "craftsmanship": "common",
-                "availability": "common",
-                "weight": 0,
-                "equipped": false,
-                "inBackpack": false
-            },
-            "armourPoints": {
-                "type": "",
-                "armourPoints": {
-                    "head": 0,
-                    "leftArm": 0,
-                    "rightArm": 0,
-                    "body": 0,
-                    "leftLeg": 0,
-                    "rightLeg": 0
-                }
-            },
-            "itemDescription": {
-                "description": "",
-                "source": ""
-            },
-            "attack": {
-                "range": "",
-                "attackType": "",
-                "attackBonus": 0,
-                "rateOfFire": {
-                    "single": 1,
-                    "burst": 0,
-                    "full": 0
-                }
-            },
-            "damage": {
-                "damage": "",
-                "damageType": "",
-                "penetration": "",
-                "special": {}
-            },
-            "action": {
-                "target": "",
-                "effect": ""
-            },
-            "backpack": {
-                "backpack": {
-                    "inBackpack": false
-                }
-            }
-        },
-        "ammunition": {
-            "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "backpack"],
-            "container": true,
-            "containerTypes": ["attackSpecial"],
-            "weaponType": ""
-        },
-        "aptitude": {
-            "template": ["itemDescription"]
-        },
-        "armour": {
-            "templates": ["physicalItem", "itemDescription", "container", "backpack", "armourPoints"],
-            "container": true,
-            "containerTypes": ["armourModification"],
-            "maxAgility": 0
-        },
-        "armourModification": {
-            "templates": ["physicalItem", "itemDescription", "backpack"]
-        },
-        "attackSpecial": {
-            "templates": ["itemDescription"],
-            "enabled": true,
-            "hasLevel": false,
-            "level": 0
-        },
-        "bonus": {
-            "source": "",
-            "name": "",
-            "benefit": ""
-        },
-        "criticalInjury": {
-            "templates": ["itemDescription"],
-            "type": "impact",
-            "part": "body"
-        },
-        "cybernetic": {
-            "templates": ["physicalItem", "itemDescription", "backpack", "armourPoints"],
-            "hasArmourPoints": false
-        },
-        "consumable": {
-            "templates": ["physicalItem", "itemDescription", "backpack"]
-        },
-        "drug": {
-            "templates": ["physicalItem", "itemDescription", "backpack"]
-        },
-        "enemy": {
-            "templates": ["itemDescription"],
-            "name": "",
-            "modifier": 0
-        },
-        "forceField": {
-            "templates": ["physicalItem", "itemDescription", "action", "backpack"],
-            "protectionRating": 0,
-            "activated": false,
-            "overloaded": false
-        },
-        "gear": {
-            "templates": ["physicalItem", "itemDescription", "action", "backpack"]
-        },
-        "journalEntry": {
-            "templates": ["itemDescription"],
-            "time": "",
-            "place": ""
-        },
-        "malignancy": {
-            "templates": ["itemDescription"]
-        },
-        "mentalDisorder": {
-            "templates": ["itemDescription"]
-        },
-        "mutation": {
-            "templates": ["itemDescription"]
-        },
-        "peer": {
-            "templates": ["itemDescription"],
-            "name": "",
-            "modifier": 0
-        },
-        "psychicPower": {
-            "templates": ["itemDescription", "damage", "attack", "action"],
-            "container": true,
-            "containerTypes": ["attackSpecial"],
-            "cost": 0,
-            "sustained": "No",
-            "discipline": "",
-            "subtype": "Concentration",
-            "action": "Half Action",
-            "target": {
-                "bonus": 0,
-                "useSkill": false,
-                "characteristic": "willpower",
-                "skill": "None",
-                "opposedBonus": 0,
-                "isOpposed": false,
-                "useOpposedSkill": false,
-                "opposed": "willpower",
-                "opposedSkill": "None"
-            }
-        },
-        "specialAbility": {
-            "templates": ["itemDescription"],
-            "benefit": ""
-        },
-        "talent": {
-            "templates": ["itemDescription"],
-            "prerequisites": "",
-            "aptitudes": "",
-            "benefit": "",
-            "tier": 0,
+        "size": 4,
+        "characteristics": {
+          "weaponSkill": {
+            "label": "Weapon Skill",
+            "short": "WS",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
             "cost": 0
-        },
-        "tool": {
-            "templates": ["physicalItem", "itemDescription", "action", "backpack"]
-        },
-        "trait": {
-            "templates": ["itemDescription"],
-            "level": 0
-        },
-        "weapon": {
-            "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "container", "backpack"],
-            "container": true,
-            "containerTypes": ["weaponModification", "attackSpecial", "ammunition"],
-            "class": "",
-            "type": "",
-            "reload": "",
-            "clip": {
-                "max": 0,
-                "value": 0
-            },
-            "modifications": []
-        },
-        "weaponModification": {
-            "templates": ["physicalItem", "itemDescription", "damage", "attack", "backpack"]
-        },
-        "storageLocation": {
-            "templates": ["itemDescription"],
-            "location": "",
-            "container": true,
-            "containerTypes": ["ammunition", "armour", "armourModification", "cybernetic", "consumable", "drug", "forceField", "gear", "tool", "weapon", "weaponModification"]
+          },
+          "ballisticSkill": {
+            "label": "Ballistic Skill",
+            "short": "BS",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "strength": {
+            "label": "Strength",
+            "short": "S",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "toughness": {
+            "label": "Toughness",
+            "short": "T",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "agility": {
+            "label": "Agility",
+            "short": "Ag",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "intelligence": {
+            "label": "Intelligence",
+            "short": "Int",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "perception": {
+            "label": "Perception",
+            "short": "Per",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "willpower": {
+            "label": "Willpower",
+            "short": "WP",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "fellowship": {
+            "label": "Fellowship",
+            "short": "Fel",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          },
+          "influence": {
+            "label": "Influence",
+            "short": "Inf",
+            "base": 0,
+            "advance": 0,
+            "modifier": 0,
+            "unnatural": 0,
+            "cost": 0
+          }
         }
+      },
+      "rogueTraderCharacter": {
+        "bio": {
+          "playerName": "",
+          "careerPath": "",
+          "rank": "",
+          "homeWorld": "",
+          "motivation": "",
+          "description": ""
+        },
+        "wounds": {
+          "max": 0,
+          "value": 0
+        },
+        "size": 4,
+        "fate": {
+          "max": 0,
+          "value": 0
+        },
+        "fatigue": {
+          "max": 0,
+          "value": 0,
+          "penaltyActive": false,
+          "penalty": 0
+        },
+        "characteristics": {
+          "weaponSkill": {
+            "label": "Weapon Skill",
+            "short": "WS",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "ballisticSkill": {
+            "label": "Ballistic Skill",
+            "short": "BS",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "strength": {
+            "label": "Strength",
+            "short": "S",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "toughness": {
+            "label": "Toughness",
+            "short": "T",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "agility": {
+            "label": "Agility",
+            "short": "Ag",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "intelligence": {
+            "label": "Intelligence",
+            "short": "Int",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "perception": {
+            "label": "Perception",
+            "short": "Per",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "willpower": {
+            "label": "Willpower",
+            "short": "WP",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          },
+          "fellowship": {
+            "label": "Fellowship",
+            "short": "Fel",
+            "starting": 0,
+            "advances": 0,
+            "modifier": 0,
+            "total": 0,
+            "bonus": 0
+          }
+        },
+        "skills": {
+          "awareness": {
+            "label": "Awareness",
+            "characteristic": "perception",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "acrobatics": {
+            "label": "Acrobatics",
+            "characteristic": "agility",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "barter": {
+            "label": "Barter",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "blather": {
+            "label": "Blather",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "carouse": {
+            "label": "Carouse",
+            "characteristic": "toughness",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "charm": {
+            "label": "Charm",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "chemUse": {
+            "label": "Chem-Use",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "ciphers": {
+            "label": "Ciphers",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "climb": {
+            "label": "Climb",
+            "characteristic": "strength",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "commonLore": {
+            "label": "Common Lore",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "command": {
+            "label": "Command",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "commerce": {
+            "label": "Commerce",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "concealment": {
+            "label": "Concealment",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "contortionist": {
+            "label": "Contortionist",
+            "characteristic": "agility",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "deceive": {
+            "label": "Deceive",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "demolition": {
+            "label": "Demolition",
+            "characteristic": "intelligence",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "disguise": {
+            "label": "Disguise",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "dodge": {
+            "label": "Dodge",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "drive": {
+            "label": "Drive",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "evaluate": {
+            "label": "Evaluate",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "forbiddenLore": {
+            "label": "Forbidden Lore",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "gamble": {
+            "label": "Gamble",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "intimidate": {
+            "label": "Intimidate",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "inquiry": {
+            "label": "Inquiry",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "interrogation": {
+            "label": "Interrogation",
+            "characteristic": "willpower",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "invocation": {
+            "label": "Invocation",
+            "characteristic": "willpower",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "literacy": {
+            "label": "Literacy",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "logic": {
+            "label": "Logic",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "medicae": {
+            "label": "Medicae",
+            "characteristic": "intelligence",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "navigation": {
+            "label": "Navigation",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "parry": {
+            "label": "Parry",
+            "characteristic": "weaponSkill",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "search": {
+            "label": "Search",
+            "characteristic": "perception",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "performer": {
+            "label": "Performer",
+            "characteristic": "fellowship",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "pilot": {
+            "label": "Pilot",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "psyniscience": {
+            "label": "Psyniscience",
+            "characteristic": "perception",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "scrutiny": {
+            "label": "Scrutiny",
+            "characteristic": "perception",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "security": {
+            "label": "Security",
+            "characteristic": "agility",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "shadowing": {
+            "label": "Shadowing",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "silentMove": {
+            "label": "Silent Move",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "sleightOfHand": {
+            "label": "Sleight of Hand",
+            "characteristic": "agility",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "speakLanguage": {
+            "label": "Speak Language",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "scholasticLore": {
+            "label": "Scholastic Lore",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "secretTongue": {
+            "label": "Secret Tongue",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "stealth": {
+            "label": "Stealth",
+            "characteristic": "agility",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "survival": {
+            "label": "Survival",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "swim": {
+            "label": "Swim",
+            "characteristic": "strength",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "trade": {
+            "label": "Trade",
+            "characteristic": "intelligence",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "tracking": {
+            "label": "Tracking",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "techUse": {
+            "label": "Tech-Use",
+            "characteristic": "intelligence",
+            "advanced": true,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          },
+          "wrangling": {
+            "label": "Wrangling",
+            "characteristic": "intelligence",
+            "advanced": false,
+            "trained": false,
+            "rank10": false,
+            "rank20": false,
+            "talentBonus": 0,
+            "otherBonus": 0,
+            "target": 0
+          }
+        },
+        "notes": {
+          "talentsTraits": "",
+          "specialAbilities": "",
+          "psychic": ""
+        }
+      },
+      "creature": {
+        "fatigue": {
+          "max": 0,
+          "value": 0
+        },
+        "fate": {
+          "max": 0,
+          "value": 0,
+          "rolled": false
+        },
+        "psy": {
+          "rating": 0,
+          "sustained": 0,
+          "defaultPR": 0,
+          "class": "bound",
+          "cost": 0,
+          "hasFocus": false
+        },
+        "backpack": {
+          "hasBackpack": false,
+          "name": "Backpack",
+          "isCombatVest": false,
+          "weight": {
+            "max": 30
+          }
+        },
+        "skills": {
+          "acrobatics": {
+            "label": "Acrobatics",
+            "characteristics": [
+              "Ag",
+              "S"
+            ],
+            "selectedCharacteristic": "",
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Ag"
+          },
+          "athletics": {
+            "label": "Athletics",
+            "characteristics": [
+              "S",
+              "T"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "S"
+          },
+          "awareness": {
+            "label": "Awareness",
+            "characteristics": [
+              "Per",
+              "Fel",
+              "Int"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Per"
+          },
+          "charm": {
+            "label": "Charm",
+            "characteristics": [
+              "Fel",
+              "Inf"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Fel"
+          },
+          "command": {
+            "label": "Command",
+            "characteristics": [
+              "Fel",
+              "Int",
+              "S",
+              "WP"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Fel"
+          },
+          "commerce": {
+            "label": "Commerce",
+            "characteristics": [
+              "Int",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Int"
+          },
+          "commonLore": {
+            "label": "Common Lore",
+            "characteristics": [
+              "Int",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "adeptaSororitas": {
+                "label": "Adepta Sororitas",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "adeptusArbites": {
+                "label": "Adeptus Arbites",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "adeptusAstartes": {
+                "label": "Adeptus Astartes",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "adeptusAstraTelepathica": {
+                "label": "Adeptus Astra Telepathica",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "adeptusMechanicus": {
+                "label": "Adeptus Mechanicus",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "administratum": {
+                "label": "Administratum",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "askellonSector": {
+                "label": "Askellon Sector",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "chartistCaptains": {
+                "label": "Chartist Captains",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "collegiaTitanicu": {
+                "label": "Collegia Titanicu",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "ecclesiarchy": {
+                "label": "Ecclesiarchy",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "imperialCreed": {
+                "label": "Imperial Creed",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "imperialGuard": {
+                "label": "Imperial Guard",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "imperialNavy": {
+                "label": "Imperial Navy",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "imperium": {
+                "label": "Imperium",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "navigators": {
+                "label": "Navigators",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "planetaryDefenceForces": {
+                "label": "Planetary Defence Forces",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "rogueTraders": {
+                "label": "Rogue Traders",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "scholaProgenium": {
+                "label": "Schola Progenium",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "tech": {
+                "label": "Tech",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "underworld": {
+                "label": "Underworld",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "war": {
+                "label": "War",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Int"
+          },
+          "deceive": {
+            "label": "Deceive",
+            "characteristics": [
+              "Fel",
+              "Int"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Fel"
+          },
+          "dodge": {
+            "label": "Dodge",
+            "characteristics": [
+              "Ag"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Ag"
+          },
+          "forbiddenLore": {
+            "label": "Forbidden Lore",
+            "characteristics": [
+              "Int",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "archaeotech": {
+                "label": "Archaeotech",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "chaosSpaceMarines": {
+                "label": "Chaos Space Marines",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "criminalCartelsAndSmugglers": {
+                "label": "Criminal Cartels and Smugglers",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "daemonology": {
+                "label": "Daemonology",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "heresy": {
+                "label": "Heresy",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "theHorusHeresyAndTheLongWar": {
+                "label": "The Horus Heresy and the Long War",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "inquisition": {
+                "label": "Inquisition",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "mutants": {
+                "label": "Mutants",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "officioAssassinorum": {
+                "label": "Officio Assassinorum",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "pirates": {
+                "label": "Pirates",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "psykers": {
+                "label": "Psykers",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "theWarp": {
+                "label": "The Warp",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "xenos": {
+                "label": "Xenos",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Int"
+          },
+          "inquiry": {
+            "label": "Inquiry",
+            "characteristics": [
+              "Fel",
+              "Int",
+              "Per"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Fel"
+          },
+          "interrogation": {
+            "label": "Interrogation",
+            "characteristics": [
+              "WP",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "WP"
+          },
+          "intimidate": {
+            "label": "Intimidate",
+            "characteristics": [
+              "S",
+              "WP"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "S"
+          },
+          "linguistics": {
+            "label": "Linguistics",
+            "characteristics": [
+              "Int",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "chapterRunes": {
+                "label": "Chapter Runes",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "chaosMarks": {
+                "label": "Chaos Marks",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "eldar": {
+                "label": "Eldar",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "highGothic": {
+                "label": "High Gothic",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "imperialCodes": {
+                "label": "Imperial Codes",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "lowGothic": {
+                "label": "Low Gothic",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "mercenary": {
+                "label": "Mercenary",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "necrontyr": {
+                "label": "Necrontyr",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "ork": {
+                "label": "Ork",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "technaLingua": {
+                "label": "Techna-Lingua",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "tau": {
+                "label": "Tau",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "underworld": {
+                "label": "Underworld",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "xenosMarkings": {
+                "label": "Xenos Markings",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Int"
+          },
+          "logic": {
+            "label": "Logic",
+            "characteristics": [
+              "Int",
+              "Ag"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Int"
+          },
+          "medicae": {
+            "label": "Medicae",
+            "characteristics": [
+              "Int",
+              "Ag",
+              "Per"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Int"
+          },
+          "navigate": {
+            "label": "Navigate",
+            "characteristics": [
+              "Int",
+              "Per"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "surface": {
+                "label": "Surface",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "stellar": {
+                "label": "Stellar",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "warp": {
+                "label": "Warp",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Int"
+          },
+          "operate": {
+            "label": "Operate",
+            "characteristics": [
+              "Ag",
+              "Int"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "surface": {
+                "label": "Surface",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "aeronautica": {
+                "label": "Aeronautica",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "voidship": {
+                "label": "Voidship",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Ag"
+          },
+          "parry": {
+            "label": "Parry",
+            "characteristics": [
+              "WS"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "WS"
+          },
+          "psyniscience": {
+            "label": "Psyniscience",
+            "characteristics": [
+              "Per",
+              "WP"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Per"
+          },
+          "scholasticLore": {
+            "label": "Scholastic Lore",
+            "characteristics": [
+              "Int",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "astromancy": {
+                "label": "Astromancy",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "beasts": {
+                "label": "Beasts",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "bureaucracy": {
+                "label": "Bureaucracy",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "chymistry": {
+                "label": "Chymistry",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "cryptology": {
+                "label": "Cryptology",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "heraldry": {
+                "label": "Heraldry",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "imperialWarrants": {
+                "label": "Imperial Warrants",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "judgement": {
+                "label": "Judgement",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "legend": {
+                "label": "Legend",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "numerology": {
+                "label": "Numerology",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "occult": {
+                "label": "Occult",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "philosophy": {
+                "label": "Philosophy",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "tacticaImperialis": {
+                "label": "Tactica Imperialis",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Int"
+          },
+          "scrutiny": {
+            "label": "Scrutiny",
+            "characteristics": [
+              "Per",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Per"
+          },
+          "security": {
+            "label": "Security",
+            "characteristics": [
+              "Int",
+              "Ag"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Int"
+          },
+          "sleightOfHand": {
+            "label": "Sleight of Hand",
+            "characteristics": [
+              "Ag",
+              "Int"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Ag"
+          },
+          "stealth": {
+            "label": "Stealth",
+            "characteristics": [
+              "Ag",
+              "Per"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Ag"
+          },
+          "survival": {
+            "label": "Survival",
+            "characteristics": [
+              "Per",
+              "Ag",
+              "Int"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Per"
+          },
+          "techUse": {
+            "label": "Tech Use",
+            "characteristics": [
+              "Int",
+              "Ag"
+            ],
+            "advance": 0,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "characteristic": "Int"
+          },
+          "trade": {
+            "label": "Trade",
+            "characteristics": [
+              "Int",
+              "Ag",
+              "Fel"
+            ],
+            "advance": 0,
+            "isSpecialist": true,
+            "specialities": {
+              "agri": {
+                "label": "Agri",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "archaeologist": {
+                "label": "Archaeologist",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "armourer": {
+                "label": "Armourer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "astrographer": {
+                "label": "Astrographer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "chymist": {
+                "label": "Chymist",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "cryptographer": {
+                "label": "Cryptographer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "cook": {
+                "label": "Cook",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "explorator": {
+                "label": "Explorator",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "linguist": {
+                "label": "Linguist",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "loremancer": {
+                "label": "Loremancer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "morticator": {
+                "label": "Morticator",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "performancer": {
+                "label": "Performancer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "prospector": {
+                "label": "Prospector",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "scrimshawer": {
+                "label": "Scrimshawer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "sculptor": {
+                "label": "Sculptor",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "shipwright": {
+                "label": "Shipwright",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "soothsayer": {
+                "label": "Soothsayer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "technomat": {
+                "label": "Technomat",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              },
+              "voidfarer": {
+                "label": "Voidfarer",
+                "advance": 0,
+                "cost": 0,
+                "taken": false
+              }
+            },
+            "characteristic": "Int"
+          }
+        }
+      },
+      "npc": {
+        "faction": "",
+        "subfaction": "",
+        "type": "troop",
+        "threatLevel": 0
+      },
+      "vehicle": {
+        "front": "",
+        "side": "",
+        "rear": "",
+        "availability": "",
+        "speed": {
+          "cruising": 0,
+          "tactical": 0
+        },
+        "crew": "",
+        "manoeuverability": 0,
+        "carryingCapacity": 0,
+        "integrity": {
+          "max": 0,
+          "value": 0,
+          "critical": 0
+        }
+      },
+      "rogueTraderExtras": {
+        "rogueTrader": {
+          "rank": 1,
+          "careerPath": "",
+          "motivation": "",
+          "profitFactor": {
+            "starting": 0,
+            "current": 0,
+            "misfortunes": 0
+          },
+          "lifting": {
+            "lift": 0,
+            "carry": 0,
+            "push": 0
+          },
+          "armourWeight": 0,
+          "acquisitions": "",
+          "mutations": ""
+        }
+      }
+    },
+    "acolyte": {
+      "templates": [
+        "base",
+        "creature",
+        "rogueTraderExtras"
+      ],
+      "bio": {
+        "homeWorld": "",
+        "background": "",
+        "role": "",
+        "elite": "",
+        "divination": "",
+        "gender": "",
+        "age": "",
+        "build": "",
+        "complexion": "",
+        "hair": "",
+        "quirks": "",
+        "superstition": "",
+        "mementos": "",
+        "notes": ""
+      },
+      "experience": {
+        "used": 0,
+        "total": 0
+      },
+      "insanity": 0,
+      "corruption": 0,
+      "aptitudes": {},
+      "backgroundEffects": {
+        "abilities": []
+      }
+    },
+    "character": {
+      "templates": [
+        "rogueTraderCharacter"
+      ]
+    },
+    "npc": {
+      "templates": [
+        "base",
+        "creature",
+        "npc"
+      ]
+    },
+    "xenos": {
+      "templates": [
+        "base",
+        "creature",
+        "npc"
+      ],
+      "species": ""
+    },
+    "vehicle": {
+      "templates": [
+        "base",
+        "vehicle",
+        "npc"
+      ]
     }
+  },
+  "Item": {
+    "types": [
+      "ammunition",
+      "aptitude",
+      "armour",
+      "armourModification",
+      "attackSpecial",
+      "backpack",
+      "consumable",
+      "criticalInjury",
+      "cybernetic",
+      "drug",
+      "enemy",
+      "forceField",
+      "gear",
+      "journalEntry",
+      "malignancy",
+      "mentalDisorder",
+      "mutation",
+      "peer",
+      "psychicPower",
+      "specialAbility",
+      "storageLocation",
+      "talent",
+      "tool",
+      "trait",
+      "weapon",
+      "weaponModification"
+    ],
+    "templates": {
+      "physicalItem": {
+        "craftsmanship": "common",
+        "availability": "common",
+        "weight": 0,
+        "equipped": false,
+        "inBackpack": false
+      },
+      "armourPoints": {
+        "type": "",
+        "armourPoints": {
+          "head": 0,
+          "leftArm": 0,
+          "rightArm": 0,
+          "body": 0,
+          "leftLeg": 0,
+          "rightLeg": 0
+        }
+      },
+      "itemDescription": {
+        "description": "",
+        "source": ""
+      },
+      "attack": {
+        "range": "",
+        "attackType": "",
+        "attackBonus": 0,
+        "rateOfFire": {
+          "single": 1,
+          "burst": 0,
+          "full": 0
+        }
+      },
+      "damage": {
+        "damage": "",
+        "damageType": "",
+        "penetration": "",
+        "special": {}
+      },
+      "action": {
+        "target": "",
+        "effect": ""
+      },
+      "backpack": {
+        "backpack": {
+          "inBackpack": false
+        }
+      }
+    },
+    "ammunition": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "damage",
+        "attack",
+        "action",
+        "backpack"
+      ],
+      "container": true,
+      "containerTypes": [
+        "attackSpecial"
+      ],
+      "weaponType": ""
+    },
+    "aptitude": {
+      "template": [
+        "itemDescription"
+      ]
+    },
+    "armour": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "container",
+        "backpack",
+        "armourPoints"
+      ],
+      "container": true,
+      "containerTypes": [
+        "armourModification"
+      ],
+      "maxAgility": 0
+    },
+    "armourModification": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "backpack"
+      ]
+    },
+    "attackSpecial": {
+      "templates": [
+        "itemDescription"
+      ],
+      "enabled": true,
+      "hasLevel": false,
+      "level": 0
+    },
+    "bonus": {
+      "source": "",
+      "name": "",
+      "benefit": ""
+    },
+    "criticalInjury": {
+      "templates": [
+        "itemDescription"
+      ],
+      "type": "impact",
+      "part": "body"
+    },
+    "cybernetic": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "backpack",
+        "armourPoints"
+      ],
+      "hasArmourPoints": false
+    },
+    "consumable": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "backpack"
+      ]
+    },
+    "drug": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "backpack"
+      ]
+    },
+    "enemy": {
+      "templates": [
+        "itemDescription"
+      ],
+      "name": "",
+      "modifier": 0
+    },
+    "forceField": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "action",
+        "backpack"
+      ],
+      "protectionRating": 0,
+      "activated": false,
+      "overloaded": false
+    },
+    "gear": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "action",
+        "backpack"
+      ]
+    },
+    "journalEntry": {
+      "templates": [
+        "itemDescription"
+      ],
+      "time": "",
+      "place": ""
+    },
+    "malignancy": {
+      "templates": [
+        "itemDescription"
+      ]
+    },
+    "mentalDisorder": {
+      "templates": [
+        "itemDescription"
+      ]
+    },
+    "mutation": {
+      "templates": [
+        "itemDescription"
+      ]
+    },
+    "peer": {
+      "templates": [
+        "itemDescription"
+      ],
+      "name": "",
+      "modifier": 0
+    },
+    "psychicPower": {
+      "templates": [
+        "itemDescription",
+        "damage",
+        "attack",
+        "action"
+      ],
+      "container": true,
+      "containerTypes": [
+        "attackSpecial"
+      ],
+      "cost": 0,
+      "sustained": "No",
+      "discipline": "",
+      "subtype": "Concentration",
+      "action": "Half Action",
+      "target": {
+        "bonus": 0,
+        "useSkill": false,
+        "characteristic": "willpower",
+        "skill": "None",
+        "opposedBonus": 0,
+        "isOpposed": false,
+        "useOpposedSkill": false,
+        "opposed": "willpower",
+        "opposedSkill": "None"
+      }
+    },
+    "specialAbility": {
+      "templates": [
+        "itemDescription"
+      ],
+      "benefit": ""
+    },
+    "talent": {
+      "templates": [
+        "itemDescription"
+      ],
+      "prerequisites": "",
+      "aptitudes": "",
+      "benefit": "",
+      "tier": 0,
+      "cost": 0
+    },
+    "tool": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "action",
+        "backpack"
+      ]
+    },
+    "trait": {
+      "templates": [
+        "itemDescription"
+      ],
+      "level": 0
+    },
+    "weapon": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "damage",
+        "attack",
+        "action",
+        "container",
+        "backpack"
+      ],
+      "container": true,
+      "containerTypes": [
+        "weaponModification",
+        "attackSpecial",
+        "ammunition"
+      ],
+      "class": "",
+      "type": "",
+      "reload": "",
+      "clip": {
+        "max": 0,
+        "value": 0
+      },
+      "modifications": []
+    },
+    "weaponModification": {
+      "templates": [
+        "physicalItem",
+        "itemDescription",
+        "damage",
+        "attack",
+        "backpack"
+      ]
+    },
+    "storageLocation": {
+      "templates": [
+        "itemDescription"
+      ],
+      "location": "",
+      "container": true,
+      "containerTypes": [
+        "ammunition",
+        "armour",
+        "armourModification",
+        "cybernetic",
+        "consumable",
+        "drug",
+        "forceField",
+        "gear",
+        "tool",
+        "weapon",
+        "weaponModification"
+      ]
+    }
+  }
 }
