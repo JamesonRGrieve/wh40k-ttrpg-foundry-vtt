@@ -8,29 +8,31 @@
             <div class="table-cell--last">Total</div>
         </div>
         {{#each actor.skills as |skill name|}}
-            {{#unless skill.isSpecialist}}
-                <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}">
-                    <div class="table-cell">
-                        <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
+            {{#unless skill.hidden}}
+                {{#unless skill.isSpecialist}}
+                    <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}">
+                        <div class="table-cell">
+                            <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
+                        </div>
+                        <div class="table-cell">
+                            <select name="system.skills.{{name}}.advance">
+                                {{option "0" this.advance "Unknown"}}
+                                {{option "1" this.advance "Known"}}
+                                {{option "2" this.advance "Trained"}}
+                                {{option "3" this.advance "Experienced"}}
+                                {{option "4" this.advance "Veteran"}}
+                            </select>
+                        </div>
+                        <div class="table-cell">
+                            <select name="system.skills.{{name}}.characteristic">
+                                {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
+                            </select>
+                        </div>
+                        <div class="table-cell--last table-cell--highlight">
+                            <span class="display">{{this.current}}</span>
+                        </div>
                     </div>
-                    <div class="table-cell">
-                        <select name="system.skills.{{name}}.advance">
-                            {{option "0" this.advance "Unknown"}}
-                            {{option "1" this.advance "Known"}}
-                            {{option "2" this.advance "Trained"}}
-                            {{option "3" this.advance "Experienced"}}
-                            {{option "4" this.advance "Veteran"}}
-                        </select>
-                    </div>
-                    <div class="table-cell">
-                        <select name="system.skills.{{name}}.characteristic">
-                            {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
-                        </select>
-                    </div>
-                    <div class="table-cell--last table-cell--highlight">
-                        <span class="display">{{this.current}}</span>
-                    </div>
-                </div>
+                {{/unless}}
             {{/unless}}
         {{/each}}
     </div>

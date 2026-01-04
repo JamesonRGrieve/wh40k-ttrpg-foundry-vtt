@@ -29,10 +29,12 @@ export class RogueTraderCharacterSheet extends ActorSheet {
             .filter((key) => characteristics[key])
             .map((key) => ({ key, data: characteristics[key] }));
 
-        const skills = Object.entries(this.actor.system.skills ?? {}).map(([key, data]) => ({
-            key,
-            data,
-        }));
+        const skills = Object.entries(this.actor.system.skills ?? {})
+            .filter(([, data]) => !data.hidden)
+            .map(([key, data]) => ({
+                key,
+                data,
+            }));
         skills.sort((a, b) => a.data.label.localeCompare(b.data.label));
         const splitIndex = Math.ceil(skills.length / 2);
         context.skillColumns = {
