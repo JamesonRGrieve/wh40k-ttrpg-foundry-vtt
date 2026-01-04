@@ -1,37 +1,86 @@
-{{dhlog this}}
+{{!-- Rogue Trader Vehicle Sheet --}}
 <div class="dh-wrapper">
-    <form class="dh-actor" autocomplete="off">
-        <div class="dh-header dh-grid-col-6 dh-panel">
+    <form class="dh-actor rt-sheet rt-vehicle-sheet" autocomplete="off">
+        {{!-- Vehicle Header --}}
+        <div class="dh-header dh-grid-col-6 dh-panel rt-vehicle-header">
             <div class="dh-header__info">
-                <div class="dh-header__logo dh-header__item-wrapper--span-4">
-                    <img class="dh-header__logo-image" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                <div class="dh-header__logo rt-portrait-container">
+                    <img class="dh-header__logo-image rt-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
-                <div class="dh-header__item-wrapper--span-2">
-                    <span class="dh-header__title">Vehicle Name</span>
-                    <input class="dh-header__input" name="name" type="text" value="{{actor.name}}" />
+                <div class="rt-header-info">
+                    <div class="rt-header-row rt-name-row">
+                        <span class="rt-header-label">{{localize "RT.Vehicle.Name"}}</span>
+                        <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
+                    </div>
+                    <div class="rt-header-row">
+                        <span class="rt-header-label">{{localize "RT.Vehicle.Type"}}</span>
+                        <select class="rt-header-input" name="system.type">
+                            {{selectOptions (arrayToObject dh.items.vehicle_types) selected=actor.system.type}}
+                        </select>
+                    </div>
+                    <div class="rt-header-row">
+                        <span class="rt-header-label">{{localize "RT.Vehicle.Crew"}}</span>
+                        <input class="rt-header-input" name="system.crew" type="text" value="{{actor.system.crew}}" />
+                    </div>
                 </div>
-                <div class="dh-header__item-wrapper--span-2">
-                    <span class="dh-header__title">Type</span>
-                    <select class="dh-header__input" name="system.type">
-                        {{selectOptions (arrayToObject dh.items.vehicle_types) selected=actor.system.type}}
-                    </select>
-                </div>
-                <div class="dh-header__item-wrapper--span-2">
-                    <span class="dh-header__title">Crew</span>
-                    <input class="dh-header__input" name="system.crew" type="text" value="{{actor.system.crew}}" />
-                </div>
-                <div class="dh-header__item-wrapper--span-2">
-                    <span class="dh-header__title">Carrying Capacity</span>
-                    <input class="dh-header__input" name="system.carryingCapacity" type="number" data-dtype="Number" value="{{actor.system.carryingCapacity}}" />
+                <div class="rt-quick-stats">
+                    <div class="rt-stat-box rt-integrity-box">
+                        <span class="rt-stat-label">Integrity</span>
+                        <div class="rt-stat-values">
+                            <input type="number" class="rt-stat-input" name="system.integrity.value" value="{{system.integrity.value}}" title="Current" />
+                            <span class="rt-stat-separator">/</span>
+                            <input type="number" class="rt-stat-input" name="system.integrity.max" value="{{system.integrity.max}}" title="Max" />
+                        </div>
+                    </div>
+                    <div class="rt-stat-box rt-capacity-box">
+                        <span class="rt-stat-label">Capacity</span>
+                        <input type="number" class="rt-stat-input rt-stat-single" name="system.carryingCapacity" value="{{system.carryingCapacity}}" />
+                    </div>
                 </div>
             </div>
         </div>
-        {{> systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs}}
-        {{> systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs}}
-        {{> systems/rogue-trader/templates/actor/panel/vehicle-movement-panel.hbs}}
-        {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
-        {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
+
+        {{!-- Navigation Tabs --}}
+        <div class="dh-navigation rt-navigation" data-group="primary">
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="stats" data-group="primary">
+                    <span class="material-icons">speed</span>
+                    {{localize "RT.Vehicle.Tabs.Stats"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="weapons" data-group="primary">
+                    <span class="material-icons">gps_fixed</span>
+                    {{localize "RT.Vehicle.Tabs.Weapons"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="traits" data-group="primary">
+                    <span class="material-icons">stars</span>
+                    {{localize "RT.Vehicle.Tabs.Traits"}}
+                </a>
+            </label>
+        </div>
+
+        {{!-- Tab Content --}}
+        <section class="dh-body rt-body">
+            {{!-- STATS TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="stats">
+                {{> systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/vehicle-movement-panel.hbs}}
+            </div>
+
+            {{!-- WEAPONS TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="weapons">
+                {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
+            </div>
+
+            {{!-- TRAITS TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="traits">
+                {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/vehicle-upgrades-panel.hbs}}
+            </div>
+        </section>
     </form>
 </div>
-
-

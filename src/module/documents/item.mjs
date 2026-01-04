@@ -282,4 +282,107 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         }
         return specials;
     }
+
+    /**
+     * Get the item type label for display
+     * @returns {string} The localized item type label
+     */
+    get itemTypeLabel() {
+        const typeLabels = {
+            weapon: 'Weapon',
+            armour: 'Armour',
+            talent: 'Talent',
+            trait: 'Trait',
+            skill: 'Skill',
+            psychicPower: 'Psychic Power',
+            navigatorPower: 'Navigator Power',
+            shipComponent: 'Ship Component',
+            shipRole: 'Ship Role',
+            shipWeapon: 'Ship Weapon',
+            order: 'Order',
+            ritual: 'Ritual',
+            originPath: 'Origin Path',
+            gear: 'Gear',
+            cybernetic: 'Cybernetic',
+            consumable: 'Consumable',
+            ammunition: 'Ammunition',
+            forceField: 'Force Field'
+        };
+        return typeLabels[this.type] || this.type;
+    }
+
+    /**
+     * Check if this item has actions available
+     * @returns {boolean}
+     */
+    get hasActions() {
+        return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || 
+               (this.isTalent && this.system?.isRollable);
+    }
+
+    /**
+     * Check if this item can be rolled
+     * @returns {boolean}
+     */
+    get isRollable() {
+        return (this.isTalent && this.system?.isRollable) || 
+               (this.isSkill && this.system?.rollConfig);
+    }
+
+    /**
+     * Send this item's details to chat as a card
+     * @param {Object} options - Options for the chat card
+     */
+    async sendToChat(options = {}) {
+        const cardData = {
+            item: this,
+            itemTypeLabel: this.itemTypeLabel,
+            isWeapon: this.isWeapon,
+            isNavigatorPower: this.isNavigatorPower,
+            isShipComponent: this.isShipComponent,
+            isPsychicPower: this.isPsychicPower,
+            isTalent: this.isTalent,
+            hasActions: this.hasActions,
+            isRollable: this.isRollable,
+            actor: this.actor?.name || '',
+            ...options
+        };
+
+        const html = await renderTemplate('systems/rogue-trader/templates/chat/item-card-chat.hbs', cardData);
+        
+        const chatData = {
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            type: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        };
+
+        const rollMode = game.settings.get('core', 'rollMode');
+        if (['gmroll', 'blindroll'].includes(rollMode)) {
+            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        } else if (rollMode === 'selfroll') {
+            chatData.whisper = [game.user];
+        }
+
+        return ChatMessage.create(chatData);
+    }
+
+    /**
+     * Perform the default action for this item
+     */
+    async performAction() {
+        if (this.isWeapon) {
+            // Weapon attack - handled by the actor sheet
+            return this.actor?.rollWeaponAction(this);
+        } else if (this.isPsychicPower) {
+            // Psychic power - handled by the actor sheet  
+            return this.actor?.rollPsychicPower(this);
+        } else if (this.isNavigatorPower) {
+            // Navigator power - send to chat
+            return this.sendToChat();
+        } else {
+            // Default - send to chat
+            return this.sendToChat();
+        }
+    }
 }

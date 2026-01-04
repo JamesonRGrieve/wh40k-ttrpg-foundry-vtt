@@ -1,40 +1,85 @@
-{{dhlog this}}
+{{!-- Rogue Trader NPC Sheet --}}
 <div class="dh-wrapper">
-    <form class="dh-actor" autocomplete="off">
-        <div class="dh-header dh-grid-col-6 dh-panel">
+    <form class="dh-actor rt-sheet rt-npc-sheet" autocomplete="off">
+        {{!-- NPC Header --}}
+        <div class="dh-header dh-grid-col-6 dh-panel rt-npc-header">
             <div class="dh-header__info">
-                <div class="dh-header__logo dh-header__item-wrapper--span-4">
-                    <img class="dh-header__logo-image" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                <div class="dh-header__logo rt-portrait-container">
+                    <img class="dh-header__logo-image rt-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
-                <div class="dh-header__item-wrapper--span-2">
-                    <span class="dh-header__title">Name</span>
-                    <input class="dh-header__input" name="name" type="text" value="{{actor.name}}" />
+                <div class="rt-header-info">
+                    <div class="rt-header-row rt-name-row">
+                        <span class="rt-header-label">{{localize "RT.NPC.Name"}}</span>
+                        <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
+                    </div>
+                    <div class="rt-header-row">
+                        <span class="rt-header-label">{{localize "RT.NPC.Type"}}</span>
+                        <input class="rt-header-input" name="system.npcType" type="text" value="{{system.npcType}}" />
+                    </div>
+                    <div class="rt-header-row">
+                        <span class="rt-header-label">{{localize "RT.NPC.Allegiance"}}</span>
+                        <input class="rt-header-input" name="system.allegiance" type="text" value="{{system.allegiance}}" />
+                    </div>
                 </div>
-                {{#each actor.bio}}
-                    {{#if (arrayIncludes @key @root.dh.bio.primary)}}
-                        {{> systems/rogue-trader/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
-                    {{/if}}
-                {{/each}}
+                <div class="rt-quick-stats">
+                    <div class="rt-stat-box rt-wounds-box">
+                        <span class="rt-stat-label">Wounds</span>
+                        <div class="rt-stat-values">
+                            <input type="number" class="rt-stat-input" name="system.wounds.value" value="{{system.wounds.value}}" title="Current" />
+                            <span class="rt-stat-separator">/</span>
+                            <input type="number" class="rt-stat-input" name="system.wounds.max" value="{{system.wounds.max}}" title="Max" />
+                        </div>
+                    </div>
+                    <div class="rt-stat-box rt-fate-box">
+                        <span class="rt-stat-label">Fate</span>
+                        <div class="rt-stat-values">
+                            <input type="number" class="rt-stat-input" name="system.fate.value" value="{{system.fate.value}}" title="Current" />
+                            <span class="rt-stat-separator">/</span>
+                            <input type="number" class="rt-stat-input" name="system.fate.max" value="{{system.fate.max}}" title="Max" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="dh-navigation" data-group="primary">
-            <label class="dh-navigation__item dh-navigation__item-left">
-                <a class="item" data-tab="combat" data-group="primary">combat</a>
+        {{!-- Navigation Tabs --}}
+        <div class="dh-navigation rt-navigation" data-group="primary">
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="combat" data-group="primary">
+                    <span class="material-icons">gps_fixed</span>
+                    {{localize "RT.Tabs.Combat"}}
+                </a>
             </label>
-            <label class="dh-navigation__item">
-                <a class="item" data-tab="main" data-group="primary">main</a>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="abilities" data-group="primary">
+                    <span class="material-icons">psychology</span>
+                    {{localize "RT.Tabs.Abilities"}}
+                </a>
             </label>
-            <label class="dh-navigation__item">
-                <a class="item" data-tab="gear" data-group="primary">gear</a>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="gear" data-group="primary">
+                    <span class="material-icons">inventory_2</span>
+                    {{localize "RT.Tabs.Gear"}}
+                </a>
             </label>
-            <label class="dh-navigation__item">
-                <a class="item" data-tab="psychic" data-group="primary">psychic powers</a>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="powers" data-group="primary">
+                    <span class="material-icons">auto_fix_high</span>
+                    {{localize "RT.Tabs.Powers"}}
+                </a>
+            </label>
+            <label class="dh-navigation__item rt-nav-item">
+                <a class="item" data-tab="notes" data-group="primary">
+                    <span class="material-icons">description</span>
+                    {{localize "RT.NPC.Notes"}}
+                </a>
             </label>
         </div>
 
-        <section class="dh-body">
-            <div class="tab" data-group="primary" data-tab="combat">
+        {{!-- Tab Content --}}
+        <section class="dh-body rt-body">
+            {{!-- COMBAT TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="combat">
                 {{> systems/rogue-trader/templates/actor/panel/wounds-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/fatigue-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/fate-panel.hbs}}
@@ -43,8 +88,11 @@
                 {{> systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/movement-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
             </div>
-            <div class="tab" data-group="primary" data-tab="main">
+
+            {{!-- ABILITIES TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="abilities">
                 {{> systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs}}
@@ -52,20 +100,34 @@
                 {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
             </div>
-            <div class="tab" data-group="primary" data-tab="gear">
-                {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
+
+            {{!-- GEAR TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="gear">
                 {{> systems/rogue-trader/templates/actor/panel/encumbrance-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/armour-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/storage-location-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/backpack-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/gear-panel.hbs}}
             </div>
-            <div class="tab" data-group="primary" data-tab="psychic">
-                {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
+
+            {{!-- POWERS TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="powers">
                 {{> systems/rogue-trader/templates/actor/panel/psy-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/navigator-powers-panel.hbs}}
+            </div>
+
+            {{!-- NOTES TAB --}}
+            <div class="tab rt-tab" data-group="primary" data-tab="notes">
+                <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-2">
+                    <h1 class="dh-panel__header">{{localize "RT.NPC.Description"}}</h1>
+                    <textarea class="dh-header__textarea rt-npc-notes" name="system.description" rows="8">{{system.description}}</textarea>
+                </div>
+                <div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
+                    <h1 class="dh-panel__header">{{localize "RT.NPC.Tactics"}}</h1>
+                    <textarea class="dh-header__textarea" name="system.tactics" rows="4">{{system.tactics}}</textarea>
+                </div>
             </div>
         </section>
     </form>
 </div>
-
-

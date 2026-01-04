@@ -1,0 +1,51 @@
+{{!-- Ship Weapon Fire Chat Template --}}
+<div class="dh-wrapper">
+    <div class="dh-chat rt-ship-weapon-card">
+        <div class="rt-ship-weapon-header">
+            <img class="rt-ship-weapon-img" src="{{weapon.img}}" alt="{{weapon.name}}" />
+            <div class="rt-ship-weapon-info">
+                <h1>{{weapon.name}}</h1>
+                <span class="rt-ship-weapon-type">{{weapon.system.weaponType}} - {{weapon.system.location}}</span>
+            </div>
+        </div>
+
+        <div class="dh-roll__divider"></div>
+
+        <div class="rt-ship-weapon-stats">
+            <div class="rt-ship-stat">
+                <span class="rt-ship-stat-label">Strength</span>
+                <span class="rt-ship-stat-value">{{weapon.system.strength}}</span>
+            </div>
+            <div class="rt-ship-stat">
+                <span class="rt-ship-stat-label">Damage</span>
+                <span class="rt-ship-stat-value">{{weapon.system.damage}}</span>
+            </div>
+            <div class="rt-ship-stat">
+                <span class="rt-ship-stat-label">Crit Rating</span>
+                <span class="rt-ship-stat-value">{{weapon.system.critRating}}</span>
+            </div>
+            <div class="rt-ship-stat">
+                <span class="rt-ship-stat-label">Range</span>
+                <span class="rt-ship-stat-value">{{weapon.system.range}}</span>
+            </div>
+        </div>
+
+        {{#if weapon.system.special}}
+            <div class="rt-ship-weapon-special">
+                <span class="rt-ship-special-label">Special:</span>
+                <span class="rt-ship-special-value">{{weapon.system.special}}</span>
+            </div>
+        {{/if}}
+
+        <div class="rt-ship-weapon-actions">
+            <button class="rt-action-button rt-ship-attack-roll" data-weapon-id="{{weapon._id}}" data-crew-rating="{{crewRating}}">
+                <span class="material-icons">casino</span>
+                Roll to Hit (Crew Rating: {{crewRating}})
+            </button>
+            <button class="rt-action-button rt-action-damage rt-ship-damage-roll" data-damage="{{weapon.system.damage}}" data-strength="{{weapon.system.strength}}">
+                <span class="material-icons">whatshot</span>
+                Roll Damage
+            </button>
+        </div>
+    </div>
+</div>
