@@ -1,10 +1,10 @@
 {
   "id": "rogue-trader",
-  "title": "Rogue Trader",
-  "description": "Rogue Trader - Foundry VTT",
+  "title": "Rogue Trader Mode",
+  "description": "Dark Heresy 2e-derived Rogue Trader mode for Foundry VTT, using the acolyte sheet for player characters.",
   "version": "1.8.1",
   "compatibility": {
-    "minimum": 11,
+    "minimum": 13,
     "verified": "13.351",
     "maximum": 13
   },
