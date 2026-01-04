@@ -9,7 +9,7 @@
             <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
         </div>
         {{#each skillLists.specialist as |entry|}}
-            <div class="table-row--grouped rt-specialist-group">
+            <div class="table-row--grouped rt-specialist-group spec_skills_{{entry.[0]}}" data-skill="{{entry.[0]}}">
                 <div class="table-cell--settingstoggle">
                     {{> systems/rogue-trader/templates/actor/partial/display-toggle.hbs toggle=(concat 'spec_skills_' entry.[0])}}
                 </div>

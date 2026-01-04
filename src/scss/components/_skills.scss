@@ -185,7 +185,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 
 // Specialist skills specific styling
 .rt-specialist-group {
-  background: rgba(36, 107, 131, 0.25) !important;
+  background: rgba(36, 107, 131, 0.25);
   border-top: 2px solid rgba(36, 107, 131, 0.4);
   border-bottom: 2px solid rgba(36, 107, 131, 0.4);
   margin-top: 0.5rem;
@@ -339,4 +339,105 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   border: 1px solid rgba(36, 107, 131, 0.3);
   border-radius: 4px;
   overflow: hidden;
+}
+
+// ============================================
+// LORE SKILLS SPECIAL STYLING
+// ============================================
+// These styles highlight Common Lore, Forbidden Lore, and Scholastic Lore
+// skills with distinct colors to make them stand out like in the Roll20 version
+
+.rt-specialist-group {
+  // Common Lore - Golden/amber theme (knowledge of common topics)
+  &[data-skill="commonLore"],
+  &.spec_skills_commonLore {
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.2), rgba(218, 165, 32, 0.1));
+    border-top-color: rgba(218, 165, 32, 0.5);
+    border-bottom-color: rgba(218, 165, 32, 0.5);
+    
+    .rt-specialist-group-name {
+      color: #8B6914;
+    }
+    
+    .rt-add-specialization {
+      background: linear-gradient(135deg, #DAA520, #B8860B);
+      
+      &:hover {
+        background: linear-gradient(135deg, #B8860B, #996515);
+      }
+    }
+  }
+  
+  // Forbidden Lore - Dark purple/crimson theme (dangerous knowledge)
+  &[data-skill="forbiddenLore"],
+  &.spec_skills_forbiddenLore {
+    background: linear-gradient(135deg, rgba(128, 0, 64, 0.2), rgba(75, 0, 130, 0.15));
+    border-top-color: rgba(139, 0, 0, 0.5);
+    border-bottom-color: rgba(75, 0, 130, 0.5);
+    
+    .rt-specialist-group-name {
+      color: #800040;
+    }
+    
+    .rt-add-specialization {
+      background: linear-gradient(135deg, #8B0000, #4B0082);
+      
+      &:hover {
+        background: linear-gradient(135deg, #660000, #3d0066);
+      }
+    }
+  }
+  
+  // Scholastic Lore - Deep blue theme (academic knowledge)
+  &[data-skill="scholasticLore"],
+  &.spec_skills_scholasticLore {
+    background: linear-gradient(135deg, rgba(25, 25, 112, 0.15), rgba(0, 0, 128, 0.1));
+    border-top-color: rgba(0, 0, 139, 0.5);
+    border-bottom-color: rgba(0, 0, 139, 0.5);
+    
+    .rt-specialist-group-name {
+      color: #191970;
+    }
+    
+    .rt-add-specialization {
+      background: linear-gradient(135deg, #191970, #000080);
+      
+      &:hover {
+        background: linear-gradient(135deg, #0f0f50, #000050);
+      }
+    }
+  }
+}
+
+// Lore specialization rows styling
+.rt-specialist-block {
+  &.spec_skills_commonLore {
+    .rt-specialist-row {
+      border-left: 3px solid rgba(218, 165, 32, 0.4);
+      
+      &:hover {
+        background: rgba(218, 165, 32, 0.08);
+      }
+    }
+  }
+  
+  &.spec_skills_forbiddenLore {
+    .rt-specialist-row {
+      border-left: 3px solid rgba(139, 0, 0, 0.4);
+      
+      &:hover {
+        background: rgba(139, 0, 0, 0.05);
+      }
+    }
+  }
+  
+  &.spec_skills_scholasticLore {
+    .rt-specialist-row {
+      border-left: 3px solid rgba(0, 0, 139, 0.4);
+      
+      &:hover {
+        background: rgba(0, 0, 139, 0.05);
+      }
+    }
+  }
 }
