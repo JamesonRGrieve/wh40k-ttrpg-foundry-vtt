@@ -1,20 +1,20 @@
 <div class="dh-panel dh-grid-col-3 dh-grid-row-2 rt-skills-panel">
     <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">Rogue Trader Skills</h1>
+        <h1 class="dh-panel__header">{{localize "RT.Skills.Header"}}</h1>
         <div class="table-row--head rt-skills-header">
-            <div class="table-cell rt-skill-name">Skill</div>
-            <div class="table-cell rt-skill-char">Char</div>
-            <div class="table-cell rt-skill-trained">Basic</div>
-            <div class="table-cell rt-skill-trained">Trained</div>
-            <div class="table-cell rt-skill-trained">+10</div>
-            <div class="table-cell rt-skill-trained">+20</div>
-            <div class="table-cell rt-skill-bonus">Bonus</div>
-            <div class="table-cell--last rt-skill-total">Total</div>
+            <div class="table-cell rt-skill-name">{{localize "RT.Skills.Skill"}}</div>
+            <div class="table-cell rt-skill-char">{{localize "RT.Skills.Characteristic"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Basic"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Trained"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus10"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus20"}}</div>
+            <div class="table-cell rt-skill-bonus">{{localize "RT.Skills.Bonus"}}</div>
+            <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
         </div>
         {{#each skillLists.standard as |entry|}}
             <div class="table-row actor-drag rt-skill-row" data-item-type="skill" data-item-id="{{entry.[0]}}">
                 <div class="table-cell rt-skill-name">
-                    <button class="roll-skill rt-skill-button" data-skill="{{entry.[0]}}" type="roll" title="Roll {{entry.[1].label}}">
+                    <button class="roll-skill rt-skill-button" data-skill="{{entry.[0]}}" type="roll" title="{{localize 'RT.Skills.RollSkillTitle' entry.[1].label}}">
                         <span class="material-icons">casino</span> {{entry.[1].label}}
                     </button>
                 </div>
@@ -24,16 +24,16 @@
                     </select>
                 </div>
                 <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.basic" data-dtype="Boolean" {{checked entry.[1].basic}} title="Basic" />
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.basic" data-dtype="Boolean" {{checked entry.[1].basic}} title="{{localize 'RT.Skills.Basic'}}" />
                 </div>
                 <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.trained" data-dtype="Boolean" {{checked entry.[1].trained}} title="Trained" />
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.trained" data-dtype="Boolean" {{checked entry.[1].trained}} title="{{localize 'RT.Skills.Trained'}}" />
                 </div>
                 <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus10" data-dtype="Boolean" {{checked entry.[1].plus10}} title="+10" />
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus10" data-dtype="Boolean" {{checked entry.[1].plus10}} title="{{localize 'RT.Skills.Plus10'}}" />
                 </div>
                 <div class="table-cell rt-skill-training">
-                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus20" data-dtype="Boolean" {{checked entry.[1].plus20}} title="+20" />
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus20" data-dtype="Boolean" {{checked entry.[1].plus20}} title="{{localize 'RT.Skills.Plus20'}}" />
                 </div>
                 <div class="table-cell rt-skill-bonus">
                     <input type="number" data-dtype="Number" name="system.skills.{{entry.[0]}}.bonus" value="{{entry.[1].bonus}}" class="rt-bonus-input" />

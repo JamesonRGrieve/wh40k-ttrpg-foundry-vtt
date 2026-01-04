@@ -39,6 +39,23 @@
       "AcquisitionAcquired": "Acquired",
       "AcquisitionNotes": "Notes",
       "MutationsHeader": "Mutations"
+    },
+    "Skills": {
+      "Header": "Rogue Trader Skills",
+      "SpecialistHeader": "Specialist Skills",
+      "Skill": "Skill",
+      "Specialization": "Specialization",
+      "Characteristic": "Char",
+      "Basic": "Basic",
+      "Trained": "Trained",
+      "Plus10": "+10",
+      "Plus20": "+20",
+      "Bonus": "Bonus",
+      "Total": "Total",
+      "AddSpecialization": "Add",
+      "NoSpecializations": "Click \"Add\" to create a {0} specialization",
+      "RollSkillTitle": "Roll {0}",
+      "AddSpecializationTitle": "Add {0} specialization"
     }
   }
 }
