@@ -2,7 +2,7 @@ import { RogueTraderSettings } from './rogue-trader-settings.mjs';
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 181;
+    const worldVersion = 182;
 
     const currentVersion = game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion);
     if (worldVersion !== currentVersion && game.user.isGM) {
@@ -106,6 +106,24 @@ export async function checkAndMigrateWorld() {
                 }
             }
         }
+
+        if (currentVersion < 182) {
+            const skills = actor.system?.skills;
+
+            if (skills?.navigate) {
+                const navigationSkill = foundry.utils.duplicate(skills.navigate);
+                navigationSkill.label = 'Navigation';
+                navigationSkill.characteristic = navigationSkill.characteristic ?? 'Int';
+                navigationSkill.characteristics = navigationSkill.characteristics?.length ? navigationSkill.characteristics : ['Int'];
+
+                const updateData = {
+                    'system.skills.navigation': skills.navigation ?? navigationSkill,
+                    'system.skills.-=navigate': null,
+                };
+
+                await actor.update(updateData);
+            }
+        }
     }
 
     async function displayReleaseNotes(version) {
@@ -149,6 +167,15 @@ export async function checkAndMigrateWorld() {
                     notes: [
                         'Updated compendium permissions to fix permissions issues for players without ownership permissions.',
                         'Fixed issue with nested items not working: weapon specials and ammunition should now work correctly.',
+                    ],
+                });
+                break;
+            case 182:
+                await releaseNotes({
+                    version: '1.8.2',
+                    notes: [
+                        'Updated the Navigate skill to Navigation and migrated existing actors to use the new skill key.',
+                        'Adjusted skill roll lookups to respect Navigation aliases.',
                     ],
                 });
                 break;
