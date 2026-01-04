@@ -1,0 +1,309 @@
+// Rogue Trader Skills Styling
+// Improved layout and readability for skills panels
+
+// Skills panel layout adjustments
+.rt-skills-panel,
+.rt-specialist-skills-panel {
+  .dh-panel__header {
+    font-size: 1.2em;
+    padding: 0.5rem;
+    text-align: center;
+    background: rgba(36, 107, 131, 0.15);
+    border-bottom: 2px solid rgba(36, 107, 131, 0.3);
+  }
+}
+
+// Skills table header
+.rt-skills-header {
+  background: rgba(36, 107, 131, 0.2) !important;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.5px;
+  
+  .table-cell {
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+  }
+  
+  .rt-skill-name {
+    text-align: left;
+    padding-left: 0.5rem;
+  }
+}
+
+// Skill row styling
+.rt-skill-row,
+.rt-specialist-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background: rgba(36, 107, 131, 0.05);
+  }
+  
+  .table-cell {
+    padding: 0.35rem 0.25rem;
+    vertical-align: middle;
+  }
+}
+
+// Skill name column
+.rt-skill-name {
+  text-align: left !important;
+  
+  .rt-skill-button {
+    background: transparent;
+    border: none;
+    color: #246b83;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+    width: 100%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &:hover {
+      background: rgba(36, 107, 131, 0.1);
+      color: #1a4f61;
+      border-radius: 3px;
+    }
+    
+    i {
+      font-size: 0.9em;
+      opacity: 0.7;
+    }
+  }
+}
+
+// Characteristic dropdown
+.rt-skill-char {
+  text-align: center;
+  
+  .rt-char-select {
+    width: 100%;
+    padding: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    background: white;
+    font-size: 0.9em;
+    
+    &:focus {
+      outline: none;
+      border-color: #246b83;
+      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+    }
+  }
+}
+
+// Training checkboxes
+.rt-skill-training {
+  text-align: center !important;
+  
+  input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    margin: 0 auto;
+    display: block;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Bonus input
+.rt-skill-bonus {
+  text-align: center;
+  
+  .rt-bonus-input {
+    width: 100%;
+    padding: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    text-align: center;
+    font-size: 0.9em;
+    
+    &:focus {
+      outline: none;
+      border-color: #246b83;
+      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+    }
+  }
+}
+
+// Total value display
+.rt-skill-total {
+  text-align: center !important;
+  font-weight: bold;
+  
+  .rt-total-value {
+    display: inline-block;
+    background: rgba(36, 107, 131, 0.15);
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 1.1em;
+    min-width: 3rem;
+  }
+}
+
+// Specialist skills specific styling
+.rt-specialist-group {
+  background: rgba(36, 107, 131, 0.25) !important;
+  border-top: 2px solid rgba(36, 107, 131, 0.4);
+  border-bottom: 2px solid rgba(36, 107, 131, 0.4);
+  margin-top: 0.5rem;
+  
+  .rt-specialist-group-name {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.95em;
+    padding: 0.5rem !important;
+    
+    .rt-group-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+  
+  .rt-specialist-add {
+    text-align: right !important;
+    padding-right: 0.5rem !important;
+    
+    .rt-add-specialization {
+      background: #246b83;
+      color: white;
+      border: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      
+      &:hover {
+        background: #1a4f61;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+      
+      i {
+        font-size: 1em;
+      }
+    }
+  }
+}
+
+// Specialist name field
+.rt-specialist-name {
+  display: flex !important;
+  gap: 0.5rem;
+  align-items: center;
+  
+  .rt-specialization-input {
+    flex: 1;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    font-size: 0.9em;
+    
+    &:focus {
+      outline: none;
+      border-color: #246b83;
+      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+    }
+  }
+  
+  .rt-skill-button {
+    flex-shrink: 0;
+    padding: 0.35rem 0.5rem;
+    min-width: auto;
+    
+    i {
+      margin: 0;
+    }
+  }
+}
+
+// Empty state message
+.rt-no-specializations {
+  background: rgba(0, 0, 0, 0.02);
+  
+  .rt-empty-message {
+    padding: 1rem !important;
+    text-align: center !important;
+    color: #666;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    
+    i {
+      opacity: 0.6;
+    }
+  }
+}
+
+// Update the grid layout for skill tables
+.dh-skilltable--border {
+  .table-row--head,
+  .table-row,
+  .rt-skill-row,
+  .rt-specialist-row {
+    grid-template-columns: 2fr 0.6fr 0.5fr 0.5fr 0.5fr 0.5fr 0.6fr 0.7fr;
+    display: grid;
+    align-items: center;
+  }
+  
+  .table-row--grouped,
+  .rt-specialist-group,
+  .rt-no-specializations {
+    grid-template-columns: 1fr auto;
+    display: grid;
+    align-items: center;
+  }
+}
+
+// Responsive adjustments for smaller screens
+@media (max-width: 1200px) {
+  .rt-skills-panel,
+  .rt-specialist-skills-panel {
+    grid-column: span 6 !important;
+  }
+  
+  .dh-skilltable--border {
+    .table-row--head,
+    .table-row,
+    .rt-skill-row,
+    .rt-specialist-row {
+      grid-template-columns: 1.5fr 0.5fr 0.4fr 0.4fr 0.4fr 0.4fr 0.5fr 0.6fr;
+      font-size: 0.9em;
+    }
+  }
+  
+  .rt-skill-button {
+    font-size: 0.85em;
+  }
+}
+
+// Additional polish
+.rt-skills-panel .dh-table--border,
+.rt-specialist-skills-panel .dh-table--border {
+  border: 1px solid rgba(36, 107, 131, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
