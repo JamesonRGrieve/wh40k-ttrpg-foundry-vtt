@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 2d10+10</p><p><b>Notes:</b> Reroll (1). If damage roll exceeds armour, does 3d10 Crew and 2d10 Morale damage instead of hull damage. Repeats each turn until -10 Command Test passed. Same occurs to you if torpedo tube holding this is damaged. Refer to Torpedo Rules block.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Deploys countermeasures that for the next 1d5+1 turns causes all ships targeting this one to have -20 on BS Tests and all torpedos to have -30. Single use, once deployed requires successful upkeep test outside of combat at a suitable location such as a shipyard before it can be used again. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

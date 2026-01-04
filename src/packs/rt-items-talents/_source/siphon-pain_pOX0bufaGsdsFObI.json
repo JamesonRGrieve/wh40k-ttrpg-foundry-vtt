@@ -9,7 +9,15 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>The character adds the first digit of their Corruption Points in metres to the range they can gain Pain Tokens. (EG: 39 corruption = +3 Metres)</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

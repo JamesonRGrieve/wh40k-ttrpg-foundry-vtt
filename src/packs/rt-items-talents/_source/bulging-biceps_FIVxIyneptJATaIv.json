@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

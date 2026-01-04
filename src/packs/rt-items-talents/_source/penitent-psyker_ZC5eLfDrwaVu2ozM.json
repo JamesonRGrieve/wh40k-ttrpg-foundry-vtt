@@ -9,7 +9,16 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When the Character or an ally within 10m is targeted by a Psychic Power, the character may choose to suffer any number of levels of Fatigue, each level suffered gives +10 to any Opposed Test to resist the power or Evasion Test to avoid its effects. If target's test to resist or avoid rolls a double, the character generates Psychic Phenomena as they would when making a Focus Power Tests.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,16 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Inquisitor can spend two Fate Points as a Free Action to grant another character within 10 metres a Fate Point. Any other character within 10 metres can spend two Fate Points to grant this character a Fate Point.\nIn either case, number of Fate Points can't exceed Fate Point maximum.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

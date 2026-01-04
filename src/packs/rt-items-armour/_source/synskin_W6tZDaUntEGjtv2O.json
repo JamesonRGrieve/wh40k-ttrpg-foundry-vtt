@@ -14,7 +14,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Form Fitting, +10 to Concealment and Silent Move while not wearing other armour, invisible to Presense goggles and Dark Sight if not wearing power armour.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

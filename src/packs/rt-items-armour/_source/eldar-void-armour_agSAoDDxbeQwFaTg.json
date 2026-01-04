@@ -14,7 +14,9 @@
     "source": "RT: Navis Primer",
     "description": {
       "value": "<p>Eldar Armour. Sealed armour with long range Vox, auspex. Gives Dark-Sight Trait. Also Gives Flyer (12) in zero gravity thanks to back-mounted wings. Gives +10 to all pilot (Personal) Tests.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

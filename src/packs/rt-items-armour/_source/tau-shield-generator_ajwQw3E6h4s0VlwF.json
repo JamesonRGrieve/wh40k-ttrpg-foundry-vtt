@@ -14,7 +14,9 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Designed for Tau Drones and Battlesuits as opposed to personal use. Acts like a Refractor Field, projecting energy waves to intercept and disable projectiles.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

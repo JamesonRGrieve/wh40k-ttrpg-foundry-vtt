@@ -14,7 +14,9 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Gives +30 to Strength Characteristic and +1 to Size. However Suffers -30 to all Agility Tests and -20 to Perception Tests. Armour is sealed and has 10 hours of air. Shielding provides +20 to Toughness Tests to Extreme Heat and Radiation. Power Cells last 10 hours before needing recharge or replacing.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

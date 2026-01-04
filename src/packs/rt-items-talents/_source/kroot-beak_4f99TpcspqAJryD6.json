@@ -9,7 +9,15 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>A Kroot's beak counts as a Natural Weapon. It deals 1d5+Strength Bonus Rending Damage, with Primitive Quality.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,16 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>As a Full Action, the character can make a +0 Scholastic Lore (Imperial Creed) Test to bless a single weapon with the Flame Quality. If successful, for Willpower Bonus Rounds or until the weapon's Clip is depleted, the weapon gains the Sanctified Quality and automatically sets Daemons on Fire when it strikes them.\nSanctified: Weapon damage counts as \"Holy\", Ignoring the Toughness Bonus granted by the \"Daemonic\" Trait. Weapons with this trait can destroy creatures with the \"Stuff of Nightmares\" Trait.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": false,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

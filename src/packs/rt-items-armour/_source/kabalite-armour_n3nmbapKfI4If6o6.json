@@ -14,7 +14,9 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>Average Availability if acquired from Dark Eldar Settlement. Held in place by barbs and hooks that inflict pain on the wearer. Those not used to this must make +0 Willpower or Toughness Test or gain a level of fatigue when donning it, and may frequently express displeasure while wearing it. Likely Human Wearable, if uncomfortable.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -17,7 +17,9 @@
     "source": null,
     "description": {
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Doesn't Deal damage or have regular weapn profile. Instead when performing a Boarding Action, a ship with this weapon can make -10 BS Test instead of -20 Pilot (Spacecraft)+Manoeuvrability Test. Enemy ships trying to escape must make -40 Pilot (Spacecraft)+Manoeuvrability Test to escape rather than -20, although you can simply cut the cable.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

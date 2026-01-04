@@ -14,7 +14,9 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Weapons with the Force Quality have it negated while attacking anyone wearing this armour.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

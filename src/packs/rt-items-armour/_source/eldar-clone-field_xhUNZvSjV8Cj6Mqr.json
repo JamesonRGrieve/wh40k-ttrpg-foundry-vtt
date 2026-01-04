@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Wearer doubles their Degrees of Success with all Successful Dodge Tests. Once per Round can re-roll a failed Dodge Test. Gain one extra Reaction that can only be used to perform the Evasion Reaction each turn.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

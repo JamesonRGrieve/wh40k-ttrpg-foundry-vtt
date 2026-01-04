@@ -5,7 +5,7 @@
   "system": {
     "type": "Augment",
     "hullType": "All Ships",
-    "powerUsage": "1--3",
+    "powerUsage": 0,
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "Increases Hull Integrity by twice the amount of power supplied (max +6 Hull, for 3 Power). If component is supplied less power or is damaged, bonus is lost, although cannot bring Hull Integrity below 0. Can increase Supplied power with +0 Tech-use check, unpowering other components at GM Discretion.",
@@ -13,6 +13,14 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Increases Hull Integrity by twice the amount of power supplied (max +6 Hull, for 3 Power). If component is supplied less power or is damaged, bonus is lost, although cannot bring Hull Integrity below 0. Can increase Supplied power with +0 Tech-use check, unpowering other components at GM Discretion.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Large Weapon and Ammo Stockpile. +25 Achievement Points towards Military Objectives and all Macrobatteries have +1 Damage. If component is damaged, it explodes, doing 2d5 Hull Integrity damage, another component of GM's choice is set on fire. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

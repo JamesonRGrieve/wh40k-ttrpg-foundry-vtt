@@ -9,7 +9,16 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

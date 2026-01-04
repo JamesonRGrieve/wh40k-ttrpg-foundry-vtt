@@ -20,6 +20,12 @@
     "note": "Psykers hit bt weapon must immediately roll on perils of the warp. Creatuers with the Daemonic Trait hit by this gain the Warp Instability Trait until the end of the encounter, or suffer -20 to Warp Instability Tests if they already have the trait. Contains a Blood-like substance said to weep from some statues and relics.",
     "description": {
       "value": "<p><b>Special:</b> Blast (2), Sanctified</p><p><b>Note:</b> Psykers hit bt weapon must immediately roll on perils of the warp. Creatuers with the Daemonic Trait hit by this gain the Warp Instability Trait until the end of the encounter, or suffer -20 to Warp Instability Tests if they already have the trait. Contains a Blood-like substance said to weep from some statues and relics.</p>"
+    },
+    "damageFormula": "1d10",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

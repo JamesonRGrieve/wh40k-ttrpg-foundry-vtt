@@ -14,7 +14,9 @@
     "source": "BC: Tome of Blood",
     "description": {
       "value": "<p>Rare on the War Moons of Talax. Gives +10 to resist effects of Concussive Weapon Quality.\nHalve primitive armour AP vs non primitive weapons</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

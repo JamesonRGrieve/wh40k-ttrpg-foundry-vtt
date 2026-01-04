@@ -14,7 +14,9 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Additional +5 AP vs Energy Damage, but -30 to Concealment and Silent move tests due to armour conspicuousness.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

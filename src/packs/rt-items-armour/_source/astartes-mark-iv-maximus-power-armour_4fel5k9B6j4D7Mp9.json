@@ -14,7 +14,9 @@
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>The Armour worn during the Zenith of the Great Crusade. +15 Fellowship with Space Marines. +20 Strength. Subsystems: Autosenses (+10), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History 3 Times. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

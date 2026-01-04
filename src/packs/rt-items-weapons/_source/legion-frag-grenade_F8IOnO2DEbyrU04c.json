@@ -20,6 +20,12 @@
     "note": "Chaos Legionary Weapon. Dangerous to own.",
     "description": {
       "value": "<p><b>Special:</b> Blast (4), SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    },
+    "damageFormula": "2d10+2",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

@@ -9,7 +9,15 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>The Character gains +30 when opposing any Fellowship or Interrogation Tests, and suffers -20 to any Fellowship-based tests they make. The Character removes any current Mental Disorders and never rolls for Mental Traumas.\nThey must however pay double xp (200xp) to remove Insanity Points. If they somehow drop below 10 Insanity they may remove this talent at GM discretion.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

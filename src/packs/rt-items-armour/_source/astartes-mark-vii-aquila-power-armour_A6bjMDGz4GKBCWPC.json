@@ -14,7 +14,9 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Possesses all Power Armour Subsystems (See Armour Upgrades). +20 to Strength Characteristic. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet.\nIncreases Size to Hulking. Poor Manual Dexterity causes -10 to use equipment not designed for Space Marines, non-Astartes Ranged weapons need modification to work at all.\nRoll once for Power Armour History.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

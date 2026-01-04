@@ -9,7 +9,15 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+10 to Fellowship Tests with Relevent Group. Such as: Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers.\nOrk Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,16 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Before rolling the d100 when making a test. The Inquisitor can spend a Fate Point to count as having rolled a 01 on that roll.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

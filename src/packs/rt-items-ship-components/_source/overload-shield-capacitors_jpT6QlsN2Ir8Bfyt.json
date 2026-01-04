@@ -5,14 +5,22 @@
   "system": {
     "type": "Upgrade",
     "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
     "effect": "Once per 24 hours, allows Void Shields to automatically reactivate after overloading. Poor Craftsmanship reduces their strength by 1 when reactivated. Good allows three reactivations, Best only allows one reactivation, but increase stength of void shields by 1 at all times. Only one per vessel.",
     "availability": "Extremely Rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Once per 24 hours, allows Void Shields to automatically reactivate after overloading. Poor Craftsmanship reduces their strength by 1 when reactivated. Good allows three reactivations, Best only allows one reactivation, but increase stength of void shields by 1 at all times. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

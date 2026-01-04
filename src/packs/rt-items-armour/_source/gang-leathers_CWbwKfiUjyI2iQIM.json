@@ -14,7 +14,9 @@
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>Often found in outlandish colours of whichever Gang the wearer belongs to.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

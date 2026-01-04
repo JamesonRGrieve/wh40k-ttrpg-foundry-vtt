@@ -14,7 +14,9 @@
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

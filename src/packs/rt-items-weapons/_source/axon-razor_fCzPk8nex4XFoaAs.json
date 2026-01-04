@@ -20,6 +20,12 @@
     "note": "Does no Damage, instead, listed damage counts for the purposes of the weapon's Crippling Quality. A Thin paper-like blade that slices through tissue with little damage, but instead causes agonising nerve damage.",
     "description": {
       "value": "<p><b>Special:</b> Crippling (5), Razor-Sharp</p><p><b>Note:</b> Does no Damage, instead, listed damage counts for the purposes of the weapon's Crippling Quality. A Thin paper-like blade that slices through tissue with little damage, but instead causes agonising nerve damage.</p>"
+    },
+    "damageFormula": "1d5",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

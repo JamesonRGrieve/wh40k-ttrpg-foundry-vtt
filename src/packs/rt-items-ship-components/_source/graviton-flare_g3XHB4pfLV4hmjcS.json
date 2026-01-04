@@ -13,6 +13,14 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>When triggered, causes all vessels in the system to suffer -30 to Detection for 2 Strategic Rounds, takes 24 hour to recharge. Can't be damaged or destroyed except via critical hits. Doing this in a heavily populated system may cause a commotion, but may also provide a chance to escape.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

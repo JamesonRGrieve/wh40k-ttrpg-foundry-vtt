@@ -14,7 +14,9 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Virtually Undetectable as armour, looks like finely crafted clothing. Often deemed heretical due to inclusion of xenos craftsmanship.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

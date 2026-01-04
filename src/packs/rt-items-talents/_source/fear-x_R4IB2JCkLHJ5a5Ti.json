@@ -9,7 +9,15 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When Encountering a creature with this trait, make a Willpower test modifed based on X, on failiure roll on Table 10-4 Shock, add +10 for each degree of failiure. \nX may be: 1 (Disturbing, -0),  2 (Frightening, -10), 3 (Horrifying, -20), or 4 (Terrifying, -30)</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

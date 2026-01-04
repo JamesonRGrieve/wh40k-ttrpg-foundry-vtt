@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+50 Achievement Points towards Trade or Criminal Objectives, -3 to Ship Manoeuvrability. Stores Large amounts of Cargo and Cargo Shuttles (aka Cargo Lighters)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

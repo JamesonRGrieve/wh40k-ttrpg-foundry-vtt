@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -14,7 +14,9 @@
     "source": "RT: Stars of Inequity",
     "description": {
       "value": "<p>Designed for carrying cargo in dangerous environments.  +20 to Strength Characteristic, Unnatural Strength (x2) and Sturdy Traits, as well as +1 Size. However -40 on Agility Tests and -20 on WSkill and BSkill Tests, and can't run. Is sealed, has vox, microbead, rebreather, and 24 hours of battery. Takes 30 minutes to get in/out (15 with help).</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

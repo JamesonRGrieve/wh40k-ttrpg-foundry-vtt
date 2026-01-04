@@ -20,6 +20,12 @@
     "note": null,
     "description": {
       "value": "<p><b>Special:</b> Balanced</p>"
+    },
+    "damageFormula": "1d10",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

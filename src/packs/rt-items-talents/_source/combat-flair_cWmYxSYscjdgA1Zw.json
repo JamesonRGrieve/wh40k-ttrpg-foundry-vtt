@@ -9,7 +9,15 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Character can make Opposed +0 Charm vs Willpower Test as a Half Action against any enemies they are in close combat with. If they win they impose -10, + -5 per Degree of Success after first on the enemy's Weapon Skill for one Full Round. Effects are cumulative. Opponents that have Bestial, Daemonic, From Beyond, or Machine Traits  are immune to this talent at GM Discretion.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": false,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

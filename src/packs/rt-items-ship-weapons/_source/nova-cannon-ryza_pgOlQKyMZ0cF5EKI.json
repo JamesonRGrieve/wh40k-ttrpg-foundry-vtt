@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 2d5+5</p><p><b>Notes:</b> Check Separate Nova Cannon Rules Block. Additionally, on 5 Degrees of Failiure of BS Test to fire causes crit on firer's ship, target component always Nova Cannon.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

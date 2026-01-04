@@ -9,7 +9,16 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character can subtract their Willpower Bonus from the number of Degrees of Failiure they suffer on any failed Fear Test. If this reduces the number to 0 or less, they count as passing the Fear Test with 1 degree of success.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

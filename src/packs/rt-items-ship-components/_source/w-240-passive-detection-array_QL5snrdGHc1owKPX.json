@@ -13,6 +13,14 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>While on Silent Running, Vessel can perform Detection Actions without Penalty. Component cannot be damaged or destroyed except via a critical hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

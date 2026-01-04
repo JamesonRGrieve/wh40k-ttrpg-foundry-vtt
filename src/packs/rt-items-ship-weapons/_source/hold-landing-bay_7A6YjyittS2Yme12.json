@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Retrofits \"Main Cargo Hold\", -5 Hull and Manoeuvrability. Holds up to 6 squadrons only 2 can be launched at a time. Squadrons have -2 VU on first turn. In combat make +10 Piloting+Manoeuvrability Test to land. 3DoF requires new attempt, 4DoF damages craft. For squadrons, one damaged craft per DoF. Out of Combat, Squadron Landing takes 30mins.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

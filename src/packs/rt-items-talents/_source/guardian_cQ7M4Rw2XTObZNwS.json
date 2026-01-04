@@ -9,7 +9,16 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As a Reaction, character can spend a Fate Point and expand all their actions for their next Round to switch places within an ally within 2 metres so long as no physical obstruction would prevent it. The character becomes target of any attacks previously targeting the ally.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

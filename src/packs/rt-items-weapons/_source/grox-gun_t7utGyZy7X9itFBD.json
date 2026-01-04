@@ -20,6 +20,12 @@
     "note": null,
     "description": {
       "value": "<p><b>Special:</b> Unreliable</p>"
+    },
+    "damageFormula": "1d10+4",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

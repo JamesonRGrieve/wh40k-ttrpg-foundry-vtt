@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Storm Shield of the Sons of Orar Chapter. Overload 01. Wielder can trigger a demeanour one additional time each session.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character gains +20 to Willpower Tests made to resist mind control or interrogation. They become mildly socially ignorant, such as not getting jokes.\nOften provided by a prayer-spewing circuit implanted into the skull.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

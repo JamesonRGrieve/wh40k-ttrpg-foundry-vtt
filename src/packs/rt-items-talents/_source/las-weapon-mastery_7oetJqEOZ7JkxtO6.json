@@ -9,7 +9,16 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever this character makes a ranged attack with a las weapon, they deal +1 damage per two Degrees of Success scored beyond the first.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

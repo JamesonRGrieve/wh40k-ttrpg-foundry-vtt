@@ -14,7 +14,9 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Grants +10 to all Attack Rolls, +3 to Penetration of any weapon wielded by wearer. Increases Effective Rank by 1 for determining Squad Cohesion or for Ultramarine Chapter Abilities in Solo Mode.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

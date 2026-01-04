@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Force Field of the Iron Lords Chapter. Overload 01. Attacks not stopped by the Force Field reduce their damage by 3. Unarmed attacks against the user cause the attacker to suffer 1d5 damage that ignores Armour and Toughness.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

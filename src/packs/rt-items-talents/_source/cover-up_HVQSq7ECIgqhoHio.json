@@ -9,7 +9,16 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>At GM Discretion, Character can reduce their Influence by X to increase their Subtlety by Xd5.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

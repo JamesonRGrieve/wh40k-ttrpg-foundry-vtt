@@ -9,7 +9,16 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever this character wields a Melta Weapon, they count its range as being increased by +2xBallistic Skill Bonus metres.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

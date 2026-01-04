@@ -14,7 +14,9 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Allies within 10 metres of a Priest with a Rosarius gain +10 to Fear and Pinning Tests.\nAlso used by Space Marine Chaplains</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

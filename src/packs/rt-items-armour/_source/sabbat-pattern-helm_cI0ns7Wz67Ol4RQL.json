@@ -14,7 +14,9 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

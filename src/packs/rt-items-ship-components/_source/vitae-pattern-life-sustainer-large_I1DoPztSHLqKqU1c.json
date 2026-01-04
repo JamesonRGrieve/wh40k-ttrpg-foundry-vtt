@@ -7,12 +7,20 @@
     "hullType": "Light Cruisers, Cruisers",
     "powerUsage": 5,
     "spaceUsage": 3,
-    "spCost": "-",
+    "spCost": 0,
     "effect": "Recycles air and water for the ship. Considered the Default Option.",
     "availability": "Scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Recycles air and water for the ship. Considered the Default Option.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

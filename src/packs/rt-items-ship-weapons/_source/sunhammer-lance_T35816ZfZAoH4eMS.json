@@ -17,7 +17,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

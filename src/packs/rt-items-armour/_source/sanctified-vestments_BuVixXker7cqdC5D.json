@@ -14,7 +14,9 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

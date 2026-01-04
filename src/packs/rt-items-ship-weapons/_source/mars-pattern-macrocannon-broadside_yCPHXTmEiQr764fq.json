@@ -17,7 +17,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> Must Occupy Port or Starboard slots.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

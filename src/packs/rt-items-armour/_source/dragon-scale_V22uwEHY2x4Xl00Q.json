@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Only Acquirable by Tech Priests. Draws Power from the Potentia Coil, and so does not run out of energy. Has Inbuilt Photo-Visor and Respirator. Increases Strength Characteristic by +10. User must have Cyber Mantle and Potentia Coil.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

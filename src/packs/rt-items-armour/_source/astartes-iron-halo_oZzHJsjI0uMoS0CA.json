@@ -14,7 +14,9 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Always Master-Crafted</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

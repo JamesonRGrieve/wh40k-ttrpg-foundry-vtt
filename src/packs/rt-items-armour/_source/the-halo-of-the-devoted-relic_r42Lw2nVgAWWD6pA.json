@@ -14,7 +14,9 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. </p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

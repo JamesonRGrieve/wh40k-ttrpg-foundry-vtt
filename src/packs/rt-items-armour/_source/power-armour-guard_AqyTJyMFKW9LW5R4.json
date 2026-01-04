@@ -14,7 +14,9 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Gives +2 Unnatural Strength and Perception. Increase size by 1. Environmentally sealed as long as helmet is worn. Power Pack lasts 1d5 Hours, or forever if powered by Potential Coil. (Use OW Unnatural Characteristics) Extremely Rare for Enginseers</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

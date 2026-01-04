@@ -14,7 +14,9 @@
     "source": "BC: Tome of Blood",
     "description": {
       "value": "<p>Must be Dedicated to Khorne to Wear. Lets wearer activate Frenzy Talent as a Free Action if they have it. Grants Regeneration(X), where X is equal to 1 per 5 damage they caused last turn, returning to 0 when combat ends of wearer leaves an ongoing melee voluntarily.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

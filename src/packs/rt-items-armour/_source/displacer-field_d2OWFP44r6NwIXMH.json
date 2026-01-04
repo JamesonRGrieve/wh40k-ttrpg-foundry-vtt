@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

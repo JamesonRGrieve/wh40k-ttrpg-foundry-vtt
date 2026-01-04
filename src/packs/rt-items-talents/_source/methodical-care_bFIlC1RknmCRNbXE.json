@@ -9,7 +9,16 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever the character Fails a test as part of the Extended Care Medicae Special Use that leads to their Patient taking damage, the character can reduce that damage by their Int Bonus.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

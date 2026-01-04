@@ -9,7 +9,15 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever the Character or an Ally in Cohesion with the Character inflicts Righteous Fury on an enemy, and that attack causes damage, roll 1d5 for Critical damage twice and discard the lower result.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

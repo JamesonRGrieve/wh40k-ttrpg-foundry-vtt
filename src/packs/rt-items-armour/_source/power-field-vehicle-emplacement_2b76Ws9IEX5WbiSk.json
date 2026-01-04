@@ -14,7 +14,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Bulky Installation, projects force wall out 3 metres. Ranged attacks within 3 metres, and any melee attacks are unaffected by field.  Visibly glows and crackles, giving -40 to Stealth while active. This version is equipped in vechiles or inside small buildings. Ranged can be modified but also varies power usage.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

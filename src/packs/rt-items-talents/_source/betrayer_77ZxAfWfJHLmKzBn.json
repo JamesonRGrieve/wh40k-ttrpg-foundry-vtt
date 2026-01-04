@@ -9,7 +9,16 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Once per game session, character can killed an allied NPC (an NPC that trusts and is friendly towards them), or one of their own Minions. They gain +10 to their next Infamy Test if killing an NPC, or +20 if a Minion. This may have consequences as determined by GM.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

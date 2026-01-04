@@ -14,7 +14,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -13,6 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

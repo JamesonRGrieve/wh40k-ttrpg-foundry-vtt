@@ -13,6 +13,14 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

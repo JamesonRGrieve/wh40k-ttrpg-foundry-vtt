@@ -5,7 +5,7 @@
   "system": {
     "type": "Xenotech",
     "hullType": "All Ships",
-    "powerUsage": "1--3",
+    "powerUsage": 0,
     "spaceUsage": 0,
     "spCost": 3,
     "effect": "Can push away slow moving objects that would otherwise collide with the ship. Whenever this ship would take damage from Asteroids, Space Debris, Torpedos, Bombers, or Ramming, reduce damage by 1 per point of power allocated (max 3). For torpedos it applies this per torpedo, for all other damage it is applied to combined damage.",
@@ -13,6 +13,14 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Can push away slow moving objects that would otherwise collide with the ship. Whenever this ship would take damage from Asteroids, Space Debris, Torpedos, Bombers, or Ramming, reduce damage by 1 per point of power allocated (max 3). For torpedos it applies this per torpedo, for all other damage it is applied to combined damage.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

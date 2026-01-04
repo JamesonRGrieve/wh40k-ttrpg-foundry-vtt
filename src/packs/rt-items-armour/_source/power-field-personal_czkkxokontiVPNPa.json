@@ -14,7 +14,9 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

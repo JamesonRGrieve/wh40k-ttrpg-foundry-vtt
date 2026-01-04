@@ -13,6 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>When Performing the \"Adjust Speed and Bearing\", \"Come to a New Heading\", or \"Evasive Manoeuver\" Manoeuvre Actions, Pilot (Space Craft) + Manoeuvrability Tests are +0. (instead of -20, -10, and -10 Respectively). Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

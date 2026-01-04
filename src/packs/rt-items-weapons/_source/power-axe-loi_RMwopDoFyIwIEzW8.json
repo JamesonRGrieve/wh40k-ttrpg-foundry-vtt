@@ -20,6 +20,12 @@
     "note": "Requires Two Hands to wield",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Requires Two Hands to wield</p>"
+    },
+    "damageFormula": "1d10+7",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

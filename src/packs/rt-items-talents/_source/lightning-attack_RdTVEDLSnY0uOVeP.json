@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character can make Lightning Attack Combat Actions.\nLightning Attack: Half Action, Attack, Make a -10 Weapon Skill Test with one melee weapon, if successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 3,
+    "isPassive": false,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

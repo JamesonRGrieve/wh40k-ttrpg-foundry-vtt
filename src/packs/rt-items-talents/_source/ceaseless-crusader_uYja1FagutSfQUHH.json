@@ -9,7 +9,16 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As a Free Action, the Sister can spend a Fate Point to ignore the effects of Fatigue until the end of the encounter. On doing so every other firendly character within 30m removes 1 Fatigue.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

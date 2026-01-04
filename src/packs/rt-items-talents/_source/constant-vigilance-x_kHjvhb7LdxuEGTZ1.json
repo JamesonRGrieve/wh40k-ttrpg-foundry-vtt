@@ -9,7 +9,16 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character uses \"X\" when rolling for initiative instead of their Agility vlaue, and rolls two dice for the roll, choosing the highest of the two.\nX may be either Intelligence or Perception, with the requirements matching the characteristic.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

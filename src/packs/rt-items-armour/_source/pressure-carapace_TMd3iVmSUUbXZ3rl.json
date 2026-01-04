@@ -14,7 +14,9 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Sealed against the void. If this armour would be punctured, roll 1d10, on 6+ no puncture occurs (although any damage done happens as normal). Good and Best versions cannot suffer from breaches or punctures due to an internal fluid layer.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

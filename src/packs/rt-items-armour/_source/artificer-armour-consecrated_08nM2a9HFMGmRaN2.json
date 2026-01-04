@@ -14,7 +14,9 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Legendary Armour, in addition to benefits of normal Artificer Armour (see those notes), Armour is also Warded, and grants +20 to Opposed Willpower Tests to resist Psychic Techniques, and Unarmed Attacks have the Sanctified Quality.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

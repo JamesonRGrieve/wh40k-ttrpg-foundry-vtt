@@ -13,6 +13,14 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Space Brothel. Allows crew to select from various pleasures and satisfy their desires. Often looked down on by Imperial Bureaucracies. Permenant +2 Morale and +10 to all Charm and Commerce tests conducted on the vessel if the Sensorium is used. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
     }
   },
   "effects": [],

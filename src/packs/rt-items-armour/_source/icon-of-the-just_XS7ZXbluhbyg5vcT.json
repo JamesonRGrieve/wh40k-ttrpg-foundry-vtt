@@ -14,7 +14,9 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Opponents with the Daemonic Trait suffer -10 to attack tests and Focus Power tests against the wearer.\nOnly available to those must trusted by the Ordo Malleus.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

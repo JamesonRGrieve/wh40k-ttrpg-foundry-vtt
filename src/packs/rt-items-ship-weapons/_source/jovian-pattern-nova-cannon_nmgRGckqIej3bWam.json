@@ -17,7 +17,9 @@
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p><b>Damage:</b> 2d5+7</p><p><b>Notes:</b> Check Separate Nova Cannon Rules Block. Additionally, this Nova Cannon fires Vortex Warheads, vessels shot by (but not neccisarily damaged by) this weapon take 1d5 Morale Damage. If this weapon is damaged, it is instead Destroyed, its ammo explodes doing 1d10 Hull Damage to firer's ship, ignoring armour and void shields.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

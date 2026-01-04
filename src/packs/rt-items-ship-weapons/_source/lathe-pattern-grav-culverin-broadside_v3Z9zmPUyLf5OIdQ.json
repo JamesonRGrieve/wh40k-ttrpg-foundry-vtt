@@ -17,7 +17,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> Must Occupy Port or Starboard slots. Can choose to increase range by 2 VU's, at the cost of decreasing damage to 1d10+1</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

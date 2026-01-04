@@ -14,7 +14,9 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Used by Apothacaries, provides +10 to Medicae Tests when working on a patient. Acts as a Preysense Sight.\nHas all normal functions of an Astartes Helmet.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

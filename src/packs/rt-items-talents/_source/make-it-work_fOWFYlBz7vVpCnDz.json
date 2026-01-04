@@ -9,7 +9,15 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Ork Weapons that have the Unreliable Quality do not have this Quality when wielded by an Ork.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

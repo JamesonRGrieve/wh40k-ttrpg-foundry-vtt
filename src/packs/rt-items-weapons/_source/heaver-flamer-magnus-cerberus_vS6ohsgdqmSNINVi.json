@@ -20,6 +20,12 @@
     "note": "Weight includes backpack fuel supply.",
     "description": {
       "value": "<p><b>Special:</b> Flame, Reliable, Spray, Vengeful (9)</p><p><b>Note:</b> Weight includes backpack fuel supply.</p>"
+    },
+    "damageFormula": "1d10+5",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

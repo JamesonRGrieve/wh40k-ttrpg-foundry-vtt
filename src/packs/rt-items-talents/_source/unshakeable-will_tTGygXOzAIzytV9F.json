@@ -9,7 +9,16 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear. \nJust the heretical version of Unshakeable Faith.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

@@ -20,6 +20,12 @@
     "note": "Overloads target's nervous system with pain.\nIf Best Craftsmanship any that suffer Critical Damage from weapon permenantly reduce Perception Characteristic by 1d5.",
     "description": {
       "value": "<p><b>Special:</b> Flexible, Power Field, Tearing, Shocking</p><p><b>Note:</b> Overloads target's nervous system with pain.\nIf Best Craftsmanship any that suffer Critical Damage from weapon permenantly reduce Perception Characteristic by 1d5.</p>"
+    },
+    "damageFormula": "1d10+3",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

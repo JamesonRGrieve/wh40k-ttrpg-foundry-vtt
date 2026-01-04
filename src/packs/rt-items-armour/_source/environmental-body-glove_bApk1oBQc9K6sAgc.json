@@ -14,7 +14,9 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Sustains wearer at a constant temperature in extreme environments, recycles sweat and other fluids, cooling/warming as needed. Waterproof. Grants +10 to Survival Tests.\nUsually equipped with a rebreather, comm-bead, and photo-contacts.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

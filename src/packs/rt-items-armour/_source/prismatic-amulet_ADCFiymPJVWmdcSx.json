@@ -14,7 +14,9 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p>If ever overloads, attack responsible for overload takes 2d10 Energy Damage reduced by their Willpower Bonus rather than Toughness or Armour. Only Functions when wearer has the Mark of Tzeentch</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

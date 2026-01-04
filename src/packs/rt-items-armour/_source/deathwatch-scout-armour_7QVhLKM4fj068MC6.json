@@ -14,7 +14,9 @@
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>+10 to Toughness Tests vs Poisons, Radiation, Acids, or Chemicals. Tech-Use or Scrutiny Tests to detect wearer via Auto-senses/auspex/augurs/etc suffer -10. Has inbuilt vox system with 35km range and can relay indefintely off of vehicles or other wearers of this armour. Has identifier beacon with 10km range, acts as emergency distress and identifies wearer as friendly, highly encrypted and frequency is kept secret. Auto-Injector provides +5 to tests vs Toxic Quality and Poisons, Two doses of Pain Suppressants (Astartes Grade), and if wearer is stunned, they will be automatically unstunned in 1d5 rounds.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

@@ -17,7 +17,9 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage:</b> 1d10+2</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

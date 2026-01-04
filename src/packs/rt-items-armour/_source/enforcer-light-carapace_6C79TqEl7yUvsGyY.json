@@ -14,7 +14,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>May consist of easily removable plates to help with repair. Some suits are sealed against the void.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

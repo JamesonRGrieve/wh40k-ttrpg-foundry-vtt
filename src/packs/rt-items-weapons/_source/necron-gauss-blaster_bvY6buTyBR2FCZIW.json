@@ -20,6 +20,12 @@
     "note": "Nearly Unchanged from ChatGPT description. Always Best Quality.",
     "description": {
       "value": "<p><b>Special:</b> Gauss, Necron Wep</p><p><b>Note:</b> Nearly Unchanged from ChatGPT description. Always Best Quality.</p>"
+    },
+    "damageFormula": "1d10+6",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

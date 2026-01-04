@@ -14,7 +14,9 @@
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Scout Armour of the Dark Hunters Chapter. Provides all other bonuses of Scout Armour. Awareness Tests to spot the wearer have -20, or -40 if the wearer is standing still. Armour has Built-in Auspex, if wearer makes a Half-Action or more Aim, Auspex allows attacks to treat target's AP as half prior to applying Penetration.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

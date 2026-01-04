@@ -14,7 +14,9 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Gives +1 Unnatural Strength and Perception. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

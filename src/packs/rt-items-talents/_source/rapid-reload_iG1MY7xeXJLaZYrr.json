@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Halve reload time of all weapons, rounding down. Halving a Half Action reload makes it a Free Action.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 1,
+    "isPassive": false,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

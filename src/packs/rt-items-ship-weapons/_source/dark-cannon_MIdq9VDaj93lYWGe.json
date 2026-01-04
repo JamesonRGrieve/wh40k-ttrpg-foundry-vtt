@@ -17,7 +17,9 @@
     "source": null,
     "description": {
       "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> Impacts cause clouds of fog. Vessels struck by this weapon have -15 to BS Tests for the following Strategic turn. Weapon doesn't seem to use ammo.</p>"
-    }
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
   },
   "effects": [],
   "flags": {},

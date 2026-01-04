@@ -20,6 +20,12 @@
     "note": "Loses Shocking Quality while Recharging. Uses Normal Shield Profile while Recharging. Grants +4AP to wielding Arm and Body, Good/Best Craftsmanship have a weapon lock that lets a basic weapon rest on it and fire one-handed without penalty.",
     "description": {
       "value": "<p><b>Special:</b> Defensive, Recharge, Shocking</p><p><b>Note:</b> Loses Shocking Quality while Recharging. Uses Normal Shield Profile while Recharging. Grants +4AP to wielding Arm and Body, Good/Best Craftsmanship have a weapon lock that lets a basic weapon rest on it and fire one-handed without penalty.</p>"
+    },
+    "damageFormula": "1d10",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

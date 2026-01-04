@@ -14,7 +14,9 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Also Provides +4 AP to the Arm and Body. Acts as a Defensive Weapon dealing 1d10 Impact Damage. Reduces Guarded Attack to a Half Action.</p>"
-    }
+    },
+    "modificationSlots": 2,
+    "installedMods": []
   },
   "effects": [],
   "flags": {},

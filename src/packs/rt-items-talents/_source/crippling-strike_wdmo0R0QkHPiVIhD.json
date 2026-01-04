@@ -9,7 +9,16 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Whenever the Character's Melee Attacks inflict Critical Damage, add +2 to the damage result.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": false
   },
   "effects": [],
   "flags": {},

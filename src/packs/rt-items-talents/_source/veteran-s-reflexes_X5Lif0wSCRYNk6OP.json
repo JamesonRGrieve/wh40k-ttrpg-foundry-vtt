@@ -9,7 +9,15 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true
   },
   "effects": [],
   "flags": {},

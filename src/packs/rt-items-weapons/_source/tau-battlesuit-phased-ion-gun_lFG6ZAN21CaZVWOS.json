@@ -20,6 +20,12 @@
     "note": "Tau Battlesuit Weapon, not practical to wield outside of one.",
     "description": {
       "value": "<p><b>Special:</b> Overcharge (6)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.</p>"
+    },
+    "damageFormula": "1d10+9",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],

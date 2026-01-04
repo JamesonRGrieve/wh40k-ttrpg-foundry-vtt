@@ -20,6 +20,12 @@
     "note": "Add 2x Strength Bonus to melee damage rather than 1x",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Add 2x Strength Bonus to melee damage rather than 1x</p>"
+    },
+    "damageFormula": "2d10",
+    "craftsmanshipMods": {
+      "toHit": 0,
+      "damage": 0,
+      "penetration": 0
     }
   },
   "effects": [],
