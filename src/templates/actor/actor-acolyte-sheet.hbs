@@ -7,41 +7,44 @@
                     <img class="dh-header__logo-image" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
                 <div class="dh-header__item-wrapper--span-2">
-                    <span class="dh-header__title">Name</span>
+                    <span class="dh-header__title">{{localize "RT.Character.Name"}}</span>
                     <input class="dh-header__input" name="name" type="text" value="{{actor.name}}" />
                 </div>
-                {{#each actor.bio}}
-                    {{#if (arrayIncludes @key @root.dh.bio.primary)}}
-                        {{> systems/rogue-trader/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
-                    {{/if}}
-                {{/each}}
+                <div class="dh-header__item-wrapper">
+                    <span class="dh-header__title">{{localize "RT.OriginPath.Career"}}</span>
+                    <span class="dh-header__display">{{system.originPath.career}}</span>
+                </div>
+                <div class="dh-header__item-wrapper">
+                    <span class="dh-header__title">{{localize "RT.OriginPath.HomeWorld"}}</span>
+                    <span class="dh-header__display">{{system.originPath.homeWorld}}</span>
+                </div>
             </div>
         </div>
 
         <div class="dh-navigation" data-group="primary">
             <label class="dh-navigation__item dh-navigation__item-left">
-                <a class="item" data-tab="combat" data-group="primary">combat</a>
+                <a class="item" data-tab="combat" data-group="primary">{{localize "RT.Tabs.Combat"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="main" data-group="primary">main</a>
+                <a class="item" data-tab="main" data-group="primary">{{localize "RT.Tabs.Main"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="bio" data-group="primary">bio</a>
+                <a class="item" data-tab="origin" data-group="primary">{{localize "RT.Tabs.OriginPath"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="gear" data-group="primary">gear</a>
+                <a class="item" data-tab="gear" data-group="primary">{{localize "RT.Tabs.Gear"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="psychic" data-group="primary">psychic powers</a>
+                <a class="item" data-tab="powers" data-group="primary">{{localize "RT.Tabs.Powers"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="advances" data-group="primary">advances</a>
+                <a class="item" data-tab="advances" data-group="primary">{{localize "RT.Tabs.Advances"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="rogue-trader" data-group="primary">{{localize "RT.RogueTrader.TabLabel"}}</a>
+                <a class="item" data-tab="ship" data-group="primary">{{localize "RT.Tabs.Ship"}}</a>
             </label>
             <label class="dh-navigation__item">
-                <a class="item" data-tab="social" data-group="primary">social</a>
+                <a class="item" data-tab="bio" data-group="primary">{{localize "RT.Tabs.Biography"}}</a>
             </label>
         </div>
 
@@ -56,8 +59,8 @@
                 {{> systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/movement-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
-
             </div>
+
             <div class="tab" data-group="primary" data-tab="main">
                 {{> systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
@@ -66,18 +69,11 @@
                 {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
             </div>
-            <div class="tab" data-group="primary" data-tab="bio">
-                <div class="dh-panel dh-grid-col-6">
-                    <div class="dh-header__info">
-                        <h1 class="dh-panel__header dh-grid-col-4">Biography</h1>
-                        {{#each actor.bio}}
-                            {{#unless (arrayIncludes @key @root.dh.bio.primary)}}
-                                {{> systems/rogue-trader/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
-                            {{/unless}}
-                        {{/each}}
-                    </div>
-                </div>
+
+            <div class="tab" data-group="primary" data-tab="origin">
+                {{> systems/rogue-trader/templates/actor/panel/origin-path-panel.hbs}}
             </div>
+
             <div class="tab" data-group="primary" data-tab="gear">
                 {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/encumbrance-panel.hbs}}
@@ -88,22 +84,34 @@
                 {{> systems/rogue-trader/templates/actor/panel/force-field-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/gear-panel.hbs}}
             </div>
-            <div class="tab" data-group="primary" data-tab="psychic">
+
+            <div class="tab" data-group="primary" data-tab="powers">
                 {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/psy-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/navigator-powers-panel.hbs}}
             </div>
+
             <div class="tab" data-group="primary" data-tab="advances">
                 {{> systems/rogue-trader/templates/actor/panel/corruption-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/aptitude-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/experience-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/insanity-panel.hbs}}
             </div>
-            
-            <div class="tab" data-group="primary" data-tab="rogue-trader">
+
+            <div class="tab" data-group="primary" data-tab="ship">
                 {{> systems/rogue-trader/templates/actor/panel/rogue-trader-panel.hbs}}
+                {{> systems/rogue-trader/templates/actor/panel/ship-role-panel.hbs}}
             </div>
 
-<div class="tab" data-group="primary" data-tab="social">
+            <div class="tab" data-group="primary" data-tab="bio">
+                <div class="dh-panel dh-grid-col-6">
+                    <div class="dh-header__info">
+                        <h1 class="dh-panel__header dh-grid-col-4">{{localize "RT.Biography.Header"}}</h1>
+                        {{#each actor.bio}}
+                            {{> systems/rogue-trader/templates/actor/partial/character-field.hbs key=@key value=this options=(getBioOptions @key)}}
+                        {{/each}}
+                    </div>
+                </div>
                 {{> systems/rogue-trader/templates/actor/panel/journal-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/peer-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/enemy-panel.hbs}}
@@ -111,5 +119,3 @@
         </section>
     </form>
 </div>
-
-

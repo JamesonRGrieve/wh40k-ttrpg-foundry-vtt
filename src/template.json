@@ -1595,11 +1595,6 @@
         "rogueTraderExtras"
       ],
       "bio": {
-        "homeWorld": "",
-        "birthright": "",
-        "careerPath": "",
-        "elite": "",
-        "divination": "",
         "gender": "",
         "age": "",
         "build": "",
@@ -1609,6 +1604,14 @@
         "superstition": "",
         "mementos": "",
         "notes": ""
+      },
+      "originPath": {
+        "homeWorld": "",
+        "birthright": "",
+        "lureOfTheVoid": "",
+        "trialsAndTravails": "",
+        "motivation": "",
+        "career": ""
       },
       "experience": {
         "used": 0,
@@ -1628,11 +1631,6 @@
         "rogueTraderExtras"
       ],
       "bio": {
-        "homeWorld": "",
-        "birthright": "",
-        "careerPath": "",
-        "elite": "",
-        "divination": "",
         "gender": "",
         "age": "",
         "build": "",
@@ -1642,6 +1640,14 @@
         "superstition": "",
         "mementos": "",
         "notes": ""
+      },
+      "originPath": {
+        "homeWorld": "",
+        "birthright": "",
+        "lureOfTheVoid": "",
+        "trialsAndTravails": "",
+        "motivation": "",
+        "career": ""
       },
       "experience": {
         "used": 0,
@@ -1696,15 +1702,27 @@
       "malignancy",
       "mentalDisorder",
       "mutation",
+      "navigatorPower",
+      "order",
+      "originPath",
       "peer",
       "psychicPower",
+      "ritual",
+      "shipComponent",
+      "shipRole",
+      "shipUpgrade",
+      "shipWeapon",
+      "skill",
       "specialAbility",
       "storageLocation",
       "talent",
       "tool",
       "trait",
+      "vehicleTrait",
+      "vehicleUpgrade",
       "weapon",
-      "weaponModification"
+      "weaponModification",
+      "weaponQuality"
     ],
     "templates": {
       "physicalItem": {
@@ -2005,6 +2023,127 @@
         "weapon",
         "weaponModification"
       ]
+    },
+    "navigatorPower": {
+      "templates": [
+        "itemDescription"
+      ],
+      "useTime": "",
+      "range": "",
+      "test": "",
+      "sustain": "",
+      "novice": "",
+      "adept": "",
+      "master": ""
+    },
+    "order": {
+      "templates": [
+        "itemDescription"
+      ],
+      "typeAndAction": "",
+      "requirements": "",
+      "descriptionText": ""
+    },
+    "originPath": {
+      "templates": [
+        "itemDescription"
+      ],
+      "step": "",
+      "stepIndex": 0,
+      "requirements": "",
+      "effects": "",
+      "descriptionText": ""
+    },
+    "ritual": {
+      "templates": [
+        "itemDescription"
+      ],
+      "test": "",
+      "requirements": "",
+      "effect": "",
+      "costs": "",
+      "failure": ""
+    },
+    "shipComponent": {
+      "templates": [
+        "itemDescription"
+      ],
+      "componentType": "",
+      "hullType": "",
+      "powerUsage": 0,
+      "spaceUsage": 0,
+      "spCost": 0,
+      "effect": "",
+      "availability": ""
+    },
+    "shipRole": {
+      "templates": [
+        "itemDescription"
+      ],
+      "rank": 0,
+      "purpose": "",
+      "careerPreferences": "",
+      "subordinates": "",
+      "importantSkills": "",
+      "effect": ""
+    },
+    "shipUpgrade": {
+      "templates": [
+        "itemDescription"
+      ],
+      "powerUsage": 0,
+      "spaceUsage": 0,
+      "spCost": 0,
+      "effect": "",
+      "availability": ""
+    },
+    "shipWeapon": {
+      "templates": [
+        "itemDescription"
+      ],
+      "weaponType": "",
+      "hullType": "",
+      "powerUsage": 0,
+      "spaceUsage": 0,
+      "spCost": 0,
+      "strength": 0,
+      "damage": "",
+      "crit": 0,
+      "range": "",
+      "special": "",
+      "availability": ""
+    },
+    "skill": {
+      "templates": [
+        "itemDescription"
+      ],
+      "skillType": "",
+      "characteristic": "",
+      "descriptor": "",
+      "uses": "",
+      "useTime": ""
+    },
+    "vehicleTrait": {
+      "templates": [
+        "itemDescription"
+      ],
+      "effect": "",
+      "level": 0
+    },
+    "vehicleUpgrade": {
+      "templates": [
+        "itemDescription"
+      ],
+      "effect": "",
+      "availability": ""
+    },
+    "weaponQuality": {
+      "templates": [
+        "itemDescription"
+      ],
+      "effect": "",
+      "hasLevel": false,
+      "level": 0
     }
   }
 }

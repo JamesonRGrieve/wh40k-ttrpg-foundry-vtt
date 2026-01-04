@@ -10,3 +10,122 @@
         min-width: 100px;
     }
 }
+
+// Origin Path Panel Styles
+.rt-origin-path-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.rt-origin-path-step {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 8px;
+
+    &__header {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #4a3728;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 3px;
+    }
+
+    &__label {
+        font-size: 0.9em;
+    }
+
+    &__value {
+        min-height: 40px;
+    }
+}
+
+.rt-origin-path-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 5px;
+    border-radius: 3px;
+
+    &__img {
+        width: 24px;
+        height: 24px;
+        border-radius: 2px;
+    }
+
+    &__name {
+        flex: 1;
+        font-size: 0.9em;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__remove {
+        cursor: pointer;
+        opacity: 0.6;
+
+        &:hover {
+            opacity: 1;
+            color: #c00;
+        }
+    }
+}
+
+.rt-origin-path-dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.4);
+    font-style: italic;
+    font-size: 0.85em;
+
+    &:hover {
+        border-color: rgba(0, 0, 0, 0.4);
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.rt-origin-path-empty {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-style: italic;
+    padding: 20px;
+}
+
+.rt-origin-effect-text {
+    font-size: 0.85em;
+    line-height: 1.4;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+// Ship Role Panel Styles
+.rt-ship-role-details {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.rt-ship-role-detail {
+    margin-bottom: 10px;
+
+    h3 {
+        margin: 0 0 5px 0;
+        color: #4a3728;
+    }
+
+    p {
+        margin: 3px 0;
+        font-size: 0.9em;
+    }
+}

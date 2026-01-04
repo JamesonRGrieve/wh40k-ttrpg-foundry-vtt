@@ -1,5 +1,51 @@
 {
   "RT": {
+    "Character": {
+      "Name": "Name"
+    },
+    "Tabs": {
+      "Combat": "Combat",
+      "Main": "Main",
+      "OriginPath": "Origin Path",
+      "Gear": "Gear",
+      "Powers": "Powers",
+      "Advances": "Advances",
+      "Ship": "Ship & Role",
+      "Biography": "Biography"
+    },
+    "OriginPath": {
+      "Header": "Origin Path",
+      "Description": "Drag origin path items from the compendium to set your character's background. Each step provides bonuses and abilities.",
+      "HomeWorld": "Home World",
+      "Birthright": "Birthright",
+      "LureOfTheVoid": "Lure of the Void",
+      "TrialsAndTravails": "Trials and Travails",
+      "Motivation": "Motivation",
+      "Career": "Career",
+      "DropHere": "Drop origin item here",
+      "Remove": "Remove",
+      "EffectsHeader": "Origin Path Effects",
+      "Source": "Source",
+      "Name": "Name",
+      "Effect": "Effect",
+      "NoEffects": "No origin path items selected. Drag items from the Origin Path compendium to build your character's background."
+    },
+    "Biography": {
+      "Header": "Biography"
+    },
+    "NavigatorPowers": {
+      "Header": "Navigator Powers",
+      "Name": "Power",
+      "Range": "Range",
+      "Test": "Test"
+    },
+    "ShipRole": {
+      "Header": "Ship Role",
+      "Role": "Role",
+      "Rank": "Rank",
+      "Purpose": "Purpose",
+      "Effect": "Effect"
+    },
     "RogueTrader": {
       "TabLabel": "Rogue Trader",
       "Header": "Rogue Trader",
@@ -41,7 +87,7 @@
       "MutationsHeader": "Mutations"
     },
     "Skills": {
-      "Header": "Rogue Trader Skills",
+      "Header": "Skills",
       "SpecialistHeader": "Specialist Skills",
       "Skill": "Skill",
       "Specialization": "Specialization",
@@ -56,6 +102,23 @@
       "NoSpecializations": "Click \"Add\" to create a {0} specialization",
       "RollSkillTitle": "Roll {0}",
       "AddSpecializationTitle": "Add {0} specialization"
+    },
+    "Items": {
+      "Weapon": "Weapon",
+      "Armour": "Armour",
+      "Gear": "Gear",
+      "Talent": "Talent",
+      "Trait": "Trait",
+      "Skill": "Skill",
+      "PsychicPower": "Psychic Power",
+      "NavigatorPower": "Navigator Power",
+      "ShipComponent": "Ship Component",
+      "ShipRole": "Ship Role",
+      "ShipWeapon": "Ship Weapon",
+      "Order": "Order",
+      "Ritual": "Ritual",
+      "OriginPath": "Origin Path",
+      "Condition": "Condition"
     }
   }
 }
