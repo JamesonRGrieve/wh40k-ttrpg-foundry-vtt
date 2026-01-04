@@ -9,6 +9,28 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>-5 Ballistic Skill, -5 Toughness, +5 Agility, +5 Fellowship. Gain Common Lore (Koronus Expanse) and Psyniscience as Trained Skill (Psyniscience acts as sixth sense, not innately psychic). Gain Polyglot Talent one Peer Talent from the noted list. Suffer -5 on any Scholastic Lore Test not related to the Kornus Expanse and gain Rival (Inquisition) Talent.<br>Noted List: Choose one of: Peer(Astropaths, the Insane, Underworld, Void Born, or Workers)</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 0,
+        "ballisticSkill": -5,
+        "strength": 0,
+        "toughness": -5,
+        "agility": 5,
+        "intelligence": 0,
+        "perception": 0,
+        "willpower": 0,
+        "fellowship": 5,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 0,
+      "skills": [],
+      "talents": [
+        "Polyglot"
+      ],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

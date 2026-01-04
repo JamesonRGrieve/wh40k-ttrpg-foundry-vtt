@@ -9,6 +9,26 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.<br>Skills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader&#x27;s Cant)<br>Talents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).<br>Gear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.<br>Special Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 0,
+        "ballisticSkill": 0,
+        "strength": 0,
+        "toughness": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "perception": 0,
+        "willpower": 0,
+        "fellowship": 0,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 0,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

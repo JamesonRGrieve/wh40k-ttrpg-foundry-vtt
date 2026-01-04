@@ -9,6 +9,29 @@
     "source": "Character Creation (sheet)",
     "description": {
       "value": "<p>1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.<br>2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)<br>3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.</p>"
+    },
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": 5,
+        "ballisticSkill": 5,
+        "strength": 0,
+        "toughness": 5,
+        "agility": 5,
+        "intelligence": 3,
+        "perception": 0,
+        "willpower": 3,
+        "fellowship": -5,
+        "influence": 0
+      },
+      "wounds": 0,
+      "fate": 0,
+      "skills": [],
+      "talents": [
+        "Hatred",
+        "Meditation"
+      ],
+      "traits": [],
+      "other": []
     }
   },
   "effects": [],

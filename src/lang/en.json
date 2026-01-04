@@ -4,18 +4,22 @@
       "Name": "Name"
     },
     "Tabs": {
+      "Overview": "Overview",
       "Combat": "Combat",
-      "Main": "Main",
-      "OriginPath": "Origin Path",
-      "Gear": "Gear",
+      "Abilities": "Abilities",
       "Powers": "Powers",
+      "Equipment": "Equipment",
+      "OriginPath": "Origin Path",
+      "Dynasty": "Dynasty",
+      "Biography": "Biography",
+      "Main": "Main",
+      "Gear": "Gear",
       "Advances": "Advances",
-      "Ship": "Ship & Role",
-      "Biography": "Biography"
+      "Ship": "Ship & Role"
     },
     "OriginPath": {
       "Header": "Origin Path",
-      "Description": "Drag origin path items from the compendium to set your character's background. Each step provides bonuses and abilities.",
+      "Description": "Drag origin path items from the compendium to define your character's background. Each step grants unique abilities and bonuses.",
       "HomeWorld": "Home World",
       "Birthright": "Birthright",
       "LureOfTheVoid": "Lure of the Void",
@@ -31,7 +35,16 @@
       "NoEffects": "No origin path items selected. Drag items from the Origin Path compendium to build your character's background."
     },
     "Biography": {
-      "Header": "Biography"
+      "Header": "Biography",
+      "Gender": "Gender",
+      "Age": "Age",
+      "Build": "Build",
+      "Complexion": "Complexion",
+      "Hair": "Hair",
+      "Quirks": "Quirks",
+      "Superstition": "Superstition",
+      "Mementos": "Mementos",
+      "Notes": "Notes"
     },
     "NavigatorPowers": {
       "Header": "Navigator Powers",
@@ -45,6 +58,30 @@
       "Rank": "Rank",
       "Purpose": "Purpose",
       "Effect": "Effect"
+    },
+    "ProfitFactor": {
+      "Header": "Profit Factor",
+      "Starting": "Starting",
+      "Current": "Current",
+      "Misfortunes": "Misfortunes"
+    },
+    "Acquisitions": {
+      "Header": "Acquisitions",
+      "Name": "Name",
+      "Availability": "Availability",
+      "Modifier": "Modifier",
+      "Acquired": "Acquired",
+      "Notes": "Notes"
+    },
+    "Orders": {
+      "Header": "Orders",
+      "Name": "Order",
+      "Action": "Action"
+    },
+    "Rituals": {
+      "Header": "Rituals",
+      "Name": "Ritual",
+      "Test": "Test"
     },
     "RogueTrader": {
       "TabLabel": "Rogue Trader",

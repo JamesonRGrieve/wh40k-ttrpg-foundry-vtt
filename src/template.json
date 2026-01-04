@@ -2052,7 +2052,27 @@
       "stepIndex": 0,
       "requirements": "",
       "effects": "",
-      "descriptionText": ""
+      "descriptionText": "",
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0,
+        "skills": [],
+        "talents": [],
+        "traits": [],
+        "other": []
+      }
     },
     "ritual": {
       "templates": [
