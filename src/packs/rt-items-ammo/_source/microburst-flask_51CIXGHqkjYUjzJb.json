@@ -12,7 +12,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage/Effect:</b> -2 Damage, +2 Penetration, +10 range. Cannot use \"Maximal\" Setting, but also cannot overheat.</p><p><b>Qualities:</b> Maximal (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

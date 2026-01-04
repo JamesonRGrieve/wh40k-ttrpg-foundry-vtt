@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character makes +0 Command Test. If Successful each Player Character with a Comrade in Cohesion can immediately Disengage as a Free Action, however any that do so lose one Half Action on their next turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

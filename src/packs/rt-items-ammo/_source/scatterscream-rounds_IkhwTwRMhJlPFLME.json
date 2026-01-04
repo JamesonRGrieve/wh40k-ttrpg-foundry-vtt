@@ -12,7 +12,10 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Lose Scatter Quality, gain Blast(2) and Concussive (2) Quality</p><p><b>Qualities:</b> Blast(2), Concussive (2)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

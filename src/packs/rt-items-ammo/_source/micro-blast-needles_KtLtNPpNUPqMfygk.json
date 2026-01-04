@@ -12,7 +12,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Loses Toxic Quality, but +4 damage, gain Tearing Quality. Change damage type to Explosive</p><p><b>Qualities:</b> Toxic (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

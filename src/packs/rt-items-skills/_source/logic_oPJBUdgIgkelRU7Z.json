@@ -10,7 +10,12 @@
     "useTime": "1 Minute or longer for complex problems",
     "description": {
       "value": "<p>The Solving of problems, such as through calculating equations, deciphering puzzles, infering missing information, or preparing reasoned arguments in debates. Can also be used to know when to gamble, and to decode complex ciphers and codes.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

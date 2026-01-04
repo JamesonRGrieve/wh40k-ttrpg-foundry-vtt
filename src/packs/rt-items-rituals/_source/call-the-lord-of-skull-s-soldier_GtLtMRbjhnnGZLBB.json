@@ -11,6 +11,13 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p><b>Effect:</b> A Bloodletter is summoned, it remains corporeal for 1d5+5 rounds, +1 Round per Degree of Success on Ritual Test. If the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.  If the Daemon is summoned for a specific task, it remains long enough to complete it (within reason).\nA Daemonic Mastery Test may be made to take control of the Daemon.</p><p><b>Costs:</b> The Ritual Triggers Psychic Phenomena, all participants also must make a +0 Willpower Test or enter a Frenzied state (as frenzy talent). This may prevent Daemonic Mastery Tests occuring.</p><p><b>Failure:</b> Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test beyond the first.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

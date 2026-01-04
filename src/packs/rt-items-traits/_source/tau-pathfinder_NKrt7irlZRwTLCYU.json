@@ -9,7 +9,14 @@
     "source": "RT: Tau Character Guide (Page 20)",
     "description": {
       "value": "<p>Pathfinders act as scouts and forward operatives. Often acting behind enemy lines. They require mastery of stealth, sharp percpetion, and a selfless will to lay down their lives for The Greater Good.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Tau Pathfinder\nAllows for the purchasing of the Unique Talents Guided Precision and Opportunist's Evasion.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

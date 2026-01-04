@@ -10,6 +10,12 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Built from or upgraded with remnants of enemy Space Marine armour, gain +10 to Infamy, Intimidate, or command Tests vs Loyalist or Traitor Astartes</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

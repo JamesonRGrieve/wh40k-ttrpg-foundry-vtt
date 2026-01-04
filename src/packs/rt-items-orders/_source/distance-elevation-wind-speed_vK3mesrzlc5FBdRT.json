@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Until the end of the Turn Comrade in Cohesion allows Character to treat targets beyond three times their Weapon's Range as Long Range, and those beyond four times as Extreme Range. (Instead of the normal 2x and 3x)</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

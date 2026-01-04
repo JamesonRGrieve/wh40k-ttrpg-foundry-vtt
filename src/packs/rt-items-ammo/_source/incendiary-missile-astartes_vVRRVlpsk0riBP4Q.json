@@ -12,7 +12,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 1d10+3 E, Pen 0, Blast (5).\nArea remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.</p><p><b>Qualities:</b> Blast(5), Flame</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

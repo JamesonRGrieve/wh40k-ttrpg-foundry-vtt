@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can use Order whenever an enemy is on fire within 10 metres of a Comrade in Cohesion. Until Character's next turn, enemy has -20 to any tests to extinguish flames and suffers +1d5 Damage from effects with the Flame Quality.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

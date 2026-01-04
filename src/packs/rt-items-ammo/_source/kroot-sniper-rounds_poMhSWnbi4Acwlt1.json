@@ -12,7 +12,10 @@
     "source": "RT: Tau Char. Guide",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Replaces RoF with S/-/-, increases damage to 1d10+7 E, and penetration to 5, weapon gains Accurate Quality. However, decreases Clip Size to 1. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p><p><b>Qualities:</b> Accurate</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

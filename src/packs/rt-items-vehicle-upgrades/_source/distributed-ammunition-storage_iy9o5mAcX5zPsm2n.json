@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever this Vehicle suffers Critical Damage to the Weapon Systems or Turret, reduce Damage the crew would suffer by 10.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

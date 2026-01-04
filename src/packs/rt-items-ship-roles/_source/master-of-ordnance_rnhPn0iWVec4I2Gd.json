@@ -11,7 +11,15 @@
     "effect": "Additional +5 to BS Tests on Ship Weapons while using \"Lock on Target\" Extended Action.",
     "description": {
       "value": "<p><b>Purpose:</b> Directs Ship Weapons, Gunneries, and Fighter Pilots.</p><p><b>Effect:</b> Additional +5 to BS Tests on Ship Weapons while using \"Lock on Target\" Extended Action.</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

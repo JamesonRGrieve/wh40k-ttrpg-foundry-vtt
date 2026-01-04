@@ -11,7 +11,15 @@
     "effect": "After Starship combat, can capture and press gang mutant slaves. Regaining 1d5 Crew but losing 1 Morale.",
     "description": {
       "value": "<p><b>Purpose:</b> Keep Mutants in check and press them to work</p><p><b>Effect:</b> After Starship combat, can capture and press gang mutant slaves. Regaining 1d5 Crew but losing 1 Morale.</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

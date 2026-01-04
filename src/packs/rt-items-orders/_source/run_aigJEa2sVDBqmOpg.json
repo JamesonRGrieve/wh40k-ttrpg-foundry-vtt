@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade out of Cohesion performs the Run Action. Moving their Run Speed. Range attacks against them suffer -20, Melee Attacks gain +20.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

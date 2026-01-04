@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Comrade in Cohesion hides behind Player Character, until either of them move, Comrade does not get hit by attacks that would have hit them, which instead hit the Player Character, they also immediately recover from the effects of Fear and Pinning</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>The Character subscribes to the fixed and utterly merciless views of the Redemptionist. The Psyker Must be burned, the Mutant must be purged, and the heretic must be cleansed. There is no forgiveness, only the flaming pyre.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "150xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

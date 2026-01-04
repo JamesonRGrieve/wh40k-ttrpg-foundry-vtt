@@ -10,7 +10,12 @@
     "useTime": "1 Minute or more.",
     "description": {
       "value": "<p>Understanding Trade, Value, and Exchange. Bartering for the best deals and acquiring contraband. Understanding how valuable something is, and who would value it the most.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

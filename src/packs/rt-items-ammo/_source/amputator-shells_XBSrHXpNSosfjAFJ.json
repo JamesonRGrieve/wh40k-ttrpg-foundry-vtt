@@ -12,7 +12,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> +2 Damage</p><p><b>Qualities:</b> -</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

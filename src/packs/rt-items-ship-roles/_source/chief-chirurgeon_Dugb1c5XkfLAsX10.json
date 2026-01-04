@@ -11,7 +11,15 @@
     "effect": "+10 to Triage Extended Action (Chief Chirurgeon Talent)",
     "description": {
       "value": "<p><b>Purpose:</b> Oversees and Maintains Crew Health</p><p><b>Effect:</b> +10 to Triage Extended Action (Chief Chirurgeon Talent)</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

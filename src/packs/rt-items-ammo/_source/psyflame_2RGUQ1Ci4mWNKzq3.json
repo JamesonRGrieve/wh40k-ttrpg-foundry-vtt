@@ -12,7 +12,10 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. Ignore Protective Benefits from Psychic Powers. Targets suffer - 5 x Their Psy Rating Penalty to Agility Tests to avoid being hit by weapon</p><p><b>Qualities:</b> Sanctified</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

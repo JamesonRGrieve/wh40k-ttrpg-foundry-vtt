@@ -6,6 +6,12 @@
     "descriptionText": "Can ignore most Difficult Terrain such as Rockslides, Tank Traps, Fallen Trees, etc, counting them as open ground. Can't Ram, makes Charge Action instead. Can turn as a Free Action, and do so as many times as they like while moving, turning itself doesn't count as movement. Can also Parry if equipped with a melee weapon.",
     "description": {
       "value": "<p>Can ignore most Difficult Terrain such as Rockslides, Tank Traps, Fallen Trees, etc, counting them as open ground. Can't Ram, makes Charge Action instead. Can turn as a Free Action, and do so as many times as they like while moving, turning itself doesn't count as movement. Can also Parry if equipped with a melee weapon.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

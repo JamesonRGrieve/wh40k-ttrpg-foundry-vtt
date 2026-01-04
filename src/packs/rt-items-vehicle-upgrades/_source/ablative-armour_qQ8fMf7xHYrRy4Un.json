@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Add +4 Armour to all faces. Reduce Tactical and Cruising Speed by 5 Metres and Reduce Manoeuvrability by -10. Any Critical Damage, including that from Righteous Fury to a location with Ablative Armour destroys it, but causes no other Critical Effect. Can't be repaired, must be replaced.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -12,7 +12,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 4d10+10, Pen 10, Blast(1)</p><p><b>Qualities:</b> Blast(1)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

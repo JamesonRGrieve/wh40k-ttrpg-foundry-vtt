@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": "<p>Khorne, Unaligned</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Nurgle",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "1 Minute or more for complex deceptions",
     "description": {
       "value": "<p>Misleading others as to the user's true intent, lying, or spinning information to manipulate someone. Test made only when deception would change a person's mind, opinion, or actions. Disguising oneself</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

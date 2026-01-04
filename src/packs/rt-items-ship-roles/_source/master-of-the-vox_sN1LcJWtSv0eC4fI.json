@@ -11,7 +11,15 @@
     "effect": "+20 to \"Jam Communications\" Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Keep clear and maintain vox communications.</p><p><b>Effect:</b> +20 to \"Jam Communications\" Extended Action</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

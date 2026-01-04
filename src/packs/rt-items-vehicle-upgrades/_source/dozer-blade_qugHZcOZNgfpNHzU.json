@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Add +4 Armour to Front Face, Treat Heavy Rubble and other detritus as Open Ground as long as moving at Tactical Speed or less each turn. Can be used as an Improvised Weapon.\nMutually Exclusive with Minesweeper.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -6,6 +6,12 @@
     "descriptionText": "May fire a weapon in each hand as if having the Two-Weapon Wielder Talent. If already possessing this talent, gives +10 to Weapon Skill or Ballistic Skill when making an attack with one weapon in each hand.",
     "description": {
       "value": "<p>May fire a weapon in each hand as if having the Two-Weapon Wielder Talent. If already possessing this talent, gives +10 to Weapon Skill or Ballistic Skill when making an attack with one weapon in each hand.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

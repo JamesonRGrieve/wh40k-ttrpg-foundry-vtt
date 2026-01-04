@@ -12,7 +12,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> +1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.</p><p><b>Qualities:</b> Tearing, Reliable (lose)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

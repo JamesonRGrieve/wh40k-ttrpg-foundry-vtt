@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 66)",
     "description": {
       "value": "<p>Infamous trackers and bounty hunters. These individuals are issued Bloodsworn Charters, tough parchment bearing an authorising seal and a genelock circuit that identifies a victim by having their blood spilt upon it. Most often post mortem.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Malfian Bloodsworn\nGain a Bloodsworn Charter.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

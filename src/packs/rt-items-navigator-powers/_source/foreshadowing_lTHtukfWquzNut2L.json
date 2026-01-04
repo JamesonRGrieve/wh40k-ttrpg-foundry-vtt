@@ -13,7 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Novice:</b> Navigator draws three \"Secrets\" from the future, they may spend any number of these to increase to gain a +10 bonus per secret on any test they make until the end of the next round. Using more than 1 secret on a test requires the Navigator to roll a d10 per additional secret, on a 7,8,9, or 10 the secret instead gives a -10 to the test. For every use of this power within one hour of the first, the Navigator suffers 1d5 Insanity Points.</p><p><b>Adept:</b> Additional Secrets only cause a -10 on a d10 roll of a 9 or 10.</p><p><b>Master:</b> Secrets last and can be spent up to five rounds after the power was used.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Those capable of bending the warp into unholy powers, they are both exceptionally dangers if lacking the strength of will to control their powers, and incredibly powerful when properly trained to wield their powers.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "300xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

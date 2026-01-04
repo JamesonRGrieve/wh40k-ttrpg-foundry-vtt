@@ -10,7 +10,12 @@
     "useTime": "Full Action or More for complex problems",
     "description": {
       "value": "<p>Some additional Uses for Medicae (Diagnose, Chem-Use)</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "^^^^^^^^^^",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

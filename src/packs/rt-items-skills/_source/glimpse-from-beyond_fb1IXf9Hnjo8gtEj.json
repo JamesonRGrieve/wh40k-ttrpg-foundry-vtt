@@ -10,7 +10,12 @@
     "useTime": "RT: Into the Storm",
     "description": {
       "value": "<p>Character has Experienced something horrifyingly traumatic and survived relatively sane and uncorrupted. In so doing, they gain forbidden insight in to that often better left unknown.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "400xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

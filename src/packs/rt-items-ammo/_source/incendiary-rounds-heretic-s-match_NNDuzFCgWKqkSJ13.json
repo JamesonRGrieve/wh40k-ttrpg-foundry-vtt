@@ -12,7 +12,10 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.</p><p><b>Qualities:</b> Blast (lose), Flame, Unreliable</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

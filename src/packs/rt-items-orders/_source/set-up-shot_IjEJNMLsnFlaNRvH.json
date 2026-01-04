@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade in Cohesion fires off a shot to distract the enemy, Character's next shot cannot be dodged.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

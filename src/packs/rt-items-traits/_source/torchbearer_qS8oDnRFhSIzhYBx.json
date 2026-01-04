@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm\n(Page 98)",
     "description": {
       "value": "<p>A Missionary who becomes a torchbearer seeks to bring the light of the Emperor to untouched worlds across the expanse no matter how inhospitable they are, such that those ungraced may join in the Light of the Imperial Faith. </p><p><b>Effects:</b> Replace new Rank's Advances with that of the Torchbearer\nAllows for the purchasing of the Unique Talent Survival Master</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

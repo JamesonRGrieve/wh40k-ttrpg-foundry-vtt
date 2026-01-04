@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Comrade in Cohesion marks a target within the Character's Weapon Range, Character to double their Degrees of Success on any Successful Ballistic Skill Test to hit that marked target until the end of the Turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

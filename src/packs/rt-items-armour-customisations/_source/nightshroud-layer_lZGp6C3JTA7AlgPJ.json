@@ -10,6 +10,12 @@
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>+30 to Concealment Tests in the dark. While used, must make +0 Toughness Test per hour or gain a level of fatigue. Works like Night Cloak gear item.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

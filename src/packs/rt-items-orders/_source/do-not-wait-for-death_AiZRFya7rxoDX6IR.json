@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character makes -20 Charm or Command Test, if successful all Comrades who are in Cohesion with their Player Characters are struck instead of their Player Character unless the Attack roll was a double.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

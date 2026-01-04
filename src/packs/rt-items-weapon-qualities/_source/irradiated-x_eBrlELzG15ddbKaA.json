@@ -6,7 +6,15 @@
     "effect": "When a character is hit by this weapon, regardless of whether they take damage, they must make -10*X Toughness Test or suffer 2d10 nonpermenant Toughness Damage.",
     "description": {
       "value": "<p>When a character is hit by this weapon, regardless of whether they take damage, they must make -10*X Toughness Test or suffer 2d10 nonpermenant Toughness Damage.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can use Order when one or more Player Characters have been Surpised. All Comrades affected spend a Half Action to benefit from cover as if receiving the Take Cover! Generic Order, even if their controlling Player Characters cannot act due to being Suprised.\nTake Cover!: All shots that hit the Comrade must roll damage, if doing less than 3+Cover AP damage, the Comrade is unharmed.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

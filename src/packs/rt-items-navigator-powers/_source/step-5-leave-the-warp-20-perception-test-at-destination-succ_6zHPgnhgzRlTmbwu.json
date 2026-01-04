@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Adept:</b> Some occupied systems may not take kindly to off-target warp translations. Exact effects are GM dependant, generally shouldn't be lethal, that isn't fun.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

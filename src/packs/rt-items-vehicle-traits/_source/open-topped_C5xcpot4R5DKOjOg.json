@@ -6,6 +6,12 @@
     "descriptionText": "Crew and Passengers can be targetted via a Called Shot Action, and are struck by any Blast or Spray attacks that they are in range of which an enclosed vehicle may have blocked. These Crew and Passengers may also attack with their own weapons.",
     "description": {
       "value": "<p>Crew and Passengers can be targetted via a Called Shot Action, and are struck by any Blast or Spray attacks that they are in range of which an enclosed vehicle may have blocked. These Crew and Passengers may also attack with their own weapons.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

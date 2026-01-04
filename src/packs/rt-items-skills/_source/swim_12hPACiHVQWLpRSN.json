@@ -10,7 +10,12 @@
     "useTime": "Full Action",
     "description": {
       "value": "<p>Swimming through various liquids, Test only needed in unusual circumstances, difficult waters, or long distances.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Strength",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

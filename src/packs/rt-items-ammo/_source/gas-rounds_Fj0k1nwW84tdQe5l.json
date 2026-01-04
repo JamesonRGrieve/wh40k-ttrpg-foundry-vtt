@@ -12,7 +12,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Does no damage, instead has effect of Blind, Hallucinogen, Bloodfire, Stunner, Toxin, or Scare Grenade to hit target. Rarity = 'nade rarity.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

@@ -13,7 +13,14 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p><b>Novice:</b> Navigator Learns target's Armour Points at each location, total Toughness Bonus, and Psy Rating (if they have one)</p><p><b>Adept:</b> Navigator also learns of any Invisible Defences such as Force Fields, and Sustained Psychic Techniques.</p><p><b>Master:</b> Navigator also learns any Psychic Techniques or Navigator powers the target knows.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

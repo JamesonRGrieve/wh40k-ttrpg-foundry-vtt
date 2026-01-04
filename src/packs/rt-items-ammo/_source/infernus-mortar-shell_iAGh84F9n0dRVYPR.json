@@ -12,7 +12,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10+4 E, Pen 2, Blast (8), Flame</p><p><b>Qualities:</b> Blast (8), Flame</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

@@ -13,7 +13,14 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Novice:</b> Navigator makes Opposed Willpower Test vs Target, if successful target is locked in place and will remain so as long as Navigator doesn't use another Navigator Power, and don't leave line of sight or power range. Psykers using powers or Daemons using Daemonic Presence Trait must beat psyker in Opposed Willpower test each time they want to use relevent feature. Affected Daemons take +1 damage from Warp Instability.</p><p><b>Adept:</b> Increase Range to 20m x Perception Bonus. Affected Daemons take 2d10 damage instead of 1 from Warp Instability.</p><p><b>Master:</b> Navigator no longer needs Line of Sight to target to maintain lock. If an Affected Daemon would take any damage from Warp Instability, they are instantly destroyed and sent back to the warp.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

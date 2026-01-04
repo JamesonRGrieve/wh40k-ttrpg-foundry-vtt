@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Jovian-Pattern Gun Servitor Primary Function. Servitor Comrade in Cohesion makes Standard Ranged Attack, Semi-Auto Burst, or Full Auto Burst with one of its weapons against a target within weapon range.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

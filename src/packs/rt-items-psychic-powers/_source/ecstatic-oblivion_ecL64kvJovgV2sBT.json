@@ -14,7 +14,9 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>250xp</p>"
-    }
+    },
+    "focusTime": "Half Action",
+    "threshold": 0
   },
   "effects": [],
   "flags": {},

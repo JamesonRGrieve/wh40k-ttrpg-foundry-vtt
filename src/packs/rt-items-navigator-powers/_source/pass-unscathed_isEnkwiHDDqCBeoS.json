@@ -13,7 +13,14 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p><b>Novice:</b> Navigator chooses target in range, for Willpower Bonus Minutes, if that target would gain Corruption Points, they gain 1 less (minimum 1). Can only have one instance of this power active at a time, after it ends Navigator makes +0 Toughness Test or gains 1 Fatigue.</p><p><b>Adept:</b> Navigator can shield a number of targets equal to their Perception Bonus, reducing any Corruption Points gained by 2 (minimum 0).</p><p><b>Master:</b> Power now lasts for 2x Willpower Bonus Minutes.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

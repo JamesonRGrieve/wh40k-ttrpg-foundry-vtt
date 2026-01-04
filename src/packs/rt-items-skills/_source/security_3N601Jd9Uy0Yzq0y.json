@@ -10,7 +10,12 @@
     "useTime": "1 Minute, Reduced by 10 seconds per DoS. Could be more.",
     "description": {
       "value": "<p>The Bypassing of Mechanical Locks or other physical security methods as well as the hacking of cogitators, tech, and simple mechanical devices.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

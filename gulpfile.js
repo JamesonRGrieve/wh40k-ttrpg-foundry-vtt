@@ -2,15 +2,13 @@ const gulp = require('gulp');
 const prefix = require('gulp-autoprefixer');
 const through2 = require("through2");
 const yaml = require("js-yaml");
-const Datastore = require("nedb");
-const cb = require("cb");
 const merge = require("merge-stream");
 const clean = require("gulp-clean");
-const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass')(require('sass'));
 const fs = require("fs");
 const path = require("path");
 const zip = require("gulp-zip");
+const { ClassicLevel } = require("classic-level");
 
 const util = require('util');
 if (!util.isDate) {
@@ -26,44 +24,79 @@ const STATIC_FILES = [
   "src/templates/**/*",
   "src/images/**/*",
   "src/lang/**/*",
-  "src/*.json",
-  "src/packs/*.db"
+  "src/*.json"
 ];
 const PACK_SRC = "src/packs";
 const BUILD_DIR = "build/rogue-trader";
 
 /* ----------------------------------------- */
-/*  Compile Packs
+/*  Compile Packs (V13 LevelDB Format)
 /* ----------------------------------------- */
 
-function compilePacks() {
-  // determine the source folders to process
+/**
+ * Compile packs into Foundry V13 LevelDB format.
+ * V13 uses folder-based LevelDB databases instead of .db files.
+ */
+async function compilePacks() {
+  // Determine the source folders to process
   const folders = fs.readdirSync(PACK_SRC).filter((file) => {
     return fs.statSync(path.join(PACK_SRC, file)).isDirectory();
   });
 
-  // process each folder into a compendium db
-  const packs = folders.map((folder) => {
-    const db = new Datastore({ filename: path.resolve(__dirname, BUILD_DIR, "packs", `${folder}.db`), autoload: true });
-    return gulp.src(path.join(PACK_SRC, folder, "/**/*.yml")).pipe(
-        through2.obj((file, enc, cb) => {
-          try {
-            const fileContents = file.contents.toString();
-            let json = yaml.loadAll(fileContents);
-            db.insert(json, (err, newDoc) => {
-              if (err) {
-                console.error(`Error inserting into Datastore:`, err);
-              }
-            });
-            cb(null, file);
-          } catch (err) {
-            console.error(`Error processing file ${file.path}:`, err);
-            cb(err, file);
+  const packsDir = path.resolve(__dirname, BUILD_DIR, "packs");
+  
+  // Ensure packs directory exists
+  if (!fs.existsSync(packsDir)) {
+    fs.mkdirSync(packsDir, { recursive: true });
+  }
+
+  // Process each folder into a LevelDB compendium
+  for (const folder of folders) {
+    const sourceDir = path.join(PACK_SRC, folder, "_source");
+    
+    // Skip if no _source directory (contains JSON files)
+    if (!fs.existsSync(sourceDir)) {
+      continue;
+    }
+
+    const dbPath = path.join(packsDir, folder);
+    
+    // Remove existing database folder if it exists
+    if (fs.existsSync(dbPath)) {
+      fs.rmSync(dbPath, { recursive: true, force: true });
+    }
+
+    // Create the LevelDB database
+    const db = new ClassicLevel(dbPath, { valueEncoding: 'json' });
+    
+    try {
+      // Read all JSON files from _source directory
+      const files = fs.readdirSync(sourceDir).filter(f => f.endsWith('.json'));
+      
+      for (const file of files) {
+        const filePath = path.join(sourceDir, file);
+        const content = fs.readFileSync(filePath, 'utf8');
+        
+        try {
+          const doc = JSON.parse(content);
+          
+          // Use the document's _id as the key, prefixed with "!" for Foundry format
+          if (doc._id) {
+            const key = `!${folder}.${doc._id}`;
+            await db.put(key, doc);
           }
-        })
-    );
-  });
-  return merge.call(null, packs);
+        } catch (parseErr) {
+          console.error(`Error parsing ${filePath}:`, parseErr);
+        }
+      }
+      
+      console.log(`Compiled pack: ${folder} (${files.length} documents)`);
+    } finally {
+      await db.close();
+    }
+  }
+  
+  return Promise.resolve();
 }
 
 /* ----------------------------------------- */

@@ -10,7 +10,12 @@
     "useTime": "Varies",
     "description": {
       "value": "<p>Taming, Training, and riding of animals for any purpose the user wishes. Not useful for Cybernetic, Psy-Bonded, or Sapient Animals.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

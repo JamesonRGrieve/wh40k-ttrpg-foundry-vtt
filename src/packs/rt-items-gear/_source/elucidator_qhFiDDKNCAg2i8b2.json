@@ -12,6 +12,16 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 25 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

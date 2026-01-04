@@ -6,6 +6,12 @@
     "descriptionText": "A Protection Rating 40 Shield. Overload varies with Craftsmanship: Poor - 01-20, Common - 01-10, \nGood - 01-05, Best - 1.",
     "description": {
       "value": "<p>A Protection Rating 40 Shield. Overload varies with Craftsmanship: Poor - 01-20, Common - 01-10, \nGood - 01-05, Best - 1.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

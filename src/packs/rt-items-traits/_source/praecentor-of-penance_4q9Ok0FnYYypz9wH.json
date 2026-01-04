@@ -9,7 +9,14 @@
     "source": "OW: Shield of Humanity (Page 86)",
     "description": {
       "value": "<p>History is won not by the one, but by the many. For the Imperium is a million worlds heaving under the weight of trillions of souls whose devotion to the Emperor must be absolute. The Praecentor shall see this mass devotion weaponised, driving his many faithful attendants to ever higher acts of violence in the Emperor's name.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with Praecentor of Penance. Apt: Fellowship, Intelligence or Willpower, Leadership, Offence, Toughness, Weapon Skill. Add. Equipment: Carapace Armour, Puritan's Wrath Chainaxe or Shotgun+Explosive Slugs, Book of Scripture, Laud Hailer. Gain Talents: Berserk Charge+Double Team or Aspire to Vengeance. Can Purchase Unique Talent:Gather the Penitents and Basic Order: Annihilate Them! </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

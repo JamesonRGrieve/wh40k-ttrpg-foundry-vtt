@@ -10,7 +10,12 @@
     "useTime": "RT: Into the Storm",
     "description": {
       "value": "<p>The Tech-Priest joins their brain to another, whose brain is removed from their body and placed into the Tech-Priest's own. Gaining vastly improved research capabilities.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "1000xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

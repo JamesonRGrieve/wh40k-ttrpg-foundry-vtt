@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> Characteristic                        Khorne                     Tzeentch                    Nurgle                         Slaanesh                     Unknown\nWeapon Skill                         40+3d10                    20+3d10                  25+3d10                     30+3d10                     25+3d10\nBallistic Skill                         30+3d10                    30+3d10                  25+3d10                     25+3d10                     25+3d10\nStrength                                   40+3d10                    25+3d10                  30+3d10                     30+3d10                     30+3d10\nToughness                             30+3d10                    30+3d10                  40+3d10                     30+3d10                     30+3d10\nAgility                                       30+3d10                    25+3d10                  20+3d10                     40+3d10                     30+3d10\nIntelligence                           25+3d10                    40+3d10                   30+3d10                    30+3d10                     30+3d10\nPerception                            30+3d10                    30+3d10                  30+3d10                      40+3d10                    30+3d10\nWillpower                             35+3d10                    50+3d10                  40+3d10                     40+3d10                     40+3d10\nFellowship                            10+1d10                    25+3d10                  5+1d10                        40+3d10                    30+3d10\nInfluence                                25+3d10                    30+3d10                   25+3d10                    25+3d10                     20+3d10\nWounds                                  25+2d10                    25+2d10                  25+2d10                     25+2d10                     25+2d10</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

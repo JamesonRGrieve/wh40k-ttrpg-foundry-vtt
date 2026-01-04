@@ -10,6 +10,12 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Affixed to Backpack, Helmet, or other similarly worn item. Set aflame as a Half Action and burns for 2 hours. Whilst alight acts as Glow-Globe, and grants +30 to Charm and Command Tests, and +10 to Intimidate Tests, but -40 to Stealth Tests. If wearer is knocked prone whilst it is lit must make +10 Agility Test or be set on fire.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

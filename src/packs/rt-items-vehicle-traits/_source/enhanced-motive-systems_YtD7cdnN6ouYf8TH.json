@@ -6,6 +6,12 @@
     "descriptionText": "Explorer's Strength and Size become that of the Battlesuit, and Pilot gains Auto-Stabilised Trait. If this system is disabled, Pilot cannot perform movement actions in addition to losing other benefits (size remains the same). Auto-Stabilised: No need to brace Heavy Weapons.",
     "description": {
       "value": "<p>Explorer's Strength and Size become that of the Battlesuit, and Pilot gains Auto-Stabilised Trait. If this system is disabled, Pilot cannot perform movement actions in addition to losing other benefits (size remains the same). Auto-Stabilised: No need to brace Heavy Weapons.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

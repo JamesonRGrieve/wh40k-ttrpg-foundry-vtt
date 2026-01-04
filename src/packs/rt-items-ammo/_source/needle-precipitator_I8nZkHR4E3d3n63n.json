@@ -12,7 +12,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Applies chemical or drug to the rounds fired by Needle Weapons. One does of drug/toxin applies to one shot.\nUsually issued alongside the weapon itself.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

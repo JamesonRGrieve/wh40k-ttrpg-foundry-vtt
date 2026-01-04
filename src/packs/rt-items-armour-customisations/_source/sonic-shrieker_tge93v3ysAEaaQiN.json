@@ -10,6 +10,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>Attached to Head. Can activate after Initiative but before first combat round. Everyon except wearer makes -20 Willpower Test or treat first round as if they were Surprised. Equipment that protects against loud noises works as normal against this. </p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

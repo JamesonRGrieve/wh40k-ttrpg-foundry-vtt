@@ -12,7 +12,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Produces Light</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

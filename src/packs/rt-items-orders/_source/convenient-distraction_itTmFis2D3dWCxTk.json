@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Comrade in Comms Range allows Character to make Opposed Stealth Test vs Awareness of each Opponent within 10 metres. If Character wins Opposed Test against a Target, that target counts as being Unaware of them until the end of their next Turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

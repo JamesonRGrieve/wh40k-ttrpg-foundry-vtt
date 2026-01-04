@@ -11,6 +11,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Any Crew or Passenger may activate the Search Light as a Half Action by making a +0 Perception Test to find targets. If successful they are illuminated. For as long as the Searchlight stays active attacks made against illuminated targets suffer no penalties due to darkness.</p>"
+    },
+    "installCost": 0,
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

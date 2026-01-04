@@ -10,7 +10,12 @@
     "useTime": "RT: Into the Storm",
     "description": {
       "value": "<p>Become an agent of one of the Imperium's many organisations, and work for it as well as for your crew. But if push comes to shove, the organisation comes first.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "600xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

@@ -11,7 +11,15 @@
     "effect": "May increase range of Astropathic Signals by one step.",
     "description": {
       "value": "<p><b>Purpose:</b> Directs Astropathic Choir Communications.</p><p><b>Effect:</b> May increase range of Astropathic Signals by one step.</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

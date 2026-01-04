@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 58)",
     "description": {
       "value": "<p>Common amongst adepts of the Ordo Xenos, especially those who might have encountered or curated xenos lore, for some the pursuit of the alien and its destruction lead one deeper into its midst, such that the horrid xenos may be most efficiently understood, categorised, and finally eliminated.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Calixian Xeno-Arcanist</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

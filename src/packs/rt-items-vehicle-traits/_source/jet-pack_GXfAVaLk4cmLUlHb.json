@@ -6,6 +6,12 @@
     "descriptionText": "Can make +20 Pilot (Personal) Test to make safe guided fall from any height or short jump over terrain or foes and land at the end of movement. Can make +0 Pilot Personal Test as Half Action to gain Flyer (12) for one minute or 1d5+10 Rounds.",
     "description": {
       "value": "<p>Can make +20 Pilot (Personal) Test to make safe guided fall from any height or short jump over terrain or foes and land at the end of movement. Can make +0 Pilot Personal Test as Half Action to gain Flyer (12) for one minute or 1d5+10 Rounds.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

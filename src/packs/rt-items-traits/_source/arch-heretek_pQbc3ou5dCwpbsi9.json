@@ -9,7 +9,14 @@
     "source": "RT: Hostile Acquisitions \n(Page 32)",
     "description": {
       "value": "<p>Those that experiment with technology without the sanction of the Adeptus Mechanicus, who do not abide by their stifling rules and rituals, or who out right defy them to perform whatever technological experiments they please are branded Hereteks. Those who survive to gain expert knowledge and skill become Arch-Hereteks.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Arch-Heretek\nAutomatically Gain Enemy (Mechanicus) Talent\nAllows for the purchasing of the Unique Talents Apostate Mechanic, Subversive Programming, Lumninen Desecretation, and Vile Intrusion</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

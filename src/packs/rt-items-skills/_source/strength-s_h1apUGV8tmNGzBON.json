@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": "The Physical Strength of a Character. Used for determining carrying weights, performing strenuous tasks, etc. Strength Bonus is added to Melee Damage.",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

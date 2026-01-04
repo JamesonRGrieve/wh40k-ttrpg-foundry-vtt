@@ -12,7 +12,10 @@
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Change damage type to Explosive, half range.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

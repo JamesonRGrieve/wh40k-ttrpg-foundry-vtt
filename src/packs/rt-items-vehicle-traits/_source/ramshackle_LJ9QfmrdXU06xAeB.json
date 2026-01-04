@@ -6,6 +6,12 @@
     "descriptionText": "When Righteous Fury is Rolled against this vehicle, roll 1d10 rather than 1d5. Vehicle taks twice rolled damage against itself when attempting to Ram another vehicle or something equally solid. Repairing takes half the time, and has +20 to tests. Ramshackle vehicles are always lightly damaged unless having taken Critical Damage.",
     "description": {
       "value": "<p>When Righteous Fury is Rolled against this vehicle, roll 1d10 rather than 1d5. Vehicle taks twice rolled damage against itself when attempting to Ram another vehicle or something equally solid. Repairing takes half the time, and has +20 to tests. Ramshackle vehicles are always lightly damaged unless having taken Critical Damage.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

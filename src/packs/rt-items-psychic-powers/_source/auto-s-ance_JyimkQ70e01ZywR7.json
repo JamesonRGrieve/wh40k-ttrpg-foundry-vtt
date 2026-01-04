@@ -1,5 +1,5 @@
 {
-  "name": "Auto-Séance",
+  "name": "Auto-S\u00e9ance",
   "type": "psychicPower",
   "img": "icons/svg/eye.svg",
   "system": {
@@ -9,12 +9,14 @@
     "action": "Special",
     "range": "Psyniscience",
     "opposed": "Yes",
-    "sustained": "The Psyker acts to augment and protect the actions of another psyker performing powers of the Divination Discipline. Psyker makes Focus Power Test, on success, the other Psyker may activate any Divination power they know, if this power suceeds the augmented Psyker gains a bonus to their Psy Rarting equal to half the Psy Rating of the Psyker using Auto-Séance. Additionally, half of any damage suffered by the psyker through use of divination powers or any Psychic Phenomena or Perils of the Warp events may be transferred from the Augmented Psyker to the one usign Auto-Seance.",
+    "sustained": "The Psyker acts to augment and protect the actions of another psyker performing powers of the Divination Discipline. Psyker makes Focus Power Test, on success, the other Psyker may activate any Divination power they know, if this power suceeds the augmented Psyker gains a bonus to their Psy Rarting equal to half the Psy Rating of the Psyker using Auto-S\u00e9ance. Additionally, half of any damage suffered by the psyker through use of divination powers or any Psychic Phenomena or Perils of the Warp events may be transferred from the Augmented Psyker to the one usign Auto-Seance.",
     "effect": "200xp",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>200xp</p>"
-    }
+    },
+    "focusTime": "Half Action",
+    "threshold": 0
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "RT: Into the Storm\n(Page 96)",
     "description": {
       "value": "<p>An Astropath whose blindingly brief soul-binding with the Emperor of Mankind left them with nothing but the truest belief in his divinity, and through that they have been transformed and uplifted by the Master of Mankind.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Transubstantial Initiate\nReplaces Rank 1 Advances as normal, but character still has their normal starting skills, talents, etc, All talents in this advance list are completely separate. (This includes the Psychic Technique Advance).\nSuffer -3 to Weapon Skill and Ballistic Skill.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

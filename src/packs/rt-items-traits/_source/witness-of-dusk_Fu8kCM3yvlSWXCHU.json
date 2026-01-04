@@ -9,7 +9,14 @@
     "source": "RT: The Navis Primer\n(Page 80)",
     "description": {
       "value": "<p>A mysterious group of Astropaths whom hide their eyes or faces with ornate metal plates bonded to their flesh. They focus on mastering the Astropath's innate ability to see without eyes such that despite their supposed blindness their perception is far greater than any normal human.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Witness of Dusk\nAutomatically Gain Blind Fighting, Dark Soul, Rival (Astropaths, and Inqusition), and Enemy (Astropaths) Talents.</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

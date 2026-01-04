@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>If Comrade equipped with Indirect Weapon to launch a flare and squad in place where Artillery Barrage Possible, Character makes +0 Command Test instead of BS Test for an attack action. 1d5+5 Rounds Later, -1 per DoS (min 1 Round), an Artillery Strike lands at position of launched flare. Profile (3d10+10 X, Pen 16, Blast 2d10+5, Concussive(3)). Comrade must be out of Cohesion. Can't make another attack during turn making the order.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

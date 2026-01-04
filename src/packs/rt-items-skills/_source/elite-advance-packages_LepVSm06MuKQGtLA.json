@@ -10,7 +10,12 @@
     "useTime": null,
     "description": {
       "value": ""
-    }
+    },
+    "rollConfig": {
+      "characteristic": null,
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

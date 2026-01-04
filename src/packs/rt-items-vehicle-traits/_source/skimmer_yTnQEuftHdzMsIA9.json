@@ -6,6 +6,12 @@
     "descriptionText": "Move ~2 Above Ground with minour adjusting possible. Can also move to Low Altitude. Ignores Difficult Terrain, gains +10 to Manoeuvrability. Cannot Fly properly as a Flyer can, but still crashes to the ground if immobilised.",
     "description": {
       "value": "<p>Move ~2 Above Ground with minour adjusting possible. Can also move to Low Altitude. Ignores Difficult Terrain, gains +10 to Manoeuvrability. Cannot Fly properly as a Flyer can, but still crashes to the ground if immobilised.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

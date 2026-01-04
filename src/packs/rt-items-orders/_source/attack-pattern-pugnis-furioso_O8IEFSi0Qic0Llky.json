@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Pugnis-Class Combat Servitor Primary Function. Servitor Comrade in Cohesion gives Characte +5 to Weapon Skill Tests and +2 to Melee Attack Damage for the end of the turn. If Controlling Multiple of this Servitor Type, gain an additional +5 to Weapon Skill Tests and +1 to Melee Attack Damage per additional Pugnis-Class Combat Servitor in Cohesion.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

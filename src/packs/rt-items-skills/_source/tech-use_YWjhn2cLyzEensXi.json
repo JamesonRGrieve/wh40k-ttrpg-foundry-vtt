@@ -10,7 +10,12 @@
     "useTime": "1 Minute or more for complex systems.",
     "description": {
       "value": "<p>Use and Repair complex machinery, understand technology, etc. No test needed for basic machinery, but test needed for unusual gear, malfunctioning items, and so on. Also used for setting up and dealing with Explosives.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

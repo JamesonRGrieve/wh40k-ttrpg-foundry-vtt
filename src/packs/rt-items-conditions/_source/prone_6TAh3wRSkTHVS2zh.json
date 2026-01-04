@@ -9,7 +9,15 @@
     "source": "Character Actions and Rules (sheet)",
     "description": {
       "value": "<p>Attacking prone target with melee weapon: +10<br>Shooting at prone target: -10<br>Dodging while prone: -20</p>"
-    }
+    },
+    "severity": 1,
+    "stackable": false,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "autoRemove": false
   },
   "effects": [],
   "flags": {

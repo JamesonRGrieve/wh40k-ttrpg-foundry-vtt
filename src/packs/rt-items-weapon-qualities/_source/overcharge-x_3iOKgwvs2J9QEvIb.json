@@ -6,7 +6,15 @@
     "effect": "User can choose to increase weapon's damage by X, but weapon gains \"Overheats\" Quality for those shots.",
     "description": {
       "value": "<p>User can choose to increase weapon's damage by X, but weapon gains \"Overheats\" Quality for those shots.</p>"
-    }
+    },
+    "rating": 0,
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "toHit": 0,
+      "range": 0
+    },
+    "specialEffect": ""
   },
   "effects": [],
   "flags": {},

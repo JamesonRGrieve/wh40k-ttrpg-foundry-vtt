@@ -9,7 +9,14 @@
     "source": "OW: Hammer of the Emperor (Page 82)",
     "description": {
       "value": "<p>The Sharpshooter seeks absolute precision, to put a hole through a Gretchin at 500 metres is trivial, to pierce the weakpoint of an enemy walker is expected, and to do this quickly, precisely, and consistantly is their bread and butter.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Sharpshooter. Apt: Agility, Ballistic Skill, Fellowship, Finesse, Offence, Perception \nAdd. Equipment: Good Triplex Lasgun or Good Long-Las or Good Missile Launcher+4 Krak Missiles. Gain Talents: Heightened Senses(Sight)+Deadeye Shot or Lasgun Volley. Can Purchase Unique Talent: Spotter and Basic Order: Pinpoint Guidance </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

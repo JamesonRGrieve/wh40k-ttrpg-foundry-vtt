@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> Unbound: The Daemonhost has broken its bindings and cannot be controlled, it has no master and can use its power fully.\nOnce-Bound: The Daemon is barely contained\nTwice-Bound: The Daemon is bound by powerful wards and will generally follow orders, although always plot to escape\nThrice-Bound: The Daemon is strongly bound such that it is somewhat less likely to try to rebel against its controllers.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

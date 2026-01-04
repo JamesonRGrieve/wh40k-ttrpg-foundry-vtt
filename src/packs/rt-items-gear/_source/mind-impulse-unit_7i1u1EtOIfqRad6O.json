@@ -12,6 +12,16 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1750 T\n15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

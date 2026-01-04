@@ -3,12 +3,19 @@
   "type": "shipUpgrade",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "spCost": "2",
+    "spCost": 2,
     "shipAvailability": "Transports, Raiders, and Frigates",
     "effects": "During Long-Term Repairs, repair 1d10+5 Hull Integrity instead of 1d5. Gain +10 to Silent Running maoeuvres. -10 to all Social Interaction Tests to anyone who knows what ship you are from.",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>During Long-Term Repairs, repair 1d10+5 Hull Integrity instead of 1d5. Gain +10 to Silent Running maoeuvres. -10 to all Social Interaction Tests to anyone who knows what ship you are from.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0
     }
   },
   "effects": [],

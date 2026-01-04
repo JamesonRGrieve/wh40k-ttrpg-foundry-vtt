@@ -12,7 +12,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Reduce Damage by 2. Target and everyone within 2m of them must make +0 Agility Test or catch on fire. Can choose to target object or specific area instead of specific target. The Shot is +20, and everyone within 2m must test to avoid fire as usual.</p><p><b>Qualities:</b> Flame</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

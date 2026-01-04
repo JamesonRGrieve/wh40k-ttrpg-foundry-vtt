@@ -10,7 +10,12 @@
     "useTime": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>The Mechanicus rebuilds the character with replacement limbs, organs and more, to bring them back to a functional state. But not without permenant loss. They are unlikely to offer it for free.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "200xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

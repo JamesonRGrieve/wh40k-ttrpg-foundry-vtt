@@ -12,7 +12,10 @@
     "source": "BC: Tome of Decay",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Lose Scatter Quality. +2 Penetration and gain Razor Sharp Quality. Scourge Shells can be loaded with a disease or toxin as a Full Action by making +20 Medicae Test (Chem-Use), if successful targets that suffer damage also suffer disease/toxin effect. Heretical.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

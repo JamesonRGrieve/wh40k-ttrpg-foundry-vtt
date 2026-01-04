@@ -10,7 +10,12 @@
     "useTime": "1 Minute or more",
     "description": {
       "value": "<p>Determine the Value of an object or group of items. Difficult varies with user's access to the item, time allowed for evaluation, etc. Can also determine requirements for Endeavours.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

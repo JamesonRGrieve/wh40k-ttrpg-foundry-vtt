@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Adept:</b> See \"Warp Travel Encounters\" Table.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

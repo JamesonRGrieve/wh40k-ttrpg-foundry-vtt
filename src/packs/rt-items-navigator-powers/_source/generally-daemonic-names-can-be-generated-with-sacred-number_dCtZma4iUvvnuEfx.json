@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> - The Enactor Knows Little of what they are trying to do\n- The veil between Reality and the Warp is strong\n- The Ritual is conducted on Hallowed Ground, or antagonistic individuals of faith are present (Sisters of Battle, Ecclesiarchy Priests, Grey Knights, Chaplains, etc)</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

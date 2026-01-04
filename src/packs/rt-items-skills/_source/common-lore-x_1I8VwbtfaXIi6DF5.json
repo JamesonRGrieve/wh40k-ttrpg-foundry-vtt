@@ -10,7 +10,12 @@
     "useTime": "Free Action",
     "description": {
       "value": "<p>Recalling general knowledge on procedures, divisions, traditions, important individuals, superstitions, etc, for target group.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

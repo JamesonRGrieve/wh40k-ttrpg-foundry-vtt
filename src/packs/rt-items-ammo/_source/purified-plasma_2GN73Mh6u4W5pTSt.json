@@ -12,7 +12,10 @@
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Weapon loses Overheats Quality</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

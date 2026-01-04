@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Comrade in Cohesion spends a Half Action, or Full Action if their Character has made an attack since the beginning of their last Turn. All Attempts to spot the character or their Comrade suffer -20 during any round this order is enacted. Can be enacted out of combat, in which case it is maintained until Comrade ceases to work on maintaining it for whatever reason.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

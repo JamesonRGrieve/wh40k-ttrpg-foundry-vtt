@@ -10,7 +10,12 @@
     "useTime": "Half Action",
     "description": {
       "value": "<p>Determining Honesty, motives, personality, or temprament of a person. Noticing small details or characteristics that may pass unseen. For auspex returns, determining A Vessel's mass, velocity, etc.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Perception",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

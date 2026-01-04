@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When this order is activated, until the end of the turn whenever the Character kills an enemy they can make a +0 Intimidate Test as a Free Action. If successful each ally within Communication range of the Character's Comrade gains +10 to their next Weapon Skill or Ballistic Skill Test made before the end of the next turn. Additionally, any Ogryns affected by this ability can enter a Frenzy as a Free Action.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

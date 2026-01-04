@@ -10,7 +10,12 @@
     "useTime": "RT: Into the Storm",
     "description": {
       "value": "<p>A Xenos is permently marked to show they serve the Imperium of Man, as long as they are vouched for by a human patron, they are much less likely to be attacked on sight while on Imperial Worlds and Stations.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "800xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

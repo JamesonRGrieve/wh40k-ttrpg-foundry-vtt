@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Whilst in a Vehicle, Character with help of Comrade choose a single target vehicle as a Free Action, the driver (who can be the Character) makes +0 Operate Test, or -30 Test if Vehicle has made any Movement Action other than Tactical Manoeuvring this Round. If Test is Successful, Vehicle's Weapons gain +2 to Penetration per Degree of Success on Test when firing at chosen target, bonus persists until either vehicle moves.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

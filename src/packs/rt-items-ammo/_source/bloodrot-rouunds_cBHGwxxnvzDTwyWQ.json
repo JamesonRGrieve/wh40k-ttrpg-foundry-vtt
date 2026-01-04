@@ -12,7 +12,10 @@
     "source": "BC: Tome of Decay",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Change Heavy Bolter Profile to (Heavy, Range 80m, S/-/-, 3d10 X, Pen 6, Blast(5), Corrosive, Smoke(1), Toxic(3))\nWhen a creature begins their turn within the Smoke of the Smoke Quality, they take 2d10 I Damage with Corrosive and Toxic(3).</p><p><b>Qualities:</b> Razor Sharp</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

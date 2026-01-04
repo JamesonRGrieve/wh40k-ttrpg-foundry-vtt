@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Order can only be made to Servitor Comrade Weapon Capable of Semi/Full Auto Fire. Character Designates a 45 Degree Arc Kill Zone that Comrade will unleash a Suppressing Fire Action in.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "Free Action as part of Movement",
     "description": {
       "value": "<p>Moving Quietly, concealing themselves or an object from a searcher, Shadowing someone, etc.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

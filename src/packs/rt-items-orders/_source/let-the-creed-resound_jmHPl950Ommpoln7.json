@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>As long as Comrade is in Cohesion, character counts as having a Laud Hailer Equipped, and can affect twice the normal number of subjects with their Interaction Skill Tests. This stacks with talents such as Master Orator. (Order is passive, stays on unless otherwise desired)</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

@@ -12,7 +12,10 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p><b>Damage/Effect:</b> When a Psyker suffers damage from weapon must make -10 Willpower Test or be Stunned for DoF Rounds. \nIf target has Warp Instability Trait suffers damage from weapon must make -10 Instability Test.</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

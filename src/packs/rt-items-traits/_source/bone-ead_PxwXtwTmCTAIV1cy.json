@@ -9,7 +9,14 @@
     "source": "OW: Shield of Humanity (Page 58)",
     "description": {
       "value": "<p>The Ogryn is not an intelligent thing, an abhuman deemed fit by the Imperium to serve humanity for its incredible strength and dogged devotion. Yet there are those Ogryns whom show a spark of cunning, or a tenancy for independence. In these, the Bone 'Ead Implant may allow them the higher thought to put such talents to use.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Bone 'Ead Apt: Ballistic Skill, Leadership, Offence, Strength, Toughness, Weapon Skill\nAdd. Equipment: Good Cerebral Implants, Good Ripper Gun or Good Shock Maul and Common Bolter, 2 Frag and 1 Krak Grenade. Gain Talents: Ambidextrous+ Resistance(Fear) or Loyal Demeanour, Can Purchase Unique Talents: Improved Dexterity and Enhanced Intellect and Basic Order: Brutal Encouragement</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

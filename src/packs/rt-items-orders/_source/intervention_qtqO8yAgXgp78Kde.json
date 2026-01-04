@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Comrade in Cohesion allows the Character to re-roll Failed Parry or Dodge Tests vs Melee Attacks (must accept second result). However if they fail the test even after the reroll the Comrade is struck by the attack instead. Can only use this order once per Round.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

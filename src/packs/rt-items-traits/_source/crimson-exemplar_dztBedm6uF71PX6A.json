@@ -9,7 +9,14 @@
     "source": "OW: Shield of Humanity (Page 49)",
     "description": {
       "value": "<p>The Crimson Guard are an elite, highly trained and Augmented Soldiers commanded by the Mechanicus Operated Lathe Worlds. These Forge Worlds see that those that fight in their name are equipped to best serve the Imperium, or more specifically the Mechancus' Interests in relation to it.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with Crimson Exemplar. Apt: Ballistic Skill, Intelligence, Offence, Strength, Tech, Toughness, Weapon Skill\nAdd. Equipment: Sacred Ungents, Omnissian Axe, Ballistic or Utility Mechadendrite (Servo Arm), Crimson Armour, MIU Weapon Interface, Best Lathe-Lasrifle.      Gain Talents: Meditation+Weapon Tech or Integrated Weapons Expertise. Can Purchase Unique Talent: Integrated Weapon Systems and Basic Order: Target Lock</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

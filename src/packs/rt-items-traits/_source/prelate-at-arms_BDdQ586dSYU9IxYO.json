@@ -9,7 +9,14 @@
     "source": "OW: Shield of Humanity (Page 90)",
     "description": {
       "value": "<p>The Emperor protects only those worthy of it, and the Prelate of Arms knows themselves worthy. They know that they may stride into battle and slay the enemy, they know that they shall survive until their duty is done, and they know that only when it is shall the Emperor claim them. Others call it madness, but not within ear's reach.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with Prelate-At-Arms. Apt: Ballistic Skill, Defence, Fellowship, Leadership, Strength, Toughness, Willpower\nAdd. Equipment: Sanctified Vestments, Best Bolter or Good Power Sword+Best Bolt Pistol, Book of Scripture, Laud Hailer. Gain Talents: Combat Formation +Weapon Training(Bolt) or Strength in the Creed. Can Purchase Unique Talent: Piety's Reward and Basic Order: Do Not Falter!</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

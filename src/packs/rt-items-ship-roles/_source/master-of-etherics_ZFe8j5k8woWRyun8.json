@@ -11,7 +11,15 @@
     "effect": "+10 to Focused Augury Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Responsible for the Auspex and Vox relays.</p><p><b>Effect:</b> +10 to Focused Augury Extended Action</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

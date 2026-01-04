@@ -12,7 +12,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Can be recharged with Tech-Use Test and suitable power source which takes a few hours. can charge in a fire which takes 1 day, halves clip size, and imposes Unreliable Quality (or loses Reliable), subsequent fire recharges instead have 30% chance to destroy the pack.</p><p><b>Qualities:</b> -</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

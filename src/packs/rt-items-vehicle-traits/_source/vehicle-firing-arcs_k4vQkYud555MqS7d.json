@@ -6,6 +6,12 @@
     "descriptionText": "Vehicle weapons can face in Front, Left, Right, and Back Directions. Each of these represent 90 Degree Cones of fire, if a Vehicle weapon lists as \"Firing Front\", it could only fire in a 90 degree arc in front of the vehicle for example. \nSome Vehicle weapons have wider firing arcs, listed for example as Front/Left, for firing in the Front arc or the Left arc. Some are listed as Firing \"All\", which can fire in all directions.\nFixed weapons have no Firing Arcs. Hull Weapons have 45 Degree firing arcs in one direction. \nSponson Weapons have 180 Degree Firing Arcs centred on the side they face (normally Front/Side/Back). \nPintle Weapons can fire in all directions, but often leave a user exposed. \nTurret weapons have 360 Degree Firing but are slow, each Full 180 Degree Rotation takes a Half Action. Turrets always treat hits to them as if hitting the front of the vehicle. Smaller turrets may have line of fire blocked own vehicle.\nCo-Axial Weapons are attached usually beside turret weapons and move with them, they can be fired as a Full Action alongside the Turret weapon, firing first. If they hit, they give +20 to the firing of the Turret weapon.",
     "description": {
       "value": "<p>Vehicle weapons can face in Front, Left, Right, and Back Directions. Each of these represent 90 Degree Cones of fire, if a Vehicle weapon lists as \"Firing Front\", it could only fire in a 90 degree arc in front of the vehicle for example. \nSome Vehicle weapons have wider firing arcs, listed for example as Front/Left, for firing in the Front arc or the Left arc. Some are listed as Firing \"All\", which can fire in all directions.\nFixed weapons have no Firing Arcs. Hull Weapons have 45 Degree firing arcs in one direction. \nSponson Weapons have 180 Degree Firing Arcs centred on the side they face (normally Front/Side/Back). \nPintle Weapons can fire in all directions, but often leave a user exposed. \nTurret weapons have 360 Degree Firing but are slow, each Full 180 Degree Rotation takes a Half Action. Turrets always treat hits to them as if hitting the front of the vehicle. Smaller turrets may have line of fire blocked own vehicle.\nCo-Axial Weapons are attached usually beside turret weapons and move with them, they can be fired as a Full Action alongside the Turret weapon, firing first. If they hit, they give +20 to the firing of the Turret weapon.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

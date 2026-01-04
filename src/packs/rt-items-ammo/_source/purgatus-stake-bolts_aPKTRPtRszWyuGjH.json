@@ -12,7 +12,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. If a Psyker or Warp entity is hit by this ammo, must make +0 Willpower Test or immediately roll on Perils of the Warp table.</p><p><b>Qualities:</b> Sanctified</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

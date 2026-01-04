@@ -6,6 +6,12 @@
     "descriptionText": "Allows the wearer to re-roll failed Ballistic Skill Tests made as part of the Overwatch Action or Supporting Fire Trait.",
     "description": {
       "value": "<p>Allows the wearer to re-roll failed Ballistic Skill Tests made as part of the Overwatch Action or Supporting Fire Trait.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

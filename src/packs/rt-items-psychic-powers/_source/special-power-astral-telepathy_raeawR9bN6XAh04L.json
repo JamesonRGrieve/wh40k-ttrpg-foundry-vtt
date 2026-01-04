@@ -14,7 +14,9 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Free (Astropaths Only)</p>"
-    }
+    },
+    "focusTime": "Half Action",
+    "threshold": 0
   },
   "effects": [],
   "flags": {},

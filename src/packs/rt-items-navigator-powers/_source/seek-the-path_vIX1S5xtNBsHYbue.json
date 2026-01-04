@@ -13,7 +13,14 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p><b>Novice:</b> Navigator can use Perception Characteristic in place of their Weapon Skill and/or Ballistic Skill Characteristics for the purposes of Tests. Lasts until the end of their next turn, +1 turn per Degree of Success.</p><p><b>Adept:</b> Navigator's Melee and Ranged Attacks impose -10 to Dodge and Parry Tests made by opponents to avoid them.</p><p><b>Master:</b> Navigator's Melee and Ranged Attacks instead impose -20 to Dodge and Parry Tests made by opponents to avoid them. As opposed to -10.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

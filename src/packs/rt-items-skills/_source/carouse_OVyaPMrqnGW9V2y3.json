@@ -10,7 +10,12 @@
     "useTime": "Free Action",
     "description": {
       "value": "<p>Resisting the effects of Alcohol and Narcotics. Failiure results in gaining Fatigue or some other side effect. </p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Toughness",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

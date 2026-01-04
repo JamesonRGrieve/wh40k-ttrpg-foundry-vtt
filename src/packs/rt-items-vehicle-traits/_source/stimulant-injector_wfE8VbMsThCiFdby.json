@@ -6,6 +6,12 @@
     "descriptionText": "Once per Round as a Free Action, the wearer may inject a single dose of a loaded Drug into them. The Injector can carry a single dose of one type of Drug. Usually a Pain Suppressor that ignores a single Critical Effect that wouldn't kill the wearer.",
     "description": {
       "value": "<p>Once per Round as a Free Action, the wearer may inject a single dose of a loaded Drug into them. The Injector can carry a single dose of one type of Drug. Usually a Pain Suppressor that ignores a single Critical Effect that wouldn't kill the wearer.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -13,7 +13,14 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p><b>Novice:</b> Navigator can add 5xIntelligence Bonus to any Manoeuvre Action or a Single Ballistic Skill Test to fire the starship's guns that strategic turn.</p><p><b>Adept:</b> Navigator can make -20 Perception Test, on success can spread Intelligence Bonus between ship's increasing Speed or Armour for 1 Strategic Turn, can't use this again for rest of starship combat. If test failed by 1+ DoF, suffer 2 Fatigue.</p><p><b>Master:</b> Same as Adept Level, but increases last for 1d5 Strategic Turns, but Navigator gains 2 Fatigue from power use, or 4 Fatigue if failing Perception Test by 1+ DoF.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

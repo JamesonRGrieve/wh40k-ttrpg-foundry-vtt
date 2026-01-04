@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> - The Ritual Follows the \"Rule of Sympathy\", Sympathetic Objects, Rites, actions, and/or Location favour the God.\n- The Daemon has been provided a Suitable Sacrifice to partake of upon arrival.\n- The Enactor has an Artefact connected to the summoned Daemon.\n- The Enactor has an Aetheme Blade or Rituals Kit\n- The Enactor is a Psyker with Psy Rating 4-6\n- The Veil between Reality and the Warp is weakened\n- The Enactor knows part of a Daemon's True Name</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

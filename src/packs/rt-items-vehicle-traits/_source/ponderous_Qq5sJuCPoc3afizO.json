@@ -6,6 +6,12 @@
     "descriptionText": "Cannot use the Floor It! Action, moving Tactical Speed requires a Full Action. (cannot move 2x Tactical Speed). Mutually Cancels out Enhanced Motive Systems Trait and becomes regular vehicle. ",
     "description": {
       "value": "<p>Cannot use the Floor It! Action, moving Tactical Speed requires a Full Action. (cannot move 2x Tactical Speed). Mutually Cancels out Enhanced Motive Systems Trait and becomes regular vehicle. </p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

@@ -10,7 +10,12 @@
     "useTime": "Full Action",
     "description": {
       "value": "<p>Stalling for time, causing distractons through speaking. Requires sharing common language with opponent.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

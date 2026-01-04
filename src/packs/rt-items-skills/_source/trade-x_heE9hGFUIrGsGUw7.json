@@ -10,7 +10,12 @@
     "useTime": "Varies",
     "description": {
       "value": "<p>The Creation of things from contracts to weapons to starships, as well as the recalling of knowledge related to the Trade. A Trade may earn additional Profit Factor when able to ply it.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

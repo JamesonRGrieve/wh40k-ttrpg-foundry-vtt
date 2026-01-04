@@ -10,7 +10,12 @@
     "useTime": "Full Action",
     "description": {
       "value": "<p>The User's ability to clear their mind and better channel the warp through the use of Mantras, psychic foci, meditation, etc.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Willpower",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

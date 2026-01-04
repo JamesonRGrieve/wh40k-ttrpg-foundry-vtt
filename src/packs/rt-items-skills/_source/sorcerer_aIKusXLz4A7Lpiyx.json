@@ -10,7 +10,12 @@
     "useTime": "RT: Edge of the Abyss",
     "description": {
       "value": "<p>Through fell tomes or dark pacts, one learns the art of Sorcery, allowing a non-psyker to wield psychic powers through the use of often chaotic artifacts.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "750xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

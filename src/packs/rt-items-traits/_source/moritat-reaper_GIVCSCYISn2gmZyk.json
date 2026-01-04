@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 74)",
     "description": {
       "value": "<p>Members of an ancient Imperial Death Cult, devoted to a bloody interpretation of the Imperial Creed. They believe they serve the God Emperor humself, their killings divinely liscened and ordained. They see blood as sacred, and its shedding from the Heretic, Mutant, Cultist, and Witch by the finest blades an ultimate art.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Moritat Reaper\nAllows for the purchasing of the Unique Talent The Reaping</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

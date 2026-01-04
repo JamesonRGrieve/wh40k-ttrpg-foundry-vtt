@@ -10,7 +10,12 @@
     "useTime": "RT: The Navis Primer",
     "description": {
       "value": "<p>Use ones own insanity and internal voices to guide their mind into unlocking hidden memories not their own.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "500xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

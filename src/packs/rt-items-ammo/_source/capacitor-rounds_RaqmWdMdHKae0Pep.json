@@ -12,7 +12,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Grants weapon the Shocking Quality, but reduce damage by 4</p><p><b>Qualities:</b> Shocking</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

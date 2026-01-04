@@ -9,7 +9,14 @@
     "source": "RT: Faith and Coin\n(Page 74)",
     "description": {
       "value": "<p>Those who spread the message of famed missionary Nadine Aleynikov, known for their trails and tribulations to cure a plague that ultimately claimed them. Those of the faith perservere to learn fieldcraft and medicine, honing research skills such they may to cure others.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Adherent of Aleynikov\nAllows for the purchasing of the Unique Talent Faith Healing</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

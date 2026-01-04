@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>If Comrade is in Cohesion, all targets of character's attacks must make +0 Pinning Test or become pinned.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

@@ -10,7 +10,12 @@
     "useTime": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>The Mechanicus constructs a new body for the character and transfers their mind into it, this is rarely stable or safe. It is an rare and expensive process that leaves one a shadow of themselves, but now stronger.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "500xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

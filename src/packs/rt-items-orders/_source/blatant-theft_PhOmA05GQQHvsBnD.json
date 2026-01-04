@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Comrade in Cohesion distracts target within 3 metres of Character,Character makes Opposed Sleight of Hand Test against target with +30 if target is unaware of them. If Succesful, they may steal one item from the target's person of Size(2, Puny) or Smaller. If getting 3+ Degrees of Success, can immediately afterwards make the Disengage Action as a Free Action.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

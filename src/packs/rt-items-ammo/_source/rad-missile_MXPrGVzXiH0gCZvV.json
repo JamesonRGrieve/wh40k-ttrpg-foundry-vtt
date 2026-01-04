@@ -12,7 +12,10 @@
     "source": "BC: Tome of Decay",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.</p><p><b>Qualities:</b> Blast(4), Irradiated(4)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

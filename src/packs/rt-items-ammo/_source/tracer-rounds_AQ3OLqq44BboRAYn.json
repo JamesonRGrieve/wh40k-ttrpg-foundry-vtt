@@ -12,7 +12,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p><b>Damage/Effect:</b> When making a Full Auto Attack, gain additional Degrees of Success equal to Half Initial Degrees of Success, rounding up. At Point Blank Range, gain Flame Quality, may ignite things at longer ranges. Comrades provide additional +5 to BS tests with Ranged Volley Order.</p><p><b>Qualities:</b> Flame (conditional)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

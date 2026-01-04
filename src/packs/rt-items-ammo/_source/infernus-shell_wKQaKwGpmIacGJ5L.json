@@ -12,7 +12,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10+10 E, Pen 6, Flame Damage Profile, loses Concussive quality if weapon has it.</p><p><b>Qualities:</b> Flame</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 60)",
     "description": {
       "value": "<p>A Special Military unit designed to maintain direct control over locally raised regiments within the calixis sector, their sight along blanches many Guardsmen, for these individuals are exceptionally devoted to seeking out rebellious tendancies and executing those they deem as cowards or deserters.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Chaliced Commissariat\nAutomatically gain Unique Trait Feared and Loathed</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

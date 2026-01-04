@@ -9,7 +9,14 @@
     "source": "RT: Faith and Coin\n(Page 68)",
     "description": {
       "value": "<p>Beastmasters are those inclined towards the keeping, training, and commanding a menagerie of exotic creatures. Such creatures could aid in battle and perform acts their owners and companions could not.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Beastmaster\nAllows for the purchasing of the Unique Talents Bestial Minion and Coordinated Strike. </p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

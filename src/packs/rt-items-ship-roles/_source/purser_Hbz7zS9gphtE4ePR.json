@@ -11,7 +11,15 @@
     "effect": "When Replenishing Morale with Achievement Points, Purser only has to spend 25, and always makes +20 Barter Test instead of Charm test, regardless of how many times method is used.",
     "description": {
       "value": "<p><b>Purpose:</b> Balance the books, crew payments.</p><p><b>Effect:</b> When Replenishing Morale with Achievement Points, Purser only has to spend 25, and always makes +20 Barter Test instead of Charm test, regardless of how many times method is used.</p>"
-    }
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
   },
   "effects": [],
   "flags": {},

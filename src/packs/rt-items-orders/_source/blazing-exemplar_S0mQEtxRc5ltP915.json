@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Order is issued, If Comrade is in Cohesion, whenever the Character inflicts Righteous fury on an enemy, each ally within Cohesion Range (default 5m) of the Comrade can inflict Righteous Fury on a 9 or 10 Damage Roll until the end of this next turn.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

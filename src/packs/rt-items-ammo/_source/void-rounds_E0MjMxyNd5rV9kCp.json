@@ -12,7 +12,10 @@
     "source": "RT: Into the Storm / DH: Inquisitor's HB",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n</p><p><b>Qualities:</b> Reliable (conditional)</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

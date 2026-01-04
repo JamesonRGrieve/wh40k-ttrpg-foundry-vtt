@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Adept:</b> Navigation(Warp) Test bonus will become relevent in Step 4.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

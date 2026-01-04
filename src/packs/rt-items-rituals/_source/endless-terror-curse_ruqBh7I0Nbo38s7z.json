@@ -11,6 +11,13 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p><b>Effect:</b> Target treats all living things as if they had Fear(1), or increases any existing creature's Fear Trait by 1. Recovering Fatigue takes 4x as long as it normally would. Fearless Targets still suffer the Fatigue, effect although are immune to the fear effect.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased  If cursing a bloodline, failing either test causes this result and causes curse to affect everyone closely aligned to the character.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

@@ -12,7 +12,10 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Default exotic ammo of all Q'Sal Crystal Casters</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

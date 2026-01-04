@@ -9,7 +9,11 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character makes -10 Command Test with +10 for each of their Comrades in Cohesion that participate in the Order. If Successful, Until the end of their Turn the character cannot be targeted by Melee Attacks whilst making a Charge Action and for each Degree of Success they inflict one additional hit on the target of the Charge Action with a melee weapon wielded by one of more of their Comrades.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

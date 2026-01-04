@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>If Comrade is in Comms Range, until the start of the next turn, all enemies suffer -10 to WS Tests to hit the Character, and they can take one extra Dodge or Parry Action.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

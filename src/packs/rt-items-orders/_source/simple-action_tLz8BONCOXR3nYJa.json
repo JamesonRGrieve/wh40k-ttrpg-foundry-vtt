@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>The Comrade performs some basic action that could be performed without requiring a Skill Test, such as helping a Character perform an activity (which reduces the time it takes by one Round per Comrade, to a minimum of one).</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

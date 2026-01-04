@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>Character chooses target of Size (Hulking, 5) or larger within line of sight and makes +0 Perception Test. If Comrade is in Cohesion they give Character +X or Felling(X) to the character's next attack against chosen target. Where X is the Degrees of Success on Perception Test.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

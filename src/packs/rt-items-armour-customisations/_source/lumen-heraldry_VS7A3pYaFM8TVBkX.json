@@ -10,6 +10,12 @@
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

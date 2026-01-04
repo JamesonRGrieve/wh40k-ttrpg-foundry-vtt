@@ -9,7 +9,11 @@
     "source": "OW: Hammer of The Emperor",
     "description": {
       "value": "<p>If Comrade is in Cohesion, the Character counts their Weapon has having the Accurate Quality for the next Single-Shot Ranged Attack they make. Cannot be used for weapons with Blast, Haywire, Inaccurate, Indirect, Scatter, Spray, Storm, or Twin-Linked Qualities, doesn't add extra damage if fired weapon doesn't deal damage.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

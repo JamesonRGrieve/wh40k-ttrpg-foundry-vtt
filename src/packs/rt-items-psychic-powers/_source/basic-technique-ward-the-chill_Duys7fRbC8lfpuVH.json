@@ -14,7 +14,9 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>Free</p>"
-    }
+    },
+    "focusTime": "Half Action",
+    "threshold": 0
   },
   "effects": [],
   "flags": {},

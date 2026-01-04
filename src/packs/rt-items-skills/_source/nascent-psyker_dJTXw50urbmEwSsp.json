@@ -10,7 +10,12 @@
     "useTime": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>In times of extreme stress, very rarely, some may manifest psychic powers. This is no gift however, for the unsanctioned are feared for they are a danger to all around them.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "0xp",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

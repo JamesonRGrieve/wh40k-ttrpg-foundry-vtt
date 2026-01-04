@@ -11,6 +11,13 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p><b>Effect:</b> Target suffers effects of whichever Word of Power was spoken: Bane: when target takes damage, roll 1d10, on a 1 attack has Crippling(X), where X is their Corruption Bonus, stacks with existing Crippling Qualities.. Banish: Target gains Warp Instability Trait, or its tests become -20 if they already had it. Benumb (Slaanesh): Target halves Agility and Perception Characteristics, rounding up. Bewilder: target suffers -20 to any test involving Awareness, Charm, Command, Commerce, Deceive, Intimidate, Logic, or Scrutiny. Bind: If target is Psyker, their Psy Rating is reduced by their WP Bonus (minimum 1). Blaze(Tzeentch): when target takes damage, roll 1d10, on a 1 the attack has the Flame Quality, if it already had it, test to avoid is -30. Bleed(Khorne): when target takes damage, roll 1d10, on a 1 they suffer Blood Loss. Blight(Nurgle):When target takes damage, roll 1d10, on a 1 attack has Toxic(X), where X is their Corruption Bonus, stacks with existing Toxic Qualities.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

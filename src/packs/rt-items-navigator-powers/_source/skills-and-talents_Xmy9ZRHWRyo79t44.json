@@ -13,7 +13,14 @@
     "source": null,
     "description": {
       "value": "<p><b>Novice:</b> Khorne: Ambidextrous, Combat Master, Deathdealer (Melee), Devastating Assault, Crushing Blow, Frenzy, Swift Attack, Two-Weapon Master, Two-Weapon Wielder (Melee)\nTzeentch: Constant Vigilance (Intelligence), Favoured by the Warp.\nNurgle: Thunder Charge, True Grit.               Slaanesh: Constant Vigilance (Perception), Hard Target, Preternatural Speed</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

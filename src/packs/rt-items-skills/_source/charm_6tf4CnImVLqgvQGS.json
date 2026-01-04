@@ -10,7 +10,12 @@
     "useTime": "1 Minute",
     "description": {
       "value": "<p>Changing the Disposition/Opinion, or the act of convincing someone in an overtly friendly manner.  Target(s) must share common language and be able to see and hear user.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

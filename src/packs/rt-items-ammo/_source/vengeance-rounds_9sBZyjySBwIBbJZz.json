@@ -12,7 +12,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gains Unstable and Overheats Qualities as well as +3 Damage and Penetration</p><p><b>Qualities:</b> Unstable, Overheats</p>"
-    }
+    },
+    "damageModifier": 0,
+    "penetrationModifier": 0,
+    "specialRules": []
   },
   "effects": [],
   "flags": {},

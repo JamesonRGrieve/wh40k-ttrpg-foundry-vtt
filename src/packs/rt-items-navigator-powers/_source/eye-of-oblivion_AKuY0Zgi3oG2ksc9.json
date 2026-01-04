@@ -13,7 +13,14 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p><b>Novice:</b> The Navigator Adds Perception Bonus to first hit each turn with Ranged or Melee attacks to Target(not Navigator Powers) . Lasts 1 Turn + 1 per Degree of Sucecss.</p><p><b>Adept:</b> Extra damage ignores Armour and Toughness (although rest of the attack is reduced as normal).</p><p><b>Master:</b> Extra Damage is now 2x Perception Bonus instead of 1x, the Navigators first successful ranged or melee attack (not including Navigator Powers) ignores Forcefields and Psychic Defences.</p>"
-    }
+    },
+    "noviceOnly": false,
+    "rollConfig": {
+      "characteristic": "perception",
+      "modifier": 0
+    },
+    "sideEffects": "",
+    "duration": "Instant"
   },
   "effects": [],
   "flags": {},

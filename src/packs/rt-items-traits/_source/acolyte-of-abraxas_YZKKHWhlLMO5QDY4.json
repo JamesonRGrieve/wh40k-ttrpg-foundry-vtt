@@ -9,7 +9,14 @@
     "source": "RT: The Navis Primer\n(Page 65)",
     "description": {
       "value": "<p>These deeply heretical Explorators install strange Xeno-Tech into their very beings that possess psychic properties. This technology bestows onto them psuedo-psychic powers at the great chagrin of the wider Mechanicus who may hunt them down should they be found out.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Acolyte of Abraxas\nAutomatically Gain Enemy (Mechanicus) and Rival (Mechanicus) Talents.\nAllows for the purchasing of the Unique Talents Corrupted Charge and Unhallowed Discovery</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

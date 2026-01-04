@@ -9,7 +9,11 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Make +0 Command Test, if successful, all Comrades grant their Player Characters an additional +4 Ranged/Melee Damage if the Ranged volley or Close Quarters Orders are used.</p>"
-    }
+    },
+    "skill": "command",
+    "modifier": 0,
+    "duration": "1 Round",
+    "shipAction": true
   },
   "effects": [],
   "flags": {},

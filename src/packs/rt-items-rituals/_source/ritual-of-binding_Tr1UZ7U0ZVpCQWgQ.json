@@ -11,6 +11,13 @@
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p><b>Effect:</b> The Summoned Daemon is bound within the shell of the Daemon Engine, bringing it to unholy life. The Daemon is now treated as a Daemon Engine of the appropriate type.  The Daemon remains forever, unable to leave its shell unless it either gathers sufficient power, or is banished by one of sufficient power to unravel the binding, or the Daemon Engine is Destroyed. Daemons are more likely to be willingly implanted in a Daemon Engine.</p><p><b>Costs:</b> Each Ritual Partcipant suffers 4d10 nonpermenant damage to all Characteristics for 2d10 Hours, +1 Hour per level of Size Trait the Daemon Engine Is. The Ritual also triggers two Psychic Phenomenas that affect all ritual partcipants.</p><p><b>Failure:</b> The Daemon breaks free of control, if the Daemon was unwilling it attacks the characters, if it was willing it dissolves back to the warp. Regardless roll Contempt of the Warp with +10 per DoF.</p>"
+    },
+    "time": "1 Hour",
+    "participants": 1,
+    "components": [],
+    "rollConfig": {
+      "characteristic": "willpower",
+      "modifier": 0
     }
   },
   "effects": [],

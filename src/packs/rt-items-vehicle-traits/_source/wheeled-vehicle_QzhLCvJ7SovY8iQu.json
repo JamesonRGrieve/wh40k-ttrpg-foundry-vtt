@@ -6,6 +6,12 @@
     "descriptionText": "-20 to all tests involving Difficult Terrain, +10 to Maneouvrability. Once Critical Damage to Motive Systems is taken, all movement requires Drive Tests and all tests using Maneouvrability have -10. Repairing Motive System Critical Damage takes half as long. ",
     "description": {
       "value": "<p>-20 to all tests involving Difficult Terrain, +10 to Maneouvrability. Once Critical Damage to Motive Systems is taken, all movement requires Drive Tests and all tests using Maneouvrability have -10. Repairing Motive System Critical Damage takes half as long. </p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

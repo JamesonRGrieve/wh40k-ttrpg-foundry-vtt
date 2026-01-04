@@ -6,6 +6,12 @@
     "descriptionText": "Battlesuit is Environmentally Sealed and can proide air for several days as long as power source is operable and seal remains intact. This system provides breathable air and protection from the elements.",
     "description": {
       "value": "<p>Battlesuit is Environmentally Sealed and can proide air for several days as long as power source is operable and seal remains intact. This system provides breathable air and protection from the elements.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

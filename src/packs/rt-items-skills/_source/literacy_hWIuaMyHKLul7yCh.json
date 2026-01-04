@@ -10,7 +10,12 @@
     "useTime": "1 Minute per Page, ~750 Words",
     "description": {
       "value": "<p>The ability to read and write in any language the user speaks. Every day activities do not require a test, although situations involving regional variation, damaged/archaeic writings, or colloqialisms may need one.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},

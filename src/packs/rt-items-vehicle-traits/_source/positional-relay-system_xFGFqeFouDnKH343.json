@@ -6,6 +6,12 @@
     "descriptionText": "Wearer counts as having a Positional Relay Equipped and gains the benefits of it. (Acts as a long-range Vox. Allowing communications up to 10km. Due to inbuilt security, attempts to subvert or listen in on the vox have have -30 to relevent tests.)",
     "description": {
       "value": "<p>Wearer counts as having a Positional Relay Equipped and gains the benefits of it. (Acts as a long-range Vox. Allowing communications up to 10km. Due to inbuilt security, attempts to subvert or listen in on the vox have have -30 to relevent tests.)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
     }
   },
   "effects": [],

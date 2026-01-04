@@ -9,7 +9,14 @@
     "source": "DH: Inquisitor's Handbook (Page 68)",
     "description": {
       "value": "<p>Towering masses of sinew, steel, and mechadendrites. The Secutor is a walking tank of firepower fascinated by the challenges of warfare and obssessed with arming themselves and reshaping their body such as best to perform it.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Mechanicus Secutor\nAllows for the purchasing of the Unique Talent Machinator Array</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

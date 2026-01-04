@@ -12,6 +12,16 @@
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 1500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
     }
   },
   "effects": [],

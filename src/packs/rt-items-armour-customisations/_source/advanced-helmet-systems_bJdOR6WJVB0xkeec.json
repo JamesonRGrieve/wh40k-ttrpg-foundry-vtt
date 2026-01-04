@@ -10,6 +10,12 @@
     "source": "Rogue Trader; Core",
     "description": {
       "value": "<p>Has any of following: Inbuilt Microbead/voxcaster, Auto-senses that give Heightened Senses (sight), Preysense Goggles that grant Dark Sight Trait. Best Quality lets user make Awareness test against hidden target as free action</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
     }
   },
   "effects": [],

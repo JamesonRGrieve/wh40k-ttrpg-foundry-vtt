@@ -9,7 +9,14 @@
     "source": "RT: Hostile Acquisitions\n(Page 42)",
     "description": {
       "value": "<p>To be a Reaver is to have been broken by the indifference of the universe, to have seen and lost more than most could comprehend such that no amount of death and horror phase you. Such individuals now exist purely for themselves, never planning for the future, killing, taking, and indulging in primal desires indifferent of morality.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Reaver.\nAutomatically Gain 1d10+5 Insanity and Enemy(Rogue Traders, Nobility, and Imperial Navy)\nAllows for the purchasing of the Unique Talent Cold Soul</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

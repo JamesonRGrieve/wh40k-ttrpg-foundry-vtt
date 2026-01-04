@@ -9,7 +9,14 @@
     "source": "RT: Hostile Acquisitions \n(Page 46)",
     "description": {
       "value": "<p>Many would consider Seccession the greatest act of suicide. It is to make an enemy of the Imperium itself, to isolate from its walls and defy the will of the Emperor. Yet for those of most iron will and silver tongues, they may take control over entire worlds with a populace that cheers for their freedom rather than fears for their future.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Seccesionist. Automatically Gain Enemy (Adeptus Sororitas, Arbites, Astartes, Mechanicus, Adminstratum, Astropaths, Ecclesiarchy, Imperial Guard, Imperial Navy, and Inquisition) Talents. You are now an enemy of the Imperium. \nAllows for the purchasing of the Unique Talents Peer/Good Reputation (Seceded Worlds), Hatred (Imperial Organisation), and Grand Oratory</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "OW: Shield of Humanity (Page 66)",
     "description": {
       "value": "<p>An Ogryn's ability to heft all but the heaviest of conventional weapons is limited only by their often inefficiency at using them. Those that have the wherewithall to not simply spray all their bullets wildly however can be a punishing source of Heavy Suppressive Fire that keeps enemies either pinned or dead.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Gun Lugger. Apt: Ballistic Skill, Offence, Defence, Perception, Strength, Weapon Skill\nAdd. Equipment: Good Heavy Bolter or Good M41 Multilaser or Best Ripper Gun, 5 Frag Grenades. Gain Talents: Weapon Training(Bolt)+Weapon Training(Las) or Ripper Charge. Can Purchase Unique Talent: Ballistic Fury and Basic Order: Guiding Fire</p>"
-    }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

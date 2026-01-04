@@ -10,7 +10,12 @@
     "useTime": "Varies, Normally Minutes to Hours.",
     "description": {
       "value": "<p>Entertain or Enthrall groups of Spectators, takes an amount of time dependant on Performance.</p>"
-    }
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true
   },
   "effects": [],
   "flags": {},
