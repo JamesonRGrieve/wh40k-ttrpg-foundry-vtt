@@ -83,6 +83,34 @@
       "Name": "Ritual",
       "Test": "Test"
     },
+    "QuickActions": {
+      "Header": "Quick Actions",
+      "RollTable": "Roll Tables",
+      "PsychicPhenomena": "Psychic Phenomena",
+      "PerilsOfTheWarp": "Perils of the Warp",
+      "FearEffects": "Fear Effects",
+      "Mutation": "Roll Mutation",
+      "Malignancy": "Roll Malignancy",
+      "NavigatorMutation": "Navigator Mutation",
+      "SpendFate": "Spend Fate",
+      "BurnFate": "Burn Fate",
+      "RecoverFate": "Recover Fate"
+    },
+    "Dynasty": {
+      "Header": "Dynasty",
+      "Name": "Dynasty Name",
+      "History": "Dynasty History",
+      "Reputation": "Reputation",
+      "ShipName": "Ship Name"
+    },
+    "Endeavours": {
+      "Header": "Endeavours",
+      "Current": "Current Endeavour",
+      "Objectives": "Objectives",
+      "AchievementPoints": "Achievement Points",
+      "Completed": "Completed Endeavours",
+      "AddObjective": "Add Objective"
+    },
     "RogueTrader": {
       "TabLabel": "Rogue Trader",
       "Header": "Rogue Trader",

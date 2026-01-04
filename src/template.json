@@ -1554,7 +1554,20 @@
           "profitFactor": {
             "starting": 0,
             "current": 0,
+            "modifier": 0,
             "misfortunes": ""
+          },
+          "endeavours": {
+            "current": "",
+            "objectives": [],
+            "achievementPoints": 0,
+            "completed": []
+          },
+          "shipName": "",
+          "dynasty": {
+            "name": "",
+            "history": "",
+            "reputation": 0
           },
           "armour": {
             "head": 0,
