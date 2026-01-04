@@ -8,7 +8,7 @@ It offers extensive support for character sheets, compendium packs, and automate
 
 🗡️ The system includes a variety of compendium packs, such as weapons, weapon mods, talents, armor, psychic abilities, ammunition, tools, traits, attack specials (toxic, corrosive, etc.), and consumables and drugs.
 
-💪 During character creation, there are automated bonuses for backgrounds, roles, and elite advances.
+💪 During character creation, there are automated bonuses for birthrights, career paths, and elite advances.
 
 🧰 You can easily manage your inventory by dragging and dropping items, such as weapon mods and custom ammunition to build weapons, or storing items in a location on your ship to reduce encumbrance.
 
