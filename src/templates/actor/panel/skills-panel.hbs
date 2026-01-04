@@ -1,39 +1,36 @@
 <div class="dh-panel dh-grid-col-2 dh-grid-row-2">
     <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">Basic Skills</h1>
+        <h1 class="dh-panel__header">Skills</h1>
         <div class="table-row--head">
             <div class="table-cell">Name</div>
-            <div class="table-cell">Adv.</div>
             <div class="table-cell">Char.</div>
+            <div class="table-cell">Training</div>
+            <div class="table-cell">Bonus</div>
             <div class="table-cell--last">Total</div>
         </div>
-        {{#each actor.skills as |skill name|}}
-            {{#unless skill.hidden}}
-                {{#unless skill.isSpecialist}}
-                    <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{name}}">
-                        <div class="table-cell">
-                            <button class="roll-skill" data-skill="{{name}}" type="roll">{{localize this.label}}</button>
-                        </div>
-                        <div class="table-cell">
-                            <select name="system.skills.{{name}}.advance">
-                                {{option "0" this.advance "Unknown"}}
-                                {{option "1" this.advance "Known"}}
-                                {{option "2" this.advance "Trained"}}
-                                {{option "3" this.advance "Experienced"}}
-                                {{option "4" this.advance "Veteran"}}
-                            </select>
-                        </div>
-                        <div class="table-cell">
-                            <select name="system.skills.{{name}}.characteristic">
-                                {{selectOptions (arrayToObject this.characteristics) selected=this.characteristic}}
-                            </select>
-                        </div>
-                        <div class="table-cell--last table-cell--highlight">
-                            <span class="display">{{this.current}}</span>
-                        </div>
-                    </div>
-                {{/unless}}
-            {{/unless}}
+        {{#each skillLists.standard as |entry|}}
+            <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{entry.[0]}}">
+                <div class="table-cell">
+                    <button class="roll-skill" data-skill="{{entry.[0]}}" type="roll">{{entry.[1].label}}</button>
+                </div>
+                <div class="table-cell">
+                    <select name="system.skills.{{entry.[0]}}.characteristic">
+                        {{selectOptions ../skillCharacteristicOptions selected=entry.[1].characteristic}}
+                    </select>
+                </div>
+                <div class="table-cell dh-skill-training">
+                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.basic" data-dtype="Boolean" {{checked entry.[1].basic}} />Basic</label>
+                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.trained" data-dtype="Boolean" {{checked entry.[1].trained}} />Trained</label>
+                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.plus10" data-dtype="Boolean" {{checked entry.[1].plus10}} />+10</label>
+                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.plus20" data-dtype="Boolean" {{checked entry.[1].plus20}} />+20</label>
+                </div>
+                <div class="table-cell">
+                    <input type="number" data-dtype="Number" name="system.skills.{{entry.[0]}}.bonus" value="{{entry.[1].bonus}}" />
+                </div>
+                <div class="table-cell--last table-cell--highlight">
+                    <span class="display">{{entry.[1].current}}</span>
+                </div>
+            </div>
         {{/each}}
     </div>
 </div>
