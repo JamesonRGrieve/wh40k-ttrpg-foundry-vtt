@@ -57,10 +57,21 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-movement-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/vehicle-upgrades-panel.hbs',
+
+            // Starship Panels
+            'systems/rogue-trader/templates/actor/panel/ship-components-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/ship-crew-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/ship-upgrades-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/ship-weapons-panel.hbs',
 
             'systems/rogue-trader/templates/actor/partial/character-field.hbs',
             'systems/rogue-trader/templates/actor/partial/display-toggle.hbs',
             'systems/rogue-trader/templates/actor/partial/trait-toggle.hbs',
+
+            // Chat Templates
+            'systems/rogue-trader/templates/chat/item-card-chat.hbs',
+            'systems/rogue-trader/templates/chat/ship-weapon-chat.hbs',
 
             // Item Panels
             'systems/rogue-trader/templates/item/panel/active-effects-panel.hbs',

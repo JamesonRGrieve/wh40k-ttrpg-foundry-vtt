@@ -4,7 +4,8 @@
       "acolyte",
       "character",
       "npc",
-      "vehicle"
+      "vehicle",
+      "starship"
     ],
     "templates": {
       "base": {
@@ -1681,6 +1682,49 @@
         "vehicle",
         "npc"
       ]
+    },
+    "starship": {
+      "hullType": "",
+      "hullClass": "",
+      "dimensions": "",
+      "crew": {
+        "population": 100,
+        "crewRating": 30,
+        "morale": {
+          "max": 100,
+          "value": 100
+        }
+      },
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "voidShields": 0,
+      "hullIntegrity": {
+        "max": 0,
+        "value": 0
+      },
+      "space": {
+        "total": 0,
+        "used": 0
+      },
+      "power": {
+        "total": 0,
+        "used": 0
+      },
+      "turretRating": 0,
+      "shipPoints": 0,
+      "machineSpiritOddities": "",
+      "pastHistory": "",
+      "complications": "",
+      "weaponCapacity": {
+        "dorsal": 0,
+        "prow": 0,
+        "port": 0,
+        "starboard": 0,
+        "keel": 0
+      },
+      "notes": ""
     }
   },
   "Item": {
@@ -1954,7 +1998,21 @@
       "aptitudes": "",
       "benefit": "",
       "tier": 0,
-      "cost": 0
+      "cost": 0,
+      "category": "",
+      "isPassive": true,
+      "isRollable": false,
+      "rollConfig": {
+        "characteristic": "",
+        "modifier": 0,
+        "description": ""
+      },
+      "modifiers": {
+        "characteristics": {},
+        "skills": {},
+        "combat": {},
+        "other": []
+      }
     },
     "tool": {
       "templates": [
@@ -2002,7 +2060,27 @@
         "damage",
         "attack",
         "backpack"
-      ]
+      ],
+      "modifierType": "",
+      "modifiers": {
+        "damage": 0,
+        "penetration": 0,
+        "range": 0,
+        "rateOfFire": {
+          "single": 0,
+          "semi": 0,
+          "full": 0
+        },
+        "clip": 0,
+        "reliability": 0,
+        "weight": 0,
+        "toHit": 0,
+        "special": []
+      },
+      "restrictions": {
+        "weaponClass": [],
+        "weaponType": []
+      }
     },
     "storageLocation": {
       "templates": [
@@ -2141,7 +2219,14 @@
       "characteristic": "",
       "descriptor": "",
       "uses": "",
-      "useTime": ""
+      "useTime": "",
+      "isBasic": false,
+      "aptitudes": [],
+      "specializations": [],
+      "rollConfig": {
+        "defaultModifier": 0,
+        "canBeUsedUntrained": true
+      }
     },
     "vehicleTrait": {
       "templates": [
