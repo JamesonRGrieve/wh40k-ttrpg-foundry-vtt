@@ -38,6 +38,9 @@
                 <a class="item" data-tab="advances" data-group="primary">advances</a>
             </label>
             <label class="dh-navigation__item">
+                <a class="item" data-tab="rogue-trader" data-group="primary">Rogue Trader</a>
+            </label>
+            <label class="dh-navigation__item">
                 <a class="item" data-tab="social" data-group="primary">social</a>
             </label>
         </div>
@@ -95,7 +98,12 @@
                 {{> systems/rogue-trader/templates/actor/panel/experience-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/insanity-panel.hbs}}
             </div>
-            <div class="tab" data-group="primary" data-tab="social">
+            
+            <div class="tab" data-group="primary" data-tab="rogue-trader">
+                {{> systems/rogue-trader/templates/actor/panel/rogue-trader-panel.hbs}}
+            </div>
+
+<div class="tab" data-group="primary" data-tab="social">
                 {{> systems/rogue-trader/templates/actor/panel/journal-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/peer-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/enemy-panel.hbs}}

@@ -35,6 +35,7 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/journal-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/movement-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/peer-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/rogue-trader-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/psy-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/skills-panel.hbs',
