@@ -2,7 +2,7 @@ import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { toCamelCase } from '../handlebars/handlebars-helpers.mjs';
 
-export class DarkHeresyBaseActor extends Actor {
+export class RogueTraderBaseActor extends Actor {
 
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);

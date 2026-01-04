@@ -5,7 +5,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/items/swords/swords_01_b.png
+img: systems/rogue-trader/icons/items/swords/swords_01_b.png
 name: Ambidextrous
 type: talent
 ---
@@ -17,7 +17,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_02.png
+img: systems/rogue-trader/icons/talents/blue/b_02.png
 name: Blind Fighting
 type: talent
 ---
@@ -32,7 +32,7 @@ data:
     prerequisites: ''
     source: PG 60 EB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/items/armor/helmet_s05.png
+img: systems/rogue-trader/icons/items/armor/helmet_s05.png
 name: Bodyguard
 type: talent
 ---
@@ -44,7 +44,7 @@ data:
     prerequisites: ''
     source: PG 124 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/psykana/wind-grasp-magenta-1.jpg
+img: systems/rogue-trader/icons/psykana/wind-grasp-magenta-1.jpg
 name: Catfall
 type: talent
 ---
@@ -56,7 +56,7 @@ data:
     prerequisites: ''
     source: PG 124 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Clues from the Crowds
 type: talent
 ---
@@ -68,7 +68,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Die Hard
 type: talent
 ---
@@ -80,7 +80,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/items/armor/gloves_s08.png
+img: systems/rogue-trader/icons/items/armor/gloves_s08.png
 name: Disarm
 type: talent
 ---
@@ -91,7 +91,7 @@ data:
     prerequisites: ''
     source: PG 126 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_29.PNG
+img: systems/rogue-trader/icons/talents/violet/p_29.PNG
 name: Double Team
 type: talent
 ---
@@ -103,7 +103,7 @@ data:
     prerequisites: ''
     source: PG 126 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_21.PNG
+img: systems/rogue-trader/icons/talents/violet/p_21.PNG
 name: Enemy
 type: talent
 ---
@@ -115,7 +115,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_02.png
+img: systems/rogue-trader/icons/talents/blue/b_02.png
 name: Ferric Summons
 type: talent
 ---
@@ -126,7 +126,7 @@ data:
     prerequisites: ''
     source: PG 57 EI
     tier: '1'
-img: systems/dark-heresy-2nd/icons/items/flail/flail_03_t.PNG
+img: systems/rogue-trader/icons/items/flail/flail_03_t.PNG
 name: Flagellant
 type: talent
 ---
@@ -143,7 +143,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/red/r_08.png
+img: systems/rogue-trader/icons/talents/red/r_08.png
 name: Frenzy
 type: talent
 ---
@@ -156,7 +156,7 @@ data:
     prerequisites: ''
     source: PG 62 EO
     tier: '1'
-img: systems/dark-heresy-2nd/icons/items/grenade/grenade_04.png
+img: systems/rogue-trader/icons/items/grenade/grenade_04.png
 name: Grenadier
 type: talent
 ---
@@ -167,7 +167,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Iron Jaw
 type: talent
 ---
@@ -178,7 +178,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Jaded
 type: talent
 ---
@@ -189,7 +189,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Keen Intuition
 type: talent
 ---
@@ -200,7 +200,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Leap Up
 type: talent
 ---
@@ -212,7 +212,7 @@ data:
     prerequisites: ''
     source: PG 63 EO
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Leaping Dodge
 type: talent
 ---
@@ -224,7 +224,7 @@ data:
     prerequisites: ''
     source: PG 58 EI
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Mounted Warrior
 type: talent
 ---
@@ -235,7 +235,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Nowhere to Hide
 type: talent
 ---
@@ -248,7 +248,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/psykana/evil-eye-eerie-2.jpg
+img: systems/rogue-trader/icons/psykana/evil-eye-eerie-2.jpg
 name: Peer
 type: talent
 ---
@@ -259,7 +259,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_18.png
+img: systems/rogue-trader/icons/items/pistols/pistols_18.png
 name: Quick Draw
 type: talent
 ---
@@ -270,7 +270,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Rapid Reload
 type: talent
 ---
@@ -281,7 +281,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Resistance
 type: talent
 ---
@@ -296,7 +296,7 @@ data:
     prerequisites: ''
     source: PG 63 EO
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Skilled Rider
 type: talent
 ---
@@ -307,7 +307,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Sound Constitution
 type: talent
 ---
@@ -318,7 +318,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Takedown
 type: talent
 ---
@@ -329,7 +329,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_21.png
+img: systems/rogue-trader/icons/talents/blue/b_21.png
 name: Technical Knock
 type: talent
 ---
@@ -340,7 +340,7 @@ data:
     prerequisites: ''
     source: PG 133 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/psykana/evil-eye-eerie-3.jpg
+img: systems/rogue-trader/icons/psykana/evil-eye-eerie-3.jpg
 name: Warp Sense
 type: talent
 ---
@@ -351,7 +351,7 @@ data:
     prerequisites: ''
     source: PG 133 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Weapon Training
 type: talent
 ---
@@ -364,7 +364,7 @@ data:
     prerequisites: ''
     source: PG 133 CB
     tier: '1'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Weapon-Tech
 type: talent
 ---
@@ -377,7 +377,7 @@ data:
     prerequisites: ''
     source: PG 62 EO
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Ambassador Imperialis
 type: talent
 ---
@@ -389,7 +389,7 @@ data:
     prerequisites: ''
     source: PG 62 EO
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Archivator
 type: talent
 ---
@@ -400,7 +400,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_07.png
+img: systems/rogue-trader/icons/talents/blue/b_07.png
 name: Armor-Monger
 type: talent
 ---
@@ -412,7 +412,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/psykana/evil-eye-red-1.jpg
+img: systems/rogue-trader/icons/psykana/evil-eye-red-1.jpg
 name: Battle Rage
 type: talent
 ---
@@ -424,7 +424,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Bulging Biceps
 type: talent
 ---
@@ -437,7 +437,7 @@ data:
     prerequisites: ''
     source: PG 60 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/psykana/haste-sky-3.jpg
+img: systems/rogue-trader/icons/psykana/haste-sky-3.jpg
 name: Bulwark of Faith
 type: talent
 ---
@@ -448,7 +448,7 @@ data:
     prerequisites: ''
     source: PG 124 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/items/armor/helmet_s10.png
+img: systems/rogue-trader/icons/items/armor/helmet_s10.png
 name: Combat Master
 type: talent
 ---
@@ -460,7 +460,7 @@ data:
     prerequisites: ''
     source: PG 124 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/psykana/evil-eye-eerie-1.jpg
+img: systems/rogue-trader/icons/psykana/evil-eye-eerie-1.jpg
 name: Constant Vigilance
 type: talent
 ---
@@ -471,7 +471,7 @@ data:
     prerequisites: ''
     source: PG 124 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Contact Network
 type: talent
 ---
@@ -483,7 +483,7 @@ data:
     prerequisites: ''
     source: PG 124 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Coordinated Interrogation
 type: talent
 ---
@@ -494,7 +494,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Counter Attack
 type: talent
 ---
@@ -505,7 +505,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Cover-Up
 type: talent
 ---
@@ -517,7 +517,7 @@ data:
     prerequisites: ''
     source: PG 60 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/red/r_36.png
+img: systems/rogue-trader/icons/talents/red/r_36.png
 name: Daemonhunter
 type: talent
 ---
@@ -530,7 +530,7 @@ data:
     prerequisites: ''
     source: PG 60 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/red/r_29.png
+img: systems/rogue-trader/icons/talents/red/r_29.png
 name: Daemonologist
 type: talent
 ---
@@ -541,7 +541,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/psykana/haste-royal-2.jpg
+img: systems/rogue-trader/icons/psykana/haste-royal-2.jpg
 name: Deny the Witch
 type: talent
 ---
@@ -553,7 +553,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Devastating Assault
 type: talent
 ---
@@ -565,7 +565,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_13.png
+img: systems/rogue-trader/icons/items/pistols/pistols_13.png
 name: Double Tap
 type: talent
 ---
@@ -576,7 +576,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/items/spear/stave_04_b.png
+img: systems/rogue-trader/icons/items/spear/stave_04_b.png
 name: Exotic Weapon Training
 type: talent
 ---
@@ -587,7 +587,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/green/g_11.png
+img: systems/rogue-trader/icons/talents/green/g_11.png
 name: Face in a Crowd
 type: talent
 ---
@@ -601,7 +601,7 @@ data:
     prerequisites: ''
     source: PG 62 EO
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Field Vivisection
 type: talent
 ---
@@ -612,7 +612,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Hard Target
 type: talent
 ---
@@ -625,7 +625,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Harden Soul
 type: talent
 ---
@@ -636,7 +636,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Hardy
 type: talent
 ---
@@ -648,7 +648,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Hatred
 type: talent
 ---
@@ -660,7 +660,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Hip Shooting
 type: talent
 ---
@@ -674,7 +674,7 @@ data:
     prerequisites: ''
     source: PG 62 EO
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Hotshot Pilot
 type: talent
 ---
@@ -685,7 +685,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Independent Targeting
 type: talent
 ---
@@ -697,7 +697,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Inescapable Attack
 type: talent
 ---
@@ -711,7 +711,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Inspiring Aura
 type: talent
 ---
@@ -723,7 +723,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Iron Resolve
 type: talent
 ---
@@ -734,7 +734,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Killing Strike
 type: talent
 ---
@@ -746,7 +746,7 @@ data:
     prerequisites: ''
     source: PG 63 EO
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Lexographer
 type: talent
 ---
@@ -759,7 +759,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/psykana/lighting-eerie-2.jpg
+img: systems/rogue-trader/icons/psykana/lighting-eerie-2.jpg
 name: Luminen Shock
 type: talent
 ---
@@ -773,7 +773,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Maglev Transcendence
 type: talent
 ---
@@ -784,7 +784,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/items/rifles/rifle_03.png
+img: systems/rogue-trader/icons/items/rifles/rifle_03.png
 name: Marksman
 type: talent
 ---
@@ -795,7 +795,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Mechadendrite Use
 type: talent
 ---
@@ -808,7 +808,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: One-on-One
 type: talent
 ---
@@ -820,7 +820,7 @@ data:
     prerequisites: ''
     source: PG 58 EI
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Penitent Psyker
 type: talent
 ---
@@ -831,7 +831,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Precision Killer
 type: talent
 ---
@@ -843,7 +843,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Prosanguine
 type: talent
 ---
@@ -854,7 +854,7 @@ data:
     prerequisites: ''
     source: PG 58 EI
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Purity of Hatred
 type: talent
 ---
@@ -868,7 +868,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Rites of Banishment
 type: talent
 ---
@@ -879,7 +879,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/red/r_27.png
+img: systems/rogue-trader/icons/talents/red/r_27.png
 name: Strong Minded
 type: talent
 ---
@@ -890,7 +890,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Swift Attack
 type: talent
 ---
@@ -903,7 +903,7 @@ data:
     prerequisites: ''
     source: PG 58 EI
     tier: '2'
-img: systems/dark-heresy-2nd/icons/psykana/horror-red-3.jpg
+img: systems/rogue-trader/icons/psykana/horror-red-3.jpg
 name: Tainted Psyker
 type: talent
 ---
@@ -915,7 +915,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Two-Weapon Wielder
 type: talent
 ---
@@ -927,7 +927,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Unarmed Specialist
 type: talent
 ---
@@ -939,7 +939,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Warp Conduit
 type: talent
 ---
@@ -953,7 +953,7 @@ data:
     prerequisites: ''
     source: PG 133 CB
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Whirlwind of Death
 type: talent
 ---
@@ -965,7 +965,7 @@ data:
     prerequisites: ''
     source: PG 58 EI
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Witch Finder
 type: talent
 ---
@@ -977,7 +977,7 @@ data:
     prerequisites: ''
     source: PG 63 EO
     tier: '2'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Xenosavant
 type: talent
 ---
@@ -990,7 +990,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_06.png
+img: systems/rogue-trader/icons/talents/violet/p_06.png
 name: Adamantium Faith
 type: talent
 ---
@@ -1001,7 +1001,7 @@ data:
     prerequisites: 'Shared Destiny, Shield of Contempt, Hatred (any)'
     source: PG 57 EI
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/link-eerie-1.jpg
+img: systems/rogue-trader/icons/psykana/link-eerie-1.jpg
 name: Aegis of Contempt
 type: talent
 ---
@@ -1014,7 +1014,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/gr_10.PNG
+img: systems/rogue-trader/icons/talents/blue/gr_10.PNG
 name: Assassin Strike
 type: talent
 ---
@@ -1026,7 +1026,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/protect-blue-2.jpg
+img: systems/rogue-trader/icons/psykana/protect-blue-2.jpg
 name: Bastion of Iron Will
 type: talent
 ---
@@ -1038,7 +1038,7 @@ data:
     prerequisites: ''
     source: PG 123 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/items/swords/swords_06_b.PNG
+img: systems/rogue-trader/icons/items/swords/swords_06_b.PNG
 name: Blademaster
 type: talent
 ---
@@ -1049,7 +1049,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/items/maces/mace_09_b.png
+img: systems/rogue-trader/icons/items/maces/mace_09_b.png
 name: Crushing Blow
 type: talent
 ---
@@ -1062,7 +1062,7 @@ data:
     prerequisites: ''
     source: PG 60 EB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_19.PNG
+img: systems/rogue-trader/icons/talents/violet/p_19.PNG
 name: Daemonic Disruption
 type: talent
 ---
@@ -1075,7 +1075,7 @@ data:
     prerequisites: ''
     source: PG 60 EB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_32.png
+img: systems/rogue-trader/icons/talents/blue/b_32.png
 name: Dark Soul
 type: talent
 ---
@@ -1086,7 +1086,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/items/rifles/rifle_06.png
+img: systems/rogue-trader/icons/items/rifles/rifle_06.png
 name: Deathdealer
 type: talent
 ---
@@ -1098,7 +1098,7 @@ data:
     prerequisites: ''
     source: PG 125 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Delicate Interrogation
 type: talent
 ---
@@ -1109,7 +1109,7 @@ data:
     prerequisites: ''
     source: PG 57 EI
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/heal-sky-3.jpg
+img: systems/rogue-trader/icons/psykana/heal-sky-3.jpg
 name: Divine Protection
 type: talent
 ---
@@ -1121,7 +1121,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/evil-eye-red-3.jpg
+img: systems/rogue-trader/icons/psykana/evil-eye-red-3.jpg
 name: Eye of Vengeance
 type: talent
 ---
@@ -1132,7 +1132,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/green/g_23.PNG
+img: systems/rogue-trader/icons/talents/green/g_23.PNG
 name: Favored by the Warp
 type: talent
 ---
@@ -1143,7 +1143,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Flash of Insight
 type: talent
 ---
@@ -1154,7 +1154,7 @@ data:
     prerequisites: ''
     source: PG 127 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Halo of Command
 type: talent
 ---
@@ -1167,7 +1167,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/items/maces/mace_02_b.png
+img: systems/rogue-trader/icons/items/maces/mace_02_b.png
 name: Hammer Blow
 type: talent
 ---
@@ -1181,7 +1181,7 @@ data:
     prerequisites: ''
     source: PG 62 EO
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Hull Down
 type: talent
 ---
@@ -1193,7 +1193,7 @@ data:
     prerequisites: ''
     source: PG 57 EI
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Indomitable Conviction
 type: talent
 ---
@@ -1204,7 +1204,7 @@ data:
     prerequisites: ''
     source: PG 128 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Infused Knowledge
 type: talent
 ---
@@ -1219,7 +1219,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Instrument of His Will
 type: talent
 ---
@@ -1230,7 +1230,7 @@ data:
     prerequisites: ''
     source: PG 57 EI
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Into the Jaws of Hell
 type: talent
 ---
@@ -1241,7 +1241,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Iron Faith
 type: talent
 ---
@@ -1252,7 +1252,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/enchant-sky-2.jpg
+img: systems/rogue-trader/icons/psykana/enchant-sky-2.jpg
 name: Lightning Attack
 type: talent
 ---
@@ -1265,7 +1265,7 @@ data:
     prerequisites: ''
     source: PG 129 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/lighting-eerie-3.jpg
+img: systems/rogue-trader/icons/psykana/lighting-eerie-3.jpg
 name: Luminen Blast
 type: talent
 ---
@@ -1278,7 +1278,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Mastery
 type: talent
 ---
@@ -1289,7 +1289,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Mighty Shot
 type: talent
 ---
@@ -1301,7 +1301,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Never Die
 type: talent
 ---
@@ -1312,7 +1312,7 @@ data:
     prerequisites: ''
     source: PG 130 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Preternatural Speed
 type: talent
 ---
@@ -1326,7 +1326,7 @@ data:
     prerequisites: ''
     source: PG 63 EO
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Push the Limit
 type: talent
 ---
@@ -1339,7 +1339,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Sanctic Purity
 type: talent
 ---
@@ -1351,7 +1351,7 @@ data:
     prerequisites: ''
     source: PG 61 EB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_19.PNG
+img: systems/rogue-trader/icons/talents/blue/b_19.PNG
 name: Shield Wall
 type: talent
 ---
@@ -1362,7 +1362,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Sprint
 type: talent
 ---
@@ -1373,7 +1373,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Step Aside
 type: talent
 ---
@@ -1385,7 +1385,7 @@ data:
     prerequisites: ''
     source: PG 131 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Superior Chirurgeon
 type: talent
 ---
@@ -1397,7 +1397,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Target Selection
 type: talent
 ---
@@ -1408,7 +1408,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/psykana/lighting-acid-2.jpg
+img: systems/rogue-trader/icons/psykana/lighting-acid-2.jpg
 name: Thunder Charge
 type: talent
 ---
@@ -1419,7 +1419,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: True Grit
 type: talent
 ---
@@ -1430,7 +1430,7 @@ data:
     prerequisites: ''
     source: PG 132 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Two-Weapon Master
 type: talent
 ---
@@ -1444,7 +1444,7 @@ data:
     prerequisites: ''
     source: PG 133 CB
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Warp Lock
 type: talent
 ---
@@ -1456,6 +1456,6 @@ data:
     prerequisites: ''
     source: PG 63 EO
     tier: '3'
-img: systems/dark-heresy-2nd/icons/talents/blue/b_18.png
+img: systems/rogue-trader/icons/talents/blue/b_18.png
 name: Weapon Intuition
 type: talent

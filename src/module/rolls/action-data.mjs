@@ -4,7 +4,7 @@ import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } f
 import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
-import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
+import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 
 export class ActionData {
     id = uuid();
@@ -306,7 +306,7 @@ export class ActionData {
             // Create Specials
             await this.createEffectData();
 
-            game.dh.log('Perform Action', this);
+            game.rt.log('Perform Action', this);
 
             // Description Text
             await this.descriptionText();
@@ -327,7 +327,7 @@ export class ActionData {
 export class WeaponActionData extends ActionData {
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
         this.hasDamage = true;
         this.rollData = new WeaponRollData();
         this.damageData = new WeaponDamageData();
@@ -339,7 +339,7 @@ export class PsychicActionData extends ActionData {
 
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
         this.hasDamage = true;
         this.rollData = new PsychicRollData();
         this.damageData = new PsychicDamageData();
@@ -347,8 +347,8 @@ export class PsychicActionData extends ActionData {
 
     async performActionAndSendToChat() {
         if(!this.rollData.hasDamage) {
-            this.rollData.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
-            this.template = 'systems/dark-heresy-2nd/templates/chat/psychic-action-chat.hbs';
+            this.rollData.template = 'systems/rogue-trader/templates/chat/psychic-action-chat.hbs';
+            this.template = 'systems/rogue-trader/templates/chat/psychic-action-chat.hbs';
         }
         await super.performActionAndSendToChat();
     }
@@ -363,7 +363,7 @@ export class PsychicActionData extends ActionData {
 export class PsychicSkillData extends ActionData {
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
         this.hasDamage = false;
         this.rollData = new PsychicRollData();
     }
@@ -372,7 +372,7 @@ export class PsychicSkillData extends ActionData {
 export class SimpleSkillData extends ActionData {
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/simple-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/simple-roll-chat.hbs';
         this.hasDamage = false;
         this.rollData = new RollData();
     }

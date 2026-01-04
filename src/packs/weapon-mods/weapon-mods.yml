@@ -7,7 +7,7 @@ data:
     installed: false
     upgrades: Any Las, Solid Projectile, or Bolt weapons of the Basic class
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Auxiliary Grenade Launcher
 type: weaponModification
 ---
@@ -19,7 +19,7 @@ data:
     installed: false
     upgrades: Any Bolt, Flame, Las, Melta, Plasma, and Solid Projectile weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Backpack Ammo Supply
 type: weaponModification
 ---
@@ -32,7 +32,7 @@ data:
     upgrades: Any Pistol or any Las, Solid Projectile, Flame, Bolt, or Plasma weapon
         of the Basic class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Compact
 type: weaponModification
 ---
@@ -43,7 +43,7 @@ data:
     installed: false
     upgrades: Any weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Custom Grip
 type: weaponModification
 ---
@@ -54,7 +54,7 @@ data:
     installed: false
     upgrades: Any weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Deactivated Safety Features
 type: weaponModification
 ---
@@ -65,7 +65,7 @@ data:
     installed: false
     upgrades: Ranged weapons
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Expanded Magazine
 type: weaponModification
 ---
@@ -77,7 +77,7 @@ data:
     installed: false
     upgrades: Any weapon except Pistol or Thrown.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Exterminator
 type: weaponModification
 ---
@@ -89,7 +89,7 @@ data:
     upgrades: Any Bolt, Launcher, and Solid Projectile weapon of the Pistol or Basic
         class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Fire Selector
 type: weaponModification
 ---
@@ -101,7 +101,7 @@ data:
     installed: false
     upgrades: Any ranged weapon capable of Semi-Automatic fore.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Fluid Action
 type: weaponModification
 ---
@@ -112,7 +112,7 @@ data:
     installed: false
     upgrades: Any Las, Low-Tech, Solid Projectile, Bolt, or Melta of the Pistol class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Forearm Weapon Mounting
 type: weaponModification
 ---
@@ -123,7 +123,7 @@ data:
     installed: false
     upgrades: Any Basic ranged weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Melee Attachment
 type: weaponModification
 ---
@@ -134,7 +134,7 @@ data:
     installed: false
     upgrades: Any Weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Modified Stock
 type: weaponModification
 ---
@@ -146,7 +146,7 @@ data:
     installed: false
     upgrades: Any Low-Tech or Power Melee weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Mono
 type: weaponModification
 ---
@@ -157,7 +157,7 @@ data:
     installed: false
     upgrades: Any Ranged weapon (except Low-Tech) Capable of Semi-Auto or Full Auto.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Motion Predictor
 type: weaponModification
 ---
@@ -170,7 +170,7 @@ data:
     upgrades: Any ranged Las, Solid Projectile, Bolt, Low-Tech or Plasma weapon of the
         Basic class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Omni-Scope
 type: weaponModification
 ---
@@ -182,7 +182,7 @@ data:
     upgrades: Any ranged Las, Solid Projectile, Bolt, Low-Tech or Plasma weapon of the
         Basic class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Photo Sight
 type: weaponModification
 ---
@@ -193,7 +193,7 @@ data:
     installed: false
     upgrades: Any Basic ranged weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Pistol Grip
 type: weaponModification
 ---
@@ -206,7 +206,7 @@ data:
     upgrades: Any ranged Las, Solid Projectile, Bolt, Low-Tech or Plasma weapon of the
         Basic class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Preysense Sight
 type: weaponModification
 ---
@@ -217,7 +217,7 @@ data:
     installed: false
     upgrades: Any ranged weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Quick-Release
 type: weaponModification
 ---
@@ -229,7 +229,7 @@ data:
     upgrades: Any ranged Las, Solid Projectile, Bolt, Low-Tech or Plasma weapon of the
         Basic class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Red-Dot Laser Sight
 type: weaponModification
 ---
@@ -242,7 +242,7 @@ data:
     installed: false
     upgrades: Any Weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Reinforced
 type: weaponModification
 ---
@@ -253,7 +253,7 @@ data:
     installed: false
     upgrades: Any Weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Sacred Inscriptions
 type: weaponModification
 ---
@@ -265,7 +265,7 @@ data:
     installed: false
     upgrades: Any Solid Projectile weapon of the Basic or Pistol class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Silencer
 type: weaponModification
 ---
@@ -277,7 +277,7 @@ data:
     installed: false
     upgrades: Any Heavy Weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Suspensors
 type: weaponModification
 ---
@@ -289,7 +289,7 @@ data:
     installed: false
     upgrades: Any Las, Solid Projectile, Bolt, or Heavy weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Targeter
 type: weaponModification
 ---
@@ -302,7 +302,7 @@ data:
     upgrades: Any ranged Las, Solid Projectile, Bolt, Low-Tech or Plasma weapon of the
         Basic class.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Telescopic Sight
 type: weaponModification
 ---
@@ -314,7 +314,7 @@ data:
     installed: false
     upgrades: Any Low-Tech or Chain Melee Weapon
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Tox Dispenser
 type: weaponModification
 ---
@@ -327,7 +327,7 @@ data:
     installed: false
     upgrades: Any Basic or Heavy weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Tripod/Bipod
 type: weaponModification
 ---
@@ -339,7 +339,7 @@ data:
     installed: false
     upgrades: Any Low-Tech melee weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Truesilver Gilding
 type: weaponModification
 ---
@@ -354,7 +354,7 @@ data:
     installed: false
     upgrades: Any Launcher, Low-Tech, or Solid Projectile ranged weapon.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Truesilver Weaving
 type: weaponModification
 ---
@@ -367,7 +367,7 @@ data:
     upgrades: Any Pistol, Basic, Launcher, or Heavy weapon that is not of the Low-Tech
         type
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Vox-Operated
 type: weaponModification
 ---
@@ -379,6 +379,6 @@ data:
     installed: false
     upgrades: Any Solid Projectile weapon without a silencer.
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/ammo/ammo_13.png
+img: systems/rogue-trader/icons/items/ammo/ammo_13.png
 name: Warpleech Canister
 type: weaponModification

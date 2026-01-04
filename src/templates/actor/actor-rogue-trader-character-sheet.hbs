@@ -1,0 +1,152 @@
+<div class="dh-wrapper rt-sheet">
+    <form class="rt-sheet__form" autocomplete="off">
+        <header class="rt-sheet__header">
+            <div class="rt-sheet__title">Rogue Trader</div>
+            <div class="rt-sheet__identity">
+                <div class="rt-field">
+                    <label>Character Name</label>
+                    <input name="name" type="text" value="{{actor.name}}" placeholder="Character Name" />
+                </div>
+                <div class="rt-field">
+                    <label>Player Name</label>
+                    <input name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" />
+                </div>
+                <div class="rt-field">
+                    <label>Career Path</label>
+                    <input name="system.bio.careerPath" type="text" value="{{system.bio.careerPath}}" />
+                </div>
+                <div class="rt-field">
+                    <label>Rank</label>
+                    <input name="system.bio.rank" type="text" value="{{system.bio.rank}}" />
+                </div>
+                <div class="rt-field">
+                    <label>Home World</label>
+                    <input name="system.bio.homeWorld" type="text" value="{{system.bio.homeWorld}}" />
+                </div>
+                <div class="rt-field">
+                    <label>Motivation</label>
+                    <input name="system.bio.motivation" type="text" value="{{system.bio.motivation}}" />
+                </div>
+                <div class="rt-field rt-field--full">
+                    <label>Description</label>
+                    <input name="system.bio.description" type="text" value="{{system.bio.description}}" />
+                </div>
+            </div>
+        </header>
+
+        <section class="rt-sheet__characteristics">
+            <div class="rt-section-title">Characteristics</div>
+            <div class="rt-characteristics-grid">
+                {{#each characteristics as |char|}}
+                    <div class="rt-char">
+                        <button type="button" class="rt-char__roll roll-characteristic" data-characteristic="{{char.key}}">Roll</button>
+                        <div class="rt-char__label">{{char.data.label}}</div>
+                        <div class="rt-char__circle">{{char.data.total}}</div>
+                        <div class="rt-char__inputs">
+                            <input type="number" name="system.characteristics.{{char.key}}.starting" value="{{char.data.starting}}" />
+                            <input type="number" name="system.characteristics.{{char.key}}.advances" value="{{char.data.advances}}" />
+                            <input type="number" name="system.characteristics.{{char.key}}.modifier" value="{{char.data.modifier}}" />
+                        </div>
+                        <div class="rt-char__input-labels">
+                            <span>Base</span>
+                            <span>Adv</span>
+                            <span>Mod</span>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <section class="rt-sheet__vitals">
+            <div class="rt-section-title">Vitals</div>
+            <div class="rt-vitals-grid">
+                <div class="rt-vital">
+                    <label>Wounds</label>
+                    <input type="number" name="system.wounds.value" value="{{system.wounds.value}}" />
+                    <span>/</span>
+                    <input type="number" name="system.wounds.max" value="{{system.wounds.max}}" />
+                </div>
+                <div class="rt-vital">
+                    <label>Fate</label>
+                    <input type="number" name="system.fate.value" value="{{system.fate.value}}" />
+                    <span>/</span>
+                    <input type="number" name="system.fate.max" value="{{system.fate.max}}" />
+                </div>
+                <div class="rt-vital">
+                    <label>Fatigue</label>
+                    <input type="number" name="system.fatigue.value" value="{{system.fatigue.value}}" />
+                    <span>/</span>
+                    <input type="number" name="system.fatigue.max" value="{{system.fatigue.max}}" />
+                </div>
+                <div class="rt-vital rt-vital--toggle">
+                    <label>Fatigue Penalty</label>
+                    <input type="checkbox" name="system.fatigue.penaltyActive" {{checked system.fatigue.penaltyActive}} />
+                    <input type="number" value="{{system.fatigue.penalty}}" disabled />
+                </div>
+            </div>
+        </section>
+
+        <section class="rt-sheet__skills">
+            <div class="rt-section-title">Skills</div>
+            <div class="rt-skills-grid">
+                <div class="rt-skills-column">
+                    {{#each skillColumns.left as |skill|}}
+                        <div class="rt-skill">
+                            <button type="button" class="rt-skill__roll roll-skill" data-skill="{{skill.key}}">Roll</button>
+                            <div class="rt-skill__label">{{skill.data.label}}</div>
+                            <div class="rt-skill__checks">
+                                <input type="checkbox" name="system.skills.{{skill.key}}.trained" {{checked skill.data.trained}} />
+                                <input type="checkbox" name="system.skills.{{skill.key}}.rank10" {{checked skill.data.rank10}} />
+                                <input type="checkbox" name="system.skills.{{skill.key}}.rank20" {{checked skill.data.rank20}} />
+                            </div>
+                            <div class="rt-skill__mods">
+                                <input type="number" name="system.skills.{{skill.key}}.talentBonus" value="{{skill.data.talentBonus}}" />
+                                <input type="number" name="system.skills.{{skill.key}}.otherBonus" value="{{skill.data.otherBonus}}" />
+                            </div>
+                            <div class="rt-skill__target">{{skill.data.target}}</div>
+                        </div>
+                    {{/each}}
+                </div>
+                <div class="rt-skills-column">
+                    {{#each skillColumns.right as |skill|}}
+                        <div class="rt-skill">
+                            <button type="button" class="rt-skill__roll roll-skill" data-skill="{{skill.key}}">Roll</button>
+                            <div class="rt-skill__label">{{skill.data.label}}</div>
+                            <div class="rt-skill__checks">
+                                <input type="checkbox" name="system.skills.{{skill.key}}.trained" {{checked skill.data.trained}} />
+                                <input type="checkbox" name="system.skills.{{skill.key}}.rank10" {{checked skill.data.rank10}} />
+                                <input type="checkbox" name="system.skills.{{skill.key}}.rank20" {{checked skill.data.rank20}} />
+                            </div>
+                            <div class="rt-skill__mods">
+                                <input type="number" name="system.skills.{{skill.key}}.talentBonus" value="{{skill.data.talentBonus}}" />
+                                <input type="number" name="system.skills.{{skill.key}}.otherBonus" value="{{skill.data.otherBonus}}" />
+                            </div>
+                            <div class="rt-skill__target">{{skill.data.target}}</div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="rt-skill__legend">
+                <span>Trained</span>
+                <span>+10</span>
+                <span>+20</span>
+                <span>Talent</span>
+                <span>Other</span>
+                <span>Target</span>
+            </div>
+        </section>
+
+        <section class="rt-sheet__notes">
+            <div class="rt-notes-column">
+                <div class="rt-section-title">Talents &amp; Traits</div>
+                <textarea name="system.notes.talentsTraits">{{system.notes.talentsTraits}}</textarea>
+                <div class="rt-section-title">Special Abilities</div>
+                <textarea name="system.notes.specialAbilities">{{system.notes.specialAbilities}}</textarea>
+            </div>
+            <div class="rt-notes-column">
+                <div class="rt-section-title">Psychic Disciplines</div>
+                <textarea name="system.notes.psychic">{{system.notes.psychic}}</textarea>
+            </div>
+        </section>
+    </form>
+</div>

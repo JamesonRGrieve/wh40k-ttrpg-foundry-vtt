@@ -1,113 +1,113 @@
 data:
     description: 'Those skills and talents with the General aptitude represent advances that are simple to learn, regardless of the background or aptitude of the character gaining them. To represent this, all characters in DARK HERESY have the General aptitude.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: General
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Weapon Skill
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Ballistic Skill
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Strength
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Toughness
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Agility
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Intelligence
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Perception
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Willpower
 type: aptitude
 ---
 data:
     description: 'There are nine aptitudes that share a name with nine characteristics each character possesses: Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception, Willpower, and Fellowship. These represent the character’s ability to learn and improve the matching characteristic, as well as all the skills and talents related to it. Note that Influence is not a characteristic-based aptitude, as players cannot purchase advances in that characteristic.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Fellowship
 type: aptitude
 ---
 data:
     description: 'Characters with the Offence aptitude are those who prefer an all-out assault of brute force over a more careful, strategic approach. These Acolytes often charge into melee in a blood-crazed frenzy, or favour unloading overwhelming amounts of firepower into their foes.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Offence
 type: aptitude
 ---
 data:
     description: 'While skills and talents with the Offence aptitude focus on sheer, brute force, those with the Finesse aptitude rely instead on precise skill and careful planning. Acolytes with the Finesse aptitude can become expert at effectively firing long-range weapons, or wielding exotic weapons with deadly results in personal combat.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Finesse
 type: aptitude
 ---
 data:
     description: 'Acolytes with this aptitude quickly learn how to keep themselves alive amongst the deadly chaos of combat that often surrounds them. Whether through skilful deterrence or dogged toughness, they weather the battlefields and violent underhives of the 41st Millennium while others fall around them.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Defence
 type: aptitude
 ---
 data:
     description: 'Only those with the rare ability to wield psychic powers gain the Psyker aptitude, representing their affinity with the terrible powers of the Warp. It also indicates abilities to sense the unnatural energies that signal Warp denizens or the use of psychic powers.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Psyker
 type: aptitude
 ---
 data:
     description: 'Very few dare tamper with the mysteries of the Dark Age of Technology, and fewer still excel at it. Those characters with the Tech aptitude might not understand the inner workings of machines, but they can easily learn to commune with the machine spirit, and seem to get results where others gain only frustration.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Tech
 type: aptitude
 ---
 data:
     description: 'Amongst the countless worlds and labyrinthine organisations of the Imperium, there is more information than could be amassed in a million lifetimes. While the majority of citizens in the Imperium remain ignorant of the grand and mysterious workings of the Imperium, Acolytes with the Knowledge aptitude find it simple to acquire this information.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Knowledge
 type: aptitude
 ---
 data:
     description: 'There are untold billions of humans within the Imperium, but without guidance they are but bleating sheep or unruly children. Commanding them effectively is essential to defending Mankind, and Acolytes with this aptitude can turn cowering citizens into a vengeful force ready to storm a heretical shrine or defend against xenos raiders.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Leadership
 type: aptitude
 ---
 data:
     description: 'Staying alive in the inhospitable environments across the Imperium can be as difficult as surviving an actual battle. Acolytes with the Fieldcraft aptitude easily adjust to, and thrive on, myriad settings, from oppressive jungles to bleak deserts.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Fieldcraft
 type: aptitude
 ---
 data:
     description: 'Social situations can be just as deadly as any fire-fight to those unfamiliar or unskilled with verbal combat. Those with this aptitude easily learn how to best use honeyed words or harsh intimidation to get their way with self-important priests, well-connected Rogue Traders, and others requiring more subtle means of persuasion.'
-img: systems/dark-heresy-2nd/icons/talents/violet/p_04.png
+img: systems/rogue-trader/icons/talents/violet/p_04.png
 name: Social
 type: aptitude

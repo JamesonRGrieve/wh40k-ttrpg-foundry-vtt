@@ -12,7 +12,7 @@ data:
     maxAgility: 0
     type: Basic
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Armoured Bodyglove
 type: armour
 ---
@@ -30,7 +30,7 @@ data:
     maxAgility: 35
     type: Basic
     weight: 15
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Chainmail Suit
 type: armour
 ---
@@ -48,7 +48,7 @@ data:
     maxAgility: 25
     type: Basic
     weight: 30
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Feudal World Plate
 type: armour
 ---
@@ -66,7 +66,7 @@ data:
     maxAgility: 0
     type: Basic
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Heavy Leathers
 type: armour
 ---
@@ -84,7 +84,7 @@ data:
     maxAgility: 0
     type: Basic
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Imperial Robes
 type: armour
 ---
@@ -105,7 +105,7 @@ data:
     maxAgility: 40
     type: Basic
     weight: 10
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Mould Suit
 type: armour
 ---
@@ -127,7 +127,7 @@ data:
     maxAgility: 35
     type: Basic
     weight: 35
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Obsidian Plate
 type: armour
 ---
@@ -145,7 +145,7 @@ data:
     maxAgility: 50
     type: Basic
     weight: 20
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Xenos Hide Vest
 type: armour
 ---
@@ -163,7 +163,7 @@ data:
     maxAgility: 55
     type: Carapace
     weight: 7
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Carapace Chestplate
 type: armour
 ---
@@ -181,7 +181,7 @@ data:
     maxAgility: 0
     type: Carapace
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Carapace Gauntlets
 type: armour
 ---
@@ -199,7 +199,7 @@ data:
     maxAgility: 0
     type: Carapace
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Carapace Greaves
 type: armour
 ---
@@ -217,7 +217,7 @@ data:
     maxAgility: 0
     type: Carapace
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Carapace Helm
 type: armour
 ---
@@ -235,7 +235,7 @@ data:
     maxAgility: 45
     type: Carapace
     weight: 15
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Enforcer Light Carapace
 type: armour
 ---
@@ -253,7 +253,7 @@ data:
     maxAgility: 45
     type: Carapace
     weight: 15
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Militarum Tempestus Carapace
 type: armour
 ---
@@ -271,7 +271,7 @@ data:
     maxAgility: 55
     type: Flak
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Flak Cloak
 type: armour
 ---
@@ -289,7 +289,7 @@ data:
     maxAgility: 60
     type: Flak
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Flak Coat
 type: armour
 ---
@@ -307,7 +307,7 @@ data:
     maxAgility: 0
     type: Flak
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Flak Gauntlets
 type: armour
 ---
@@ -325,7 +325,7 @@ data:
     maxAgility: 0
     type: Flak
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Flak Helmet
 type: armour
 ---
@@ -343,7 +343,7 @@ data:
     maxAgility: 60
     type: Flak
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Flak Vest
 type: armour
 ---
@@ -361,7 +361,7 @@ data:
     maxAgility: 50
     type: Flak
     weight: 11
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Imperial Guard Flak Armour
 type: armour
 ---
@@ -379,7 +379,7 @@ data:
     maxAgility: 55
     type: Flak
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Light Flak Cloak
 type: armour
 ---
@@ -398,7 +398,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Conversion Field
 type: armour
 ---
@@ -419,7 +419,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Displacer Field
 type: armour
 ---
@@ -442,7 +442,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 18
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Field Wall Generator
 type: armour
 ---
@@ -462,7 +462,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Flare Shield
 type: armour
 ---
@@ -481,7 +481,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Icon of the Just
 type: armour
 ---
@@ -500,7 +500,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 50
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Power Field (Personnel)
 type: armour
 ---
@@ -519,7 +519,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 500
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Power Field (Vehicle/Emplacement)
 type: armour
 ---
@@ -537,7 +537,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Refractor Field
 type: armour
 ---
@@ -557,7 +557,7 @@ data:
     maxAgility: 0
     type: Force Field
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Rosarius
 type: armour
 ---
@@ -575,7 +575,7 @@ data:
     maxAgility: 60
     type: Mesh
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Mesh Cloak
 type: armour
 ---
@@ -593,7 +593,7 @@ data:
     maxAgility: 0
     type: Mesh
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Mesh Vest
 type: armour
 ---
@@ -611,7 +611,7 @@ data:
     maxAgility: 50
     type: Power
     weight: 35
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Adepta Sororitas Power Armour
 type: armour
 ---
@@ -634,7 +634,7 @@ data:
     maxAgility: 35
     type: Power
     weight: 65
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Heavy Power Armour
 type: armour
 ---
@@ -653,7 +653,7 @@ data:
     maxAgility: 40
     type: Power
     weight: 40
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Light Power Armour
 type: armour
 ---
@@ -675,6 +675,6 @@ data:
     maxAgility: 50
     type: Power
     weight: 16
-img: systems/dark-heresy-2nd/icons/items/armor/armor_s09.png
+img: systems/rogue-trader/icons/items/armor/armor_s09.png
 name: Praetor Armour
 type: armour

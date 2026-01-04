@@ -1,10 +1,10 @@
-import { DarkHeresyTour } from './dark-heresy-tour.mjs';
+import { RogueTraderTour } from './rogue-trader-tour.mjs';
 
-export class DHTourMain extends DarkHeresyTour {
+export class DHTourMain extends RogueTraderTour {
     constructor() {
         super({
-            title: "Get started with DH2",
-            description: "Learn the basic features of the Dark Heresy 2nd edition system",
+            title: "Get started with Rogue Trader",
+            description: "Learn the basic features of the Rogue Trader system",
             canBeResumed: false,
             display: true,
             steps: [
@@ -17,9 +17,9 @@ export class DHTourMain extends DarkHeresyTour {
                 },
                 {
                     id: "import-compendium",
-                    selector: "[data-pack=\"dark-heresy-2nd.ammo\"]",
+                    selector: "[data-pack=\"rogue-trader.ammo\"]",
                     title: 'Import Compendiums',
-                    content: 'Import the dark-heresy-2nd compendiums for the item and data lists.',
+                    content: 'Import the rogue-trader compendiums for the item and data lists.',
                 },
                 {
                     id: "goto-actors",

@@ -1,7 +1,7 @@
 import { prepareWeaponRoll } from '../prompts/weapon-prompt.mjs';
 import { preparePsychicPowerRoll } from '../prompts/psychic-power-prompt.mjs';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
-import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
+import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
 
 export class TargetedActionManager {
@@ -11,7 +11,7 @@ export class TargetedActionManager {
         Hooks.on('getSceneControlButtons', (controls) => {
             const bar = controls.find((c) => c.name === 'token');
             try {
-                if (!game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.simpleAttackRolls)) {
+                if (!game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
                     bar.tools.push({
                         name: 'Attack',
                         title: 'Attack',
@@ -22,7 +22,7 @@ export class TargetedActionManager {
                     });
                 }
             } catch (error) {
-                game.dh.log('Unable to add game bar icon.', error)
+                game.rt.log('Unable to add game bar icon.', error)
             }
         });
     }
@@ -48,7 +48,7 @@ export class TargetedActionManager {
     }
 
     getSourceToken(source) {
-        game.dh.log('getSourceToken', source);
+        game.rt.log('getSourceToken', source);
         let sourceToken;
         if (source) {
             sourceToken = source.token ?? source.getActiveTokens()[0];
@@ -74,7 +74,7 @@ export class TargetedActionManager {
     }
 
     getTargetToken(target) {
-        game.dh.log('getTargetToken', target);
+        game.rt.log('getTargetToken', target);
         let targetToken;
         if (target) {
             targetToken = target.token ?? target.getActiveTokens()[0];
@@ -97,7 +97,7 @@ export class TargetedActionManager {
     }
 
     createSourceAndTargetData(source, target) {
-        game.dh.log('createSourceAndTargetData', { source, target });
+        game.rt.log('createSourceAndTargetData', { source, target });
 
         // Source
         const sourceToken = this.getSourceToken(source);
@@ -119,7 +119,7 @@ export class TargetedActionManager {
     }
 
     async performWeaponAttack(source = null, target = null, weapon = null) {
-        game.dh.log('performWeaponAttack', { source, target, weapon });
+        game.rt.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 
@@ -140,7 +140,7 @@ export class TargetedActionManager {
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
-        game.dh.log('performPsychicAttack');
+        game.rt.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 

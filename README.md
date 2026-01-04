@@ -1,6 +1,6 @@
-# Dark Heresy 2nd Edition
+# Rogue Trader
 
-This is an _unofficial_ system for playing Dark Heresy 2nd Edition on [Foundry VTT](https://foundryvtt.com/). This requires >= Foundry 12.
+This is an _unofficial_ system for playing Rogue Trader on [Foundry VTT](https://foundryvtt.com/). This requires >= Foundry 12.
 
 It offers extensive support for character sheets, compendium packs, and automated management to save you time and allow you to focus on role playing. The existing system listed on Foundry was character sheet only and thus this system was created to facilitate the automation features I desired.
 
@@ -17,12 +17,15 @@ It offers extensive support for character sheets, compendium packs, and automate
 
 ## Install
  - Go to the setup page and choose _Game Systems_.
- - Click the _Install System_ button, and paste in this [manifest link](https://s3-keathley.nyc3.digitaloceanspaces.com/dark-heresy-2nd/system.json)
- - Create a Game World using the "Dark Heresy 2nd Edition" system.
+ - Click the _Install System_ button, and paste in this [manifest link](https://github.com/AndruQuiroga/RogueTraderVTT/releases/latest/download/system.json)
+ - Create a Game World using the "Rogue Trader" system.
 
 ## Links
   - [Foundry VTT](https://foundryvtt.com/)
-  - [Dark Heresy 2nd Edition Rules](https://www.drivethrurpg.com/browse/pub/54/Cubicle-7-Entertainment-Ltd/subcategory/179_21610/Dark-Heresy-Second-Edition)
+  - [Rogue Trader Core Rulebook](https://www.drivethrurpg.com/product/65991/Rogue-Trader-Core-Rulebook)
+
+## Content Policy
+This repo does not include copyrighted book text or art. See `docs/CONTENT_POLICY.md`.
 
 ## Screenshots
 
@@ -33,7 +36,7 @@ It offers extensive support for character sheets, compendium packs, and automate
 
 ### Thanks
 - I liked the layout of the WH4e sheet on Roll20 and tried to mimic that where possible. Thanks to the authors for that inspiration.
-- I studied the original DH2e Foundry VTT project by moo-man. I ended up not using much from there but learned a lot about Foundry. I appreciate the head start!
+- I studied the original Rogue Trader Foundry VTT project by moo-man. I ended up not using much from there but learned a lot about Foundry. I appreciate the head start!
 - My tabletop group for play testing and feedback.
 
 ## License

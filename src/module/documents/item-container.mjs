@@ -2,14 +2,14 @@ import { SYSTEM_ID } from '../hooks-manager.mjs';
 
 export const DH_CONTAINER_ID = 'nested';
 
-export class DarkHeresyItemContainer extends Item {
+export class RogueTraderItemContainer extends Item {
     get actor() {
         if (this.parent instanceof Item) return null;
         return this.parent;
     }
 
     async update(data={}, options={}) {
-        console.log('DarkHeresyItemContainer: ' + this.name + ' update', data);
+        console.log('RogueTraderItemContainer: ' + this.name + ' update', data);
         data._id = this.id;
         if (this.isNestedItem()) {
             await this.parent.updateNestedDocuments(data);
@@ -48,13 +48,13 @@ export class DarkHeresyItemContainer extends Item {
 
     async convertNestedToItems() {
         // Convert Nested to Items
-        game.dh.log('Convert ' + this.name + ' Nested', this.hasNested());
+        game.rt.log('Convert ' + this.name + ' Nested', this.hasNested());
         this.items = new foundry.utils.Collection();
         for (const nestedData of this.getNested()) {
             const item = new CONFIG.Item.documentClass(nestedData, { parent: this });
             await this.items.set(nestedData._id, item);
         }
-        game.dh.log('Item ' + this.name + ' items:', this.items);
+        game.rt.log('Item ' + this.name + ' items:', this.items);
     }
 
     static async _onCreateOperation(items, context, user) {
@@ -73,7 +73,7 @@ export class DarkHeresyItemContainer extends Item {
             }
         }
         if (!toCreate.length) return [];
-        game.dh.log('ItemContainer: ' + this.name + ' _onCreateDocuments');
+        game.rt.log('ItemContainer: ' + this.name + ' _onCreateDocuments');
         const cls = getDocumentClass('ActiveEffect');
         return cls.createDocuments(toCreate, context);
     }
@@ -83,7 +83,7 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     hasItemByType(item, type) {
-        game.dh.log('Check for Has Nested Item', item);
+        game.rt.log('Check for Has Nested Item', item);
         if (!this.system.container) return false;
         return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
     }
@@ -93,14 +93,14 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     getItemByName(item, type) {
-        game.dh.log('Check for item by name', item);
+        game.rt.log('Check for item by name', item);
         if (!this.system.container) return;
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
     async createNestedDocuments(data) {
         if (!Array.isArray(data)) data = [data];
-        game.dh.log('ItemContainer: ' + this.name + ' createNestedDocuments', data);
+        game.rt.log('ItemContainer: ' + this.name + ' createNestedDocuments', data);
         const currentItems = this.getNested();
 
         if (data.length > 0) {
@@ -116,7 +116,7 @@ export class DarkHeresyItemContainer extends Item {
     }
 
     async deleteNestedDocuments(ids = []) {
-        game.dh.log('ItemContainer: ' + this.name + ' deleteNestedDocuments', ids);
+        game.rt.log('ItemContainer: ' + this.name + ' deleteNestedDocuments', ids);
         const containedItems = this.getNested();
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id));
@@ -127,19 +127,19 @@ export class DarkHeresyItemContainer extends Item {
     async updateNestedDocuments(data) {
         const contained = this.getNested();
         if (!Array.isArray(data)) data = [data];
-        game.dh.log('ItemContainer: ' + this.name + ' updateNestedDocuments', data);
+        game.rt.log('ItemContainer: ' + this.name + ' updateNestedDocuments', data);
         let updated = [];
         let newContained = contained.map((existing) => {
             let theUpdate = data.find((update) => update._id === existing._id);
             if (theUpdate) {
-                game.dh.log('Found Update object', theUpdate);
+                game.rt.log('Found Update object', theUpdate);
                 const newData = foundry.utils.mergeObject(theUpdate, existing, {
                     overwrite: false,
                     insertKeys: true,
                     insertValues: true,
                     inplace: false,
                 });
-                game.dh.log('Merged Update object', newData);
+                game.rt.log('Merged Update object', newData);
                 updated.push(newData);
                 return newData;
             }
@@ -155,7 +155,7 @@ export class DarkHeresyItemContainer extends Item {
     prepareEmbeddedDocuments() {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
-        game.dh.log('ItemContainer: ' + this.name, 'prepareEmbeddedDocuments');
+        game.rt.log('ItemContainer: ' + this.name, 'prepareEmbeddedDocuments');
         const containedItems = this.getNested();
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();

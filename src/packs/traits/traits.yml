@@ -2,7 +2,7 @@ data:
     description: May increase or decrease its Size trait value by 1 as a Free Action.
         Also has the Crawler trait.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Amorphous
 type: trait
 ---
@@ -10,14 +10,14 @@ data:
     description: Gain additional Armor points to all locations and stacks with worn
         armour, but not with the Machine trait.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Natural Armor
 type: trait
 ---
 data:
     description: Creature can breathe underwater.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Amphibious
 type: trait
 ---
@@ -30,21 +30,21 @@ data:
         have enough teeth, claws, or spines to ignore a few being removed. Natural weapons
         have the Primitive (7) weapon quality unless stated otherwise in the prole.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Natural Weapons
 type: trait
 ---
 data:
     description: Always counts as braced.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Auto-stabilized
 type: trait
 ---
 data:
     description: Switch between incorporeal and corporeal as a Half Action.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Phase
 type: trait
 ---
@@ -52,14 +52,14 @@ data:
     description: All suer a 10 penalty to Willpower tests taken while within X metres
         of the creature.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Baneful Presence
 type: trait
 ---
 data:
     description: Creature has a psy rating of 1 or more.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Psyker
 type: trait
 ---
@@ -68,7 +68,7 @@ data:
         Willpower test when frightened, startled, or injured. If it fails, the creature
         ees.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Bestial
 type: trait
 ---
@@ -76,7 +76,7 @@ data:
     description: Movement equals AB2. With more than four legs may gain this trait as
         well, increasing their movement as indicated above but adding an additional 2
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Quadruped
 type: trait
 ---
@@ -84,7 +84,7 @@ data:
     description: Cannot see. The Blind Fighting talent reduces the penalty to Weapon
         Skill tests as normal for Blind creatures, from 30 to 15.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Blind
 type: trait
 ---
@@ -92,21 +92,21 @@ data:
     description: Each round, at the start of its turn, the creature can make a Toughness
         test to remove an amount of damage indicated in the parentheses after the trait.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Regeneration
 type: trait
 ---
 data:
     description: Deals an extra (X) points of damage on each hit it inicts that turn.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Brutal Charge
 type: trait
 ---
 data:
     description: Avoid Corruption from Psyker elite advance; start at psy rating 2.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Sanctioned
 type: trait
 ---
@@ -117,14 +117,14 @@ data:
         impediment. At the end of each round after the borrower passes, roll 1d10; on
         a result of 5 or lower, the tunnel collapses behind.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Burrower
 type: trait
 ---
 data:
     description: Determines creature size and benefits.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Size
 type: trait
 ---
@@ -133,7 +133,7 @@ data:
         rate (roundup) as determined by its Agility bonus, but it does not take penalties
         for moving over dicult terrain.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Crawler
 type: trait
 ---
@@ -141,7 +141,7 @@ data:
     description: Perceive surroundings flawlessly within 30 meters. Other within this
         30 metre range that succeed on a Dicult (10) Awareness skill can detect the echoing.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Sonar Sense
 type: trait
 ---
@@ -153,7 +153,7 @@ data:
         or other creatures with this trait. Daemonic creatures also have the Undying trait,
         and gain benets when using psychic powers.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Daemonic
 type: trait
 ---
@@ -163,7 +163,7 @@ data:
         Insanity points, the permanent loss of his sight, permanent loss of 1d10 points
         from one characteristic, or a random mutation.'
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Soul Bound
 type: trait
 ---
@@ -171,7 +171,7 @@ data:
     description: Can see in darkness and never takes a penalty for ghting in areas of
         dim or no lighting.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Dark-sight
 type: trait
 ---
@@ -183,7 +183,7 @@ data:
         as well. The stampede lasts until the source of danger is no longer visible or
         for 1d10 minutes, whichever occurs last.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Stampede
 type: trait
 ---
@@ -191,7 +191,7 @@ data:
     description: Gains all the benets of the Natural Weapons trait, except that its
         attacks no longer have the Primitive weapon quality.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Deadly Natural Weapons
 type: trait
 ---
@@ -202,7 +202,7 @@ data:
         one that would destroy them outright, unless it was caused by a psychic power,
         force weapon, or holy attack.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Stuff of Nightmares
 type: trait
 ---
@@ -213,14 +213,14 @@ data:
         succeeds, the character suers no ill eects; if he fails, he must roll on Table
         8-11: Shock, adding +10 to the roll for every degree of failure on the test.'
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Fear
 type: trait
 ---
 data:
     description: +20 bonus to resist grapple, Knock Down, and Takedown.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Sturdy
 type: trait
 ---
@@ -228,14 +228,14 @@ data:
     description: Fly and enter any altitude. (X) indicates its speed when ying. This
         number replaces the creatures Agility bonus for movement actions while airborne.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Flyer
 type: trait
 ---
 data:
     description: NPC has Fate points.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Touched by the Fates
 type: trait
 ---
@@ -244,7 +244,7 @@ data:
         a mortal mind. Such a creature is immune to Fear, Pinning, Insanity points, and
         psychic powers used to cloud, control, or delude its mind.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: From Beyond
 type: trait
 ---
@@ -253,7 +253,7 @@ data:
         end of his turn with a penalty equal to 10 times the number in parentheses (X),
         or suer 1d10 points of Energy damage not reduced by Armour or Toughness.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Toxic
 type: trait
 ---
@@ -262,7 +262,7 @@ data:
         number in parentheses (X) indicates its speed when hovering; this number replaces
         its Agility bonus for purposes of calculating Movement while airborne.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Hoverer
 type: trait
 ---
@@ -270,7 +270,7 @@ data:
     description: It cannot be harmed by diseases, poisons, or toxic eects. It also has
         no need to breathe, and thus can survive unaided in a vacuum.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Undying
 type: trait
 ---
@@ -284,14 +284,14 @@ data:
         usually aect the mortal world, and thus cannot damage normal opponents unless
         it has a suitable special ability or talent.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Incorporeal
 type: trait
 ---
 data:
     description: Increases one characteristic bonus.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Unnatural Characteristic
 type: trait
 ---
@@ -301,7 +301,7 @@ data:
         (indicated by the number in parentheses). This armour stacks with worn armour,
         but not with the Natural Armour trait, and can damage from Fire
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Machine
 type: trait
 ---
@@ -309,7 +309,7 @@ data:
     description: Perceive surroundings by uncanny means. Includes a range in metres
         indicated by the number in parentheses (X).
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Unnatural Senses
 type: trait
 ---
@@ -317,7 +317,7 @@ data:
     description: Character has mechanical augmentations. Cranial circuitry, Cyber-mantle,
         Electro-Graft, Electoo Inductors, and Potenia Coil.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Mechanicus Implants
 type: trait
 ---
@@ -328,7 +328,7 @@ data:
         point of damage for each degree of failure. If this would deal damage equal to
         (or in excess of) the creatures wounds, it is cast back into the Warp.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Warp Instability
 type: trait
 ---
@@ -337,7 +337,7 @@ data:
         master to issue orders, the creature must pass a Routine (+20) Intelligence test
         or be Stunned for 1 round.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Mind Lock
 type: trait
 ---
@@ -346,7 +346,7 @@ data:
         psychoactive materials or is somehow warded against the Warp. Force elds still
         work against these attacks normally.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Warp Weapons
 type: trait
 ---
@@ -359,6 +359,6 @@ data:
         actual melee weapons to wield for this to take eect. Note that a creature still
         requires the Two-Weapon Wielder talent to make multiple attacks in the same turn.
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/blue/b_33.png
+img: systems/rogue-trader/icons/talents/blue/b_33.png
 name: Multiple Arms
 type: trait

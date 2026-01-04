@@ -17,12 +17,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 151
+    source: RT - 151
     special:
         tearing: true
     type: Bolt
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Bolt Pistol
 type: weapon
 ---
@@ -45,12 +45,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 151
+    source: RT - 151
     special:
         tearing: true
     type: Bolt
     weight: 7
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Boltgun
 type: weapon
 ---
@@ -79,7 +79,7 @@ data:
         tearing: true
     type: Bolt
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Godwyn-Deaz Bolt Pistol
 type: weapon
 ---
@@ -108,7 +108,7 @@ data:
         tearing: true
     type: Bolt
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Godwyn-Deaz Bolter
 type: weapon
 ---
@@ -137,7 +137,7 @@ data:
         tearing: true
     type: Bolt
     weight: 35
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Godwyn-Deaz Heavy Bolter
 type: weapon
 ---
@@ -167,7 +167,7 @@ data:
         tearing: true
     type: Bolt
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Godwyn-Deaz Storm Bolter
 type: weapon
 ---
@@ -190,12 +190,12 @@ data:
         full: 6
         single: 0
     reload: 'Full Action'
-    source: DH2 - 151
+    source: RT - 151
     special:
         tearing: true
     type: Bolt
     weight: 40
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Heavy Bolter
 type: weapon
 ---
@@ -225,7 +225,7 @@ data:
         tearing: true
     type: Bolt
     weight: 20
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Psycannon
 type: weapon
 ---
@@ -248,13 +248,13 @@ data:
         full: 4
         single: 1
     reload: 'Full Action'
-    source: DH2 - 151
+    source: RT - 151
     special:
         storm: true
         tearing: true
     type: Bolt
     weight: 9
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Storm Bolter
 type: weapon
 ---
@@ -277,13 +277,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         tearing: true
         two-handed: true
     type: Chain
     weight: 13
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Chainaxe
 type: weapon
 ---
@@ -306,12 +306,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         tearing: true
     type: Chain
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Chainblade
 type: weapon
 ---
@@ -334,13 +334,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         balanced: true
         tearing: true
     type: Chain
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Chainsword
 type: weapon
 ---
@@ -363,7 +363,7 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 159
+    source: RT - 159
     special:
         razor-sharp: true
         tearing: true
@@ -371,7 +371,7 @@ data:
         unwieldy: true
     type: Chain
     weight: 15
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Eviscerator
 type: weapon
 ---
@@ -400,7 +400,7 @@ data:
         reliable: true
     type: Exotic
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Condemnor
 type: weapon
 ---
@@ -427,7 +427,7 @@ data:
     special: {}
     type: Exotic
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Digi-Weapon
 type: weapon
 ---
@@ -456,7 +456,7 @@ data:
         toxic: 2
     type: Exotic
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Firesprite Needler
 type: weapon
 ---
@@ -486,7 +486,7 @@ data:
         razor-sharp: true
     type: Exotic
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Ghost Blade
 type: weapon
 ---
@@ -509,13 +509,13 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 156
+    source: RT - 156
     special:
         concussive: 1
         graviton: true
     type: Exotic
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Grav Pistol
 type: weapon
 ---
@@ -545,7 +545,7 @@ data:
         graviton: true
     type: Exotic
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Graviton Grenade
 type: weapon
 ---
@@ -568,13 +568,13 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 156
+    source: RT - 156
     special:
         concussive: 2
         graviton: true
     type: Exotic
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Graviton Gun
 type: weapon
 ---
@@ -603,7 +603,7 @@ data:
         graviton: true
     type: Exotic
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Graviton Hammer
 type: weapon
 ---
@@ -631,7 +631,7 @@ data:
         felling: 2
     type: Exotic
     weight: 10
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hellrifle
 type: weapon
 ---
@@ -661,7 +661,7 @@ data:
         inaccurate: true
     type: Exotic
     weight: 65
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Integration Cannon
 type: weapon
 ---
@@ -684,14 +684,14 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 156
+    source: RT - 156
     special:
         accurate: true
         felling: 1
         toxic: 5
     type: Exotic
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Needle Pistol
 type: weapon
 ---
@@ -714,14 +714,14 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 156
+    source: RT - 156
     special:
         accurate: true
         felling: 1
         toxic: 5
     type: Exotic
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Needle Rifle
 type: weapon
 ---
@@ -749,7 +749,7 @@ data:
         reliable: true
     type: Exotic
     weight: 16
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Purgatus Crossbow
 type: weapon
 ---
@@ -776,7 +776,7 @@ data:
     special: {}
     type: Exotic
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Quillgun
 type: weapon
 ---
@@ -804,7 +804,7 @@ data:
         defensive: true
     type: Exotic
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Silver Shield
 type: weapon
 ---
@@ -835,7 +835,7 @@ data:
         snare: 2
     type: Exotic
     weight: 25
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Silverseine Launcher
 type: weapon
 ---
@@ -858,12 +858,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 156
+    source: RT - 156
     special:
         snare: 0
     type: Exotic
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Web Pistol
 type: weapon
 ---
@@ -886,13 +886,13 @@ data:
         full: -1
         single: -1
     reload: 2 Full
-    source: DH2 - 156
+    source: RT - 156
     special:
         blast: 5
         snare: 1
     type: Exotic
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Webber
 type: weapon
 ---
@@ -915,13 +915,13 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         blast: 2
         flame: true
     type: Explosives
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Fire Bomb
 type: weapon
 ---
@@ -944,14 +944,14 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         blast: 2
         flame: true
         melta: true
     type: Explosives
     weight: 12
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Melta Bomb
 type: weapon
 ---
@@ -980,7 +980,7 @@ data:
         unbalanced: true
     type: Flame
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Brazier of Holy Fire
 type: weapon
 ---
@@ -1010,7 +1010,7 @@ data:
         spray: true
     type: Flame
     weight: 40
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Cerberus Heavy Flamer
 type: weapon
 ---
@@ -1039,7 +1039,7 @@ data:
         unbalanced: true
     type: Flame
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Fire Gauntlets
 type: weapon
 ---
@@ -1062,13 +1062,13 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 152
+    source: RT - 152
     special:
         flame: true
         spray: true
     type: Flame
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Flamer
 type: weapon
 ---
@@ -1100,7 +1100,7 @@ data:
         toxic: 2
     type: Flame
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Gorgon Chemical Flamer
 type: weapon
 ---
@@ -1123,13 +1123,13 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 152
+    source: RT - 152
     special:
         flame: true
         spray: true
     type: Flame
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hand Flamer
 type: weapon
 ---
@@ -1152,13 +1152,13 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 152
+    source: RT - 152
     special:
         flame: true
         spray: true
     type: Flame
     weight: 45
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Heavy Flamer
 type: weapon
 ---
@@ -1188,7 +1188,7 @@ data:
         spray: true
     type: Flame
     weight: 10
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hydra Flamer Array
 type: weapon
 ---
@@ -1218,7 +1218,7 @@ data:
         spray: true
     type: Flame
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Incinerator
 type: weapon
 ---
@@ -1249,7 +1249,7 @@ data:
         unwieldy: true
     type: Force
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Animus Hammer
 type: weapon
 ---
@@ -1278,7 +1278,7 @@ data:
         unbalanced: true
     type: Force
     weight: 10
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Force Hammer
 type: weapon
 ---
@@ -1301,13 +1301,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         force: true
         two-handed: true
     type: Force
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Force Staff
 type: weapon
 ---
@@ -1330,13 +1330,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         balanced: true
         force: true
     type: Force
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Force Sword
 type: weapon
 ---
@@ -1367,7 +1367,7 @@ data:
         unwieldy: true
     type: Force
     weight: 10
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Nemesis Daemon Hammer
 type: weapon
 ---
@@ -1399,7 +1399,7 @@ data:
         power-field: true
     type: Force
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Santus Hammer
 type: weapon
 ---
@@ -1430,7 +1430,7 @@ data:
         unwieldy: true
     type: Force
     weight: 14
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Tempus Hammer
 type: weapon
 ---
@@ -1460,7 +1460,7 @@ data:
         smoke: 3
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Ironfaith Incense Grenade
 type: weapon
 ---
@@ -1490,7 +1490,7 @@ data:
         tainted: true
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Abyssal Charge
 type: weapon
 ---
@@ -1520,7 +1520,7 @@ data:
         sanctified: true
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Argent Globe
 type: weapon
 ---
@@ -1543,12 +1543,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         smoke: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Blind Grenade
 type: weapon
 ---
@@ -1571,12 +1571,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         blast: 3
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Choke Grenade
 type: weapon
 ---
@@ -1599,12 +1599,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         blast: 3
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Frag Grenade
 type: weapon
 ---
@@ -1627,12 +1627,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         blast: 5
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Frag Missile
 type: weapon
 ---
@@ -1655,13 +1655,13 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         blast: 6
         hallucinogenic: true
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hallucinogen Grenade
 type: weapon
 ---
@@ -1684,12 +1684,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         haywire: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Haywire Grenade
 type: weapon
 ---
@@ -1712,12 +1712,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         concussive: 0
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Krak Grenade
 type: weapon
 ---
@@ -1740,13 +1740,13 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 157
+    source: RT - 157
     special:
         concussive: 3
         proven: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Krak Missile
 type: weapon
 ---
@@ -1769,12 +1769,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         blast: 6
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Photon Flash Grenade
 type: weapon
 ---
@@ -1803,7 +1803,7 @@ data:
         hallucinogenic: 4
     type: Grenades/Missiles
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Psychotroke Grenade
 type: weapon
 ---
@@ -1832,7 +1832,7 @@ data:
         smoke: 3
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Psyk-Out Grenade
 type: weapon
 ---
@@ -1861,7 +1861,7 @@ data:
         smoke: 3
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Psyk-Out Grenade
 type: weapon
 ---
@@ -1889,7 +1889,7 @@ data:
         blast: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Rad Grenade
 type: weapon
 ---
@@ -1912,12 +1912,12 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         smoke: 4
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Smoke Grenade
 type: weapon
 ---
@@ -1945,7 +1945,7 @@ data:
         blast: 5
     type: Grenades/Missiles
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Spore Bomb
 type: weapon
 ---
@@ -1968,13 +1968,13 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         blast: 3
         concussive: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Stun Grenade
 type: weapon
 ---
@@ -2003,7 +2003,7 @@ data:
         sanctified: true
     type: Grenades/Missiles
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Tears of the Emperor
 type: weapon
 ---
@@ -2026,13 +2026,13 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 158
+    source: RT - 158
     special:
         blast: 3
         snare: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Web Grenade
 type: weapon
 ---
@@ -2064,7 +2064,7 @@ data:
         toxic: 2
     type: Grenades/Missiles
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Whitefire Grenade
 type: weapon
 ---
@@ -2087,11 +2087,11 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 154
+    source: RT - 154
     special: {}
     type: Las
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hot-shot Lasgun
 type: weapon
 ---
@@ -2114,11 +2114,11 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 154
+    source: RT - 154
     special: {}
     type: Las
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hot-shot Laspistol
 type: weapon
 ---
@@ -2141,12 +2141,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 153
+    source: RT - 153
     special:
         reliable: true
     type: Las
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Lasgun
 type: weapon
 ---
@@ -2169,12 +2169,12 @@ data:
         full: 0
         single: 1
     reload: 'Half Action'
-    source: DH2 - 153
+    source: RT - 153
     special:
         unreliable: true
     type: Las
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Laslock
 type: weapon
 ---
@@ -2197,12 +2197,12 @@ data:
         full: 0
         single: 1
     reload: 'Half Action'
-    source: DH2 - 153
+    source: RT - 153
     special:
         reliable: true
     type: Las
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Laspistol
 type: weapon
 ---
@@ -2225,14 +2225,14 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 154
+    source: RT - 154
     special:
         accurate: true
         felling: 4
         reliable: true
     type: Las
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Long-Las
 type: weapon
 ---
@@ -2255,11 +2255,11 @@ data:
         full: 0
         single: 1
     reload: 2 Full
-    source: DH2 - 154
+    source: RT - 154
     special: {}
     type: Launcher
     weight: 12
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Grenade Launcher
 type: weapon
 ---
@@ -2282,11 +2282,11 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 154
+    source: RT - 154
     special: {}
     type: Launcher
     weight: 35
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Missile Launcher
 type: weapon
 ---
@@ -2316,7 +2316,7 @@ data:
         unreliable: true
     type: Low-Tech
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Arquebus
 type: weapon
 ---
@@ -2345,7 +2345,7 @@ data:
         sanctified: true
     type: Low-Tech
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Axe of Retribution
 type: weapon
 ---
@@ -2368,13 +2368,13 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 154
+    source: RT - 154
     special:
         inaccurate: true
         snare: true
     type: Low-Tech
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Bolas
 type: weapon
 ---
@@ -2397,13 +2397,13 @@ data:
         full: 0
         single: 1
     reload: 'Half Action'
-    source: DH2 - 154
+    source: RT - 154
     special:
         primitive: 6
         reliable: true
     type: Low-Tech
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Bow
 type: weapon
 ---
@@ -2432,7 +2432,7 @@ data:
         reliable: true
     type: Low-Tech
     weight: 12
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Castigator Heavy Crossbow
 type: weapon
 ---
@@ -2455,12 +2455,12 @@ data:
         full: 0
         single: 1
     reload: '2 Full Actions'
-    source: DH2 - 154
+    source: RT - 154
     special:
         primitive: 7
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Crossbow
 type: weapon
 ---
@@ -2488,7 +2488,7 @@ data:
         primitive: 7
     type: Low-Tech
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Deliverance Light Crossbow
 type: weapon
 ---
@@ -2520,7 +2520,7 @@ data:
         tearing: true
     type: Low-Tech
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Drakes Claw
 type: weapon
 ---
@@ -2551,7 +2551,7 @@ data:
         snare: 2
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Flail of Chastisement
 type: weapon
 ---
@@ -2581,7 +2581,7 @@ data:
         unreliable: true
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Flintlock Pistol
 type: weapon
 ---
@@ -2604,13 +2604,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         two-handed: true
         unbalanced: true
     type: Low-Tech
     weight: 7
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Great Weapon
 type: weapon
 ---
@@ -2633,12 +2633,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         concussive: 3
     type: Low-Tech
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hunting Lance
 type: weapon
 ---
@@ -2661,13 +2661,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         primitive: 7
         unbalanced: true
     type: Low-Tech
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Improvised
 type: weapon
 ---
@@ -2690,11 +2690,11 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special: {}
     type: Low-Tech
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Knife
 type: weapon
 ---
@@ -2717,11 +2717,11 @@ data:
         full: 0
         single: 1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special: {}
     type: Low-Tech
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Knife
 type: weapon
 ---
@@ -2752,7 +2752,7 @@ data:
         primitive: 8
     type: Low-Tech
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Longflame
 type: weapon
 ---
@@ -2781,7 +2781,7 @@ data:
         unwieldy: true
     type: Low-Tech
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Man-Catcher
 type: weapon
 ---
@@ -2811,7 +2811,7 @@ data:
         unreliable: true
     type: Low-Tech
     weight: 7
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Musket
 type: weapon
 ---
@@ -2839,7 +2839,7 @@ data:
         defensive: true
     type: Low-Tech
     weight: 14
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Praesidium Protectiva
 type: weapon
 ---
@@ -2870,7 +2870,7 @@ data:
         vengeful: 8
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Rune Weapon (Sword)
 type: weapon
 ---
@@ -2893,12 +2893,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         defensive: true
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Shield
 type: weapon
 ---
@@ -2929,7 +2929,7 @@ data:
         unreliable: true
     type: Low-Tech
     weight: 45
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Snapper Repeating Rifle
 type: weapon
 ---
@@ -2952,13 +2952,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         primitive: 8
         two-handed: true
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Spear
 type: weapon
 ---
@@ -2981,14 +2981,14 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         balanced: true
         primitive: 7
         two-handed: true
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Staff
 type: weapon
 ---
@@ -3018,7 +3018,7 @@ data:
         sanctified: true
     type: Low-Tech
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Stealth Claw
 type: weapon
 ---
@@ -3041,12 +3041,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         balanced: true
     type: Low-Tech
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Sword
 type: weapon
 ---
@@ -3069,12 +3069,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         primitive: 7
     type: Low-Tech
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Truncheon
 type: weapon
 ---
@@ -3097,11 +3097,11 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 226
+    source: RT - 226
     special: {}
     type: Low-Tech
     weight: 0
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Unarmed
 type: weapon
 ---
@@ -3132,7 +3132,7 @@ data:
         sanctified: true
     type: Low-Tech
     weight: 9
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Wailing Trident
 type: weapon
 ---
@@ -3155,14 +3155,14 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         concussive: 1
         primitive: 8
         two-handed: true
     type: Low-Tech
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Warhammer
 type: weapon
 ---
@@ -3185,13 +3185,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 160
+    source: RT - 160
     special:
         flexible: true
         primitive: 6
     type: Low-Tech
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Whip
 type: weapon
 ---
@@ -3214,12 +3214,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 155
+    source: RT - 155
     special:
         melta: true
     type: Melta
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Inferno Pistol
 type: weapon
 ---
@@ -3242,12 +3242,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 155
+    source: RT - 155
     special:
         melta: true
     type: Melta
     weight: 15
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Meltagun
 type: weapon
 ---
@@ -3270,13 +3270,13 @@ data:
         full: 0
         single: 1
     reload: 5 Full
-    source: DH2 - 155
+    source: RT - 155
     special:
         maximal: true
         overheats: true
     type: Plasma
     weight: 18
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Plasma Gun
 type: weapon
 ---
@@ -3299,13 +3299,13 @@ data:
         full: 0
         single: 1
     reload: '3 Full Actions'
-    source: DH2 - 155
+    source: RT - 155
     special:
         maximal: true
         overheats: true
     type: Plasma
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Plasma Pistol
 type: weapon
 ---
@@ -3333,7 +3333,7 @@ data:
         reliable: true
     type: Plasma
     weight: 20
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Sentinel Plasma Rifle
 type: weapon
 ---
@@ -3361,7 +3361,7 @@ data:
         power-field: true
     type: Power
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Desoleum Power Blade
 type: weapon
 ---
@@ -3389,7 +3389,7 @@ data:
         power-field: true
     type: Power
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Desoleum Power Blade
 type: weapon
 ---
@@ -3419,7 +3419,7 @@ data:
         unwieldy: true
     type: Power
     weight: 16
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Ebenus Hammer
 type: weapon
 ---
@@ -3442,14 +3442,14 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         power-field: true
         two-handed: true
         unbalanced: true
     type: Power
     weight: 8
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Omnissian Axe
 type: weapon
 ---
@@ -3480,7 +3480,7 @@ data:
         sanctified: true
     type: Power
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Ordo Malleus Power Glaive
 type: weapon
 ---
@@ -3503,14 +3503,14 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         power-field: true
         two-handed: true
         unbalanced: true
     type: Power
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Axe
 type: weapon
 ---
@@ -3533,13 +3533,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         power-field: true
         unwieldy: true
     type: Power
     weight: 13
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Fist
 type: weapon
 ---
@@ -3562,13 +3562,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         power-field: true
         shocking: true
     type: Power
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Maul (High)
 type: weapon
 ---
@@ -3591,12 +3591,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         shocking: true
     type: Power
     weight: 4
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Maul (Low)
 type: weapon
 ---
@@ -3625,7 +3625,7 @@ data:
         power-field: true
     type: Power
     weight: 6
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Shield
 type: weapon
 ---
@@ -3655,7 +3655,7 @@ data:
         unbalanced: true
     type: Power
     weight: 1
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Stake
 type: weapon
 ---
@@ -3678,13 +3678,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         balanced: true
         power-field: true
     type: Power
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Power Sword
 type: weapon
 ---
@@ -3714,7 +3714,7 @@ data:
         unwieldy: true
     type: Power
     weight: 16
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Thunder Hammer
 type: weapon
 ---
@@ -3743,7 +3743,7 @@ data:
         shocking: true
     type: Shock
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Electro-Flail
 type: weapon
 ---
@@ -3766,12 +3766,12 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         shocking: true
     type: Shock
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Shock Maul
 type: weapon
 ---
@@ -3794,13 +3794,13 @@ data:
         full: -1
         single: -1
     reload: ''
-    source: DH2 - 161
+    source: RT - 161
     special:
         flexible: true
         shocking: true
     type: Shock
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Shock Whip
 type: weapon
 ---
@@ -3823,12 +3823,12 @@ data:
         full: 0
         single: 1
     reload: '2 Full Actions'
-    source: DH2 - 155
+    source: RT - 155
     special:
         reliable: true
     type: Solid Projectile
     weight: 40
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Autocannon
 type: weapon
 ---
@@ -3851,11 +3851,11 @@ data:
         full: 10
         single: 1
     reload: 'Full Action'
-    source: DH2 - 155
+    source: RT - 155
     special: {}
     type: Solid Projectile
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Autogun
 type: weapon
 ---
@@ -3878,11 +3878,11 @@ data:
         full: 6
         single: 1
     reload: 'Full Action'
-    source: DH2 - 155
+    source: RT - 155
     special: {}
     type: Solid Projectile
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Autopistol
 type: weapon
 ---
@@ -3905,12 +3905,12 @@ data:
         full: 0
         single: 1
     reload: '2 Full Actions'
-    source: DH2 - 155
+    source: RT - 155
     special:
         '!': true
     type: Solid Projectile
     weight: 3
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Hand Cannon
 type: weapon
 ---
@@ -3933,11 +3933,11 @@ data:
         full: 8
         single: 0
     reload: '2 Full Actions'
-    source: DH2 - 156
+    source: RT - 156
     special: {}
     type: Solid Projectile
     weight: 30
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Heavy Stubber
 type: weapon
 ---
@@ -3960,12 +3960,12 @@ data:
         full: 0
         single: 1
     reload: '2 Full Actions'
-    source: DH2 - 156
+    source: RT - 156
     special:
         scatter: true
     type: Solid Projectile
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Shotgun
 type: weapon
 ---
@@ -3988,12 +3988,12 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 156
+    source: RT - 156
     special:
         scatter: true
     type: Solid Projectile
     weight: 7
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Shotgun (Combat)
 type: weapon
 ---
@@ -4016,13 +4016,13 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 156
+    source: RT - 156
     special:
         accurate: true
         reliable: true
     type: Solid Projectile
     weight: 5
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Sniper Rifle
 type: weapon
 ---
@@ -4045,11 +4045,11 @@ data:
         full: 0
         single: 1
     reload: 'Full Action'
-    source: DH2 - 156
+    source: RT - 156
     special: {}
     type: Solid Projectile
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Stub Automatic
 type: weapon
 ---
@@ -4072,11 +4072,11 @@ data:
         full: 0
         single: 1
     reload: '2 Full Actions'
-    source: DH2 - 156
+    source: RT - 156
     special:
         reliable: true
     type: Solid Projectile
     weight: 2
-img: systems/dark-heresy-2nd/icons/items/pistols/pistols_09.png
+img: systems/rogue-trader/icons/items/pistols/pistols_09.png
 name: Stub Revolver
 type: weapon

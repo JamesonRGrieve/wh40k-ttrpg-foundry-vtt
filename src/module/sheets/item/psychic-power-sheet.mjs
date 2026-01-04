@@ -1,6 +1,6 @@
-import { DarkHeresyItemContainerSheet } from './item-container-sheet.mjs';
+import { RogueTraderItemContainerSheet } from './item-container-sheet.mjs';
 
-export class DarkHeresyPsychicPowerSheet extends DarkHeresyItemContainerSheet {
+export class RogueTraderPsychicPowerSheet extends RogueTraderItemContainerSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 820,
@@ -10,6 +10,6 @@ export class DarkHeresyPsychicPowerSheet extends DarkHeresyItemContainerSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/item/item-psychic-power-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-psychic-power-sheet.hbs`;
     }
 }

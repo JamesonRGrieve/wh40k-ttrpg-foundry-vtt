@@ -92,7 +92,7 @@ export class Hit {
         let righteousFuryThreshold = 10;
         if (attackData.rollData.hasAttackSpecial('Vengeful')) {
             righteousFuryThreshold = attackData.rollData.getAttackSpecial('Vengeful').level ?? 10;
-            game.dh.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
+            game.rt.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
         let rollFormula = actionItem.system.damage;
@@ -102,7 +102,7 @@ export class Hit {
         this.damageRoll = new Roll(rollFormula, attackData.rollData);
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {
-            game.dh.log('Modifying dice due to tearing');
+            game.rt.log('Modifying dice due to tearing');
             this.damageRoll.terms.filter(term => term instanceof foundry.dice.terms.Die).forEach(die => {
                 if (die.modifiers.includes('kh')) return;
                 die.modifiers.push('kh' + die.number);
@@ -111,14 +111,14 @@ export class Hit {
         }
 
         await this.damageRoll.evaluate();
-        game.dh.log('Damage Roll', this.damageRoll);
+        game.rt.log('Damage Roll', this.damageRoll);
 
         this.damage = this.damageRoll.total;
 
         for (const term of this.damageRoll.terms) {
             if (!term.results) continue;
             for (const result of term.results) {
-                game.dh.log('_calculateDamage result:', result);
+                game.rt.log('_calculateDamage result:', result);
                 if (result.discarded || !result.active) continue;
                 if (result.result >= righteousFuryThreshold) {
                     // Righteous fury hit
@@ -376,14 +376,14 @@ export class Hit {
 export class WeaponDamageData extends DamageData {
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/weapon-roll-chat.hbs';
     }
 }
 
 export class PsychicDamageData extends DamageData {
     constructor() {
         super();
-        this.template = 'systems/dark-heresy-2nd/templates/chat/weapon-roll-chat.hbs';
+        this.template = 'systems/rogue-trader/templates/chat/weapon-roll-chat.hbs';
     }
 }
 

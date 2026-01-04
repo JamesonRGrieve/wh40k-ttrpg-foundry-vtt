@@ -1,6 +1,6 @@
-import { DarkHeresyAcolyte } from './acolyte.mjs';
+import { RogueTraderAcolyte } from './acolyte.mjs';
 
-export class DarkHeresyNPC extends DarkHeresyAcolyte {
+export class RogueTraderNPC extends RogueTraderAcolyte {
 
     get faction() {
         return this.system.faction;

@@ -9,7 +9,7 @@ data:
         \ cannot generate Righteous Fury."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Accurate
 type: attackSpecial
 ---
@@ -20,7 +20,7 @@ data:
         only gains the bonus once.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Balanced
 type: attackSpecial
 ---
@@ -33,7 +33,7 @@ data:
         \ user fails his Ballistic Skill test when firing it."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Blast
 type: attackSpecial
 ---
@@ -48,7 +48,7 @@ data:
         \ bonus, the target is knocked Prone."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Concussive
 type: attackSpecial
 ---
@@ -67,7 +67,7 @@ data:
         \ making use of that talent."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Corrosive
 type: attackSpecial
 ---
@@ -81,7 +81,7 @@ data:
         reduced by Armour or Toughness.
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Crippling
 type: attackSpecial
 ---
@@ -92,7 +92,7 @@ data:
         \ on tests to make attacks with it."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Defensive
 type: attackSpecial
 ---
@@ -104,7 +104,7 @@ data:
         s base Toughness bonus, and does not persist once the damage has been calculated."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Felling
 type: attackSpecial
 ---
@@ -118,7 +118,7 @@ data:
         \ vehicle immediately catches fire."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Flame
 type: attackSpecial
 ---
@@ -128,7 +128,7 @@ data:
         \ can be used to Parry an opponent's weapon."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Flexible
 type: attackSpecial
 ---
@@ -146,7 +146,7 @@ data:
         \ cannot be destroyed by weapons with the Power Field quality."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Force
 type: attackSpecial
 ---
@@ -161,7 +161,7 @@ data:
         \ actually hit."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Graviton
 type: attackSpecial
 ---
@@ -175,7 +175,7 @@ data:
         \ last for 1 round, plus 1 additional round for every degree of failure."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Hallucinogenic
 type: attackSpecial
 ---
@@ -194,7 +194,7 @@ data:
         \ the old one if higher."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Haywire
 type: attackSpecial
 ---
@@ -204,7 +204,7 @@ data:
         from the Aim action when attacking with a weapon with this quality.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Inaccurate
 type: attackSpecial
 ---
@@ -229,7 +229,7 @@ data:
         \ (X)."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Indirect
 type: attackSpecial
 ---
@@ -243,7 +243,7 @@ data:
         \ 3x5=15), the total penetration for the attack would be 20."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Lance
 type: attackSpecial
 ---
@@ -258,7 +258,7 @@ data:
         quality.'
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Maximal
 type: attackSpecial
 ---
@@ -268,7 +268,7 @@ data:
         firing at Short range or closer.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Melta
 type: attackSpecial
 ---
@@ -286,7 +286,7 @@ data:
         \ causes the weapon to overheat."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Overheats
 type: attackSpecial
 ---
@@ -298,7 +298,7 @@ data:
         \ the Warp Weapon or Force quality, and Natural Weapons, are immune to this effect."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Power Field
 type: attackSpecial
 ---
@@ -311,7 +311,7 @@ data:
         on a damage roll of 10.
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Primitive
 type: attackSpecial
 ---
@@ -322,7 +322,7 @@ data:
         1 or 2 as a 3 for the purposes of calculating damage.
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Proven
 type: attackSpecial
 ---
@@ -333,7 +333,7 @@ data:
         \ is doubled when resolving any hits from that attack."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Razor Sharp
 type: attackSpecial
 ---
@@ -344,7 +344,7 @@ data:
         end of the next round (in effect, it can only be used once every other round).
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Recharge
 type: attackSpecial
 ---
@@ -355,7 +355,7 @@ data:
         rolls, never jam.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Reliable
 type: attackSpecial
 ---
@@ -365,7 +365,7 @@ data:
         some terrible Daemons and other denizens of the Warp.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Sanctified
 type: attackSpecial
 ---
@@ -377,7 +377,7 @@ data:
         \ -3 damage."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Scatter
 type: attackSpecial
 ---
@@ -389,7 +389,7 @@ data:
         for a number of rounds equal to half of his degrees of failure (rounding up).
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Shocking
 type: attackSpecial
 ---
@@ -401,7 +401,7 @@ data:
         adverse weather conditions.
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Smoke
 type: attackSpecial
 ---
@@ -417,7 +417,7 @@ data:
         \ free or wriggles out. The target is considered Helpless until he escapes."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Snare
 type: attackSpecial
 ---
@@ -437,7 +437,7 @@ data:
         \ they cannot be used to make Called Shot actions."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Spray
 type: attackSpecial
 ---
@@ -450,7 +450,7 @@ data:
         s firing rate, as normal)."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Storm
 type: attackSpecial
 ---
@@ -460,7 +460,7 @@ data:
         one extra die for damage, and the lowest result is discarded.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Tearing
 type: attackSpecial
 ---
@@ -476,7 +476,7 @@ data:
         \ with their toxins or inflict more damage, as indicated in their individual descriptions."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Toxic
 type: attackSpecial
 ---
@@ -489,7 +489,7 @@ data:
         \ When emptied, the weapon's reload time is doubled."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Twin-Linked
 type: attackSpecial
 ---
@@ -500,7 +500,7 @@ data:
         \ used to Parry."
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Unbalanced
 type: attackSpecial
 ---
@@ -511,7 +511,7 @@ data:
         suffers a jam on a roll of 91 or higher, even if fired on Semi- or Full Auto.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Unreliable
 type: attackSpecial
 ---
@@ -520,7 +520,7 @@ data:
         with finesse. They cannot be used to Parry or make Lightning Attack actions.
     hasLevel: false
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Unwieldy
 type: attackSpecial
 ---
@@ -531,6 +531,6 @@ data:
         \ value of X or higher (before any modifiers are applied)."
     hasLevel: true
     level: 0
-img: systems/dark-heresy-2nd/icons/talents/red/r_01.png
+img: systems/rogue-trader/icons/talents/red/r_01.png
 name: Vengeful
 type: attackSpecial

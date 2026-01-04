@@ -8,15 +8,15 @@ import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
-import { DarkHeresyBaseActor } from './base-actor.mjs';
+import { RogueTraderBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
 import { prepareForceFieldRoll } from '../prompts/force-field-prompt.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
-import { DarkHeresySettings } from '../dark-heresy-settings.mjs';
+import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 
-export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
+export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
     get backpack() {
         return this.system.backpack;
@@ -133,7 +133,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
     }
 
     async rollItem(itemId) {
-        game.dh.log('RollItem', itemId);
+        game.rt.log('RollItem', itemId);
         const item = this.items.get(itemId);
         switch (item.type) {
             case 'weapon':
@@ -141,7 +141,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
                     ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
-                if(game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.simpleAttackRolls)) {
+                if(game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
                     if(item.isRanged) {
                         await this.rollCharacteristic('ballisticSkill', item.name);
                     } else {
@@ -152,7 +152,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
                 }
                 return;
             case 'psychicPower':
-                if(game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.simplePsychicRolls)) {
+                if(game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower',  item.name)
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
@@ -558,7 +558,7 @@ export class DarkHeresyAcolyte extends DarkHeresyBaseActor {
     async rollCharacteristicCheck(characteristic) {
         const char = this.getCharacteristicFuzzy(characteristic);
         if(!char) {
-            game.dh.error('Unable to perform characteristic test. Could now find provided characteristic.', char);
+            game.rt.error('Unable to perform characteristic test. Could now find provided characteristic.', char);
             return null;
         }
         return await this.rollCheck(char.total);

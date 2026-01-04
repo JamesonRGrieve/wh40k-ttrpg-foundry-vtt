@@ -1,7 +1,7 @@
-import { DarkHeresyBaseActor } from './base-actor.mjs';
+import { RogueTraderBaseActor } from './base-actor.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 
-export class DarkHeresyVehicle extends DarkHeresyBaseActor {
+export class RogueTraderVehicle extends RogueTraderBaseActor {
 
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
@@ -67,7 +67,7 @@ export class DarkHeresyVehicle extends DarkHeresyBaseActor {
             return;
         }
 
-        game.dh.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
+        game.rt.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
         switch (item.type) {
             case 'weapon':
                 await DHTargetedActionManager.performWeaponAttack(character, null, item);

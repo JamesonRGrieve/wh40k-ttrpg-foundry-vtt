@@ -1,5 +1,5 @@
-export { DarkHeresyBaseActor } from "./base-actor.mjs";
-export { DarkHeresyAcolyte } from "./acolyte.mjs";
-export { DarkHeresyNPC } from "./npc.mjs";
-export { DarkHeresyVehicle } from "./vehicle.mjs";
-
+export { RogueTraderBaseActor } from "./base-actor.mjs";
+export { RogueTraderAcolyte } from "./acolyte.mjs";
+export { RogueTraderNPC } from "./npc.mjs";
+export { RogueTraderVehicle } from "./vehicle.mjs";
+export { RogueTraderCharacter } from "./rogue-trader-character.mjs";

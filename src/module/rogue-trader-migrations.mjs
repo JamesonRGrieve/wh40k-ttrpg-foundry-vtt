@@ -1,10 +1,10 @@
-import { DarkHeresySettings } from './dark-heresy-settings.mjs';
+import { RogueTraderSettings } from './rogue-trader-settings.mjs';
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
 export async function checkAndMigrateWorld() {
     const worldVersion = 181;
 
-    const currentVersion = game.settings.get(SYSTEM_ID, DarkHeresySettings.SETTINGS.worldVersion);
+    const currentVersion = game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion);
     if (worldVersion !== currentVersion && game.user.isGM) {
         ui.notifications.info('Upgrading the world, please wait...');
 
@@ -32,7 +32,7 @@ export async function checkAndMigrateWorld() {
         // Display Release Notes
         await displayReleaseNotes(worldVersion);
 
-        game.settings.set(SYSTEM_ID, DarkHeresySettings.SETTINGS.worldVersion, worldVersion);
+        game.settings.set(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion, worldVersion);
         ui.notifications.info('Upgrade complete!');
     }
 
@@ -158,7 +158,7 @@ export async function checkAndMigrateWorld() {
     }
 
     async function releaseNotes(data) {
-        const html = await renderTemplate('systems/dark-heresy-2nd/templates/prompt/release-notes-prompt.hbs', data);
+        const html = await renderTemplate('systems/rogue-trader/templates/prompt/release-notes-prompt.hbs', data);
         let dialog = new Dialog(
             {
                 title: 'Release Notes',

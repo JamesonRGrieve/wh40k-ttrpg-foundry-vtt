@@ -20,7 +20,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Aura of Fear
 type: psychicPower
 ---
@@ -50,7 +50,7 @@ system:
         isOpposed: true
         opposedBonus: 10
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Deja Vu
 type: psychicPower
 ---
@@ -81,7 +81,7 @@ system:
         bonus: -10
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Foretelling
 type: psychicPower
 ---
@@ -112,7 +112,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Ignite
 type: psychicPower
 ---
@@ -145,7 +145,7 @@ system:
         isOpposed: true
         useOpposedSkill: true
         opposedSkill: logic
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Ill Omen
 type: psychicPower
 ---
@@ -175,7 +175,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Impel
 type: psychicPower
 ---
@@ -203,7 +203,7 @@ system:
         bonus: 0
         useSkill: true
         skill: awareness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Luck
 type: psychicPower
 ---
@@ -234,7 +234,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Suggestion
 type: psychicPower
 ---
@@ -261,7 +261,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Summon Vermin
 type: psychicPower
 ---
@@ -289,7 +289,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Weapon Jinx
 type: psychicPower
 ---
@@ -325,7 +325,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Word of Beasts
 type: psychicPower
 ---
@@ -352,7 +352,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Call Item
 type: psychicPower
 ---
@@ -375,7 +375,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Staunch Bleeding
 type: psychicPower
 ---
@@ -396,7 +396,7 @@ system:
     penetration: 0
     prerequisite: T 35, Smite
     range: 20*@pr
-    source: DH2 200
+    source: RT 200
     special: {}
     action: Half Action
     subtype: 'Attack, Concentration'
@@ -406,7 +406,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: toughness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Enfeeble
 type: psychicPower
 ---
@@ -424,7 +424,7 @@ system:
     penetration: 0
     prerequisite: T 30, Shape Flesh
     range: 3*@pr
-    source: DH2 200
+    source: RT 200
     special: {}
     action: Half Action
     subtype: Concentration
@@ -432,7 +432,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Endurance
 type: psychicPower
 ---
@@ -453,7 +453,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 4, Life Leech
     range: 10*@pr
-    source: DH2 200
+    source: RT 200
     special: {}
     action: Half Action
     subtype: 'Attack, Concentration'
@@ -463,7 +463,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: toughness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Haemorrhage
 type: psychicPower
 ---
@@ -482,7 +482,7 @@ system:
     penetration: 0
     prerequisite: T 30
     range: '1'
-    source: DH2 200
+    source: RT 200
     special: {}
     action: Half Action
     subtype: Concentration
@@ -490,7 +490,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Invigourate
 type: psychicPower
 ---
@@ -508,7 +508,7 @@ system:
     penetration: 0
     prerequisite: Str 35, T 35, Shape Flesh
     range: 0
-    source: DH2 200
+    source: RT 200
     special: {}
     action: Half Action
     subtype: Concentration
@@ -516,7 +516,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Iron Arm
 type: psychicPower
 ---
@@ -536,7 +536,7 @@ system:
     penetration: 0
     prerequisite: T 40, Enfeeble
     range: 10*@pr
-    source: DH2 201
+    source: RT 201
     special: {}
     action: Full Action
     subtype: 'Attack, Concentration'
@@ -546,7 +546,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: toughness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Life Leech
 type: psychicPower
 ---
@@ -577,7 +577,7 @@ system:
     penetration: 0
     prerequisite: Per 35, T 30, Smite
     range: '1'
-    source: DH2 202
+    source: RT 202
     special: {}
     action: Full Action
     subtype: Concentration
@@ -585,7 +585,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Shape Flesh
 type: psychicPower
 ---
@@ -603,7 +603,7 @@ system:
     penetration: 4
     prerequisite: WP 40, Invigourate
     range: 20*@pr
-    source: DH2 202
+    source: RT 202
     special: {}
     action: Half Action
     subtype: 'Attack, Concentration'
@@ -611,7 +611,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Smite
 type: psychicPower
 ---
@@ -627,7 +627,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 5, Iron Arm OR Endurace
     range: 0
-    source: DH2 202
+    source: RT 202
     special: {}
     action: Half Action
     subtype: Concentration
@@ -635,7 +635,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Warp Speed
 type: psychicPower
 ---
@@ -663,7 +663,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Bio-Lightning
 type: psychicPower
 ---
@@ -696,7 +696,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Regeneration
 type: psychicPower
 ---
@@ -732,7 +732,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: toughness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Blood Boil
 type: psychicPower
 ---
@@ -773,7 +773,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Sharpened Senses
 type: psychicPower
 ---
@@ -791,7 +791,7 @@ system:
     penetration: 0
     prerequisite: Psyniscience rank 1, Warp Perception
     range: 0
-    source: DH2 203
+    source: RT 203
     special: {}
     action: Free Action
     subtype: Concentration
@@ -799,7 +799,7 @@ system:
     target:
         bonus: -10
         characteristic: perception
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Foreboding
 type: psychicPower
 ---
@@ -817,7 +817,7 @@ system:
     penetration: 0
     prerequisite: Per 50, Foreboding
     range: 3*@pr
-    source: DH2 203
+    source: RT 203
     special: {}
     action: Half Action
     subtype: Concentration
@@ -825,7 +825,7 @@ system:
     target:
         bonus: 0
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Forewarning
 type: psychicPower
 ---
@@ -844,7 +844,7 @@ system:
     penetration: 0
     prerequisite: WP 45, Foreboding
     range: 20*@pr
-    source: DH2 203
+    source: RT 203
     special: {}
     action: Half Action
     subtype: 'Attack, Concentration'
@@ -854,7 +854,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Misfortune
 type: psychicPower
 ---
@@ -873,7 +873,7 @@ system:
     penetration: 0
     prerequisite: Per 55, Forewarning
     range: 3*@pr
-    source: DH2 203
+    source: RT 203
     special: {}
     action: Half Action
     subtype: Concentration
@@ -882,7 +882,7 @@ system:
         bonus: -10
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Perfect Timing
 type: psychicPower
 ---
@@ -902,7 +902,7 @@ system:
     penetration: 0
     prerequisite: Per 45, WP 45, Scrier's Gaze
     range: 5*@pr
-    source: DH2 203
+    source: RT 203
     special: {}
     action: Full Action
     subtype: Concentration
@@ -911,7 +911,7 @@ system:
         bonus: -20
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Precognition
 type: psychicPower
 ---
@@ -928,7 +928,7 @@ system:
     penetration: 0
     prerequisite: Psyniscience Rank 1, Warp Perception
     range: 3*@pr
-    source: DH2 204
+    source: RT 204
     special: {}
     action: Half Action
     subtype: Concentration
@@ -937,7 +937,7 @@ system:
         bonus: 0
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Prescience
 type: psychicPower
 ---
@@ -968,7 +968,7 @@ system:
     penetration: 0
     prerequisite: Psyniscience rank 2, Prescience
     range: 0
-    source: DH2 204
+    source: RT 204
     special: {}
     action: Special
     subtype: Concentration
@@ -977,7 +977,7 @@ system:
         bonus: 0
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Scrier's Gaze
 type: psychicPower
 ---
@@ -992,7 +992,7 @@ system:
     penetration: 0
     prerequisite: WP 35
     range: 0
-    source: DH2 204
+    source: RT 204
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1001,7 +1001,7 @@ system:
         bonus: 0
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Warp Perception
 type: psychicPower
 ---
@@ -1017,7 +1017,7 @@ system:
     penetration: 0
     prerequisite: Per 50, Scrier's Gaze
     range: 0
-    source: DH2 205
+    source: RT 205
     special: {}
     action: Full Action
     subtype: Concentration
@@ -1026,7 +1026,7 @@ system:
         bonus: -10
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Winding Fate
 type: psychicPower
 ---
@@ -1053,7 +1053,7 @@ system:
         bonus: -10
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: The Action Again
 type: psychicPower
 ---
@@ -1079,7 +1079,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: In Harms Way
 type: psychicPower
 ---
@@ -1105,7 +1105,7 @@ system:
         bonus: 0
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Foreshadow
 type: psychicPower
 ---
@@ -1134,7 +1134,7 @@ system:
         bonus: 0
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Precognitive Dodge
 type: psychicPower
 ---
@@ -1163,7 +1163,7 @@ system:
         bonus: 0
         useSkill: true
         skill: psyniscience
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Preternatural Awareness
 type: psychicPower
 ---
@@ -1180,7 +1180,7 @@ system:
     penetration: 0
     prerequisite: WP 45, Fire Shield
     range: '1'
-    source: DH2 206
+    source: RT 206
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1188,7 +1188,7 @@ system:
     target:
         bonus: 20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Cauterise
 type: psychicPower
 ---
@@ -1203,7 +1203,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 3, Spontanous Combustion
     range: 20*@pr
-    source: DH2 206
+    source: RT 206
     special:
         flame: true
     action: Half Action
@@ -1212,7 +1212,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Flame Breath
 type: psychicPower
 ---
@@ -1231,7 +1231,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 4, Fire Shield
     range: 0
-    source: DH2 206
+    source: RT 206
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1239,7 +1239,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Fiery Form
 type: psychicPower
 ---
@@ -1257,7 +1257,7 @@ system:
     penetration: 0
     prerequisite: Ag 40, Manipulate Flame
     range: 20*@pr
-    source: DH2 206
+    source: RT 206
     special:
         flame: true
     action: Half Action
@@ -1266,7 +1266,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Fire Shield
 type: psychicPower
 ---
@@ -1281,7 +1281,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 5, Molten Beam OR Sunburst
     range: 10*@pr
-    source: DH2 207
+    source: RT 207
     special:
         blast: '@pr'
         flame: true
@@ -1291,7 +1291,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Inferno
 type: psychicPower
 ---
@@ -1309,7 +1309,7 @@ system:
     penetration: 0
     prerequisite: WP 35
     range: 10*@pr
-    source: DH2 208
+    source: RT 208
     special: {}
     action: Half Action
     subtype: Attack
@@ -1317,7 +1317,7 @@ system:
     target:
         bonus: 20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Manipulate Flame
 type: psychicPower
 ---
@@ -1332,7 +1332,7 @@ system:
     penetration: '2*@pr'
     prerequisite: Psy rating 4, Spontaneous Combustion
     range: 5*@pr
-    source: DH2 208
+    source: RT 208
     special:
         melta: true
     action: Half Action
@@ -1341,7 +1341,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Molten Beam
 type: psychicPower
 ---
@@ -1356,7 +1356,7 @@ system:
     penetration: 0
     prerequisite: WP 40, Manipulate Flame
     range: 20*@pr
-    source: DH2 208
+    source: RT 208
     special:
         flame: true
     action: Half Action
@@ -1365,7 +1365,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Spontaneous Combustion
 type: psychicPower
 ---
@@ -1380,7 +1380,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 4, Flame Breath
     range: 20*@pr
-    source: DH2 208
+    source: RT 208
     special:
         flame: true
     action: Half Action
@@ -1389,7 +1389,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Sunburst
 type: psychicPower
 ---
@@ -1419,7 +1419,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Wall of FIre
 type: psychicPower
 ---
@@ -1449,7 +1449,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Incinerate
 type: psychicPower
 ---
@@ -1467,7 +1467,7 @@ system:
     penetration: 2
     prerequisite: WP 40, Telekinetic Control
     range: 20*@pr
-    source: DH2 209
+    source: RT 209
     special: {}
     action: Half Action
     subtype: 'Attack, Concentration'
@@ -1475,7 +1475,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Assail
 type: psychicPower
 ---
@@ -1492,7 +1492,7 @@ system:
     penetration: 2
     prerequisite: WP 45, Assail
     range: 10*@pr
-    source: DH2 209
+    source: RT 209
     special:
         snare: '@pr/2'
     action: Half Action
@@ -1503,7 +1503,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: toughness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Crush
 type: psychicPower
 ---
@@ -1527,7 +1527,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 5, Telekine Dome
     range: 1k*@pr
-    source: DH2 209
+    source: RT 209
     special: {}
     action: 3 Full Actions
     subtype: Concentration
@@ -1535,7 +1535,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Gate of Infinity
 type: psychicPower
 ---
@@ -1552,7 +1552,7 @@ system:
     penetration: 0
     prerequisite: Int 40, Crush
     range: 10*@pr
-    source: DH2 209
+    source: RT 209
     special:
         haywire: '@pr'
     action: Half Action
@@ -1561,7 +1561,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Objuration Mechanicum
 type: psychicPower
 ---
@@ -1578,7 +1578,7 @@ system:
     penetration: 0
     prerequisite: WP 50, Crush
     range: 0
-    source: DH2 210
+    source: RT 210
     special:
         blast: '@pr'
     action: Half Action
@@ -1587,7 +1587,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Shockwave
 type: psychicPower
 ---
@@ -1607,7 +1607,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 4, Telekine Shield
     range: 5*@pr
-    source: DH2 211
+    source: RT 211
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1615,7 +1615,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Telekine Dome
 type: psychicPower
 ---
@@ -1634,7 +1634,7 @@ system:
     penetration: 0
     prerequisite: Int 40, Assail
     range: 0
-    source: DH2 211
+    source: RT 211
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1642,7 +1642,7 @@ system:
     target:
         bonus: 20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Telekine Shield
 type: psychicPower
 ---
@@ -1660,7 +1660,7 @@ system:
     penetration: 0
     prerequisite: WP 35
     range: 10*@pr
-    source: DH2 211
+    source: RT 211
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1668,7 +1668,7 @@ system:
     target:
         bonus: 20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Telekinetic Control
 type: psychicPower
 ---
@@ -1703,7 +1703,7 @@ system:
     penetration: 0
     prerequisite: Psy rating 5, Shockwave OR Telekine Dome
     range: 5*@pr
-    source: DH2 211
+    source: RT 211
     special:
         blast: 2
     action: Half Action
@@ -1712,7 +1712,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Vortex of Doom
 type: psychicPower
 ---
@@ -1741,7 +1741,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Death Grip
 type: psychicPower
 ---
@@ -1768,7 +1768,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Psycho-Kinetic Shield
 type: psychicPower
 ---
@@ -1801,7 +1801,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Precision Telekinesis
 type: psychicPower
 ---
@@ -1832,7 +1832,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Telekinetic Weapon
 type: psychicPower
 ---
@@ -1857,7 +1857,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Storm of Force
 type: psychicPower
 ---
@@ -1888,7 +1888,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Force Shards
 type: psychicPower
 ---
@@ -1908,7 +1908,7 @@ system:
     penetration: 0
     prerequisite: WP 40, Erasure
     range: 5*@pr
-    source: DH2 212
+    source: RT 212
     special: {}
     action: Full Action
     subtype: Concentration
@@ -1918,7 +1918,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Dominate
 type: psychicPower
 ---
@@ -1938,7 +1938,7 @@ system:
     penetration: 0
     prerequisite: Fel 40, Telepathic Link
     range: 5*@pr
-    source: DH2 212
+    source: RT 212
     special: {}
     action: Full Action
     subtype: Concentration
@@ -1948,7 +1948,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Erasure
 type: psychicPower
 ---
@@ -1966,7 +1966,7 @@ system:
     penetration: 0
     prerequisite: Fel 40, Telepathic Link
     range: 10*@pr
-    source: DH2 212
+    source: RT 212
     special: {}
     action: Half Action
     subtype: Concentration
@@ -1976,7 +1976,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Hallucination
 type: psychicPower
 ---
@@ -1996,7 +1996,7 @@ system:
     penetration: 0
     prerequisite: Ag 30, psy rating 4, Terrify
     range: 10*@pr
-    source: DH2 212
+    source: RT 212
     special: {}
     action: Half Action
     subtype: Concentration
@@ -2004,7 +2004,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Invisibility
 type: psychicPower
 ---
@@ -2021,7 +2021,7 @@ system:
     penetration: 0
     prerequisite: Adamantium Faith, Dominate OR Terrify
     range: 3*@pr
-    source: DH2 212
+    source: RT 212
     special: {}
     action: Half Action
     subtype: Concentration
@@ -2029,7 +2029,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Mental Fortitude
 type: psychicPower
 ---
@@ -2044,7 +2044,7 @@ system:
     penetration: '0'
     prerequisite: Psy rating 3, Hallucination
     range: 10*@pr
-    source: DH2 213
+    source: RT 213
     special:
         concussive: '@pr/2'
     action: Half Action
@@ -2053,7 +2053,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Psychic Shriek
 type: psychicPower
 ---
@@ -2076,7 +2076,7 @@ system:
     penetration: 0
     prerequisite: Fellowship 55, Dominate OR Terrify
     range: 10*@pr
-    source: DH2 214
+    source: RT 214
     special: {}
     action: Full Action
     subtype: Concentration
@@ -2086,7 +2086,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Puppet Master
 type: psychicPower
 ---
@@ -2111,7 +2111,7 @@ system:
     penetration: 0
     prerequisite: WP 35
     range: 20*@pr
-    source: DH2 214
+    source: RT 214
     special: {}
     action: Half Action
     subtype: Concentration
@@ -2121,7 +2121,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Telepathic Link
 type: psychicPower
 ---
@@ -2143,7 +2143,7 @@ system:
     penetration: 0
     prerequisite: Fel 45, Hallucination
     range: 10*@pr
-    source: DH2 214
+    source: RT 214
     special: {}
     action: Half Action
     subtype: Concentration
@@ -2153,7 +2153,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Terrify
 type: psychicPower
 ---
@@ -2180,7 +2180,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Chaos Mind
 type: psychicPower
 ---
@@ -2205,7 +2205,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Mental Alacrity
 type: psychicPower
 ---
@@ -2239,7 +2239,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Beastmaster
 type: psychicPower
 ---
@@ -2267,7 +2267,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Banishment
 type: psychicPower
 ---
@@ -2294,7 +2294,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Cleansing Flame
 type: psychicPower
 ---
@@ -2322,7 +2322,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Exorcism
 type: psychicPower
 ---
@@ -2348,7 +2348,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Hammerhand
 type: psychicPower
 ---
@@ -2377,7 +2377,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Holocaust
 type: psychicPower
 ---
@@ -2402,7 +2402,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Psychic Communion
 type: psychicPower
 ---
@@ -2430,7 +2430,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Purge Soul
 type: psychicPower
 ---
@@ -2457,7 +2457,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Sanctuary
 type: psychicPower
 ---
@@ -2482,7 +2482,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Word of the Emperor
 type: psychicPower
 ---
@@ -2498,7 +2498,7 @@ system:
         the value of their Daemonic trait by [[@pr/2]] and receive a bonus of [[5*@pr]]
         rating to Warp Instability tests. In addition, psychic powers used within
         the affected area add +10 to Focus Power tests and rolls on Table 62: Psychic
-        Phenomena (see page 196 of the Dark Heresy Core Rulebook). Those in the presence
+        Phenomena (see page 196 of the Rogue Trader Core Rulebook). Those in the presence
         of the Cursed Earth may experience disturbing Warp phenomena at the GMs discretion
         (see Table 32: Warp Phenomena on page 137).'
     penetration: 0
@@ -2512,7 +2512,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Cursed Earth
 type: psychicPower
 ---
@@ -2539,7 +2539,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Dark Flame
 type: psychicPower
 ---
@@ -2567,7 +2567,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Infernal Gaze
 type: psychicPower
 ---
@@ -2591,7 +2591,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Incursion
 type: psychicPower
 ---
@@ -2606,7 +2606,7 @@ system:
         Strength ([[@pr/2]]) traits, as well as the Deadly
         Natural Weapons trait. In addition, the psyker must succeed at a Challenging (+0)
         Willpower test each round the power is sustained or enter a Frenzied state per
-        the Frenzy talent (see page 127 of the Dark Heresy Core Rulebook). While Frenzied,
+        the Frenzy talent (see page 127 of the Rogue Trader Core Rulebook). While Frenzied,
         the psyker must continue to sustain the power (in a special exception to the prohibition
         on using psychic powers while Frenzied). Psychic Phenomena: A result of Psychic
         Phenomena when using this power means that a more powerful Daemon, as chosen by
@@ -2623,7 +2623,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Possession
 type: psychicPower
 ---
@@ -2650,7 +2650,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Sacrifice
 type: psychicPower
 ---
@@ -2674,7 +2674,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Summoning
 type: psychicPower
 ---
@@ -2704,7 +2704,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Astral Telepathy
 type: psychicPower
 ---
@@ -2736,7 +2736,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Telepathic Bond
 type: psychicPower
 ---
@@ -2772,7 +2772,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Mind Scan
 type: psychicPower
 ---
@@ -2798,7 +2798,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Thought Shield
 type: psychicPower
 ---
@@ -2821,7 +2821,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Time Shift
 type: psychicPower
 ---
@@ -2847,7 +2847,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: toughness
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Temporal Stasis
 type: psychicPower
 ---
@@ -2871,7 +2871,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Chronological Removal
 type: psychicPower
 ---
@@ -2895,7 +2895,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Stop Time
 type: psychicPower
 ---
@@ -2918,7 +2918,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Slow Time
 type: psychicPower
 ---
@@ -2944,7 +2944,7 @@ system:
     target:
         bonus: -20
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Chrono Shield
 type: psychicPower
 ---
@@ -2968,7 +2968,7 @@ system:
     target:
         bonus: 10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Chrono Shift
 type: psychicPower
 ---
@@ -2994,7 +2994,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Time Warp
 type: psychicPower
 ---
@@ -3018,7 +3018,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Temporal Crush
 type: psychicPower
 ---
@@ -3042,7 +3042,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Chronosphere
 type: psychicPower
 ---
@@ -3076,7 +3076,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: The Voids Touch
 type: psychicPower
 ---
@@ -3101,7 +3101,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Breathstealing Barrage
 type: psychicPower
 ---
@@ -3126,7 +3126,7 @@ system:
     target:
         bonus: -10
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Freeze the Soul
 type: psychicPower
 ---
@@ -3162,7 +3162,7 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Embrace of Emptiness
 type: psychicPower
 ---
@@ -3197,7 +3197,7 @@ system:
         characteristic: willpower
         isOpposed: true
         opposed: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Black Sleep
 type: psychicPower
 ---
@@ -3229,6 +3229,6 @@ system:
     target:
         bonus: 0
         characteristic: willpower
-img: systems/dark-heresy-2nd/icons/psykana/beam-blue-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-blue-1.jpg
 name: Void Substantiation
 type: psychicPower

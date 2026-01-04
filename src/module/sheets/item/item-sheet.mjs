@@ -1,6 +1,6 @@
 import { toggleUIExpanded } from '../../rules/config.mjs';
 
-export class DarkHeresyItemSheet extends ItemSheet {
+export class RogueTraderItemSheet extends ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 650,
@@ -10,13 +10,13 @@ export class DarkHeresyItemSheet extends ItemSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/item/item-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-sheet.hbs`;
     }
 
     getData() {
         const context = super.getData();
         context.flags = context.item.flags;
-        context.dh = CONFIG.dh;
+        context.dh = CONFIG.rt;
         context.effects = this.item.getEmbeddedCollection('ActiveEffect').contents;
         return context;
     }

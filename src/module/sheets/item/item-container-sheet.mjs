@@ -2,13 +2,13 @@
  * An item sheet that can accept other items within it --
  * e.g. weapons with associated weapon mods
  */
-import { DarkHeresyItemSheet } from './item-sheet.mjs';
+import { RogueTraderItemSheet } from './item-sheet.mjs';
 
-export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
+export class RogueTraderItemContainerSheet extends RogueTraderItemSheet {
     getData() {
         const context = super.getData();
         if (!context.item.system.container) {
-            game.dh.warn('Unexpected Sheet Type: Item has container sheet but is not container?', context);
+            game.rt.warn('Unexpected Sheet Type: Item has container sheet but is not container?', context);
             this.options.editable = false;
             return context;
         }
@@ -45,10 +45,10 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
         try {
             data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type !== 'Item') {
-                game.dh.log('ItemCollection | Containers only accept items', data);
+                game.rt.log('ItemCollection | Containers only accept items', data);
                 return false;
             } else {
-                game.dh.log('_onDrop data: ', data);
+                game.rt.log('_onDrop data: ', data);
                 item = fromUuidSync(data.uuid)
 
                 if (data.actor) {
@@ -59,12 +59,12 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
 
                 // Check if Item already Exists
                 if (this.item.items.find((i) => i._id === item._id)) {
-                    game.dh.log('Item already exists in container -- ignoring');
+                    game.rt.log('Item already exists in container -- ignoring');
                     return false;
                 }
             }
         } catch (err) {
-            game.dh.log('Item Container | drop error', err);
+            game.rt.log('Item Container | drop error', err);
             return false;
         }
 
@@ -80,7 +80,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
                 parent = parent.parent;
             }
             if (!canAdd) {
-                game.dh.log('ItemCollection | Cant drop on yourself');
+                game.rt.log('ItemCollection | Cant drop on yourself');
                 ui.notifications.info('Cannot drop item into itself');
                 throw new Error('Dragging bag onto itself or ancestor opens a planar vortex and you are sucked into it');
             }
@@ -151,11 +151,11 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
 
     async _onItemDragStart(event) {
         event.stopPropagation();
-        game.dh.log('Item:_onItemDragStart', event);
+        game.rt.log('Item:_onItemDragStart', event);
 
         const element = event.currentTarget;
         if (!element.dataset?.itemId) {
-            game.dh.log('No Item Id - Cancelling Drag');
+            game.rt.log('No Item Id - Cancelling Drag');
             return;
         }
 
@@ -163,7 +163,7 @@ export class DarkHeresyItemContainerSheet extends DarkHeresyItemSheet {
         let item = this.item.items.get(itemId);
         if (!item) {
             // Cannot find item on container? Just let foundry handle it...
-            game.dh.log('Default Foundry Handler');
+            game.rt.log('Default Foundry Handler');
             return super._onDragStart(event);
         }
 

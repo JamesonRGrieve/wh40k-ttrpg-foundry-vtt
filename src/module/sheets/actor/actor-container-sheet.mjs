@@ -43,22 +43,22 @@ export class ActorContainerSheet extends ActorSheet {
     _onDrop(event) {
         event.preventDefault();
         event.stopPropagation();
-        game.dh.log('Actor _onDrop', event);
+        game.rt.log('Actor _onDrop', event);
 
         try {
             const data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type === 'Item' || data.type === 'item') {
-                game.dh.log('Checking if item already exists', data);
+                game.rt.log('Checking if item already exists', data);
                 // Check if Item already Exists
                 if (this.actor.items.find((i) => i._id === data?.data?._id)) {
-                    game.dh.log('Item already exists on Actor -- ignoring');
+                    game.rt.log('Item already exists on Actor -- ignoring');
                     return false;
                 } else {
                     return super._onDrop(event);
                 }
             }
         } catch (err) {
-            game.dh.log('Actor Container | drop error', err);
+            game.rt.log('Actor Container | drop error', err);
             return false;
         }
     }
@@ -149,11 +149,11 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onItemDragStart(event) {
         event.stopPropagation();
-        game.dh.log('Actor:_onItemDragStart', event);
+        game.rt.log('Actor:_onItemDragStart', event);
 
         const element = event.currentTarget;
         if (!element.dataset?.itemId) {
-            game.dh.warn('No Item Id - Cancelling Drag');
+            game.rt.warn('No Item Id - Cancelling Drag');
             return;
         }
 
@@ -161,7 +161,7 @@ export class ActorContainerSheet extends ActorSheet {
         const item = this.actor.items.get(itemId);
         if (!item) {
             // Cannot find item on actor? Just let foundry handle it...
-            game.dh.log('Default Foundry Handler');
+            game.rt.log('Default Foundry Handler');
             return super._onDragStart(event);
         }
 
@@ -190,10 +190,10 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onActorDragStart(event) {
         event.stopPropagation();
-        game.dh.log('_onActorDragStart', event);
+        game.rt.log('_onActorDragStart', event);
         const element = event.currentTarget;
         if (!element.dataset?.itemType) {
-            game.dh.warn('No Drag Type - Cancelling Drag');
+            game.rt.warn('No Drag Type - Cancelling Drag');
             return;
         }
 
@@ -234,7 +234,7 @@ export class ActorContainerSheet extends ActorSheet {
                 return;
             default:
                 // Let default Foundry handler deal with default drag cases.
-                game.dh.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
+                game.rt.warn('No handler for drag type: ' + dragType + ' Using default foundry handler.');
                 return super._onDragStart(event);
         }
     }

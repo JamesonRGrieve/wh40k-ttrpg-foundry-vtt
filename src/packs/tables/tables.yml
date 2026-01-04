@@ -1,6 +1,6 @@
 ---
 name: Psychic Phenomena
-img: systems/dark-heresy-2nd/icons/psykana/beam-acid-1.jpg
+img: systems/rogue-trader/icons/psykana/beam-acid-1.jpg
 description: An unpredictable manifestation of the warp occurs.
 results:
   - type: 0
@@ -363,7 +363,7 @@ replacement: true
 displayRoll: true
 ---
 name: Perils of the Warp
-img: systems/dark-heresy-2nd/icons/psykana/beam-acid-3.jpg
+img: systems/rogue-trader/icons/psykana/beam-acid-3.jpg
 description: The warp convulses violently.
 results:
   - type: 0
@@ -664,7 +664,7 @@ replacement: true
 displayRoll: true
 ---
 name: Fear
-img: systems/dark-heresy-2nd/icons/talents/red/r_08.png
+img: systems/rogue-trader/icons/talents/red/r_08.png
 description: If a character fails a Fear test in a combat situation, he must immediately
   roll on this table adding +10 to the result for each degree of failure after the
   first.

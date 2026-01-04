@@ -1,6 +1,6 @@
-import { DarkHeresyItemContainerSheet } from './item-container-sheet.mjs';
+import { RogueTraderItemContainerSheet } from './item-container-sheet.mjs';
 
-export class DarkHeresyAmmoSheet extends DarkHeresyItemContainerSheet {
+export class RogueTraderAmmoSheet extends RogueTraderItemContainerSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 820,
@@ -10,7 +10,7 @@ export class DarkHeresyAmmoSheet extends DarkHeresyItemContainerSheet {
     }
 
     get template() {
-        return `systems/dark-heresy-2nd/templates/item/item-ammo-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-ammo-sheet.hbs`;
     }
 
     canAdd(itemData) {

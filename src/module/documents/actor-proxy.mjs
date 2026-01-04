@@ -1,16 +1,16 @@
-import { DarkHeresyAcolyte } from './acolyte.mjs';
-import { DarkHeresyVehicle } from './vehicle.mjs';
-import { DarkHeresyNPC } from './npc.mjs';
-import { DarkHeresyBaseActor } from './base-actor.mjs';
+import { RogueTraderAcolyte } from './acolyte.mjs';
+import { RogueTraderVehicle } from './vehicle.mjs';
+import { RogueTraderNPC } from './npc.mjs';
+import { RogueTraderBaseActor } from './base-actor.mjs';
 
 
 const actorHandler = {
     construct(_, args) {
       const type = args[0]?.type;
-      const cls = CONFIG.Actor.documentClasses[type] ?? DarkHeresyBaseActor;
+      const cls = CONFIG.Actor.documentClasses[type] ?? RogueTraderBaseActor;
       return new cls(...args);
     },
   };
   
-  export const DarkHeresyActorProxy = new Proxy(DarkHeresyBaseActor, actorHandler);
+  export const RogueTraderActorProxy = new Proxy(RogueTraderBaseActor, actorHandler);
   
