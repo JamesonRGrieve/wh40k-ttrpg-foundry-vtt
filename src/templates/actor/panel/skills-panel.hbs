@@ -1,34 +1,45 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-2">
+<div class="dh-panel dh-grid-col-3 dh-grid-row-2 rt-skills-panel">
     <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">Skills</h1>
-        <div class="table-row--head">
-            <div class="table-cell">Name</div>
-            <div class="table-cell">Char.</div>
-            <div class="table-cell">Training</div>
-            <div class="table-cell">Bonus</div>
-            <div class="table-cell--last">Total</div>
+        <h1 class="dh-panel__header">{{localize "RT.Skills.Header"}}</h1>
+        <div class="table-row--head rt-skills-header">
+            <div class="table-cell rt-skill-name">{{localize "RT.Skills.Skill"}}</div>
+            <div class="table-cell rt-skill-char">{{localize "RT.Skills.Characteristic"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Basic"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Trained"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus10"}}</div>
+            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Plus20"}}</div>
+            <div class="table-cell rt-skill-bonus">{{localize "RT.Skills.Bonus"}}</div>
+            <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
         </div>
         {{#each skillLists.standard as |entry|}}
-            <div class="table-row actor-drag" data-item-type="skill" data-item-id="{{entry.[0]}}">
-                <div class="table-cell">
-                    <button class="roll-skill" data-skill="{{entry.[0]}}" type="roll">{{entry.[1].label}}</button>
+            <div class="table-row actor-drag rt-skill-row" data-item-type="skill" data-item-id="{{entry.[0]}}">
+                <div class="table-cell rt-skill-name">
+                    <button class="roll-skill rt-skill-button" data-skill="{{entry.[0]}}" type="roll" title="{{localize 'RT.Skills.RollSkillTitle' entry.[1].label}}">
+                        <span class="material-icons">casino</span> {{entry.[1].label}}
+                    </button>
                 </div>
-                <div class="table-cell">
-                    <select name="system.skills.{{entry.[0]}}.characteristic">
+                <div class="table-cell rt-skill-char">
+                    <select name="system.skills.{{entry.[0]}}.characteristic" class="rt-char-select">
                         {{selectOptions ../skillCharacteristicOptions selected=entry.[1].characteristic}}
                     </select>
                 </div>
-                <div class="table-cell dh-skill-training">
-                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.basic" data-dtype="Boolean" {{checked entry.[1].basic}} />Basic</label>
-                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.trained" data-dtype="Boolean" {{checked entry.[1].trained}} />Trained</label>
-                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.plus10" data-dtype="Boolean" {{checked entry.[1].plus10}} />+10</label>
-                    <label><input type="checkbox" name="system.skills.{{entry.[0]}}.plus20" data-dtype="Boolean" {{checked entry.[1].plus20}} />+20</label>
+                <div class="table-cell rt-skill-training">
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.basic" data-dtype="Boolean" {{checked entry.[1].basic}} title="{{localize 'RT.Skills.Basic'}}" />
                 </div>
-                <div class="table-cell">
-                    <input type="number" data-dtype="Number" name="system.skills.{{entry.[0]}}.bonus" value="{{entry.[1].bonus}}" />
+                <div class="table-cell rt-skill-training">
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.trained" data-dtype="Boolean" {{checked entry.[1].trained}} title="{{localize 'RT.Skills.Trained'}}" />
                 </div>
-                <div class="table-cell--last table-cell--highlight">
-                    <span class="display">{{entry.[1].current}}</span>
+                <div class="table-cell rt-skill-training">
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus10" data-dtype="Boolean" {{checked entry.[1].plus10}} title="{{localize 'RT.Skills.Plus10'}}" />
+                </div>
+                <div class="table-cell rt-skill-training">
+                    <input type="checkbox" name="system.skills.{{entry.[0]}}.plus20" data-dtype="Boolean" {{checked entry.[1].plus20}} title="{{localize 'RT.Skills.Plus20'}}" />
+                </div>
+                <div class="table-cell rt-skill-bonus">
+                    <input type="number" data-dtype="Number" name="system.skills.{{entry.[0]}}.bonus" value="{{entry.[1].bonus}}" class="rt-bonus-input" />
+                </div>
+                <div class="table-cell--last table-cell--highlight rt-skill-total">
+                    <span class="display rt-total-value">{{entry.[1].current}}</span>
                 </div>
             </div>
         {{/each}}
