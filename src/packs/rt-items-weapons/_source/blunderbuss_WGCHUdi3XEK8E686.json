@@ -1,0 +1,28 @@
+{
+  "name": "Blunderbuss",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Primitive (8), Unreliable, Inaccurate",
+    "weight": "4kg",
+    "availability": "Plentiful",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Can use any musket ammo",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Unreliable, Inaccurate</p><p><b>Note:</b> Can use any musket ammo</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WGCHUdi3XEK8E686"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Disciplinarium",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "Captain can Sacrifice Crew Population to boost morale. When used, reduce crew population by 1 to increase morale by 2. Can be done once per day. No Poor Craftsmanship. Good provides +5 to all command tests on the vessel, Best also raises morale by 3 instead of 2. Only one per vessel.",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Captain can Sacrifice Crew Population to boost morale. When used, reduce crew population by 1 to increase morale by 2. Can be done once per day. No Poor Craftsmanship. Good provides +5 to all command tests on the vessel, Best also raises morale by 3 instead of 2. Only one per vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pX3S1eYYY2NiMYpq"
+}

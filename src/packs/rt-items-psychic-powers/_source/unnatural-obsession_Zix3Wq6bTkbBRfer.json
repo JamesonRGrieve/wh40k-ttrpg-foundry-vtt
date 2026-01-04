@@ -1,0 +1,22 @@
+{
+  "name": "Unnatural Obsession",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned, Psy Rating 3, Fellowship 40+",
+    "focusPower": "Half Action\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Corruption",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Target Individual opposes Focus Power Test with Willpower. If Psyker wins, target cannot attack psyker and suffers -10 Penalty to all Tests as a result of being distracted by the Psyker's Overwhelming greatness. The Target attacks anyone who obviously attempts to harm the Psyker, ignoring the -10 Penalty from this power when doing so. Otherwise, the target may act freely as long as the Psyker is not in danger.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Zix3Wq6bTkbBRfer"
+}

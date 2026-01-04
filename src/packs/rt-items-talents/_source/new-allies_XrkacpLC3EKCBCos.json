@@ -1,0 +1,17 @@
+{
+  "name": "New Allies",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Fellowship 30",
+    "effect": "The Explorer's \"For the Greater Good!\" and \"Classified Competency\" Traits, as well as any talent referencing Tau Characters, can be used with trusted allies of any race instead of only allied Tau.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The Explorer's \"For the Greater Good!\" and \"Classified Competency\" Traits, as well as any talent referencing Tau Characters, can be used with trusted allies of any race instead of only allied Tau.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XrkacpLC3EKCBCos"
+}

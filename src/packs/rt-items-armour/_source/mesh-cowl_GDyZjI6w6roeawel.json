@@ -1,0 +1,22 @@
+{
+  "name": "Mesh Cowl",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Mesh",
+    "locations": "Head",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "100 T",
+    "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GDyZjI6w6roeawel"
+}

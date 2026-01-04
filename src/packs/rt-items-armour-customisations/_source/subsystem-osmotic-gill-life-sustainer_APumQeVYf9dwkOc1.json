@@ -1,0 +1,18 @@
+{
+  "name": "Subsystem: Osmotic Gill Life Sustainer",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour, Legion/Astartes Power Armour",
+    "effect": "Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "APumQeVYf9dwkOc1"
+}

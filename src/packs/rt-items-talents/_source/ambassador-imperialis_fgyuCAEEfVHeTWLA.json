@@ -1,0 +1,17 @@
+{
+  "name": "Ambassador Imperialis",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Fellowship 35, Intelligence 35\nAptitudes: Perception, Social",
+    "effect": "Character is experienced in dealing diplomatically with divergent and alien cultures, and avoiding the subtle faux pas that can turn a negotiation into a bloodbath. \nReduce penalty for interaction tests when dealing with Xenos or Non-Imperial NPCs by 20, once per encounter can reroll a failed Interaction Skill Test with such an NPC.",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>Character is experienced in dealing diplomatically with divergent and alien cultures, and avoiding the subtle faux pas that can turn a negotiation into a bloodbath. \nReduce penalty for interaction tests when dealing with Xenos or Non-Imperial NPCs by 20, once per encounter can reroll a failed Interaction Skill Test with such an NPC.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fgyuCAEEfVHeTWLA"
+}

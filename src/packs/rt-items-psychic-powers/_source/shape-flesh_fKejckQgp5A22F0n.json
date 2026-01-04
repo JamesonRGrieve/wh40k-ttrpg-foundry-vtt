@@ -1,0 +1,22 @@
+{
+  "name": "Shape Flesh",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Threshold 19",
+    "opposed": "Yes",
+    "sustained": "Choose one of the following effects, and retain it as long as power is sustained: Gain one Trait: Burrower (1), Crawler, Dark Sight, Flyer, Hoverer, Natural Armour (2), Natural Weapons, or Quadruped. Assume the appearance of any one creature, gaining Disguise Skill and +10 to using it, or +20 if already had skill. Gain Natural Weapons (Bite, Claws, Etc) to deal 1d10 + SB damage.\nThis power can be manifested multiple times, gaining a different bonus each time.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fKejckQgp5A22F0n"
+}

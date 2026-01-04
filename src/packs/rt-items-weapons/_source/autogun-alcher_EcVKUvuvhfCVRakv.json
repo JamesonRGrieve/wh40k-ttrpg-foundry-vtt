@@ -1,0 +1,28 @@
+{
+  "name": "Autogun (Alcher)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "60m",
+    "rof": "S/-/10",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 40,
+    "reload": "Full",
+    "special": null,
+    "weight": "3.5kg",
+    "availability": "Average",
+    "cost": "95 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A popular weapon amongst newer, less well-trained soldiers of PDF forces.",
+    "description": {
+      "value": "<p><b>Note:</b> A popular weapon amongst newer, less well-trained soldiers of PDF forces.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EcVKUvuvhfCVRakv"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Chainfist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Tearing",
+    "weight": "48kg",
+    "availability": "Famed",
+    "cost": "40 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Only usable by Terminators, replacing one of the Terminator Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Only usable by Terminators, replacing one of the Terminator Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6eR1UJD5KPfwn3Z0"
+}

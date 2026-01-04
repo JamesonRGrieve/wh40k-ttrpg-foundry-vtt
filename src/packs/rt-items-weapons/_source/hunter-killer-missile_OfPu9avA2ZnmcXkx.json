@@ -1,0 +1,28 @@
+{
+  "name": "Hunter-Killer Missile",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "Launcher",
+    "range": "350m",
+    "rof": "S/-/-",
+    "damage": "3d10+6",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": 1,
+    "reload": "-",
+    "special": null,
+    "weight": "64kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Mounted to vehicles. Can only fire one shot, can't use unusual ammo.\nWhen firing, gain +20 to Ballistic Test due to onboard guidance.",
+    "description": {
+      "value": "<p><b>Note:</b> Mounted to vehicles. Can only fire one shot, can't use unusual ammo.\nWhen firing, gain +20 to Ballistic Test due to onboard guidance.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OfPu9avA2ZnmcXkx"
+}

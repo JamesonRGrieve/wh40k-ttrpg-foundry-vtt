@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Reaver's Fang",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d5",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Felling (4), Tearing, Toxic",
+    "weight": "1kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Can be loaded with up to three poisons that replace its Toxic Quality. Only one poision can be applied at a time, of the wielder's choosing prior to making an attack.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Tearing, Toxic</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Can be loaded with up to three poisons that replace its Toxic Quality. Only one poision can be applied at a time, of the wielder's choosing prior to making an attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XSUYdagXDWVXwWgA"
+}

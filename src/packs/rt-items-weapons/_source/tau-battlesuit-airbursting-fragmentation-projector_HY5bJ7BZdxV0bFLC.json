@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Airbursting Fragmentation Projector",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 3,
+    "clip": 12,
+    "reload": "2 Full",
+    "special": "Blast (4)",
+    "weight": "20kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Ignore AP Targets gain from cover.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Ignore AP Targets gain from cover.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HY5bJ7BZdxV0bFLC"
+}

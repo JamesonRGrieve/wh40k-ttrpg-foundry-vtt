@@ -1,0 +1,20 @@
+{
+  "name": "Frag Missile",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Missile Launcher",
+    "damageOrEffect": "2d10+4 X, Pen 4, Blast(6)",
+    "qualities": "Blast(6)",
+    "weight": "0.5kg",
+    "availability": "Average",
+    "cost": "75T each",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 2d10+4 X, Pen 4, Blast(6)</p><p><b>Qualities:</b> Blast(6)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "77Ht6VQJhmVPXM33"
+}

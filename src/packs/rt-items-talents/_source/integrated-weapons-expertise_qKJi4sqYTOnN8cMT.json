@@ -1,0 +1,17 @@
+{
+  "name": "Integrated Weapons Expertise",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 40, Implanted Potentia Coil or Mechanicus Implants. \nAptitudes: Ballistic Skill, Defence",
+    "effect": "When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qKJi4sqYTOnN8cMT"
+}

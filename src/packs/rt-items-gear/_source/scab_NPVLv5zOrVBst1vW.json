@@ -1,0 +1,20 @@
+{
+  "name": "Scab",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Lasts ~1 Hour, grants +1 to user's Toughness Bonus, doesn't stack. Every dose past the first within 24 hours inflicts 1d10+10 Agility Damage as used is wracked with pain. User's skin turns a greyish green colour and crusts over for the duration.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NPVLv5zOrVBst1vW"
+}

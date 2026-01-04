@@ -1,0 +1,20 @@
+{
+  "name": "Infernus Shell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Artillery/Battle Cannons",
+    "damageOrEffect": "2d10+10 E, Pen 6, Flame Damage Profile, loses Concussive quality if weapon has it.",
+    "qualities": "Flame",
+    "weight": null,
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 2d10+10 E, Pen 6, Flame Damage Profile, loses Concussive quality if weapon has it.</p><p><b>Qualities:</b> Flame</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wKQaKwGpmIacGJ5L"
+}

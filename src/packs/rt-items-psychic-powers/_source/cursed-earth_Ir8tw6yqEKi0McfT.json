@@ -1,0 +1,22 @@
+{
+  "name": "Cursed Earth",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Malefic Daemonology",
+    "prerequisites": "Willpower 40,\nSummoning",
+    "focusPower": "Full Action\nConcentration",
+    "action": "1m x Psy Rating",
+    "range": "-10 Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, Daemons within range increase their Daemonic Trait by Psy Rating / 2 and receive a bonus of +5 x Psy Rating to Warp Instability Tests. Psychic POwers user within the area add +10 to Focus Power Tests and rolls on the Psychic Phenomena Table. Those in the presence of the cursed earth may experience disturbing warp phenomena at GM discretion.\nIf power is Successfully manifested, gain Corruption Points equal to the Psy Rating used to manifest this power after its effects have been resolved.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ir8tw6yqEKi0McfT"
+}

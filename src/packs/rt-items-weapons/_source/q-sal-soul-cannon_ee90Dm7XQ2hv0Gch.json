@@ -1,0 +1,28 @@
+{
+  "name": "Q'Sal Soul Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Q'Sal",
+    "range": "75m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 10,
+    "reload": "-",
+    "special": "Flame, Shocking, Warp Weapon",
+    "weight": "45kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Never reloads, gains 1 shot per 10 damage dealt, target killed, or hour spent within area of intense warp activity. Wielder can make -10 Willpower Test to regain one shot, if fail suffer 1d5 Willpower Damage per DoF. Custom made, if original owner, don't need to Brace.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Shocking, Warp Weapon</p><p><b>Note:</b> Never reloads, gains 1 shot per 10 damage dealt, target killed, or hour spent within area of intense warp activity. Wielder can make -10 Willpower Test to regain one shot, if fail suffer 1d5 Willpower Damage per DoF. Custom made, if original owner, don't need to Brace.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ee90Dm7XQ2hv0Gch"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Cylinder Pistol (Mariette)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d5+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "400 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Can be Dissassembled and has no Metallic Components, imposes -30 to Search Tests when dissassembled and concealed.\n Each of the 4 barrels is a self contained firing piece that counts as its specialised ammo (Rare, 100 Thrones Each)",
+    "description": {
+      "value": "<p><b>Note:</b> Can be Dissassembled and has no Metallic Components, imposes -30 to Search Tests when dissassembled and concealed.\n Each of the 4 barrels is a self contained firing piece that counts as its specialised ammo (Rare, 100 Thrones Each)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UYeodQRA3NyMk5Rv"
+}

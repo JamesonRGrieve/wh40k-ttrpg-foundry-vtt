@@ -1,0 +1,17 @@
+{
+  "name": "Superior Minion of Chaos",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Fellowship 55, Infamy 60\nAptitudes: Unaligned",
+    "effect": "The Character gains a Superior Minion. They can be further upgraded by the Minion Improvement",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>The Character gains a Superior Minion. They can be further upgraded by the Minion Improvement</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fNtkzSxVBexJAgIC"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Field Repairs",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Tech-Priest Enginseer Spec\nServitor Comrade\n300xp",
+    "descriptionText": "As long as Servitor Comrade is within Comms range, Character can perform Tech-Use Tests with - 10 Remotely on anything the Comrade is near to.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>As long as Servitor Comrade is within Comms range, Character can perform Tech-Use Tests with - 10 Remotely on anything the Comrade is near to.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZAtpEAy0gcI7NW2S"
+}

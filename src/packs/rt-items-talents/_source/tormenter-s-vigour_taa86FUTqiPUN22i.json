@@ -1,0 +1,17 @@
+{
+  "name": "Tormenter's Vigour",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Dark Eldar, Power Through Pain",
+    "effect": "After the character spends a fate point to regain lost wounds, for the rest of the encounter they will regain 1d5 lost wounds every time they gain a Pain Token.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>After the character spends a fate point to regain lost wounds, for the rest of the encounter they will regain 1d5 lost wounds every time they gain a Pain Token.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "taa86FUTqiPUN22i"
+}

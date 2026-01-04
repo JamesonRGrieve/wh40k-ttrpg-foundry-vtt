@@ -1,0 +1,17 @@
+{
+  "name": "Emperor's Guidance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T2)",
+    "requirements": "Tier 2: Sister of Battle E.Adv, Insanity 25+, Furious Zeal. Aptitudes: Willpower, Offence",
+    "effect": "As a Free Action, the Sister can spend a Fate Point to increase the penetration of their weapon by their Insanity Bonus until the end of the next turn.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>As a Free Action, the Sister can spend a Fate Point to increase the penetration of their weapon by their Insanity Bonus until the end of the next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MGtlfNl0lOu5r6oA"
+}

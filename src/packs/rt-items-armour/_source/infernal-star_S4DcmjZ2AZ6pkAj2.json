@@ -1,0 +1,22 @@
+{
+  "name": "Infernal Star",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.5,
+    "maxAg": "-",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Chaos Equivilent to a Space Marine's Iron Halo. Good Quality",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p>Chaos Equivilent to a Space Marine's Iron Halo. Good Quality</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S4DcmjZ2AZ6pkAj2"
+}

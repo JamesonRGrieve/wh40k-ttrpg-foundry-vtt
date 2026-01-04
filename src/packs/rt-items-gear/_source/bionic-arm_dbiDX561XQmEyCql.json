@@ -1,0 +1,20 @@
+{
+  "name": "Bionic Arm",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.",
+    "cost": "Damage works as normal, although inappropriate effects like bleeding just render limb useless",
+    "effects": "Scarce / Initiated",
+    "notes": "1000 T",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dbiDX561XQmEyCql"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Sweetmeats",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "The Carefully cooked Progenoid Glands of a captured Loyalist Space Marine, glazed in rare oils and roasted within their dying presence. Insulting even to Chaos Space Marines but apparently quite delicious. Quences a hearty appetite, grants Regeneration(4) Trait for 1d10 Rounds. ",
+    "cost": "Heretical",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uUIxs2KAMjPOEP8a"
+}

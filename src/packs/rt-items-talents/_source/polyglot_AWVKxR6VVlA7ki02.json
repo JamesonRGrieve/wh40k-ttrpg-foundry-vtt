@@ -1,0 +1,17 @@
+{
+  "name": "Polyglot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Intelligence 40, Fellowship 30\nAptitudes: Intelligence, Social, Tzeentch",
+    "effect": "Character can derive basic meaning from languages they do not know, can also make Untrained Linguistics Skill Tests as if it were a non-specialist skill. (They can make the test, but at -20)\nIf Rogue Trader or Earlier, can treat unknown languages as Untrained Basic Skills with -10 instead.\nIn a Social Encounter, gain +20 to Opposed Tests when going against an opponent speaking in a different language.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can derive basic meaning from languages they do not know, can also make Untrained Linguistics Skill Tests as if it were a non-specialist skill. (They can make the test, but at -20)\nIf Rogue Trader or Earlier, can treat unknown languages as Untrained Basic Skills with -10 instead.\nIn a Social Encounter, gain +20 to Opposed Tests when going against an opponent speaking in a different language.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AWVKxR6VVlA7ki02"
+}

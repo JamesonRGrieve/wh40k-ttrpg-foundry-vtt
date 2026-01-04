@@ -1,0 +1,25 @@
+{
+  "name": "Rhino APC",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Ground Vehicle",
+    "size": "15m",
+    "tacticalSpeed": "70kph",
+    "cruisingSpeed": "+0",
+    "maneuverability": "25",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "Front 24,\nSide 24,\nRear 20",
+    "rearArmour": "Driver, Gunner",
+    "structuralIntegrity": "10 Soldiers with Gear",
+    "crew": "Pintle-Mounted Storm Bolter (Facing All, Range 90m, Basic, -/-/6, 1d10+5 X, Pen 4, Clip 120, Reload Full, Storm, Tearing)",
+    "passengers": "Tech-Use Tests to repair or restore the vehicle have +20. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.",
+    "cargo": "Rare",
+    "availability": "RT: Into the Storm",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "YgxqX1AbBKKHq7Qg"
+}

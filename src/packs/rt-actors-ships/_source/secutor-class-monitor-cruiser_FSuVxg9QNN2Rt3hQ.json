@@ -1,0 +1,28 @@
+{
+  "name": "Secutor-class Monitor-cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Light Cruiser",
+    "size": "4.3km long, 0.5km wide",
+    "crew": 50000,
+    "speed": 5,
+    "manoeuvrability": 12,
+    "detection": 15,
+    "hull": 65,
+    "armour": 20,
+    "turrets": 2,
+    "space": 58,
+    "shipPoints": 58,
+    "weaponCapacity": "1 Dorsal, 1 Prow, 1 Port, \n1 Starboard",
+    "notes": "Can use \"Cruiser Only\" Void Shield Components",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Can use \"Cruiser Only\" Void Shield Components</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "FSuVxg9QNN2Rt3hQ"
+}

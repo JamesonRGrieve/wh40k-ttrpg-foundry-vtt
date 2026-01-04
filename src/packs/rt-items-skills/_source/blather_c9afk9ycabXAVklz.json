@@ -1,0 +1,18 @@
+{
+  "name": "Blather",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Advanced, Interaction",
+    "characteristic": "Fellowship",
+    "descriptor": "Stalling for time, causing distractons through speaking. Requires sharing common language with opponent.",
+    "uses": "Opposed Test vs Target Willpower/Scrutiny. Success means target is distracted by you or bemused into inaction. Doesn't neccisarily mean they are completley inactive or unaware in the face of obvious danger or harm against them.",
+    "useTime": "Full Action",
+    "description": {
+      "value": "<p>Stalling for time, causing distractons through speaking. Requires sharing common language with opponent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c9afk9ycabXAVklz"
+}

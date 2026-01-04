@@ -1,0 +1,28 @@
+{
+  "name": "Defiant-Class Light Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Light Cruiser",
+    "size": "3.8km long, 0.5km wide",
+    "crew": 61500,
+    "speed": 6,
+    "manoeuvrability": 12,
+    "detection": 15,
+    "hull": 60,
+    "armour": 20,
+    "turrets": 2,
+    "space": 55,
+    "shipPoints": 58,
+    "weaponCapacity": "1 Prow, 1 Port, 1 Starboard",
+    "notes": "Crew also has 6,100 pilots and support personnel. Comes with two \"Jovian-pattern Escort Bay\" (port/starboard), space  already reduced, can't be removed, must be able to power.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Crew also has 6,100 pilots and support personnel. Comes with two \"Jovian-pattern Escort Bay\" (port/starboard), space  already reduced, can't be removed, must be able to power.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "KJi8padH5BXtQAYF"
+}

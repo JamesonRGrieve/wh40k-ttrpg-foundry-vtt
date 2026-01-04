@@ -1,0 +1,17 @@
+{
+  "name": "Stuff of Nightmares",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "A Generally horrifying thing, immune to: Poison, disease, needing to breathe, most environmental hazards, bleeding, stunning, and any critical effect that would destroy it not dealt through a Psychic Power, Force Weapon, or Holy Attack.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>A Generally horrifying thing, immune to: Poison, disease, needing to breathe, most environmental hazards, bleeding, stunning, and any critical effect that would destroy it not dealt through a Psychic Power, Force Weapon, or Holy Attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RFljLgliQ6vU06Zx"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Detect Taint",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "The psyker detects the tell-tale Odour of the warp on objects, places, and people. The Psyker makes a Focus Power Test and gains information based on their Degrees of Success. Information doesn't go into great detail. Results: 1 DoS: Psyker knows if object has been in contact with the something warp-related in the last Psy Rating Hours. 2 DoS: Psyker knows the nature of the contact an object has had with the warp (part of ritual, held by psyker, etc) within the last Psy Rating Hours. 3 DoS: Psyker knows if person has been touched by the warp, but not how. 4 DoS: Psyker determines person's relationship with the warp, whether they are psyker, sorcerer, possessed, etc. 5+ DoS: Dicern's nature of any target's warp connection, presence of warp gates, dark pacts, possession etc. HB: 0 DoS: Psyker gets offput feeling if something is warped in range.",
+    "effect": "100xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mGgsTsQeHSK9bIKV"
+}

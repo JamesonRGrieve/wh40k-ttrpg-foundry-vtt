@@ -1,0 +1,20 @@
+{
+  "name": "Xenos Mercenary",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Hired to aid the group in some action, can attack a target on behest or fight alongside them. Requisition test based off of nature of target, willingness of the alien, and scale.",
+    "cost": "Xenos Mercanaries to perform some violent action such as Kroot, Ork Freebootas, and Sslyth.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v0EzTZeiEZMFaQyM"
+}

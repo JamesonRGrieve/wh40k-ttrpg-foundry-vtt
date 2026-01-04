@@ -1,0 +1,17 @@
+{
+  "name": "Flame Sweep Initiation",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Attack Order\nHalf Action",
+    "requirements": ".Servitor Comrade: Incendio-Class Gun Servitor\nApt: None",
+    "descriptionText": "Incendio-Class Gun Servitor Primary Function. Servitor Comrade makes Standard Ranged Attack with its Integrated Flamer, enemies in the area of effect can avoid the attack with +0 Agility Test as normal.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Incendio-Class Gun Servitor Primary Function. Servitor Comrade makes Standard Ranged Attack with its Integrated Flamer, enemies in the area of effect can avoid the attack with +0 Agility Test as normal.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QdrofEjtNo0gbBsP"
+}

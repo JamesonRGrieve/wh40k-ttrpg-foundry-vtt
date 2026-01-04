@@ -1,0 +1,21 @@
+{
+  "name": "Graviton Flare",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Archeotech",
+    "hullType": "Raiders, Frigates",
+    "powerUsage": 2,
+    "spaceUsage": 0,
+    "spCost": 3,
+    "effect": "When triggered, causes all vessels in the system to suffer -30 to Detection for 2 Strategic Rounds, takes 24 hour to recharge. Can't be damaged or destroyed except via critical hits. Doing this in a heavily populated system may cause a commotion, but may also provide a chance to escape.",
+    "availability": "Extremely Rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>When triggered, causes all vessels in the system to suffer -30 to Detection for 2 Strategic Rounds, takes 24 hour to recharge. Can't be damaged or destroyed except via critical hits. Doing this in a heavily populated system may cause a commotion, but may also provide a chance to escape.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "g3XHB4pfLV4hmjcS"
+}

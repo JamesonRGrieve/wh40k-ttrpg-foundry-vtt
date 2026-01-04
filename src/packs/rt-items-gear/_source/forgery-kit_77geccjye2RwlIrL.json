@@ -1,0 +1,20 @@
+{
+  "name": "Forgery Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "Varies",
+    "availability": "Tools, from Parchment inks to codifiers to forge or duplicate official documents, cognomens, passes, and permits. Provides a +10 Bonus when used with Trade(Copyist) or Tech-Use to copy, forge, or fabricate such things. Good Craftsmanship provies +20, Best provides +30.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "400 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 400 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "77geccjye2RwlIrL"
+}

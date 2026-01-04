@@ -1,0 +1,17 @@
+{
+  "name": "Distance, Elevation, Wind Speed?",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ".Ratling Comrade, Perception 35\nApt: Ballistic Skill, Fieldcraft",
+    "descriptionText": "Until the end of the Turn Comrade in Cohesion allows Character to treat targets beyond three times their Weapon's Range as Long Range, and those beyond four times as Extreme Range. (Instead of the normal 2x and 3x)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Until the end of the Turn Comrade in Cohesion allows Character to treat targets beyond three times their Weapon's Range as Long Range, and those beyond four times as Extreme Range. (Instead of the normal 2x and 3x)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vK3mesrzlc5FBdRT"
+}

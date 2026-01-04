@@ -1,0 +1,22 @@
+{
+  "name": "Harrier Imps",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "25m x Psy Rating",
+    "range": "+10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Target Individual is harried by harmless imps from within the warp, suffering -10 to all Tests made whilst power is sustained. If the target spends a Half Action to make a +10 Intimidate Test, the imps flee and the power ends.",
+    "effect": "100xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c1lbUQBBaxrwlfaM"
+}

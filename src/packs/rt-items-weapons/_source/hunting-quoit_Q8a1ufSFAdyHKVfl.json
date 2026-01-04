@@ -1,0 +1,28 @@
+{
+  "name": "Hunting Quoit",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (8), Unreliable, Inaccurate",
+    "weight": "0.5kg",
+    "availability": "Common",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Can receive the Mono Upgrade, but doesn't have it by default.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Unreliable, Inaccurate</p><p><b>Note:</b> Can receive the Mono Upgrade, but doesn't have it by default.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q8a1ufSFAdyHKVfl"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Laspistol (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 30,
+    "reload": "Half",
+    "special": "Reliable",
+    "weight": "1.5kg",
+    "availability": "Common",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ayjTwjSCcFMIw9ND"
+}

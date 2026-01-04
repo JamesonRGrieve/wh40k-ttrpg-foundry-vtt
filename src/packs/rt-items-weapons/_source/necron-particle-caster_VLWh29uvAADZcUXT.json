@@ -1,0 +1,28 @@
+{
+  "name": "Necron Particle Caster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Necron",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Concussive (1), Reliable",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Concussive (1), Reliable</p><p><b>Note:</b> Always Best Quality</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VLWh29uvAADZcUXT"
+}

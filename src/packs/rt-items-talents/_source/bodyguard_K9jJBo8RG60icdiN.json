@@ -1,0 +1,17 @@
+{
+  "name": "Bodyguard",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1: Agility 35\nAptitudes: Agility, Defence",
+    "effect": "After an enemy makes a successful attack against an ally, character can use their Reaction to mvoe up to Half their Move distance to interpose themselves between the attacker and target, the attack resolving against them instead. For Melee Attacks, the character can immediately attempt to make a Parry as part of this Reaction.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>After an enemy makes a successful attack against an ally, character can use their Reaction to mvoe up to Half their Move distance to interpose themselves between the attacker and target, the attack resolving against them instead. For Melee Attacks, the character can immediately attempt to make a Parry as part of this Reaction.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "K9jJBo8RG60icdiN"
+}

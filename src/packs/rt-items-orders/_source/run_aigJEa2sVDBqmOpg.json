@@ -1,0 +1,17 @@
+{
+  "name": "Run",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nFull Action",
+    "requirements": "--",
+    "descriptionText": "Comrade out of Cohesion performs the Run Action. Moving their Run Speed. Range attacks against them suffer -20, Melee Attacks gain +20.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade out of Cohesion performs the Run Action. Moving their Run Speed. Range attacks against them suffer -20, Melee Attacks gain +20.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aigJEa2sVDBqmOpg"
+}

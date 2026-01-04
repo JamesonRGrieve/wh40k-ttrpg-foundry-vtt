@@ -1,0 +1,28 @@
+{
+  "name": "Warhammer (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Ogryn-Proof, Primitive (8)",
+    "weight": "4.5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Two-Handed Weapon, \"Aha, we've found it, the Warhammer Forty Thousand!\"",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Primitive (8)</p><p><b>Note:</b> Two-Handed Weapon, \"Aha, we've found it, the Warhammer Forty Thousand!\"</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "unCfL58BWrMegQAa"
+}

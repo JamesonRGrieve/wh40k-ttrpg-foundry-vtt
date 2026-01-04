@@ -1,0 +1,17 @@
+{
+  "name": "Relic Bearer",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Logistics Rating 40+, Scholastic Lore (Imperial Creed) +20. \nAptitudes: Fellowship, Social",
+    "effect": "Character has earned the right to possess a Sacred Relic as part of their Standard Kit, such as the fingerbone of an imperial saint, or a scrap of Death Shroud that covered the remains of a Lord General.\nWhilst the Relic is displayed, all allies within 30 metres gain +20 to resist Fear and Pinning, as well as Tests to avoid gaining Corruption or Insanity Points.\nIf the Relic is Lost or Destroyed, the character brings a deep shame to themselves, they immediately lose all remaining Fate Points for the session and cease to gain benefit from this talent until the relic is recovered or restored.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character has earned the right to possess a Sacred Relic as part of their Standard Kit, such as the fingerbone of an imperial saint, or a scrap of Death Shroud that covered the remains of a Lord General.\nWhilst the Relic is displayed, all allies within 30 metres gain +20 to resist Fear and Pinning, as well as Tests to avoid gaining Corruption or Insanity Points.\nIf the Relic is Lost or Destroyed, the character brings a deep shame to themselves, they immediately lose all remaining Fate Points for the session and cease to gain benefit from this talent until the relic is recovered or restored.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7pbwDW7twqeptYfF"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Pass Unscathed",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "3m x Perception Bonus",
+    "test": "-10 Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator chooses target in range, for Willpower Bonus Minutes, if that target would gain Corruption Points, they gain 1 less (minimum 1). Can only have one instance of this power active at a time, after it ends Navigator makes +0 Toughness Test or gains 1 Fatigue.",
+    "adept": "Navigator can shield a number of targets equal to their Perception Bonus, reducing any Corruption Points gained by 2 (minimum 0).",
+    "master": "Power now lasts for 2x Willpower Bonus Minutes.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator chooses target in range, for Willpower Bonus Minutes, if that target would gain Corruption Points, they gain 1 less (minimum 1). Can only have one instance of this power active at a time, after it ends Navigator makes +0 Toughness Test or gains 1 Fatigue.</p><p><b>Adept:</b> Navigator can shield a number of targets equal to their Perception Bonus, reducing any Corruption Points gained by 2 (minimum 0).</p><p><b>Master:</b> Power now lasts for 2x Willpower Bonus Minutes.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "isEnkwiHDDqCBeoS"
+}

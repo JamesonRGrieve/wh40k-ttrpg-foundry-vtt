@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Plasma Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic - Eldar",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (4), Shocking",
+    "weight": "0.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Highly valued by Cold Traders",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Shocking</p><p><b>Note:</b> Highly valued by Cold Traders</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OpvTtSrwnahyiELP"
+}

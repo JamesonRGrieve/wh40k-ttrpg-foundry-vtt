@@ -1,0 +1,20 @@
+{
+  "name": "Inferno Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP/Bolt: Shotguns, Bolt weapons",
+    "damageOrEffect": "When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)",
+    "qualities": "Flame",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": "18T each",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)</p><p><b>Qualities:</b> Flame</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZePtvOJoOtq6SOJK"
+}

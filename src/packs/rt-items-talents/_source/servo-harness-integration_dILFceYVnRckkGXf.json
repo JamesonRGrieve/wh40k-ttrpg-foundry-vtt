@@ -1,0 +1,17 @@
+{
+  "name": "Servo-Harness Integration",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Techmarine Implants, Mechadendrite Use (Servo-Arm/Utility)",
+    "effect": "Character is fitted with a Servo-Harness and may use it proficiently.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dILFceYVnRckkGXf"
+}

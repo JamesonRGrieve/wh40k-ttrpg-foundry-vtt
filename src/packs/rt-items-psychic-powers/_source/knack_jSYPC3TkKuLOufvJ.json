@@ -1,0 +1,22 @@
+{
+  "name": "Knack",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 7\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Character gains +10 to any one non-combat test made before the end of their next turn (~5-10 seconds of narrative time)",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jSYPC3TkKuLOufvJ"
+}

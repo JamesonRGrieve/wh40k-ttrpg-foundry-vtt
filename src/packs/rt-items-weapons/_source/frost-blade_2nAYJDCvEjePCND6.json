@@ -1,0 +1,28 @@
+{
+  "name": "Frost Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+11",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field, Tearing",
+    "weight": "10kg",
+    "availability": "Hero",
+    "cost": "60 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only. Relic Master Crafted Chainsword of the Space Wolves Innately Master-Crafted. Adds +3 Damage to attacks that cause Critical Damage.\nA fusion of Chain and Power Weapons that has a cold aura.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master Crafted Chainsword of the Space Wolves Innately Master-Crafted. Adds +3 Damage to attacks that cause Critical Damage.\nA fusion of Chain and Power Weapons that has a cold aura.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2nAYJDCvEjePCND6"
+}

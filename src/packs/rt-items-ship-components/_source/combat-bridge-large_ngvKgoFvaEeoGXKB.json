@@ -1,0 +1,21 @@
+{
+  "name": "Combat Bridge (large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 2,
+    "spCost": "-",
+    "effect": "Where characters command the ship. As long as this component is undamaged, gain +10 to Tech-use Tests to repair the ship.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where characters command the ship. As long as this component is undamaged, gain +10 to Tech-use Tests to repair the ship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ngvKgoFvaEeoGXKB"
+}

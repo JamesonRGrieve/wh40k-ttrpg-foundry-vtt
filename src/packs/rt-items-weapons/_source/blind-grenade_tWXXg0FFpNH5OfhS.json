@@ -1,0 +1,28 @@
+{
+  "name": "Blind Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Smoke",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "25 T",
+    "source": "Rogue Trader: Core",
+    "note": "Blocks Advanced detection",
+    "description": {
+      "value": "<p><b>Special:</b> Smoke</p><p><b>Note:</b> Blocks Advanced detection</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tWXXg0FFpNH5OfhS"
+}

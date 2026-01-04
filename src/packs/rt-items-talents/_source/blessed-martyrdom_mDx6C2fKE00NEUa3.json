@@ -1,0 +1,17 @@
+{
+  "name": "Blessed Martyrdom",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T1)",
+    "requirements": "Tier 2: Sister of Battle E.Adv, Ceaseless Crusader, Shielding Faith.\nAptitudes: Leadership, Willpower",
+    "effect": "Whenever the Sister burns a Fate Point to survive a mortal bloe, each other friendly character who witnesses it regains 1 spent Fate Point.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Whenever the Sister burns a Fate Point to survive a mortal bloe, each other friendly character who witnesses it regains 1 spent Fate Point.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mDx6C2fKE00NEUa3"
+}

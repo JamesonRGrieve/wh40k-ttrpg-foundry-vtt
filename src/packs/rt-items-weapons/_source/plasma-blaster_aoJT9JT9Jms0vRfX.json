@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Plasma",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Overheats, Recharge, Unreliable",
+    "weight": "20kg",
+    "availability": "Very Rare",
+    "cost": "7500 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Effectively a Two plasma guns built into one, sharing one canister.",
+    "description": {
+      "value": "<p><b>Special:</b> Overheats, Recharge, Unreliable</p><p><b>Note:</b> Effectively a Two plasma guns built into one, sharing one canister.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aoJT9JT9Jms0vRfX"
+}

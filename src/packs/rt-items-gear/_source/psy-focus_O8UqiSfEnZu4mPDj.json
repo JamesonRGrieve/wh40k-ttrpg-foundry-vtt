@@ -1,0 +1,20 @@
+{
+  "name": "Psy-Focus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "-",
+    "availability": "+10 to Invocation Skill Tests when used by a Psyker",
+    "cost": "Often an item with some meaning to the Psyker",
+    "effects": "Rare / Initiated",
+    "notes": "100 T\n15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 100 T\n15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O8UqiSfEnZu4mPDj"
+}

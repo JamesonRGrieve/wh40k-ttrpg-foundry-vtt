@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 24,
+    "reload": "Full",
+    "special": null,
+    "weight": "1.2kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Eldar weapon, emits a stream of dark energy similar to lasers, although it rips apart a target with explosive blasts.",
+    "description": {
+      "value": "<p><b>Note:</b> Eldar weapon, emits a stream of dark energy similar to lasers, although it rips apart a target with explosive blasts.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "quq93FyMTb9pZGeT"
+}

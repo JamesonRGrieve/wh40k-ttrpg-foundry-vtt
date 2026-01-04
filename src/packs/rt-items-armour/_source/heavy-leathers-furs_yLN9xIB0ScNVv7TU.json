@@ -1,0 +1,22 @@
+{
+  "name": "Heavy Leathers/Furs",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body, Legs",
+    "ap": 2,
+    "maxAg": "-",
+    "weight": "7kg",
+    "availability": "Common",
+    "cost": "100 T",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yLN9xIB0ScNVv7TU"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Exorcist-Class Grand Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Grand Cruiser",
+    "size": "7.3km long, 1.1km wide",
+    "crew": 112000,
+    "speed": 4,
+    "manoeuvrability": 4,
+    "detection": 9,
+    "hull": 85,
+    "armour": 20,
+    "turrets": 3,
+    "space": 80,
+    "shipPoints": 71,
+    "weaponCapacity": "3 Port, 3 Starboard",
+    "notes": "Can use \"Cruiser Only\" Components. Pre-equipped with two \"Jovian-pattern Landing Bay\" (port/starboard), size already reduced, can't be removed. Must be able to Provide Power for them.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can use \"Cruiser Only\" Components. Pre-equipped with two \"Jovian-pattern Landing Bay\" (port/starboard), size already reduced, can't be removed. Must be able to Provide Power for them.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "LPa4a72WDK5dkbU0"
+}

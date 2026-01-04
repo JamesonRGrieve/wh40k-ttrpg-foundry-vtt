@@ -1,0 +1,18 @@
+{
+  "name": "Tzeentch",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Khorne, Nurgle",
+    "characteristic": "Tzeentch",
+    "descriptor": "Slaanesh, Unaligned",
+    "uses": null,
+    "useTime": null,
+    "description": {
+      "value": "<p>Slaanesh, Unaligned</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pRj7rsoAa3XJxeMH"
+}

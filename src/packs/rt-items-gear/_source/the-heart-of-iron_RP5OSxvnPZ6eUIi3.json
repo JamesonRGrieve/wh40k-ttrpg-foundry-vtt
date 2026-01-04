@@ -1,0 +1,20 @@
+{
+  "name": "The Heart of Iron",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "-",
+    "availability": "Relic Mastercrafted Cybernetic of the Iron Hands. Once it has bonded with the user, they gain Regeneration (5) Trait, and become immune to Fatigue. If worn for more than a single mission, the wearer suffers 1d10+5 temporary Toughness Damage for each subsequent mission. If not removed, the character will die if reahcing 0 or lower Toughness.",
+    "cost": "Iron Hands Only",
+    "effects": "Famed",
+    "notes": "30 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 30 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RP5OSxvnPZ6eUIi3"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Purge Soul",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Sanctic Daemonology",
+    "prerequisites": "Willpower 35,\nWord of the Emperor",
+    "focusPower": "Half Action\nAttack\nConcentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range and line of sight opposes Willpower Test. If character wins target suffers Degrees of Success + Target's Corruption Bonus Energy Damage. Damage ignores Armour and Toughness.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mpVIVauuQb5kEL1R"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Crusade",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Lure of the Void",
+    "descriptionText": "1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.\n2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)\n3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.",
+    "effects": "1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.\n2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)\n3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.<br>2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)<br>3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.lure-of-the-void",
+      "step": "Lure of the Void",
+      "stepIndex": 3,
+      "number": "2 and 3"
+    }
+  },
+  "_id": "8eZLFtwOGCx9IOC5"
+}

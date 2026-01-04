@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Webber (Aegis-Redback)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "80m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": 4,
+    "reload": "3 Full",
+    "special": "Blast (6), Snare",
+    "weight": "17kg",
+    "availability": "Rare",
+    "cost": "2000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Weapon does no damage, use to restrain large crowds of people",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (6), Snare</p><p><b>Note:</b> Weapon does no damage, use to restrain large crowds of people</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MbbUrwvZWh6AwivH"
+}

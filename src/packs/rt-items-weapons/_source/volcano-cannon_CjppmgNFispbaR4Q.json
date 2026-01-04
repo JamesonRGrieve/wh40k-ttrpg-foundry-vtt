@@ -1,0 +1,28 @@
+{
+  "name": "Volcano Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "Melta",
+    "range": "3000m",
+    "rof": "S/-/-",
+    "damage": "10d10+20",
+    "damageType": "Energy",
+    "penetration": 20,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (8), Felling (6), Overheats, Recharge",
+    "weight": "8000kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (8), Felling (6), Overheats, Recharge</p><p><b>Note:</b> 13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CjppmgNFispbaR4Q"
+}

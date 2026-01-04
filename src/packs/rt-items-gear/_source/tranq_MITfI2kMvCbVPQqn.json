@@ -1,0 +1,20 @@
+{
+  "name": "Tranq",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Bootleg Anesthetic, makes you feel drunk, numbs the body and mind.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Abundant",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MITfI2kMvCbVPQqn"
+}

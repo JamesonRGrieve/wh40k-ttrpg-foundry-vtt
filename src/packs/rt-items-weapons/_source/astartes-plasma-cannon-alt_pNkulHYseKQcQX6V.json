@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Plasma Cannon (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Plasma",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "2d10+12",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 16,
+    "reload": "5 Full",
+    "special": "SM Wep, Blast (3), Volatile, Maximal",
+    "weight": "70kg",
+    "availability": "Distinguished",
+    "cost": "30 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (3), Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pNkulHYseKQcQX6V"
+}

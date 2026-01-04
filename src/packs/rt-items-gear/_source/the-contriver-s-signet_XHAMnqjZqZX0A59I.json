@@ -1,0 +1,20 @@
+{
+  "name": "The Contriver's Signet",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic",
+    "weight": "0.5kg",
+    "availability": "A Ring locked to require the remains of Jollus Marquette, a -20 Ciphers (Rogue Trader) Test, and 10 minutes. If activated, is so permenantly. Once per Session, wearer may spent a fate point to gain Peer + Good Reputation Talents for any one group until end of encounter. Also gives +10 to Interaction tests on worlds converted by Marquette.",
+    "cost": "An Archeotech Onyx Cogitator Gem inset in a ring, providing innumerable contacts and info. Relics are unique, one of a kind items, they must be earned as opposed to acquired.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XHAMnqjZqZX0A59I"
+}

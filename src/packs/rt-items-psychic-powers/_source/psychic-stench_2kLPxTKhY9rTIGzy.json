@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Stench",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Touch",
+    "range": "Threshold 5\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Target held item will emit a stench in a 5 metre radius they will always find horrible. This stench is not blocked by barriers, rebreathers, or other smells. It can also effect individuals who cannot otherwise smell things.\nThe Smell lasts 1d10 days before dissipating, it has no specific effect beyond being unpleasent.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2kLPxTKhY9rTIGzy"
+}

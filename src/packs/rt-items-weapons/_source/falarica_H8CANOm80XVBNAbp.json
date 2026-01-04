@@ -1,0 +1,28 @@
+{
+  "name": "Falarica",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+1",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (8), Tearing",
+    "weight": "2.5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Tearing</p><p><b>Note:</b> A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H8CANOm80XVBNAbp"
+}

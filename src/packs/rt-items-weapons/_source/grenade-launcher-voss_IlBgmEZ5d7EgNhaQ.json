@@ -1,0 +1,28 @@
+{
+  "name": "Grenade Launcher (Voss)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Launcher",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 6,
+    "reload": "Full",
+    "special": "Inaccurate",
+    "weight": "12.5kg",
+    "availability": "Scarce",
+    "cost": "500 T",
+    "source": "Rogue Trader: Core",
+    "note": "Traits vary with ammo (Weapon - Grenades)",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Traits vary with ammo (Weapon - Grenades)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IlBgmEZ5d7EgNhaQ"
+}

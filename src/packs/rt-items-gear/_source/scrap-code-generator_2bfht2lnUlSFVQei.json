@@ -1,0 +1,20 @@
+{
+  "name": "Scrap Code Generator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "3kg",
+    "availability": "Tech-Heresy Device, when it is connected to a machine, make -20 Tech-Use Test. If successful the machine operated on will have its Machine Spirit shattered and reformatted into a more pliable and useful form, that will obey commands from then on with a +40 Tech-Use Test.",
+    "cost": "Tech-Heresy",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2bfht2lnUlSFVQei"
+}

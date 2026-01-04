@@ -1,0 +1,21 @@
+{
+  "name": "Extended Supply Vaults",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "effect": "Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cu0jLIz531ToLS8U"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Super-Heavy",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Ignores Penalties from Difficult Terrain, can move over obstacles like fallen trees, tank traps, and shattered buildings without penalty. Moving over objects 5 metres high or bulldozing through walls. Automatically gain Ponderous Trait.",
+    "description": {
+      "value": "<p>Ignores Penalties from Difficult Terrain, can move over obstacles like fallen trees, tank traps, and shattered buildings without penalty. Moving over objects 5 metres high or bulldozing through walls. Automatically gain Ponderous Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FBOSm4ptXklEZXkj"
+}

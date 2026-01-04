@@ -1,0 +1,28 @@
+{
+  "name": "Neural Shredder",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "2 Full",
+    "special": "Scatter",
+    "weight": "4kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Target suffers 2d10 Intelligence damage on hit (ignores armour/toughness), make -20 Toughness Test or be stunned for 1 Round. Foes with Daemonic, Machine, Strange Physiology, or The Stuff of Nightmares Traits are unaffected by this weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Target suffers 2d10 Intelligence damage on hit (ignores armour/toughness), make -20 Toughness Test or be stunned for 1 Round. Foes with Daemonic, Machine, Strange Physiology, or The Stuff of Nightmares Traits are unaffected by this weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8nfv4sMEpCkQLWKE"
+}

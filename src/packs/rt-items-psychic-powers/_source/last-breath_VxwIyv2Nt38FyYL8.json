@@ -1,0 +1,22 @@
+{
+  "name": "Last Breath",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 3, ",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range and line of sight begins suffering the effects of Suffocation as psychically induced liquid fills their lungs. They are considered to be performing Strenuous Activity, allowing them to hold their breath for up to 2xToughness Bonus rounds, after which they must make a +0 Toughness Bonus each round or suffer a level of Fatigue. If they succeed any of these Toughness Tests, they clear their throat and the effect ends, although any gained Fatigue remains.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VxwIyv2Nt38FyYL8"
+}

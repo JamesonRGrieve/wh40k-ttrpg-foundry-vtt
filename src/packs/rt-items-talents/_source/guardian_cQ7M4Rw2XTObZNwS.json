@@ -1,0 +1,17 @@
+{
+  "name": "Guardian",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Agility 40 \nAptitudes: Agility, Defence",
+    "effect": "As a Reaction, character can spend a Fate Point and expand all their actions for their next Round to switch places within an ally within 2 metres so long as no physical obstruction would prevent it. The character becomes target of any attacks previously targeting the ally.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>As a Reaction, character can spend a Fate Point and expand all their actions for their next Round to switch places within an ally within 2 metres so long as no physical obstruction would prevent it. The character becomes target of any attacks previously targeting the ally.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cQ7M4Rw2XTObZNwS"
+}

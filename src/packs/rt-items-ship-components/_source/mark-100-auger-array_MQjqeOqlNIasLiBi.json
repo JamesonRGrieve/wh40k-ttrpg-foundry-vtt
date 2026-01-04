@@ -1,0 +1,21 @@
+{
+  "name": "Mark-100 Auger Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Augurs",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 0,
+    "spCost": "-",
+    "effect": "The eyes and ears of the ship. Can only be damaged/destroyed by a critical hit despite being external. Considered the default option.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>The eyes and ears of the ship. Can only be damaged/destroyed by a critical hit despite being external. Considered the default option.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MQjqeOqlNIasLiBi"
+}

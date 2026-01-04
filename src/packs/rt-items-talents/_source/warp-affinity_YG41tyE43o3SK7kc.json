@@ -1,0 +1,17 @@
+{
+  "name": "Warp Affinity",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Psy Rating, Special",
+    "effect": "When rolling Psychic Phenomenon, can discard result, take 1d5 Corruption, and roll again with no modifiers.\nMutually exclusive with Rite of Sanctioning Talent, cannot have both. ",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When rolling Psychic Phenomenon, can discard result, take 1d5 Corruption, and roll again with no modifiers.\nMutually exclusive with Rite of Sanctioning Talent, cannot have both. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YG41tyE43o3SK7kc"
+}

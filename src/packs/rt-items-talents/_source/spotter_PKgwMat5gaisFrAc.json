@@ -1,0 +1,17 @@
+{
+  "name": "Spotter",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Sharpshooter Advanced Speciality or Ratling\n300xp (Sharpshooter) / 250xp (Ratling)",
+    "effect": "As long as the Character's Comrade is in Cohesion, and the character is using a weapon with the Accurate Quality, the Comrade may use their actions to take the Aim Action on behalf of the Character, who gains the benefits for themselves.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>As long as the Character's Comrade is in Cohesion, and the character is using a weapon with the Accurate Quality, the Comrade may use their actions to take the Aim Action on behalf of the Character, who gains the benefits for themselves.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PKgwMat5gaisFrAc"
+}

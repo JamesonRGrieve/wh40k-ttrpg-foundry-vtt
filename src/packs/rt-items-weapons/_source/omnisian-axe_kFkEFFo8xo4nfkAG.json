@@ -1,0 +1,28 @@
+{
+  "name": "Omnisian Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d5+5",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unwieldy",
+    "weight": "7kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "An Icon of the Machine God, only given to its followers.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> An Icon of the Machine God, only given to its followers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kFkEFFo8xo4nfkAG"
+}

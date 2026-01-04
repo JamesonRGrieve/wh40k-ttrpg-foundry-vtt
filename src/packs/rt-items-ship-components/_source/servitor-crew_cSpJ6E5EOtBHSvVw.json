@@ -1,0 +1,21 @@
+{
+  "name": "Servitor Crew",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "-10 to BS Tests to fire ship weapons and Command Tests on the ship. Morale always 100, crew losses halved (minimum 1), Tech-Use Checks required to Triage. Poor: Crew Rating 20, Common: 30, Good; 35, Best: 40. Certain human-oriented components may not work. Replaces most crew.",
+    "availability": "Very Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>-10 to BS Tests to fire ship weapons and Command Tests on the ship. Morale always 100, crew losses halved (minimum 1), Tech-Use Checks required to Triage. Poor: Crew Rating 20, Common: 30, Good; 35, Best: 40. Certain human-oriented components may not work. Replaces most crew.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cSpJ6E5EOtBHSvVw"
+}

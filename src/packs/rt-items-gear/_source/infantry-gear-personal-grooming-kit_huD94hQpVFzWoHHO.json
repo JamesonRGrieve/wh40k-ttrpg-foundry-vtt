@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Personal Grooming Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "0.1kg",
+    "availability": "A kit containing shaving gear, soap, dental items, and other appropriately neccissary self-care items. May also contain Anti-Fungal and Parasite powders.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Common",
+    "notes": "2 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 2 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "huD94hQpVFzWoHHO"
+}

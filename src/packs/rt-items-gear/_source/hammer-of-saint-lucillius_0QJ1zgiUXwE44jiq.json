@@ -1,0 +1,20 @@
+{
+  "name": "Hammer of Saint Lucillius",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Profane)",
+    "weight": "?",
+    "availability": "A Wailing Hammer of suspicous origins, wielded by various cult leaders or zealous military commanders. Its strikes driving those around into frenzies. Characters using the Hammer gain the Frenzy Talent and +5 to WS Tests for each other friendly character in 8 metres. Each of those allies suffer -5 to WS tests. The Hammer itself counts as a Best Craftsmanship Power Fist with Concussive (3) and Tearing Qualities. At the end of combat each friendly character within 8m suffers 1 Fatigue, and user suffers 1d5 Corruption for each adversary killed using the hammer.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0QJ1zgiUXwE44jiq"
+}

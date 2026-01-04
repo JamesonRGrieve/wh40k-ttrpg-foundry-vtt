@@ -1,0 +1,17 @@
+{
+  "name": "Duelist",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; WS 35, Sure Strike \nAptitudes: Finesse, Weapon Skill",
+    "effect": "When engaging in Melee vs a Single Opponent who is not engaging with melee with anyone else, character gains +2 Degrees of Success on any successful Weapon Skill Test.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When engaging in Melee vs a Single Opponent who is not engaging with melee with anyone else, character gains +2 Degrees of Success on any successful Weapon Skill Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9lkm9njRXjXoshbA"
+}

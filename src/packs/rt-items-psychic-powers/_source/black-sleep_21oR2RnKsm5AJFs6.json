@@ -1,0 +1,22 @@
+{
+  "name": "Black Sleep",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n(Cryokinesis)",
+    "prerequisites": "Embrace of Emptiness",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker chooses a target in range to act as the centre of the power's effect, all creatures, except Daemons, Machines, Non-living entities, and the pskyer within Psy Rating metres of target make Opposed Willpower Test or suffer one fatigue, +1 per three degrees of failiure. The Psyker gains one level of Fatigue for every target that resists the power. The Psyker may choose to have any target that passes into unconciousness as a result of fatigue be frozen solid. Creatures frozen this way do not need to breath and suffer no ill effects of vacuum, but also shatter if struck with sufficient force (and so count as Toughness 0 against Impact Attacks). Shattered targets die instantly.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "21oR2RnKsm5AJFs6"
+}

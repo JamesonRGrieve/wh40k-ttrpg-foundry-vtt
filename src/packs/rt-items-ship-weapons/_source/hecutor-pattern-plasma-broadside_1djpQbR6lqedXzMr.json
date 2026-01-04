@@ -1,0 +1,25 @@
+{
+  "name": "Hecutor-pattern Plasma Broadside",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "Battlecruisers, Grand Cruisers",
+    "powerUsage": 12,
+    "spaceUsage": 5,
+    "spCost": 2,
+    "damage": "1d10+2",
+    "strength": 5,
+    "critRating": 4,
+    "range": 11,
+    "availability": "Rare",
+    "notes": "When this component rolls a 1 or 2 on the Critical Hit Chart, it affects two Components instead of one. Must occupy Port or Starboard slots.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> When this component rolls a 1 or 2 on the Critical Hit Chart, it affects two Components instead of one. Must occupy Port or Starboard slots.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1djpQbR6lqedXzMr"
+}

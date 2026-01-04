@@ -1,0 +1,14 @@
+{
+  "name": "Skimmer",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Move ~2 Above Ground with minour adjusting possible. Can also move to Low Altitude. Ignores Difficult Terrain, gains +10 to Manoeuvrability. Cannot Fly properly as a Flyer can, but still crashes to the ground if immobilised.",
+    "description": {
+      "value": "<p>Move ~2 Above Ground with minour adjusting possible. Can also move to Low Altitude. Ignores Difficult Terrain, gains +10 to Manoeuvrability. Cannot Fly properly as a Flyer can, but still crashes to the ground if immobilised.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yTnQEuftHdzMsIA9"
+}

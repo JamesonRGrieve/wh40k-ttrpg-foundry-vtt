@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Tent",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "9kg",
+    "availability": "A Tent to fit two people and their gear. Water Proof and has a Reflective side for warding away hot suns.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Average",
+    "notes": "40 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 40 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gre6W8CWTuzjxYRn"
+}

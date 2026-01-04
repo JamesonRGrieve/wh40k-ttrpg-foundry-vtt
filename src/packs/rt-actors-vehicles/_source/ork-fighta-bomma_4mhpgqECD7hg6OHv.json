@@ -1,0 +1,25 @@
+{
+  "name": "Ork Fighta-Bomma",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Spacecraft/Flyer",
+    "size": "20AU's",
+    "tacticalSpeed": "2,200kph/ 8VU's",
+    "cruisingSpeed": "+5",
+    "maneuverability": "25",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "All 25",
+    "rearArmour": "Ork Pilot, 2-4 Grot Riggers, 1-2 Grot Gunners",
+    "structuralIntegrity": "Assorted Bomms, Rokkits, and Grot-Guided Ordinance",
+    "crew": "Pilot: 4 Big Shootas (Front, Range 400m (4 AU), S/3/10, 1d10+6 I, Pen 4, Clip 1000, Reload -, Inaccurate, Unreliable\nGrot Gunner: Bigga Big Shoota Turret (Left/Right/Rear, Range 400m (4 AU), S/3/10, 2d10+10 I, Pen 5, Clip 1000, Reload -, Inaccurate, Unreliable, Twin-Linked)",
+    "passengers": "Is a Spacecraft, but can only act as Flyer in Atmosphere. Pilot can fire all Pilot Weapons simultaneously, rolling once for all Big Shootas, dealing 3d10+20 Damage with Pen 4. Bomb Payloads can't accurately hit small targets like individuals or vehicles, estimate damage of 5d10+5 E, Pen 1d10, Blast 12. Acts as both a Fighter and a Bomber, has Craft Rating of +8 (Fighta) or +5 (Bomma) and squadron size of 25 for Attack Craft Purposes. Can only acquire if allied with Ork Freebooters.",
+    "cargo": "Extremely Rare",
+    "availability": "RT: Battlefleet Koronus",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "4mhpgqECD7hg6OHv"
+}

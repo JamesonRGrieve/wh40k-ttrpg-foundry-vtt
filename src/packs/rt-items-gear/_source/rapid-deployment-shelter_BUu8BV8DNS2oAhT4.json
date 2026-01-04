@@ -1,0 +1,20 @@
+{
+  "name": "Rapid Deployment Shelter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "200kg+",
+    "availability": "A Durable Portable Shelter. Made of AP 15 Rockcrete and comes with radiation scrubbers, acts as cover. Once per Encounter, can make +0 Tech-Use Test to increase AP to 30 for 1d5 Rounds. Can operate for 1d10 months before needing recharging. ",
+    "cost": "Starts as metre thick, several metre wide plank, unfolds and builds itself when deployed in  ~30 minutes. Can make +0 Tech-Use test to reduce build time by 5 minutes, +5 per DoS.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BUu8BV8DNS2oAhT4"
+}

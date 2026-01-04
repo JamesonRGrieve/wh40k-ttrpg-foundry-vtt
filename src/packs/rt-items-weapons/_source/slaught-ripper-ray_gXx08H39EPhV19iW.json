@@ -1,0 +1,28 @@
+{
+  "name": "Slaught Ripper Ray",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+6",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 15,
+    "reload": "Full",
+    "special": "Reliable, Tearing",
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Seemingly made out of brass, bone, and meaty gristle. Weapon physically bites into and binds with the hand of the wielder. Fires dark beams that twist and rupture people apart on the inside.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Tearing</p><p><b>Note:</b> Xenotech. Seemingly made out of brass, bone, and meaty gristle. Weapon physically bites into and binds with the hand of the wielder. Fires dark beams that twist and rupture people apart on the inside.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gXx08H39EPhV19iW"
+}

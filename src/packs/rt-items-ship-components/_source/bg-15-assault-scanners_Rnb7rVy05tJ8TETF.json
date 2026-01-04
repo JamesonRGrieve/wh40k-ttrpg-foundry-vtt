@@ -1,0 +1,21 @@
+{
+  "name": "BG-15 Assault Scanners",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Augurs",
+    "hullType": "All Ships",
+    "powerUsage": 5,
+    "spaceUsage": 0,
+    "spCost": "-",
+    "effect": "The eyes and ears of the ship. +5 to BS Tests against Planetary Based Targets, +50 Achievement Points towards Military Objectives. Component can only be damaged or destroyed by a critical hit.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>The eyes and ears of the ship. +5 to BS Tests against Planetary Based Targets, +50 Achievement Points towards Military Objectives. Component can only be damaged or destroyed by a critical hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rnb7rVy05tJ8TETF"
+}

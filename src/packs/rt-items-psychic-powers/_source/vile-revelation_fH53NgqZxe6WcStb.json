@@ -1,0 +1,22 @@
+{
+  "name": "Vile Revelation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Mark of Tzeentch, Perception 50+, Psy Rating 5",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "- 10 Opposed Perception",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst Power is Sustained, Psyker sees into the future, gaining a bonus to all tests equal to twice their Psy Rating, however they suffer 1d5 Intelligence Damage every turn the power is sustained.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fH53NgqZxe6WcStb"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Combat Webbing",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Fits over Astartes Scout Armour as well as most body sizes. Consists of sturdy web belts that consist of various pouches such as: Clip Pouches (Hold two clips), Medicae Pouch (contains patches, contraseptics, single-use injectors, Astartes Detox, Pain Suppressant, Morpha, Resuscitex, etc, providfes +20 to Medicae Tests), Vox Pouch (Astartes Vox Unit), Grenade Pouch (4 Krak/Frag Grenades), Knife Pouch (One Astartes Combat Knife), Shotgun Pouch (8 Astartes Shotgun Rounds), Sidearm Holster (one Astartes Sidearm), Drop Pouch (Holds Spare Mags, has a Draw String or Magnetic Lock).",
+    "cost": "Consists of various pouches, may have more than what is listed.\nUsed by Astartes Scouts.",
+    "effects": "Initiated",
+    "notes": "3 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 3 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CIMB9xYzjcPL0bNh"
+}

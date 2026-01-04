@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Krak Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "3d10+4",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep",
+    "weight": "0.8kg",
+    "availability": "Initiated",
+    "cost": "1 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8DHpDTf6vSZ1qXyz"
+}

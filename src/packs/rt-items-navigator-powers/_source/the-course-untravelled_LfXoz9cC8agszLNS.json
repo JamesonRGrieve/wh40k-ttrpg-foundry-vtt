@@ -1,0 +1,21 @@
+{
+  "name": "The Course Untravelled",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "1m x Perception Characteristic",
+    "test": "-10 Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator moves to any point within range instantaneously, as long as it would have been possible for them to have walked, climbed or swam there normally without impediment. If test is failed, Navigator is stunned for 1 Round, if failed by 3+ DoF, is stunned for 1d10 Rounds and gains 1 Insanity Point. Regardless of pass or fail, Navigator gains 1 Fatigue at the end of the round.",
+    "adept": "Test becomes +0 Willpower Test. Range Becomes 2m x Perception Characteristic.",
+    "master": "Power may be used as a Reaction or Free Action.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator moves to any point within range instantaneously, as long as it would have been possible for them to have walked, climbed or swam there normally without impediment. If test is failed, Navigator is stunned for 1 Round, if failed by 3+ DoF, is stunned for 1d10 Rounds and gains 1 Insanity Point. Regardless of pass or fail, Navigator gains 1 Fatigue at the end of the round.</p><p><b>Adept:</b> Test becomes +0 Willpower Test. Range Becomes 2m x Perception Characteristic.</p><p><b>Master:</b> Power may be used as a Reaction or Free Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LfXoz9cC8agszLNS"
+}

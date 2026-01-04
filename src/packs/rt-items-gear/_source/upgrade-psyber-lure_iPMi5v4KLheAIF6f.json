@@ -1,0 +1,20 @@
+{
+  "name": "Upgrade: Psyber Lure",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Implanted into Psyber Familiars. Allows Psychic Individuals can use Familiar as a Psy-Focus and can extend effects of psychic abilities to them with a -10 to the Focus Power Test.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "1000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 1000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iPMi5v4KLheAIF6f"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Chimeric Talons",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Proven (4)",
+    "weight": "60kg",
+    "availability": "Hero",
+    "cost": "80 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Lightning Claws of the Astral Claws Chapter. Comes as a Pair of Lightning Claws that are requisitioned as one item and designed to be worn as a pair. When used against a Force Field, that Force Field decreases its Protection Rating by 10 and Increases its Overload Rating by 5.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Proven (4)</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Lightning Claws of the Astral Claws Chapter. Comes as a Pair of Lightning Claws that are requisitioned as one item and designed to be worn as a pair. When used against a Force Field, that Force Field decreases its Protection Rating by 10 and Increases its Overload Rating by 5.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b7NsTfd8zyb6MmUR"
+}

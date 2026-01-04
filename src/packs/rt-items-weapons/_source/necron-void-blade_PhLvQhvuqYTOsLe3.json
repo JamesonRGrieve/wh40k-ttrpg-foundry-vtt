@@ -1,0 +1,28 @@
+{
+  "name": "Necron Void Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Necron",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+11",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Crippling (5), Felling (2)",
+    "weight": "15kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Crippling (5), Felling (2)</p><p><b>Note:</b> Always Best Quality</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PhLvQhvuqYTOsLe3"
+}

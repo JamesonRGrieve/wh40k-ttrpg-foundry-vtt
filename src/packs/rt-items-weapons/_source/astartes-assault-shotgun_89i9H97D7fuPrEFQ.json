@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Assault Shotgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/3/5",
+    "damage": "2d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 20,
+    "reload": "Full",
+    "special": "SM Wep, Reliable, Scatter",
+    "weight": "10kg",
+    "availability": "Initiated",
+    "cost": "7 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Reliable, Scatter</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "89i9H97D7fuPrEFQ"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Concussive",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 45,
+    "description": {
+      "value": "<p>45</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OgDW5xcvDOLbApRv"
+}

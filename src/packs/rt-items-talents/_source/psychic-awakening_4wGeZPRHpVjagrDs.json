@@ -1,0 +1,17 @@
+{
+  "name": "Psychic Awakening",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Awakened Psyker Alternative Advance (Innate), WP 35+",
+    "effect": "Character gains Psy Rating 1, or increases their Psy Rating by 1 if they already had it. They choose one Psychic Discipline or other group of Psychic Techniques and immediately learn one Psychic Technique of value 200xp or less which they meed the prerequisites for. They do not gain the Basic Technique of this Discipline (req. GM Approval). From then on, unless allowed otherwise by the GM they may only purchase Psychic Techniques from this Discipline. They may switch Disciplin, but in so doing lose any Techniques of the old Discipline.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Character gains Psy Rating 1, or increases their Psy Rating by 1 if they already had it. They choose one Psychic Discipline or other group of Psychic Techniques and immediately learn one Psychic Technique of value 200xp or less which they meed the prerequisites for. They do not gain the Basic Technique of this Discipline (req. GM Approval). From then on, unless allowed otherwise by the GM they may only purchase Psychic Techniques from this Discipline. They may switch Disciplin, but in so doing lose any Techniques of the old Discipline.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4wGeZPRHpVjagrDs"
+}

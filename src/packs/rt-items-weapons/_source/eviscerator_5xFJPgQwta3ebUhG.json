@@ -1,0 +1,28 @@
+{
+  "name": "Eviscerator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+3",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unwieldy",
+    "weight": "12kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5xFJPgQwta3ebUhG"
+}

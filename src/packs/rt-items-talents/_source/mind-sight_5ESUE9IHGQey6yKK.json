@@ -1,0 +1,17 @@
+{
+  "name": "Mind Sight",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Witchfinder Alternative Advance, 600xp\nPsyniscience",
+    "effect": "The Character can spend a Fate Point to automatically succeed on a Psyniscience Test with Perception Bonus Degrees of Success.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>The Character can spend a Fate Point to automatically succeed on a Psyniscience Test with Perception Bonus Degrees of Success.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5ESUE9IHGQey6yKK"
+}

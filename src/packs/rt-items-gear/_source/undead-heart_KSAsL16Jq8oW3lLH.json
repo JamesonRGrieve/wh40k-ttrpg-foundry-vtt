@@ -1,0 +1,20 @@
+{
+  "name": "Undead Heart",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "1.5kg",
+    "availability": "A Character can be implanted with this mass of heresy with a -30 Medicae Test over the course of several hours. If successful they gain Regeneration(1d5) and The Stuff of Nightmares Traits. If fail, permenantly reduce Toughness Characteristic by 1d5. ",
+    "cost": "Once implanted, can never be removed without killing the host. Very Heretical.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KSAsL16Jq8oW3lLH"
+}

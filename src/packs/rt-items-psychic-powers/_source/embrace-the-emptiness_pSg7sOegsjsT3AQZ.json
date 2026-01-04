@@ -1,0 +1,22 @@
+{
+  "name": "Embrace the Emptiness",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n(Cryokinesis)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "If Psyker targets willing target, they drop the target's core body temperature and halt bodily processes. The target enters a trance for a number of days up to the psykers Psy Rating, chosen by the Psyker, which doubles with each degree of Success on the Focus Power Test . During this time, the target does not need to breath or eat, ignores environmental effects including that of a vacuum, and does not need to roll to survive negative effects such as Blood Loss. During this time the target cannot take actions, and cannot exit the state without the assistance of a psyker with this technique. If the target is unwilling, they instead make a +0 Toughness Test, and if failing gain 1 Fatigue and have their movement speed halved for the next turn.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pSg7sOegsjsT3AQZ"
+}

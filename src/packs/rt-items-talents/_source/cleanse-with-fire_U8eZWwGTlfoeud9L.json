@@ -1,0 +1,17 @@
+{
+  "name": "Cleanse with Fire",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T2)",
+    "requirements": "Tier 2: Sister of Battle E.Adv, Ballistic Skill 40\nAptitudes: Willpower, Offence",
+    "effect": "When attacking with a weapon that has the Flame Quality, the Sister can re-roll any results lower than their Willpower Bonus on damage rolls.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>When attacking with a weapon that has the Flame Quality, the Sister can re-roll any results lower than their Willpower Bonus on damage rolls.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "U8eZWwGTlfoeud9L"
+}

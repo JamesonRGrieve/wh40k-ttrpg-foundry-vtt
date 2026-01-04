@@ -1,0 +1,28 @@
+{
+  "name": "Legion Plasma Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Plasma",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+10",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 12,
+    "reload": "3 Full",
+    "special": "Maximal, Overheats, SM Wep",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "description": {
+      "value": "<p><b>Special:</b> Maximal, Overheats, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pGN8PaAdUKKdPOBa"
+}

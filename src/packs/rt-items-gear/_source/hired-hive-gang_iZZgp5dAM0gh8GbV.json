@@ -1,0 +1,20 @@
+{
+  "name": "Hired Hive Gang",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Requesting a Hive Gang to attack a specific location.",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iZZgp5dAM0gh8GbV"
+}

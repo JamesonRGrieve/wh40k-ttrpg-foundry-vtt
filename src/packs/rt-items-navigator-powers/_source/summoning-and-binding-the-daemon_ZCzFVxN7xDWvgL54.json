@@ -1,0 +1,21 @@
+{
+  "name": "Summoning and Binding the Daemon",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Summoning a Daemon requires performing a Daemonic Summoning Ritual and succeeding a Daemonic Mastery Test. As seen elsewhere. ",
+    "range": null,
+    "test": "Armoured",
+    "sustain": "9",
+    "novice": "Scales, bony plates, insectoid carapace, living metal, or some other form coats the Daemonhost's flesh. They gain the Natural Armour (5) Trait.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Scales, bony plates, insectoid carapace, living metal, or some other form coats the Daemonhost's flesh. They gain the Natural Armour (5) Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZCzFVxN7xDWvgL54"
+}

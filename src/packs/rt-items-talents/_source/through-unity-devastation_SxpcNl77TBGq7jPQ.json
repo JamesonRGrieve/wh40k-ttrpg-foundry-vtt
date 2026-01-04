@@ -1,0 +1,17 @@
+{
+  "name": "Through Unity, Devastation",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Ballistic Skill 45, Furious Fusillade, Command +20",
+    "effect": "The character can spend a Fate Point to make a +0 Ballistic Skill Test as a Full Action. If they succeed, they choose a single target within range, that unit is marked for one round, +1 per Degree of Success on test. Allied Tau characters that hit the target with ranged attacks can roll twice for damage and choose the higher result.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The character can spend a Fate Point to make a +0 Ballistic Skill Test as a Full Action. If they succeed, they choose a single target within range, that unit is marked for one round, +1 per Degree of Success on test. Allied Tau characters that hit the target with ranged attacks can roll twice for damage and choose the higher result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SxpcNl77TBGq7jPQ"
+}

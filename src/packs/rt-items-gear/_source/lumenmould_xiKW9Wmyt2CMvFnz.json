@@ -1,0 +1,20 @@
+{
+  "name": "Lumenmould",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "A Phosporescent fungus found in the Black Holds and Underdecks of some void ships, and likely other similar locations with the toxic sludge it thrives on. Provides 5m of dim light. \nProbably not safe to be around, doesn't stop some using it as body paint.",
+    "cost": null,
+    "effects": "Abundant",
+    "notes": "0 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 0 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xiKW9Wmyt2CMvFnz"
+}

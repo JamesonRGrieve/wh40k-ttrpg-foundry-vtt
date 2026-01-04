@@ -1,0 +1,20 @@
+{
+  "name": "Interstellar Travel",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Transport via a voidship from one system to another.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OiRWCSjujIRpVCjh"
+}

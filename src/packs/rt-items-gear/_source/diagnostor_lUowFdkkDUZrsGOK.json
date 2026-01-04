@@ -1,0 +1,20 @@
+{
+  "name": "Diagnostor",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "4kg",
+    "availability": "+20 to Medicae or Perception Tests to determine ailments. Success indicates proper medical countermeasures.",
+    "cost": "Can be installed in servo-skulls and servitors, as well as medkits.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lUowFdkkDUZrsGOK"
+}

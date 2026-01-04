@@ -1,0 +1,28 @@
+{
+  "name": "Autocannon (M34, Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "300m",
+    "rof": "S/3/-",
+    "damage": "3d10+8",
+    "damageType": "Impact",
+    "penetration": 6,
+    "clip": 20,
+    "reload": "2 Full",
+    "special": "Ogryn-Proof, Reliable",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "1000 T",
+    "source": "Only War: Core",
+    "note": "Can be manned as a crew of two.",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Reliable</p><p><b>Note:</b> Can be manned as a crew of two.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FMo6McBn123PJeyG"
+}

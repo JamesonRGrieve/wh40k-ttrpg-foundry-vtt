@@ -1,0 +1,17 @@
+{
+  "name": "Thump 'em!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Ogryn, Ogryn Comrade, Frenzy\nApt: Weapon Skill, Offence",
+    "descriptionText": "Comrade in Cohesion gives Character +4 Damage and Concussive(0) on their next melee Attack Action.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Comrade in Cohesion gives Character +4 Damage and Concussive(0) on their next melee Attack Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a6UZ25oiXyAZHAla"
+}

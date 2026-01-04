@@ -1,0 +1,22 @@
+{
+  "name": "Chorus of the Righteous",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Know Thy Place",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker chooses a number of allies, up to their Psy Rating (excluding themselves). As long as power is sustained, each ally gains +5, with additional +5 per Degree of Success on Focus power Test, to their Weapon Skill and Ballistic Skill Tests, up to a maximum of +30. The Psyker causes all nearby emblems of the imperium to flare with bright light, as an astropathic choir joins in song to praise their mission and cast damnation on their foes.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tuTvmZ8TPt47VRNE"
+}

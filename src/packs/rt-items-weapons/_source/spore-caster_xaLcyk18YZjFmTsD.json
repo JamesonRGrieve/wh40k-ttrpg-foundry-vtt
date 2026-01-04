@@ -1,0 +1,28 @@
+{
+  "name": "Spore Caster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Devastating (5), Hallucinogenic (3), Spray",
+    "weight": "5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.",
+    "description": {
+      "value": "<p><b>Special:</b> Devastating (5), Hallucinogenic (3), Spray</p><p><b>Note:</b> Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xaLcyk18YZjFmTsD"
+}

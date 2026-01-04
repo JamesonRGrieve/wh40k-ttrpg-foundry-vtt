@@ -1,0 +1,28 @@
+{
+  "name": "The Scyphus Vitae",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+13",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Devastating (1), Power Field, Unwieldy",
+    "weight": "18kg",
+    "availability": "Famed",
+    "cost": "50 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Powersword of the Blood Drinkers Chapter. Two-Handed. Wielder can drink the blood of any target they deal wounds to with this weapon to avert the Blood Craving curse of their Chapter.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Devastating (1), Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Powersword of the Blood Drinkers Chapter. Two-Handed. Wielder can drink the blood of any target they deal wounds to with this weapon to avert the Blood Craving curse of their Chapter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "26eSRDXex0SUldgB"
+}

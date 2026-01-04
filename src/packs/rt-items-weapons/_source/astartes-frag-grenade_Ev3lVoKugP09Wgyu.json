@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Frag Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Blast (5)",
+    "weight": "0.8kg",
+    "availability": "Initiated",
+    "cost": "1 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ev3lVoKugP09Wgyu"
+}

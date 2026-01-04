@@ -1,0 +1,17 @@
+{
+  "name": "Weapon-Tech",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Tech-Use +10, Intelligence 40\nAptitudes: Intelligence, Tech, Unaligned",
+    "effect": "Once per Combat, character wielding a Melta, Plasma, Power, or Exotic Weapon can add their Intelligence Bonus to the Dmaage and Penetration values of the weapon for one Round.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Combat, character wielding a Melta, Plasma, Power, or Exotic Weapon can add their Intelligence Bonus to the Dmaage and Penetration values of the weapon for one Round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "liHLz2cdLrMIXQN7"
+}

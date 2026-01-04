@@ -1,0 +1,28 @@
+{
+  "name": "Howler Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (10)",
+    "weight": "0.5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Lasts for 1d5 Rounds producing an incredibly loud sound, anyone in range must make a +0 Toughness Test or be stunned while the grenade is active.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Lasts for 1d5 Rounds producing an incredibly loud sound, anyone in range must make a +0 Toughness Test or be stunned while the grenade is active.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N0dYv1kSfcQpi4ar"
+}

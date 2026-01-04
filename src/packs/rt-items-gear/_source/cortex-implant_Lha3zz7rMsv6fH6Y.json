@@ -1,0 +1,20 @@
+{
+  "name": "Cortex Implant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Repairs brain damage/paralysis. Poor: Lobotomises implantee. Common: -1d10 WS, BS, AG, INT, and FEL and +1d10 Insanity. Good: gain unnatural Intelligence (x2), perform all functions of cogitator, +1d10 insanity. ",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "5000 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 5000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Lha3zz7rMsv6fH6Y"
+}

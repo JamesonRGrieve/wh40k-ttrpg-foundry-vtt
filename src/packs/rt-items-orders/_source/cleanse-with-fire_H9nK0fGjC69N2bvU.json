@@ -1,0 +1,17 @@
+{
+  "name": "Cleanse with Fire!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ",Schol. Lore (Imp Creed), Weapon Training (Flame). \nApt: Ballistic Skill, Offence",
+    "descriptionText": "Character can use Order whenever an enemy is on fire within 10 metres of a Comrade in Cohesion. Until Character's next turn, enemy has -20 to any tests to extinguish flames and suffers +1d5 Damage from effects with the Flame Quality.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can use Order whenever an enemy is on fire within 10 metres of a Comrade in Cohesion. Until Character's next turn, enemy has -20 to any tests to extinguish flames and suffers +1d5 Damage from effects with the Flame Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H9nK0fGjC69N2bvU"
+}

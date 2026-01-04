@@ -1,0 +1,28 @@
+{
+  "name": "Firesprite Needler",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "-/4/8",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 16,
+    "reload": "2 Full",
+    "special": "Inaccurate, Toxic (2)",
+    "weight": "1.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Inbuilt Compact, Forearm Mounting, and Silencer Upgrades.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Toxic (2)</p><p><b>Note:</b> Inbuilt Compact, Forearm Mounting, and Silencer Upgrades.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hkzR29UOMvQWPuq6"
+}

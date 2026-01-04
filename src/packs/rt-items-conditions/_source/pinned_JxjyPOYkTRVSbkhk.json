@@ -1,0 +1,22 @@
+{
+  "name": "Pinned",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Shooting while pinned: -20",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Shooting while pinned: -20</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "self"
+    }
+  },
+  "_id": "JxjyPOYkTRVSbkhk"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Scatter",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 0,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ypmmi9aeBcMfbfFJ"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Camp Warders",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "4kg",
+    "availability": "Half a Dozen Small Clockwork Scorpions Data-Linked to a Screamer. The Screamer is buried on the edge of a camp. When triggered, it silently sends a message to these Camp Warders which act to frighten and cause mild but not damaging pain to herd away intruders. Creatures with the Bestial Trait make a -20 Willpower Test or flee.",
+    "cost": "Cost includes a Modified Screamer and 6 Camp Warders \n(Screamer: set via a Tech-Use Test, has perception 75, see profile for full info)",
+    "effects": "Rare",
+    "notes": "310 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 310 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AxmCreacL0wdQuiw"
+}

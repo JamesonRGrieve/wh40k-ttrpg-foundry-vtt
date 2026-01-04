@@ -1,0 +1,17 @@
+{
+  "name": "Master Chirurgeon",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Medicae +10\nAptitudes: Intelligence, Fieldcraft, Nurgle",
+    "effect": "Gain +10 to all Medicae Skill Tests. If character fails a Medicae Skill Test whilst performing Extended Care, the can reduce the amount of damage suffered by their Patients by their Intelligence Bonus.\nIf their Patients are in danger of losing a Limb from a Critical Hit, the character provides their patient +20 to the Toughness Bonus to avoid losing the limb.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Gain +10 to all Medicae Skill Tests. If character fails a Medicae Skill Test whilst performing Extended Care, the can reduce the amount of damage suffered by their Patients by their Intelligence Bonus.\nIf their Patients are in danger of losing a Limb from a Critical Hit, the character provides their patient +20 to the Toughness Bonus to avoid losing the limb.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vXMp4nWesoI2opbY"
+}

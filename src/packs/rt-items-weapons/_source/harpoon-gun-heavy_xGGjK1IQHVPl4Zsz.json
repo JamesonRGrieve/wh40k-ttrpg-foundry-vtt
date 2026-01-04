@@ -1,0 +1,28 @@
+{
+  "name": "Harpoon Gun (Heavy)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "4 Full",
+    "special": "Crippling (5), Primitive (9), Snare (1)",
+    "weight": "18kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (5), Primitive (9), Snare (1)</p><p><b>Note:</b> If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xGGjK1IQHVPl4Zsz"
+}

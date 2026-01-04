@@ -1,0 +1,17 @@
+{
+  "name": "Give it Sum Dakka!",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork, Bulging Biceps, Strength 50",
+    "effect": "The Ork may use the Suppressive Fire Combat Action as a Half Action instead of a Full Action.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The Ork may use the Suppressive Fire Combat Action as a Half Action instead of a Full Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bqcQI2NZQqi5iyw7"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Mark VI \"Corvus\" Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "All",
+    "ap": "8/9/8/8",
+    "maxAg": null,
+    "weight": "170kg",
+    "availability": "Initiated",
+    "cost": "-",
+    "notes": "The Armour created during the Horus Heresy, lighter and smoother, often fitted with a Jump Pack. +10 to Agility.  Readily interchangable with Mk VII Parts .+20 Strength. Subsystems: Autosenses (+15), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History 2 Times. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>The Armour created during the Horus Heresy, lighter and smoother, often fitted with a Jump Pack. +10 to Agility.  Readily interchangable with Mk VII Parts .+20 Strength. Subsystems: Autosenses (+15), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History 2 Times. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "46WSjcevYpDTe1zJ"
+}

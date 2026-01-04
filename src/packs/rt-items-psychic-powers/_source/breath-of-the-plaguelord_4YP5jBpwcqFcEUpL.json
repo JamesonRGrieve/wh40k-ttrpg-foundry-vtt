@@ -1,0 +1,22 @@
+{
+  "name": "Breath of the Plaguelord",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Daemon",
+    "prerequisites": "Daemonic Trait",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Deamon selects target position, all Living Creatures in 2m x Psy Rating of position make -20 Toughness Test with -5 per Degree of Success on Focus Power Test, or are afflicted by Nurgle's Rot. Attack can be dodged as with Area of Effect Ranged Attack. Nurgle's Rot immediately causes 1d5 Impact Damage ignoring Armour and Toughness, repeating at the start of an afflicted creature's turn for a number of rounds equal to the Degrees of Failiure it made on Toughness Test. Whenever a creature suffers damage from this, it spreads the disease to every non-infected Living Creature withinin 5 metres (even those who passed prior tests or who survived it the first time), who must make +0 Toughness Test or be infected with Nurgle's Rot following same rules. Any Creature that dies as a result of this rises as a Plaguebearer.  (See Plaguebearer Stats)",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4YP5jBpwcqFcEUpL"
+}

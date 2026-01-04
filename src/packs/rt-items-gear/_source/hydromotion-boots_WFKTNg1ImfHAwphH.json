@@ -1,0 +1,20 @@
+{
+  "name": "Hydromotion Boots",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "4kg",
+    "availability": "Worn boots that can support up to 250kg over liquid surfaces. However if moving faster than full move action, must make +0 Agility Test or be forced to reduce movement to Full-Move. Failing by 2+ DoF causes user to fall, 4+ DoF user is inverted, boots above water, rest below. Imposes -10 on Silent Move and Shadowing Tests.",
+    "cost": "Potentially Rarer versions exist that are Heat, Cold, and/or Chemical resistant for walking over dangerous liquids or in dangerous environments.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WFKTNg1ImfHAwphH"
+}

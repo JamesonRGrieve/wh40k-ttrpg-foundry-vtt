@@ -1,0 +1,17 @@
+{
+  "name": "Honour the Weapon",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Mechanicus Related, Common Lore (Mechanicus, Tech)\nApt: Ballistic Skill, Tech",
+    "descriptionText": "Character can use Order when they or another Squad Member's Weapon suffers a Jam. Comrade in Comms Range immediately repairs the Jam without needing a test as long they are within 5 Metres of it. Can be used with Servitor Comrades in addition to normal ones.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can use Order when they or another Squad Member's Weapon suffers a Jam. Comrade in Comms Range immediately repairs the Jam without needing a test as long they are within 5 Metres of it. Can be used with Servitor Comrades in addition to normal ones.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PRcy3lObOoooPa3c"
+}

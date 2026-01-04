@@ -1,0 +1,22 @@
+{
+  "name": "The Armour of Faith",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power Relic (Astartes)",
+    "locations": "All",
+    "ap": 12,
+    "maxAg": null,
+    "weight": "100kg",
+    "availability": "Hero",
+    "cost": "60 R",
+    "notes": "Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NkpkRACAGTRp6PNT"
+}

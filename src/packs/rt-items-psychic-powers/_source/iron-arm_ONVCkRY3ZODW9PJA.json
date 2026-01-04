@@ -1,0 +1,22 @@
+{
+  "name": "Iron Arm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Endurance, Strength 35+, Toughness 35+",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "-20 Willpower ",
+    "opposed": "Yes",
+    "sustained": "Psyker gains Unnatural Toughness and Unnatural Strength (+X), where X is equal to half their Psy Rating, rounded up (Use Only War Unnatural Characteristics Trait). However they suffer -10 to Agility Characteristic while this power is active.",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ONVCkRY3ZODW9PJA"
+}

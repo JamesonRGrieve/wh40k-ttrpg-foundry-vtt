@@ -1,0 +1,28 @@
+{
+  "name": "Armageddon-Class Battlecruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Battlecruiser",
+    "size": "5km long, 0.8km wide",
+    "crew": 98500,
+    "speed": 5,
+    "manoeuvrability": 10,
+    "detection": 10,
+    "hull": 70,
+    "armour": 20,
+    "turrets": 2,
+    "space": 73,
+    "shipPoints": 63,
+    "weaponCapacity": "1 Prow, 1 Dorsal, 2 Port, 2 Starboard.",
+    "notes": "Can use \"Cruiser Only\" Components. Can only stock 3 Months of Supplies before taking crew/morale damage, instead of the normal 6.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can use \"Cruiser Only\" Components. Can only stock 3 Months of Supplies before taking crew/morale damage, instead of the normal 6.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "aSwsgBg553gNpsmm"
+}

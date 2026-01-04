@@ -1,0 +1,20 @@
+{
+  "name": "Glimmerdust",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Character gains Resistance(Psychic Powers) for Willpower Bonus Hours, if they already have this talent, they gain a further +10 to resist Psychic Powers. Whilst under the influence of the drug suffer -30 to all Perception Tests, Psykers taking this drug cannot Push their powers.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0uhELgsTxdSrkYwl"
+}

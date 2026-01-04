@@ -1,0 +1,19 @@
+{
+  "name": "Ship's Steward",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Monitors resource stocks such as food/water/air.",
+    "careerPreferences": "Seneschal, Void-masters, chars with Void-Born Homeworld.",
+    "subordinates": "Master of Stores, Hydologists, Atmospheric Regulator Guildmaster",
+    "importantSkills": "Blather, Survival, ",
+    "effect": "Doubles time ship can function without resupply before suffering consequences of long term voyage. (by default 6 months --> 1 year)",
+    "description": {
+      "value": "<p><b>Purpose:</b> Monitors resource stocks such as food/water/air.</p><p><b>Effect:</b> Doubles time ship can function without resupply before suffering consequences of long term voyage. (by default 6 months --> 1 year)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SpcIkZOOZsSM5w2E"
+}

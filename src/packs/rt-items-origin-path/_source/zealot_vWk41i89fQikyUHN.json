@@ -1,0 +1,25 @@
+{
+  "name": "Zealot",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Lure of the Void",
+    "descriptionText": "1. Blessed Scars: +10 to Intimidate Tests, -10 to Charm Tests. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).\n2. Unnerving Clarity: +5 Willpower, -5 Fellowship or 1d10 Insanity.\n3. Favoured of the Faithful: +5 Fellowship, -5 Toughness. Gain Peer (Ecclesiarchy).",
+    "effects": "1. Blessed Scars: +10 to Intimidate Tests, -10 to Charm Tests. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).\n2. Unnerving Clarity: +5 Willpower, -5 Fellowship or 1d10 Insanity.\n3. Favoured of the Faithful: +5 Fellowship, -5 Toughness. Gain Peer (Ecclesiarchy).",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Blessed Scars: +10 to Intimidate Tests, -10 to Charm Tests. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).<br>2. Unnerving Clarity: +5 Willpower, -5 Fellowship or 1d10 Insanity.<br>3. Favoured of the Faithful: +5 Fellowship, -5 Toughness. Gain Peer (Ecclesiarchy).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.lure-of-the-void",
+      "step": "Lure of the Void",
+      "stepIndex": 3,
+      "number": "5"
+    }
+  },
+  "_id": "vWk41i89fQikyUHN"
+}

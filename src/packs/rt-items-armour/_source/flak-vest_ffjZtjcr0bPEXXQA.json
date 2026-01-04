@@ -1,0 +1,22 @@
+{
+  "name": "Flak Vest",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Flak",
+    "locations": "Body",
+    "ap": 3,
+    "maxAg": 60,
+    "weight": "5kg",
+    "availability": "Average",
+    "cost": "50 T",
+    "notes": "+1 AP against Blast Weapons if not at centre of blast.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ffjZtjcr0bPEXXQA"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Commander",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
+    "descriptionText": "On the Battlefield the Commander's will be done, they are sure of voice, unyielding in action. They may lead a multitude of Comrades underneath them, who seek to slay the enemies of the Imperium, or assist others in doing so.",
+    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Commander. Apt: Intelligence, Leadership, Social, Toughness, Weapon Skill\nAdd. Equipment: Best Chainsword or Common Power Sword, Best Laspistol or Good Bolt Pistol, Laud Hailer. Gain Talents: Air of Authority+Combat Formation or Heroic Inspiration. Can Purchase Unique Talent: Born Leader and Sweeping Orders: Back them Up, Dig In, and Flank Them! ",
+    "source": "OW: Hammer of the Emperor (Page 62)",
+    "description": {
+      "value": "<p>On the Battlefield the Commander's will be done, they are sure of voice, unyielding in action. They may lead a multitude of Comrades underneath them, who seek to slay the enemies of the Imperium, or assist others in doing so.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Commander. Apt: Intelligence, Leadership, Social, Toughness, Weapon Skill\nAdd. Equipment: Best Chainsword or Common Power Sword, Best Laspistol or Good Bolt Pistol, Laud Hailer. Gain Talents: Air of Authority+Combat Formation or Heroic Inspiration. Can Purchase Unique Talent: Born Leader and Sweeping Orders: Back them Up, Dig In, and Flank Them! </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L6Yluq2I9pXfUcp4"
+}

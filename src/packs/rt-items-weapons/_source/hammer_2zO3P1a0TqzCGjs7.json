@@ -1,0 +1,28 @@
+{
+  "name": "Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (9), Unbalanced",
+    "weight": "4kg",
+    "availability": "Common",
+    "cost": "10 T",
+    "source": "Black Crusade: Core",
+    "note": "Can be carried openly without generating too much suspicion",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (9), Unbalanced</p><p><b>Note:</b> Can be carried openly without generating too much suspicion</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2zO3P1a0TqzCGjs7"
+}

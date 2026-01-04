@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Gun (Clovis)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Plasma",
+    "range": "60m",
+    "rof": "S/3/5",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 40,
+    "reload": "5 Full",
+    "special": "Overheats, Maximal",
+    "weight": "20kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Can only use Maximal Setting on single-shot or semi-automatic fire",
+    "description": {
+      "value": "<p><b>Special:</b> Overheats, Maximal</p><p><b>Note:</b> Can only use Maximal Setting on single-shot or semi-automatic fire</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "72LQ7ADdiUumXix3"
+}

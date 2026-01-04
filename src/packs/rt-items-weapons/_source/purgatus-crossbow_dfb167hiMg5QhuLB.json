@@ -1,0 +1,28 @@
+{
+  "name": "Purgatus Crossbow",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": "Reliable",
+    "weight": "16kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Mix of a Shotgun and Crossbow, can fire any type of Shotgun and Crossbow ammo, as well as Purgatus Stakes unusual ammo.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Mix of a Shotgun and Crossbow, can fire any type of Shotgun and Crossbow ammo, as well as Purgatus Stakes unusual ammo.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dfb167hiMg5QhuLB"
+}

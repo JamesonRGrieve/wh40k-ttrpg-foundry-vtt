@@ -1,0 +1,28 @@
+{
+  "name": "Laspistol (Mark IV \"Dervish\")",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "25m",
+    "rof": "S/4/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 20,
+    "reload": "1 Full",
+    "special": "Reliable",
+    "weight": "1.5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5QeLGrCMwLIRUteD"
+}

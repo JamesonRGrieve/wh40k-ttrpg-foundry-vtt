@@ -1,0 +1,14 @@
+{
+  "name": "Balanced",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 167,
+    "description": {
+      "value": "<p>167</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AkOxPbSVmO3AV6lg"
+}

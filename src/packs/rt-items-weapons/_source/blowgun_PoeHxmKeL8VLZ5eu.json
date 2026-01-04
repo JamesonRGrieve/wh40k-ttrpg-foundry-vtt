@@ -1,0 +1,28 @@
+{
+  "name": "Blowgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d5+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Half",
+    "special": "Toxic (0)",
+    "weight": "0.5kg",
+    "availability": "Common",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Easy to make and coneal. Ammunition is annoying to find",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic (0)</p><p><b>Note:</b> Easy to make and coneal. Ammunition is annoying to find</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PoeHxmKeL8VLZ5eu"
+}

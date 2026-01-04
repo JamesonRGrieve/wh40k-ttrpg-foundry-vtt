@@ -1,0 +1,17 @@
+{
+  "name": "Piety's Reward",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Prelate-At-Arms Advanced Specialty(300xp)",
+    "effect": "Whenever an ally within communication range of the character spends a Fate Point, the character can immediately make a -20 Command Test as a Free Action. If successful they immediately issue the \"Righteous Oration\" Order that lasts until the end of the Turn, even if it had already been used by their Comrade this encounter. Righetous Oration, Order: All Player Characters within comms range can Re-roll Damage Rolls for duration.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Whenever an ally within communication range of the character spends a Fate Point, the character can immediately make a -20 Command Test as a Free Action. If successful they immediately issue the \"Righteous Oration\" Order that lasts until the end of the Turn, even if it had already been used by their Comrade this encounter. Righetous Oration, Order: All Player Characters within comms range can Re-roll Damage Rolls for duration.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SRaMvTlktZDnoC3p"
+}

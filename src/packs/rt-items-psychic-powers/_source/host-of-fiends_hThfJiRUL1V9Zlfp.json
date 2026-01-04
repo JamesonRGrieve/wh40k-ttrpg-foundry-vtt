@@ -1,0 +1,22 @@
+{
+  "name": "Host of Fiends",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 3",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating Radius",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "All enemies within range suffer -2*Psy Rating Penalty to Willpower Tests, every time a creature effected by this power fails a Willpower Test, they gain 1d5 Corruption Points per Degree of Failiure",
+    "effect": "200xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hThfJiRUL1V9Zlfp"
+}

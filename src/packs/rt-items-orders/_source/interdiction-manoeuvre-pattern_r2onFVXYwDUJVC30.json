@@ -1,0 +1,17 @@
+{
+  "name": "Interdiction Manoeuvre Pattern",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ".Servitor Comrade: Clipaeus-Class Combat Servitor\nApt: Weapon Skill, Defence",
+    "descriptionText": "Until the Beginning of the Character's Next Turn, Servitor Comrade in Cohesion will move to and attack the first enemy that approaches wihtin 5 metres of the Character, making a +0 Weapon Skill Test. If succeeding it hits once with its melee weapon. If the enemy was making a charge action against the character, it must resolve its attack against the Servitor Comrade instead.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Until the Beginning of the Character's Next Turn, Servitor Comrade in Cohesion will move to and attack the first enemy that approaches wihtin 5 metres of the Character, making a +0 Weapon Skill Test. If succeeding it hits once with its melee weapon. If the enemy was making a charge action against the character, it must resolve its attack against the Servitor Comrade instead.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r2onFVXYwDUJVC30"
+}

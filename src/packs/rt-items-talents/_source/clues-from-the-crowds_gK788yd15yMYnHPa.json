@@ -1,0 +1,17 @@
+{
+  "name": "Clues from the Crowds",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Fellowship 30\nAptitudes: General, Social",
+    "effect": "Once per day, character can re-roll a test made to gather information from a group of people.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Once per day, character can re-roll a test made to gather information from a group of people.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gK788yd15yMYnHPa"
+}

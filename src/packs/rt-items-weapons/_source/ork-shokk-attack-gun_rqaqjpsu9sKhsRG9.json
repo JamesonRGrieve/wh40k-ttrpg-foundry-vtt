@@ -1,0 +1,28 @@
+{
+  "name": "Ork Shokk Attack Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Ork",
+    "range": "200m",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Explosive",
+    "penetration": "1d10",
+    "clip": 8,
+    "reload": "2 Full",
+    "special": "Blast (3), Inaccurate, Overheats, Unreliable, Unstable",
+    "weight": "40kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Koronus Bestiary",
+    "note": "For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. If triples are rolled for damage, misfires. Roll 1d10: 1 - Explodes, resolve attack against self ignoring armour and weapon is destroyed, 2-5: Uses 3 extra rounds of \"ammo\",6-7: Reduce damage to 1d5 and Pen to 0 for attack, 8-9: Weapon is Blast(5) but damage is 1d10 for attack, 10: \"Ammo\" attacks the user.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Inaccurate, Overheats, Unreliable, Unstable</p><p><b>Note:</b> For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. If triples are rolled for damage, misfires. Roll 1d10: 1 - Explodes, resolve attack against self ignoring armour and weapon is destroyed, 2-5: Uses 3 extra rounds of \"ammo\",6-7: Reduce damage to 1d5 and Pen to 0 for attack, 8-9: Weapon is Blast(5) but damage is 1d10 for attack, 10: \"Ammo\" attacks the user.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rqaqjpsu9sKhsRG9"
+}

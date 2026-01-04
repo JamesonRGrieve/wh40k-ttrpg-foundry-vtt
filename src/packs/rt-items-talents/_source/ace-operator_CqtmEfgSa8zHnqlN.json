@@ -1,0 +1,17 @@
+{
+  "name": "Ace Operator",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Operate (Any) +10 \nAptitudes: Agility, Tech",
+    "effect": "When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CqtmEfgSa8zHnqlN"
+}

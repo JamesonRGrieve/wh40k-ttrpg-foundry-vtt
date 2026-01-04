@@ -1,0 +1,22 @@
+{
+  "name": "Reward of the Renegade",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Bastion of the Imperium\nOW: Psy Rating 5",
+    "focusPower": "Reaction",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "As a Reaction, the Psyker makes an Opposed Willpower Test vs an enemy who is attacking an ally (excluding themselves) within range who is currently under the effects of a beneficial psychic technique the Psyker is sustaining. If the Psyker wins opposed test, he prevents all damage that would have been caused by the attack would have dealt. If succeeding by 2+ Degrees of Success, the damage is returned to the attacker as an amount of Energy Damage equal to the amount of damage prevented, with Penetration 0. \nNote: If attacker is making multiple attacks, this technique likely only blocks one of the attacks.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lzs9kSbi2HhYBU9n"
+}

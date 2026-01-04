@@ -1,0 +1,28 @@
+{
+  "name": "M31 Plasma Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Plasma",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 20,
+    "reload": "5 Full",
+    "special": "Blast (1), Overheats, Maximal",
+    "weight": "45kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can choose between firing normally or maximally",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1), Overheats, Maximal</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9BuFA9QjGm0YWSA3"
+}

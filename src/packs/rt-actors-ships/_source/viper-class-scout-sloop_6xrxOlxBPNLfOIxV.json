@@ -1,0 +1,28 @@
+{
+  "name": "Viper-Class Scout Sloop",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Raider",
+    "size": "0.95km long, 0.25km wide",
+    "crew": 7500,
+    "speed": 11,
+    "manoeuvrability": 30,
+    "detection": 25,
+    "hull": 25,
+    "armour": 14,
+    "turrets": 1,
+    "space": 29,
+    "shipPoints": 27,
+    "weaponCapacity": "1 Dorsal",
+    "notes": "The smallest warp-capable ship in Battlefleet Calixis",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>The smallest warp-capable ship in Battlefleet Calixis</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "6xrxOlxBPNLfOIxV"
+}

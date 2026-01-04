@@ -1,0 +1,20 @@
+{
+  "name": "Eos Star Amulet",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "The wearer may re-roll one failed interaction skill test per game session.",
+    "cost": null,
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "M1Xpn6I45watUYOg"
+}

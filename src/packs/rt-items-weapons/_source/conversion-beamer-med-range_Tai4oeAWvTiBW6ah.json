@@ -1,0 +1,28 @@
+{
+  "name": "Conversion Beamer [Med Range]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "2d10+8",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Blast (2), Recharge",
+    "weight": "55kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Damage and Penetration vary with range. Use this profile for Medium Range. See Conversion Beamer [Short Range] and [Long Range]",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Recharge</p><p><b>Note:</b> Damage and Penetration vary with range. Use this profile for Medium Range. See Conversion Beamer [Short Range] and [Long Range]</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tai4oeAWvTiBW6ah"
+}

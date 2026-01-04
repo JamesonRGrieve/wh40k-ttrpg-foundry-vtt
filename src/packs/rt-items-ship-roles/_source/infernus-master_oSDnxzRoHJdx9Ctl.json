@@ -1,0 +1,19 @@
+{
+  "name": "Infernus Master",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Leads Firefighting and Damage control efforts.",
+    "careerPreferences": "Not Rogue Trader, Astropath, Explorator, or Navigator.",
+    "subordinates": "Shipboard Troops, damage-control crew",
+    "importantSkills": "Command, Intimidate, Search",
+    "effect": "+20 to Command Tests made to combat ship-board fires.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Leads Firefighting and Damage control efforts.</p><p><b>Effect:</b> +20 to Command Tests made to combat ship-board fires.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oSDnxzRoHJdx9Ctl"
+}

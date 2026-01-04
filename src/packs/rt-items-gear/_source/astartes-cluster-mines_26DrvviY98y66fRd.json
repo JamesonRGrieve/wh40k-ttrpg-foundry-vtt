@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Cluster Mines",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "4kg",
+    "availability": "Covers 2 square metres of space (at least 1 metre in each dimension). Can be increased by linking multiple mine arrays. When setting mines make Concealement Test ,with +20 if also trained in Demolition Skill. Those passing through area oppose result with Awareness Test. If the victim wins they stop short of the mines, if not they take 4d10 X, Pen 4 Damage. Double PEN vs Vehicles.",
+    "cost": "Can make a Demoltiions test when planting the mines to have a better trigger, such as a Time-delay.",
+    "effects": "Initiated",
+    "notes": "5 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 5 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "26DrvviY98y66fRd"
+}

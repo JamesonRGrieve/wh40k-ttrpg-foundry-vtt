@@ -1,0 +1,21 @@
+{
+  "name": "Librarium Vault",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "A Collection of Ancient Writings, Manuscripts, and Data. +10 to All investigation tests made aboard the ship. Only one per vessel.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>A Collection of Ancient Writings, Manuscripts, and Data. +10 to All investigation tests made aboard the ship. Only one per vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TIIbO2ipp3PKLO73"
+}

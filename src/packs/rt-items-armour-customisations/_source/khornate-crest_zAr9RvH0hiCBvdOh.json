@@ -1,0 +1,18 @@
+{
+  "name": "Khornate Crest",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour and Terminator Armour",
+    "effect": "Attached to the Head, provides +1 AP to head and +10 to all Interaction Tests with followers of Khorne. Counts as Dvotional Iconography. Must be dedicated to Khorne to wear,",
+    "weight": "+2kg",
+    "availability": "Extremely Rare",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p>Attached to the Head, provides +1 AP to head and +10 to all Interaction Tests with followers of Khorne. Counts as Dvotional Iconography. Must be dedicated to Khorne to wear,</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zAr9RvH0hiCBvdOh"
+}

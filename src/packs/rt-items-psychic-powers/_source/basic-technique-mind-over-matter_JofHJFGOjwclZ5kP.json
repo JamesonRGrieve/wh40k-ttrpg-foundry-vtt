@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: Mind over Matter",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower / Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Basic Technique of Telekinesis Discipline, available to any with this Discipline. The Psyker may lift or move any object within range and line of sight that does not exceed 10kg x Psy Rating. Heavy Objects do not move fast enough to damage someone, and when released, will slowly settle back to the surface. Objects 5kg x Psy Rating or Lighter however can be fired up to 5m x Psy Rating, to hit something with it, Psyker makes Ballistic Skill Test, with missile doing 1d10 Impact damage, +1 per 5kg of fired objects weight. Neither of these effects work against living things. However, Psyker can instead unleash a wave of force to shove any target, living or not, requiring Opposed Willpower vs Target's Strength, if passed, target is knocked to the ground and pushed 1m x Psy Rating.",
+    "effect": "Free",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JofHJFGOjwclZ5kP"
+}

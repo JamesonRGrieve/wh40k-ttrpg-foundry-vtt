@@ -1,0 +1,22 @@
+{
+  "name": "Carapace Vambraces",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "Arms",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "300 T",
+    "notes": null,
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PWhOXzeoZxl3qsXs"
+}

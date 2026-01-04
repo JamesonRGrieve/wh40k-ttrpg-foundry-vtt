@@ -1,0 +1,17 @@
+{
+  "name": "Combat Master",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 30\nAptitudes: Weapon Skill, Defence, Khorne",
+    "effect": "Opponents Fighting the character in Melee combat gain no bonuses for Ganging up on them.\nThe effects of the Double Team Talent still apply if the attackers have that however.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Opponents Fighting the character in Melee combat gain no bonuses for Ganging up on them.\nThe effects of the Double Team Talent still apply if the attackers have that however.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3mmeTUGeHTCav5HP"
+}

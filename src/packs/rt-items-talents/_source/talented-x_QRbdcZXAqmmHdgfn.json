@@ -1,0 +1,17 @@
+{
+  "name": "Talented (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "+10 to any Test made using relevent Skill \"X\".",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+10 to any Test made using relevent Skill \"X\".</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QRbdcZXAqmmHdgfn"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Celeritous Sense",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned, Psy Rating 4, Perception 40+, Lightning Reflexes",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker gains +5xPsy Rating to Perception, Dodge, and Parry Tests. They inflict Zealous Hatred/Righteous Fury on a roll of 9 or 10.\nThey can also detect stimuli that are normally far too insignificant to be noticed (such as whispered words from a hundreds of metres away, or the indiviudal blades on a properller), or that would be subsumed amidst other noise (such as picking out a specific location on a complex map, a specific person from a crowd, eavesdropping on a conversation in the middle of a battle, etc). The exact bounds are subject to the GM.\nThe Fickle Nature of Chaos may see it that only fragments of information are caught as opposed to a full conversation if it is especially plot important.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qiffJzzi63Fhsp7t"
+}

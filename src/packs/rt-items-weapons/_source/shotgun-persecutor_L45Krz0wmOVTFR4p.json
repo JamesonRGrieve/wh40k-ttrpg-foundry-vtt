@@ -1,0 +1,28 @@
+{
+  "name": "Shotgun (Persecutor)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "35m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 20,
+    "reload": "Full",
+    "special": "Reliable, Scatter",
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Scatter</p><p><b>Note:</b> Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L45Krz0wmOVTFR4p"
+}

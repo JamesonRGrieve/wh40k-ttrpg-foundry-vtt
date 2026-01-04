@@ -1,0 +1,22 @@
+{
+  "name": "Thought Shield",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy - Astropath Elite Advance",
+    "prerequisites": "Strong Minded Talent",
+    "focusPower": "Reaction\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower Test",
+    "opposed": "No",
+    "sustained": "Character can use this power in reaction to a rival psyker's mind-influencing ability, an attempt from a Daemon or similar creature to possess them, or any creature's attempt to subvert control of themselves. If the Focus Power Test succeeds they shield themselves from the attempt, which immediately fails.",
+    "effect": "300xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wHku9OXETguM4CDu"
+}

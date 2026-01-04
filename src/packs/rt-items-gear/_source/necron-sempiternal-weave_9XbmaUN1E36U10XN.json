@@ -1,0 +1,20 @@
+{
+  "name": "Necron Sempiternal Weave",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "When implanted/worn, increases Machine Trait by +1 and grants Sturdy Trait.",
+    "cost": "Weaved into the bodies of Necron Lords\nAlways Best Quality. Xenotech.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9XbmaUN1E36U10XN"
+}

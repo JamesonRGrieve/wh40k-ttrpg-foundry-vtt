@@ -1,0 +1,28 @@
+{
+  "name": "Shield (Mirror)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5-1",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive, Primitive (8)",
+    "weight": "3kg",
+    "availability": "Rare",
+    "cost": "60 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Provides AP 8 Primitive Cover to arm and body. Non-Primitive for las weapons.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Primitive (8)</p><p><b>Note:</b> Provides AP 8 Primitive Cover to arm and body. Non-Primitive for las weapons.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZUGkzAfhsxS0mshQ"
+}

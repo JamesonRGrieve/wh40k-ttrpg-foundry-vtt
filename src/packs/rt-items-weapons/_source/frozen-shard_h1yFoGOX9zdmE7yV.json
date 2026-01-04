@@ -1,0 +1,28 @@
+{
+  "name": "Frozen Shard",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Rending",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Felling (3)",
+    "weight": "2kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Blade with a Frictionless Surface, capable of piecring through the smallest joint or defect.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (3)</p><p><b>Note:</b> Blade with a Frictionless Surface, capable of piecring through the smallest joint or defect.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h1yFoGOX9zdmE7yV"
+}

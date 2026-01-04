@@ -1,0 +1,17 @@
+{
+  "name": "Death Serves the Righteous",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 50, Deadeye Shot, Sharpshooter \nAptitudes: Ballistic Skill, Offence",
+    "effect": "Once per Combat Encounter, character can spend a Fate Point to change the result of a 1 on a single damage die from a ranged attack to a 10. This can then inflict Righteous Fury as normal.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Once per Combat Encounter, character can spend a Fate Point to change the result of a 1 on a single damage die from a ranged attack to a 10. This can then inflict Righteous Fury as normal.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xv7bEEmwc3cRC4Ip"
+}

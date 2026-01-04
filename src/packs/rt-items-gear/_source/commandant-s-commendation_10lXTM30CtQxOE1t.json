@@ -1,0 +1,20 @@
+{
+  "name": "Commandant's Commendation",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+2 Penetration against Targets benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Bronze Star inlaid with a teardrop-shaped ruby.",
+    "cost": "Distinguished Service Medal: Capture or Kill an enemy Rebel General.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "10lXTM30CtQxOE1t"
+}

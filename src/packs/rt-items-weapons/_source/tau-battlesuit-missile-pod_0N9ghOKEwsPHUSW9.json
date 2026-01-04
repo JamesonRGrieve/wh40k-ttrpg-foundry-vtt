@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Missile Pod",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "200m",
+    "rof": "S/-/6",
+    "damage": "2d10+4",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": 36,
+    "reload": "2 Full",
+    "special": "Blast (2)",
+    "weight": "25kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. ",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0N9ghOKEwsPHUSW9"
+}

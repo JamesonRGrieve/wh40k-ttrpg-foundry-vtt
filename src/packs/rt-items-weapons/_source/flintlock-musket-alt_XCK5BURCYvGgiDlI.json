@@ -1,0 +1,28 @@
+{
+  "name": "Flintlock Musket (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "5 Full",
+    "special": "Primitive (8), Inaccurate, Unreliable",
+    "weight": "7kg",
+    "availability": "Common",
+    "cost": "30 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Inaccurate, Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XCK5BURCYvGgiDlI"
+}

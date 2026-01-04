@@ -1,0 +1,28 @@
+{
+  "name": "Grapplewhip",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "5m",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Snare",
+    "weight": "3kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Without training, missing an attack causes user to hit themselves in random location. With +0 Weapon Skill Test, user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. ",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Snare</p><p><b>Note:</b> Without training, missing an attack causes user to hit themselves in random location. With +0 Weapon Skill Test, user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zmfGsweZolM3fdgf"
+}

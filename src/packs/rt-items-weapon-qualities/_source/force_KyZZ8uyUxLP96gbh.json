@@ -1,0 +1,14 @@
+{
+  "name": "Force",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 21,
+    "description": {
+      "value": "<p>21</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KyZZ8uyUxLP96gbh"
+}

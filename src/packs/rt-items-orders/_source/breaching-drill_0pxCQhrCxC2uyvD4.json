@@ -1,0 +1,17 @@
+{
+  "name": "Breaching Drill",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Veteran Order\nHalf Action",
+    "requirements": ".Vet. Comrade\nApt: Agility, Offence",
+    "descriptionText": "If Comrade is in Cohesion, Prior to beginning an Encounter add +2 to Initative. On the first round of combat, each enemy with a lower Initiative roll than the Character's counts as being Unaware (+30 to hit). Can't issue order during combat after Initiative has been rolled.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>If Comrade is in Cohesion, Prior to beginning an Encounter add +2 to Initative. On the first round of combat, each enemy with a lower Initiative roll than the Character's counts as being Unaware (+30 to hit). Can't issue order during combat after Initiative has been rolled.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0pxCQhrCxC2uyvD4"
+}

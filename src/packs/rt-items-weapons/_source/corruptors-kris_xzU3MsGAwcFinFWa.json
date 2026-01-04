@@ -1,0 +1,28 @@
+{
+  "name": "Corruptors' Kris",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unbalanced",
+    "weight": "2.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unbalanced</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xzU3MsGAwcFinFWa"
+}

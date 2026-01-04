@@ -1,0 +1,20 @@
+{
+  "name": "Tox Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP Weapon (Pistol/Basic)",
+    "damageOrEffect": "Weapon gains Toxic(2) Quality",
+    "qualities": "Toxic(2)",
+    "weight": "10% wep",
+    "availability": "Average",
+    "cost": null,
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon gains Toxic(2) Quality</p><p><b>Qualities:</b> Toxic(2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LeH1plqOoi869KIW"
+}

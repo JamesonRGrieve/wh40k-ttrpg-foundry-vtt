@@ -1,0 +1,22 @@
+{
+  "name": "Bio-Lightning",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 14",
+    "opposed": "No",
+    "sustained": "Target Individual within range and line of sight takes 1d10 + Willpower Bonus Energy Damage.\nFor every 5 points above threshold, extend power's range by 10m.\nFor every 10 points above threshold, can launch another bolt of energy against the same or different target.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rtRX8NtXLvDTqzbq"
+}

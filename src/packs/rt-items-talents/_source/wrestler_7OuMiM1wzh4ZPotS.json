@@ -1,0 +1,17 @@
+{
+  "name": "Wrestler",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Strength 30, Athletics \nAptitudes: Strength, General",
+    "effect": "Character can use Athletics Skill in place of Strength Characteristic for any Strength Tests made as part of a Grapple. When successfullly using the Damage Opponent Grapple Option, they deal additional Dmaage equal to the number of Degrees of Success by which they won the Opposed Test.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character can use Athletics Skill in place of Strength Characteristic for any Strength Tests made as part of a Grapple. When successfullly using the Damage Opponent Grapple Option, they deal additional Dmaage equal to the number of Degrees of Success by which they won the Opposed Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7OuMiM1wzh4ZPotS"
+}

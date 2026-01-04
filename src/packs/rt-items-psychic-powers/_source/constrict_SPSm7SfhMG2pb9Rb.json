@@ -1,0 +1,22 @@
+{
+  "name": "Constrict",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "10m",
+    "range": "Threshold 13",
+    "opposed": "No",
+    "sustained": "Target individual begins to suffocate, each round character makes a +0 Willpower Test as a Free Action, if they succeed they can act normally (but are still suffocating), if they fail they must spend a Full Action to make a +0 Toughness Test, if they succeed they stop suffocating, if they fail they continue suffocating (can choose to fail Willpower test to try to clear throat). This is considered Strenuous activity for the purposes of suffocation. \nFor every 10 points above threshold, Toughness Test to stop suffocating gets a -10.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SPSm7SfhMG2pb9Rb"
+}

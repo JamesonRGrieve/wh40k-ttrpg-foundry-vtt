@@ -1,0 +1,17 @@
+{
+  "name": "Put That Out!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Operator Spec\n300xp",
+    "descriptionText": "Comrade puts out a fire that is threatening the vehicle that both they and their character occupy",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade puts out a fire that is threatening the vehicle that both they and their character occupy</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X1oJsxwTU5MUOjYh"
+}

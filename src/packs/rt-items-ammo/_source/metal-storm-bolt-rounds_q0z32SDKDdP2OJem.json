@@ -1,0 +1,20 @@
+{
+  "name": "Metal Storm Bolt Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt Weapons",
+    "damageOrEffect": "Reduce Damage and Penetration by 2. Gain Blast(2) Quality",
+    "qualities": "Blast(2)",
+    "weight": "10% wep",
+    "availability": "Very Rare / Initiated",
+    "cost": "15 R / Clip",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Reduce Damage and Penetration by 2. Gain Blast(2) Quality</p><p><b>Qualities:</b> Blast(2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q0z32SDKDdP2OJem"
+}

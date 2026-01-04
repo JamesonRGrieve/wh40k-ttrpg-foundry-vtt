@@ -1,0 +1,14 @@
+{
+  "name": "SP*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 108,
+    "description": {
+      "value": "<p>108</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2jJyUOKbUAHYNHP2"
+}

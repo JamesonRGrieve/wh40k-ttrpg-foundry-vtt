@@ -1,0 +1,28 @@
+{
+  "name": "Noise Marine Sonic Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "100m",
+    "rof": "S/2/4",
+    "damage": "1d10+9",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "21kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Counts as a Heavy Weapon when fired on Full Auto, requiring bracing. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.",
+    "description": {
+      "value": "<p><b>Note:</b> Counts as a Heavy Weapon when fired on Full Auto, requiring bracing. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4dXMMpQrOo9LGteK"
+}

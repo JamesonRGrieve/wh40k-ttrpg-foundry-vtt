@@ -1,0 +1,28 @@
+{
+  "name": "Crux Beam Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "80m",
+    "rof": "S/3/-",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 25,
+    "reload": "4 Full",
+    "special": "Scatter",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Can use las ammo packs, but burns them out.",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Can use las ammo packs, but burns them out.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yFHtRQIS8obNen66"
+}

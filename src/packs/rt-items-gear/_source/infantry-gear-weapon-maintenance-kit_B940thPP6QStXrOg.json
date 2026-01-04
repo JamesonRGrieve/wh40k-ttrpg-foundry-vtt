@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Weapon Maintenance Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "1kg",
+    "availability": "Blessed oils, swabbing clothes, cleaning gels, weapon specific tools and basic spare parts (such as stocks/barrels) typically designed around standard-issue Lasguns. Also included are the appropriate litanties and invocations to the machine spirits required for proper function.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Average",
+    "notes": "20 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 20 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "B940thPP6QStXrOg"
+}

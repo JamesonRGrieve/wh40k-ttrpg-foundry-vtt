@@ -1,0 +1,28 @@
+{
+  "name": "Mining Melta [Broad]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 11,
+    "clip": 6,
+    "reload": "3 Full",
+    "special": "Scatter",
+    "weight": "36kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Focused])",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Focused])</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "esdWu2w0XVdi9pG2"
+}

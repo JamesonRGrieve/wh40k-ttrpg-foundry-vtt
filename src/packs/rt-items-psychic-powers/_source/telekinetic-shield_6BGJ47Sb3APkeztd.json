@@ -1,0 +1,22 @@
+{
+  "name": "Telekinetic Shield",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Telekinetic Crush",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker creates a shield around the Psyker that provides 1 AP per Psy Rating to all locations that stacks with any armour and lasts for one round unless sustained. The Shield is not opaque and does not block light or line of sight. The protection from this shield works against attacks with the \"Warp Weapon\" Quality.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6BGJ47Sb3APkeztd"
+}

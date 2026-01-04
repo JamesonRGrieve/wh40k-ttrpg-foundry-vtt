@@ -1,0 +1,17 @@
+{
+  "name": "'Ard",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Ork (Innate)",
+    "effect": "Orks innately have the Traits Unnatural Toughness (x2) and Sturdy, and the Talents Iron Jaw and True Grit. Additionally, all Medicae Tests made to treat injuries of an Ork have +20 due to a Robust Physiology.\nUnnatural Toughness: Double Toughness Bonus (doesn't affect starting wounds), Sturdy: +20 to tests made to resist grappling and the Takedown Talent, Iron Jaw: When Stunned make Toughness Test to ignore it, True Grit: Halve Critical damage (round up)",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Orks innately have the Traits Unnatural Toughness (x2) and Sturdy, and the Talents Iron Jaw and True Grit. Additionally, all Medicae Tests made to treat injuries of an Ork have +20 due to a Robust Physiology.\nUnnatural Toughness: Double Toughness Bonus (doesn't affect starting wounds), Sturdy: +20 to tests made to resist grappling and the Takedown Talent, Iron Jaw: When Stunned make Toughness Test to ignore it, True Grit: Halve Critical damage (round up)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3KwSUFwGnLQSAPBY"
+}

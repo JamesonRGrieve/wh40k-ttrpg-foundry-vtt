@@ -1,0 +1,22 @@
+{
+  "name": "Fire Bolt",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "100m",
+    "range": "Threshold 11",
+    "opposed": "No",
+    "sustained": "Create one Fire Bolt, plus one per 5 points above Threshold. For each Firebolt make a +0 Willpower Test to strike a target individual within range, each bolt may be sent at the same or a separate target, and is tested for seperately.\nEach bolt deals 1d10 + 5 Energy damage with Flame Quality.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oFHnSTClw3uMaQyu"
+}

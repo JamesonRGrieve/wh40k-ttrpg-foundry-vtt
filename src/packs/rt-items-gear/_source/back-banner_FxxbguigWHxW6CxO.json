@@ -1,0 +1,20 @@
+{
+  "name": "Back Banner",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "5kg",
+    "availability": "Elaborate Banners worn sometimes by the Astartes that display Deathwatch Symbol and icons of Faith. Often as large as the Space marines themselves. When a Kill-Team's Leader spends a Fate Point to restore lose Cohesion, they restore one additional point if wearing this.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "15 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FxxbguigWHxW6CxO"
+}

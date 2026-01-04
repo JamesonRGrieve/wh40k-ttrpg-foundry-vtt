@@ -1,0 +1,22 @@
+{
+  "name": "Executioner",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Warlock)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Warlock makes a Focus Power Test targeting a point in range, on success they conjure a doppleganger construct that has exactly the same profile and equipment as the Warlock (except they cannot cast this power). The constructs dissipate if they would take Critical Damage, leave the power's range, or the Warlock ceases sustaining it. Each Degree of Success on Focus Power Test gives construct +5 to Weapon Skill. The psyker can only ever sustain one such construct.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "o6VHb9lCEHAbxnik"
+}

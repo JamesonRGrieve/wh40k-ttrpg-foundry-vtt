@@ -1,0 +1,17 @@
+{
+  "name": "Warp Lock",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Psy Rating, Strong Minded, WP 50\nAptitudes: Willpower, Psyker, Tzeentch",
+    "effect": "Once per Game Session, character can ignore a Psychic Phenomena result they have rolled, including a roll that would have caused Perils of the Warp. Character however suffers 1d5 Energy Damage that ignores Armour and Toughness in the process, and cannot make any Focus Power Tests or sustain Psychic Powers until the Beginning of their next turn.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Game Session, character can ignore a Psychic Phenomena result they have rolled, including a roll that would have caused Perils of the Warp. Character however suffers 1d5 Energy Damage that ignores Armour and Toughness in the process, and cannot make any Focus Power Tests or sustain Psychic Powers until the Beginning of their next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "96GpPmL9ZoS5JqwF"
+}

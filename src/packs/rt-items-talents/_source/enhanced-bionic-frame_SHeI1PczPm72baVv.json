@@ -1,0 +1,17 @@
+{
+  "name": "Enhanced Bionic Frame",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Machinator Array",
+    "effect": "Explorer gains Auto-Stabilised Trait.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Explorer gains Auto-Stabilised Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SHeI1PczPm72baVv"
+}

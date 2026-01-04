@@ -1,0 +1,28 @@
+{
+  "name": "Ork Choppa",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unbalanced",
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Two-Handed for Non-Orks with a Strength Bonus of 3 or less.",
+    "description": {
+      "value": "<p><b>Special:</b> Unbalanced</p><p><b>Note:</b> Two-Handed for Non-Orks with a Strength Bonus of 3 or less.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5NS9wok56BDm1y9x"
+}

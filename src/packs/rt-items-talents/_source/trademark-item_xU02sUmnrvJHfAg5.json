@@ -1,0 +1,17 @@
+{
+  "name": "Trademark Item",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Fellowship 40, Command +10 \nAptitudes: Fellowship, Social",
+    "effect": "Character Designates or acquires some item of trivial significance for free that becomes their Trademark Item. Whilst displayed prominently, they gain +1 Degree of Success on all successful Interaction Tests when dealing with members of their regiment, and anyone else who would reasonably recognise and respect them for such an item (GM Discretion). If the character can issue Sweeping Orders, once per Encounter they can make a -10 Command Test to issue one additional Sweeping Order on their Turn which is different from the first. The character must make a +0 Willpower Test in order to willingly abandon their Trademark Item, if it is lost or destroyed, they can choose a new one after a suitable mourning period determined by the GM.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character Designates or acquires some item of trivial significance for free that becomes their Trademark Item. Whilst displayed prominently, they gain +1 Degree of Success on all successful Interaction Tests when dealing with members of their regiment, and anyone else who would reasonably recognise and respect them for such an item (GM Discretion). If the character can issue Sweeping Orders, once per Encounter they can make a -10 Command Test to issue one additional Sweeping Order on their Turn which is different from the first. The character must make a +0 Willpower Test in order to willingly abandon their Trademark Item, if it is lost or destroyed, they can choose a new one after a suitable mourning period determined by the GM.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xU02sUmnrvJHfAg5"
+}

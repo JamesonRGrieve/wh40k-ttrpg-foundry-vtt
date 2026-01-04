@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Digital Melta",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Astartes",
+    "range": "4m",
+    "rof": "S/-/-",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 1,
+    "reload": "-",
+    "special": "SM Wep, ",
+    "weight": "0.1kg",
+    "availability": "Famed",
+    "cost": "35 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, </p><p><b>Note:</b> Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "i0wIHiduVzezpiiF"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Barbed Ring/Venom Nail",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": null,
+    "availability": "An unobtrusive item that hides a concealed toxic barb. Targets hit from a scratch or cut by it must make -30 Toughness Test or take 2d10 Wounds ignoring armour and toughness. Poor Craftsmanship only does 1d10 Wounds, Good delays the illness by 1 hour. Best also deals 1d10+10 wounds",
+    "cost": "Useful tool of assasination",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kDbNpmv7MeAvmeoE"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Mind Ward",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The psyker creates defences against mental attacks and effects. The Psyker makes a Focus power test and gains bonuses dependant on the number of Degrees of Success, these effects are cumulative, stacking with the previous ones: 0 DoF: Psychic Attacks that affect Psyker's mind must pass Opposed Willpower Test to succeed, if one is already required, Psyker gains +20 to test. 1 DoF: Psychic Attacks that attack the mind with Psy Rating 2 or less are negated. 2 DoF: Same as previous but now negate Psy Rating 3. 3 DoF: Same as previous but now negate Psy Rating 4. 4 DoF: Same as previous but now negate Psy Rating 5, and Psyker is immune to the effects of Fear as long as power is maintained.",
+    "effect": "100xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IqkSTrG0eRUybPZg"
+}

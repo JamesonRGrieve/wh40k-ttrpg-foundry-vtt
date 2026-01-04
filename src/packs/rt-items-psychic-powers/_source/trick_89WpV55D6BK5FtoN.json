@@ -1,0 +1,22 @@
+{
+  "name": "Trick",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 5\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained gain +20 to Tests relating to Gambling, or if not proficient, count as proficient and gain +10.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "89WpV55D6BK5FtoN"
+}

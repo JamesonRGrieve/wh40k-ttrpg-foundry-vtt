@@ -1,0 +1,21 @@
+{
+  "name": "Main Cargo Hold",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "Transports",
+    "powerUsage": 2,
+    "spaceUsage": 4,
+    "spCost": 1,
+    "effect": "+125 Achievement Points towards Trade Objectives. Stores Massive amounts of Cargo and Cargo Shuttles. Transports tend to have some built-in.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+125 Achievement Points towards Trade Objectives. Stores Massive amounts of Cargo and Cargo Shuttles. Transports tend to have some built-in.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MsinpYc4ggfjmnaL"
+}

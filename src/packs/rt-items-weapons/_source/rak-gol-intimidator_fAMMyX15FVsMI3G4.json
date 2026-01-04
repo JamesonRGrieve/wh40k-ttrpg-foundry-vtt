@@ -1,0 +1,28 @@
+{
+  "name": "Rak'Gol Intimidator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Rak'Gol",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking",
+    "weight": "5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Koronus Bestiary",
+    "note": "Carried by higher-up Rak'Gol as a status symbol, believed to be used for torture.",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Carried by higher-up Rak'Gol as a status symbol, believed to be used for torture.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fAMMyX15FVsMI3G4"
+}

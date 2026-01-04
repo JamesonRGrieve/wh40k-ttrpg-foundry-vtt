@@ -1,0 +1,14 @@
+{
+  "name": "Sentry",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Either Point Defence or Sentry Mode, switch with +10 Tech-Use (if fail, Jam but lose no ammo. Also sets Target Priority: Infantry, Tank, or Aircraft):\nPoint Defence: Functions as Permenant Overwatch with 90 Fire Arc.\nSentry: Has Area of Infleunce up to half weapon range. Can Fire in any direction and rolls for initiative as if an NPC.",
+    "description": {
+      "value": "<p>Either Point Defence or Sentry Mode, switch with +10 Tech-Use (if fail, Jam but lose no ammo. Also sets Target Priority: Infantry, Tank, or Aircraft):\nPoint Defence: Functions as Permenant Overwatch with 90 Fire Arc.\nSentry: Has Area of Infleunce up to half weapon range. Can Fire in any direction and rolls for initiative as if an NPC.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FeylVpdEolgMQ6cb"
+}

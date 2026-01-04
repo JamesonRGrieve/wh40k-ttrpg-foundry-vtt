@@ -1,0 +1,17 @@
+{
+  "name": "Know the Heretic; Kill the Heretic!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Rector Erudite Spec\n500xp",
+    "descriptionText": "Once per Encounter Character makes -20 Common Lore, Forbidden Lore, or Scholastic Lore Test for a specialisation that includes a type of enemy, such as Orks, Eldar, Chaos Space Marines, etc. If Successful each ally within comms range of the Character's Comrade may reroll one missed attack per Round against that foe for a number of rounds equal to the Degrees of Success on the Test.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Once per Encounter Character makes -20 Common Lore, Forbidden Lore, or Scholastic Lore Test for a specialisation that includes a type of enemy, such as Orks, Eldar, Chaos Space Marines, etc. If Successful each ally within comms range of the Character's Comrade may reroll one missed attack per Round against that foe for a number of rounds equal to the Degrees of Success on the Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8RMgtnqW5C2tRBKA"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Force Hammer (Tempus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemonbane, Force, Power Field, Unwieldy",
+    "weight": "14kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Two-Handed unless wielder has Strength Bonus of 5+ Once per Session as a Full Action, wielder can smite the ground, creating a 2d10 metre radius blast, all other characters must make -20 Agility Test or lose a Half Action on their next turn. Those that fail by 2+ DoF lose their Full Action.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+ Once per Session as a Full Action, wielder can smite the ground, creating a 2d10 metre radius blast, all other characters must make -20 Agility Test or lose a Half Action on their next turn. Those that fail by 2+ DoF lose their Full Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O6LiyJoP35wxvRi5"
+}

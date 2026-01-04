@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Crush",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 17",
+    "opposed": "No",
+    "sustained": "Against Target Individual within range and line of sight, make an Opposed Willpower vs target's Toughness Test. If successful target suffers 1d10 + Willpower Bonus damage, with +2 damage per Degree of Success.\nFor every 5 points above threshold, increase range by 10m",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yQ9aBHTKzNkwJ0jm"
+}

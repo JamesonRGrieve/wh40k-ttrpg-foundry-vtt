@@ -1,0 +1,22 @@
+{
+  "name": "Hellish Blast",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 5, Hatred (Any)",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "30m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker targets point within range and creates a Psychic Blast of Psy Rating Metres in Radius that may be dodged as if an Area of Effect Attack. Those that fail to avoid it suffer 3d10+Psy Rating Enegy Damage with Penetration 10 and the Flame and Tearing Qualities.",
+    "effect": "600xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>600xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lYr1zwkQs0pb74Eq"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Melodium",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Provides uplifting (and possible subliminally hypnotic) tunes to instil loyalty within the crew. Permenant +1 morale and +10 to all social skill tests on the ship. One per Vessel.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Provides uplifting (and possible subliminally hypnotic) tunes to instil loyalty within the crew. Permenant +1 morale and +10 to all social skill tests on the ship. One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dYjKvwGeW0xWs8ey"
+}

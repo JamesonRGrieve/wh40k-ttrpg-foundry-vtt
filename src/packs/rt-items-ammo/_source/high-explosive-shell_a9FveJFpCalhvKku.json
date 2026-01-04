@@ -1,0 +1,20 @@
+{
+  "name": "High Explosive Shell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Artillery/Battle Cannons",
+    "damageOrEffect": "3d10+10 X, Pen 8, Blast (10), Concussive (3) Damage Profile",
+    "qualities": "Blast (10), Concussive (3)",
+    "weight": null,
+    "availability": "Rare",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 3d10+10 X, Pen 8, Blast (10), Concussive (3) Damage Profile</p><p><b>Qualities:</b> Blast (10), Concussive (3)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a9FveJFpCalhvKku"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Holo Wafer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Officially used as Fealty-Badges, signal markers, etc. Thin, palm-sized disks that produce a small holographic image when activated.\nUnofficially used as kill-counters or markers left as calling cards by assassins.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lFODIxbCSaFtTD2d"
+}

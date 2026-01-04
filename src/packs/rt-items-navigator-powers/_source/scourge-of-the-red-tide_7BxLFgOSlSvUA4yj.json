@@ -1,0 +1,21 @@
+{
+  "name": "Scourge of the Red Tide",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Full Action",
+    "range": "15m (or 5m in fog/mist, etc).",
+    "test": "Opposed Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it). Targets that fail take 1d10 + Navigator's Willpower Bonus damage Energy damage + 1d10 per Degree of Success. Ignores non-warded armour, but Toughness works as normal. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.",
+    "adept": "Damage increases to 1d10 + 2x Navigators Willpower Bonus in Energy Damage, + 1d10 per Degree of Success. Can also damage non-living beings and inanimate objects. Navigator suffers 1 Fatigue and Wound, or 2 wounds if failing WP Test by 1+ DoF.",
+    "master": "Targets get no bonus to Opposed test from looking away. However Navigator suffers 1d5 wounds (ignores armour+toughness) and can't use any other powers for rest of encounter. If failing WP Test by 1+ DoF, take 1d10 Fatigue.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it). Targets that fail take 1d10 + Navigator's Willpower Bonus damage Energy damage + 1d10 per Degree of Success. Ignores non-warded armour, but Toughness works as normal. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.</p><p><b>Adept:</b> Damage increases to 1d10 + 2x Navigators Willpower Bonus in Energy Damage, + 1d10 per Degree of Success. Can also damage non-living beings and inanimate objects. Navigator suffers 1 Fatigue and Wound, or 2 wounds if failing WP Test by 1+ DoF.</p><p><b>Master:</b> Targets get no bonus to Opposed test from looking away. However Navigator suffers 1d5 wounds (ignores armour+toughness) and can't use any other powers for rest of encounter. If failing WP Test by 1+ DoF, take 1d10 Fatigue.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7BxLFgOSlSvUA4yj"
+}

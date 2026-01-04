@@ -1,0 +1,22 @@
+{
+  "name": "Forewarning",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "Foreboding",
+    "focusPower": "Half Action Concentration",
+    "action": "3m x Psy Rating radius",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Psy Rating Allies within range plus the psyker gain +2xPsy Rating Bonus to their Dodge/Parry Tests as long as the power is sustained and allies remain within range of the power",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nbfmDgVmd9s6dma6"
+}

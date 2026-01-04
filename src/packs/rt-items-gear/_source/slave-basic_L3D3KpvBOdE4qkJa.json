@@ -1,0 +1,20 @@
+{
+  "name": "Slave (Basic)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Basic Slave endentured to perform menial labour",
+    "cost": null,
+    "effects": "Abundant",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L3D3KpvBOdE4qkJa"
+}

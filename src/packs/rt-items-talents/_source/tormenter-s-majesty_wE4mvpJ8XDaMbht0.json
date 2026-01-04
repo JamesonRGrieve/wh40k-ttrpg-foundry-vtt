@@ -1,0 +1,17 @@
+{
+  "name": "Tormenter's Majesty",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Dark Eldar, Power Through Pain",
+    "effect": "If the character has gained at least 3 Pain Tokens during an encounter, they may spend a Fate Point to gain Fear (1) Trait, or increase an existing Fear Trait by 1 (up to Fear(3)) for the rest of the encounter. While benefiting from this Fear Trait, they add +10 to all Intimidate and Command Tests.\nFear (X): Enemies encountering someone with this trait make a Willpower test modifed based on X, on failiure roll on Table 10-4 Shock, add +10 for each degree of failiure. X may be: 1 (-0 to Test), 2 (-10), 3 (-20), or 4 (-30)",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>If the character has gained at least 3 Pain Tokens during an encounter, they may spend a Fate Point to gain Fear (1) Trait, or increase an existing Fear Trait by 1 (up to Fear(3)) for the rest of the encounter. While benefiting from this Fear Trait, they add +10 to all Intimidate and Command Tests.\nFear (X): Enemies encountering someone with this trait make a Willpower test modifed based on X, on failiure roll on Table 10-4 Shock, add +10 for each degree of failiure. X may be: 1 (-0 to Test), 2 (-10), 3 (-20), or 4 (-30)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wE4mvpJ8XDaMbht0"
+}

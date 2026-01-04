@@ -1,0 +1,19 @@
+{
+  "name": "Choking Darkness [Curse]",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "+0 Forbidden Lore (Heresy or The Warp)",
+    "requirements": "Requires target to have corruption points, no effect on those Pure or Sanctified such as Grey Knights, Sisters of Battle, etc). The character must have comprehensive knowledge of the target's most heinous acts, a list which they speak aloud to the gods themselves as they bessech their power.",
+    "effect": "Target gains the Blinded and Deafened Conditions for the Target's Corruption Bonus number of Days. They may temporarily relieve these conditions by making a -20 Willpower Test to stop the effects for their Corruption Bonus number of Rounds, +1 per Degree of Success after first.",
+    "costs": "None",
+    "failure": "Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Target gains the Blinded and Deafened Conditions for the Target's Corruption Bonus number of Days. They may temporarily relieve these conditions by making a -20 Willpower Test to stop the effects for their Corruption Bonus number of Rounds, +1 per Degree of Success after first.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "s6eKhzBHMSRHuVMZ"
+}

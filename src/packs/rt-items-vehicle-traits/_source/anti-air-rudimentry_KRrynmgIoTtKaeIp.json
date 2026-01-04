@@ -1,0 +1,14 @@
+{
+  "name": "Anti-Air (Rudimentry)",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Halve Standard Penalties for ground vehicles firing at Aircraft",
+    "description": {
+      "value": "<p>Halve Standard Penalties for ground vehicles firing at Aircraft</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KRrynmgIoTtKaeIp"
+}

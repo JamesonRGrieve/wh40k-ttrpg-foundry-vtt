@@ -1,0 +1,17 @@
+{
+  "name": "Improved Dexterity",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Bone 'Ead Advanced Specialty (300xp)",
+    "effect": "The Ogryn can wield Basic and Thrown Ranged Weapons, as well as Melee Weapons that do not have the Ogryn-Proof Trait as if they did not have the Clumsy Trait. Any of these weapons that would require Two Hands do not when wielded by this Ogryn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>The Ogryn can wield Basic and Thrown Ranged Weapons, as well as Melee Weapons that do not have the Ogryn-Proof Trait as if they did not have the Clumsy Trait. Any of these weapons that would require Two Hands do not when wielded by this Ogryn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lXoP5NqER9XaieCJ"
+}

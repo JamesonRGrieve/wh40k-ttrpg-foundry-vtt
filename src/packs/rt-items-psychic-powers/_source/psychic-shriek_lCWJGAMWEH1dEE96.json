@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Shriek",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Psy Rating 3",
+    "focusPower": "Half Action\nAttack",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range takes 1d10+2, +2xPsy Rating Explosive Damage with Pen 0 and Concussive(1). A Screech of Psychic Energy shredding through their mind.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lCWJGAMWEH1dEE96"
+}

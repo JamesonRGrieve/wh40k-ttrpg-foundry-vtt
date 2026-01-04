@@ -1,0 +1,21 @@
+{
+  "name": "Chaos Rituals",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": "Those Darkest of Heretics may attempt such blasphemies as to bargain with the warp itself, bringing forth Daemons and attempting to bind them to their service. Summoning a Daemon requires a Summoning Ritual, and Binding it requires a Daemonic Mastery Test.",
+    "adept": "Chaos Curses",
+    "master": "Chaos Rituals of a slightly different type. Curses affect a specific individual, despite the name the effect isn't always bad, just usually. Curses have additional modifiers based on how well the Curser knows the Cursee, in addition to normal Ritual Mods.",
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Those Darkest of Heretics may attempt such blasphemies as to bargain with the warp itself, bringing forth Daemons and attempting to bind them to their service. Summoning a Daemon requires a Summoning Ritual, and Binding it requires a Daemonic Mastery Test.</p><p><b>Adept:</b> Chaos Curses</p><p><b>Master:</b> Chaos Rituals of a slightly different type. Curses affect a specific individual, despite the name the effect isn't always bad, just usually. Curses have additional modifiers based on how well the Curser knows the Cursee, in addition to normal Ritual Mods.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XWsYu6ZMAT41u7oM"
+}

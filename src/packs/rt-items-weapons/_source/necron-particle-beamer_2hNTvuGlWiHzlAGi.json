@@ -1,0 +1,28 @@
+{
+  "name": "Necron Particle Beamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Necron",
+    "range": "70m",
+    "rof": "S/-/-",
+    "damage": "3d10+8",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Blast (4), Concussive (3), Reliable",
+    "weight": "25kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Blast (4), Concussive (3), Reliable</p><p><b>Note:</b> Always Best Quality</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2hNTvuGlWiHzlAGi"
+}

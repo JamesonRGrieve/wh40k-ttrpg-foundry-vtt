@@ -1,0 +1,28 @@
+{
+  "name": "Ork Shoota",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Ork",
+    "range": "60m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 30,
+    "reload": "Full",
+    "special": "Inaccurate, Unreliable",
+    "weight": "4kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Not Unreliable when wielded by an Ork. The most common Ork Ranged weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. The most common Ork Ranged weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Cg4giJ4W5vn7lpoJ"
+}

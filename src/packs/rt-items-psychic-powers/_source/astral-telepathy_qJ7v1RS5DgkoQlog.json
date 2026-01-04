@@ -1,0 +1,22 @@
+{
+  "name": "Astral Telepathy",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy - Astropath Elite Advance",
+    "prerequisites": "Telepathic Link, Willpower 40",
+    "focusPower": "Full Action\nConcentration",
+    "action": "1000km x Psy Rating",
+    "range": "-20 Opposed Willpower Test",
+    "opposed": "No",
+    "sustained": "Target person they are aware of within range who resists power with a Willpower Test. Target can be someone character has met personally or who is aware of by a description. If power succeeds character can transmit a brief verbal message of no more than 5 seconds x Psy Rating. If target is aware of character's action they can choose to fail the Willpower Test, counting as having rolled a 100.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qJ7v1RS5DgkoQlog"
+}

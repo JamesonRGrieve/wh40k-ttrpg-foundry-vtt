@@ -1,0 +1,14 @@
+{
+  "name": "Repulsor Impact Field",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Wearer can make a +10 Tech-Use Test as a Half Action. If Successful each chatacter within 10 metres must make a -20 Strength Test or suffer 1d10 Impact Damage ignoring Armour. If failing by 3+ Degrees of Failiure, are also pushed 1d5 metres away from wearer and knocked prone.",
+    "description": {
+      "value": "<p>Wearer can make a +10 Tech-Use Test as a Half Action. If Successful each chatacter within 10 metres must make a -20 Strength Test or suffer 1d10 Impact Damage ignoring Armour. If failing by 3+ Degrees of Failiure, are also pushed 1d5 metres away from wearer and knocked prone.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KTc26iU5PUstWJ1n"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Darklight Blast Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - DEldar",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 16,
+    "clip": 6,
+    "reload": "3 Full",
+    "special": "Felling (4), Proven (2)",
+    "weight": "2kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Rare Availability if acquired from Dark Eldar Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (2)</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z1PyB9H4kQaDVQcR"
+}

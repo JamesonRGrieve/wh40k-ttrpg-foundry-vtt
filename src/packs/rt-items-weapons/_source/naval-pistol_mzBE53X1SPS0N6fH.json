@@ -1,0 +1,28 @@
+{
+  "name": "Naval Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "20m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 6,
+    "reload": "Full",
+    "special": "Tearing",
+    "weight": "3kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Uses Specialised Ammunition. Loses Tearing Quality if this is not used.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Uses Specialised Ammunition. Loses Tearing Quality if this is not used.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mzBE53X1SPS0N6fH"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Javelin (Relic)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Accurate",
+    "weight": "0.5kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FXdiGuKd3AEmLjJX"
+}

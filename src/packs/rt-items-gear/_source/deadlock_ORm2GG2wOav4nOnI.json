@@ -1,0 +1,20 @@
+{
+  "name": "Deadlock",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Poison",
+    "weight": "-",
+    "availability": "Victim makes -10 Toughness Test, if failed they suffer 1d10 Temprary Strength Damage, +1d10 per Degree of Failiure on Test. If they reach 0 Strength as a result they are completely paralysed. This paralysis and any damage to strength wear off after 2d5-TB Minutes (minimum 1 minute). (TB is victim's Toughness Bonus)",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "10 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ORm2GG2wOav4nOnI"
+}

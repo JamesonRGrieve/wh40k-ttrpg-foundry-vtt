@@ -1,0 +1,28 @@
+{
+  "name": "Eviscerator (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "Razor-Sharp, Tearing, Unwieldy",
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Razor-Sharp, Tearing, Unwieldy</p><p><b>Note:</b> Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pRAaj57y0hAc8y0v"
+}

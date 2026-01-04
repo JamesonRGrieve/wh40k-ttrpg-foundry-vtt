@@ -1,0 +1,20 @@
+{
+  "name": "Promethium",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "1kg",
+    "availability": "Used to fuel vehicles, flamethrowers, and explosives. If used for explosives, inflicts 1d10 E, Flame per kilogram, with a blast radius of 4 metres per kilogram. Those caught in the blast must make Agility Test or be set on fire. No Good or Best Craftsmanship",
+    "cost": "GM should consider blast radius/dmg to curve off with excessive mass, oil tankers can carry over 400k tonnes, if that exploded it would be Exterminatus grade by these rules.",
+    "effects": "Abundant",
+    "notes": "60 T",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 60 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JYIb3Sc5Kljhk8JE"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Regeneration",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 5, Tougness 40+, Unnatural Healing",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Full or Half Action)",
+    "sustained": "In Combat, Psyker uses this power in \"Active\" Mode, requiring a Half Action to sustain, whilst sustained the Psyker gains Regeneration(4) Trait, and gains a +Psy Rating bonus to the Toughness Tests made for the Regeneration Trait.\nWhen not in combat or resting,the Psyker can choose to instead use the \"Rested\" Mode, requiring a Full Action to sustain. This mode regenerates Psy Rating Wounds per day, starting with Critical Damage until psyker is fully healed. It also allows for lost appendages and organs with 1d5 Weeks of Rest, the time is halved if a cut-off limb is still present to be reattached during the process.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FSOn63AladKAW1MP"
+}

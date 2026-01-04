@@ -1,0 +1,20 @@
+{
+  "name": "Medikit (Advanced)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "5kg",
+    "availability": "+20 Medicae Skill when used, if user doesn't have Medicae, can treat it as Basic Skill when using this.\nContains 6 Doses of Stimm which must be replaced seperately.",
+    "cost": "GM Dependant as to whether it is actually consumed on use",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c4BtuLijywBJWbCU"
+}

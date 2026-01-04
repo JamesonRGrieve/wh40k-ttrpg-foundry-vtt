@@ -1,0 +1,25 @@
+{
+  "name": "Navigator",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Career",
+    "descriptionText": "Mutants of ancient noble lines, whose third eyes allow them to pilot vessels through the warp.\nSkills: Common Lore (Navis Nobilite), Forbidden Lore (Navigators, Warp), Literacy, Navigation (Stellar, Warp), Psyniscience, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)\nTalents: Navigator, Pistol Weapon Training (Universal)\nGear: Best Hellpistol or Good Hand-cannon, Best Metal Staff, Best Xeno-mesh Armour, Emperor's Tarot deck, Silk Headscarf, Nobilite Robes, Charm, Micro-bead.\nSpecial Ability: Warp Eye: Start with Warp Eye Navigator Power and one other Navigator Power. Gain boons and mutations based upon the Navigator's Lineage. (See Psychic Powers Page)",
+    "effects": "Mutants of ancient noble lines, whose third eyes allow them to pilot vessels through the warp.\nSkills: Common Lore (Navis Nobilite), Forbidden Lore (Navigators, Warp), Literacy, Navigation (Stellar, Warp), Psyniscience, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)\nTalents: Navigator, Pistol Weapon Training (Universal)\nGear: Best Hellpistol or Good Hand-cannon, Best Metal Staff, Best Xeno-mesh Armour, Emperor's Tarot deck, Silk Headscarf, Nobilite Robes, Charm, Micro-bead.\nSpecial Ability: Warp Eye: Start with Warp Eye Navigator Power and one other Navigator Power. Gain boons and mutations based upon the Navigator's Lineage. (See Psychic Powers Page)",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>Mutants of ancient noble lines, whose third eyes allow them to pilot vessels through the warp.<br>Skills: Common Lore (Navis Nobilite), Forbidden Lore (Navigators, Warp), Literacy, Navigation (Stellar, Warp), Psyniscience, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)<br>Talents: Navigator, Pistol Weapon Training (Universal)<br>Gear: Best Hellpistol or Good Hand-cannon, Best Metal Staff, Best Xeno-mesh Armour, Emperor&#x27;s Tarot deck, Silk Headscarf, Nobilite Robes, Charm, Micro-bead.<br>Special Ability: Warp Eye: Start with Warp Eye Navigator Power and one other Navigator Power. Gain boons and mutations based upon the Navigator&#x27;s Lineage. (See Psychic Powers Page)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.career",
+      "step": "Career",
+      "stepIndex": 6,
+      "number": "7"
+    }
+  },
+  "_id": "ckUATOFoyuffMRxV"
+}

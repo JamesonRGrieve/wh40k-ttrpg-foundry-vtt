@@ -1,0 +1,17 @@
+{
+  "name": "Auto-Stabilised",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Always counts as braced, and may fire on semi or full-auto as a half action when firing heavy weapons. Also suffers no penalty for moving and firing on semi or full-auto.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Always counts as braced, and may fire on semi or full-auto as a half action when firing heavy weapons. Also suffers no penalty for moving and firing on semi or full-auto.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ghEVc0D35Vb259Ss"
+}

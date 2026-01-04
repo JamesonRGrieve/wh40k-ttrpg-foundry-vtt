@@ -1,0 +1,28 @@
+{
+  "name": "Overlord-Class Battlecruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Battlecruiser",
+    "size": "5.3km long, 0.85km wide",
+    "crew": 100000,
+    "speed": 5,
+    "manoeuvrability": 10,
+    "detection": 10,
+    "hull": 70,
+    "armour": 20,
+    "turrets": 2,
+    "space": 78,
+    "shipPoints": 64,
+    "weaponCapacity": "1 Prow, 1 Dorsal, 2 Port, 2 Starboard.",
+    "notes": "Can use \"Cruiser Only\" Components",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can use \"Cruiser Only\" Components</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "ysbMmzHhptP9mB4l"
+}

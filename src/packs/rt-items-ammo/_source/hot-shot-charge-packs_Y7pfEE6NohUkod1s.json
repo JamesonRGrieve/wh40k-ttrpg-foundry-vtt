@@ -1,0 +1,20 @@
+{
+  "name": "Hot-Shot Charge Packs",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Las: Laspistols, lascarbines, lasguns, long-las",
+    "damageOrEffect": "+1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.",
+    "qualities": "Tearing, Reliable (lose)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": "15T each",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.</p><p><b>Qualities:</b> Tearing, Reliable (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Y7pfEE6NohUkod1s"
+}

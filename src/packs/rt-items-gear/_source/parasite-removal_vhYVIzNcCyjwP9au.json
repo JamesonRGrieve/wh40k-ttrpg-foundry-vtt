@@ -1,0 +1,20 @@
+{
+  "name": "Parasite Removal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Smoke Bath, sand scrub, lice comb, or some other process to remove parasites from the body.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "20 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 20 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vhYVIzNcCyjwP9au"
+}

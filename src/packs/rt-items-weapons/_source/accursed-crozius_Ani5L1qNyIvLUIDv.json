@@ -1,0 +1,28 @@
+{
+  "name": "Accursed Crozius",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Power Field",
+    "weight": "16kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ani5L1qNyIvLUIDv"
+}

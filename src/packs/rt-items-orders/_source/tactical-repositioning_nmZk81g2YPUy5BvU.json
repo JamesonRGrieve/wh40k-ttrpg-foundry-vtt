@@ -1,0 +1,17 @@
+{
+  "name": "Tactical Repositioning",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": ",Combat Formation Talent\nApt: Intelligence, Fellowship",
+    "descriptionText": "Character makes +0 Command Test. If Successful each Player Character with a Comrade in Cohesion can immediately Disengage as a Free Action, however any that do so lose one Half Action on their next turn.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Character makes +0 Command Test. If Successful each Player Character with a Comrade in Cohesion can immediately Disengage as a Free Action, however any that do so lose one Half Action on their next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nmZk81g2YPUy5BvU"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Djesset Talisman",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.1kg",
+    "availability": "Acts as a Psyfocus, its wearer counts as being Trained in the Psynscience Skill.",
+    "cost": null,
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X9eFtJmQ19ERcbWm"
+}

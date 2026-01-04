@@ -1,0 +1,14 @@
+{
+  "name": "Power Field",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 130,
+    "description": {
+      "value": "<p>130</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4iRhiFdXeHzyBkjZ"
+}

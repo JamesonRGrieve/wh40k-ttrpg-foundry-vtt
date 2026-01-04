@@ -1,0 +1,17 @@
+{
+  "name": "Tormenter's Will",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Dark Eldar, Power Through Pain",
+    "effect": "If the character has gained at least 2 Pain Tokens during an encounter, they may spend a Fate Point to gain the From Beyond Trait for the rest of the encounter.\nFrom Beyond: Immune to Fear, Pinning, Insanity, and Psychic Powers that would cloud, control, or delude your mind.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>If the character has gained at least 2 Pain Tokens during an encounter, they may spend a Fate Point to gain the From Beyond Trait for the rest of the encounter.\nFrom Beyond: Immune to Fear, Pinning, Insanity, and Psychic Powers that would cloud, control, or delude your mind.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CjpBLkmSslEt28RV"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Technical Knock",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Intelligence 30\nAptitudes: Intelligence, Tech, Unaligned",
+    "effect": "Character can Un-Jam any gun they can touch as a Half Action, but only to one weapon per round.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can Un-Jam any gun they can touch as a Half Action, but only to one weapon per round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W6FkTzFZmG8C5ieI"
+}

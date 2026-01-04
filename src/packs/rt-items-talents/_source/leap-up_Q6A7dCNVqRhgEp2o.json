@@ -1,0 +1,17 @@
+{
+  "name": "Leap Up",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Agility 30\nAptitudes: Agility, General, Slaanesh",
+    "effect": "The Character can Stand Up as a Free Action",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Character can Stand Up as a Free Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q6A7dCNVqRhgEp2o"
+}

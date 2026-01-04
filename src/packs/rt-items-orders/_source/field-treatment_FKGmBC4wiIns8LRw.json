@@ -1,0 +1,17 @@
+{
+  "name": "Field Treatment",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Medic Spec\n300xp",
+    "descriptionText": "If Comrade is in comms range, character remotely performs Medicae with -10 on target near Comrade.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>If Comrade is in comms range, character remotely performs Medicae with -10 on target near Comrade.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FKGmBC4wiIns8LRw"
+}

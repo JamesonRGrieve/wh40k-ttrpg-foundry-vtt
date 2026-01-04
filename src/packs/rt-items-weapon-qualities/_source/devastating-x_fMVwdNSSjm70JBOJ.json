@@ -1,0 +1,14 @@
+{
+  "name": "Devastating (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "If Targeting a Horde of Enemies, a successful hit reduces the Horde's Magnitude by an addional amount equal to X.\nDW: Weapon also always does at least 1 Cohesion damage if it hits even if it does not wound.",
+    "description": {
+      "value": "<p>If Targeting a Horde of Enemies, a successful hit reduces the Horde's Magnitude by an addional amount equal to X.\nDW: Weapon also always does at least 1 Cohesion damage if it hits even if it does not wound.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fMVwdNSSjm70JBOJ"
+}

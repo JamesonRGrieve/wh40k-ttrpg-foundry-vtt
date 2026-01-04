@@ -1,0 +1,22 @@
+{
+  "name": "Sorcerer's Tribute",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Daemon",
+    "prerequisites": "Daemonic Trait",
+    "focusPower": "Half Action",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Daemon selects target in range, dealing 1d10 Energy Damage with Pen 5, +1d10 Energy Damage per two degrees of Success. Any creature affected by this power also makes +0 Toughness Test, if failed, they gain 1d5 Corruption, +1d5 per Degree of Failiure. Targets that fail by 5+ Degress of Failiure irreversably and catastrophically mutate into a Chaos Spawn, effectively being killed instantly. Characters with fate points may burn them to avoid this fate.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WQp55DdG3eKvhxHN"
+}

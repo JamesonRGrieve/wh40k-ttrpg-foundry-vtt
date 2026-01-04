@@ -1,0 +1,28 @@
+{
+  "name": "Chalice-Class Battlecruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Battlecruiser",
+    "size": "5.1km long, 0.8km wide",
+    "crew": 98200,
+    "speed": 6,
+    "manoeuvrability": 10,
+    "detection": 10,
+    "hull": 70,
+    "armour": 19,
+    "turrets": 2,
+    "space": 75,
+    "shipPoints": 63,
+    "weaponCapacity": "1 Prow, 1 Dorsal, 2 Port, 2 Starboard.",
+    "notes": "Can use \"Cruiser Only\" Components. +4 power to installed Plasma Drives. If vessel takes critical hit, 25% chance to also suffer additional \"Fire!\" Critical Hit.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can use \"Cruiser Only\" Components. +4 power to installed Plasma Drives. If vessel takes critical hit, 25% chance to also suffer additional \"Fire!\" Critical Hit.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "WDOhbA99Bvu3Wxez"
+}

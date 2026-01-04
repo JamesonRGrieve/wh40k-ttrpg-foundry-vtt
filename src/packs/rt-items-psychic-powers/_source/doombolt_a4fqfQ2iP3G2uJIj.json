@@ -1,0 +1,22 @@
+{
+  "name": "Doombolt",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker fires a Psychic Barrage of one bolt, +1 per two degrees of Success on Focus Power Test up to a maximum number of bolts equal to their Psy Rating. The first hits their target, with each further bolt hitting the target or anyone within 2 metres of the target. It does 1d10+Psy Rating Damage with Pen 8.",
+    "effect": "200xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a4fqfQ2iP3G2uJIj"
+}

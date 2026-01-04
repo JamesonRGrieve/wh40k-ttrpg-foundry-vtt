@@ -1,0 +1,28 @@
+{
+  "name": "Tox Spray",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 3,
+    "reload": "3 Full",
+    "special": "Flame, Spray, Toxic",
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "200 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "If the Weapon suffers a Jam it ruptures, dealing weapon's base damage to everyone in 2 metres (doubled for user).",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray, Toxic</p><p><b>Note:</b> If the Weapon suffers a Jam it ruptures, dealing weapon's base damage to everyone in 2 metres (doubled for user).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tPrgtrVvP1azOsWd"
+}

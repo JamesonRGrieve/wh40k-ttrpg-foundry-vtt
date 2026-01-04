@@ -1,0 +1,22 @@
+{
+  "name": "Blinding Flash",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "12m",
+    "range": "Threshold 11",
+    "opposed": "No",
+    "sustained": "Everyone within range and line of sight who do not have flash protection (such as Photo-Visors or not having eyes) must make a +0 Agility Test or be blinded for 1d10 x Psy Rating rounds. Blinded targets automatically fail vision-based tests, move at half speed, and take -20 to any test involving fighting, movement, or reactions. The character can accidentally blind themselves if they don't close their eyes.\nFor every 10 points above threshold, range increases by 10m.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RLpRNoj8oK2I8z21"
+}

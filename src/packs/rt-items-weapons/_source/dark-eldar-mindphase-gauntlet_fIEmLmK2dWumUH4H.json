@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Mindphase Gauntlet",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "-",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. ",
+    "description": {
+      "value": "<p><b>Special:</b> -</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fIEmLmK2dWumUH4H"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Finally, To Command a Daemon, make a Daemonic Master Test, requiring an Opposed Willpower Test, with +5 per level of Psy Rating the Summoner has. If a Daemon is forced to go against its fundamental nature, it forces a second Daemonic Mastery Test, where the controller now has -30 as the Daemon actively tries to break control",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": 20,
+    "novice": "- \"The Stars are Right\" - Ausicious Circumstances favour the Enactors\n- The Enactor has sworn allegiance/is devoted to the Daemon's/God's Cause\n- The Enactor is a Psyker with Psy Rating 7+\n- The Veil between Reality and the Warp is greatly weakened\n- Sacred Numbers are used correctly and appropriately as part of the Ritual",
+    "adept": " -60 to Curse Test: Character has never met or seen their target\n -50 to Curse Test: Character has seen or been in the presence of their target\n -40 to Curse Test: Character has spoken to their target at least once\n -30 to Curse Test: Character has had minor dealings with their target\n -20 to Curse Test: Character and target know one another in some capacity\n -10 to Curse Test: Character and target have had numerous dealings over several years\n +0  to Curse Test: Character and target have known one naother for many years",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> - \"The Stars are Right\" - Ausicious Circumstances favour the Enactors\n- The Enactor has sworn allegiance/is devoted to the Daemon's/God's Cause\n- The Enactor is a Psyker with Psy Rating 7+\n- The Veil between Reality and the Warp is greatly weakened\n- Sacred Numbers are used correctly and appropriately as part of the Ritual</p><p><b>Adept:</b>  -60 to Curse Test: Character has never met or seen their target\n -50 to Curse Test: Character has seen or been in the presence of their target\n -40 to Curse Test: Character has spoken to their target at least once\n -30 to Curse Test: Character has had minor dealings with their target\n -20 to Curse Test: Character and target know one another in some capacity\n -10 to Curse Test: Character and target have had numerous dealings over several years\n +0  to Curse Test: Character and target have known one naother for many years</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nHX4cq8Bu7zvI3GP"
+}

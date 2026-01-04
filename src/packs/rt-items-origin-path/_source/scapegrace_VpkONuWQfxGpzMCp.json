@@ -1,0 +1,25 @@
+{
+  "name": "Scapegrace",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Birthright",
+    "descriptionText": "+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.",
+    "effects": "+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.birthright",
+      "step": "Birthright",
+      "stepIndex": 2,
+      "number": "2"
+    }
+  },
+  "_id": "VpkONuWQfxGpzMCp"
+}

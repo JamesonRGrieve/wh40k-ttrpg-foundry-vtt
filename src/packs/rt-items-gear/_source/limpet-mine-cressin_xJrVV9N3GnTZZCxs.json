@@ -1,0 +1,20 @@
+{
+  "name": "Limpet Mine (Cressin)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "3kg",
+    "availability": "Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "55 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xJrVV9N3GnTZZCxs"
+}

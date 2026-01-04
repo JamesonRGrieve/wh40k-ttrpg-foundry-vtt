@@ -1,0 +1,22 @@
+{
+  "name": "Puppet Master (HB: Alternate Dominate)",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Dominate",
+    "focusPower": "Full Action Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": " Psyker chooses Target Individual whose total wounds must be less than or equal to 3xPsy Rating, If Target fails Opposed Willpower Test, Psyker gains full command over the mind and body of target individual. For as long as power is sustained, Psyker may divide their actions between themselves and the target who uses their own characteristics at -10. If the puppeted individual would perform a suicidal action they may make another +0 Opposed Willpower Test to break free. The Target breaks free automatically if they move out of range.",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HJC9AJlCxdEGQTXL"
+}

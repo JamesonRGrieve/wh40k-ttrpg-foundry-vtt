@@ -1,0 +1,17 @@
+{
+  "name": "Coordinated Strike",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Beastmaster Alternative Advance, 500xp\nWrangling +10, Bestial Minion",
+    "effect": "As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4Vi0grElp7j6nC3P"
+}

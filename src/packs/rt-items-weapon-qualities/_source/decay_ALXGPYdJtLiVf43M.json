@@ -1,0 +1,14 @@
+{
+  "name": "Decay",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 2,
+    "description": {
+      "value": "<p>2</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ALXGPYdJtLiVf43M"
+}

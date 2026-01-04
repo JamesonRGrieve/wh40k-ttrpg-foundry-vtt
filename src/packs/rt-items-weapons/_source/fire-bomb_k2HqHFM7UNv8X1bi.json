@@ -1,0 +1,28 @@
+{
+  "name": "Fire Bomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "-",
+    "special": "Blast (2), Flame",
+    "weight": "0.5kg",
+    "availability": "Plentiful",
+    "cost": "-",
+    "source": "Dark Heresy 2E: Core",
+    "note": "Requires Half Action to ready before use. Cannot be loaded into launchers.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Flame</p><p><b>Note:</b> Requires Half Action to ready before use. Cannot be loaded into launchers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k2HqHFM7UNv8X1bi"
+}

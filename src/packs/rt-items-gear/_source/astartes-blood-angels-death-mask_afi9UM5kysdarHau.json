@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Blood Angels Death Mask",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Worn over power armour helmet. Provides Fear +1",
+    "cost": "Blood Angels Only",
+    "effects": "Respected",
+    "notes": "20 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Respected</p><p><b>Notes:</b> 20 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "afi9UM5kysdarHau"
+}

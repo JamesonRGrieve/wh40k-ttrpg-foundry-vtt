@@ -1,0 +1,21 @@
+{
+  "name": "(Starting Power)\nThe Lidless Stare",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Full Action",
+    "range": "15m (or 5m in fog/mist, etc).",
+    "test": "Opposed Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it). Targets that fail take 1d10 + Navigator's Willpower Bonus damage Energy damage that ignores Armour and Toughness and are stunned for 1 round. Navigator suffers 1 Fatigue, +2 per Degree of Failiure on test. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.",
+    "adept": "Damage increases to 2d10 + WP Bonus, targets are stunned for 1d5 Rounds and suffer 1d5 Insanity Points.",
+    "master": "Added effect that any target with 20+ Intelligence that suffers damage from this power also makes -10 Toughness Test or instantly dies.  Insanity damage dealt increased to 1d10 from 1d5.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it). Targets that fail take 1d10 + Navigator's Willpower Bonus damage Energy damage that ignores Armour and Toughness and are stunned for 1 round. Navigator suffers 1 Fatigue, +2 per Degree of Failiure on test. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.</p><p><b>Adept:</b> Damage increases to 2d10 + WP Bonus, targets are stunned for 1d5 Rounds and suffer 1d5 Insanity Points.</p><p><b>Master:</b> Added effect that any target with 20+ Intelligence that suffers damage from this power also makes -10 Toughness Test or instantly dies.  Insanity damage dealt increased to 1d10 from 1d5.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "891JKUIT7QqrV67a"
+}

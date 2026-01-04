@@ -1,0 +1,25 @@
+{
+  "name": "Void-Master",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Career",
+    "descriptionText": "Pilots, Gunners and Masters of Space in warfare and exploration.\nSkills: Common Lore (Imperial Navy, War), Forbidden Lore (Xenos), Navigation (Stellar), Pilot (Space Craft, Flyers), Scholastic Lore (Astromancy), Speak Language (Low Gothic)\nTalents: Pistol Weapon Training (Universal), Melee Wepaon Training (Universal), Nerves of Steel\nGear: Best Monosword or Common Power Sword, Best Hand-cannon or Common Bolt Pistol, Guard Flak Armour, Micro-bead, Void Suit, blessed ship token, re-breather, Imperial Navy Uniform or Beggar's Cloak, 2 bottles of Amasec, pict-recorder, vox-caster.\nSpecial Ability (Choose one): Mastery of Space: Reroll all failed tests with starship Manoeuvre Actions. Mastery of Gunnery: Reroll all failed tests with starship Shooting Actions. Mastery of Augurs: Reroll all failed tests involving starship detection. Mastery of Small Craft: Reroll all failed Pilot Tests with small craft (shuttles, lifters, fighters, etc).",
+    "effects": "Pilots, Gunners and Masters of Space in warfare and exploration.\nSkills: Common Lore (Imperial Navy, War), Forbidden Lore (Xenos), Navigation (Stellar), Pilot (Space Craft, Flyers), Scholastic Lore (Astromancy), Speak Language (Low Gothic)\nTalents: Pistol Weapon Training (Universal), Melee Wepaon Training (Universal), Nerves of Steel\nGear: Best Monosword or Common Power Sword, Best Hand-cannon or Common Bolt Pistol, Guard Flak Armour, Micro-bead, Void Suit, blessed ship token, re-breather, Imperial Navy Uniform or Beggar's Cloak, 2 bottles of Amasec, pict-recorder, vox-caster.\nSpecial Ability (Choose one): Mastery of Space: Reroll all failed tests with starship Manoeuvre Actions. Mastery of Gunnery: Reroll all failed tests with starship Shooting Actions. Mastery of Augurs: Reroll all failed tests involving starship detection. Mastery of Small Craft: Reroll all failed Pilot Tests with small craft (shuttles, lifters, fighters, etc).",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>Pilots, Gunners and Masters of Space in warfare and exploration.<br>Skills: Common Lore (Imperial Navy, War), Forbidden Lore (Xenos), Navigation (Stellar), Pilot (Space Craft, Flyers), Scholastic Lore (Astromancy), Speak Language (Low Gothic)<br>Talents: Pistol Weapon Training (Universal), Melee Wepaon Training (Universal), Nerves of Steel<br>Gear: Best Monosword or Common Power Sword, Best Hand-cannon or Common Bolt Pistol, Guard Flak Armour, Micro-bead, Void Suit, blessed ship token, re-breather, Imperial Navy Uniform or Beggar&#x27;s Cloak, 2 bottles of Amasec, pict-recorder, vox-caster.<br>Special Ability (Choose one): Mastery of Space: Reroll all failed tests with starship Manoeuvre Actions. Mastery of Gunnery: Reroll all failed tests with starship Shooting Actions. Mastery of Augurs: Reroll all failed tests involving starship detection. Mastery of Small Craft: Reroll all failed Pilot Tests with small craft (shuttles, lifters, fighters, etc).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.career",
+      "step": "Career",
+      "stepIndex": 6,
+      "number": "3"
+    }
+  },
+  "_id": "yrCCXTtAJeAVeARi"
+}

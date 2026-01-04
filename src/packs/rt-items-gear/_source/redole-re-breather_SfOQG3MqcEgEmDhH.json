@@ -1,0 +1,20 @@
+{
+  "name": "Redole Re-breather",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1kg",
+    "availability": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "250 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 250 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SfOQG3MqcEgEmDhH"
+}

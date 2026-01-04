@@ -1,0 +1,20 @@
+{
+  "name": "Cherubim",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Homunculi scuplted to look like a genderless baby with implanted augmetic wings and a grav generator. Disturbing to some, can perform simple tasks such as copy text, fetching objects, carrying items, and singing The Emperor's praises.",
+    "cost": "See Bestiary or Inquisitor's Handbook Page 192/193",
+    "effects": "Rare",
+    "notes": "300 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 300 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KtTaaT9UnpufVTGH"
+}

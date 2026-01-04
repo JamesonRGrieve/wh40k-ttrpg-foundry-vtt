@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Hand Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Flame",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 4,
+    "reload": "2 Full",
+    "special": "SM Wep, Flame, Spray",
+    "weight": "6kg",
+    "availability": "Initiated",
+    "cost": "10 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KlEooBtz25U6C8ol"
+}

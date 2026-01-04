@@ -1,0 +1,28 @@
+{
+  "name": "Haywire Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (2)",
+    "weight": "0.5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CU0gTfiTt3sdTYm2"
+}

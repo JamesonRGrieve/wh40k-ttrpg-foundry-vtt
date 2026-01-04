@@ -1,0 +1,22 @@
+{
+  "name": "Psychometry",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "Augury",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating Radius",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "The Psyker spends time in an area or with an object, and makes Focus Power Test. On Success, over time, they will learn of things that happened within the area. Reduce the number of rounds taken before effects occur by Psyker's Psy Rating. Effects: After 10 Rounds: Detects the strongest emotion associated with the area or object. 20 Rounds: See General features of the one experiencing the emotion. 30 Rounds: a clear image of the person who experienced the emotion. 40 Rounds: The Occupation and Rank of the person. 50 Rounds: The name of the Person. +10 Rounds onwards: +1 Additional Fact about person determined by GM.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HSwDoXEFYPlN59BY"
+}

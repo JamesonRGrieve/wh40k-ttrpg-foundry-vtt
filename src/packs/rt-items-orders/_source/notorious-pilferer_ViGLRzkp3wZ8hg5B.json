@@ -1,0 +1,17 @@
+{
+  "name": "Notorious Pilferer",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Trailblazer Spec\n400xp",
+    "descriptionText": "Once per Game Session, Character can direct a Comrade in Cohesion to produce a single previously unmentioned item with Common Availability or better that was \"Borrowed\" from some best left unmentioned source. GM Determines what is an is not acceptable, and whether any consequences occur from performing such an action.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Once per Game Session, Character can direct a Comrade in Cohesion to produce a single previously unmentioned item with Common Availability or better that was \"Borrowed\" from some best left unmentioned source. GM Determines what is an is not acceptable, and whether any consequences occur from performing such an action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ViGLRzkp3wZ8hg5B"
+}

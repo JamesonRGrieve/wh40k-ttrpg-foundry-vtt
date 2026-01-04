@@ -1,0 +1,22 @@
+{
+  "name": "Abhorrent Ward",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Corruption 30+\nPsy Rating 4",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "Corruption",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst Power is Sustained, any creature targeting the Psyker with any form of attack must make -5*Psy Rating Willpower Test, if they fail they must choose another target.\nIf this Power causes Psychic Phenomena, whilst it is sustained all psykers within 30m must add +20 to all Psychic Phenomena Rolls.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j7NGwsi4PD9iSINW"
+}

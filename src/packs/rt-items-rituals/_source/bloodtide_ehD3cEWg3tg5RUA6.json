@@ -1,0 +1,19 @@
+{
+  "name": "Bloodtide",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-20 Forbidden Lore(The Warp)",
+    "requirements": "Character must be dedicated to Khorne and possess Forbidden Lore(The Warp). Should be performed in an area of great violence. Requires an altar ideally made of the bones of fresh victims. Finally, a direction and destination for the result of this ritual must be known. Add +10 for Schol. Lore(Occult or Legend), and +5 per ritual sacrifice performed during the ritual.",
+    "effect": "A Boiling Blood Torrent explodes outwards in chosen direction. It has the Spray Quality and range of 100m x Willpower Bonus, +100m per Degree of Success after the first. Effect lasts 1d5 x WP Bonus hours, +1 Hour per Degree of Success on Test. Those dedicated to Khorne are immune to it, Khorne Daemons ignore Warp Instability as long as they remain within its area. Unaligned, Nurgle, and Tzeentch Targets must make -10 Willpower Test every 10 minutes spent within range or suffer 2d10 E damage that ignores Toughness and Armour, pass or fail they also gain 2d10 Corruption. Non-Chaos and Slaaneshi Targets suffer same effects but with -40 Willpower Test every 5 minutes. Non-living objects take 2d10+8 Impact Damage that ignores armour, treat as a Physical attack. ",
+    "costs": "None, beyond resources required for altar and sacrifices.",
+    "failure": "Roll Contempt of the Warp. If failed by 3+ Degrees of Failiure Bloodtide Occurs but floods out in all directions, Those dedicated to Khorne are not immune if this happens. All who touch it gain 2d10 Corruption Points.",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> A Boiling Blood Torrent explodes outwards in chosen direction. It has the Spray Quality and range of 100m x Willpower Bonus, +100m per Degree of Success after the first. Effect lasts 1d5 x WP Bonus hours, +1 Hour per Degree of Success on Test. Those dedicated to Khorne are immune to it, Khorne Daemons ignore Warp Instability as long as they remain within its area. Unaligned, Nurgle, and Tzeentch Targets must make -10 Willpower Test every 10 minutes spent within range or suffer 2d10 E damage that ignores Toughness and Armour, pass or fail they also gain 2d10 Corruption. Non-Chaos and Slaaneshi Targets suffer same effects but with -40 Willpower Test every 5 minutes. Non-living objects take 2d10+8 Impact Damage that ignores armour, treat as a Physical attack. </p><p><b>Costs:</b> None, beyond resources required for altar and sacrifices.</p><p><b>Failure:</b> Roll Contempt of the Warp. If failed by 3+ Degrees of Failiure Bloodtide Occurs but floods out in all directions, Those dedicated to Khorne are not immune if this happens. All who touch it gain 2d10 Corruption Points.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ehD3cEWg3tg5RUA6"
+}

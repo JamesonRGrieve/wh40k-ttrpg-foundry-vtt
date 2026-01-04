@@ -1,0 +1,14 @@
+{
+  "name": "Amphibious",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Vehicle Treats bodies of water as open ground, and is not slowed by them",
+    "description": {
+      "value": "<p>Vehicle Treats bodies of water as open ground, and is not slowed by them</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x4eDJQUU8BLOPv7E"
+}

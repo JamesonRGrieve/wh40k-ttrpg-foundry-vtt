@@ -1,0 +1,20 @@
+{
+  "name": "Cosecrated Scrolls",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "Before making a Focus Power test, user can burn one of these scrolls as a Free Action, destroying it. Should the user then have to roll for Psychic Phenomena they can re-roll the result.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SGMZOZG12r5WjUeP"
+}

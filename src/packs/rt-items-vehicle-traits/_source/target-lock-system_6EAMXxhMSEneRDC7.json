@@ -1,0 +1,14 @@
+{
+  "name": "Target Lock System",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Wearer counts as having a Target Lock Equipped and gains the benefits of it. (Characters with this do not lose the benefit of an aim action if they make a reaction before firing.)",
+    "description": {
+      "value": "<p>Wearer counts as having a Target Lock Equipped and gains the benefits of it. (Characters with this do not lose the benefit of an aim action if they make a reaction before firing.)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6EAMXxhMSEneRDC7"
+}

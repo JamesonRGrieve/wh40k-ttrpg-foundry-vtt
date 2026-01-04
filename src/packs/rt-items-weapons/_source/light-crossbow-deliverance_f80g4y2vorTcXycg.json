@@ -1,0 +1,28 @@
+{
+  "name": "Light Crossbow \"Deliverance\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Primitive",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Half",
+    "special": "Primitive (7)",
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Has a Built-in Silencer. -20 penalty to find weapon if concealed. Doesn't lose range if given a forearm weapon mounting.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (7)</p><p><b>Note:</b> Has a Built-in Silencer. -20 penalty to find weapon if concealed. Doesn't lose range if given a forearm weapon mounting.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f80g4y2vorTcXycg"
+}

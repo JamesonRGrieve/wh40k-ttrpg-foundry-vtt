@@ -1,0 +1,28 @@
+{
+  "name": "Kroot Hunting Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Kroot",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 8,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "4kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cmcNlwHgRXNBQSBG"
+}

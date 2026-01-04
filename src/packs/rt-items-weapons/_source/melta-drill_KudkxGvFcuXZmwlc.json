@@ -1,0 +1,28 @@
+{
+  "name": "Melta Drill",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Melta",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unwieldy",
+    "weight": "15kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KudkxGvFcuXZmwlc"
+}

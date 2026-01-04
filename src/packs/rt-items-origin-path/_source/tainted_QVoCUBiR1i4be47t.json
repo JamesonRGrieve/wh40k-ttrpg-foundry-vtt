@@ -1,0 +1,25 @@
+{
+  "name": "Tainted",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Lure of the Void",
+    "descriptionText": "1. Mutant: Roll once on Mutations table, or spend 200xp to choose any one result that is lower than 76.\n2. Insane: +3 Toughness, -3 Fellowship or -1 Fate Point. Gain Peer (The Insane). Gain 2d10 Insanity Points.\n3. Deviant Philosphy: +3 Willpower and Enemy(Ecclesiarchy) Talent",
+    "effects": "1. Mutant: Roll once on Mutations table, or spend 200xp to choose any one result that is lower than 76.\n2. Insane: +3 Toughness, -3 Fellowship or -1 Fate Point. Gain Peer (The Insane). Gain 2d10 Insanity Points.\n3. Deviant Philosphy: +3 Willpower and Enemy(Ecclesiarchy) Talent",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Mutant: Roll once on Mutations table, or spend 200xp to choose any one result that is lower than 76.<br>2. Insane: +3 Toughness, -3 Fellowship or -1 Fate Point. Gain Peer (The Insane). Gain 2d10 Insanity Points.<br>3. Deviant Philosphy: +3 Willpower and Enemy(Ecclesiarchy) Talent</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.lure-of-the-void",
+      "step": "Lure of the Void",
+      "stepIndex": 3,
+      "number": "1"
+    }
+  },
+  "_id": "QVoCUBiR1i4be47t"
+}

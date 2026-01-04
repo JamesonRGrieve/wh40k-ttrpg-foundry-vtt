@@ -1,0 +1,22 @@
+{
+  "name": "Projection",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Threshold 21",
+    "opposed": "Yes",
+    "sustained": "Project a mental self that can travel at the speed of thought. Whilst doing so character is completely unaware of their physical body which is treated as unconcious. Power allows character to communicate with any creature they know well and that is somewhere within the same solar system. Unwilling targets, or those that do not like having their mind invaded may make an Opposed Willpower Test to resist the character and force them back into their own body.\nThis spiritual state is especially vulnerable to being attacked by Warp Creatures or psykes capable of attacking the mind.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SPKwllYl6kHyErs2"
+}

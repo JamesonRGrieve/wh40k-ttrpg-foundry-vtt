@@ -1,0 +1,20 @@
+{
+  "name": "Healer's Kit (Feral)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "2kg",
+    "availability": "Contains basic herbs, poultices, and other basic supplies to staunch bleeding, close wounds, etc.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "50 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 50 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4S2s2AtL9H8rZdkS"
+}

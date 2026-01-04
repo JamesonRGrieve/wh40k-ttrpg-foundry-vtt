@@ -1,0 +1,20 @@
+{
+  "name": "Rad Missile",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Missile Launcher",
+    "damageOrEffect": "1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.",
+    "qualities": "Blast(4), Irradiated(4)",
+    "weight": "2kg",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.</p><p><b>Qualities:</b> Blast(4), Irradiated(4)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MXPrGVzXiH0gCZvV"
+}

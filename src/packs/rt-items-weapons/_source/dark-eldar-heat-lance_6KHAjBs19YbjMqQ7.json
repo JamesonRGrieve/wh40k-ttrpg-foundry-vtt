@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Heat Lance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - DEldar",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "1d10+15",
+    "damageType": "Energy",
+    "penetration": 15,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Accurate",
+    "weight": "6kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Doubles Penetration if firing at Short Range or closer.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Doubles Penetration if firing at Short Range or closer.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6KHAjBs19YbjMqQ7"
+}

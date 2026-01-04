@@ -1,0 +1,17 @@
+{
+  "name": "Prosanguine",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Autosanguine Trait/Implant, Mechanicus Implant. \nAptitudes: Toughness, Tech, Nurgle",
+    "effect": "The Character can spend 10 minutes in meditation and make a Tech-Use Tetst. If successful they heal 1d5 damage immediately, if they roll 96+, they lose the ability to use their Autosanguine and Prosanguine for one week.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Character can spend 10 minutes in meditation and make a Tech-Use Tetst. If successful they heal 1d5 damage immediately, if they roll 96+, they lose the ability to use their Autosanguine and Prosanguine for one week.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "knijLuqZsh3xlqnb"
+}

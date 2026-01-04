@@ -1,0 +1,19 @@
+{
+  "name": "Rite of Sundering",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-10 Forbidden Lore (The Warp) ",
+    "requirements": "Character must have Psyker Trait, and Psyniscience and Forbidden Lore(Warp), Scholastic Lore (Occult) or Forbidden Lore(Psykers) adds +10 to Test. Ritual performed in area undergoing upheaval such as a battle or horde of cultists chanting, or another ritual involving Daemon Summoning. ",
+    "effect": "A Psy Rating km Radius area (+/- 1d5 hundred metres per 2 hours) is infused with the warp for 2d5 x Psy Rating Hours, +1 hour per Degree of Success (if odd DoS, subtract instead). All Psykers in area gain +2 to Psy Rating, all Focus Power Tests have +10, any Rituals involving Daemon Summoning have +20. Any form of Psychic Resistance is half as effective. Every round, GM rolls one Psychic Phenomena.",
+    "costs": "Everyone that does not have the Daemonic Trait within the area must make -10 Willpower Test per half hour, if fail, gain 1 Fatigue and lose 1d10 Wounds reduced by WP not AP/T. Anyone with 3+ DoF gains a Gift of the Gods.",
+    "failure": "Psyker that conducted ritual must roll on Contempt of the Warp. GM rolls 1 Perils of the Warp per Degree of Failiure.",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> A Psy Rating km Radius area (+/- 1d5 hundred metres per 2 hours) is infused with the warp for 2d5 x Psy Rating Hours, +1 hour per Degree of Success (if odd DoS, subtract instead). All Psykers in area gain +2 to Psy Rating, all Focus Power Tests have +10, any Rituals involving Daemon Summoning have +20. Any form of Psychic Resistance is half as effective. Every round, GM rolls one Psychic Phenomena.</p><p><b>Costs:</b> Everyone that does not have the Daemonic Trait within the area must make -10 Willpower Test per half hour, if fail, gain 1 Fatigue and lose 1d10 Wounds reduced by WP not AP/T. Anyone with 3+ DoF gains a Gift of the Gods.</p><p><b>Failure:</b> Psyker that conducted ritual must roll on Contempt of the Warp. GM rolls 1 Perils of the Warp per Degree of Failiure.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dgECX0Xw1E0ULrAo"
+}

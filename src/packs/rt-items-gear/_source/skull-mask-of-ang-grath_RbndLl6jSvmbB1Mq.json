@@ -1,0 +1,20 @@
+{
+  "name": "Skull Mask of Ang'grath",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "2kg",
+    "availability": "When worn provides Fear(2), or increases Character's Fear rating by 1 if they already have Fear(2) or higher. Also grants Battle Range Talent and Unnatural Weapon Skill(4). Can't be worn over a helmet.",
+    "cost": "Must have Mark of Khorne to wear, Heretical.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RbndLl6jSvmbB1Mq"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Iron Resolve",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Resistance (Fear), Jaded \nAptitudes: Defence, Willpower",
+    "effect": "Character can reroll a failed Fear or Pinning Test with a -10 Modifier.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Character can reroll a failed Fear or Pinning Test with a -10 Modifier.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RDfGNfeW4qJP8mHH"
+}

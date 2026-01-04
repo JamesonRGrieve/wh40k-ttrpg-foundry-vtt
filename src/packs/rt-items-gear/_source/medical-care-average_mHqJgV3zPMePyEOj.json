@@ -1,0 +1,20 @@
+{
+  "name": "Medical Care: Average",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Trained Medic with a level of competence\nInt 40, Medicae Skill",
+    "cost": "For Extended Care, Cost is per day. Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Scarce",
+    "notes": "75 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 75 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mHqJgV3zPMePyEOj"
+}

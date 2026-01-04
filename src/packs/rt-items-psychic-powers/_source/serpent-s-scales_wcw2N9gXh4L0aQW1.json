@@ -1,0 +1,22 @@
+{
+  "name": "Serpent's Scales",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "Flesh Warp",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Make Focus Power Test, if successful Psyker increases their Strength Characteristic by 2 x Psy Rating and their AP by Psy Rating (which stacks with armour). Their hands warp into sharp talons, preventing the use of weapons, however each hand instead counts as a Melee Weapon dealing 1d10+SB Randing Damage with the Toxic Quality.",
+    "effect": "300xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wcw2N9gXh4L0aQW1"
+}

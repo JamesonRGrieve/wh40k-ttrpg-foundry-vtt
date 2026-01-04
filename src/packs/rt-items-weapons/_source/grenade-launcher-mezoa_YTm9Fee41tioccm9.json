@@ -1,0 +1,28 @@
+{
+  "name": "Grenade Launcher (Mezoa)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Launcher",
+    "range": "80m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Half",
+    "special": null,
+    "weight": "10kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Traits vary with ammo (Weapon - Grenades)",
+    "description": {
+      "value": "<p><b>Note:</b> Traits vary with ammo (Weapon - Grenades)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YTm9Fee41tioccm9"
+}

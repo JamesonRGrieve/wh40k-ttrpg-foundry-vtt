@@ -1,0 +1,22 @@
+{
+  "name": "Telekinetic Weapon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Force Bolt",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker Shapes force into a blade, counts as a Sword in the hands of the Psyker, but with no penalty for lacking weapon training. To strike with it, make Weapon Skill Test, if hitting, does 1d10 + 3xPsy Rating Rending Damage, with Psy Rating Penetration. This weapon can be parried, but can not destroyed if parrying weapon has a power field. As it counts as Sword, it has Balanced Quality (+10 to Parry)",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GdhsQ8RvKYoHWRJX"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Assault Stubber (Echon)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "100m",
+    "rof": "-/-/6",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": 200,
+    "reload": "2 Full",
+    "special": "Storm",
+    "weight": "21kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition",
+    "description": {
+      "value": "<p><b>Special:</b> Storm</p><p><b>Note:</b> Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QcHCMjlBLUhvNsS1"
+}

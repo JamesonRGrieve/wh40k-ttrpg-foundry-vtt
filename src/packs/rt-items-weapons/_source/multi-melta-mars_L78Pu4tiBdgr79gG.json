@@ -1,0 +1,28 @@
+{
+  "name": "Multi-Melta (Mars)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "4d10+5",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Blast (1)",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L78Pu4tiBdgr79gG"
+}

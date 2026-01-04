@@ -1,0 +1,17 @@
+{
+  "name": "Adamantium Faith",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Jaded, Resistance (Fear), WP 45\nAptitudes: Willpower, Defence",
+    "effect": "Character can subtract their Willpower Bonus from the number of Degrees of Failiure they suffer on any failed Fear Test. If this reduces the number to 0 or less, they count as passing the Fear Test with 1 degree of success.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Character can subtract their Willpower Bonus from the number of Degrees of Failiure they suffer on any failed Fear Test. If this reduces the number to 0 or less, they count as passing the Fear Test with 1 degree of success.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Cq9lWdpTdfT23efy"
+}

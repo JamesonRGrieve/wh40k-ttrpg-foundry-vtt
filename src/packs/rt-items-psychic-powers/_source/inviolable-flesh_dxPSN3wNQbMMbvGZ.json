@@ -1,0 +1,22 @@
+{
+  "name": "Inviolable Flesh",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned, Toughness 40+",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "-20 Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Whilst Maintaining this power, the Psyker gains Unnatural Toughness(X), where X is equal to their Psy Rating. However they suffer -10 to their Agility Characteristic.",
+    "effect": "200xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dxPSN3wNQbMMbvGZ"
+}

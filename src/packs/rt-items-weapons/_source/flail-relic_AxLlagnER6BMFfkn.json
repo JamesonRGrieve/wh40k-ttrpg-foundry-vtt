@@ -1,0 +1,28 @@
+{
+  "name": "Flail (Relic)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+8",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unwieldy",
+    "weight": "15kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AxLlagnER6BMFfkn"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Destructor",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Warlock)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Warlock selects target and makes Focus Power Test, firing surge of psychic power that engulfs an area around target of radius 1m x Psy Rating + 1m per Two Degrees of Success on Focu Power Test. This attack can be dodged as an area of effect ranged attack. Those who fail to dodge suffer 2d10 + Psy Rating Energy Damage with Psy Rating Penetration. ",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RZ0k3qBCwyCpEILS"
+}

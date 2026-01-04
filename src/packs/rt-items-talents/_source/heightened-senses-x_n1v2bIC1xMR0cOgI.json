@@ -1,0 +1,17 @@
+{
+  "name": "Heightened Senses (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Perception, Fieldcraft, Tzeentch",
+    "effect": "The Character gains +10 bonus to any tests that specifically involve the specific sense. For example, Heightened Senses (Sight) would apply to awareness Tests to spot someone out a crowd, but not to shoot them as this requires more than eyesight.\nTalent can be taken multiple times, each time for a different sense: Sight, Sound, Smell, Taste, Touch.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Character gains +10 bonus to any tests that specifically involve the specific sense. For example, Heightened Senses (Sight) would apply to awareness Tests to spot someone out a crowd, but not to shoot them as this requires more than eyesight.\nTalent can be taken multiple times, each time for a different sense: Sight, Sound, Smell, Taste, Touch.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n1v2bIC1xMR0cOgI"
+}

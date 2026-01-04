@@ -1,0 +1,28 @@
+{
+  "name": "Electro-Flail",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Shock",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Shocking",
+    "weight": "4.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Long electrically charged lashes attached to a short staff or handle. Popular when lethal force is not desired, but suffering is.",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Shocking</p><p><b>Note:</b> Long electrically charged lashes attached to a short staff or handle. Popular when lethal force is not desired, but suffering is.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6kreX1UE9Qc3GbSk"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Potential Coil Induction",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; T 35, Implanted Potentia or Mechanicus Implants. Aptitudes: Toughness, Tech",
+    "effect": "When in the presence of a suitable power source, such as a portable generator or the power plant of a regimental vehicle, the character can make a +0 Toughness Test and recover Degree of Success levels of Fatigue.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When in the presence of a suitable power source, such as a portable generator or the power plant of a regimental vehicle, the character can make a +0 Toughness Test and recover Degree of Success levels of Fatigue.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aPubA2KSvUg4thoT"
+}

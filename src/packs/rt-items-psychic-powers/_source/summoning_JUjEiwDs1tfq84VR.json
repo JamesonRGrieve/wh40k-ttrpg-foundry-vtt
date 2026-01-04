@@ -1,0 +1,22 @@
+{
+  "name": "Summoning",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Malefic Daemonology",
+    "prerequisites": "Willpower 35",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "+0 Willpower",
+    "opposed": "Yes",
+    "sustained": "As long as Power is sustained, character gains +10 x Psy Rating to Forbidden Lore (Daemonology) Tests made to summon Daemons.\nIf power is Successfully manifested, gain Corruption Points equal to the Psy Rating used to manifest this power after its effects have been resolved.",
+    "effect": "50xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>50xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JUjEiwDs1tfq84VR"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Planet-Bound for Millenia",
+  "type": "shipUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "spCost": "3",
+    "shipAvailability": "All Ships",
+    "effects": "Decrease Hull Integrity by 1d5-1 if Frigate, Transport, or Raider, or by 1d5 if light cruiser, cruiser, or larger.  Ship starts with Modified Drive Archeotech, plus one more Archeotech component of player choice. Gain +10 Manoeuvrability within 5 VU's of a planet.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Decrease Hull Integrity by 1d5-1 if Frigate, Transport, or Raider, or by 1d5 if light cruiser, cruiser, or larger.  Ship starts with Modified Drive Archeotech, plus one more Archeotech component of player choice. Gain +10 Manoeuvrability within 5 VU's of a planet.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KG4mFxOuTD84EHdj"
+}

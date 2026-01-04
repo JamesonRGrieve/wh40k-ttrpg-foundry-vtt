@@ -1,0 +1,20 @@
+{
+  "name": "Ferric Lure Implants",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand.",
+    "cost": "Requires Mechanicus Implants.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GizZQ4fZtA6HpPty"
+}

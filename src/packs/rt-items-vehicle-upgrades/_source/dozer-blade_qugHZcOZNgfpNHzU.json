@@ -1,0 +1,19 @@
+{
+  "name": "Dozer Blade",
+  "type": "vehicleUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "type": "Standard",
+    "allowedVehicles": "Any Tracked Vehicle",
+    "difficulty": "-10",
+    "descriptionText": "Add +4 Armour to Front Face, Treat Heavy Rubble and other detritus as Open Ground as long as moving at Tactical Speed or less each turn. Can be used as an Improvised Weapon.\nMutually Exclusive with Minesweeper.",
+    "availability": "Rare",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Add +4 Armour to Front Face, Treat Heavy Rubble and other detritus as Open Ground as long as moving at Tactical Speed or less each turn. Can be used as an Improvised Weapon.\nMutually Exclusive with Minesweeper.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qugHZcOZNgfpNHzU"
+}

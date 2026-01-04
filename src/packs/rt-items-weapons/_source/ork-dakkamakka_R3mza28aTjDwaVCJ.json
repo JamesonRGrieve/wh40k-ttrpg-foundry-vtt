@@ -1,0 +1,28 @@
+{
+  "name": "Ork Dakkamakka",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Ork",
+    "range": "100m",
+    "rof": "S/3/5",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Scatter, Unreliable",
+    "weight": "30kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "ChatGPT",
+    "note": "When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter, Unreliable</p><p><b>Note:</b> When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R3mza28aTjDwaVCJ"
+}

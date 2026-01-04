@@ -1,0 +1,28 @@
+{
+  "name": "Chainaxe (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unbalanced",
+    "weight": "11kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Can be Wielded in one hand but if wielded in two hands, does additional +2 Penetration, loses Unbalanced, but gains Unwieldy.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Can be Wielded in one hand but if wielded in two hands, does additional +2 Penetration, loses Unbalanced, but gains Unwieldy.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OnKF1UtoUMXubunh"
+}

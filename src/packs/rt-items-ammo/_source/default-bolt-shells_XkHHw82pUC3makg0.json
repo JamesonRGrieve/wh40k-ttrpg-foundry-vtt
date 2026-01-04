@@ -1,0 +1,20 @@
+{
+  "name": "! Default: Bolt Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt Weapons",
+    "damageOrEffect": "-",
+    "qualities": "-",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": "16T each",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> -</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XkHHw82pUC3makg0"
+}

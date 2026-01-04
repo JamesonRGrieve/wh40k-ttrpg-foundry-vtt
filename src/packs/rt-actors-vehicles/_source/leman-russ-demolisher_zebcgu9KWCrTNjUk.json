@@ -1,0 +1,25 @@
+{
+  "name": "Leman Russ Demolisher",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "10m",
+    "tacticalSpeed": "28kph",
+    "cruisingSpeed": "-15",
+    "maneuverability": "60",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 40,\nSide 35,\nRear 22",
+    "rearArmour": "Commander, Driver, Turret Gunner, Loader, 2 Add. Gunners",
+    "structuralIntegrity": "None",
+    "crew": "Turret Gunner: Demolisher Cannon (Turret, 50m, S/-/-, 4d10+20 X, Pen 10, Pen 10, Clip 2, Rld  Full, Blast(10), Concussive(3))\nHull, one of: Front Facing, Heavy Bolter/Lascannon/Heavy Flamer\nSponson (Optional): one of: 2x Heavy Bolter/2x Heavy Flamer/2x Plasma Cannon\nPintle (Optional): one of: Facing All, Heavy Stubber/Storm Bolter\n---\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nLascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nPlasma Cannon(120m, S/-/-, 2d10+10 E, Pen 8, Clip 32, Rld 5 Full, Blast (1), Maximal, Overheat)\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)",
+    "passengers": "Vehicle Traits: Enclosed, Reinforced Armour, Ponderous, Tracked Vehicle\nSummary: Halve Damage from non-Righteous Fury, Can't use Floor It! Action and Moving Tactical Speed req Full Action.\n+10 to Difficult Terrain Tests, halve Critical roll that determines if Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.",
+    "cargo": "Very Rare",
+    "availability": "Only War Core",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "zebcgu9KWCrTNjUk"
+}

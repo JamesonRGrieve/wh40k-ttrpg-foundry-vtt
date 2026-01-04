@@ -1,0 +1,18 @@
+{
+  "name": "Hexagrammatic Wards",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Carapace or Power Armour",
+    "effect": "Provides +20 to tests made to resist Psychic attacks or manipulations. Double armour AP vs Psychic Attacks that directly deal damage. \nProvides Wards such that armour retains its AP vs Warp Weapon attacks. ",
+    "weight": "0kg",
+    "availability": "Extremely Rare",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Provides +20 to tests made to resist Psychic attacks or manipulations. Double armour AP vs Psychic Attacks that directly deal damage. \nProvides Wards such that armour retains its AP vs Warp Weapon attacks. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CHe7jbGRTJNxU5mV"
+}

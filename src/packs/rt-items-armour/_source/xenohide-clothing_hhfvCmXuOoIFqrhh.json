@@ -1,0 +1,22 @@
+{
+  "name": "Xenohide Clothing",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Dark Eldar",
+    "locations": "Body",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "notes": "Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hhfvCmXuOoIFqrhh"
+}

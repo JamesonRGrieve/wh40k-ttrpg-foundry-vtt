@@ -1,0 +1,22 @@
+{
+  "name": "Endurance",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Toughness 30+",
+    "focusPower": "Half Action Concentration",
+    "action": "3m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Psy Rating Allies within range plus the Psyker regain up to Half Psy Rating Wounds (rounding up). They also immediately recover from Pinning. This power can only be used once per 12 hours.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zIB2JOUfACIcZlwV"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Mining Helot Augmetics",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Crude Augmentations to allow a person to perform more efficient labour. Gives a Character an Extra Limb fitted with a Breacher Weapon. Increases Strength and Toughness Characteristics by +10. However reduce Agility by -10 and gain 1d10 Insanity from the considerable pain and discomfort of the uncaring implantation.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "2000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 2000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9A4KxtnrG9InXHpO"
+}

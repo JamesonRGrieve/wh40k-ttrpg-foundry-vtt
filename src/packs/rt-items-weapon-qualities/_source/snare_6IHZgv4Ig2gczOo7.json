@@ -1,0 +1,14 @@
+{
+  "name": "Snare",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 9,
+    "description": {
+      "value": "<p>9</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6IHZgv4Ig2gczOo7"
+}

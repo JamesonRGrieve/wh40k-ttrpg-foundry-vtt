@@ -1,0 +1,28 @@
+{
+  "name": "Vagabond-class Merchant Trader",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Transport",
+    "size": "2km long, 0.4km wide",
+    "crew": 18000,
+    "speed": 4,
+    "manoeuvrability": -5,
+    "detection": 10,
+    "hull": 40,
+    "armour": 13,
+    "turrets": 1,
+    "space": 40,
+    "shipPoints": 20,
+    "weaponCapacity": "1 Dorsal, 1 Prow",
+    "notes": "Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "J6zGPAn0DChsnft8"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Eloquent",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Fellowship 30, Charm or Inquiry\nAptitudes: Unaligned",
+    "effect": "In a Social Conflict, if Character uses Charm or Inquiry in an Opposed Test, any spent infamy is returned to them if they win against the opponent.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>In a Social Conflict, if Character uses Charm or Inquiry in an Opposed Test, any spent infamy is returned to them if they win against the opponent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GXcJhGstnRPcP6uq"
+}

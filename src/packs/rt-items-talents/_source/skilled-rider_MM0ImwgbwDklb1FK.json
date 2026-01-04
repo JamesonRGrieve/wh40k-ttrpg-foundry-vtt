@@ -1,0 +1,17 @@
+{
+  "name": "Skilled Rider",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Survival +10 \nAptitudes: Agility, Fieldcraft",
+    "effect": "If the character would be thrown from their Mount for any reason, they can make a +10 Survival Test, if successful they either remain on their Mount or fall safely to the ground, landing on their feet.\nAdditionally, they can Mount/Dismount as a Half Action",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>If the character would be thrown from their Mount for any reason, they can make a +10 Survival Test, if successful they either remain on their Mount or fall safely to the ground, landing on their feet.\nAdditionally, they can Mount/Dismount as a Half Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MM0ImwgbwDklb1FK"
+}

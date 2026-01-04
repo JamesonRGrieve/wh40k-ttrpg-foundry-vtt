@@ -1,0 +1,17 @@
+{
+  "name": "Combat Mnemo-Analysis",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ".Servitor Comrade: Any\nScrutiny +10\nApt: Perception, Knowledge",
+    "descriptionText": "Character designates one target in line of sight whilst their Servitor Comrade is in Cohesion, until the beginning of the Character's next turn, target has -20 to Dodge and Parry Tests to evade the character's Attacks, and Character gians +20 to dodge and Parry Tests to avoid the target's attacks.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character designates one target in line of sight whilst their Servitor Comrade is in Cohesion, until the beginning of the Character's next turn, target has -20 to Dodge and Parry Tests to evade the character's Attacks, and Character gians +20 to dodge and Parry Tests to avoid the target's attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cG23DsOuYEtuByrR"
+}

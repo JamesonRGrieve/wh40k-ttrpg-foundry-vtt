@@ -1,0 +1,22 @@
+{
+  "name": "The Halo of the Devoted (Relic)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": "65%",
+    "maxAg": "-",
+    "weight": "0.5kg",
+    "availability": "Unique",
+    "cost": "-",
+    "notes": "Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. ",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r42Lw2nVgAWWD6pA"
+}

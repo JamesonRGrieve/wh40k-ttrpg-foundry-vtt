@@ -1,0 +1,21 @@
+{
+  "name": "Refresh and Revitalise",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "Self",
+    "test": "-10 Willpower Test",
+    "sustain": "No",
+    "novice": "On successful Test, for every Degree of Success, the Navigator removes 1 level of fatigue for Toughness Bonus Hours, at which point they are returned.",
+    "adept": "Fatigue is removed for 2xTB hours before being returned. However if navigator fails to rest for at least 8 hours before duration expires, suffers a number of Wounds equal to Fatigue Removed by power.",
+    "master": "Test becomes -20 Willpower, but ignores all Fatigue and can go without sleep for 1d5+1 days. However unless Navigator sleeps for 8 hours in meantime, afterwards  fall into a coma for number of days spent awake minus Toughness Bonus (min 1).",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Novice:</b> On successful Test, for every Degree of Success, the Navigator removes 1 level of fatigue for Toughness Bonus Hours, at which point they are returned.</p><p><b>Adept:</b> Fatigue is removed for 2xTB hours before being returned. However if navigator fails to rest for at least 8 hours before duration expires, suffers a number of Wounds equal to Fatigue Removed by power.</p><p><b>Master:</b> Test becomes -20 Willpower, but ignores all Fatigue and can go without sleep for 1d5+1 days. However unless Navigator sleeps for 8 hours in meantime, afterwards  fall into a coma for number of days spent awake minus Toughness Bonus (min 1).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hU0NgY6fVQQDN2OV"
+}

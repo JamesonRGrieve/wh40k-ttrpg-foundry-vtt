@@ -1,0 +1,21 @@
+{
+  "name": "Armoured Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Raiders, Frigates",
+    "powerUsage": 2,
+    "spaceUsage": 2,
+    "spCost": "-",
+    "effect": "Where characters command the ship. If this component takes a critical hit or becomes damaged/unpowered, roll 1d10, on 4 or higher is unharmed.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where characters command the ship. If this component takes a critical hit or becomes damaged/unpowered, roll 1d10, on 4 or higher is unharmed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "U9eMbQ5HarVOY82g"
+}

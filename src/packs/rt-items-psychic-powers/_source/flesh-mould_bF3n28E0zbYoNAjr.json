@@ -1,0 +1,22 @@
+{
+  "name": "Flesh Mould",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 5, Toughness 50+",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst power is sustained, Psyker can gain one of: Amphibious, Amorphous, Burrower(3), Cralwer, Flyer(4), Multiple Arms(3), Natural Armour(2), Natural Weapons, Quadruped, a +10 x Degrees of Success Bonus to disguise tests to appear as another person (appearance, vocal cords, and genetic structure). \nThis power can be activated multiple times simultaneously, choosing a different option with each activation.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bF3n28E0zbYoNAjr"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Hardy",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Toughness 40\nAptitudes: Toughness, Defence, Nurgle",
+    "effect": "Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cxdCGZYushVAWRzB"
+}

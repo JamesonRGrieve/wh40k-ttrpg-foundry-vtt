@@ -1,0 +1,28 @@
+{
+  "name": "Thunderclap (Volonx)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "9m",
+    "rof": "S/-/-",
+    "damage": "1d5+3",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (8), Blast (2), Inaccurate, Unstable",
+    "weight": "1kg",
+    "availability": "Very Rare",
+    "cost": "45 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "May require Exotic Weapon Training to use. Returns to the user if it misses, and can be caught with a +0 Agility Test, if fail by 3+ DoF roll 1d10: 1-5: nothing happens. 6-8: nothing happens this turn, but roll again next turn. 9-10: weapon explodes, destroying itself and damaging all in range.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Blast (2), Inaccurate, Unstable</p><p><b>Note:</b> May require Exotic Weapon Training to use. Returns to the user if it misses, and can be caught with a +0 Agility Test, if fail by 3+ DoF roll 1d10: 1-5: nothing happens. 6-8: nothing happens this turn, but roll again next turn. 9-10: weapon explodes, destroying itself and damaging all in range.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eacIToAtF7iqZNYZ"
+}

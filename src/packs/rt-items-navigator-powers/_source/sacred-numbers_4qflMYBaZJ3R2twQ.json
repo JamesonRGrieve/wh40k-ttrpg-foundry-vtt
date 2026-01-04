@@ -1,0 +1,21 @@
+{
+  "name": "Sacred Numbers",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Slaanesh: 6, and Multiples of 6\nNurgle: 7, and Multiples of 7\nKhorne: 8, and Multiples of 8\nTzeentch: 9, and Multiples of 9",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4qflMYBaZJ3R2twQ"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Tempest Bolt Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt Pistols, Bolters, Heavy Bolters",
+    "damageOrEffect": "+3 Damage against targets with Machine trait, Energy Damage Type, weapon gains Shock Quality.",
+    "qualities": "Shock",
+    "weight": "10% wep",
+    "availability": "Near Unique",
+    "cost": "250T each",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +3 Damage against targets with Machine trait, Energy Damage Type, weapon gains Shock Quality.</p><p><b>Qualities:</b> Shock</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dbHCnzwIRoyEa9dW"
+}

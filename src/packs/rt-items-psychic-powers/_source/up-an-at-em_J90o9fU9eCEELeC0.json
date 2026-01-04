@@ -1,0 +1,22 @@
+{
+  "name": "Up an' at 'Em!",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "On Successful Test, for as long as power is sustained, all allied Orks within range ignore effects of Fatigue, gain +5xPsy Rating bonus to Tests to resist Fear and Pinning, and may reroll any rolls made on Fear Shock Table.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J90o9fU9eCEELeC0"
+}

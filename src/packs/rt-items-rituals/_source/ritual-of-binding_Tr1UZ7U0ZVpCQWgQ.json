@@ -1,0 +1,19 @@
+{
+  "name": "Ritual of Binding",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-60 Forbidden Lore (Daemonology)",
+    "requirements": "The Shell of an appropriate Daemon Engine to bind the Daemon into (EG: Blood Slaughterer, Blight Drone, Subjugator, Fire Lord, etc). A Summoned Daemon to bind, appropriate conditions depending on the god of the Daemon Summoned. (See Core Summon Requirements).",
+    "effect": "The Summoned Daemon is bound within the shell of the Daemon Engine, bringing it to unholy life. The Daemon is now treated as a Daemon Engine of the appropriate type.  The Daemon remains forever, unable to leave its shell unless it either gathers sufficient power, or is banished by one of sufficient power to unravel the binding, or the Daemon Engine is Destroyed. Daemons are more likely to be willingly implanted in a Daemon Engine.",
+    "costs": "Each Ritual Partcipant suffers 4d10 nonpermenant damage to all Characteristics for 2d10 Hours, +1 Hour per level of Size Trait the Daemon Engine Is. The Ritual also triggers two Psychic Phenomenas that affect all ritual partcipants.",
+    "failure": "The Daemon breaks free of control, if the Daemon was unwilling it attacks the characters, if it was willing it dissolves back to the warp. Regardless roll Contempt of the Warp with +10 per DoF.",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> The Summoned Daemon is bound within the shell of the Daemon Engine, bringing it to unholy life. The Daemon is now treated as a Daemon Engine of the appropriate type.  The Daemon remains forever, unable to leave its shell unless it either gathers sufficient power, or is banished by one of sufficient power to unravel the binding, or the Daemon Engine is Destroyed. Daemons are more likely to be willingly implanted in a Daemon Engine.</p><p><b>Costs:</b> Each Ritual Partcipant suffers 4d10 nonpermenant damage to all Characteristics for 2d10 Hours, +1 Hour per level of Size Trait the Daemon Engine Is. The Ritual also triggers two Psychic Phenomenas that affect all ritual partcipants.</p><p><b>Failure:</b> The Daemon breaks free of control, if the Daemon was unwilling it attacks the characters, if it was willing it dissolves back to the warp. Regardless roll Contempt of the Warp with +10 per DoF.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tr1UZ7U0ZVpCQWgQ"
+}

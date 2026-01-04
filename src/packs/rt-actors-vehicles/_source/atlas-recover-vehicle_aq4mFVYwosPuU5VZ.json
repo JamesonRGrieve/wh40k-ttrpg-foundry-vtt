@@ -1,0 +1,25 @@
+{
+  "name": "Atlas Recover Vehicle",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "14m",
+    "tacticalSpeed": "40kph",
+    "cruisingSpeed": "-10",
+    "maneuverability": "35",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 28\nSide 18\nRear 16",
+    "rearArmour": "Commander (Hull), Driver, Operator (Winch)",
+    "structuralIntegrity": "None",
+    "crew": "Hull, one of: Front Facing Heavy Bolter, Heavy Flamer\nPintle (Optional), one of: Heavy Stubber or Storm Bolter",
+    "passengers": "Traits: Enclosed, Rugged, Tracked Vehicle\nSpecial Rules: Possesses a Winch that can tow one Vehicle up to Massive Size. With two, tow Immense. With four, tow Monumental or Larger. Regardless reduces Manoeuvrability to -20. Winching takes 2 minutes, must remain stationary.\nCan be used for Field Repairs to lift vehicle, reduces difficulty of test by +10 (EG -20 to -10). Hits to the Vehicle's Rear strike the winch, treated as a weapon for Critical Damage Purposes, can be disabled.",
+    "cargo": "Scarce",
+    "availability": "OW: Shield of Humanity",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "aq4mFVYwosPuU5VZ"
+}

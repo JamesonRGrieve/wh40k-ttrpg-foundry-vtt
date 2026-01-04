@@ -1,0 +1,20 @@
+{
+  "name": "Photon Flash Round",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher/Mortar",
+    "damageOrEffect": "+10 Agility Test or be blinded for number of rounds equal to Degrees of Failiure. 15m Range",
+    "qualities": "Blast (15)",
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +10 Agility Test or be blinded for number of rounds equal to Degrees of Failiure. 15m Range</p><p><b>Qualities:</b> Blast (15)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v7JKTzCi1dW344OV"
+}

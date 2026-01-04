@@ -1,0 +1,28 @@
+{
+  "name": "Firestorm Blade [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "2d10+15",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Flame, Proven (3), Spray",
+    "weight": "7kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Weapon: Great Sword. Daemon WP 70 (Khorne Daemon), Bind Str 4. Att.: Howling, Piercing, Rampage. Can make [Melee] Attack. Gain Fear(+1) whenever attacking, add Daemon's WP Bonus to critical damage, every other round when charging can attack all within 1m. Must have Mark of Khorne to Wield.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Flame, Proven (3), Spray</p><p><b>Note:</b> Weapon: Great Sword. Daemon WP 70 (Khorne Daemon), Bind Str 4. Att.: Howling, Piercing, Rampage. Can make [Melee] Attack. Gain Fear(+1) whenever attacking, add Daemon's WP Bonus to critical damage, every other round when charging can attack all within 1m. Must have Mark of Khorne to Wield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EIr0x6ZB34M1zVdX"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Hand Cannon (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "35m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 2,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "3kg",
+    "availability": "Scarce",
+    "cost": "65 T",
+    "source": "Only War: Core",
+    "note": "-10 to Ballistic Test to fire unless used in two hands or with Recoil Gloves",
+    "description": {
+      "value": "<p><b>Note:</b> -10 to Ballistic Test to fire unless used in two hands or with Recoil Gloves</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WD9cNgnJp9oaIqQ7"
+}

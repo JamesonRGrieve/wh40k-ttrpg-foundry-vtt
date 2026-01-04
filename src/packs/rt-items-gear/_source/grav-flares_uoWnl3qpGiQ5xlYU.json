@@ -1,0 +1,20 @@
+{
+  "name": "Grav-flares",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "Fired from integrated tube, will fly up to reletively high altitude and ignite, illuminating ~10km across for 2d10 minutes. Comes in red, white, green, gold, or blue colours.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "7 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 7 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uoWnl3qpGiQ5xlYU"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Enfeeble",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Toughness 35+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Psyker makes Opposed Willpower vs Target Individual's Toughness. If target fails they are stunned for one round, and for as long as the power is sustained, the target gains Psy Rating/2 Fatigue if they roll doubles on any Test they make.  A target can only be affected by one instance of this power at a time.\nSubtypes: Attack, Concentration",
+    "effect": "100xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0cOUWBXTJdnhzRf3"
+}

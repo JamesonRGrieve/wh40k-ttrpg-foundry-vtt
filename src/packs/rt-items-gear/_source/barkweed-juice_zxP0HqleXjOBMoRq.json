@@ -1,0 +1,20 @@
+{
+  "name": "Barkweed Juice",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Character gains Lightning Reflexes, Rapid Reaction, Unnatural Agility(1), and Unnatural Willpower for Toughness Bonus Rounds. Afterwards suffer 1d5 Nonpermenant Toughness Damage after effects pass.",
+    "cost": "Rare on the Gates of Moment.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zxP0HqleXjOBMoRq"
+}

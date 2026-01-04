@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Meltagun (Vulkan) (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Melta",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+14",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "SM Wep, Melta",
+    "weight": "14kg",
+    "availability": "Respected",
+    "cost": "20 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hcINcsJf7hmlcsTE"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Grapplehawk",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Cyber Bird Familiar, check stats Rogue Trader: Core page 375. Can fight and lift a person for short distances.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hlbXtEGJ1450ilt4"
+}

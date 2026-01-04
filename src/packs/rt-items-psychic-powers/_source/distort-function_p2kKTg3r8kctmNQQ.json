@@ -1,0 +1,22 @@
+{
+  "name": "Distort Function",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Full Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker targets two or more Mechanical or Electronic devices in range no more than a total of 100kg x Psy Rating. If successful, the two devices are merged into a single creation that remains functional as long as technique is sustained. This abomination of technology may be controlled by the psyker to move and execute attacks, it has a melee weapon dealing 1d10 + Psy Rating Damage, along with any ranged weapons that were integrated during construction (which function as normal), It has Psy Rating Wounds, and shares Psyker's Characteristics. It has no Armour Points, falling apart when reaching 0 wounds.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p2kKTg3r8kctmNQQ"
+}

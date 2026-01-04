@@ -1,0 +1,20 @@
+{
+  "name": "Nerve Induction Tines",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain or pleasure, as the user desires.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O1oxv9nFHe9Y8rEZ"
+}

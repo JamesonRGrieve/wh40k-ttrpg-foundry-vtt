@@ -1,0 +1,28 @@
+{
+  "name": "Thresher Support Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "120m",
+    "rof": "-/-/6",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 200,
+    "reload": "2 Full",
+    "special": "Crippling (2), Primitive (8), Tearing",
+    "weight": "23kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Comes with a Backpack Ammo Supply as part of Acquisition. Could be replaced with a Vehicle Mounted ammo supply.\nBackpack weight part of listed weight. (This conflicts with Echon Assault Stubber, which weapon is a variant of, grumble)",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (2), Primitive (8), Tearing</p><p><b>Note:</b> Comes with a Backpack Ammo Supply as part of Acquisition. Could be replaced with a Vehicle Mounted ammo supply.\nBackpack weight part of listed weight. (This conflicts with Echon Assault Stubber, which weapon is a variant of, grumble)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0aI7MOGlUQfTOcWV"
+}

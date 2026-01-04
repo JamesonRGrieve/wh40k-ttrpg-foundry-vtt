@@ -1,0 +1,14 @@
+{
+  "name": "Bike",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Those attacking bikes can choose to hit the rider or bike without needing to make a Called Shot Action. Bikes cannot make the Ram Action.",
+    "description": {
+      "value": "<p>Those attacking bikes can choose to hit the rider or bike without needing to make a Called Shot Action. Bikes cannot make the Ram Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CyFMfjIQeBwCITgh"
+}

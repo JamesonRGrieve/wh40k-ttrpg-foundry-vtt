@@ -1,0 +1,17 @@
+{
+  "name": "Insanely Faithful",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": null,
+    "effect": "When rolling to determine the effects of Shock, can roll twice and take the better result",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RB0NB8eXiLkRxv46"
+}

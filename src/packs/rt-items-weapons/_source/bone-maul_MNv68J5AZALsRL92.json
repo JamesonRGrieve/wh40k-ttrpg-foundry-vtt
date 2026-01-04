@@ -1,0 +1,28 @@
+{
+  "name": "Bone Maul",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Impact",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unbalanced, Tainted",
+    "weight": "7kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion",
+    "description": {
+      "value": "<p><b>Special:</b> Unbalanced, Tainted</p><p><b>Note:</b> Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MNv68J5AZALsRL92"
+}

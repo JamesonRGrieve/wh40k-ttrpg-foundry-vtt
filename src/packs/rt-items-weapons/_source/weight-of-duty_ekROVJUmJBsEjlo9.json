@@ -1,0 +1,28 @@
+{
+  "name": "Weight of Duty",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+10",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Concussive (1), Power Field, Tearing, Unbalanced",
+    "weight": "7kg",
+    "availability": "Famed",
+    "cost": "45 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Maul of the Hammers of Dorn Chapter. Auditory Protection does not assist in resisting the weapon's Concussive effect.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Concussive (1), Power Field, Tearing, Unbalanced</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Maul of the Hammers of Dorn Chapter. Auditory Protection does not assist in resisting the weapon's Concussive effect.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ekROVJUmJBsEjlo9"
+}

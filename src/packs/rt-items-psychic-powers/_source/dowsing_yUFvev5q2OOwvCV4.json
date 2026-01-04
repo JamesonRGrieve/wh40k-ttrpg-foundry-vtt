@@ -1,0 +1,22 @@
+{
+  "name": "Dowsing",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "Self / 1km * PER Bonus",
+    "range": "Threshold 11",
+    "opposed": "Yes",
+    "sustained": "Choose a subject, an item or person related to a target, for example a lock to try to find the target key that opens it. If target is a person, the character must have seen the person before (pictures count) or know their name in order to find them. Character then makes a Psyniscience test modified by the following: +10, intimiately familiar with subject (object carreid for a long time, person known well). +5, posessing a portion of the target (lock of hair, stone from a statue, etc). +5, target is within 100m. -10, target is more than 500m away. -10, target is surrounded by others of its kind (person in a crowd, key on a keyring).  If target is within range test reveals location: 0 DoS: Rough Direction, 1 DoS: Specific Direction and roughly how far. 2-3 DoS: Specific Direction, exactly how far. 4+ DoS: visual image of current location of target, as well as previous results. Whilst power is sustained, can spend a Full Action to gain updated info.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yUFvev5q2OOwvCV4"
+}

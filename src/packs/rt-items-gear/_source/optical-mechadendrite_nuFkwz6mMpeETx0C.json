@@ -1,0 +1,20 @@
+{
+  "name": "Optical Mechadendrite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Has Pict Recorder, can extend to 3 metres, and reduce width to pencil thickness. +10 Bonus to perception tests and +20 to vision-based tests at night, can examine surfaces on microscopic level and be used as telescopic sight. Also has normal and IR lights. ",
+    "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
+    "effects": "Very Rare",
+    "notes": "400 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 400 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nuFkwz6mMpeETx0C"
+}

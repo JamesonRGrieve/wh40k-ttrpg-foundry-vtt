@@ -1,0 +1,18 @@
+{
+  "name": "Nightshroud Layer",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any armour that covers all locations, except power armour,",
+    "effect": "+30 to Concealment Tests in the dark. While used, must make +0 Toughness Test per hour or gain a level of fatigue. Works like Night Cloak gear item.",
+    "weight": "+2kg",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>+30 to Concealment Tests in the dark. While used, must make +0 Toughness Test per hour or gain a level of fatigue. Works like Night Cloak gear item.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lZGp6C3JTA7AlgPJ"
+}

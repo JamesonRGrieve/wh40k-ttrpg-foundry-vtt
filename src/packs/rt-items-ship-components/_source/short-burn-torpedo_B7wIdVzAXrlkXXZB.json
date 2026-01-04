@@ -1,0 +1,21 @@
+{
+  "name": "Short Burn Torpedo",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade (Torpedo Guidance)",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "Torpedo Rating: (+15). Increases speed to 15 VU's, decreases range to 30 VU's. ",
+    "availability": null,
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Torpedo Rating: (+15). Increases speed to 15 VU's, decreases range to 30 VU's. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "B7wIdVzAXrlkXXZB"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Snap Out of It!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": "Sergeant Spec\n200xp",
+    "descriptionText": "Make +0 Intimidate or Command Test, if successful all Comrades end ongoing Fear or Pinning Effects, and can act normally on subsequent turns.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Make +0 Intimidate or Command Test, if successful all Comrades end ongoing Fear or Pinning Effects, and can act normally on subsequent turns.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ozNA8A4DRx8jdUXv"
+}

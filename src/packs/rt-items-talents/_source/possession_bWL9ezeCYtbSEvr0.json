@@ -1,0 +1,17 @@
+{
+  "name": "Possession",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Creature can Possess Mortal Bodies. As a Full Action, Creature makes Opposed Willpower Test vs Victim within a few metres, can repeat over multiple turns until one achieves 5 DoS over the other. If Victim wins they repell Creature who can't possess them for 24 hours and takes 1d10 Energy Damage ignoring Armour+Toughness. If Creature wins they possess Victim, who while possessed gains 1d10+3 Wounds and +10 Strength and Toughness, also uses Creature's INT, PER, WP, FEL, Psy Rating+Powers, Skills, and Talents instead of their own. Possesor can recall victim's Skills and Memories as Intelligence Test. If Victim Survives to be exorcised, they suffer 2d10 Permenant Toughness and Willpower damage, and 1d10 Insanity and Corruption Points.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature can Possess Mortal Bodies. As a Full Action, Creature makes Opposed Willpower Test vs Victim within a few metres, can repeat over multiple turns until one achieves 5 DoS over the other. If Victim wins they repell Creature who can't possess them for 24 hours and takes 1d10 Energy Damage ignoring Armour+Toughness. If Creature wins they possess Victim, who while possessed gains 1d10+3 Wounds and +10 Strength and Toughness, also uses Creature's INT, PER, WP, FEL, Psy Rating+Powers, Skills, and Talents instead of their own. Possesor can recall victim's Skills and Memories as Intelligence Test. If Victim Survives to be exorcised, they suffer 2d10 Permenant Toughness and Willpower damage, and 1d10 Insanity and Corruption Points.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bWL9ezeCYtbSEvr0"
+}

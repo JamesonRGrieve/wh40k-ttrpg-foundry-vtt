@@ -1,0 +1,28 @@
+{
+  "name": "Shock Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "20m",
+    "rof": "S/2/-",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 7,
+    "reload": "Full",
+    "special": "Shocking",
+    "weight": "3kg",
+    "availability": "Rare",
+    "cost": "650 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Configured to use Laspistol Power Packs. Effectively a heavily suped up taser",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Configured to use Laspistol Power Packs. Effectively a heavily suped up taser</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h6JqA2x9tfnJ7Hv3"
+}

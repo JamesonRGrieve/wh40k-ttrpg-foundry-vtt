@@ -1,0 +1,17 @@
+{
+  "name": "Las Weapon Expertise",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 35, Lasgun Volley \nAptitudes: Ballistic Skill, General",
+    "effect": "Whenever this character makes a ranged attack with a las weapon, they impose a -5 Penalty to Dodge tests per Degree of Success scored beyond the first (max -30) made to avoid it their shots.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever this character makes a ranged attack with a las weapon, they impose a -5 Penalty to Dodge tests per Degree of Success scored beyond the first (max -30) made to avoid it their shots.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tfyhaXS9c3OM5VVf"
+}

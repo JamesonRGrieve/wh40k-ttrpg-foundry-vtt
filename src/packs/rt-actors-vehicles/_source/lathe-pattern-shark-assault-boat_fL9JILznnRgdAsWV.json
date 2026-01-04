@@ -1,0 +1,25 @@
+{
+  "name": "Lathe-Pattern Shark Assault Boat",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Spacecraft",
+    "size": "28m/ 18AU's",
+    "tacticalSpeed": "2,400kph / 10VU's",
+    "cruisingSpeed": "-10",
+    "maneuverability": "50",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 45,\nSide 45, \nRear 30",
+    "rearArmour": "Pilot, Co-Pilot, Gunner, Crew Chief, Enginseer",
+    "structuralIntegrity": "50 Soldiers",
+    "crew": "Co-Pilot: Twin-Linked Las-Breacher (Front, Range 220m (2 AU's), S/-/-, 3d10+10 E, Pen 15, Clip 10, Reload -, Inaccurate, Twin-Linked\nGunner: AP Autocannon (All, Range 300m (3 AU's), S/2/5, 4d10+5 I, Pen 8, Clip 200, Reload 2 Full",
+    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can affix to Spacecraft ship hull as +0 Pilot(Space Craft) Test and spend 4 Full Rounds to burn throough using Las-Breacher and Boarding Clamp Melta Charges. Has Craft Rating of +5 for Attack Craft Purposes, squadron size 8. ",
+    "cargo": "Very Rare",
+    "availability": "RT: Battlefleet Koronus",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fL9JILznnRgdAsWV"
+}

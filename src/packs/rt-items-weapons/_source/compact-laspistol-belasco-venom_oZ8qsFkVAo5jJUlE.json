@@ -1,0 +1,28 @@
+{
+  "name": "Compact Laspistol (Belasco) \"Venom\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+1",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 15,
+    "reload": "-",
+    "special": null,
+    "weight": "0.5kg",
+    "availability": "Scarce",
+    "cost": "120 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Doesn't use standard power packs, instead requires its internal power cell to be recharged from a standard power port.",
+    "description": {
+      "value": "<p><b>Note:</b> Doesn't use standard power packs, instead requires its internal power cell to be recharged from a standard power port.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oZ8qsFkVAo5jJUlE"
+}

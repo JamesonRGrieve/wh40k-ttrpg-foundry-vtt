@@ -1,0 +1,22 @@
+{
+  "name": "Prescience",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "Psyniscience",
+    "focusPower": "Half Action Concentration",
+    "action": "3m x Psy Rating Radius",
+    "range": "Psyniscience ",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Psy Rating Allies within range plus the Psyker gain +2xPsy Rating Bonus to their Weapon Skill and Ballistic Skill as long as the power is sustained and ally remains within range of the psyker.",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gC62ouKvcWYidV4W"
+}

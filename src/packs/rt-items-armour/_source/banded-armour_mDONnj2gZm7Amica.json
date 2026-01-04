@@ -1,0 +1,22 @@
+{
+  "name": "Banded Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "12kg",
+    "availability": "Rare",
+    "cost": "50 T",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mDONnj2gZm7Amica"
+}

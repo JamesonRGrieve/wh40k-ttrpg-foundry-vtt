@@ -1,0 +1,21 @@
+{
+  "name": "Voss \"Glimmer\"-Pattern Void Shield Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Void Shield",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 1,
+    "spCost": "-",
+    "effect": "Provides 1 Void Shield, absorbing 1 attack from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Provides 1 Void Shield, absorbing 1 attack from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PKnB5JWtfTU5EyGq"
+}

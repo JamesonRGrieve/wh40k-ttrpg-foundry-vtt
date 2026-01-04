@@ -1,0 +1,22 @@
+{
+  "name": "Tendrils of Corruption",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned, Tech-Use Skill",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker targets a single weapon, piece of armour, or item of equipment within range. If Focus Power Test successful the item is impaired. Melee Weapons become Poor Quality, losing Balanced, Force, and Power Field if they have them and gaining Primitive(6)and Unbalanced. Ranged Weapons become Poor Quality and lose Accurate, Maximal, and Reliable and gain Inaccurate and Unreliable Qualities. Armour reduces its AP by 2 (min 0), and tests made involving gear items have -10 (such as Protection Rating for Force Fields or Awareness Tests for Auspex). These effects are permenant until a few minutes of basic maintenance is performed on the item.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q65eLwW1YJ2CiHSJ"
+}

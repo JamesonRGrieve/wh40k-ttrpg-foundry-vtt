@@ -1,0 +1,20 @@
+{
+  "name": "Breaching Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Shotguns",
+    "damageOrEffect": "Change damage type to Explosive, half range.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Distinguished",
+    "cost": "8 R / Clip",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Change damage type to Explosive, half range.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MKunM0JF3rH393SB"
+}

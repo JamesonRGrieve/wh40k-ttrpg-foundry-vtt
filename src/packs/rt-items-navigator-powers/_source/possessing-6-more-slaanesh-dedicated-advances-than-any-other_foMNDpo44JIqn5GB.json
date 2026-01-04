@@ -1,0 +1,21 @@
+{
+  "name": "Possessing 6 more Slaanesh Dedicated Advances than any other type allows Character to treat Perception Bonus as one higher for one of their 5 senses.\nPossessing 7 or more Nurgle Dedicated Advances than any other type allows Character to treat Toughness Bonus as one higher vs Toxins and Poisons.\nPossessing 8 or more Khorne Dedicated Advances than any other type allows Character to treat Weapon Skill Bonus as one higher for purposes of multiple melee hits.\nPossessing 9 or more Tzeentch Dedicated Advances than any other type allows Character to treat Willpower Bonus as one higher for Psychic Power related tests.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": 10,
+    "novice": "- The Ritual Follows the \"Rule of Sympathy\", Sympathetic Objects, Rites, actions, and/or Location favour the God.\n- The Daemon has been provided a Suitable Sacrifice to partake of upon arrival.\n- The Enactor has an Artefact connected to the summoned Daemon.\n- The Enactor has an Aetheme Blade or Rituals Kit\n- The Enactor is a Psyker with Psy Rating 4-6\n- The Veil between Reality and the Warp is weakened\n- The Enactor knows part of a Daemon's True Name",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> - The Ritual Follows the \"Rule of Sympathy\", Sympathetic Objects, Rites, actions, and/or Location favour the God.\n- The Daemon has been provided a Suitable Sacrifice to partake of upon arrival.\n- The Enactor has an Artefact connected to the summoned Daemon.\n- The Enactor has an Aetheme Blade or Rituals Kit\n- The Enactor is a Psyker with Psy Rating 4-6\n- The Veil between Reality and the Warp is weakened\n- The Enactor knows part of a Daemon's True Name</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "foMNDpo44JIqn5GB"
+}

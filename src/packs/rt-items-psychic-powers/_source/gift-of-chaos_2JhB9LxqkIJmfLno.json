@@ -1,0 +1,22 @@
+{
+  "name": "Gift of Chaos",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 5, Infamy 40+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "1m x Psy Rating",
+    "range": "-20 Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Target individual opposes Psyker's -20 Willpower with Toughness, if target wins nothing happens, if they lose they suffer 1d10 Damage, +2 per Degree of Failiure, ignoring Armour and Toughness. If the target loses Test by 4+ DoF they immediately suffer a random Gift of the Gods, minor NPC's may be instantly killed by this at GM discretion, transforming into harmless agonized chaos spawn.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2JhB9LxqkIJmfLno"
+}

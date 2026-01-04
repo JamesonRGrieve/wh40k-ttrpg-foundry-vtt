@@ -1,0 +1,17 @@
+{
+  "name": "Warden of the Divisio Immoralis",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Arbitrator Career, DH Rank 1+. ",
+    "descriptionText": "There is a belief held by some that there is a hidden reason why the cults within the Calixis sector group ever more frequent.  That something pulls the strings. The Divisio Immoralis, whilt neither popular not possessing true influence, seeks to stop these cults before they happen, and are dedicated in this goal.",
+    "effects": "Replace new Rank's Advances with that of the Warden of the Divisio Immoralis",
+    "source": "DH: Inquisitor's Handbook (Page 84)",
+    "description": {
+      "value": "<p>There is a belief held by some that there is a hidden reason why the cults within the Calixis sector group ever more frequent.  That something pulls the strings. The Divisio Immoralis, whilt neither popular not possessing true influence, seeks to stop these cults before they happen, and are dedicated in this goal.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Warden of the Divisio Immoralis</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "go7nPeq5NZMA12Zh"
+}

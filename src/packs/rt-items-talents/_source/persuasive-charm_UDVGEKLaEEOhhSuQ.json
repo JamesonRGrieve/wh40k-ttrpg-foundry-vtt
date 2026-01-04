@@ -1,0 +1,17 @@
+{
+  "name": "Persuasive Charm",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Fellowsip 35, Charm \nAptitudes: Fellowship, Social",
+    "effect": "Once per Session, before the Squad makes a Logicistics Test, the character can make a -10 Charm Test to the supply distributor. If succesful they gain +5 to the Logistics Test per Degree of Success scored on the Charm test, up to +30. \nThe GM may make the test harder depending on outside circumstances, such as if the distributor dislikes the squad.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Once per Session, before the Squad makes a Logicistics Test, the character can make a -10 Charm Test to the supply distributor. If succesful they gain +5 to the Logistics Test per Degree of Success scored on the Charm test, up to +30. \nThe GM may make the test harder depending on outside circumstances, such as if the distributor dislikes the squad.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UDVGEKLaEEOhhSuQ"
+}

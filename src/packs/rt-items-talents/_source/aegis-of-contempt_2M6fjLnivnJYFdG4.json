@@ -1,0 +1,17 @@
+{
+  "name": "Aegis of Contempt",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Shared Destiny, Shield of Contempt, Hatred (any). Aptitudes: Defence, Leadership",
+    "effect": "Whenever Character or Ally within 10m gains Corruption, reduce amount gained by 1 (min 0). Allies within 10m can spend a Fate Point to automatically gain 0 Corruption. \nEffects don't stack if multiple characters with this talent overlap their ranges.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Whenever Character or Ally within 10m gains Corruption, reduce amount gained by 1 (min 0). Allies within 10m can spend a Fate Point to automatically gain 0 Corruption. \nEffects don't stack if multiple characters with this talent overlap their ranges.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2M6fjLnivnJYFdG4"
+}

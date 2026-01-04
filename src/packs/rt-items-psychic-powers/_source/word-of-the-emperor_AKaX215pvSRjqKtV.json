@@ -1,0 +1,22 @@
+{
+  "name": "Word of The Emperor",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Sanctic Daemonology",
+    "prerequisites": "Fellowship 30,\nPsychic Communion",
+    "focusPower": "Half Action\nConcentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst power is sustained, whenever anyone in range makes any kind of Attack Action against the character, the attacker must pass a +0 Willpower Test or suffer -5 to the attack roll per Degree of Failiure.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AKaX215pvSRjqKtV"
+}

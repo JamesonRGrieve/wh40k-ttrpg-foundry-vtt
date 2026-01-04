@@ -1,0 +1,28 @@
+{
+  "name": "Lorgar's Bane",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+10",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Felling (4), Sanctified, Unbalanced",
+    "weight": "10kg",
+    "availability": "Hero",
+    "cost": "40 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Black Consuls Chapter. Wielder has Fear +2 vs Chaos Space Marines, or Fear +3 vs Word Bearer Chaos Space Marines specifically. However Word Bearers double the effect of appropriate Hatred Talents against the wielder.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Felling (4), Sanctified, Unbalanced</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Black Consuls Chapter. Wielder has Fear +2 vs Chaos Space Marines, or Fear +3 vs Word Bearer Chaos Space Marines specifically. However Word Bearers double the effect of appropriate Hatred Talents against the wielder.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bD2iiRtYYx0NIOWd"
+}

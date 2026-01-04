@@ -1,0 +1,21 @@
+{
+  "name": "Ebb and Flow",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "Line of Sight",
+    "test": "Opposed Willpower Test",
+    "sustain": "Yes",
+    "novice": "Target cannot perform Reactions, +10 to Tests to dodge or parry target's attacks. Power can be sustained by devoting the first Half Action of the Navigators Turn to doing so.",
+    "adept": "Effects of power extend Navigator's Willpower Bonus metres from target, effecting everyone in range that fails Opposed Willpower Test. Now +20 to tests to Dodge or Parry any affected target's attacks.",
+    "master": "Anyone in the area that fails the Opposed Willpower Test is stunned for the first round of the effect's duration.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> Target cannot perform Reactions, +10 to Tests to dodge or parry target's attacks. Power can be sustained by devoting the first Half Action of the Navigators Turn to doing so.</p><p><b>Adept:</b> Effects of power extend Navigator's Willpower Bonus metres from target, effecting everyone in range that fails Opposed Willpower Test. Now +20 to tests to Dodge or Parry any affected target's attacks.</p><p><b>Master:</b> Anyone in the area that fails the Opposed Willpower Test is stunned for the first round of the effect's duration.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wrNiZjbg4C0qonJn"
+}

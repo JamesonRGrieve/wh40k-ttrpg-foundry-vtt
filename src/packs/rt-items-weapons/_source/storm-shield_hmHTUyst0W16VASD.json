@@ -1,0 +1,28 @@
+{
+  "name": "Storm Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive, Power Field, Shocking",
+    "weight": "10kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Gives +3 AP to Body and Arm, and provides a Force Field with Protection Rating 55, cannot be destroyed if parried by weapons with the Power Field Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Power Field, Shocking</p><p><b>Note:</b> Gives +3 AP to Body and Arm, and provides a Force Field with Protection Rating 55, cannot be destroyed if parried by weapons with the Power Field Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hmHTUyst0W16VASD"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Boltgun (Footfall)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "80m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Explosive",
+    "penetration": 2,
+    "clip": 18,
+    "reload": "Full",
+    "special": "Tearing, Unreliable",
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Can't use Unusual Ammunition. Debatably legal.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Can't use Unusual Ammunition. Debatably legal.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LgQZMqZ0pUVKq8QD"
+}

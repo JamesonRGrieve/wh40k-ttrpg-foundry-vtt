@@ -1,0 +1,18 @@
+{
+  "name": "Gamble",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Basic",
+    "characteristic": "Intelligence",
+    "descriptor": "Winning in games of chance. Participants wager money, winner takes the pot. User can choose to lose as part of a Deceive Action.",
+    "uses": "Opposed Test vs Gamble. All Partipants make test, the one with the most DoS, or fewest DoF win.\nSkill Test + Sleight of Hand: If user has both Gamble and Sleight of Hand Skills, can make Sleight of Hand Test instead to add +20 to Test. But 4+ DoF reveals them as cheating.",
+    "useTime": "Full Action for an entire day of gaming",
+    "description": {
+      "value": "<p>Winning in games of chance. Participants wager money, winner takes the pot. User can choose to lose as part of a Deceive Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9OaI0cRbqXWEX60Y"
+}

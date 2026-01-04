@@ -1,0 +1,17 @@
+{
+  "name": "Swift Attack",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 30\nAptitudes: Weapon Skill, Finesse, Khorne",
+    "effect": "Character can make Swift Attack Melee Combat Action.\nSwift Attack, Half Action, make weapon skill test, make if successful hit once, and one additional time per two degrees of success. These additional attacks can hit the same target, or anyone else who isn't harder to hit within melee range.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can make Swift Attack Melee Combat Action.\nSwift Attack, Half Action, make weapon skill test, make if successful hit once, and one additional time per two degrees of success. These additional attacks can hit the same target, or anyone else who isn't harder to hit within melee range.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z4h0MeJ944bYa3Vl"
+}

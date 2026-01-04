@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Electrocorrosive Whip",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "3m",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Shocking",
+    "weight": "2kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KyNEWN5BDBVgOkxy"
+}

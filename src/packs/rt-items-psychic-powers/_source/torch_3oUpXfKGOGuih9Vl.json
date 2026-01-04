@@ -1,0 +1,22 @@
+{
+  "name": "Torch",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 5\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Create a psychic flame of equivilent brightness to a Glow-Lamp (~15m radius light). The flame produces no heat and cannot burn things. It pulses slightly with the wearer's heartbeat.\nFor every 10 points above Threshold / 2 DoS on focus test, can double or half the size of the light, or cause it to float away from the character by 1 metre.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3oUpXfKGOGuih9Vl"
+}

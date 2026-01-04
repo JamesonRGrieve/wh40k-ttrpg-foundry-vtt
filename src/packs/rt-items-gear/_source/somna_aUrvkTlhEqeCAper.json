@@ -1,0 +1,20 @@
+{
+  "name": "Somna",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Puts the user in a deep sleep, that, for all intents and purposes, makes them look like they are dead. Shutting down metabolism and life processes to the verge of death. Requires -10 Medicae Test to determine proper dosage, failiure causes unexpected results, 4+ DoF results in actual death. Successs puts one into a trance-like state for 1-10 days.",
+    "cost": "Those in a trance from this drug can be roused early with a dose of Stimm to the Heart, however must immediately make a Toughness Test to avoid dying of Cardiac Arrest.",
+    "effects": "Scarce",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aUrvkTlhEqeCAper"
+}

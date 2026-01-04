@@ -1,0 +1,14 @@
+{
+  "name": "Unbalanced",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 68,
+    "description": {
+      "value": "<p>68</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6wqK7HBpfLzhymRh"
+}

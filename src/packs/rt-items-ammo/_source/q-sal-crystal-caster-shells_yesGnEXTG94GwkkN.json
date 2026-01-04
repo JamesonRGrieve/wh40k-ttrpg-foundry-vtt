@@ -1,0 +1,20 @@
+{
+  "name": "Q'Sal Crystal Caster Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Q'Sal Crystal Casters",
+    "damageOrEffect": "Default exotic ammo of all Q'Sal Crystal Casters",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Default exotic ammo of all Q'Sal Crystal Casters</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yesGnEXTG94GwkkN"
+}

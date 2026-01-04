@@ -1,0 +1,22 @@
+{
+  "name": "Delude (Alt)",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Thought Sending",
+    "focusPower": "Full Action Concentration",
+    "action": "1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Target Individual within range resists Psyker with their Willpower. If they fail, psyker gains +5 x Psy Rating bonus to all Interaction Skill Tests with that target. This is not mind control, so this does not allow the Psyker to force others to act against better judgement or harm themselves, and does not obscure acts of hostility.",
+    "effect": "100xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hW0DNJxOZ22Dw4yQ"
+}

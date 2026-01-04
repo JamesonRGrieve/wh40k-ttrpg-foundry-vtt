@@ -1,0 +1,17 @@
+{
+  "name": "Sanctic Purity",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Daemonologist, Favoured by the Warp, Willpower 50. Aptitudes: Psyker, Willpower",
+    "effect": "When character triggers Psychic Phenomena when manifesting a power of the Sanctic Daemonology Disicpline, they can spend a Fate Point to entirely negate the result.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>When character triggers Psychic Phenomena when manifesting a power of the Sanctic Daemonology Disicpline, they can spend a Fate Point to entirely negate the result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2DuNNAkyTTMgGzJb"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Bolter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Bolt",
+    "range": "150m",
+    "rof": "-/-/6",
+    "damage": "1d10+8",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Tearing",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "2000 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VTsqcUlGxXGFnrsD"
+}

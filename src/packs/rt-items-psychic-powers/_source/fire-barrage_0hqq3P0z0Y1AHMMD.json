@@ -1,0 +1,22 @@
+{
+  "name": "Fire Barrage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Fire Bolt",
+    "focusPower": "Free Action\nAttack",
+    "action": "15m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Power requires a source of flame within Psy Rating Metres. Power originates from this source of flame, firing as a Psychic Barrage of one bolt, +1 per two degrees of success up to a maximum number of bolts equal to Psy Rating at a target individual and line of sight (can be dodged as if a ranged attack) each bolt after the first may hit the same target or any within 2 metres of them within range and, dealing 1d10+Psy Rating Energy Damage. If scoring 4+ Degrees of Success on Focus Power Test it also sets target on fire.",
+    "effect": "250xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>250xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0hqq3P0z0Y1AHMMD"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Whirlwind of Death",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 40\nAptitudes: Weapon Skill, Finesse, Khorne",
+    "effect": "When the Character attacks whilst surrounded by more than one foe in close combat, they can make one free melee attack against a number of surrounding foes up to the character's Weapon Skill Bonus. Each additional attack counts as a Free Action and cannot be combined with any other talents or abilities that would grant further extra attacks (such as Lightning Attack, Furious Assault, etc). The Character can choose the order in which they attack their opponents. Against hordes, their attacks deal additional damage to the Horde's Magnititude equal to half their Weapon Skill Bonus.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When the Character attacks whilst surrounded by more than one foe in close combat, they can make one free melee attack against a number of surrounding foes up to the character's Weapon Skill Bonus. Each additional attack counts as a Free Action and cannot be combined with any other talents or abilities that would grant further extra attacks (such as Lightning Attack, Furious Assault, etc). The Character can choose the order in which they attack their opponents. Against hordes, their attacks deal additional damage to the Horde's Magnititude equal to half their Weapon Skill Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PpSGPexwhUgmMDTm"
+}

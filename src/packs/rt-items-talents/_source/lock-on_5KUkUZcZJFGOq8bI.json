@@ -1,0 +1,17 @@
+{
+  "name": "Lock On",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Perception 40, Vigilant\nAptitudes: Offence, Perception",
+    "effect": "The character can make a Dodge Reaction whilst maintaining an Aim or Overwatch Action without losing its benefits.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>The character can make a Dodge Reaction whilst maintaining an Aim or Overwatch Action without losing its benefits.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5KUkUZcZJFGOq8bI"
+}

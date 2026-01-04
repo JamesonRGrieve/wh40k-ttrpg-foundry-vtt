@@ -1,0 +1,17 @@
+{
+  "name": "Purity of Hatred (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Hatred (any)\nAptitudes: Offence, Willpower",
+    "effect": "When selecting talent, character chooses one group that they possess a Hatred Talent for. Against those of that group, character's attacks gain Vengeful (9), if character's attacks already possess this quality, decrease its value by 1.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>When selecting talent, character chooses one group that they possess a Hatred Talent for. Against those of that group, character's attacks gain Vengeful (9), if character's attacks already possess this quality, decrease its value by 1.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VQ4mwbR0RWYNz0g4"
+}

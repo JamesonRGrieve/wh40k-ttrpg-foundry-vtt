@@ -1,0 +1,28 @@
+{
+  "name": "Render (Landunder)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Tearing",
+    "weight": "1.25kg",
+    "availability": "Rare",
+    "cost": "50 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Tearing</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZfTkpx0M8c1ZwuqL"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Writing Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "2kg",
+    "availability": "A Kit containing papers, inks, quills, etc.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "20 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3ad6ohyAIkJj4eJh"
+}

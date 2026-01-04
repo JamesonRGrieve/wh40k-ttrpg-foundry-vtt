@@ -1,0 +1,28 @@
+{
+  "name": "Webber",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Blast (5), Snare (1)",
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Dark Heresy 2E: Core",
+    "note": "Snaring Filaments dissolve after 1d5 hours.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5), Snare (1)</p><p><b>Note:</b> Snaring Filaments dissolve after 1d5 hours.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lTmINeCDlQw2ZiXa"
+}

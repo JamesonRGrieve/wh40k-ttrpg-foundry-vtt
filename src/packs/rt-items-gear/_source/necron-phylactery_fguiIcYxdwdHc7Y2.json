@@ -1,0 +1,20 @@
+{
+  "name": "Necron Phylactery",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "Can be used with Ready Action, If used by Necron, for 1d10+5 Rounds Necron increases Unnatural Toughness by +4 and Automatically passes Regeneration Tests.\nIf Used by Non-Necron suffer 2d10 Rending Damage not reduced by Armour or Toughness. If having Machine Trat(3+), instead remove 1d10 Damage and 1d10 Corruption.",
+    "cost": "Used by Necron Nobility. One Use Item.\nAlways Best Quality. Xenotech.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fguiIcYxdwdHc7Y2"
+}

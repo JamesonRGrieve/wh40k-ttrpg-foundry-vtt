@@ -1,0 +1,22 @@
+{
+  "name": "Fire Shield",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "None",
+    "focusPower": "Free Action Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "While this power is active, any creature within range that hits the psyker with an attack suffers Psy Rating Energy damage that is not reduced by Armour or Toughness. Lashes of flame surround the psyker, punishing those who assault them.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7boZpSvCM8HYJ4SR"
+}

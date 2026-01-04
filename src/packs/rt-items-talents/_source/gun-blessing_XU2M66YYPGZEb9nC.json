@@ -1,0 +1,17 @@
+{
+  "name": "Gun Blessing",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Mechanicus Implants",
+    "effect": "As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XU2M66YYPGZEb9nC"
+}

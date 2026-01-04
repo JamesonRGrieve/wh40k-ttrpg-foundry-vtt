@@ -1,0 +1,20 @@
+{
+  "name": "Purgatus Stakes",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Purgatus Crossbow",
+    "damageOrEffect": "Gain Sanctified Quality. If a Psyker or Warp entity is hit by this ammo, must make +0 Willpower Test or immediately roll on Psychic Phenomena",
+    "qualities": "Sanctified",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. If a Psyker or Warp entity is hit by this ammo, must make +0 Willpower Test or immediately roll on Psychic Phenomena</p><p><b>Qualities:</b> Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XLXwtRgM2qNXAAsj"
+}

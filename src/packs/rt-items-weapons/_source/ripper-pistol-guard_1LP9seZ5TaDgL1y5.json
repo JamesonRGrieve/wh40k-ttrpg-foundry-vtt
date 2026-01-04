@@ -1,0 +1,28 @@
+{
+  "name": "Ripper Pistol (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 5,
+    "clip": 8,
+    "reload": "Full",
+    "special": "Tearing, Toxic (2)",
+    "weight": "4kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Uses Specialised Ammunition. Can’t use Unusual Ammuniion",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Toxic (2)</p><p><b>Note:</b> Uses Specialised Ammunition. Can’t use Unusual Ammuniion</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1LP9seZ5TaDgL1y5"
+}

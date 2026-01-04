@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Omnissian Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unbalanced",
+    "weight": "14kg",
+    "availability": "Distinguished",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only  (Specifically, only Techmarines), not easily acquirable. Also functions as a Combi-Tool.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unbalanced</p><p><b>Note:</b> Space Marines Only  (Specifically, only Techmarines), not easily acquirable. Also functions as a Combi-Tool.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QsRsAUws6pZSHtnu"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Turbulent-Class heavy Frigate",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Frigate",
+    "size": "1.95km long, 0.3km wide",
+    "crew": 25000,
+    "speed": 7,
+    "manoeuvrability": 18,
+    "detection": 15,
+    "hull": 40,
+    "armour": 20,
+    "turrets": 1,
+    "space": 42,
+    "shipPoints": 42,
+    "weaponCapacity": "2 Dorsal",
+    "notes": "Plasma Drives Installed on this vessel have +2 Power Generated. Command Tests on this vessel suffer -5 due to antiquated Intraship Communication methods.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Plasma Drives Installed on this vessel have +2 Power Generated. Command Tests on this vessel suffer -5 due to antiquated Intraship Communication methods.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "WeKdsHTDjDZpQ1yA"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Storm Trooper Carapace",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "All",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "3750 T",
+    "notes": "May consist of easily removable plates to help with repair. Some suits are sealed against the void.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>May consist of easily removable plates to help with repair. Some suits are sealed against the void.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9ITdv7Jt0xuXZg9r"
+}

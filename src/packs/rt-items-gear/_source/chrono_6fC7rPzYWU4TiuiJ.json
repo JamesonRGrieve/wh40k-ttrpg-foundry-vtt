@@ -1,0 +1,20 @@
+{
+  "name": "Chrono",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "-",
+    "availability": "Space Watch. Tells the time, may have other basic features like setting alarms, etc.",
+    "cost": null,
+    "effects": "Abundant",
+    "notes": "40 T\n1 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 40 T\n1 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6fC7rPzYWU4TiuiJ"
+}

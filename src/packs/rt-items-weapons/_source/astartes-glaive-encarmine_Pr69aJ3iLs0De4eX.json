@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Glaive Encarmine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field",
+    "weight": "7kg",
+    "availability": "Famed",
+    "cost": "25 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. Blood Angels variant Astartes Power Spear. Two-handed. Wielded y the Sanguinary Guard.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Blood Angels variant Astartes Power Spear. Two-handed. Wielded y the Sanguinary Guard.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Pr69aJ3iLs0De4eX"
+}

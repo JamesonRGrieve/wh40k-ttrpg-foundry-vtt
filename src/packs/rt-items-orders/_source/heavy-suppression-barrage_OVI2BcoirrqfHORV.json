@@ -1,0 +1,17 @@
+{
+  "name": "Heavy Suppression Barrage",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Attack Order\nFull Action",
+    "requirements": ".Servitor Comrade: Jovian-Pattern Gun Servitor\nApt: Ballistic Skill, Offence",
+    "descriptionText": "Order can only be made to Servitor Comrade Weapon Capable of Semi/Full Auto Fire. Character Designates a 45 Degree Arc Kill Zone that Comrade will unleash a Suppressing Fire Action in.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Order can only be made to Servitor Comrade Weapon Capable of Semi/Full Auto Fire. Character Designates a 45 Degree Arc Kill Zone that Comrade will unleash a Suppressing Fire Action in.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OVI2BcoirrqfHORV"
+}

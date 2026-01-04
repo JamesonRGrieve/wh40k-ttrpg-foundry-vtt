@@ -1,0 +1,17 @@
+{
+  "name": "Let the Creed Resound!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFree Action",
+    "requirements": ".Member of the Ministorum or Command +10\nApt: Fellowship, Leadership",
+    "descriptionText": "As long as Comrade is in Cohesion, character counts as having a Laud Hailer Equipped, and can affect twice the normal number of subjects with their Interaction Skill Tests. This stacks with talents such as Master Orator. (Order is passive, stays on unless otherwise desired)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>As long as Comrade is in Cohesion, character counts as having a Laud Hailer Equipped, and can affect twice the normal number of subjects with their Interaction Skill Tests. This stacks with talents such as Master Orator. (Order is passive, stays on unless otherwise desired)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jmHPl950Ommpoln7"
+}

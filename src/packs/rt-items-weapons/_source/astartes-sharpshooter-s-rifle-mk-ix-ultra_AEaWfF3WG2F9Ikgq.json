@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Sharpshooter's Rifle (Mk.IX Ultra)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "250m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 5,
+    "reload": "Full",
+    "special": "SM Wep, Accurate, Felling (4), Toxic",
+    "weight": "50kg",
+    "availability": "Initiated",
+    "cost": "25 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Accurate, Felling (4), Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AEaWfF3WG2F9Ikgq"
+}

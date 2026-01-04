@@ -1,0 +1,20 @@
+{
+  "name": "Ashen Skull",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "1kg",
+    "availability": "While possessing it, gain +10 to Opposed Willpower Tests to resist Psychic Techniques or the mental influence of Warp Entities. If winning such an opposed test, may at GM Discretion also gain some insight into the attacker (such as location, nature, intention, etc).",
+    "cost": "Preserved skulls of ritual priests.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0T1UJOI0k9HITeGB"
+}

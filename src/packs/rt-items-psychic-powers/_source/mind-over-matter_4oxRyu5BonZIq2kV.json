@@ -1,0 +1,22 @@
+{
+  "name": "Mind over Matter",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Has Multiple Uses: Move Object is not an Attack, Push and Throw Are.\nMove Object: +20 Focus Power Test (Concentration), Psyker moves an object within range that weighs up to 10kg x Psy Rating. Cannot be used to harm people as the object moves slowly, if released in the air, it floats to the ground.\nPush: +10 Opposed Focus Power Test (Attack, Concentration), Target Individual in range Opposes Focus Power Test with Strength, if fail they are thrown Psy Rating Metres back, +1m per Degree of Success on Focus Power Test.\nThrow: +0 Focus Power Test (Attack, Concentration), Psyker psychically throws object within range that weighs up to 5kg x Psy Rating at enemy within range, dealing 1d10 +1 per 5kg weight of object Impact Damage.",
+    "effect": "100xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4oxRyu5BonZIq2kV"
+}

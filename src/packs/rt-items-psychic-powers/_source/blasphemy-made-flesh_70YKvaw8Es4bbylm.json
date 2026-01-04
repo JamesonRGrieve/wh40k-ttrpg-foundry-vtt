@@ -1,0 +1,22 @@
+{
+  "name": "Blasphemy made Flesh",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Abhorrent Ward\nCorruption 60+, Psy Rating 6, ",
+    "focusPower": "Half Action\n Concentration",
+    "action": "Self",
+    "range": "-10 Corruption",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained any attack of any kind that targets the Psyker forces attacker to make a -5*Psy Rating Willpower Test. If they pass they may attack as normal, if they fail they are prevented from attacking, and waste their action and any remaining actions they had that turn.\nIf this Power causes Psychic Phenomena, whilst this power is sustained any Psyker within 30m of the Psyker who causes Psychic Phenomena automatically rolls 100, triggering Perils of the Warp.",
+    "effect": "500xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "70YKvaw8Es4bbylm"
+}

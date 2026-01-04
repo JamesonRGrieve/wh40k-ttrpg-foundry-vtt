@@ -1,0 +1,22 @@
+{
+  "name": "Synskin",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "All",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "2kg",
+    "availability": "Extremely Rare",
+    "cost": "2500 T",
+    "notes": "Form Fitting, +10 to Concealment and Silent Move while not wearing other armour, invisible to Presense goggles and Dark Sight if not wearing power armour.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Form Fitting, +10 to Concealment and Silent Move while not wearing other armour, invisible to Presense goggles and Dark Sight if not wearing power armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W6tZDaUntEGjtv2O"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Charm",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "-",
+    "availability": "Brings Good luck, if something bad happens, it might not happen to you",
+    "cost": "Up to GM fiat. Note: Suggestion, on player with charm targeted by any random source of harm, roll 1d10, on a 1, randomly choose someone else if possible.",
+    "effects": "Average",
+    "notes": "Varies T\n6 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> Varies T\n6 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "75R7W3rCXceOiIrS"
+}

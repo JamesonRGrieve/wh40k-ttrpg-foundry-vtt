@@ -1,0 +1,22 @@
+{
+  "name": "Salvation Shield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": "70%",
+    "maxAg": "-",
+    "weight": "0.05kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself. ",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZDPq7cc8iSCoNJau"
+}

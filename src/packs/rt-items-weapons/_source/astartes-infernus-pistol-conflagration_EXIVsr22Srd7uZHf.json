@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Infernus Pistol (Conflagration)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Melta",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 15,
+    "clip": 2,
+    "reload": "Full",
+    "special": "SM Wep, Melta",
+    "weight": "5kg",
+    "availability": "Distinguished",
+    "cost": "35 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EXIVsr22Srd7uZHf"
+}

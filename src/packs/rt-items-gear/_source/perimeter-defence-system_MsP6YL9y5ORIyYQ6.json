@@ -1,0 +1,20 @@
+{
+  "name": "Perimeter Defence System",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "175kg",
+    "availability": "A Pylon that can form part of a network of pylons that when linked in a line form an invisible barrier around an installation. Requires a lot of power, but protects against basic threats. Does 2d10+6 E, Shocking Damage. Good and Best Quality does an additional 1d10.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MsP6YL9y5ORIyYQ6"
+}

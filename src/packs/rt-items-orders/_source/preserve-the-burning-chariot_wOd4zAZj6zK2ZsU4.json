@@ -1,0 +1,17 @@
+{
+  "name": "Preserve the Burning Chariot",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ".Mechanicus Related Any Essential Repair Skill +10\nApt: Intelligence, Tech",
+    "descriptionText": "Character can use Order to direct a comrade to put out a fire or assist in the effort. If comrade is assisting the Character in putting out a fire, they grant +20 to the test. If the comrade is doing it on their own, Player Character makes -20 Command Test to put it out. Can be used with Servitor Comrades in addition to normal ones. Note: Mechanicus Related = Any Tech-Priest or Regiment Sworn to the Mechanicus",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can use Order to direct a comrade to put out a fire or assist in the effort. If comrade is assisting the Character in putting out a fire, they grant +20 to the test. If the comrade is doing it on their own, Player Character makes -20 Command Test to put it out. Can be used with Servitor Comrades in addition to normal ones. Note: Mechanicus Related = Any Tech-Priest or Regiment Sworn to the Mechanicus</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wOd4zAZj6zK2ZsU4"
+}

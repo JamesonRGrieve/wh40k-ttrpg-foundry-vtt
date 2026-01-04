@@ -1,0 +1,17 @@
+{
+  "name": "True Grit",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Toughness 40\nAptitudes: Toughness, Defence, Nurgle",
+    "effect": "When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6OzNPNirtqOk3woy"
+}

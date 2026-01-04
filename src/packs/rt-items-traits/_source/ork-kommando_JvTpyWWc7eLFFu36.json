@@ -1,0 +1,17 @@
+{
+  "name": "Ork Kommando",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Ork, RT Rank 4+, Agility 35+ and Perception 35+",
+    "descriptionText": "Orks of a Brutal Kunnin' who become inspired through some means to engage in the act of stealth, subterfuge, and expectedly violent and explosive surprise ambushes. To the terror of the many who refuse to believe such Orks exist.",
+    "effects": "Replace new Rank's Advances with that of the Ork Kommando\nAllows for the purchasing of the Unique Talent Ded' Sneaky",
+    "source": "RT: Into the Storm\n(Page 92)",
+    "description": {
+      "value": "<p>Orks of a Brutal Kunnin' who become inspired through some means to engage in the act of stealth, subterfuge, and expectedly violent and explosive surprise ambushes. To the terror of the many who refuse to believe such Orks exist.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Ork Kommando\nAllows for the purchasing of the Unique Talent Ded' Sneaky</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JvTpyWWc7eLFFu36"
+}

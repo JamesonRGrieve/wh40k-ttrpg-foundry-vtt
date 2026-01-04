@@ -1,0 +1,28 @@
+{
+  "name": "Legion Bolt Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Bolt",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+9",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 8,
+    "reload": "Full",
+    "special": "Tearing, SM Wep",
+    "weight": "5.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2Z2HAPGhX94F5vqs"
+}

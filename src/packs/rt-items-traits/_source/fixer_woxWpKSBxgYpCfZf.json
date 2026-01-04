@@ -1,0 +1,17 @@
+{
+  "name": "Fixer",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Ratling",
+    "descriptionText": "Despite being Abhuman, the Ratling's silver tongue and ragged charisma has seen them form close, if professional bonds both with others of their kind and some of the humans they work alongside. Their mind for leadership seeing those under their care have everything they need to survive, no matter what it takes to acquire such things.",
+    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Fixer. Apt: Agility, Ballistic Skill, Fellowship, Finesse, Leadership, Intelligence, Social\nAdd. Equipment: Good Long-Las with Telescopic Sight or Good Sniper Rifle with Telescopic Sight, Chameleoline Cloak, Cooking Supplies. Gain Talents: Combat Sense+ Polyglot or Ratling Requisitions. Can Purchase Unique Talents: Helping Hands and Bravado and Bluster  and Basic Order: Feigned Flank",
+    "source": "OW: Shield of Humanity (Page 70)",
+    "description": {
+      "value": "<p>Despite being Abhuman, the Ratling's silver tongue and ragged charisma has seen them form close, if professional bonds both with others of their kind and some of the humans they work alongside. Their mind for leadership seeing those under their care have everything they need to survive, no matter what it takes to acquire such things.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Fixer. Apt: Agility, Ballistic Skill, Fellowship, Finesse, Leadership, Intelligence, Social\nAdd. Equipment: Good Long-Las with Telescopic Sight or Good Sniper Rifle with Telescopic Sight, Chameleoline Cloak, Cooking Supplies. Gain Talents: Combat Sense+ Polyglot or Ratling Requisitions. Can Purchase Unique Talents: Helping Hands and Bravado and Bluster  and Basic Order: Feigned Flank</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "woxWpKSBxgYpCfZf"
+}

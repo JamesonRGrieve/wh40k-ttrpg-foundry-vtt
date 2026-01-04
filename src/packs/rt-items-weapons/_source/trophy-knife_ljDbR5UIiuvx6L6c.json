@@ -1,0 +1,28 @@
+{
+  "name": "Trophy Knife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Primitive",
+    "weight": "0.3kg",
+    "availability": "Very Rare",
+    "cost": "700 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A Weapon honed from the claw or teeth of a dangerous animal, a sign of strength and battlefield prowess.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Primitive</p><p><b>Note:</b> A Weapon honed from the claw or teeth of a dangerous animal, a sign of strength and battlefield prowess.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ljDbR5UIiuvx6L6c"
+}

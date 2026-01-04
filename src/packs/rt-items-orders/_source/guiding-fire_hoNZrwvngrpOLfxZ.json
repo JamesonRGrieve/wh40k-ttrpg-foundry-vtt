@@ -1,0 +1,17 @@
+{
+  "name": "Guiding Fire",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Gun Lugger Spec\n500xp",
+    "descriptionText": "Comrade in Cohesion marks a target within the Character's Weapon Range, Character to double their Degrees of Success on any Successful Ballistic Skill Test to hit that marked target until the end of the Turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Comrade in Cohesion marks a target within the Character's Weapon Range, Character to double their Degrees of Success on any Successful Ballistic Skill Test to hit that marked target until the end of the Turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hoNZrwvngrpOLfxZ"
+}

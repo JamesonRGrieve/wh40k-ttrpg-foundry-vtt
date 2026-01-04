@@ -1,0 +1,22 @@
+{
+  "name": "Armoured Bodyglove",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Arms, Body, Legs",
+    "ap": 2,
+    "maxAg": "-",
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "notes": null,
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Z8mFSPR205zFCEIp"
+}

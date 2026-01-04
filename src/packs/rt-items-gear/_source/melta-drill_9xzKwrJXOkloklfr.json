@@ -1,0 +1,20 @@
+{
+  "name": "Melta-Drill",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "15kg",
+    "availability": "Connected to backpack mounted fuel source, can drill holes between 10cm and 1m in diameter, and can bore most materials at a maximum rate of 1m per second. Requires both hands to use, and Strength Bonus of 6+ or gain 1 Fatigue per minute of use. Can be used in combat although as -20 for WS tests and can't multi-attack.",
+    "cost": "Weapon Stats: Melee; 2d10+10 E; Pen 13; Unwieldy. -20 to Melee Attacks, can't multiattack.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9xzKwrJXOkloklfr"
+}

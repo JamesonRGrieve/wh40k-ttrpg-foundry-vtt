@@ -1,0 +1,17 @@
+{
+  "name": "Flank Them!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": "Commander Spec\n500xp",
+    "descriptionText": "Character makes +0 Command Test. If Successful each Player Character imposes -10 to Dodge and Parry Tests to enemies trying to avoid their attacks per Comrade they have in Cohesion. (Max -30)",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Character makes +0 Command Test. If Successful each Player Character imposes -10 to Dodge and Parry Tests to enemies trying to avoid their attacks per Comrade they have in Cohesion. (Max -30)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oOXbr1kLUSj7n1cq"
+}

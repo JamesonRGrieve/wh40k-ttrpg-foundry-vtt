@@ -1,0 +1,17 @@
+{
+  "name": "Hail of Fire",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Weapons Specialist Spec\n300xp",
+    "descriptionText": "If Comrade is in Cohesion, all targets of character's attacks must make +0 Pinning Test or become pinned.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>If Comrade is in Cohesion, all targets of character's attacks must make +0 Pinning Test or become pinned.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n8wREMDs399FHpeW"
+}

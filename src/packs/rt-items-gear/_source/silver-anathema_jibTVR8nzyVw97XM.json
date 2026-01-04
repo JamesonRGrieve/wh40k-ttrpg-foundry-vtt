@@ -1,0 +1,20 @@
+{
+  "name": "Silver Anathema",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Poison",
+    "weight": "-",
+    "availability": "Creatures exposed to it must pass -20 Toughness Test or suffer 3d10 wounds that ignore armour and toughness. Poision reacts and tears through creature's tissue, causing sharp metallic growths. Banned by the mechanicus upon all forge worlds in the Calixis Sector.",
+    "cost": null,
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jibTVR8nzyVw97XM"
+}

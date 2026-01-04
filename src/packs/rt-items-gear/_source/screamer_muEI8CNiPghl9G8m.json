@@ -1,0 +1,20 @@
+{
+  "name": "Screamer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1.5kg",
+    "availability": "When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Good: Detects Specific Sounds, Movements, and/or odours, and have more subtle warnings (such as scream via vox) ",
+    "cost": null,
+    "effects": "Average / Initiated",
+    "notes": "140 T\n5 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 140 T\n5 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "muEI8CNiPghl9G8m"
+}

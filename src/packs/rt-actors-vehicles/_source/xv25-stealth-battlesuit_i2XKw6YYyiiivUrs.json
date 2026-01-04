@@ -1,0 +1,25 @@
+{
+  "name": "XV25 Stealth Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Hulking (+10)",
+    "sideArmour": "8 All",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "2 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Burst Cannon/Fusion Blaster, Target Lock",
+    "passengers": "Battle Suit Strength: 45\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker\nSpecial: Equipped with Integral Stealth Field Generator, Suffers no Penalty for Concealment Tests due to Size, scores two additional Degrees of Success on successful Concealment, Dodge, Shadowing, or Stealth Tests.",
+    "cargo": "Near Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "i2XKw6YYyiiivUrs"
+}

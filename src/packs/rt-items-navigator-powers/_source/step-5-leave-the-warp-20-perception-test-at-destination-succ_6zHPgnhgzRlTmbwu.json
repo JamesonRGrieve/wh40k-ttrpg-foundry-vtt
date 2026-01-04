@@ -1,0 +1,21 @@
+{
+  "name": "Step 5: Leave the Warp: -20 Perception Test at Destination, success deposits ship where intended, failiure causes off-target exit.\nWhen ship reaches destination, Navigator makes -20 Perception Test. On success the ship exits the warp at a safe, desired location. If failing, they exit off target, and possibly dangerously close to a planetary body or some other undesired location.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": "Some occupied systems may not take kindly to off-target warp translations. Exact effects are GM dependant, generally shouldn't be lethal, that isn't fun.",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Adept:</b> Some occupied systems may not take kindly to off-target warp translations. Exact effects are GM dependant, generally shouldn't be lethal, that isn't fun.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6zHPgnhgzRlTmbwu"
+}

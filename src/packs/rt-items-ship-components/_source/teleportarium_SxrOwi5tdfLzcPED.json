@@ -1,0 +1,21 @@
+{
+  "name": "Teleportarium",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Archeotech)",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Characters can teleport right into an enemy vessel, gain +20 to Command Tests for Hit and Run attacks and don't need to make a Piloting Test. At GM discretion, usually once a session can be used to teleport to or from a vessel or planet in non-combat ways. Can't teleport into void shields.",
+    "availability": "Extremely Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Characters can teleport right into an enemy vessel, gain +20 to Command Tests for Hit and Run attacks and don't need to make a Piloting Test. At GM discretion, usually once a session can be used to teleport to or from a vessel or planet in non-combat ways. Can't teleport into void shields.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SxrOwi5tdfLzcPED"
+}

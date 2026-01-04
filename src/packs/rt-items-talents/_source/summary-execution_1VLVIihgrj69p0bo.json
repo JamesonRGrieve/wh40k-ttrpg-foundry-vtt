@@ -1,0 +1,17 @@
+{
+  "name": "Summary Execution",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Commissar Specialty\n300xp",
+    "effect": "If a Player Character within weapon range falls below 0 Wounds, can make +0 Ballistic Test to shoot that PC's Comrade, if successful, Comrade dies, motivating the wounded Player Character to regain 1d5 Wounds.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>If a Player Character within weapon range falls below 0 Wounds, can make +0 Ballistic Test to shoot that PC's Comrade, if successful, Comrade dies, motivating the wounded Player Character to regain 1d5 Wounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1VLVIihgrj69p0bo"
+}

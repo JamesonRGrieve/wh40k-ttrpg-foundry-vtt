@@ -1,0 +1,17 @@
+{
+  "name": "Dark Oratory",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Fel 40\nAptitudes: Unaligned",
+    "effect": "Double Infamy Reserves when in Social Conflicts with a crowd. \nHB: If not using Social Conflict rules, add 2x Infamy Bonus to Crowd-Based Interaction Tests.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>Double Infamy Reserves when in Social Conflicts with a crowd. \nHB: If not using Social Conflict rules, add 2x Infamy Bonus to Crowd-Based Interaction Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DE7MlUdUvfaoIEXp"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Sacrifice",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Malefic Daemonology",
+    "prerequisites": "Willpower 45, Incursion",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "+10 Willpower",
+    "opposed": "No",
+    "sustained": "Can only be used if character has inflicted damage on a target since the beginning of the previous round (which can include themselves). If Focus Power Test succeeds, character gains +5 to their next Focus Power test for each point of damage inflicted with this previous attack, this bonus dissapears if not used within 1 hour.\nIf power is Successfully manifested, gain Corruption Points equal to the Psy Rating used to manifest this power after its effects have been resolved.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fs2LEOnlo15rJYiN"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Mind Link",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "1km x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Successful Test allows Psyker to create a Fettered Strength telepathic communication for a number of willing minds up to their Willpower Bonus at the same time. Does not require Line of Sight.\nMaintained as long as power sustained and individuals remain in range.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eQTG6frbwcrzzxHA"
+}

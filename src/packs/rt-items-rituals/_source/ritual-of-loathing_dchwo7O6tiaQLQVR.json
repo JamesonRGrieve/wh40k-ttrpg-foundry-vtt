@@ -1,0 +1,19 @@
+{
+  "name": "Ritual of Loathing",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "+0 Forbidden Lore (Daemonology) Test",
+    "requirements": "A Reletively Simple Summoning ritual design requiring a basic Chaos Shrine and minimal Preperation. It summons multiple lesser Daemons of no particular alignment, such as Warp Furies, Ebon Geists, Unclean Spirits, Nether Swarms, etc.",
+    "effect": "A Single Lesser Daemon appears in the summoning area, +1 Daemon of the same type per additional Degree of Success on the Ritual Test (Up to Character's Willpower Bonus number of Daemons). They remain for 1d5 rounds, +1 round per additional Daemon summoned. f the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.  If the Daemon is summoned for a specific task, it remains long enough to complete it (within reason). A +20 Daemonic Mastery Test may be made to control all of the Daemons, with -10 to the test per Daemon after the first. that was summoned. These Daemons may be merged by the GM into a sigle Horde of lesser daemons, with each contributing 5 Magnitude to the Horde.",
+    "costs": "Two Psychic Phenomena occur, add +10 to the rolls per Lesser Daemon summoned after the first.",
+    "failure": "Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test beyond the first.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> A Single Lesser Daemon appears in the summoning area, +1 Daemon of the same type per additional Degree of Success on the Ritual Test (Up to Character's Willpower Bonus number of Daemons). They remain for 1d5 rounds, +1 round per additional Daemon summoned. f the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.  If the Daemon is summoned for a specific task, it remains long enough to complete it (within reason). A +20 Daemonic Mastery Test may be made to control all of the Daemons, with -10 to the test per Daemon after the first. that was summoned. These Daemons may be merged by the GM into a sigle Horde of lesser daemons, with each contributing 5 Magnitude to the Horde.</p><p><b>Costs:</b> Two Psychic Phenomena occur, add +10 to the rolls per Lesser Daemon summoned after the first.</p><p><b>Failure:</b> Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test beyond the first.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dchwo7O6tiaQLQVR"
+}

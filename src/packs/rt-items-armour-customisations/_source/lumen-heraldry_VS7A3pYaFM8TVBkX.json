@@ -1,0 +1,18 @@
+{
+  "name": "Lumen Heraldry",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).",
+    "weight": "+0kg",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VS7A3pYaFM8TVBkX"
+}

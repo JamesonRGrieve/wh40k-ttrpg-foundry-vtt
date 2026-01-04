@@ -1,0 +1,22 @@
+{
+  "name": "Storm of Change",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Mark of Tzeentch, Willpower 50+, Psy Rating 5",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "25m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker designates point within range and creates Psychic Blast of Psy Rating Metres Radius that can be dodged as if an Area of Effect Attack. All Creatures that fail to avoid it take 2d10+7 Energy Damage with Pen 9 and Felling(Psy Rating) Quality. Additionally if the attack inflicts Zealous Hatred on any target, that target suffers a random Gift of the Gods, minor NPCs may instead be killed instantly at GM discretion, degenerated into mewling chaos spawn.\nThose aligned to the Dark Gods cannot convert this Gift of the Gods into a Reward of the Dark Gods.",
+    "effect": "500xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0QK4ffkFe0UlHbiT"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Aether Worm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, Psy Rating 5, Mindscourge",
+    "focusPower": "Half Action Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Prior to manifesting power, Psyker can choose to hide  nature and target of the power by making an Opposed Deceive Test vs Psyniscience of any Psykers that can see Psyker. Afterwards Psyker makes Focus Power Test, if successful they implant an Aether Worm Psychic Parasite within the target's psyche. Remains for Psy Rating Days. If Target knows it's there, they can make -10 Willpower Test each day to expel. Whilst Present, worm imposes -20 to all Focus Power Tests made with Telepathic or Mind-Affecting Psychic Powers. Target also gains +5 to Focus Power Tests to manifest Psychic Powers. The Original Psyker is the exception, if they have the Mind Probe Power, they can perform it subtly on Target with +20 Willpower Test, also gain +Psy Rating Damage to any power that affects Target's mind. Finally, Target must make -20 Willpower Test to target Psyker with any Psychic Power, if fail choose new target or take a different action.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oICYr1xpiyLn07df"
+}

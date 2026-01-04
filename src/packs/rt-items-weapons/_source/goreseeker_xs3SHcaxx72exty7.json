@@ -1,0 +1,28 @@
+{
+  "name": "Goreseeker",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unbalanced, Daemon Wep",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Base Weapon: Axe. Daemon Willpower 40 (Flesh Hound of Khorne), Bind Str 2. Attributes: Blood Tracker, Null \nWielder gains Unnatural Senses(40) and imposes -20 to all Psychic Powers targeting them.",
+    "description": {
+      "value": "<p><b>Special:</b> Unbalanced, Daemon Wep</p><p><b>Note:</b> Base Weapon: Axe. Daemon Willpower 40 (Flesh Hound of Khorne), Bind Str 2. Attributes: Blood Tracker, Null \nWielder gains Unnatural Senses(40) and imposes -20 to all Psychic Powers targeting them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xs3SHcaxx72exty7"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Unreliable",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 53,
+    "description": {
+      "value": "<p>53</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QvXeFUYEhvWyZWoK"
+}

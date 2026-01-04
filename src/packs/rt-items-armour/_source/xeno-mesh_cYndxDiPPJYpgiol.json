@@ -1,0 +1,22 @@
+{
+  "name": "Xeno Mesh",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Mesh",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "375 T",
+    "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cYndxDiPPJYpgiol"
+}

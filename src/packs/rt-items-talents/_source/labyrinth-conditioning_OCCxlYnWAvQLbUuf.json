@@ -1,0 +1,17 @@
+{
+  "name": "Labyrinth Conditioning",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Tyrantine Shadow Agent Alternative Advance, 100xp, Int 30.",
+    "effect": "Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OCCxlYnWAvQLbUuf"
+}

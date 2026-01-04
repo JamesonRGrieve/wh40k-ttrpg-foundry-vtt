@@ -1,0 +1,753 @@
+{
+  "name": "Perils of the Warp",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "VbRq2r71URUV9WX5",
+      "type": 0,
+      "text": "<p><b>Destruction</b>: The Psyker dies. Be it Sucked into the warp, burnt in hellfire, or some equally horrific outcome. There is a 50% chance a Daemonic entity appears in the psyker's place.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        0,
+        0
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "UqmYHbivUuXmOsLc",
+      "type": 0,
+      "text": "<p><b>The Gibbering</b>: The Psyker Screams Uncontrollably and makes +0 Willpower Test or suffers 1d5+1 Insanity and is Stunned for 1d5 Rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        5
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "gG2sDJVTbM28gDU0",
+      "type": 0,
+      "text": "<p><b>Ignored</b>: Silence greets the efforts of the Heretic. Fortunate Silence.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        50
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "P30nDVfyweeYyjxq",
+      "type": 0,
+      "text": "<p><b>What?!</b>: The Weirdboy'z power takes effect as normal, but is shunted into the warp, appearing 1d5 Rounds later and resolving at the end of the last round as if it had just been used.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        10
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "jdZmtrX2ybjZaWbC",
+      "type": 0,
+      "text": "<p><b>Reality Erosion</b>: The very fabric of the vessel is altered in some way. Walls might melt, statues and picture come to life or gravity itself may become twisted.\nHB: -3 Morale and -1 crew from chaotic occurances, characters make +0 Willpower test or gain 1d5 Insanity unless they hide in their rooms.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        3
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "F1FjMzGxsKz4iBDD",
+      "type": 0,
+      "text": "<p><b>Plague of Madness</b>: A general madness infects the crew, and without swift action chaos can ensue. It will target the weakest of will first but can be spread by contact.\nHB: Captain makes a command test, if failed some crew mutiny following mutiny rules. Can be suppressed as with regular mutiny with Command, Charm, or Intimidate, with same results</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        4,
+        9
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "tUqVR80N7jlwyC5C",
+      "type": 0,
+      "text": "<p><b>Warp Burn</b>: The Psyker suffers 1d5 Wounds and is Stunned for 1d5 rounds as warp energy smashes their mind.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        6,
+        9
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "eqQeqUctp58ZfCno",
+      "type": 0,
+      "text": "<p><b>Psychic Concussion</b>: The Psyker is knocked Unconcious for 1d5 Rounds by a crack of energy, everyone in 3d10 Metres of them makes +10 Willpower Test or is stunned for 1 round.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        10,
+        13
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "EkQiViShC2kdDBSW",
+      "type": 0,
+      "text": "<p><b>Incursion</b>: A daemonic entity slips aboard the vessel and sets out to cause problems. A more Insidious warp creature can hide on a ship for years and mask their actions as bad luck or careless accidents.\nHB: GM Dependant, treat as either a flat 1d5 lost crew and -1 Morale and report of minor incursion, or secretly add 1 to any crew loss more than 1 for some time unless dealt with. Use Warp Predator: (Ebon Geist) Profile if making it into an encounter.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        10,
+        18
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "gUeOGUv6M5fqExRP",
+      "type": 0,
+      "text": "<p><b>Vessel of Da Waaagh!</b>: The Weirdboy must make a +0 Toughness Test or take 1d5 Energy Damage, ignoring armour and toughness as their body is overcome by green lightning. For the next 1d5 hours, they add +10 to all rolls made on the \"Weird Fings\" Table.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        11,
+        20
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "8iSph828K7z9H0pn",
+      "type": 0,
+      "text": "<p><b>Psy-Blast</b>: An explosion of power knocks the Psyker 1d10 metres into the air, they then fall to the ground and take falling damage.\nFall Damage, treat as attack dealing 1d10 Impact Damage, +1 per Metre fell, ignores Armour. May vary with landing surface or local gravity.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        14,
+        18
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "0BHkwTlSGm1gXIe2",
+      "type": 0,
+      "text": "<p><b>Soul Sear</b>: Warp power scorches the Psykers Soul, they cannot use any powers for one hour, and suffer 2d5 Corruption Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        19,
+        24
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "9lOLmArEj9Ab4lCY",
+      "type": 0,
+      "text": "<p><b>Lost Time</b>: Time contracts and expands during the voyage, and Days feel like weeks or months. The sanity of the crew may frayed by this general slowing.\nHB: -2 Morale, but get that number of weeks of extra downtime during voyage.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        19,
+        26
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "rnIfjx8f1uaXrFO8",
+      "type": 0,
+      "text": "<p><b>Seein' Green</b>: Mist fills the air for 100 metres around the Weirdboy. All Creatures must make -20 Willpower Test or lose the ability to tell friend from foe for 1d5 rounds. Failiure means creature must attack nearest creature, perceiving it as a threat.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        21,
+        25
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "5dFun3LwNC1ax82A",
+      "type": 0,
+      "text": "<p><b>Locked In</b>: The Psyker's mind is caged in an ethereal prison and they enter a catatonic state. They fall to the ground, prone and unconcious. Each round afterwards they must spend a full action to make a -10 Willpower Test, on success they return to normal.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        25,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "TL787mh8m8dxJML1",
+      "type": 0,
+      "text": "<p><b>Err… I forgot</b>: Weirdboy forgets how to use the power they just used for 24 hours, and gains 1d10 Insanity Points in the confusion.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        26,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Odm8wPc10d5wU3wK",
+      "type": 0,
+      "text": "<p><b>Ghost Ships</b>: The ship’s sensors detect phantom ships that appear and dissapear at random. The wise ignore such things, but if they are real, a ship lost in the warp can still hold valuable cargo…\nHB: GM secretly rolls 1d10, on a 10 there's an actual ship with loot, otherwise it's a trap or fake. </p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        27,
+        33
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "WHNXeRwCO4XPtuou",
+      "type": 0,
+      "text": "<p><b>Chronological Incontinence</b>: Time Warps around the Pskyer, they disappear for 1d10 Rounds (or one minute of non-combat time). \nOn returning the suffer 1d5 Corruption Points and 1 Permenant Toughness and Intelligence Damage.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        38
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "lHM4B87mhX6T8Cyk",
+      "type": 0,
+      "text": "<p><b>WAA-</b>: The Weirdboy disappears for 1d5 Rounds in a flash of green light and smoke. Aftwards, they reappear 1d10 metres in a random direction (use scatter) from their original position and gain 1d5 Insanity Points. They refuse to discuss the experience.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        35
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "5iGDmPRmXVcjwiRu",
+      "type": 0,
+      "text": "<p><b>Shoals and Reefs</b>: The vessel runs into a warp shoal or reef that threatens to break it open. A good helmsman and skilled Navigator are required to pass unscathed. \nHB: Make Pilot (Space Craft) + Maneuovrability Test (with +20 if Navigator's \"Chart a Course\" test was successful) or take \"Holed\" Critical Effect to random component.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        34,
+        39
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "lObQoYEHJXKGRumk",
+      "type": 0,
+      "text": "<p><b>What Wuz I Doin' Again?</b>: The Weirdboy suddenly forgets what they are doing and what power they are using. Instead of the power's normal effects, use \"Powa Burst\" Basic power to determine what happens.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        36,
+        40
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "kN8NBPk8X0DqsKPJ",
+      "type": 0,
+      "text": "<p><b>Psychic Mirror</b>: The Psyker's power is turned back on them, the power's effects resolve as if they had targeted the Psyker. If the power would have been beneficial, it instead does 1d10+5 E Damage and provides no beneficial effect. Damage ignores non-warded Armour.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        39,
+        46
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "jqm5pWoZHrYYZgAo",
+      "type": 0,
+      "text": "<p><b>Visitations</b>: One or more of the crew find themselves visited by warp shades of lost friends or family. These lost souls might offer helpful advice and comfort or have darker motives. \nHB: Roll 1d10, on 1-5 crew loose 2 Morale, on 6+ Crew can reroll the next test they make within one month.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        40,
+        48
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "cY6x7AXfzGz9igfn",
+      "type": 0,
+      "text": "<p><b>Dis is Gunna Hurt!</b>: The Weirdboy loses control over their power, it instead resolves against everyone within the power's range including the Weirdboy. If it would have provided a beneficial effect, it does 1d10 Energy damage in addition to that beneficial effect.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        41,
+        45
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "oaqySZREutSC9R3H",
+      "type": 0,
+      "text": "<p><b>Hot-hot-hot-hot!</b>: The Weirdboy's head catches fire, and they count as being on fire. Any damage done as a result is done to the head.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        46,
+        50
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "9rvfQm5aW7XD78HD",
+      "type": 0,
+      "text": "<p><b>Warp Whispers</b>: Daemonic Voices that whisper horrible secrets and truths fill the air within 4d10 (22) metres of the Psyker, everyone, including the pskyer within this area makes -20 Willpower Test or suffers 1d5 Corruption and nonpermenant Willpower damage, \npass or fail the psyker takes an additional 1d5+5 nonpermenant Willpower Damage.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        47,
+        55
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "oD7EZoTSJVwNnlK3",
+      "type": 0,
+      "text": "<p><b>Gellar Field Fluctuations</b>: Alarmingly, the Gellar Field that keeps back the baleful energies of the warp begins to fluctuate. Hasty prayers to the Machine God or a return to realspace may be required.\nHB: Crew or Character makes +30 Tech-Use Test, if fail Gellar Field goes down, can repeat test every round or return to real space to end bad effects.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        49,
+        53
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "kz7wuypjyULHYTk1",
+      "type": 0,
+      "text": "<p><b>Mocked</b>: Howls of Laughter fill the air, the character's worst secrets and shames are hurled at them by invisible voices in mockery of their failiure. They suffer 1d5 Corruption Points</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        51,
+        80
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "bvvGzIf6OEPv0iuK",
+      "type": 0,
+      "text": "<p><b>-AAGH!</b>: An exact duplicate of the Weirdboy appears 1d10 metres away in a random direction, and prioritises attacking the original. It vanishes after 1d5 rounds, or when it is slain, along with anything it brought with it. The Weirdboy gains 1d10 Insanity Points and has a sense of Deja vu.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        51,
+        55
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "XuM6KxmIsJbKpbUU",
+      "type": 0,
+      "text": "<p><b>Warp Storms</b>: A terrible warp storm strikes the vessel and may cause damage or throw it off course. Only the skills of the ship’s Navigator will decide the outcome.\nHB: Navigator makes Navigation (Warp) Test, if fail, roll on this table 1d5 times, (rerolling if getting this result), and are automatically thrown off course if not already.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        54,
+        67
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Hk7G9q9959sgRGbI",
+      "type": 0,
+      "text": "<p><b>Vice Versa</b>: The Psyker and one random being within 50 metres that is not Daemonic, Untouchable, or Soulless  swap conciousnesses for 1d10 rounds, be they  ally or enemy. Retain WS, BS, INT, PER, WILL, and FEL, taking on STR, T, and AG of new body new body as well as their talents and traits. Effect ends immediately if either body is slain,. Both parties suffer 1d5 nonpermenant Intelligence damage. If no-one in range, Psyker goes Catatonic for 1d5 Rounds, causing 1d10 nonperm Willpower damage, 1d10 nonperm Intelligence damage, and 1d10 Corruption as their mind wanders the Warp.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        56,
+        58
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DObT51qzJwavrQ2S",
+      "type": 0,
+      "text": "<p><b>Crazy Spores</b>: The Weirdboy and all other creatures in 10 metres of them must make -10 Toughness Test or roll on Hallucinogen table and gain 1d5 Insanity Points. A Pale green fog of spores fills the area for a short time.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        56,
+        60
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "RhZUE9ZlaKaqINBL",
+      "type": 0,
+      "text": "<p><b>Dark Summoning</b>: A Lesser Daemon tears into reality 3d10 metres away from the Psyker and remains for 1d5 + psyker's Toughness Bonus rounds or until slain. The psykers turn ends immediately and the daemon takes its turn immediately afterwards. It hates the Psyker, and will prioritise trying to kill the one that summoned it and will only try to attack them even if others attack it. It immediately returns to the warp if it kills the psyker.\n (See \"Warp Predator\" Profile in Rogue Trader: Core Rulebook, page 378, or listed in short below, or use some other Lesser Daemon)</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        59,
+        67
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "d6w53MkPwr1xVHmc",
+      "type": 0,
+      "text": "<p><b>'Eadswap!</b>: The Weirdboy and one random being targeted by the power that triggered this effect, that is not Daemonic, Untouchable, a Machine, or soulless swap conciousnesses for 1d10 Rounds. Weapon Skill, Ballistic Skill, Intelligence, Perception, Willpower, and Fellowship are retained on swapping, all other characteristics are swapped. If either of the two die, the other suffers 1d10 Insanity, if both survive, they each suffer 1d5 insanity. If there are no eligible targets, the Weirdboy is deluded into thinking they are a random creature or object in line of sight for 1d5 rounds, and suffers 2d10 Insanity.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        61,
+        65
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "PY2qVBkCFESyw9WW",
+      "type": 0,
+      "text": "<p><b>Psychic Vomit</b>: The Weirdboy is knocked prone by an expulsion of green vomit and casts the \"Deff Wave\" Psychic Technique in a random direction (use scatter).</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        66,
+        70
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "v3s7ch8Yz9HBsODK",
+      "type": 0,
+      "text": "<p><b>Rending the Veil</b>: The Warp is rendered visible for all to see. All Sentient Creatures, including the Psyker, within 1d100 metres of them must test Fear (2) Warp Shock, the psyker must instead test against Fear (4) Warp Shock. The Effect lasts 1d5 Rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        68,
+        72
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "veeRpBc6xaCwXbvn",
+      "type": 0,
+      "text": "<p><b>Whispers and Dreams</b>: Everyone on board suffers from strange dreams and even hears hushed whispers when awake. These might hold hidden truths or portents should the GM wish, or merely be mad ramblings from beyond. \nHB: Everyone on board can choose to gain 1 Corruption Point (or -1 morale if crew) but can also reroll one test they make within 1 month. Alternatively, they receive some kind of premonition on future events.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        68,
+        75
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "kbiUcUctjvCNhgfi",
+      "type": 0,
+      "text": "<p><b>Gork Smash!</b>: The Weirdboy and anyone in 4d10 metres is smashed by a massive Fist of Gork (or Mork) that descends from the sky, and must make +0 Agility Test to drop prone, or take 1d10+5 Impact Damage with Shocking Quality.\nShocking: If Target takes any damage from attack, makes +0 Toughness Test, on failiure Target is stunned for a number of rounds equal to half the damage suffered. +10 to save per AP.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        75
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "OratyPXi06uknCam",
+      "type": 0,
+      "text": "<p><b>Where'd Da Git Go?</b>: The Weirdboy is thrown 3d10 metres up into the air with a crack of thunder and a small mushroom cloud. They take falling damage when they hit the ground. Fall Damage: treat as attack dealing 1d10 Impact Damage, +1 per Metre fell, ignores Armour. May vary with landing surface or local gravity.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        85
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "mSH5rxzWSb6axf7i",
+      "type": 0,
+      "text": "<p><b>Blood Rain</b>: An erupting Psychic Blood Storm causes the psyker and everyone within 5d10 (28) metres of the psyker to make +0 Strength Test or be knocked to the ground prone. Additionally for 1d5 Rounds anyone casting psychic powers within the area automatically cause Perils of the Warp in addition to any other psychic phenomena it might cause. The psyker gains 1d5+1 Corruption.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        73,
+        78
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Z61LXkbGtucaNGsh",
+      "type": 0,
+      "text": "<p><b>Waaagh!-valanche</b>: All creatures in 5d10 metres must make -20 Strength Test or be knocked prone and stunned for 1d5 rounds. The Weirdboy takes 2d10+5 Impact Dmaage and is stunned for 1d5+2 Rounds as a surge of green power explodes from them.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        76,
+        80
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "iADzSq6UH1428vUV",
+      "type": 0,
+      "text": "<p><b>All's Well</b>: A safe journey that wise captains will savour.\nNothing bad happens.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        76,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "4DZ91r99RaRMzLF4",
+      "type": 0,
+      "text": "<p><b>Cataclysmic Blast</b>: The Psyker's power overloads, The Psyker and everyone within 1d10 metres take 1d10 Energy Damage with Penetration 5, the psyker cannot dodge or avoid attack with a Force Field although everyone else can. The Psyker's Clothing and Gear are Destroyed, leaving them naked and smouldering. The Psyker may not use any further powers for 1d5 hours after this.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        79,
+        82
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "i3mDLpSx7XytlNMI",
+      "type": 0,
+      "text": "<p><b>Struck Down</b>: The Character is blasted with raw warp energy backfires. They suffer 2d10 Energy Damage with the Warp Weapon Quality as well as gain 1d10 Corruption Points</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        81,
+        90
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DOTwOqBM0BfmuxKF",
+      "type": 0,
+      "text": "<p><b>Mass Possession</b>: The Psyker and every living thing within 1d100 metres must resist being possessed. Make Opposed Willpower Test vs \"Attacker\", who has 60 Int, WP, and Fel and makes test with -10 Penalty. If Attacker wins, they possess target, replacing Int, Will, and Fel with their own. They may make use of any Skill the target has but with -10 Penalty. Suicidal Actions repeat test, but target has -10 instead of attacker. Effect lasts 2d10 Rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        83,
+        86
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ffLDj8LX1nMOlqUo",
+      "type": 0,
+      "text": "<p><b>Squigs! Squigs Everywhere!</b>: 2d10 tiny Squigs erupt from the ground within 30 metres of the Weirdboy and rapidly mature. Each attacks the nearest creature.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        86,
+        90
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "8adtNYaCpsiNiB6j",
+      "type": 0,
+      "text": "<p><b>Reality Quake</b>: The Psyker, and everything else, be it a creature or object within 3d10 (16) metres, takes 2d10 Rending Damage that ignores Armour and Toughness and cannot be dodged, halved for Warded objects, Daemons, and Untouchables.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        87,
+        90
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "yfYE1AergTGuuL46",
+      "type": 0,
+      "text": "<p><b>Lost to the Warp</b>: The Psyker makes a -30 Willpower Test or is dragged into the warp by a Daemon. They appear somewhere, on an inhabited planet 1d10 weeks later with dim yet horrific memories. They suffer 4d10 Corruption Points, as well as other possible complications. From now on, all Perils of the Warp checks have +10. Worst of all, they may have caught the notice of the Inquisition.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        91,
+        99
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "jAHpt8JZ76hsTcF2",
+      "type": 0,
+      "text": "<p><b>Assailed</b>: A Minor Daemon or Warp Entity appears amidst the ritual (chosen by GM). If the ritual was for the purposes of summoning a Daemon, it instead summons this one. Regardless the Daemon os not subject to Daemonic Mastery, and will proceed to attack its would-be summoners.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        91,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "8vjgFH17a4MVsFVH",
+      "type": 0,
+      "text": "<p><b>Waaagh!-ruption!</b>: The Weirdboy'z brain overloads, everyone in 2d10 metres of the Weirdboy takes 2d10 Energy with Psy Rating Penetration, the Weirdboy cannot avoid this attack, although others can dodge it. All of the Weirdboy'z clothing and gear are destroyed, leaving them naked on the ground, smoke pouring out of their ears and mouth. They gain 3d10 Insanity Points. Could have been worse...</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        91,
+        95
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "1BotQnnz1p7xt9TT",
+      "type": 0,
+      "text": "<p><b>Kaboom!</b>: The Weirdboy'z Head explodes, instantly killing them.  A loud boom and a small mushroom cloud accompany this, as their body continues flailing around for 1d5 rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        96,
+        99
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ItPwH9uneaVDCAk3",
+      "type": 0,
+      "text": "<p><b>'Ead A'splode!</b>: The Weirdboy'z Head explodes in a violent eruption of Psychic energy, the Weirdboy is killed instantly. This psychic energy spreads out up to 10 metres from them, all Greenskins within this range must make a +0 Toughness test, if they fail, their heads also explode, killing them instantly. Any headless Orks continue to mill about at random for 1d5 Rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        100,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "t3RmSJGkCEGXZBp7",
+      "type": 0,
+      "text": "<p><b>Possessed</b>: The Character's Arrogance is curtailed as a dark spirit attempts to possess them (or if it was a Daemon Summoning ritual the summoned daemon tries to possess them). The daemon is not subject to Daemonic Mastery.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        101,
+        120
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "dkoPRCwnxuJJdfAz"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Smash da Gitz",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Warpath",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Weirdboy and a number of Allied Orks within range up to 1 + 1 per Degree of Success on Focus Power Test lose the Primitive Quality, gain the Tearing Quality, and add Psy Rating Penetration on all melee attacks as long as power is Sustained.\nTearing: Roll additional 1d10 for Damage and drop lowest rolled dice.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "saa2wwIszRjHuUzn"
+}

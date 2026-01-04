@@ -1,0 +1,17 @@
+{
+  "name": "Never Die",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Willpower 50, Toughness 50\nAptitudes: Toughness, Defence, Nurgle",
+    "effect": "Character can spend a Fate Point to ignore the effects of injury, Fatigue, and Stunning for a single combat encounter unless it results in their death. Doesn't prevent that damage occuring, just that the character can ignore its effects up until combat ends or the damage would kill them.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can spend a Fate Point to ignore the effects of injury, Fatigue, and Stunning for a single combat encounter unless it results in their death. Doesn't prevent that damage occuring, just that the character can ignore its effects up until combat ends or the damage would kill them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dfIXY9g6fvk7Eu9W"
+}

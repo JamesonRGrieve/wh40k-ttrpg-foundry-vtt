@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Husk Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Felling (4), Power Field",
+    "weight": "3kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Any Living creature that suffers at least one wound from this also takes 2d10+5 Toughness Damage, any that suffer critical damage from this weapon instantly die, turning to dust.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (4), Power Field</p><p><b>Note:</b> Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Any Living creature that suffers at least one wound from this also takes 2d10+5 Toughness Damage, any that suffer critical damage from this weapon instantly die, turning to dust.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DqdK39TTNyF3w9mV"
+}

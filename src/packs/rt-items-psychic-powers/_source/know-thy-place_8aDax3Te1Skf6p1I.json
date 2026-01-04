@@ -1,0 +1,22 @@
+{
+  "name": "Know thy Place",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker makes Opposed Willpower test against living creature with an Intelligence characteristic higher than 15 within range. If Psyker succeeds, tartget is stunned for 1 round, +1 per three degrees of success psyker won opposed test by. Creature treats Psyker as if they have Fear (2) (-10 Fear Test) for remainder of encounter, seeing them as a living conduit of the God-Emperor. This technique can only be used once per encounter on any particular foe.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8aDax3Te1Skf6p1I"
+}

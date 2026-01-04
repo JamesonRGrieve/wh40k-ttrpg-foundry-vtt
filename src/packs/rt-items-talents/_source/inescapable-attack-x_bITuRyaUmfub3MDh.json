@@ -1,0 +1,17 @@
+{
+  "name": "Inescapable Attack (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 40 or WS 40, Perception 35\nAptitudes: Ballistic Skill or Weapon Skill, Finesse",
+    "effect": "When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). Character imposes penalty of -10 x Degrees of Success on Evasion Tests when making listed actions.\nMelee: All Out Attack, Charge Attack, Melee Called Shot, Melee Standard Attack, or Stun Action. Ranged: Ranged Called Shot, Ranged Standard Attack.\nHas no effect on weapons with the Spray Quality.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). Character imposes penalty of -10 x Degrees of Success on Evasion Tests when making listed actions.\nMelee: All Out Attack, Charge Attack, Melee Called Shot, Melee Standard Attack, or Stun Action. Ranged: Ranged Called Shot, Ranged Standard Attack.\nHas no effect on weapons with the Spray Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bITuRyaUmfub3MDh"
+}

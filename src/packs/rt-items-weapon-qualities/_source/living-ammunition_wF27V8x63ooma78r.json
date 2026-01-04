@@ -1,0 +1,14 @@
+{
+  "name": "Living Ammunition",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 15,
+    "description": {
+      "value": "<p>15</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wF27V8x63ooma78r"
+}

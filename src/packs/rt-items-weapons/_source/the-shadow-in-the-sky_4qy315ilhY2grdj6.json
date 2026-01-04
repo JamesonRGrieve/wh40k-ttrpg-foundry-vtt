@@ -1,0 +1,28 @@
+{
+  "name": "The Shadow in the Sky",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field",
+    "weight": "6kg",
+    "availability": "Respected",
+    "cost": "20 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4qy315ilhY2grdj6"
+}

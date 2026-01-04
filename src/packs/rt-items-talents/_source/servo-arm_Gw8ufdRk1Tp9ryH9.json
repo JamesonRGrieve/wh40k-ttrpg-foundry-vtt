@@ -1,0 +1,17 @@
+{
+  "name": "Servo-Arm",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Tech-Priest Enginseer Speciality\n250xp",
+    "effect": "When Assisted by their Servitor Comrade, Character gains +10 to all Tech-Use Tests to make Repairs, and halves the time needed to do them.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When Assisted by their Servitor Comrade, Character gains +10 to all Tech-Use Tests to make Repairs, and halves the time needed to do them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gw8ufdRk1Tp9ryH9"
+}

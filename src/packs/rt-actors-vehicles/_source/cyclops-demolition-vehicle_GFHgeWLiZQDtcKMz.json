@@ -1,0 +1,25 @@
+{
+  "name": "Cyclops Demolition Vehicle",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "12m",
+    "tacticalSpeed": "42kph",
+    "cruisingSpeed": "-10",
+    "maneuverability": "10",
+    "frontArmour": "Average (+0)",
+    "sideArmour": "Front 10\nSide 10\nRear 8",
+    "rearArmour": "None (Remote Controlled)",
+    "structuralIntegrity": "None",
+    "crew": "Cyclops Demolition Charge: (4d10+10 X, Pen 8, Blast(1d10+10), Concussive(5))",
+    "passengers": "Traits: Enclosed, Extremely Volatile, Ponderous, Tracked Vehicle\nSpecial Rules: Remote Controlled Little Boy! Controller uses 1kg device and requires Trained Tech-Use. Has operating range of 200m, reduced by 1m+ walls and bad weather. Split Actions between self and control device. Detonating requires Half Action (Attack/Concentration). Detonates if suffering Righteous Fury, If it explodes by any means, uses Demolition Charge Profile. Takes up space of ~5 Guardsman for transport purposes. max 1 on Valkyrie.",
+    "cargo": "Scarce",
+    "availability": "OW: Shield of Humanity",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "GFHgeWLiZQDtcKMz"
+}

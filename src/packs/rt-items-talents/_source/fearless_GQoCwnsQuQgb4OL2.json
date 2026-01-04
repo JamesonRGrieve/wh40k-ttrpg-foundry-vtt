@@ -1,0 +1,17 @@
+{
+  "name": "Fearless",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Nerves of Steel\nAptitudes: Willpower, Defence, Nurgle",
+    "effect": "Immune to Fear and Pinning. Disengaging or backing down from combat requires Willpower Test.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Immune to Fear and Pinning. Disengaging or backing down from combat requires Willpower Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GQoCwnsQuQgb4OL2"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Telekinesis",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 11",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained can lift or move any object within range of up to 5kg x Willpower Bonus in weight. The object can be moved slowly to any other point within range. Power cannot affect living creatures or be used to make attacks, once power stops being sustained object falls slowly to the ground.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EyvpVwsP4dcmHmiQ"
+}

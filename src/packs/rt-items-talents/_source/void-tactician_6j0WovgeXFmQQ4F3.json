@@ -1,0 +1,17 @@
+{
+  "name": "Void Tactician",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Int 35",
+    "effect": "+10 to BS Tests for firing Starship weapons.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+10 to BS Tests for firing Starship weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6j0WovgeXFmQQ4F3"
+}

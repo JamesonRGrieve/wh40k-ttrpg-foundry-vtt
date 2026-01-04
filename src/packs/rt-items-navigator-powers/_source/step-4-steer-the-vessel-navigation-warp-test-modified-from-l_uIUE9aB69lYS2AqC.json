@@ -1,0 +1,21 @@
+{
+  "name": "Step 4: Steer the Vessel: Navigation (Warp) Test, modified from \"Locate the Astronomicon\" Result as well as passage difficulty. Pass Speeds up Journey, fail slows it.\nNavigator makes Navigation (Warp) Test, modified by how well or badly they did on locating the Astronomicon as well as passage difficulty. Result of this test determines the actual speed of their journey. If test is failed and Navigator rolls a 9 on either dice from test, ship is thrown off course and appears in the wrong system or wrong part of space (determined by GM).",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": "Effect of Navigation (Warp) Test to Steer the Vessel on voyage journey:\nSuccess: 1x Duration. 1 DoS: 3/4 Duration. 2 DoS: 1/2 Duration. 3 DoS: 1/4 Duration. Failiure: 2x Duration. 1 DoF: 3x Duration. 2 DoF: 4x Duration.\nEffect on Test based on passage condition (choose one most appropriate): Open Warp: +20. Established Route/Well documented: +30. Unknown      Route: -10. Adverse Conditions: -10 or more. Very Familiar, well established passage: Don't make test, just pass and don't roll for warp encounters.",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Adept:</b> Effect of Navigation (Warp) Test to Steer the Vessel on voyage journey:\nSuccess: 1x Duration. 1 DoS: 3/4 Duration. 2 DoS: 1/2 Duration. 3 DoS: 1/4 Duration. Failiure: 2x Duration. 1 DoF: 3x Duration. 2 DoF: 4x Duration.\nEffect on Test based on passage condition (choose one most appropriate): Open Warp: +20. Established Route/Well documented: +30. Unknown      Route: -10. Adverse Conditions: -10 or more. Very Familiar, well established passage: Don't make test, just pass and don't roll for warp encounters.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uIUE9aB69lYS2AqC"
+}

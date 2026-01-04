@@ -1,0 +1,22 @@
+{
+  "name": "Foreshadow",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker gains a single instant of insight into the future, until the end of the next turn, they gain +5*Psy Rating on one skill test. ",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Kk459EorLPn2czv2"
+}

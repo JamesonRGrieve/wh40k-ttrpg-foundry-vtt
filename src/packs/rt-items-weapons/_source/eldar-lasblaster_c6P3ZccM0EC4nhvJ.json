@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Lasblaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "120m",
+    "rof": "S/3/6",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 90,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "3.5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Eldar weapon, a very effective laser weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Eldar weapon, a very effective laser weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c6P3ZccM0EC4nhvJ"
+}

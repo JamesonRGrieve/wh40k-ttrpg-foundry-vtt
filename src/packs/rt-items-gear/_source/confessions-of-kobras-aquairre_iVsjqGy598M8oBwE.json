@@ -1,0 +1,20 @@
+{
+  "name": "Confessions of Kobras Aquairre",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1kg",
+    "availability": "A user who is in possession of, or who can reference this book gains +20 to Common Lore (Koronus Expanse), Forbidden Lore (Xenos), and Scholastic Lore (Legend) Tests. If a particularly puritanical Inquisitor discovers the user has this book, they may gain Enemy (Inquisition) Talent.",
+    "cost": "A Tome containing large amounts of forbidden knowledge about the Koronus Expanse and Xenos races within, some dangerously powerful people consider it heretical.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iVsjqGy598M8oBwE"
+}

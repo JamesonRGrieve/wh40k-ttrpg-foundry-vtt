@@ -1,0 +1,17 @@
+{
+  "name": "Arms Master",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; WS 40, BS 40, Wep. Training (Any Two)\nAptitudes; Weapon Skill, Ballistic Skill, Unaligned",
+    "effect": "When using a Non-Exotic weapon that the character is not trained in, suffer -10 penalty rather than -20.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When using a Non-Exotic weapon that the character is not trained in, suffer -10 penalty rather than -20.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yn2oE4iixiypCZbe"
+}

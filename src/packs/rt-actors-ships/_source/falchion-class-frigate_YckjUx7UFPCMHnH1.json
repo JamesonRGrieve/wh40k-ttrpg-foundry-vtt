@@ -1,0 +1,28 @@
+{
+  "name": "Falchion-Class Frigate",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Frigate",
+    "size": "2.2km long, 0.3km wide",
+    "crew": 27000,
+    "speed": 8,
+    "manoeuvrability": 17,
+    "detection": 14,
+    "hull": 36,
+    "armour": 18,
+    "turrets": 1,
+    "space": 34,
+    "shipPoints": 42,
+    "weaponCapacity": "1 Prow, 2 Dorsal",
+    "notes": "Has Torpedo Tube (Voss) Component (prow), size already reduced, can't remove, must be able to power.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Has Torpedo Tube (Voss) Component (prow), size already reduced, can't remove, must be able to power.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "YckjUx7UFPCMHnH1"
+}

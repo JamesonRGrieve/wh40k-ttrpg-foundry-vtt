@@ -1,0 +1,28 @@
+{
+  "name": "Sword-class Frigate",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Frigate",
+    "size": "1.6km long, 0.3km wide",
+    "crew": 26000,
+    "speed": 8,
+    "manoeuvrability": 20,
+    "detection": 15,
+    "hull": 35,
+    "armour": 18,
+    "turrets": 2,
+    "space": 40,
+    "shipPoints": 40,
+    "weaponCapacity": "2 Dorsal",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fmnR5UkDrpLy0CAR"
+}

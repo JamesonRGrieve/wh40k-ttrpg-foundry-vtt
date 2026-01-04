@@ -1,0 +1,22 @@
+{
+  "name": "Beastmaster",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "On Successful Test, Psyker establishes basic control over a number of animals (Creatures with Bestial Trait) equal to their Psy Rating. Each round, Psyker can use their reaction to give basic commands such as \"Come here\", \"Guard me\", \"Attack target\", and so on. Animals will follow commands to the best of their abilities. If an animal feels threatened, becomes injured, or is commanded to act in ways contrary to its nature, it may make another Opposed Willpower Test with +10 to break free. If it breaks free, how it reacts varies, dependant on its nature and how the psyker treated it.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7vGlfgS2cQxNpeLg"
+}

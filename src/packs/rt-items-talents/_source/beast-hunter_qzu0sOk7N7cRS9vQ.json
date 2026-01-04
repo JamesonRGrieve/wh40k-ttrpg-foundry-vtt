@@ -1,0 +1,17 @@
+{
+  "name": "Beast Hunter",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Feral Warrior Alternative Advance, 200xp, WS 35, BS 35",
+    "effect": "Whenever scoring a Critical Effect against a Creature of Hulking Size or Larger, add +3 Damage. Does not apply to servitors, Daemons, or entities with the From Beyond Trait.",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Whenever scoring a Critical Effect against a Creature of Hulking Size or Larger, add +3 Damage. Does not apply to servitors, Daemons, or entities with the From Beyond Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qzu0sOk7N7cRS9vQ"
+}

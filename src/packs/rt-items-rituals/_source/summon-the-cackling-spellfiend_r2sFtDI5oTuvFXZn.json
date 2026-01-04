@@ -1,0 +1,19 @@
+{
+  "name": "Summon the Cackling Spellfiend",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-20 Forbidden Lore (Daemonology) ",
+    "requirements": "Basic Tzeentch Ritaul to summon a Pink Horror. Requires Site recently desolated by fire or magic. Summoning Circle inscribed with Tzeentchian Symbols, enchanted Braziers spewing multicoloured smoke and flame arrayed randomly around the circle. An Adult human branded in arcane runes is reduced to ash by magic and flame. ",
+    "effect": "A Pink Horror is summoned, it remains corporeal for 1d5+5 rounds, +1 Round per Degree of Success on Ritual Test. If the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.  If the Daemon is summoned for a specific task, it remains long enough to complete it (within reason).\nA Daemonic Mastery Test may be made to take control of the Daemon.",
+    "costs": "The Ritual Triggers Psychic Phenomena, adding +20 to the roll.",
+    "failure": "Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test beyond the first.",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> A Pink Horror is summoned, it remains corporeal for 1d5+5 rounds, +1 Round per Degree of Success on Ritual Test. If the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.  If the Daemon is summoned for a specific task, it remains long enough to complete it (within reason).\nA Daemonic Mastery Test may be made to take control of the Daemon.</p><p><b>Costs:</b> The Ritual Triggers Psychic Phenomena, adding +20 to the roll.</p><p><b>Failure:</b> Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test beyond the first.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r2sFtDI5oTuvFXZn"
+}

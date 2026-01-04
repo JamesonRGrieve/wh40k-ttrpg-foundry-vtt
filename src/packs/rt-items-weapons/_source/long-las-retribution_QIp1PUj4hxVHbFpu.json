@@ -1,0 +1,28 @@
+{
+  "name": "Long Las (Retribution)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "90m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 10,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QIp1PUj4hxVHbFpu"
+}

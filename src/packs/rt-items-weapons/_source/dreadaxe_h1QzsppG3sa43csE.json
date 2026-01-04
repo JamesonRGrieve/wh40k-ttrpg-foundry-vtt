@@ -1,0 +1,28 @@
+{
+  "name": "Dreadaxe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Unbalanced, Sanctified, Warp Weapon.",
+    "weight": "5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Weapon: Axe. Daemon WP 30 (Unaligned Daemon), Bind Str 1. Att. : Howling, Impossibly Sharp. If Daemon ever escapes weapon, will always be hostile. Gain Fear(+1) whenever attacking with weapon. Must be Unaligned to Wield. Sanctified Weapon represents ability to destroy other Daemons.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Unbalanced, Sanctified, Warp Weapon.</p><p><b>Note:</b> Weapon: Axe. Daemon WP 30 (Unaligned Daemon), Bind Str 1. Att. : Howling, Impossibly Sharp. If Daemon ever escapes weapon, will always be hostile. Gain Fear(+1) whenever attacking with weapon. Must be Unaligned to Wield. Sanctified Weapon represents ability to destroy other Daemons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h1QzsppG3sa43csE"
+}

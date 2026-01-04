@@ -1,0 +1,21 @@
+{
+  "name": "Standard Guidance System",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade (Torpedo Guidance)",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "Torpedo Rating: (+20)",
+    "availability": null,
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Torpedo Rating: (+20)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CTr3Z7Oplu75ydpa"
+}

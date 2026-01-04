@@ -1,0 +1,22 @@
+{
+  "name": "'Ere We Go",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Dis is Takin' Too Long, Frazzle",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Weirdboy teleports themselves and Psy Rating Ork allies within range up to 10 x Psy Rating metres. Each Ork must make separate +0 Willpower Test or be stunned for the next round as they vomit from the experience. Anyone that fails the test by 3+ Degrees of Failiure also gains 1d5 Insanity Points.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SojzpAjR7DU2eFja"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Hellglaive",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Razor-Sharp",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Scarce Availability if acquired from Dark Eldar Settlement. Two-Handed, while wielding it count as if wielding two weapons (allowing use of Two-Weapon Fighting). Grants +10 to Pilot (Personal) Tests due to its balanced nature.",
+    "description": {
+      "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Scarce Availability if acquired from Dark Eldar Settlement. Two-Handed, while wielding it count as if wielding two weapons (allowing use of Two-Weapon Fighting). Grants +10 to Pilot (Personal) Tests due to its balanced nature.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gVv1tzmJArE41bjh"
+}

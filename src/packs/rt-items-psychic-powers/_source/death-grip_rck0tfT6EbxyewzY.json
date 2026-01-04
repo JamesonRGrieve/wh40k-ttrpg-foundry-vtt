@@ -1,0 +1,22 @@
+{
+  "name": "Death Grip",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Telekinetic Crush",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker crushes a target's vital organs. Making Opposed Willpower test vs Target's Willpower. If Psyker succeeds, inflicts 1d10 + Psy Rating Rending Damage with Shocking quality. Power ignores non-warded armour and toughness bonus of target. Only works on living beings and animals, not Daemons, non-living, or other warp denizens.\nShocking: If Target takes any damage from attack, makes +0 Toughness Test, on failiure Target is stunned for a number of rounds equal to half the damage suffered. +10 to save per AP.",
+    "effect": "200xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rck0tfT6EbxyewzY"
+}

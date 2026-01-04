@@ -1,0 +1,17 @@
+{
+  "name": "Hunter of Aliens",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": null,
+    "effect": "Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting aliens.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting aliens.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OxOosltkT5gUL6L5"
+}

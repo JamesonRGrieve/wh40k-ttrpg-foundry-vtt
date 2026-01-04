@@ -1,0 +1,28 @@
+{
+  "name": "Power Flail",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Power Field, Unwieldy",
+    "weight": "7kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Two Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Power Field, Unwieldy</p><p><b>Note:</b> Two Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UyCDg4N0avdyGYtB"
+}

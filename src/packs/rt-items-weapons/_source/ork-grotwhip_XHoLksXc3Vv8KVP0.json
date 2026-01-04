@@ -1,0 +1,28 @@
+{
+  "name": "Ork Grotwhip",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "3m",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexibile, Tearing, Primitive (8)",
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "For Orks, Average, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "description": {
+      "value": "<p><b>Special:</b> Flexibile, Tearing, Primitive (8)</p><p><b>Note:</b> For Orks, Average, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XHoLksXc3Vv8KVP0"
+}

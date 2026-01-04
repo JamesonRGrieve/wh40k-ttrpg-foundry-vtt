@@ -1,0 +1,22 @@
+{
+  "name": "Flicker",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Mark of Tzeentch WP 50+, Psy Rating 4",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "- 10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, the psyker gains the Incorporeal Trait, and counts their Agility Bonus as equal to their Psy Rating for purposes of determining how far they can move. They may move in any direction, verticaly or horizontally. While in this state they cannot charge any psychically charged barriers, holy wards, or energy wards that bend reality or manipulate the warp such as Gellar Fields or Void Shields.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lEOcZV7EdMn1g1MU"
+}

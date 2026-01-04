@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Mark VIII \"Errant\" Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "All",
+    "ap": "8/11/8/8",
+    "maxAg": null,
+    "weight": "190kg",
+    "availability": "Initiated",
+    "cost": "-",
+    "notes": "The Only Armour adopted into service since the end of the Horus Heresy up until the opening of the Great Rift. +5 to Command, whenever an attack hits the head, roll 1d10, on an 8+ it hits the body instead. +20 Strength. Subsystems: Autosenses (+10), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History once. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>The Only Armour adopted into service since the end of the Horus Heresy up until the opening of the Great Rift. +5 to Command, whenever an attack hits the head, roll 1d10, on an 8+ it hits the body instead. +20 Strength. Subsystems: Autosenses (+10), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History once. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ba7F1fYzHpTTbzQN"
+}

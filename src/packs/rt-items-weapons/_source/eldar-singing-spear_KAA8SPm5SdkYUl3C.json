@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Singing Spear",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Eldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Witch-Edge",
+    "weight": "3kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: The Navis Primer",
+    "note": "If wielder is psychic, can throw up to 2xPsy-Rating Metres. Once per round can Recall it to their hand as Free Action, creatures holding on/impaled make -30 Strength Test or are dragged back to the thrower.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Witch-Edge</p><p><b>Note:</b> If wielder is psychic, can throw up to 2xPsy-Rating Metres. Once per round can Recall it to their hand as Free Action, creatures holding on/impaled make -30 Strength Test or are dragged back to the thrower.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KAA8SPm5SdkYUl3C"
+}

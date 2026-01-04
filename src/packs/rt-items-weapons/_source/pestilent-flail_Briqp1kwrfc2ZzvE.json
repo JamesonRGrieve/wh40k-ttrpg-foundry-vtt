@@ -1,0 +1,28 @@
+{
+  "name": "Pestilent Flail",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "5m",
+    "rof": "-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (1), Flexible, Unwieldy",
+    "weight": "6kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "BC: Tome of Decay",
+    "note": "Whenever character attacks with weapon, they gain +10 to Dodge Tests until the end of their next turn. If not dedicated to Nurgle character suffers 1 Damage that ignores Armour and Toughness whenever they attack with weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (1), Flexible, Unwieldy</p><p><b>Note:</b> Whenever character attacks with weapon, they gain +10 to Dodge Tests until the end of their next turn. If not dedicated to Nurgle character suffers 1 Damage that ignores Armour and Toughness whenever they attack with weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Briqp1kwrfc2ZzvE"
+}

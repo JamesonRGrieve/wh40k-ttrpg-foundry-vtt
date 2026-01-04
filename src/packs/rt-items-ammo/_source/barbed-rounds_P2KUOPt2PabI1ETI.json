@@ -1,0 +1,20 @@
+{
+  "name": "Barbed Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP Weapon",
+    "damageOrEffect": "Gains Crippling(1) Quality",
+    "qualities": "Crippling(1)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gains Crippling(1) Quality</p><p><b>Qualities:</b> Crippling(1)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "P2KUOPt2PabI1ETI"
+}

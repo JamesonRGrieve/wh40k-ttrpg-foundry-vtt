@@ -1,0 +1,28 @@
+{
+  "name": "Toxin Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (10), Toxic",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Only does damage to those in blast range that fail -10 Toughness test. Damage bypassing armour. (Respirators/sealed armour gives +20 to test). Gas in grenade may linger.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10), Toxic</p><p><b>Note:</b> Only does damage to those in blast range that fail -10 Toughness test. Damage bypassing armour. (Respirators/sealed armour gives +20 to test). Gas in grenade may linger.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PFtXxRcK9LzqSHra"
+}

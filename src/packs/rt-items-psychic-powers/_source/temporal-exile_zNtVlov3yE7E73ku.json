@@ -1,0 +1,22 @@
+{
+  "name": "Temporal Exile",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "Farseer selects target and makes Focus Power Test, if successful, they cut the target out of time. For one round, +1 per 2 Degrees of Success, target cannot take actions, or be affected by otherts. Upon returning target makes +0 Willpower Test or gains 1d5 Insanity Points from the paradoxical experience.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zNtVlov3yE7E73ku"
+}

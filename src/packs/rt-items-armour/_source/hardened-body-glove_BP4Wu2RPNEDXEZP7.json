@@ -1,0 +1,22 @@
+{
+  "name": "Hardened Body Glove",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "300 T",
+    "notes": "Wearable under loose or specifically tailored clothing.\nOptionally can get a version with a sealable hood option with built in stealth features, imposes -20 to those attempting to notice the wearer. 3x cost, or increase rarity by 1.",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Wearable under loose or specifically tailored clothing.\nOptionally can get a version with a sealable hood option with built in stealth features, imposes -20 to those attempting to notice the wearer. 3x cost, or increase rarity by 1.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BP4Wu2RPNEDXEZP7"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "\"Stingray\" Rifle (Anoxis)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 4,
+    "reload": "Full",
+    "special": "Spray",
+    "weight": "3kg",
+    "availability": "Average",
+    "cost": "100 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A Microwave gun, firing a blistering heat that burns the skin but leaves most objects untouched.",
+    "description": {
+      "value": "<p><b>Special:</b> Spray</p><p><b>Note:</b> A Microwave gun, firing a blistering heat that burns the skin but leaves most objects untouched.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bi02wwO6jIDmrYuu"
+}

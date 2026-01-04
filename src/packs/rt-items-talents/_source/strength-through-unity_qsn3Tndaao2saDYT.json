@@ -1,0 +1,17 @@
+{
+  "name": "Strength through Unity",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Fellowship 40, Bonding Ritual",
+    "effect": "When in Melee Combat, for each ally with the Bonding Ritual Talent who are engaged with the same target, the Explorer gains +5 to Weapon Skill Tests and +1 Damage on melee attacks.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>When in Melee Combat, for each ally with the Bonding Ritual Talent who are engaged with the same target, the Explorer gains +5 to Weapon Skill Tests and +1 Damage on melee attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qsn3Tndaao2saDYT"
+}

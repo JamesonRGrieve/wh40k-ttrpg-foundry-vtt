@@ -1,0 +1,14 @@
+{
+  "name": "Counterfire Defence System",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Allows the wearer to re-roll failed Ballistic Skill Tests made as part of the Overwatch Action or Supporting Fire Trait.",
+    "description": {
+      "value": "<p>Allows the wearer to re-roll failed Ballistic Skill Tests made as part of the Overwatch Action or Supporting Fire Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZYZ56iWXGB1KyjZo"
+}

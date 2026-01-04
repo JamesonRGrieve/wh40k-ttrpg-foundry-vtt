@@ -1,0 +1,19 @@
+{
+  "name": "High Factotum",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 2,
+    "purpose": "Manages Finances, Trade, and the making of Profits.",
+    "careerPreferences": "Usually Seneschal, any but Missionary.",
+    "subordinates": "Quartermasters, negotiators, crew officers.",
+    "importantSkills": "Barter, Commerce, Evaluate",
+    "effect": "Once per Session, can take up to 300 Achievement Points earned to the completion of one Endeavour and apply them to another.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Manages Finances, Trade, and the making of Profits.</p><p><b>Effect:</b> Once per Session, can take up to 300 Achievement Points earned to the completion of one Endeavour and apply them to another.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rVYtPrMnxr5Cl6Gl"
+}

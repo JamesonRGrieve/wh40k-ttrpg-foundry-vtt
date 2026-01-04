@@ -1,0 +1,20 @@
+{
+  "name": "Ship Passage: Tramp Freighter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Passage aboard a Void Craft, to another planet or star system. Barely Held together cargo haulers, widespread and good for keeping a low profile. Conditions aren't the greatest, but it's one way to get somewhere specific with no questions asked.",
+    "cost": "Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed",
+    "effects": "Average",
+    "notes": "2000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 2000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QKqFEmYHiPhLCY24"
+}

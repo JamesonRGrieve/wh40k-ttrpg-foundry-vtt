@@ -1,0 +1,20 @@
+{
+  "name": "Vertia",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Once taken the user experiences powerful illusions of the past, present, and future. Rare and deemed illegal. Imposes -10 to Willpower and -20 to Perception Tests for 3d10 Minutes, however the consumer experiences visions and altered perceptions decided by GM. Afterwards make Willpower Test or suffer 1d5 Insanity, and a 20% chance to also gain 1d5 Corruption",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DsDRoNC00SCA5Dts"
+}

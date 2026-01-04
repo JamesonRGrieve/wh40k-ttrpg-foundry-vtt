@@ -1,0 +1,20 @@
+{
+  "name": "Lord-Captain's Baton",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "Sign of office, durable hitting stick, data storage, and potential ship security key.",
+    "cost": "Counts as Staff or Truncheon, probably shouldn't be used as one",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Utw0gJeMXYna0Y6K"
+}

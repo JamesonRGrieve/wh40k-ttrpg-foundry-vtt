@@ -1,0 +1,17 @@
+{
+  "name": "Underfoot Assault",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Agility 40, Weapon Skill 40 \nAptitudes: Weapon Skill, Finesse",
+    "effect": "When making a Melee Attack against a Foe with a Size Trait greater than the Character's, the character imposes a -10xSize Difference Penalty to any Parry or Dodge Test to avoid their Melee Attacks.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When making a Melee Attack against a Foe with a Size Trait greater than the Character's, the character imposes a -10xSize Difference Penalty to any Parry or Dodge Test to avoid their Melee Attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lwvqfM5GMcey3g0c"
+}

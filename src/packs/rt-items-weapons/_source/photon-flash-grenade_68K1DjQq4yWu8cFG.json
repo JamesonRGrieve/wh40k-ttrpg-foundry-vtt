@@ -1,0 +1,28 @@
+{
+  "name": "Photon Flash Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (15)",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "60 T",
+    "source": "Rogue Trader: Core",
+    "note": "Make +0 Toughness Test or be Blinded for 1d5 Rounds",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (15)</p><p><b>Note:</b> Make +0 Toughness Test or be Blinded for 1d5 Rounds</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "68K1DjQq4yWu8cFG"
+}

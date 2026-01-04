@@ -1,0 +1,22 @@
+{
+  "name": "Flak Gauntlets",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Flak",
+    "locations": "Arms",
+    "ap": 2,
+    "maxAg": "-",
+    "weight": "1kg",
+    "availability": "Average",
+    "cost": "50 T",
+    "notes": "+1 AP against Blast Weapons if not at centre of blast.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Od2j1FwqzE1Xb2hP"
+}

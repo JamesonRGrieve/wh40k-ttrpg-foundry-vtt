@@ -1,0 +1,28 @@
+{
+  "name": "Las Carbine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "75m",
+    "rof": "S/2/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 60,
+    "reload": "Half",
+    "special": "Reliable",
+    "weight": "2.5kg",
+    "availability": "Common",
+    "cost": "75 T",
+    "source": "Only War: Core",
+    "note": "Can be fired one handed with only -10 Penalty. Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Can be fired one handed with only -10 Penalty. Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vAK0bticP6QTqJs6"
+}

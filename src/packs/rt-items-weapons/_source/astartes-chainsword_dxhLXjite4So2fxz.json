@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Chainsword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Tearing",
+    "weight": "10kg",
+    "availability": "Initiated",
+    "cost": "5 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dxhLXjite4So2fxz"
+}

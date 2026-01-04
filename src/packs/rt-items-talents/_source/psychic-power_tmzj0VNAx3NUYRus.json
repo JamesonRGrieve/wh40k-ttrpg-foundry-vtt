@@ -1,0 +1,17 @@
+{
+  "name": "Psychic Power",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Psyker\nAptitudes: Willpower, Psyker, Varied Alignment",
+    "effect": "Character learns an additional Psychic Power. The experience cost of this power is the cost of the psychic power learned.\nThis Talent can be taken multiple times. For Black Crusade, Alignment depends on Psychic Power Chosen.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character learns an additional Psychic Power. The experience cost of this power is the cost of the psychic power learned.\nThis Talent can be taken multiple times. For Black Crusade, Alignment depends on Psychic Power Chosen.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tmzj0VNAx3NUYRus"
+}

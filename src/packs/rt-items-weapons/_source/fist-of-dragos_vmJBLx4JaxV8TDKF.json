@@ -1,0 +1,28 @@
+{
+  "name": "Fist of Dragos",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unwieldy, Overheats",
+    "weight": "25kg",
+    "availability": "Famed",
+    "cost": "25 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Power Fist of the Deathwatch. Increases Unnatural Strength x2 to x3 as normal for Power Fists.\nCan't be dropped if it overheats.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy, Overheats</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Fist of the Deathwatch. Increases Unnatural Strength x2 to x3 as normal for Power Fists.\nCan't be dropped if it overheats.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vmJBLx4JaxV8TDKF"
+}

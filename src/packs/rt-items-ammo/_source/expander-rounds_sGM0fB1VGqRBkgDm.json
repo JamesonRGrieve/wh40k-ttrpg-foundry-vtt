@@ -1,0 +1,20 @@
+{
+  "name": "Expander Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Stubbers, autopistols, autoguns",
+    "damageOrEffect": "+1 Damage, +1 Pen",
+    "qualities": "-",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +1 Damage, +1 Pen</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sGM0fB1VGqRBkgDm"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Fire Caste Weapon Training",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau",
+    "effect": "The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a3qhQp51XPbyA0Ws"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Call to Ecstasy",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Daemon",
+    "prerequisites": "Daemonic Trait",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Daemon selects target in range, making Opposed Fellowship Test vs Target's Willpower. If Daemon Wins target is compelled to spend all its actions dancing and singing at the top of their lungs for as long as power is sustained, and may make no other actions and gain no bonus AP from cover. At the beginning of each of their turns, the target may make +0 Willpower Test with -5 per Degree of Success Daemon won test by. On success target escapes daemon's grip, on fail they suffer 1 Fatigue. ",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZKyIDg59x0mxko19"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Ntharian Falx",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Tearing, Unbalanced",
+    "weight": "6.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Gains additional Penetration equal to Degrees of Success on WS Test to attack with it. Requires two hands to wield.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Tearing, Unbalanced</p><p><b>Note:</b> Gains additional Penetration equal to Degrees of Success on WS Test to attack with it. Requires two hands to wield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZNXi5orXeFKbkAlk"
+}

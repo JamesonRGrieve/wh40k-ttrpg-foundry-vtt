@@ -1,0 +1,17 @@
+{
+  "name": "Tyrantine Shadow Agent",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Non Sororitas or Tech-Priest Career, DH Rank 5+. Have been singled out by the Tyrantine Cabal, to take this path means becoming part of their secret orders and goals.",
+    "descriptionText": "A Secret order that act to maintain an ignorance regarding a wandering celestial object known as the Tyrant Star, this black star brings madness and death, to the Tyrantine it is a source of concern, to be hidden from outsiders and to be studied by those in the know.",
+    "effects": "Replace new Rank's Advances with that of the \nAllows for the purchasing of the Unique Talent Labyrinth Conditioning",
+    "source": "DH: Inquisitor's Handbook (Page 82)",
+    "description": {
+      "value": "<p>A Secret order that act to maintain an ignorance regarding a wandering celestial object known as the Tyrant Star, this black star brings madness and death, to the Tyrantine it is a source of concern, to be hidden from outsiders and to be studied by those in the know.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the \nAllows for the purchasing of the Unique Talent Labyrinth Conditioning</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2Kq3tYVb6E4iwUtV"
+}

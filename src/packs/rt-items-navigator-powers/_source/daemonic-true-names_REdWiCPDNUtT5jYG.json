@@ -1,0 +1,21 @@
+{
+  "name": "Daemonic True Names",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Daemonic True Names are utterly incomprehensible to mortals, and the power that name gives over the Daemon makes finding out what the name is all the harder. Ture Names are longer for more powerful daemons.",
+    "range": null,
+    "test": null,
+    "sustain": 0,
+    "novice": "- The Enactor knows the Allegiance of the Summoned Daemon",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> - The Enactor knows the Allegiance of the Summoned Daemon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "REdWiCPDNUtT5jYG"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Ferric Summons",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Ferric Lure, Mechanicus Implants\nAptitudes: Willpower, Tech, Unaligned",
+    "effect": "Character can call an unsecured Metal Object to their hand from up to 40 metres away using Ferric Lure Implants. Object may be up to 2kg*WP Bonus in weight.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can call an unsecured Metal Object to their hand from up to 40 metres away using Ferric Lure Implants. Object may be up to 2kg*WP Bonus in weight.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aIXvU83xPosyzrYB"
+}

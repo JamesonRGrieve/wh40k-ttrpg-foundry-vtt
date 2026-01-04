@@ -1,0 +1,20 @@
+{
+  "name": "Notarikon of the Seven",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1kg",
+    "availability": "A user that possesses this tome gains +30 to Scholastic Lore (Legend, Numerology, Occult), and Trade (Soothsayer) Tests, but if they fail that test by more degrees than their Wilpower Bonus, they gain one Insanity Point.",
+    "cost": "A Tome penned by an infamous witch-cabal on Footfall that covers methods of Astrology and divination. Somewhat Heretical.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ESYXg8p3iwnfirOR"
+}

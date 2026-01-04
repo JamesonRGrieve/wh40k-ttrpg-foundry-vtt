@@ -1,0 +1,21 @@
+{
+  "name": "Fire Suppression System (Very Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Grand Cruisers",
+    "powerUsage": 3,
+    "spaceUsage": 3,
+    "spCost": 2,
+    "effect": "Once per turn if Bridge is undamaged, any character can take an Extended Action to make a -10 Tech-Use Test to extinguish one component that is on fire. If successful, fire is extinguished.",
+    "availability": "Rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Once per turn if Bridge is undamaged, any character can take an Extended Action to make a -10 Tech-Use Test to extinguish one component that is on fire. If successful, fire is extinguished.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mLdzBxxynyNcuDCR"
+}

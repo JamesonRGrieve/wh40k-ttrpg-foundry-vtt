@@ -1,0 +1,21 @@
+{
+  "name": "Corrupting the Flesh",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Full Action",
+    "range": "15m (or 5m in fog/mist, etc).",
+    "test": "Opposed Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator makes Oposed Willpower Test vs single target in range, if winning inflicts 1d5 Corruption Points on Target (Warded Armour Protects), if failing Navigator gains 1 Insanity Point. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist. \nNote: This power is seen as vile, generally only seen used by those of Shrouded or Renegade Houses.",
+    "adept": "Target Suffers 1d10 Corruption Points instead of 1d5. But if failing Navigator suffers 1d5 Insanity Points.",
+    "master": "Instead of causing corruption points, target immediately makes Malignancy Test. But if failing Opposed Test Navigator suffers 1d10 Insanity Points",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator makes Oposed Willpower Test vs single target in range, if winning inflicts 1d5 Corruption Points on Target (Warded Armour Protects), if failing Navigator gains 1 Insanity Point. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist. \nNote: This power is seen as vile, generally only seen used by those of Shrouded or Renegade Houses.</p><p><b>Adept:</b> Target Suffers 1d10 Corruption Points instead of 1d5. But if failing Navigator suffers 1d5 Insanity Points.</p><p><b>Master:</b> Instead of causing corruption points, target immediately makes Malignancy Test. But if failing Opposed Test Navigator suffers 1d10 Insanity Points</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EvyZR7WTgikVBLER"
+}

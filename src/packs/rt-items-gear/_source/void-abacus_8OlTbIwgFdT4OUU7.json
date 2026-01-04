@@ -1,0 +1,20 @@
+{
+  "name": "Void Abacus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "65kg",
+    "availability": "When integrated into a ship's Auspex and Propulsion, allows a ship to safely plot warp jumps of up to 5-10 days with +10 Navigation(Warp) Test without a Navigator. Disliked by the Navigator's Guild.",
+    "cost": "A Rare Archeotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8OlTbIwgFdT4OUU7"
+}

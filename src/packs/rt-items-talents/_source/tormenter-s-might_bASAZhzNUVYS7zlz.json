@@ -1,0 +1,17 @@
+{
+  "name": "Tormenter's Might",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Dark Eldar, Power Through Pain",
+    "effect": "If the character has gained at least 3 Pain Tokens during an encounter, they may spend a Fate Point to gain Unnatural Strength (x2) for the remainder of the Encounter.\nUnnatural Strength: Double Strength Bonus, gain 2 free Degrees of Success on all successful strength tests. ",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>If the character has gained at least 3 Pain Tokens during an encounter, they may spend a Fate Point to gain Unnatural Strength (x2) for the remainder of the Encounter.\nUnnatural Strength: Double Strength Bonus, gain 2 free Degrees of Success on all successful strength tests. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bASAZhzNUVYS7zlz"
+}

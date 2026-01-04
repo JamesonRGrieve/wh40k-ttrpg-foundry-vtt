@@ -1,0 +1,22 @@
+{
+  "name": "Agonising Grasp",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "4m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker Grasps a targets vital organs with a psychic grip, make Opposed Willpower Test vs Target, if psyker wins target is stunned for one round, +1 round per Degree of Success. If 4+ Degrees of Success target also takes 1d5 Rending Damage that ignores armour and toughness. Has no effect on non-living creatures or targets with the Machine Trait.",
+    "effect": "300xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q0XEYGF4LyAuj3Tm"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Heavy Leathers",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body",
+    "ap": 1,
+    "maxAg": "-",
+    "weight": "5kg",
+    "availability": "Common",
+    "cost": "-",
+    "notes": null,
+    "source": "Only War Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PUiP07bkdLb6o3x5"
+}

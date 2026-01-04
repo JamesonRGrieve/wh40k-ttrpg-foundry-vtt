@@ -1,0 +1,20 @@
+{
+  "name": "Stryxis Phase-Reality Shifter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "6kg",
+    "availability": "Creates a barrier that hides all items and life signs behind it from detection from anything but psykers. Causes -30 to Scrutiny and Augury Sweep Tests. Can come in Personal and Ship sized, the ship sized being even rarer.",
+    "cost": "One step easier to obtain if offered by a stryxis merchant.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Koronus Bestiary",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IGDlFKXcIwN2KmiV"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Skeleton Key",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.1kg",
+    "availability": "In Primitive Societies, many locks will be made to fit one master key, this is one of such keys and will open all locks made to fit it.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "24 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 24 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MrGRmrVmIkruF4FN"
+}

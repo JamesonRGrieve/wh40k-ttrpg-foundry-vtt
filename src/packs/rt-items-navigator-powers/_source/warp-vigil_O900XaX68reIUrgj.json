@@ -1,0 +1,21 @@
+{
+  "name": "Warp Vigil",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Full Action",
+    "range": "Self",
+    "test": "Perception Test",
+    "sustain": "No",
+    "novice": "For the remainder of the Encounter, the Navigator can make one additional Dodge Reaction per Round, however when using this dodge, they lose one Half Action on their next turn.",
+    "adept": "Navigator can also make a Half Move as a Free Action when making their Dodge Reaction.",
+    "master": "Navigator can allow any ally within Perception Bonus to make use of the Extra Dodge Reaction and Half Move instead of themselves, although the Navigator is still the one to lose the Half Action on the next turn.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> For the remainder of the Encounter, the Navigator can make one additional Dodge Reaction per Round, however when using this dodge, they lose one Half Action on their next turn.</p><p><b>Adept:</b> Navigator can also make a Half Move as a Free Action when making their Dodge Reaction.</p><p><b>Master:</b> Navigator can allow any ally within Perception Bonus to make use of the Extra Dodge Reaction and Half Move instead of themselves, although the Navigator is still the one to lose the Half Action on the next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O900XaX68reIUrgj"
+}

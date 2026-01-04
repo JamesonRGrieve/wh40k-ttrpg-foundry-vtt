@@ -1,0 +1,28 @@
+{
+  "name": "Bulkhead Shears",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "4d10+5",
+    "damageType": "Rending",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM, Wep, Tearing, Unwieldy",
+    "weight": "10kg",
+    "availability": "Initiated",
+    "cost": "17 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.",
+    "description": {
+      "value": "<p><b>Special:</b> SM, Wep, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Elv21yQSpxhqKLjw"
+}

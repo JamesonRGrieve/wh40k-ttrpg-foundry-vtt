@@ -1,0 +1,17 @@
+{
+  "name": "Eyes Up",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": ",Combat Sense Talent\nApt: Fieldcraft, Perception",
+    "descriptionText": "At the start of a Combat Encounter, As long as the Character is not surprised the make +0 Perception Test. If successful, all Player Characters with a Comrade in Cohesion gain +2 to Initiative and do not count as being Surprised during their First Round of Combat.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>At the start of a Combat Encounter, As long as the Character is not surprised the make +0 Perception Test. If successful, all Player Characters with a Comrade in Cohesion gain +2 to Initiative and do not count as being Surprised during their First Round of Combat.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D8DkyyV1Dxq8azKs"
+}

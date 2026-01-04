@@ -1,0 +1,25 @@
+{
+  "name": "Thunderstrike Macrocannon",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "All Ships",
+    "powerUsage": 2,
+    "spaceUsage": 2,
+    "spCost": 1,
+    "damage": "1d10+1",
+    "strength": 3,
+    "critRating": 6,
+    "range": 4,
+    "availability": "Scarce",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+1</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5TjlpyW0HsxJHRLB"
+}

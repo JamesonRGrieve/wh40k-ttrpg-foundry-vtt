@@ -1,0 +1,28 @@
+{
+  "name": "Seismic Escalation Detonator (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Astartes",
+    "range": "100m",
+    "rof": "S/-/-",
+    "damage": "3d10+14",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "3 Full",
+    "special": "Blast (10)",
+    "weight": "40kg",
+    "availability": "Initiated",
+    "cost": "40 R",
+    "source": "Deathwatch: Errata",
+    "note": "Planted in Solid Ground or Walls via a large spike. Power Generator is good for 1 Hour. Once activated, damage repeats every round, and increases by 1d10 every 10 rounds. Attempting to approach it whilst its operating requires -30 Agility Test or be knocked down and be dealt half current damage it is producing.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Planted in Solid Ground or Walls via a large spike. Power Generator is good for 1 Hour. Once activated, damage repeats every round, and increases by 1d10 every 10 rounds. Attempting to approach it whilst its operating requires -30 Agility Test or be knocked down and be dealt half current damage it is producing.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2ZAIqEgi2E090jtR"
+}

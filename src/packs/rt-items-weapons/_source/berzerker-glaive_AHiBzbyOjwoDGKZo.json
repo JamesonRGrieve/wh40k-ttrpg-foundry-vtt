@@ -1,0 +1,28 @@
+{
+  "name": "Berzerker Glaive",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Rending",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Devastating (2), Unbalanced",
+    "weight": "8kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Weapon: Glaive. Daemon WP 40 (Khorne Daemon), Bind Str 1. Att.: Bloodlust, Impervious, Thirsting. Must Make -10 WP Test to resist entering Frenzy (or -30 if having Frenzy Talent). Inflicts 1 Fatigue on wounding hit. Gain Prot 40 Force Field with no Overload, causes Psychic Phenomena if protection roll is a double. Two-Handed. Need Mark of Khorne to Wield. ",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Devastating (2), Unbalanced</p><p><b>Note:</b> Weapon: Glaive. Daemon WP 40 (Khorne Daemon), Bind Str 1. Att.: Bloodlust, Impervious, Thirsting. Must Make -10 WP Test to resist entering Frenzy (or -30 if having Frenzy Talent). Inflicts 1 Fatigue on wounding hit. Gain Prot 40 Force Field with no Overload, causes Psychic Phenomena if protection roll is a double. Two-Handed. Need Mark of Khorne to Wield. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AHiBzbyOjwoDGKZo"
+}

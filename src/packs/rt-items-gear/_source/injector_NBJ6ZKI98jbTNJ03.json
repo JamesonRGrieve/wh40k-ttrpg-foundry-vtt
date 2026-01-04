@@ -1,0 +1,20 @@
+{
+  "name": "Injector",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Administers drug/poison/etc held within them as a Full Action",
+    "cost": null,
+    "effects": "Plentiful / Initiated",
+    "notes": "5 T\n3 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful / Initiated</p><p><b>Notes:</b> 5 T\n3 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NBJ6ZKI98jbTNJ03"
+}

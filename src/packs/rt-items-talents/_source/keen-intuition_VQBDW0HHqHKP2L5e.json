@@ -1,0 +1,17 @@
+{
+  "name": "Keen Intuition",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Intelligence 35\nAptitudes: Perception, Social",
+    "effect": "When character fails an Awareness Test, character can reroll it with a -10 Modifier.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>When character fails an Awareness Test, character can reroll it with a -10 Modifier.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VQBDW0HHqHKP2L5e"
+}

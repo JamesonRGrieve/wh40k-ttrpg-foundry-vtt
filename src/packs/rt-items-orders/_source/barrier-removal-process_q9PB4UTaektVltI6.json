@@ -1,0 +1,17 @@
+{
+  "name": "Barrier Removal Process",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ".Servitor Comrade: Lathe-Pattern Breacher Servitor\nApt: None",
+    "descriptionText": "Lathe-Pattern Breacher Servitor Primary Function. Servitor Comrade begins drilling through an obstruction, and will continue to do so until told otherwise or until successfully drilling a hole through the obstruction. Drilling 5cm or Rock per Round, or 3m per 5 minutes. Double or more Distance for soft matierals (EG:Wood/loose stone), Halve or more for harder like fortified stone/metal. Hole is 2m high, 1m wide, can collapse if weak material.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Lathe-Pattern Breacher Servitor Primary Function. Servitor Comrade begins drilling through an obstruction, and will continue to do so until told otherwise or until successfully drilling a hole through the obstruction. Drilling 5cm or Rock per Round, or 3m per 5 minutes. Double or more Distance for soft matierals (EG:Wood/loose stone), Halve or more for harder like fortified stone/metal. Hole is 2m high, 1m wide, can collapse if weak material.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q9PB4UTaektVltI6"
+}

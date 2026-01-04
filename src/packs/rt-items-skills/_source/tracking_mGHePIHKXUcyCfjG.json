@@ -1,0 +1,18 @@
+{
+  "name": "Tracking",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Advanced, Exploration",
+    "characteristic": "Intelligence",
+    "descriptor": "Following signs left by a target, determining time passed since tracks were made, numbers in a group of targets, and their race. Test only needed if environment or target concealment attempts affect the user's ability to track.",
+    "uses": "Skill Test: Test to track path target took, and gain information on them. Made as part of movement, if test is harder than +0, halves movement rat.e\nOpposed Skill Test vs Concealment: Track target despite their attempts to conceal their movement.",
+    "useTime": "Free Action made with movement.",
+    "description": {
+      "value": "<p>Following signs left by a target, determining time passed since tracks were made, numbers in a group of targets, and their race. Test only needed if environment or target concealment attempts affect the user's ability to track.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mGHePIHKXUcyCfjG"
+}

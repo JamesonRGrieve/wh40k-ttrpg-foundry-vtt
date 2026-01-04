@@ -1,0 +1,17 @@
+{
+  "name": "Precision Firepower Delivery",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Attack Order\nFull Action",
+    "requirements": ".Servitor Comrade: Jovian-Pattern Gun Servitor\nApt: Ballistic Skill, Finesse",
+    "descriptionText": "Order can only be made to Servitor Comrades with Weapons capable of Single-Shot fire. Servitor Comrade in Comms Rnage makes Standard Ranged Attack against target within range of its integrated Heavy Weapon.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Order can only be made to Servitor Comrades with Weapons capable of Single-Shot fire. Servitor Comrade in Comms Rnage makes Standard Ranged Attack against target within range of its integrated Heavy Weapon.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XIedeXjFxXANbEKI"
+}

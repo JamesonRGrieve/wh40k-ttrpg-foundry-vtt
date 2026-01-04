@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Lascannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "6d10+10",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "SM Wep",
+    "weight": "75kg",
+    "availability": "Respected",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iItbENy9iPHFn6a2"
+}

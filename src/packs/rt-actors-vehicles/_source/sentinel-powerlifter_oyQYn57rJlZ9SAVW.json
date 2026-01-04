@@ -1,0 +1,25 @@
+{
+  "name": "Sentinel Powerlifter",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Walker",
+    "size": "10m",
+    "tacticalSpeed": "45kph",
+    "cruisingSpeed": "+10",
+    "maneuverability": "20",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "Front 25\nSide 15\nRear 15",
+    "rearArmour": "1 Driver",
+    "structuralIntegrity": "None",
+    "crew": "Melee: Servo-Lifter (2d10+16 I; Pen 4; Unwieldy)",
+    "passengers": "Traits: Enhanced Motive Systems, Open-Topped, Walker\nServo-Lifter not intended for combat, all attacks suffer -10 to WS Tests. Instead for lifting things. Can be used to Grapple a target (Treat as Strength 70 with Unnatural Strength (+4), if successful target does not take damage, however if they do not escape by start of driver's next turn, target counts as helpless and is automatically hit by Servo-Lifter Weapon for double damage. ",
+    "cargo": "Scarce",
+    "availability": "OW: No Surrender",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "oyQYn57rJlZ9SAVW"
+}

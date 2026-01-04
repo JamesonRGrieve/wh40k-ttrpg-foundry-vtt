@@ -1,0 +1,28 @@
+{
+  "name": "Naval Shotcannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 24,
+    "reload": "2 Full",
+    "special": "Scatter, Unreliable",
+    "weight": "7kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Scatter, Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7HFqFPMkIksJC4YW"
+}

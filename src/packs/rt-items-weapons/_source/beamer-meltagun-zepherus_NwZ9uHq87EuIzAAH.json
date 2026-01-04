@@ -1,0 +1,28 @@
+{
+  "name": "Beamer Meltagun (Zepherus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Melta",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "9kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NwZ9uHq87EuIzAAH"
+}

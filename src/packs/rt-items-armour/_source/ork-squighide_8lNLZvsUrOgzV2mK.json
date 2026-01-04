@@ -1,0 +1,22 @@
+{
+  "name": "Ork Squighide",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Ork",
+    "locations": "Body, Arms, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "notes": "For Orks, Plentiful. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>For Orks, Plentiful. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8lNLZvsUrOgzV2mK"
+}

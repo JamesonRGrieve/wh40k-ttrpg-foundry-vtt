@@ -1,0 +1,22 @@
+{
+  "name": "Xeno Hide Vest",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Body",
+    "ap": 6,
+    "maxAg": 50,
+    "weight": "20kg",
+    "availability": "Very Rare",
+    "cost": "5000 T",
+    "notes": "Heavy hides of animals found within the Imperium, repurposed as armour.",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>Heavy hides of animals found within the Imperium, repurposed as armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bSdYwRGLYglWJnNj"
+}

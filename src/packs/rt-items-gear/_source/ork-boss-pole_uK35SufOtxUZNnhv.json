@@ -1,0 +1,20 @@
+{
+  "name": "Ork Boss Pole",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "8kg",
+    "availability": "For Orks, Rare. When worn gives +10 to Command Tests when interacting with Orks. Designed to be strapped to the back of an Ork, with the pole's symbol above them.",
+    "cost": "Covered in skulls, sharp bits, and Orkish Glyphs. Worn by Nobz and Warbosses. A human attempting to use it (such as as a banner pole) might not have the same effect.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uK35SufOtxUZNnhv"
+}

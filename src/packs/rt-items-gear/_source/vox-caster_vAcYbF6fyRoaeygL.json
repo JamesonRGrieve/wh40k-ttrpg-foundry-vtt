@@ -1,0 +1,20 @@
+{
+  "name": "Vox Caster",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Space Long-Range Communicator. Can send and receive signals, incliudng to/from a planet and orbit. +10 Tech-use to use if there's interference.",
+    "cost": null,
+    "effects": "Scarce / Initiated",
+    "notes": "300 T\n10 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 300 T\n10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vAcYbF6fyRoaeygL"
+}

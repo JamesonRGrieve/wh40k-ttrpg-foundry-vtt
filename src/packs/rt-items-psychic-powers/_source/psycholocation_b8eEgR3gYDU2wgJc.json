@@ -1,0 +1,22 @@
+{
+  "name": "Psycholocation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1km x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "On Successful Test, the psyker can locate and track a single object or person in their immediate vicinity as long as they have a degree of familiarity with the object/person. For example, looking at a lock and using the power to find a key, or finding a person they know the face of would work, but simply finding a key or unknwon person with no other reference would not. The degree of precision as to the location increases with more Degrees of Success: 0 DoF: Rough Direction, 2 DoF: Specific Direction, and roughly how far away. 4 DoF: Specific direction and exactly how far away. Finally, consider further modifiers to focus power Test: +10 if intimately familiar with target, +5 if posessing a portion of target (lock of hair, fragment, etc), +5 if target within 50 metres, -10 if in a crowd of similar targets, -20 if target over 2km away.",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b8eEgR3gYDU2wgJc"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Heavy Frag Shell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Heavy Mortar",
+    "damageOrEffect": "3d10 X, Pen 5, Concussive (3), Blast(8).",
+    "qualities": "Concussive (3), Blast(8).",
+    "weight": "3kg",
+    "availability": "Common",
+    "cost": null,
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 3d10 X, Pen 5, Concussive (3), Blast(8).</p><p><b>Qualities:</b> Concussive (3), Blast(8).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZNpGLPIvU5vZ2dSz"
+}

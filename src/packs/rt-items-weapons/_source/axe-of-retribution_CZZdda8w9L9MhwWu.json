@@ -1,0 +1,28 @@
+{
+  "name": "Axe of Retribution",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Shock",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking, Tearing, Unbalanced",
+    "weight": "10kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Requires Two Hands to wield",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking, Tearing, Unbalanced</p><p><b>Note:</b> Requires Two Hands to wield</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CZZdda8w9L9MhwWu"
+}

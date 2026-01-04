@@ -1,0 +1,17 @@
+{
+  "name": "Disciple of Shiamesh",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Dark Eldar,Chem Use + 20, Scholastic Lore (Chymistry) +20",
+    "effect": "The character can spend a Fate Point to automatically pass a Chem-Use Test, succeeding by a number of Degrees of Success equal to their Intelligence Bonus.\nAdditionally when wielding a weapon with the Toxic Quality, the character adds their Intelligence Bonus to the Weapon's Damage, and adds Felling (1) to the weapon if it does not already have it, or increase its Felling Quality by 1 if it does have it.\nFelling X: Reduce Unnatural Toughness Trait of target by X for purpose of calculating damage.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>The character can spend a Fate Point to automatically pass a Chem-Use Test, succeeding by a number of Degrees of Success equal to their Intelligence Bonus.\nAdditionally when wielding a weapon with the Toxic Quality, the character adds their Intelligence Bonus to the Weapon's Damage, and adds Felling (1) to the weapon if it does not already have it, or increase its Felling Quality by 1 if it does have it.\nFelling X: Reduce Unnatural Toughness Trait of target by X for purpose of calculating damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dbTQJB7X0i03BvYb"
+}

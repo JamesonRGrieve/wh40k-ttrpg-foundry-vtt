@@ -1,0 +1,17 @@
+{
+  "name": "Berserk Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Strength, Offence, Khorne",
+    "effect": "Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "64PD43Q2KaW52vkK"
+}

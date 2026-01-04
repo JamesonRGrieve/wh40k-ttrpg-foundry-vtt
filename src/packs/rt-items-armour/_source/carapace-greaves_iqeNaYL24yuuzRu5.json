@@ -1,0 +1,22 @@
+{
+  "name": "Carapace Greaves",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "Legs",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "3kg",
+    "availability": "Rare",
+    "cost": "375 T",
+    "notes": null,
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iqeNaYL24yuuzRu5"
+}

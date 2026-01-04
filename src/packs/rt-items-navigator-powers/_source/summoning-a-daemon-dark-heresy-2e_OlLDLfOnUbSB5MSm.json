@@ -1,0 +1,21 @@
+{
+  "name": "Summoning a Daemon (Dark Heresy 2E)",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Firstly, Discover and Prepare the Ritual: This requires discovering the ritual or modify an existing one, likely via a Forbidden Lore (Daemonology) test, and some adventuring. Each Daemon will have specific ritual requirements. The Black Crusade Rituals are good guides for these, it will likely involve blood, sacrifices, ash, candles, profane relics, etc, etc. GM Discretion.\n\nSecondly, Perform the Ritual: This requires a -60 Forbidden Lore (Daemonology) Test at baseline, Malefic Psychic Powers can provide bonuses to the test, as can proper materials, assistants, and time. Penalties may include the power of the Daemon or other factors such as the closeness of the warp. If the Summoner knows the Daemon's true name they get +30 to the test.\n\nThirdly, Complete the Ritual: The ritual will take anywhere from an hour to several days, depending on its nature and the power of what it summons. If it is successful the Daemon is summoned, likely through a rift in reality, bursting forth from a sacrifice, or so on. Anyone partaking or even witnessing it should gain Corruption Points.\n\nFourthy, Control the Daemon: A -30 Daemonic Mastery Test (Opposed Willpower vs Daemon), with +10 if summoner is aligned to the same god as the Daemon, and +30 if knowing its True Name. Other factors such as the ritual circumstances or the Daemon's Baneful Presence Trait may affect this test. If the summoner wins they gain control of the Daemon for 1 hour, +1 per Degree of Success, at the end of this they can repeat the test. If the Daemon is made to act against its nature (A Khorne Daemon being sneaky, a Slaanesh Daemon not being Excessive, etc) it forces another test with an additional -30 penalty.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OlLDLfOnUbSB5MSm"
+}

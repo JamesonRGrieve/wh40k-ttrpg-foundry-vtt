@@ -1,0 +1,20 @@
+{
+  "name": "Shipboard Meals: Mid",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The Meals provided whilst aboard a Void Craft. Vatmeal Cakes, Grox Hash, Josian Ale. Suitable food for those with basic standards.",
+    "cost": "Cost is per day",
+    "effects": "Common",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BhPnPCu77DzbOzfr"
+}

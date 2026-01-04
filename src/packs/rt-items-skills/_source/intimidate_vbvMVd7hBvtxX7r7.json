@@ -1,0 +1,18 @@
+{
+  "name": "Intimidate",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Investigation, Interaction\nApt: Strength, Social, Nurgle",
+    "characteristic": "Strength",
+    "descriptor": "The Application of pressure to make an individual give into to demands. Only required to make test when it involves coercion. Can use Strength, Intelligence, or Fellowship depending on the type of Intimidaiton (although normally Strength).",
+    "uses": "Use: If against an Opponent, is an Opposed Test vs target's Willpower. Used to get someone to move out of the way, extrat info from a hostile or resisting enemy, making someone back down from a fight.\nCan affect up to 10x Fellowship Bonus People",
+    "useTime": "Full Action",
+    "description": {
+      "value": "<p>The Application of pressure to make an individual give into to demands. Only required to make test when it involves coercion. Can use Strength, Intelligence, or Fellowship depending on the type of Intimidaiton (although normally Strength).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vbvMVd7hBvtxX7r7"
+}

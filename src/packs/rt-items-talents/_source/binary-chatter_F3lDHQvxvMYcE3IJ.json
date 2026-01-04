@@ -1,0 +1,17 @@
+{
+  "name": "Binary Chatter",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "+10 to Communicate with Servitors, +1 Crew Morale aboard Ship character serves.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+10 to Communicate with Servitors, +1 Crew Morale aboard Ship character serves.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F3lDHQvxvMYcE3IJ"
+}

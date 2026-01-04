@@ -1,0 +1,21 @@
+{
+  "name": "Gellar Field",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Gellar Field",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 0,
+    "spCost": "-",
+    "effect": "Protects the vessel while in the immaterium. Considered the Default Option.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Protects the vessel while in the immaterium. Considered the Default Option.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bIl76PyLjthyo08W"
+}

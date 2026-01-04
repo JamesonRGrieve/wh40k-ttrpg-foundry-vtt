@@ -1,0 +1,17 @@
+{
+  "name": "Da Big Shout",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork Weirdboy, The Power of Da Waaagh, Psy Rating 2, Willpower 35",
+    "effect": "Weirdboy gains Astrotelepathy Psychic Technique, but can only send messages up to one word per point of Willpower Bonus. Character (and optionally, player) must shout this message as loud as possible whilst making Focus Power Test.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Weirdboy gains Astrotelepathy Psychic Technique, but can only send messages up to one word per point of Willpower Bonus. Character (and optionally, player) must shout this message as loud as possible whilst making Focus Power Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c7R2TrrJBPIEfV7q"
+}

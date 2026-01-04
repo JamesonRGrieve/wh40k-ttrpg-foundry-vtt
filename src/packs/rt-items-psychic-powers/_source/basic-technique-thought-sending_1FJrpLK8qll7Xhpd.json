@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: Thought Sending",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "None",
+    "focusPower": "Free Action",
+    "action": "10m x Psy Rating",
+    "range": "None",
+    "opposed": "No",
+    "sustained": "Basic Technique of the Telepathy Discipline, available to any with this Discipline. \nPsyker can select an individual, group, or a generalised broadcast to everyone within range for which they will send their thoughts with. If no language is shared, comprehending the meaning of the communication has a -20 Penalty. Those who do not wish to be communicated with can make Opposed Willpower Test.",
+    "effect": "Free",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1FJrpLK8qll7Xhpd"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Entropic Field Generator",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field Relic Astartes",
+    "locations": "All",
+    "ap": 0.4,
+    "maxAg": "-",
+    "weight": "5kg",
+    "availability": "Hero",
+    "cost": "50 R",
+    "notes": "Master Crafted Relic Force Field of the Iron Lords Chapter. Overload 01. Attacks not stopped by the Force Field reduce their damage by 3. Unarmed attacks against the user cause the attacker to suffer 1d5 damage that ignores Armour and Toughness.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Force Field of the Iron Lords Chapter. Overload 01. Attacks not stopped by the Force Field reduce their damage by 3. Unarmed attacks against the user cause the attacker to suffer 1d5 damage that ignores Armour and Toughness.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l6SMCs462gV5L1qX"
+}

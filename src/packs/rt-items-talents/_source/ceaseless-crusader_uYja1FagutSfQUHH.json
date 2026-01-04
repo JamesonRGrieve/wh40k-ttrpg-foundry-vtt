@@ -1,0 +1,17 @@
+{
+  "name": "Ceaseless Crusader",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T1)",
+    "requirements": "Tier 1: Sister of Battle E.Adv, Willpower 45\nAptitudes:  Leadership, Willpower",
+    "effect": "As a Free Action, the Sister can spend a Fate Point to ignore the effects of Fatigue until the end of the encounter. On doing so every other firendly character within 30m removes 1 Fatigue.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>As a Free Action, the Sister can spend a Fate Point to ignore the effects of Fatigue until the end of the encounter. On doing so every other firendly character within 30m removes 1 Fatigue.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uYja1FagutSfQUHH"
+}

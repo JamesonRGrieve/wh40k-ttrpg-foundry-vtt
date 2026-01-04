@@ -1,0 +1,14 @@
+{
+  "name": "Bred for War",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Must be a Living Mount, Creature will not flee as a result of their Bestial Trait, and instead auto-passess tests associated with it.",
+    "description": {
+      "value": "<p>Must be a Living Mount, Creature will not flee as a result of their Bestial Trait, and instead auto-passess tests associated with it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Z00gP6pH4U4N59aW"
+}

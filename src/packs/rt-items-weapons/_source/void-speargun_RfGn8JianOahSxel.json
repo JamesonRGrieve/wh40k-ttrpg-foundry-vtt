@@ -1,0 +1,28 @@
+{
+  "name": "Void Speargun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "Full",
+    "special": null,
+    "weight": "1.5kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Has its own specialised ammo, cannot use unusual ammo. Designed for ripping void suits.",
+    "description": {
+      "value": "<p><b>Note:</b> Has its own specialised ammo, cannot use unusual ammo. Designed for ripping void suits.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RfGn8JianOahSxel"
+}

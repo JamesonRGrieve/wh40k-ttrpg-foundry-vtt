@@ -1,0 +1,28 @@
+{
+  "name": "Gauntlet of Sabatine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Sanctified, Unwieldy",
+    "weight": "25kg",
+    "availability": "Hero",
+    "cost": "65 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Fist of the White Consuls Chapter. Does +2 damage against Mutants. \nIncreases Unnatural Strength from x2 to x3 for damage purposes as with all Power Fists.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Sanctified, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Fist of the White Consuls Chapter. Does +2 damage against Mutants. \nIncreases Unnatural Strength from x2 to x3 for damage purposes as with all Power Fists.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "heQ2w2AcRnQH4WNz"
+}

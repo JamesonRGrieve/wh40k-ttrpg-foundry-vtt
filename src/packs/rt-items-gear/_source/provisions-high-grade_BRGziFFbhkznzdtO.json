@@ -1,0 +1,20 @@
+{
+  "name": "Provisions: High Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Single Meal of Roasted Vex Worms, Liquid of Americ, or some other food of exquisite taste and quality.",
+    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Scarce",
+    "notes": "40 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 40 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BRGziFFbhkznzdtO"
+}

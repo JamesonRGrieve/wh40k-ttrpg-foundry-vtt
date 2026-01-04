@@ -1,0 +1,22 @@
+{
+  "name": "Burning Fist",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 10",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained character's hands are wreathed in psychic flames. The Character's unarmed attacks gain the profile (Melee; 1d10+SB E, Flame)",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6QueK06GEtwz0y7I"
+}

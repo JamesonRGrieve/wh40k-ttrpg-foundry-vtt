@@ -1,0 +1,20 @@
+{
+  "name": "Porter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Someone to carry things for you.",
+    "cost": "Paid Weekly",
+    "effects": "Plentiful",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 10 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ng5GIeyVksBXJbUz"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Incendiary Rounds \"Heretic's Match\"",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP/Primitive: Bows, Crossbows, Shotguns",
+    "damageOrEffect": "Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.",
+    "qualities": "Blast (lose), Flame, Unreliable",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.</p><p><b>Qualities:</b> Blast (lose), Flame, Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NNDuzFCgWKqkSJ13"
+}

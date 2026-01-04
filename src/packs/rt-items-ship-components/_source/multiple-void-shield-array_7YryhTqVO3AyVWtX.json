@@ -1,0 +1,21 @@
+{
+  "name": "Multiple Void Shield Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Void Shield",
+    "hullType": "Cruisers",
+    "powerUsage": 7,
+    "spaceUsage": 2,
+    "spCost": "-",
+    "effect": "Provides 2 Void Shields, absorbing two attacks from any ship firing on this one.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Provides 2 Void Shields, absorbing two attacks from any ship firing on this one.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7YryhTqVO3AyVWtX"
+}

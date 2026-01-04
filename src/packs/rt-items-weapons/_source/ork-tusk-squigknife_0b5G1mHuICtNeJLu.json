@@ -1,0 +1,28 @@
+{
+  "name": "Ork Tusk Squigknife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Tearing",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: The Navis Primer",
+    "note": "Counts as a Psy Focus (likely for orks), whenever a character bearing this makes Opposed Willpower Test against a Psyker, they get +5. Affected by Kraftsmanship.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Tearing</p><p><b>Note:</b> Counts as a Psy Focus (likely for orks), whenever a character bearing this makes Opposed Willpower Test against a Psyker, they get +5. Affected by Kraftsmanship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0b5G1mHuICtNeJLu"
+}

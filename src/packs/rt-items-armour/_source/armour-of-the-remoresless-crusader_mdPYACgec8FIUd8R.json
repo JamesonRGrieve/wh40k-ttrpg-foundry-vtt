@@ -1,0 +1,22 @@
+{
+  "name": "Armour of the Remoresless Crusader",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power Relic (Astartes)",
+    "locations": "All",
+    "ap": 12,
+    "maxAg": null,
+    "weight": "110kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "notes": "Black Templars Relic, innately Master-Crafted. Possesses Hexagrammic Wards provide +20 to Tests to Resist Psychic Effects, double AP vs Psychic or Warp Attacks that deal damage. Retain full AP vs Warp Weapon effects. Has an inbuilt Master-Crafted Sword (see Armour of the Remoresless Crusader Weapon Profile).",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Black Templars Relic, innately Master-Crafted. Possesses Hexagrammic Wards provide +20 to Tests to Resist Psychic Effects, double AP vs Psychic or Warp Attacks that deal damage. Retain full AP vs Warp Weapon effects. Has an inbuilt Master-Crafted Sword (see Armour of the Remoresless Crusader Weapon Profile).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mdPYACgec8FIUd8R"
+}

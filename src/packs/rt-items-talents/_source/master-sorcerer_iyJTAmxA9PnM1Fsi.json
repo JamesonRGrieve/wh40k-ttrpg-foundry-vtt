@@ -1,0 +1,17 @@
+{
+  "name": "Master Sorcerer",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent  (Elite)",
+    "requirements": "Sorcerer, Intelligence 45, Forbidden Lore (Warp/Daemonology)+10, Scholastic Lore (Occult) +10, 1000xp",
+    "effect": "Sorcerous Powers now have a \"Psy Rating\" of the character's Full Unmodified Intelligence Bonus, as opposed to Half. Still unaffected by Unnatural Intelligence.",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>Sorcerous Powers now have a \"Psy Rating\" of the character's Full Unmodified Intelligence Bonus, as opposed to Half. Still unaffected by Unnatural Intelligence.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iyJTAmxA9PnM1Fsi"
+}

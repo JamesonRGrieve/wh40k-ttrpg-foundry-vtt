@@ -1,0 +1,22 @@
+{
+  "name": "Ghosthelm",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Eldar",
+    "locations": "Head",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "1kg",
+    "availability": "Unique",
+    "cost": "-",
+    "notes": "Often worn by Farseers. Wearers can make -30 Willpower Test to remain unaffected by results of Psychic Phenomena or Perils of the Warp. Doesn't prevent others being affected.",
+    "source": "RT: Navis Primer",
+    "description": {
+      "value": "<p>Often worn by Farseers. Wearers can make -30 Willpower Test to remain unaffected by results of Psychic Phenomena or Perils of the Warp. Doesn't prevent others being affected.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4mQefFO8a7hKK7o3"
+}

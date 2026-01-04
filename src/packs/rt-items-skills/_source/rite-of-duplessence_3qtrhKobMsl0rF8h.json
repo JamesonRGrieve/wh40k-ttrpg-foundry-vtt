@@ -1,0 +1,18 @@
+{
+  "name": "Rite of Duplessence",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Mechanicus Implants, Good standing, another willing Tech-Priest.",
+    "characteristic": "1000xp",
+    "descriptor": "The Tech-Priest joins their brain to another, whose brain is removed from their body and placed into the Tech-Priest's own. Gaining vastly improved research capabilities.",
+    "uses": "Gain Good Reputation (Mechanicus) and the Binary Cortex Trait. Generate Brain with 2d10+40 Intelligence and 2d10 + 30 Willpower (has no other stats), includes Simple and Trained Intelligence advances and Simple Willpower Advance. Brain has Intelligence Bonus number of Intelligence-Based Skills the Character has access to at their current rank. Brain gains seperate XP at half rate of Character, and can use that to buy new skills or talents if they are entirely mental in nature (it cannot meet prerequistes of physical-based talents or any characteristic it does not have). Character suffers -5 Perception and -5 Initiative.",
+    "useTime": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The Tech-Priest joins their brain to another, whose brain is removed from their body and placed into the Tech-Priest's own. Gaining vastly improved research capabilities.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3qtrhKobMsl0rF8h"
+}

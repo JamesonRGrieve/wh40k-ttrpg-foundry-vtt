@@ -1,0 +1,22 @@
+{
+  "name": "Clone Field",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Dark Eldar (Force Field)",
+    "locations": "All",
+    "ap": 0,
+    "maxAg": null,
+    "weight": "0.5kg",
+    "availability": "Unique",
+    "cost": "-",
+    "notes": "Near Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creates identical hologram clones of the wearer. Wearer can reroll one failed Dodge Test and can make an extra Free Dodge per Round. Wearer Doubles DoS on successful dodge tests. Field doesn't help vs creatures that do not rely on sight. Field also cannot overload.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>Near Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creates identical hologram clones of the wearer. Wearer can reroll one failed Dodge Test and can make an extra Free Dodge per Round. Wearer Doubles DoS on successful dodge tests. Field doesn't help vs creatures that do not rely on sight. Field also cannot overload.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J5GUA9voutrtG9gC"
+}

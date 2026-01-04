@@ -1,0 +1,28 @@
+{
+  "name": "Lasgun (Triplex)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "100m",
+    "rof": "S/3/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 30,
+    "reload": "Full",
+    "special": null,
+    "weight": "4.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Has Precision Mode: S/-/-, Range 150m, Accurate\nHas Incineration Mode: S/-/-, Range 50m, Proven (5), Felling (4)",
+    "description": {
+      "value": "<p><b>Note:</b> Has Precision Mode: S/-/-, Range 150m, Accurate\nHas Incineration Mode: S/-/-, Range 50m, Proven (5), Felling (4)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j1AbnNkD2Pb4jFYv"
+}

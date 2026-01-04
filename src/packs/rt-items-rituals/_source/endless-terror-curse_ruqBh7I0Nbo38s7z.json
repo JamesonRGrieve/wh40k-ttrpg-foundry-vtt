@@ -1,0 +1,19 @@
+{
+  "name": "Endless Terror [Curse]",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-20 Forbidden Lore (The Warp) or -20 Scholastic Lore (Occult)",
+    "requirements": "Character must know something of their target's fears, be it a figure or entity that terrifies them, someone from their past, something they fear losing, an irrational phobia, etc. They may choose to curse the target's bloodline, requiring the Ritual Test to be made twice (both must pass).",
+    "effect": "Target treats all living things as if they had Fear(1), or increases any existing creature's Fear Trait by 1. Recovering Fatigue takes 4x as long as it normally would. Fearless Targets still suffer the Fatigue, effect although are immune to the fear effect.",
+    "costs": "None",
+    "failure": "Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased  If cursing a bloodline, failing either test causes this result and causes curse to affect everyone closely aligned to the character.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Target treats all living things as if they had Fear(1), or increases any existing creature's Fear Trait by 1. Recovering Fatigue takes 4x as long as it normally would. Fearless Targets still suffer the Fatigue, effect although are immune to the fear effect.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased  If cursing a bloodline, failing either test causes this result and causes curse to affect everyone closely aligned to the character.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ruqBh7I0Nbo38s7z"
+}

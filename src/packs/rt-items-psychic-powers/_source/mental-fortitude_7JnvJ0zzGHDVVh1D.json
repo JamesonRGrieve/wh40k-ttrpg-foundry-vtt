@@ -1,0 +1,22 @@
+{
+  "name": "Mental Fortitude",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Fearless",
+    "focusPower": "Half Action Concentration",
+    "action": "3m x Psy Rating Radius",
+    "range": "-10 Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Psy Rating Allies within range, in addition to the psyker themselves count as having the Fearless Talent for as long as the power is sustained and allies remain within range.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7JnvJ0zzGHDVVh1D"
+}

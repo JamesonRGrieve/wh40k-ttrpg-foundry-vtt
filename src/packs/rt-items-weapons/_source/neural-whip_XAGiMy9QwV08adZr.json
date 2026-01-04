@@ -1,0 +1,28 @@
+{
+  "name": "Neural Whip",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Shock",
+    "range": "3m",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Shocking",
+    "weight": "4kg",
+    "availability": "Rare",
+    "cost": "500 T",
+    "source": "RT: Into the Storm",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Shocking</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XAGiMy9QwV08adZr"
+}

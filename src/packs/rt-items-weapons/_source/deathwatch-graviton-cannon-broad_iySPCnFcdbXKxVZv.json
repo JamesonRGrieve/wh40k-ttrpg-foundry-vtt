@@ -1,0 +1,28 @@
+{
+  "name": "Deathwatch Graviton Cannon [Broad]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Astartes",
+    "range": "45m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 5,
+    "reload": "3 Full",
+    "special": "SM Wep, Blast (5)",
+    "weight": "65kg",
+    "availability": "Distinguished",
+    "cost": "45 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Broad] targets blast area, everyone inside makes -30 Strength Test or is affected by extreme gravitational forces for 1d10 rounds, taking 1d10 damage per round or more if smashed into worse environmental objects. Attempting to move whilst affected requires Opposed Strength vs Strength 50 (Unnatural Strength x2). Shatters fragile objects, weak floors, etc.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Broad] targets blast area, everyone inside makes -30 Strength Test or is affected by extreme gravitational forces for 1d10 rounds, taking 1d10 damage per round or more if smashed into worse environmental objects. Attempting to move whilst affected requires Opposed Strength vs Strength 50 (Unnatural Strength x2). Shatters fragile objects, weak floors, etc.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iySPCnFcdbXKxVZv"
+}

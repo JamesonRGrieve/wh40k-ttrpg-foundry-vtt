@@ -1,0 +1,28 @@
+{
+  "name": "Bolas (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (1), Snare (1), Inaccurate",
+    "weight": "1.5kg",
+    "availability": "Average",
+    "cost": "10 T",
+    "source": "Only War: Core",
+    "note": "A set of balls connected by cords that can wrap around a target when thrown at them",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (1), Snare (1), Inaccurate</p><p><b>Note:</b> A set of balls connected by cords that can wrap around a target when thrown at them</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bAWRPJ3jNqjpOC6s"
+}

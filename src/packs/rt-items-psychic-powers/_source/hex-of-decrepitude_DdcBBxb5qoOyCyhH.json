@@ -1,0 +1,22 @@
+{
+  "name": "Hex of Decrepitude",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 5, Cold Hearted Talent",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range takes 1d10 nonpermenant damage to their Strength, Toughness, and Agility Damage per Degree of Success on Focus Power Test, the target can make a -10 Toughness Test to resist this damage, reducing the number of dice by 1 per Degree of Sucess (min 0). The Target gains +10 to Willpower and Intelligence Tests for 1d5 Rounds, as if actually made wiser by their temporary aging. Can't target the same individual more than once per combat, creatures that do not age naturally are immune to this power.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DdcBBxb5qoOyCyhH"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Drop Pod Launch Bays",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 3,
+    "spCost": 2,
+    "effect": "Stores 20 \"Storm\" Drop Pods, can launch 10 per 30 minutes (1 strategic turn) to a planet. Pods need to be recovered to be reused. +50 Points towards Military Endeavours. Drop Pod holds 10 (req. power armour or drop cocoons to not die from impact). ",
+    "availability": "Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Stores 20 \"Storm\" Drop Pods, can launch 10 per 30 minutes (1 strategic turn) to a planet. Pods need to be recovered to be reused. +50 Points towards Military Endeavours. Drop Pod holds 10 (req. power armour or drop cocoons to not die from impact). </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "V4nhiA7qfM4MLMeB"
+}

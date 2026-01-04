@@ -1,0 +1,20 @@
+{
+  "name": "Venenum Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Quillgun",
+    "damageOrEffect": "1d10+1 Impact Damage, Pen 3, Reliable, Toxic (4)",
+    "qualities": "Reliable, Toxic (4)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 1d10+1 Impact Damage, Pen 3, Reliable, Toxic (4)</p><p><b>Qualities:</b> Reliable, Toxic (4)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NNK87P3VZ6q5UfOp"
+}

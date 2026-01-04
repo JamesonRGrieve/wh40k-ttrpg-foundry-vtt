@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Webber",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "70m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": 3,
+    "reload": "Full",
+    "special": "Snare, Blast (5)",
+    "weight": "14kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Fires a sticky mass of threads that encompass and immobilse the target(s)",
+    "description": {
+      "value": "<p><b>Special:</b> Snare, Blast (5)</p><p><b>Note:</b> Fires a sticky mass of threads that encompass and immobilse the target(s)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DFcjZmqiSd6bZCZS"
+}

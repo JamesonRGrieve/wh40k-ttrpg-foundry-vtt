@@ -1,0 +1,17 @@
+{
+  "name": "Bestial",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Creature is animalistic, regardless of intelligence stat. Does not need to make survival checks whilst in its natural environment. \nUnless Starving, Desperate, or mad, must make a Willpower test when frightened, startled, or injured. On a fail it flees from source of danger.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature is animalistic, regardless of intelligence stat. Does not need to make survival checks whilst in its natural environment. \nUnless Starving, Desperate, or mad, must make a Willpower test when frightened, startled, or injured. On a fail it flees from source of danger.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nQCw7mPrgTHZGboU"
+}

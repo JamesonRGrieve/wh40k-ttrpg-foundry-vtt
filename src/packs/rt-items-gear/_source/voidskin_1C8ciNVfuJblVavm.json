@@ -1,0 +1,20 @@
+{
+  "name": "Voidskin",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Can resist damage due to void exposure for 1d10+3 rounds past normal duration.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1C8ciNVfuJblVavm"
+}

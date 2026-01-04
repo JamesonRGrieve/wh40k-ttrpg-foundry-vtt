@@ -1,0 +1,22 @@
+{
+  "name": "Call of Faith",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Enduring Faith\nOW: Psy Rating 6",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker chooses one ally, +1 per three Degrees of Success on Focus Power Test (excluding themselves) within range who are currently benefitting from the effects of one of the psyker's sustained techniques. If Focus Power Test is Successful, target allies may ignore the effects of Critical Damage (not including death or loss of limbs/eyes) as long as psyker sustains this power.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fBgQFFDXuAZqNX2F"
+}

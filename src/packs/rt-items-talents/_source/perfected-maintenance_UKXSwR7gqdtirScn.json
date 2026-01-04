@@ -1,0 +1,17 @@
+{
+  "name": "Perfected Maintenance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Common Lore (Mechanicus) +20, Initiated Maintence. \nAptitudes: Ballistic Skill, Tech",
+    "effect": "Once per game session, character can make a +0 Tech-Use Test as a Full Action to improve one functioning piece of personal equipment. If successful, the chosen item becomes one Craftsmanship Higher, +1 per three Degrees of Success, until the end of the game session. (max Best Craftsmanship)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Once per game session, character can make a +0 Tech-Use Test as a Full Action to improve one functioning piece of personal equipment. If successful, the chosen item becomes one Craftsmanship Higher, +1 per three Degrees of Success, until the end of the game session. (max Best Craftsmanship)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UKXSwR7gqdtirScn"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Repeating Rifle \"Snapper\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "50m",
+    "rof": "S/2/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 8,
+    "reload": "2 Full",
+    "special": "Inaccurate, Overheats, Primitive (8), Unreliable",
+    "weight": "45kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Overheats, Primitive (8), Unreliable</p><p><b>Note:</b> An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yGSkeIbLTeZcpqlU"
+}

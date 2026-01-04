@@ -1,0 +1,17 @@
+{
+  "name": "Strength in the Creed",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; is a Ministorum Priest or 10+ Insanity \nAptitudes: Willpower, Offence",
+    "effect": "Whenever this character spends a Fate Point to gain a +10 Bonus to a Test before Rolling, they gain +30 Instead.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Whenever this character spends a Fate Point to gain a +10 Bonus to a Test before Rolling, they gain +30 Instead.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YtxiA2tCdFne2KzP"
+}

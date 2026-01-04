@@ -1,0 +1,28 @@
+{
+  "name": "Psycannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Bolt",
+    "range": "120m",
+    "rof": "-/2/5",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 40,
+    "reload": "3 Full",
+    "special": "Daemonbane, Reliable, Tearing",
+    "weight": "20kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Integrated Suspensor that grants Auto-Stabilised Trait. Always at least Good Craftsmanship. Ignores protective benefits granted by psychic powers. Inflicts +2 damage for each point of wielder's psy rating.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Reliable, Tearing</p><p><b>Note:</b> Integrated Suspensor that grants Auto-Stabilised Trait. Always at least Good Craftsmanship. Ignores protective benefits granted by psychic powers. Inflicts +2 damage for each point of wielder's psy rating.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MMvLAI7gaqrVrRoB"
+}

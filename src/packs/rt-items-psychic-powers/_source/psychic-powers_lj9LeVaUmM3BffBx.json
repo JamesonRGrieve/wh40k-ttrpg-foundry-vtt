@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Powers",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": null,
+    "prerequisites": null,
+    "focusPower": "Psykers use psychic powers to channel the warp. They may do this at Fettered (Psy Rating / 2, round up), Unfettered (Psy Rating), or Push (Psy Rating +1/+2/+3). After choosing, make Focus Power Test with +5 to Test per Psy Rating (remember effects of Fettered/Pushing). Roll of 91+ is always a fail. \nUsing powers above Fettered Level may cause Psychic Phenomena. Occuring if an Unfettered Focus Power Test rolls a double, or whenever Pushing a Psychic power which also adds +5 to Psychic Phenomena Roll per Psy Rating added (up to Psy +3/+15 to roll).\nSustaining powers is free unless stated otherwise (only ever one action to sustain all powers), sustaining multiple powers adds +10 to Psychic Phenomena and -1 Psy Rating per sustained power. Psy Rating can affect powers, this is the Effective Psy Rating After any bonuses/penalties, such as halving from Fettered or +'s from Push.\nPsychic Bolts are like standard ranged weapon attacks, Barrages and Storms like Semi and Full Auto attacks with a max rate of fire equal to Psy Rating, and Blasts like Area of Effect Attacks, they can all be dodged in the same ways.",
+    "action": null,
+    "range": null,
+    "opposed": null,
+    "sustained": null,
+    "effect": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lj9LeVaUmM3BffBx"
+}

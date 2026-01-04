@@ -1,0 +1,28 @@
+{
+  "name": "Lash of Torment",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "6m",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Concussive (2), Flexible, Gyro-Stabilised, Snare (2), Tearing",
+    "weight": "7kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Concussive (2), Flexible, Gyro-Stabilised, Snare (2), Tearing</p><p><b>Note:</b> Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tPHj6s44JZ2Zj6Qz"
+}

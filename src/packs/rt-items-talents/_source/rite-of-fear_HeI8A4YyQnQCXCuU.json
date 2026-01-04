@@ -1,0 +1,17 @@
+{
+  "name": "Rite of Fear",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Mechanicus Implants",
+    "effect": "When Activating emit infrasonic noises for the next two minutes that cause all Humans in 50 Metres to consider you as having Fear (1). May not communicate or talk to others while active. Affects even those who can't hear, although they will not know it is you who is speaking.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When Activating emit infrasonic noises for the next two minutes that cause all Humans in 50 Metres to consider you as having Fear (1). May not communicate or talk to others while active. Affects even those who can't hear, although they will not know it is you who is speaking.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HeI8A4YyQnQCXCuU"
+}

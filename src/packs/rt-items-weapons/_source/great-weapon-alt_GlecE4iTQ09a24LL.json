@@ -1,0 +1,28 @@
+{
+  "name": "Great Weapon  (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Ogryn-Proof, Unbalanced",
+    "weight": "7kg",
+    "availability": "Scarce",
+    "cost": "70 T",
+    "source": "Only War: Core",
+    "note": "Two-Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Unbalanced</p><p><b>Note:</b> Two-Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GlecE4iTQ09a24LL"
+}

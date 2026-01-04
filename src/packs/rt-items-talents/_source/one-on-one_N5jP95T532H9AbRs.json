@@ -1,0 +1,17 @@
+{
+  "name": "One on One",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Weapon Skill 40\nAptitudes: Finesse, Weapon Skill",
+    "effect": "When fighting an enemy in single, one on one melee combat that no other individual has interfered within the last round, the character scores extra degrees of scucess on Weapon Skill Tests equal to half their Weapon Skill Bonus (rounded down)\nNote: Duelist Talent doesn't exist in DH 2E so this talent shouldn't stack with it.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>When fighting an enemy in single, one on one melee combat that no other individual has interfered within the last round, the character scores extra degrees of scucess on Weapon Skill Tests equal to half their Weapon Skill Bonus (rounded down)\nNote: Duelist Talent doesn't exist in DH 2E so this talent shouldn't stack with it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N5jP95T532H9AbRs"
+}

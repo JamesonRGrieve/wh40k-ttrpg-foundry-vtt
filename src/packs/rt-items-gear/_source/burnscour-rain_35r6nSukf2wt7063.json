@@ -1,0 +1,20 @@
+{
+  "name": "Burnscour Rain",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Poison",
+    "weight": "-",
+    "availability": "Creatures exposed to it must pass -10 Toughness Test or immediately take 1d5 Strength and Toughness damage, and an additional 1d5 per DoF  (non-permenant, roll seperately for each). Requires -10 Chem-Use test to apply, load or handle it. Failiure counts as being exposed to the poison.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "35r6nSukf2wt7063"
+}

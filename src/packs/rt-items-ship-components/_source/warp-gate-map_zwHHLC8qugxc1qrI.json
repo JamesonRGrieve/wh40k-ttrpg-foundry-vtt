@@ -1,0 +1,21 @@
+{
+  "name": "Warp Gate Map",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 2,
+    "spaceUsage": 1,
+    "spCost": 5,
+    "effect": "An artifact that roughly maps Warp Gates throughout the Galaxy. When approaching a Warp Gate, a Navigator must make a +0 Navigate (Warp) Test to identify location, then -20 Navigate (Warp) Test to transverse through it. On success,  vessel reaches intended destination, on failiure it arrives elsewhere. ~40% of Systems have Warp Gates in 2d10 Days of Travel.",
+    "availability": "Near Unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>An artifact that roughly maps Warp Gates throughout the Galaxy. When approaching a Warp Gate, a Navigator must make a +0 Navigate (Warp) Test to identify location, then -20 Navigate (Warp) Test to transverse through it. On success,  vessel reaches intended destination, on failiure it arrives elsewhere. ~40% of Systems have Warp Gates in 2d10 Days of Travel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zwHHLC8qugxc1qrI"
+}

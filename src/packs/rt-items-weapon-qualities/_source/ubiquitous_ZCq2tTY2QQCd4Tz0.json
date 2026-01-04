@@ -1,0 +1,14 @@
+{
+  "name": "Ubiquitous",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 2,
+    "description": {
+      "value": "<p>2</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZCq2tTY2QQCd4Tz0"
+}

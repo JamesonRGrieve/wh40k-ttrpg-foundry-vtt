@@ -1,0 +1,28 @@
+{
+  "name": "Hellstrike Missiles",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "Launcher",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "3d10+7",
+    "damageType": "Explosive",
+    "penetration": 7,
+    "clip": 1,
+    "reload": "-",
+    "special": "Blast (5)",
+    "weight": "85kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JqJFrqKxLwcpVJLv"
+}

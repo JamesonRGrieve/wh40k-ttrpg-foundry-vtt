@@ -1,0 +1,14 @@
+{
+  "name": "Accurate",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 117,
+    "description": {
+      "value": "<p>117</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rQ7GXFZAu0X6tzNM"
+}

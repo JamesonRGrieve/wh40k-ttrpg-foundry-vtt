@@ -1,0 +1,20 @@
+{
+  "name": "Anti-Plant Missile (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Astartes Missile Launcher",
+    "damageOrEffect": "5d10 E, Pen 0, Blast (5). Only deals damage to Plants",
+    "qualities": "Blast (5)",
+    "weight": "1kg",
+    "availability": "Initiated",
+    "cost": "25 R Each",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 5d10 E, Pen 0, Blast (5). Only deals damage to Plants</p><p><b>Qualities:</b> Blast (5)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VC63P2qMBa2ux7xL"
+}

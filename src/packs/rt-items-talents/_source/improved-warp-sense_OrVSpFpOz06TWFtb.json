@@ -1,0 +1,17 @@
+{
+  "name": "Improved Warp Sense",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Warp Sense",
+    "effect": "Can make Psynscience Skill as a Free Action",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Can make Psynscience Skill as a Free Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OrVSpFpOz06TWFtb"
+}

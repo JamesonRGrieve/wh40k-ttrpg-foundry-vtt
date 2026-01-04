@@ -1,0 +1,22 @@
+{
+  "name": "Frazzle",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "On successful Focus Power Test, the Weirdboy hits target with bolt of energy doing 1d10 + Psy Rating Energgy Damage with Shocking Quality. For each Degree of Success, the bolt affects another target within 3 metres of the original for half the damage of the original attack. This bolt can be dodged as with other ranged attacks.\nShocking: If Target takes any damage from attack, makes +0 Toughness Test, on failiure Target is stunned for a number of rounds equal to half the damage suffered. +10 to save per AP.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YvbmrWgdpn2svNgD"
+}

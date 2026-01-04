@@ -1,0 +1,20 @@
+{
+  "name": "Storm Eagle Rockets",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Manticore Vehicle",
+    "damageOrEffect": "6d10 X Damage, Pen 4, Blast(10), Concussive (6)\nAfter initial hit, scatter 1d5 additional hits 2d10 metres from initial hit. Afterwards resolve damage as normal.",
+    "qualities": "Blast(10), Concussive (6)",
+    "weight": "4500kg",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 6d10 X Damage, Pen 4, Blast(10), Concussive (6)\nAfter initial hit, scatter 1d5 additional hits 2d10 metres from initial hit. Afterwards resolve damage as normal.</p><p><b>Qualities:</b> Blast(10), Concussive (6)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gMrpkvyQvVEB3C4y"
+}

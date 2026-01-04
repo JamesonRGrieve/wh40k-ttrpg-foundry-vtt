@@ -1,0 +1,28 @@
+{
+  "name": "Scare Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (10)",
+    "weight": "1kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Make -10 Toughness Test or count as having failed a fear test, each DoF adds +10 to roll on shock table. Sealed suits immune to effect, Talents and traits that help against fear and poison help with test.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Make -10 Toughness Test or count as having failed a fear test, each DoF adds +10 to roll on shock table. Sealed suits immune to effect, Talents and traits that help against fear and poison help with test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iSSXANS65fgdVv6T"
+}

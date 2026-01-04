@@ -1,0 +1,14 @@
+{
+  "name": "Necron Wep",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 18,
+    "description": {
+      "value": "<p>18</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k4wx14HZiyzmIM9L"
+}

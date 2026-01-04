@@ -1,0 +1,14 @@
+{
+  "name": "Daemonic Possession",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Vehicle does not require any crew, and can pilot itself, acting as its own Pilot and Gunners. Capable of firing all of its weapons as one attak action. Any critical damage that affects the crew exclusively does nothing.",
+    "description": {
+      "value": "<p>Vehicle does not require any crew, and can pilot itself, acting as its own Pilot and Gunners. Capable of firing all of its weapons as one attak action. Any critical damage that affects the crew exclusively does nothing.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aTrLkOxJ3etDrcby"
+}

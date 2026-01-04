@@ -1,0 +1,17 @@
+{
+  "name": "Lord of Chaos",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Fellowship 40, Infamy 60, Air of Authority. Aptitudes: Unaligned",
+    "effect": "The Character can have a number of minions equal to one and a half times their Fellowship Bonus, rounded down. Instead of their Fellowship Bonus.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>The Character can have a number of minions equal to one and a half times their Fellowship Bonus, rounded down. Instead of their Fellowship Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uwjsS2rjUdYiO2Xz"
+}

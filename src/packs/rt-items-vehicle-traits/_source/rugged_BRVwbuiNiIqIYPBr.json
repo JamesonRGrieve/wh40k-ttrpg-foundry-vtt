@@ -1,0 +1,14 @@
+{
+  "name": "Rugged",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Repair Tests have +20.",
+    "description": {
+      "value": "<p>Repair Tests have +20.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BRVwbuiNiIqIYPBr"
+}

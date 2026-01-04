@@ -1,0 +1,20 @@
+{
+  "name": "Purity Bolts",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Crossbows",
+    "damageOrEffect": "Gain Haywire (2) Quality",
+    "qualities": "Haywire (2)",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Haywire (2) Quality</p><p><b>Qualities:</b> Haywire (2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dplraql5mUdS9NW7"
+}

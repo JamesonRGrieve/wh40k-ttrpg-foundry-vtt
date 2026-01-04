@@ -1,0 +1,28 @@
+{
+  "name": "Multi-Melta",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "4d10+12",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Blast (1)",
+    "weight": "55kg",
+    "availability": "Very Rare",
+    "cost": "8500 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1)</p><p><b>Note:</b> Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SozzvUCVQzjKi8IX"
+}

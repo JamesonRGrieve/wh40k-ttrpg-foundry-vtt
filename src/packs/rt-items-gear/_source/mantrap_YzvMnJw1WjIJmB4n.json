@@ -1,0 +1,20 @@
+{
+  "name": "Mantrap",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "2kg",
+    "availability": "Space Bear Trap. A Trap that snaps shut, dealing 1d10 Rending Damage and rendering target immobilized. They must pass a -10 Strength Test to free themselves.",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YzvMnJw1WjIJmB4n"
+}

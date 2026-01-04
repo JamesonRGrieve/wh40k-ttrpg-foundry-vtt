@@ -1,0 +1,22 @@
+{
+  "name": "Light Power Armour (Ancient)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 7,
+    "maxAg": 40,
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Gain +10 to Strength, Has 24 Hour Power Supply, suffer -10 to fine manipulation tasks unless using something designed for power armour.\nChoose 3 subsystems to add to Power Armour functions (see Armour Upgrades)",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Gain +10 to Strength, Has 24 Hour Power Supply, suffer -10 to fine manipulation tasks unless using something designed for power armour.\nChoose 3 subsystems to add to Power Armour functions (see Armour Upgrades)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VBrsXLlqZsTIfZGV"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Vocal Implants",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Allows vocal chords to be amplified to inhuman ranges.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OkvJhKPArUIYq5di"
+}

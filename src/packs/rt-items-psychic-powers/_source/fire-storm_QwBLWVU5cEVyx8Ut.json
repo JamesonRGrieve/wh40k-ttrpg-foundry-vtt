@@ -1,0 +1,22 @@
+{
+  "name": "Fire Storm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "50m",
+    "range": "Threshold 16",
+    "opposed": "No",
+    "sustained": "Target point or individual within range, all within 6m of that target take 1d10+5 Energy damage with Flame Quality.\nFor every 5 points above Threshold, deal an additional 1d10 damage.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QwBLWVU5cEVyx8Ut"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Chain Greataxe (Castir)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Felling (2), Tearing, Unwieldy",
+    "weight": "18kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Two Handed Weapon, requires Strength Bonus of 4+ to wield.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (2), Tearing, Unwieldy</p><p><b>Note:</b> Two Handed Weapon, requires Strength Bonus of 4+ to wield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fBRm1Ssub5fwMshD"
+}

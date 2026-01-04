@@ -1,0 +1,22 @@
+{
+  "name": "Dominate",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "Sensory Deprivation\nOW: Psy Rating 5",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "On Successful Test, Psyker takes control over target's mind and puppets them for a number of rounds up to the Psyker's Effective Psy Rating as long as the target remain within the power's range. The Psyker can divide their actions between themselves and the target, the Dominated target uses their own Characteristics, but at a -10 penalty for all tests except Opposed Willpower Tests. Suicidal actions force another Opposed Willpower Test to try to break control.",
+    "effect": "300xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gJgIaUcaGOPFnjYR"
+}

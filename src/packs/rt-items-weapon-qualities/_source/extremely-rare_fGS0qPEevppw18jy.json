@@ -1,0 +1,14 @@
+{
+  "name": "Extremely Rare",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 153,
+    "description": {
+      "value": "<p>153</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fGS0qPEevppw18jy"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Signum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "5kg",
+    "availability": "Mounted to Astartes Armour, broadcasts tactical readings to Squad Members allowing them to benefit from it. Whilst Character is in Squad Mode, all other characters in Squad Mode receive +5 to BS Tests. Character can spend a Full Action to make a +0 Tech-Use Test to increase this to +10 for one round. Effects of multiple Signum's are not cumulative.",
+    "cost": null,
+    "effects": "Distinguished",
+    "notes": "35 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "joByLjTJLlOWAtF5"
+}

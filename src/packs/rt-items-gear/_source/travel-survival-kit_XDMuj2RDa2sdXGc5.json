@@ -1,0 +1,20 @@
+{
+  "name": "Travel Survival Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "15kg",
+    "availability": "+10 to Survival Tests, Best Craftsmanship provides +20. May contain Fishing Gear, animal snares, firestarter tabs, flares, compass, signal mirror, water purification tablets, antibiotic and detox pills, insect repellent, sunscreen, Flextent Shelter, limited medkit, exposure cloth, multi-tool, disposable handgun, survival booklet, prayer scrolls, vox, combat blade and Rations.",
+    "cost": "Relatively lightweight and transportable.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XDMuj2RDa2sdXGc5"
+}

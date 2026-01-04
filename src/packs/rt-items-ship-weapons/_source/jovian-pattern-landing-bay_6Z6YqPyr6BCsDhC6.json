@@ -1,0 +1,25 @@
+{
+  "name": "Jovian-pattern Landing Bay",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Landing Bay",
+    "hullType": "Cruisers",
+    "powerUsage": 1,
+    "spaceUsage": 6,
+    "spCost": 2,
+    "damage": "-",
+    "strength": 2,
+    "critRating": "-",
+    "range": "-",
+    "availability": "Rare",
+    "notes": "Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6Z6YqPyr6BCsDhC6"
+}

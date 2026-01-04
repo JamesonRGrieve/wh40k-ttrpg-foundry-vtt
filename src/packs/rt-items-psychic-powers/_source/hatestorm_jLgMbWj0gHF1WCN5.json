@@ -1,0 +1,22 @@
+{
+  "name": "Hatestorm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 4, Frenzy, Hatred (Any One)",
+    "focusPower": "Half Action\nAttack",
+    "action": "5m x Psy Rating Radius",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst Sustained, Psyker and all creatures within power's radius immediately enter a Frenzied State as if they had the Frenzy Talent, remaining so for as long as the power is sustained. The Psyker may continue to manifest Psychic Powers even whilst frenzied.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jLgMbWj0gHF1WCN5"
+}

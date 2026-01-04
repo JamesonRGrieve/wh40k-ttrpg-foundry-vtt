@@ -1,0 +1,28 @@
+{
+  "name": "Tau Pulse Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "150m",
+    "rof": "S/2/4",
+    "damage": "2d10+3",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 36,
+    "reload": "Half",
+    "special": "Gyro-Stabilised",
+    "weight": "8kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Gyro-Stabilised</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UEXvd0cwnBxV9HxX"
+}

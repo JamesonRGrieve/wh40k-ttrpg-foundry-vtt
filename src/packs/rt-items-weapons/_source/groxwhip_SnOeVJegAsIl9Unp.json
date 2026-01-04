@@ -1,0 +1,28 @@
+{
+  "name": "Groxwhip",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "3m",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Tearing, Primitive (8)",
+    "weight": "4kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Tearing, Primitive (8)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SnOeVJegAsIl9Unp"
+}

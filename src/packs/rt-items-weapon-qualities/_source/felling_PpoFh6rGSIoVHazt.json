@@ -1,0 +1,14 @@
+{
+  "name": "Felling",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 50,
+    "description": {
+      "value": "<p>50</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PpoFh6rGSIoVHazt"
+}

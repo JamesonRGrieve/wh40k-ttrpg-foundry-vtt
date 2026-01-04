@@ -1,0 +1,22 @@
+{
+  "name": "Hellshriek",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Mark of Slaanesh, Corruption 50+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "3m x Psy Rating",
+    "range": "Corruption",
+    "opposed": "No",
+    "sustained": "Psyker causes a Psychic Blast centred on themselves which can be dodged as if an Area of Effect Explosion. Those that don't avoid the blast suffer 2d10+Psy Rating Rending Damage with Concussive(1) and Warp Weapon Qualities.\nWarp Weapon: Ignore Cover and Non-Warded Armour AP. Concussive(1): Target makes -10 Toughness Test, failiure causes stun for 1 round per DoF. If damage is greater than Target's Strength bonus, knock them prone.\nIf this power causes Psychic Phenomena, in addition to normal effects until the start of the Psyker's next turn all creatures within power's range suffer -20 to all Perception Tests.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tkjnE1XR9HlgNvgV"
+}

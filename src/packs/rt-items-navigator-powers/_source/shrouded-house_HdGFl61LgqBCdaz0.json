@@ -1,0 +1,21 @@
+{
+  "name": "Shrouded House",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Destitute: -1 from the Group's starting Profit Factor.\nA Gaze to Pierce the Soul: Start with \"Gaze into the Abyss\" Navigator Power, may raise this ability above Master to rank \"Paragon\" for same cost as raising to Master level, giving +30 to tests with power.\nMercantile Opportunitists: Gain +10 to Barter, Charm, and Carouse Skills.\nInitial Mutation: Begin with a single Navigator Mutation, rolled randomly. Additional mutations may be gained when new Powers or Mastery is gained.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HdGFl61LgqBCdaz0"
+}

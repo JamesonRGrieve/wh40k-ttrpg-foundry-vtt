@@ -1,0 +1,14 @@
+{
+  "name": "Blast (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Weapon hit creates Area of Effect explosion of X Metre radius. Roll Damage once and apply to everyone within this area. Dodging Area of Effect Attacks requires moving up to Agility Bonus Metres to leave explosion radius, auto-fail dodge if this is not possible.",
+    "description": {
+      "value": "<p>Weapon hit creates Area of Effect explosion of X Metre radius. Roll Damage once and apply to everyone within this area. Dodging Area of Effect Attacks requires moving up to Agility Bonus Metres to leave explosion radius, auto-fail dodge if this is not possible.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wNzfvBy8nETpZtIt"
+}

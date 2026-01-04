@@ -1,0 +1,28 @@
+{
+  "name": "Aetheme Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.",
+    "description": {
+      "value": "<p><b>Note:</b> Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8CU8vn4YPxvM4htA"
+}

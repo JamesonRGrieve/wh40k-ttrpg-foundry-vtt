@@ -1,0 +1,22 @@
+{
+  "name": "Resist Possession",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Reaction",
+    "action": "Self",
+    "range": "Threshold 6\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Character can re-roll any failed Test to resist being possessed by Daemons for the next hour.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KoJRwTF2IwtzrnWH"
+}

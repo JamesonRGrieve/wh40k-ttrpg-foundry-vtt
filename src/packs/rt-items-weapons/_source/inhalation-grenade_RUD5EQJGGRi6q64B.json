@@ -1,0 +1,28 @@
+{
+  "name": "Inhalation Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (5)",
+    "weight": "2kg",
+    "availability": "Initiated",
+    "cost": "-",
+    "source": "DW: Rites of Battle",
+    "note": "No effect on those in environmentally sealed gear. Contains a drug or poison of choice that is applied to everyone in blast radius as a gas. Targets get +10 to tests to resist the effects of the gas (if no test by default, assume +0 Toughness Test).",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> No effect on those in environmentally sealed gear. Contains a drug or poison of choice that is applied to everyone in blast radius as a gas. Targets get +10 to tests to resist the effects of the gas (if no test by default, assume +0 Toughness Test).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RUD5EQJGGRi6q64B"
+}

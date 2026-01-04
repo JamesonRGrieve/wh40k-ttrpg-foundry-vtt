@@ -1,0 +1,25 @@
+{
+  "name": "Imperial World",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Home World",
+    "descriptionText": "+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.",
+    "effects": "+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.home-world",
+      "step": "Home World",
+      "stepIndex": 1,
+      "number": "5"
+    }
+  },
+  "_id": "eA6HTHVTDSm0nVon"
+}

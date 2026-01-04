@@ -1,0 +1,17 @@
+{
+  "name": "Covering Fire",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": "Sergeant Spec\n200xp",
+    "descriptionText": "For the next Round, all Player Characters with their Comrade in Cohesion gain +10 to all Dodge Tests",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>For the next Round, all Player Characters with their Comrade in Cohesion gain +10 to all Dodge Tests</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d1S3EcwM4oZ1ntcb"
+}

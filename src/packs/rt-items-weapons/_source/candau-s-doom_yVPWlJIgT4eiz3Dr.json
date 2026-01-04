@@ -1,0 +1,28 @@
+{
+  "name": "Candau's Doom",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "120m",
+    "rof": "S/-/-",
+    "damage": "1d10+10",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 100,
+    "reload": "3 Full",
+    "special": "Accurate, Felling (4), Razor Sharp",
+    "weight": "15kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Archeotech Autogun of the Relictors Chapter. Despite being similar in nature to an Autogun, it is considerably more dangerous.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Felling (4), Razor Sharp</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Archeotech Autogun of the Relictors Chapter. Despite being similar in nature to an Autogun, it is considerably more dangerous.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yVPWlJIgT4eiz3Dr"
+}

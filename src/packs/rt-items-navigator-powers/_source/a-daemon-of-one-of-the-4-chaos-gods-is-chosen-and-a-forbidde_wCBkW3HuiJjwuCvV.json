@@ -1,0 +1,21 @@
+{
+  "name": "A Daemon of one of the 4 Chaos Gods is chosen, and a Forbidden Lore (Daemonology) Test is made, by default at -20 (Harder for more powerful Daemons).",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": "Ritual Modifiers",
+    "novice": "Conditions (combine up to max/min of +60/-60)",
+    "adept": "Casting a curse requires learning its words. This can be treated as an Elite Advance that costs XP in order to learn, or learnt through gameplay such as seeking out forbidden tomes.",
+    "master": "Not everyone likes being cursed, curing a curse requires a Counter-Curse, the affected must cast the same curse that affects them upon themselves in order to break it. This requires them to know they are cursed, what it is, and how to enact it.",
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Conditions (combine up to max/min of +60/-60)</p><p><b>Adept:</b> Casting a curse requires learning its words. This can be treated as an Elite Advance that costs XP in order to learn, or learnt through gameplay such as seeking out forbidden tomes.</p><p><b>Master:</b> Not everyone likes being cursed, curing a curse requires a Counter-Curse, the affected must cast the same curse that affects them upon themselves in order to break it. This requires them to know they are cursed, what it is, and how to enact it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wCBkW3HuiJjwuCvV"
+}

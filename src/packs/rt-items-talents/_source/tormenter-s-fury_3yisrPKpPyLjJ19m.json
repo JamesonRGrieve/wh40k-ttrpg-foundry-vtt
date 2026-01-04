@@ -1,0 +1,17 @@
+{
+  "name": "Tormenter's Fury",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Dark Eldar, Power Through Pain",
+    "effect": "If the character has gained at least 1 Pain Token during an encounter, they may spend a Fate Point to gain the Berserk Charge Talent and Brutal Charge Traits for the rest of the encounter.\nBerserk Charge: When using the Charge Action, gain +20 to WS instead of the usual +10\nBrutal Charge: Deals 3 extra damage with attacks made while charging.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>If the character has gained at least 1 Pain Token during an encounter, they may spend a Fate Point to gain the Berserk Charge Talent and Brutal Charge Traits for the rest of the encounter.\nBerserk Charge: When using the Charge Action, gain +20 to WS instead of the usual +10\nBrutal Charge: Deals 3 extra damage with attacks made while charging.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3yisrPKpPyLjJ19m"
+}

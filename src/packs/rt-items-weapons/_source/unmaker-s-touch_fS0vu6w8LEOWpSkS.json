@@ -1,0 +1,28 @@
+{
+  "name": "Unmaker's Touch",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+2",
+    "damageType": "Rending",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Tearing, Unwieldy",
+    "weight": "48kg",
+    "availability": "Famed",
+    "cost": "80 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Chainfist of the Minotaurs Chapter. Increases its Damage and Penetration by 5 against Vehicles, Structures, Objects, and enemies with the Machine Trait. As with all Chainfists, increases Unnatural Strength x2 to x3.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Chainfist of the Minotaurs Chapter. Increases its Damage and Penetration by 5 against Vehicles, Structures, Objects, and enemies with the Machine Trait. As with all Chainfists, increases Unnatural Strength x2 to x3.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fS0vu6w8LEOWpSkS"
+}

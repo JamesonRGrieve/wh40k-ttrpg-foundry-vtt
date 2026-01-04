@@ -1,0 +1,17 @@
+{
+  "name": "Psyker",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Creature is a Psyker, by having this Trait they can purchase the Psyniscience Skill and Psy Rating and Psychic Power Talents.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature is a Psyker, by having this Trait they can purchase the Psyniscience Skill and Psy Rating and Psychic Power Talents.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eLZhhEYZgzENitmo"
+}

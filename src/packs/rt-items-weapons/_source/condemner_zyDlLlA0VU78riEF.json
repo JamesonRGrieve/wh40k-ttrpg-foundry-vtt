@@ -1,0 +1,28 @@
+{
+  "name": "Condemner",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "100m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Accurate, Reliable",
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Undermounted to a Boltgun to form a Combi-Weapon. ",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Reliable</p><p><b>Note:</b> Undermounted to a Boltgun to form a Combi-Weapon. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zyDlLlA0VU78riEF"
+}

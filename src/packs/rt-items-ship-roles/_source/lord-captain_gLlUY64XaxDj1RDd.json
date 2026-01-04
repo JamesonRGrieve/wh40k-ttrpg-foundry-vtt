@@ -1,0 +1,19 @@
+{
+  "name": "Lord-Captain",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 1,
+    "purpose": "Commands the Vessel as its absolute leader.",
+    "careerPreferences": "Only Rogue Trader",
+    "subordinates": "Personal Guard, Imperial Emissaries, ship officers",
+    "importantSkills": "Command, Charm, Intimidate, Scholastic Lore (Tacica Imperialis)",
+    "effect": "+10 to \"Hold Fast!\" Extended Actions, can grant \"Exceptional Leader\" Ability to anyone on the ship as a free action if they have it.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Commands the Vessel as its absolute leader.</p><p><b>Effect:</b> +10 to \"Hold Fast!\" Extended Actions, can grant \"Exceptional Leader\" Ability to anyone on the ship as a free action if they have it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gLlUY64XaxDj1RDd"
+}

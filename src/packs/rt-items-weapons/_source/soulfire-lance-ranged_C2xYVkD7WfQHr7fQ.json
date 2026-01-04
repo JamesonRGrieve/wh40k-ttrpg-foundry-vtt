@@ -1,0 +1,28 @@
+{
+  "name": "Soulfire Lance [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+6",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Felling (2), Spray, Warp Weapon",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Weapon: Spear. Daemon WP 60 (Khorne Daemon), Bind Str 3. Att.: Howling, Piercing. Needs Two hands, can make [Melee] Attack.\nGain Fear(+1) When attacking, Add Daemon's WP to Critical Damage.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Felling (2), Spray, Warp Weapon</p><p><b>Note:</b> Weapon: Spear. Daemon WP 60 (Khorne Daemon), Bind Str 3. Att.: Howling, Piercing. Needs Two hands, can make [Melee] Attack.\nGain Fear(+1) When attacking, Add Daemon's WP to Critical Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C2xYVkD7WfQHr7fQ"
+}

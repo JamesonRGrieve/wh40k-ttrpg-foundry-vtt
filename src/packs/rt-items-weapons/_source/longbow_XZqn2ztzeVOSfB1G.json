@@ -1,0 +1,28 @@
+{
+  "name": "Longbow",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "Half",
+    "special": "Primitive (8)",
+    "weight": "3kg",
+    "availability": "Average",
+    "cost": "20 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XZqn2ztzeVOSfB1G"
+}

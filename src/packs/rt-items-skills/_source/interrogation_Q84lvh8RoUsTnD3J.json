@@ -1,0 +1,18 @@
+{
+  "name": "Interrogation",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Investigation, Interaction\nApt: Willpower, Social, Unaligned",
+    "characteristic": "Willpower",
+    "descriptor": "Extracting Information from Unwilling Subjects, not neccisarily torture, but rather use of psychology, serums, devices to get actually useful information. Test difficulty dependent on target, tool and facility availability, and other conditions.",
+    "uses": "Always Opposed Test, vs Target's Willpower. If Character wins gets once answer per Degree of Success. If Opponent wins gain nothing, if 2+ DoF, inflict 1d10+WP Bonus to target in damage and no more interrogation for 1d5 days. If 4+ DoF inflict 1d10+WP Bonus damage to target in damage and target gains +30 to Tests to resist Interrogation from character or their allies. Each Interrogation inflicts one Fatigue on the Target. Use to force an Adept to reveal information on their Superiors, learn the battle plans from a captain, etc",
+    "useTime": "One Hour or more.",
+    "description": {
+      "value": "<p>Extracting Information from Unwilling Subjects, not neccisarily torture, but rather use of psychology, serums, devices to get actually useful information. Test difficulty dependent on target, tool and facility availability, and other conditions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q84lvh8RoUsTnD3J"
+}

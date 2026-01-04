@@ -1,0 +1,17 @@
+{
+  "name": "Psychic Null (+X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T2)",
+    "requirements": "Tier 2: Untouchable E.Adv, Willpower 40\nAptitudes: Defence, Willpower",
+    "effect": "The Untouchable gains the Deny the Witch Talent. Gains +20 to Evasion Tests against Psychic Attacks and to Opposed Tests to resist Psychic Powers. Stacks with Resistance (Psychic Powers).\nTalent can be purchased multiple times, each additional purchase increases the bonus by +5.\nDeny the Witch: The Untouchable can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>The Untouchable gains the Deny the Witch Talent. Gains +20 to Evasion Tests against Psychic Attacks and to Opposed Tests to resist Psychic Powers. Stacks with Resistance (Psychic Powers).\nTalent can be purchased multiple times, each additional purchase increases the bonus by +5.\nDeny the Witch: The Untouchable can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "34Dd1EIwMGKsIPPw"
+}

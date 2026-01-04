@@ -1,0 +1,20 @@
+{
+  "name": "Airtorch Canister",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Melta: Inferno Pistols and Meltaguns",
+    "damageOrEffect": "Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.",
+    "qualities": "Scatter, Overheats",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.</p><p><b>Qualities:</b> Scatter, Overheats</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ro4HVHkAbxbX5I7t"
+}

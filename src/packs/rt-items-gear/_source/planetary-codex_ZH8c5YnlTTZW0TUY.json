@@ -1,0 +1,20 @@
+{
+  "name": "Planetary Codex",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "4kg",
+    "availability": "A Valuable if annoying to use Source of data about a specific planet. Roughly the size of a dataslate. Requires -40 Tech-Use Test to provide access to data on single planet the Codex is based on, reduced to -10 if user has Forbidden Lore (Archeotech),  Failed tech use may give false info or leave some out. Info Provided is GM dependent. See -->",
+    "cost": "Example Data: Full Planetary Map, common animal/plant species, list of valuable resources+quantities, recent Xenos activity+location, historical use of planet, etc.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZH8c5YnlTTZW0TUY"
+}

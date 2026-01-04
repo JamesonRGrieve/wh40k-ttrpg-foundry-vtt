@@ -1,0 +1,20 @@
+{
+  "name": "Medicae Mechadendrite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Shoulder or Sternum Mounted. +10 to Medicae and Interrogation Tests (must have skill), has six injectors that can house drugs (supplied seperately). Staunch blood loss as half action, chain scalpel can amputate with +0 Medicae test, or deal 1d5 Rending damage.",
+    "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
+    "effects": "Very Rare",
+    "notes": "500 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E9ttuOsdhbJWejoZ"
+}

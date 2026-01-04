@@ -1,0 +1,28 @@
+{
+  "name": "Foulswarm Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Corrosive, Smoke (6), Toxic (3)",
+    "weight": "1.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "BC: Tome of Decay",
+    "note": "Smoke Cloud created by grenade causes all who start their turn in it to automatically suffer 2d10 Impact Damage with Corrosive and Toxic(3) Qualities.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Corrosive, Smoke (6), Toxic (3)</p><p><b>Note:</b> Smoke Cloud created by grenade causes all who start their turn in it to automatically suffer 2d10 Impact Damage with Corrosive and Toxic(3) Qualities.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qaHNlsPPVMqAb2Cj"
+}

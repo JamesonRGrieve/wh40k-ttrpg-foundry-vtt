@@ -1,0 +1,28 @@
+{
+  "name": "Punch Dagger",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive",
+    "weight": "0.5kg",
+    "availability": "Plentiful",
+    "cost": "4 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> PEN Only applies to Primitive Armours</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h1YdTFVYWqNu7ldi"
+}

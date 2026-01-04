@@ -1,0 +1,21 @@
+{
+  "name": "Compartmentalised Cargo Hold",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "Raiders, Frigates, Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 5,
+    "spCost": 1,
+    "effect": "+100 Achievement Points towards Trade objectives. Stores Large amounts of Cargo and Cargo Shuttles.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+100 Achievement Points towards Trade objectives. Stores Large amounts of Cargo and Cargo Shuttles.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "usK0FLJkpNVTWPi1"
+}

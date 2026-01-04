@@ -1,0 +1,14 @@
+{
+  "name": "Positional Relay System",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Wearer counts as having a Positional Relay Equipped and gains the benefits of it. (Acts as a long-range Vox. Allowing communications up to 10km. Due to inbuilt security, attempts to subvert or listen in on the vox have have -30 to relevent tests.)",
+    "description": {
+      "value": "<p>Wearer counts as having a Positional Relay Equipped and gains the benefits of it. (Acts as a long-range Vox. Allowing communications up to 10km. Due to inbuilt security, attempts to subvert or listen in on the vox have have -30 to relevent tests.)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xFGFqeFouDnKH343"
+}

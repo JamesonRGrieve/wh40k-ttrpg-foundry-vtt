@@ -1,0 +1,17 @@
+{
+  "name": "Flame Weapon Training (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Allows use of Flame weapons without -20 Penalty: Groups: Universal (All non Exotic weapons with flame quality)",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Allows use of Flame weapons without -20 Penalty: Groups: Universal (All non Exotic weapons with flame quality)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qb78nv30kXoEgS5h"
+}

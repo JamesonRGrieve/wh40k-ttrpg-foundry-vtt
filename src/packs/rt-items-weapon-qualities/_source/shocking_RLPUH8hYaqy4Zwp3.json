@@ -1,0 +1,14 @@
+{
+  "name": "Shocking",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 48,
+    "description": {
+      "value": "<p>48</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RLPUH8hYaqy4Zwp3"
+}

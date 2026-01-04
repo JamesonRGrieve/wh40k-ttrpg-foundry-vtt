@@ -1,0 +1,20 @@
+{
+  "name": "Infra-Red Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "When worn, allow seeing in darkness with no Penalties. Gives +20 to Vision-Based Perception Tests at Night.\nHigher Craftsmanship versions can be disguised as eyeglasses.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "275 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 275 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p5fGk36XRHMnfZ9Q"
+}

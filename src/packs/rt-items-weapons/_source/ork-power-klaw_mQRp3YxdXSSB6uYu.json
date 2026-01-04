@@ -1,0 +1,28 @@
+{
+  "name": "Ork Power Klaw",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Tearing, Unwieldy",
+    "weight": "17kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "2xSB/+1 Unnatural Strength. For Orks, Very Rare, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Tearing, Unwieldy</p><p><b>Note:</b> 2xSB/+1 Unnatural Strength. For Orks, Very Rare, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mQRp3YxdXSSB6uYu"
+}

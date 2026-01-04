@@ -1,0 +1,17 @@
+{
+  "name": "Radiant Presence",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Fellowship 40\nAptitudes: Fellowship, Leadership, Slaanesh",
+    "effect": "All Allies within 20 metres that can see this character gain +10 to Willpower Tests to resist Fear and Intimidation Attempts.\nTalent doesn't affect the character themselves.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>All Allies within 20 metres that can see this character gain +10 to Willpower Tests to resist Fear and Intimidation Attempts.\nTalent doesn't affect the character themselves.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EbM3IPVHlHL6RZ0c"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Assault Device (Cadence)\n\"Spectre\" [Shotgun]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 4,
+    "reload": "2 Full",
+    "special": "Scatter",
+    "weight": "6.5kg",
+    "availability": "Rare",
+    "cost": "375 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Undermounted Shotgun, see [Autogun] for main profile.",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Undermounted Shotgun, see [Autogun] for main profile.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iA6VvZPXz8MfrrQ7"
+}

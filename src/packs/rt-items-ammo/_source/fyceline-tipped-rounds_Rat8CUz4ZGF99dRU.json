@@ -1,0 +1,20 @@
+{
+  "name": "Fyceline-tipped Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Stubbers, Hand cannons, rifles, autopistol, autogun, Naval Pistols",
+    "damageOrEffect": "Becomes Explosive Damage Type. +1 damage for Basic Weapons, and +3 damage for Heavy Weapons.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Becomes Explosive Damage Type. +1 damage for Basic Weapons, and +3 damage for Heavy Weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rat8CUz4ZGF99dRU"
+}

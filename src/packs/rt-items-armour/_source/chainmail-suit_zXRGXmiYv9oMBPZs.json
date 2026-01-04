@@ -1,0 +1,22 @@
+{
+  "name": "Chainmail Suit",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": 35,
+    "weight": "15kg",
+    "availability": "Common",
+    "cost": "-",
+    "notes": null,
+    "source": "Only War Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zXRGXmiYv9oMBPZs"
+}

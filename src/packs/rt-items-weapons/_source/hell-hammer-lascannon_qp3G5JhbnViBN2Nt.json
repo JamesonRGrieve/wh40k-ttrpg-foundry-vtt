@@ -1,0 +1,28 @@
+{
+  "name": "Hell Hammer Lascannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "5d10+10",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": "Proven (3)",
+    "weight": "55kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Operated by 2-3 humans or one Space Marine. Typically used by Heretics.",
+    "description": {
+      "value": "<p><b>Special:</b> Proven (3)</p><p><b>Note:</b> Operated by 2-3 humans or one Space Marine. Typically used by Heretics.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qp3G5JhbnViBN2Nt"
+}

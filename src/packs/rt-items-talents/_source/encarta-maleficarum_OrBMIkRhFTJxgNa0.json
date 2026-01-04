@@ -1,0 +1,17 @@
+{
+  "name": "Encarta Maleficarum",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Black Priest of Maccabeus Alternative Advance, 500xp, T 40.",
+    "effect": "The Character dissappears for 1d5 weeks as a secret ritual is performed on them by the Ordo Malleus. Forbidden Knowledge is burned into their mind and shackled by occult wards. Gain 1d5 Insanity, Permenantly reduce Toughness and Fellowship by 1d5 each. However, gain Forbidden Lore (Ordo Malleus) and Insanely Faithful Talents. Additionally gain +10 to resist torture, interrogation, attempts to read or control the mind, and possession. If ever possessed, if the possession test does not succeed by 3+ Degrees of Success, the intrusion is blocked despite the success but the character falls catatonic for 1d10 minutes.",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>The Character dissappears for 1d5 weeks as a secret ritual is performed on them by the Ordo Malleus. Forbidden Knowledge is burned into their mind and shackled by occult wards. Gain 1d5 Insanity, Permenantly reduce Toughness and Fellowship by 1d5 each. However, gain Forbidden Lore (Ordo Malleus) and Insanely Faithful Talents. Additionally gain +10 to resist torture, interrogation, attempts to read or control the mind, and possession. If ever possessed, if the possession test does not succeed by 3+ Degrees of Success, the intrusion is blocked despite the success but the character falls catatonic for 1d10 minutes.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OrBMIkRhFTJxgNa0"
+}

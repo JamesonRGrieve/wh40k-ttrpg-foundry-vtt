@@ -1,0 +1,20 @@
+{
+  "name": "Vortex Pendant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "-",
+    "availability": "Wearer must have Psyker Trait. Can target individual within line of Sight as Full Action with Ranged and Concentration subtypes, making -20 Willpower Test (or -30 if character not dedicated to Tzeentch). For each Degree of Success, target loses the ability to use one Psychic Power for the remainder of the encounter, chosen randomly.",
+    "cost": "Strange ever shifting pendants, worn as necklaces, wristbands, etc.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3natwe9Gz6VRV52U"
+}

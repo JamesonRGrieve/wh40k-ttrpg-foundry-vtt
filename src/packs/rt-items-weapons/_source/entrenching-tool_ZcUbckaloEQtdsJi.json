@@ -1,0 +1,28 @@
+{
+  "name": "Entrenching Tool",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Unwieldy",
+    "weight": "2kg",
+    "availability": "Plentiful",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Good for Digging Trenches, as this is its intended purpose.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Unwieldy</p><p><b>Note:</b> Good for Digging Trenches, as this is its intended purpose.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZcUbckaloEQtdsJi"
+}

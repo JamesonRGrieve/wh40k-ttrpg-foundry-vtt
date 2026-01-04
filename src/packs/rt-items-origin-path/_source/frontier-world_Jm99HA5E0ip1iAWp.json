@@ -1,0 +1,25 @@
+{
+  "name": "Frontier World",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Home World",
+    "descriptionText": "+5 Strength, -5 Intelligence. Gain Survival and Wrangling as Trained Skills. Can reroll an Initiative Roll they make, but must accept the new result. Immune to Fear Tests from Xenos with Fear(1) or Fear(2). Suffer -10 to Fellowship Tests with Strangers and also -5 with members of the Imperial Cult.",
+    "effects": "+5 Strength, -5 Intelligence. Gain Survival and Wrangling as Trained Skills. Can reroll an Initiative Roll they make, but must accept the new result. Immune to Fear Tests from Xenos with Fear(1) or Fear(2). Suffer -10 to Fellowship Tests with Strangers and also -5 with members of the Imperial Cult.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>+5 Strength, -5 Intelligence. Gain Survival and Wrangling as Trained Skills. Can reroll an Initiative Roll they make, but must accept the new result. Immune to Fear Tests from Xenos with Fear(1) or Fear(2). Suffer -10 to Fellowship Tests with Strangers and also -5 with members of the Imperial Cult.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.home-world",
+      "step": "Home World",
+      "stepIndex": 1,
+      "number": "1"
+    }
+  },
+  "_id": "Jm99HA5E0ip1iAWp"
+}

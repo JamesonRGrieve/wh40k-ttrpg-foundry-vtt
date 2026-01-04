@@ -1,0 +1,28 @@
+{
+  "name": "Ambition-Class Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Cruiser",
+    "size": "4.9km long, 2km wide (fins)",
+    "crew": 89000,
+    "speed": 5,
+    "manoeuvrability": 12,
+    "detection": 15,
+    "hull": 66,
+    "armour": 17,
+    "turrets": 2,
+    "space": 75,
+    "shipPoints": 57,
+    "weaponCapacity": "1 Prow, 2 Port, 2 Starboard",
+    "notes": null,
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "y0VvN2CURpeKRGfR"
+}

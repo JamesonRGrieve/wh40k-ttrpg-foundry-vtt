@@ -1,0 +1,17 @@
+{
+  "name": "Blistering Evasion",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Perception 35, Dodge +10 or Parry +10\nAptitudes: Perception, Finesse\nVeteran Talent Requirement Fulfilled",
+    "effect": "Veteran Talent Requirement: Character successfully Evades three consecutive attacks without being struck whilst on a mission.\nWhen Character makes a successful Evasion Test against an attack, they impose -10 to Ballistic and Weapon Skill Attacks to hit them until the start of their next turn.",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p>Veteran Talent Requirement: Character successfully Evades three consecutive attacks without being struck whilst on a mission.\nWhen Character makes a successful Evasion Test against an attack, they impose -10 to Ballistic and Weapon Skill Attacks to hit them until the start of their next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AEYhrVih6TjSH8NU"
+}

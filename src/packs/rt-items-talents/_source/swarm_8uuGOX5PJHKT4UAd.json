@@ -1,0 +1,17 @@
+{
+  "name": "Swarm",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "A Mass of Miniscule or Puny Creatures. Weapons that do not have Blast, Flame, Spray, or Scatter only inflict half damage. Swarms cannot be grappled, knocked down, or pinned. They can pour through small holes and openings.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>A Mass of Miniscule or Puny Creatures. Weapons that do not have Blast, Flame, Spray, or Scatter only inflict half damage. Swarms cannot be grappled, knocked down, or pinned. They can pour through small holes and openings.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8uuGOX5PJHKT4UAd"
+}

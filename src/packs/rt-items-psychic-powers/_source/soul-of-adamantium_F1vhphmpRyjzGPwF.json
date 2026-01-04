@@ -1,0 +1,22 @@
+{
+  "name": "Soul of Adamantium",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "While this power is active, the psyker is immune to any effect that would penalise Willpower, they cannot gain corruption, and any attacks against them with the Warp Weapon Trait treat the Psyker as if they were Holy (in other words, Warp Weapon doesn't ignore armour)",
+    "effect": "200xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F1vhphmpRyjzGPwF"
+}

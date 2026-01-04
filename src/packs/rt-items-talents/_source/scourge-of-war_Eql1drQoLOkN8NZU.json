@@ -1,0 +1,17 @@
+{
+  "name": "Scourge of War",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Fel 35, Strength 35, Hatred (Chosen One). Aptitudes: Leadership, Strength\nVeteran Talent Requirement Fulfilled",
+    "effect": "Veteran Talent Requirement: Character personally slays at least seven foes and gains 4+ Degrees of Success on an Intimidate Test when fighting against the forces of a specific kind of enemy over the course of a single mission.\nOnce per Encounter as a Free Action while fighting chosen foe, character can spend a Fate Point and make a +0 Intimidate Test, if successful they gain Fear(1) Trait against chosen foe until the end of the encounter.",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p>Veteran Talent Requirement: Character personally slays at least seven foes and gains 4+ Degrees of Success on an Intimidate Test when fighting against the forces of a specific kind of enemy over the course of a single mission.\nOnce per Encounter as a Free Action while fighting chosen foe, character can spend a Fate Point and make a +0 Intimidate Test, if successful they gain Fear(1) Trait against chosen foe until the end of the encounter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Eql1drQoLOkN8NZU"
+}

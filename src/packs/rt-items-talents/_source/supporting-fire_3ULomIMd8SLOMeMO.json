@@ -1,0 +1,17 @@
+{
+  "name": "Supporting Fire",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau",
+    "effect": "Any time an enemy makes a charge Action to engage in melee with an Allied Tau within 20 metres, the character can spend their reaction to make a standard ranged attack with -20 to the ballistic test to attack the enemy. This attack resolves prior to the target completing their charge action.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Any time an enemy makes a charge Action to engage in melee with an Allied Tau within 20 metres, the character can spend their reaction to make a standard ranged attack with -20 to the ballistic test to attack the enemy. This attack resolves prior to the target completing their charge action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3ULomIMd8SLOMeMO"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Void Suit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "8kg",
+    "availability": "Allows surviving in a vacuum, has a Rebreather, tether lines, clamps, etc. At least 1 hour of air. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)",
+    "cost": "Poor suits may not have adequate protection, leading to long term sickness",
+    "effects": "Plentiful",
+    "notes": "100 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 100 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5RXQ5i08QBGjkzYA"
+}

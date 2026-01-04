@@ -1,0 +1,28 @@
+{
+  "name": "Knife (Landunder) \"Sigilite\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive",
+    "weight": "0.75kg",
+    "availability": "Rare",
+    "cost": "85 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Defensive</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5j7L01B8xn9F3Ob8"
+}

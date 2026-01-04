@@ -1,0 +1,20 @@
+{
+  "name": "Man-Stopper Bullets",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Stubbers, Hand cannons, rifles, autopistol, autogun",
+    "damageOrEffect": "+3 PEN",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": "5T per 6",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +3 PEN</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xjPi54dfXUuK8BY1"
+}

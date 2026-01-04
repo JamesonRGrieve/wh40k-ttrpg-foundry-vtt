@@ -1,0 +1,28 @@
+{
+  "name": "Necron Ablative Projector",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Necron",
+    "range": "100m",
+    "rof": "S/2/-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Reliable, Vengeful (9)",
+    "weight": "10kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Vengeful (9)</p><p><b>Note:</b> The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KvGpYQaDhO6cbvHS"
+}

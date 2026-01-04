@@ -1,0 +1,22 @@
+{
+  "name": "Weaken Veil",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "30m Radius",
+    "range": "Threshold 9\n+10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained all Psychic Powers manifested within range gain +10 to their Focus Power Tests, however cause Psychic Phenomena on one off of doubles as well as doubles (EG: 54, 55, and 56 instead of just 55).\nFor every 5 Points above Threshold / 1 DoS on Focus Test, increase range by 10 metres.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QVhuMkkJDDSsp4ZD"
+}

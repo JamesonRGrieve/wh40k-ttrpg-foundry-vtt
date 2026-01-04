@@ -1,0 +1,28 @@
+{
+  "name": "Shock Net",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Shock",
+    "range": "-",
+    "rof": "-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking, Snare",
+    "weight": "1kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking, Snare</p><p><b>Note:</b> Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZdJa9Hs71OBu2QpE"
+}

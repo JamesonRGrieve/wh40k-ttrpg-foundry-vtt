@@ -1,0 +1,22 @@
+{
+  "name": "Banishment",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "Seal the Breach\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker disrupts a Warp Creatures connection to the warp. This power only affects target's with the Daemonic Trait (or other warp creatures at GM Discretion). Make Opposed Willpower Test vs target's willpower, For every Degree of success psyker gets, target takes 1d10 damage, ignoring armour and toughness. If Psyker wins test by 5+ Degrees of Success, Target is instantly destroyed.",
+    "effect": "500xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4QDVOx12uSHw6i8a"
+}

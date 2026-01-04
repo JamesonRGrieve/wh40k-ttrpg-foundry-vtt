@@ -1,0 +1,28 @@
+{
+  "name": "Power Hammer (Ebenus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemonbane, Power Field, Unwieldy",
+    "weight": "16kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Two-Handed unless wielder has Strength Bonus of 5+.. Acts as a Null Rod, and grants wielder the Deny the Witch Talent whilst wielded.\nNull Rod: psykers within 2d10 metres suffer -30 to manifest Psychic Powers. When on person provides +30 to resist any psychic powers that directly affect them",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+.. Acts as a Null Rod, and grants wielder the Deny the Witch Talent whilst wielded.\nNull Rod: psykers within 2d10 metres suffer -30 to manifest Psychic Powers. When on person provides +30 to resist any psychic powers that directly affect them</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YzZVRtKjuEqjGRgO"
+}

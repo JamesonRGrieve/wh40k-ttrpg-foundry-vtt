@@ -1,0 +1,20 @@
+{
+  "name": "Restraints",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "4kg",
+    "availability": "Heavy Restraints that are designed to fit most human-shaped bodies. Can even hold a Thrashing Ork, although applying them may be difficult if the target can fight back.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "10 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pN69DRpndDFmRzV7"
+}

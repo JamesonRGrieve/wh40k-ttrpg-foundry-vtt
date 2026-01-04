@@ -1,0 +1,22 @@
+{
+  "name": "Void Substantiation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n(Cryokinesis)",
+    "prerequisites": "Black Sleep\nOW: Psy Rating 6",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "On successful test, for as long as power is sustained, psyker does not need air or warmth, is immune to the effects suffocation and vacuum, and gains Resistance (Cold) and Resistance (Poison) Talents (+10 to resist effects of Cold/Poison). Whenever any creature tries to make a melee attack against the psyker, they must make +0 Toughness Test first, with -5 per Degree of Success on psyker's Focus Power Test. If the attacker fails, it suffers -10 on the attack and gains a level of fatigue.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pFbScLZtyT3zGCP7"
+}

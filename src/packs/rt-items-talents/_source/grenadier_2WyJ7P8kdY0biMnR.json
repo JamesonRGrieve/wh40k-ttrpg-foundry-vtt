@@ -1,0 +1,17 @@
+{
+  "name": "Grenadier",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1: Ballistic Skill 35\nAptitudes: Ballistic Skill, Finesse",
+    "effect": "When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2WyJ7P8kdY0biMnR"
+}

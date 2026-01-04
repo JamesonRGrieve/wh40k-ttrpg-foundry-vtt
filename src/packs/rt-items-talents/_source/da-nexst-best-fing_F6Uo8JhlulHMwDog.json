@@ -1,0 +1,17 @@
+{
+  "name": "Da Nexst Best Fing",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork, Mob Rule",
+    "effect": "The Ork now also gains the Benefits of Mob Rule (+10 to Resist effects of Fear and Pinning) for every Two Non-Orks that do not have the Machine Trait, are not Wild Animals, and are not Lesser Greenskins (Gretchin/Squigs/Snotlings) within 10 Metres.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The Ork now also gains the Benefits of Mob Rule (+10 to Resist effects of Fear and Pinning) for every Two Non-Orks that do not have the Machine Trait, are not Wild Animals, and are not Lesser Greenskins (Gretchin/Squigs/Snotlings) within 10 Metres.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F6Uo8JhlulHMwDog"
+}

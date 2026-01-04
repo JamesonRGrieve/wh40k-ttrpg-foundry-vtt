@@ -1,0 +1,28 @@
+{
+  "name": "Lasgun (Roth) \"Lightning\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "120m",
+    "rof": "S/2/-",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "4kg",
+    "availability": "Rare",
+    "cost": "175 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A Bullpup Lasgun varient. Often reserved for sharpshooter infantry regiments and further modified into long las sniper rifles",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> A Bullpup Lasgun varient. Often reserved for sharpshooter infantry regiments and further modified into long las sniper rifles</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9W6n255CkjQxvolg"
+}

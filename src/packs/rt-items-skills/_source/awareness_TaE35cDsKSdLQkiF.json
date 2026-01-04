@@ -1,0 +1,18 @@
+{
+  "name": "Awareness",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Apt: Perception, Fieldcraft, Unaligned",
+    "characteristic": "Perception",
+    "descriptor": "The Ability to understand and be aware of one's surroundings. Used for Spotting Items or Individuals or other hidden things. Covers both instantaneous Awareness and more deliberate over-time awareness",
+    "uses": "Uses: Noticing an Ambush before it happens, searching for clues or hidden items, Eavesdropping on a conversation. (From prior editions: Includes Lip Reading and Search Tests)\nSpecial Use: Lip Reading, Test with -10 per 10 metres from target, Magnoculars or other vision enhancers can benefit, environment can worsen. Success reveals gist of the conversation, more DoS, more details.\n",
+    "useTime": "Free Action made in Reaction to something",
+    "description": {
+      "value": "<p>The Ability to understand and be aware of one's surroundings. Used for Spotting Items or Individuals or other hidden things. Covers both instantaneous Awareness and more deliberate over-time awareness</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TaE35cDsKSdLQkiF"
+}

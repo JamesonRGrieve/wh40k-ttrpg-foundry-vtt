@@ -1,0 +1,17 @@
+{
+  "name": "Furious Zeal",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T1)",
+    "requirements": "Tier 1: Sister of Battle E.Adv, Insanity 10+, Hatred (Any). Aptitudes: Weapon Skill, Offence",
+    "effect": "The Sister adds their Insanity Bonus to the damage they inflict with melee attacks on targets they possess appropriate Hatred talents for.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>The Sister adds their Insanity Bonus to the damage they inflict with melee attacks on targets they possess appropriate Hatred talents for.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v8OmZFaZdjrt7FLz"
+}

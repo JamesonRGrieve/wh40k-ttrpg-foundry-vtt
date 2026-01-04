@@ -1,0 +1,22 @@
+{
+  "name": "Kroot Leathers",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Kroot",
+    "locations": "All",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Rare Availability for Kroot, and much easier to find amongst their Kindreds. Theoretically wearable by humans, Kroot should be able to wear most human armour.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Rare Availability for Kroot, and much easier to find amongst their Kindreds. Theoretically wearable by humans, Kroot should be able to wear most human armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OiDNE539s13lXAiZ"
+}

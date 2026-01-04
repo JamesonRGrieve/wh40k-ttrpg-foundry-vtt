@@ -1,0 +1,20 @@
+{
+  "name": "Death's Grasp",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Disease",
+    "weight": "-",
+    "availability": "Infected Character cannot remove Fatigue. Whenever gaining Fatigue everyone in 1d10 metres is exposed to disease. If character becomes unconcious due to Fatigue whilst infected, they die. Cured with a week of constant rest, at end make +20 Toughness Test, if fail gain 1 Fatigue. ",
+    "cost": "Acquired in batch of 5. Any exposed to disease must make +0 Toughness Test or catch it.\nNurgle Dedicated can carry disease but are immune to effects.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7RECbBggSxsxyR1Q"
+}

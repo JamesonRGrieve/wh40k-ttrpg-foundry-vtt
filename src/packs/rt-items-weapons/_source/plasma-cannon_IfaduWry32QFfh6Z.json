@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Plasma",
+    "range": "120m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 16,
+    "reload": "5 Full",
+    "special": "Blast (1), Maximal, Overheats",
+    "weight": "40kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Ammo worn as Backpack, Can choose between firing normally or maximally",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1), Maximal, Overheats</p><p><b>Note:</b> Ammo worn as Backpack, Can choose between firing normally or maximally</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IfaduWry32QFfh6Z"
+}

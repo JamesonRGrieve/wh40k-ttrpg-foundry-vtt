@@ -1,0 +1,21 @@
+{
+  "name": "Medicae Deck",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 2,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Proper Facilities to deal with severe injuries or disease. Adds +20 to Medicae Tests performed in this component, number of patients that can be treated without penalty is 3x Character's Intelligence Bonus. One per Vessel.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Proper Facilities to deal with severe injuries or disease. Adds +20 to Medicae Tests performed in this component, number of patients that can be treated without penalty is 3x Character's Intelligence Bonus. One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XjRapaRiFP5nioR5"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Xenologist",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Provides information on alien biology. Such as weaknesses and vulnerabilities. Can provide alien physiology consultation and medical procedures, tailored poisons to certain xenos, antidotes to alien toxins or viruses, removal of xenos Parasites, etc.  Has Forbidden Lore (Xenos) +20, Scholastic Lore (Chymistry)+20, Trade (Chymist)+20, Medicae +20, and the Excellent Medical Care service.",
+    "cost": "Alien Biologists, Outlawed Gene-Sculptors, blasphemous Chirurgeons and anatomists. Those who know much about alien biology, its strengths, and weaknesses.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iEOX7hZ0zTmPaNS0"
+}

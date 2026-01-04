@@ -1,0 +1,20 @@
+{
+  "name": "Devotion Chain",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Armour Sections wrapped in chains, or that bind weapons to the armour. Provides +3 to any Willpower Test to Resist Fear or Cohesion Damage",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Black Templars",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OzIM4qL2hxAjXkpr"
+}

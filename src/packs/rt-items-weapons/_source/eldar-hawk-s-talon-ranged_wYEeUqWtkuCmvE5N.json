@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Hawk's Talon [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "100m",
+    "rof": "S/3/10",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wYEeUqWtkuCmvE5N"
+}

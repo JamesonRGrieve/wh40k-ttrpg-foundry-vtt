@@ -1,0 +1,20 @@
+{
+  "name": "Blessed Ammunition",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Any Weapon with Ammo (may limt to Bolt/Flamer/SP)",
+    "damageOrEffect": "Weapon gains Sanctified Quality when firing with this ammo",
+    "qualities": "Sanctified",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": "50T Each",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon gains Sanctified Quality when firing with this ammo</p><p><b>Qualities:</b> Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Wu2zW1kQ1FcN3U6Y"
+}

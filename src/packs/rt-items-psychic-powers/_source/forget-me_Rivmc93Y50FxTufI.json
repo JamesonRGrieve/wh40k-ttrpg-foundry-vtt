@@ -1,0 +1,22 @@
+{
+  "name": "Forget Me",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 6\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range makes a +10 Willpower Test. If failed, for 1d10 minutes they cannot remember anything about the character. \nFor every 5 Points above Threshold / 1 DoS on Focus Power Test, can either target one more individual, extend duration of effect by 1d10 minutes, or make target's test one step harder (can mix and match if achieving multiple times).",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rivmc93Y50FxTufI"
+}

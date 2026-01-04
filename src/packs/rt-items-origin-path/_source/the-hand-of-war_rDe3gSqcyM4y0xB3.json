@@ -1,0 +1,25 @@
+{
+  "name": "The Hand of War",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Trials and Travails",
+    "descriptionText": "Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.",
+    "effects": "Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.trials-and-travails",
+      "step": "Trials and Travails",
+      "stepIndex": 4,
+      "number": "1"
+    }
+  },
+  "_id": "rDe3gSqcyM4y0xB3"
+}

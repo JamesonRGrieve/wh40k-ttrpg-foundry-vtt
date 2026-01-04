@@ -1,0 +1,28 @@
+{
+  "name": "Hunting Lance (Inferno)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flame",
+    "weight": "4kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame</p><p><b>Note:</b> Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d2xV0QmMfg4u5BUt"
+}

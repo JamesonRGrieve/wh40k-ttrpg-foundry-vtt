@@ -1,0 +1,28 @@
+{
+  "name": "Tyrant-class cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Cruiser",
+    "size": "5km long, 0.8km wide",
+    "crew": 90000,
+    "speed": 5,
+    "manoeuvrability": 10,
+    "detection": 10,
+    "hull": 70,
+    "armour": 20,
+    "turrets": 2,
+    "space": 77,
+    "shipPoints": 61,
+    "weaponCapacity": "1 Prow, 2 Port, 2 Starboard",
+    "notes": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "up1zrrxQFR8kp7uH"
+}

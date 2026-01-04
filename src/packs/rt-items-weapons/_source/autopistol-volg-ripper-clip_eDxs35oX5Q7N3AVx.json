@@ -1,0 +1,28 @@
+{
+  "name": "Autopistol (Volg) \"Ripper Clip\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "20m",
+    "rof": "-/-/6",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 12,
+    "reload": "Full",
+    "special": "Inaccurate, Unreliable",
+    "weight": "3kg",
+    "availability": "Scarce",
+    "cost": "40 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Common Availability on the Planet Volg",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> Common Availability on the Planet Volg</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eDxs35oX5Q7N3AVx"
+}

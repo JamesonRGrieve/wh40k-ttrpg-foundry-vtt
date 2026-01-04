@@ -1,0 +1,25 @@
+{
+  "name": "Iniquity-Pattern Dreadclaw Drop Pod",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Spacecraft",
+    "size": "15m/ 15AU's",
+    "tacticalSpeed": "2,500kph /11VU's",
+    "cruisingSpeed": "-5",
+    "maneuverability": "30",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "All 30",
+    "rearArmour": "Self-Aware Machine Spirit",
+    "structuralIntegrity": "10 Individuals in Power Armour or 20 Individuals without.",
+    "crew": "None",
+    "passengers": "Is a Spacecraft. Can be used as a drop pod, travelling at 100 AUs downwards, cannot make maneuvres but can change landing if 500km above to within 25km to original position. Shooting at drop pod has -30 while in flight. When landing scatter by 2d10 metres, afterwards can take off again. All shooting against it has -10 while it is mobile (doesn't stack with -30 while falling). Can afix itself to starship without test, and burrow through in 2 Full Rounds. Has Craft Rating of +5 and squadron size of 15 for Attack Craft Purposes. Can only acquire if allied with Chaos Reavers.",
+    "cargo": "Extremely Rare",
+    "availability": "RT: Battlefleet Koronus",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "bDxpJrL4X7xwbEn2"
+}

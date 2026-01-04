@@ -1,0 +1,22 @@
+{
+  "name": "Defraud",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "Touch",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker makes physical contact with target and makes an Opposed Willpower Test. If successful, they gain +10 + Psy Rating + 5xDoF to next Interaction Skill Test they make with the target. Anyone other than the target that can see or hear the psyker can notice the usage of the technique with a -10 Awareness Test, those who pass see the eyes of the psyker glow, their voice assuming an unnatural tone, or some other effect evident of Warp Contamination.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WwXjRqu3mNI7D0hS"
+}

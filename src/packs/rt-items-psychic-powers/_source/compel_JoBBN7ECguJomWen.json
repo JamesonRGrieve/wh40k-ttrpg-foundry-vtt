@@ -1,0 +1,22 @@
+{
+  "name": "Compel",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "Delude",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "On Successful Test, Psyker can command target to perform a simple objective achievable within a single round, such as \"Flee\", \"Fall\", or \"Attack closest Target\". Targets get +20 to Opposed Willpower Test if compelled action is potentially suicidal.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JoBBN7ECguJomWen"
+}

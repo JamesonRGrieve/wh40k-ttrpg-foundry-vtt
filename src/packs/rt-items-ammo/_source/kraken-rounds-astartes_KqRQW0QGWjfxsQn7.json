@@ -1,0 +1,20 @@
+{
+  "name": "Kraken Rounds (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Any Astartes",
+    "damageOrEffect": "Increase Penetration by 8, and increase Range by 50%",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Initiated",
+    "cost": "15 R / Clip",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Increase Penetration by 8, and increase Range by 50%</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KqRQW0QGWjfxsQn7"
+}

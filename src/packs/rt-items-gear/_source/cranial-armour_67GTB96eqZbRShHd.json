@@ -1,0 +1,20 @@
+{
+  "name": "Cranial Armour",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "67GTB96eqZbRShHd"
+}

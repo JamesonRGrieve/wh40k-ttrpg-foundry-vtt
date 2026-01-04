@@ -1,0 +1,20 @@
+{
+  "name": "Implosion Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Any",
+    "damageOrEffect": "If target takes any damage, also suffers 1d5 nonpermenant Agility Damage.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Respected",
+    "cost": "27 R / Clip",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> If target takes any damage, also suffers 1d5 nonpermenant Agility Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "i5xxZIsvxPuaBIpf"
+}

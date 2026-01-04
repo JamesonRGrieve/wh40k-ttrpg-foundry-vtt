@@ -1,0 +1,28 @@
+{
+  "name": "Ork Stinkbomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic - Ork",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Smoke, Blast (10)",
+    "weight": "1.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "-20 Toughness or vomit for 1d5 rounds. +20 if respirators/sealed armour. Even if pass, -10 to all Tests from watering eyes. No effect on orks or creatures with no sense of smell. For Orks, Common.",
+    "description": {
+      "value": "<p><b>Special:</b> Smoke, Blast (10)</p><p><b>Note:</b> -20 Toughness or vomit for 1d5 rounds. +20 if respirators/sealed armour. Even if pass, -10 to all Tests from watering eyes. No effect on orks or creatures with no sense of smell. For Orks, Common.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hN8mUgcsOhu11sAE"
+}

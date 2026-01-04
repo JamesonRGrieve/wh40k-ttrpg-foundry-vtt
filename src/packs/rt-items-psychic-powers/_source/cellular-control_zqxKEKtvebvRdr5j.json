@@ -1,0 +1,22 @@
+{
+  "name": "Cellular Control",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 16",
+    "opposed": "Yes",
+    "sustained": "Whilst power is sustained gain one of the following: Immunity to all Poisons, Immunity to extreme temperatures, +10 to any one characteristic except WS and BS, Immunity to Fatigue, or Count as wearing a sealed void suit (although still need to breathe). Each round this power is sustained, must succeed on a Toughness Test, if this test is failed take 1d5 damage that ignores Armour and Toughness. Power can be manifested multiple times simutaneously to gain multiple benefits.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zqxKEKtvebvRdr5j"
+}

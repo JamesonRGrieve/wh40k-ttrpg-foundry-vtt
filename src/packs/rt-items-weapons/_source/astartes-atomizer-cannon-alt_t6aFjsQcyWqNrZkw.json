@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Atomizer Cannon (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Astartes",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "2d10+14",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 25,
+    "reload": "3 Full",
+    "special": "SM Wep, Blast (5), Devastating (4), Volatile, Toxic",
+    "weight": "80kg",
+    "availability": "Famed",
+    "cost": "50 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable. Toxic Special Quality represents radioactive effects. Therefore Toxin resistance/immunity would do nothing.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (5), Devastating (4), Volatile, Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Toxic Special Quality represents radioactive effects. Therefore Toxin resistance/immunity would do nothing.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t6aFjsQcyWqNrZkw"
+}

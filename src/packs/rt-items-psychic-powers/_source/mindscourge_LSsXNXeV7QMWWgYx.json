@@ -1,0 +1,22 @@
+{
+  "name": "Mindscourge",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, Hatred (Any One), Psy Rating 5",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "25m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker fires Psychic Bolt which can be dodged as if a ranged attack. If it hits target within range it deals 1d10+Psy Rating Energy Damage with Warp Weapon and Shocking Qualities. The Target also suffers 1d5 Non Permenant Characteristic Damage to their Intelligence, Willpower, and Fellowship every turn for a number of turns equal to the Degrees of Success on the Focus Power Test. This power does not effect plants, machines, or other non-intelligent creatures.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LSsXNXeV7QMWWgYx"
+}

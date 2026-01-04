@@ -1,0 +1,22 @@
+{
+  "name": "Fling",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 14",
+    "opposed": "No",
+    "sustained": "Can lift an unattended object of up to 5kg x Willpower Bonus weight. This object can be thrown up to 3m x Willpower Bonus metres, if trying to hit a target make a Willpower Test, with success causing the object to deal 1d10 I damage with +1 per 5kg object weighs.\nFor every 5 points above threshold, can lift an additional 5kg x Willpower Bonus.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wmPgNYMLAByWyqDd"
+}

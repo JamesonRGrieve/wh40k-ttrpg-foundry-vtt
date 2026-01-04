@@ -1,0 +1,20 @@
+{
+  "name": "Frenzon",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Gain Frenzy Talent and Immunity to Fear for 1d10 Minutes",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Very Rare",
+    "notes": "95 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 95 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qbWUgmx1moFRFQeQ"
+}

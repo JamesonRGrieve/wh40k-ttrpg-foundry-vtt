@@ -1,0 +1,17 @@
+{
+  "name": "Chem Geld",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sL4iIZrk0JRVATU4"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Necron Rod of Night",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Necron",
+    "range": "50m",
+    "rof": "S/3/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Haywire (1)",
+    "weight": "7kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality. +2 to Haywire Roll, if Prolonged Deadzone effect occurs, is permenant until repaired with -30 Tech-Use Test or use of Luminen Capacitors. If attack hits opponent, next round instead of attacking wielder can make +0 Tech-Use Test do one of: 50m Tesla Carbine with Semi-Auto of DoS on Test, Remove TB Damage +1 per DoS on Test, or double one Necron within 5m's Regeneration.",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Haywire (1)</p><p><b>Note:</b> Always Best Quality. +2 to Haywire Roll, if Prolonged Deadzone effect occurs, is permenant until repaired with -30 Tech-Use Test or use of Luminen Capacitors. If attack hits opponent, next round instead of attacking wielder can make +0 Tech-Use Test do one of: 50m Tesla Carbine with Semi-Auto of DoS on Test, Remove TB Damage +1 per DoS on Test, or double one Necron within 5m's Regeneration.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "He4UoNqHQNwxEozA"
+}

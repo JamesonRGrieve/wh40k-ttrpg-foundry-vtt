@@ -1,0 +1,22 @@
+{
+  "name": "Incite Rage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Defraud",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker makes an Opposed Willpower test vs a target, if the psyker wins, the target becomes Frenzied for a number of rounds equal to the Psyker's Psy Rating. Each Degree of Success causes another target of psyker's choice within range to be Frenzied, as long as the new target(s) have a lower Willpower characteristic than the original target.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0DrwDYbz5hkpJ0h5"
+}

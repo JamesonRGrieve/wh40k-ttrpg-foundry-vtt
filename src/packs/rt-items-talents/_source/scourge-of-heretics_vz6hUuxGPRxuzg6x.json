@@ -1,0 +1,17 @@
+{
+  "name": "Scourge of Heretics",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": null,
+    "effect": "Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting heretics. (GM Discretion as to what counts as a Heretic)",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting heretics. (GM Discretion as to what counts as a Heretic)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vz6hUuxGPRxuzg6x"
+}

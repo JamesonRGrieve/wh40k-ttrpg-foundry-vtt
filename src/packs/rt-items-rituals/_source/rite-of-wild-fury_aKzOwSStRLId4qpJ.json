@@ -1,0 +1,19 @@
+{
+  "name": "Rite of Wild Fury",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-10 Forbidden Lore (Daemonology) ",
+    "requirements": "Try to bring fourth a Daemonic Beast, exact ritual depends on the God the Beast is from (see Core Summon Requirements). ",
+    "effect": "A Daemonic Beast is summoned, it remains corporeal for 1d5+5 rounds, +1 Round per Degree of Success on Ritual Test. If the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.\nA -10 Daemonic Mastery Test may be made to take control of the Daemon. (not the same as making it a mount).",
+    "costs": "The Ritual triggers two Psychic Phenomena.",
+    "failure": "Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test.",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> A Daemonic Beast is summoned, it remains corporeal for 1d5+5 rounds, +1 Round per Degree of Success on Ritual Test. If the veil between reality is thin, or the daemon is further empowered through slaughter it may stay for longer.\nA -10 Daemonic Mastery Test may be made to take control of the Daemon. (not the same as making it a mount).</p><p><b>Costs:</b> The Ritual triggers two Psychic Phenomena.</p><p><b>Failure:</b> Contempt of the Warp Occurs, with +10 to the roll per Degree of Failiure on Ritual Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aKzOwSStRLId4qpJ"
+}

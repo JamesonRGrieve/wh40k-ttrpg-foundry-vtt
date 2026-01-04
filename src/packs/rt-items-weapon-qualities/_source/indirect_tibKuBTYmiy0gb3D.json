@@ -1,0 +1,14 @@
+{
+  "name": "Indirect",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 4,
+    "description": {
+      "value": "<p>4</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tibKuBTYmiy0gb3D"
+}

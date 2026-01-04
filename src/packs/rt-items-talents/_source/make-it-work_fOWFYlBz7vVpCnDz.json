@@ -1,0 +1,17 @@
+{
+  "name": "Make it Work",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Ork (Innate)",
+    "effect": "Ork Weapons that have the Unreliable Quality do not have this Quality when wielded by an Ork.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Ork Weapons that have the Unreliable Quality do not have this Quality when wielded by an Ork.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fOWFYlBz7vVpCnDz"
+}

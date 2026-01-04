@@ -1,0 +1,14 @@
+{
+  "name": "Relic*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 59,
+    "description": {
+      "value": "<p>59</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "euCCBgFmj7T3jjFE"
+}

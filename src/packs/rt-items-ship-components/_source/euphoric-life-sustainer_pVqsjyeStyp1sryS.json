@@ -1,0 +1,21 @@
+{
+  "name": "Euphoric Life Sustainer",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Life Sustainer",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 4,
+    "spaceUsage": 2,
+    "spCost": 1,
+    "effect": "Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.",
+    "availability": "Rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pVqsjyeStyp1sryS"
+}

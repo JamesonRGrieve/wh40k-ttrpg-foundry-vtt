@@ -1,0 +1,22 @@
+{
+  "name": "Flesh Warp",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Make Focus Power Test, if successful Psyker can increase either their Strength, Toughness, or Agility by 1d10+Psy Rating, but must decrease one of the others by 1d5, these changes last as long as they sustain the power. If Psyker succeeds by by 2+ Degrees of Success, they can also alter their Hair Colour, Skin Tone, Muscle Tone, and Apparent Age within 10 years of actual age. They can't change their Gender, height, Body Mass or Eye Colour.",
+    "effect": "200xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "g6c8zTIvLQPCUuM8"
+}

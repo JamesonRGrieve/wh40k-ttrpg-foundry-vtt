@@ -1,0 +1,20 @@
+{
+  "name": "Melta Gel",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "A Gelatine substance that can be smeered or stuck onto a surface. Once applied it activated by an electrical spark. Rapidly burns through hull plates without requiring oxygen. Comes in a Tube that can cover ~1m^2 or a thin line 5m long. Deals the same damage as a melta bomb (6d10, Pen 12) but over the course of a minute before burning out.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "200 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 200 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aPwZS28lt84P6G7k"
+}

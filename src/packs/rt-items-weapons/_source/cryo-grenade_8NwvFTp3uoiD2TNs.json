@@ -1,0 +1,28 @@
+{
+  "name": "Cryo Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "4d10+6",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3)",
+    "weight": "0.5kg",
+    "availability": "Initiated",
+    "cost": "18 R",
+    "source": "DW: Rites of Battle",
+    "note": "Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8NwvFTp3uoiD2TNs"
+}

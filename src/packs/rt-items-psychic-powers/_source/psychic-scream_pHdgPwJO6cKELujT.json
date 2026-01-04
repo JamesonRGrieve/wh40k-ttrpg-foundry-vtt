@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Scream",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "Mind Probe\nOW: Psy Rating 5",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker can Stun and injure target within range. On Successful Focus Power Test, deal 1d10 + Psy Rating Impact Damage, with Shocking Quality that ignores armour. Target Suffers -5*Psy Rating Toughness Test to resist being Stunned for one round + 1 per DoF.\nShocking: If Target takes any damage from attack, makes +0 Toughness Test, on failiure Target is stunned for a number of rounds equal to half the damage suffered. +10 to save per AP.",
+    "effect": "300xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pHdgPwJO6cKELujT"
+}

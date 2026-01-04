@@ -1,0 +1,22 @@
+{
+  "name": "Flash Bang",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "20m Radius",
+    "range": "Threshold 6\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Everyone except the Psyker within range must make a +20 Willpower Test or be stunned for 1 round. \nFor every 10 Points above Threshold/2 DoS on Focus Test, test becomes one step harder (+20 -> +10 -> etc).",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sZ3VRRUvkmzOx3CY"
+}

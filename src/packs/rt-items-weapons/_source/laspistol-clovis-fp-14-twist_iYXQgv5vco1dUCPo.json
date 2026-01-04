@@ -1,0 +1,28 @@
+{
+  "name": "Laspistol (Clovis FP-14) \"Twist\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Unreliable",
+    "weight": "0.5kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can be readied as a Free Action as if having the \"Quick Draw\" Talent. -20 to Awareness, Scrutiny, or Search tests to discover this weapon if hidden on your person.",
+    "description": {
+      "value": "<p><b>Special:</b> Unreliable</p><p><b>Note:</b> Can be readied as a Free Action as if having the \"Quick Draw\" Talent. -20 to Awareness, Scrutiny, or Search tests to discover this weapon if hidden on your person.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iYXQgv5vco1dUCPo"
+}

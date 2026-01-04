@@ -1,0 +1,25 @@
+{
+  "name": "Devotion",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Motivation",
+    "descriptionText": "1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.\n2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.\n3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.",
+    "effects": "1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.\n2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.\n3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.<br>2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.<br>3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.motivation",
+      "step": "Motivation",
+      "stepIndex": 5,
+      "number": "1 and 4"
+    }
+  },
+  "_id": "FrjpkfY761rgTn4w"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "I'z Gunna Squig Ya!",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Zzap, Dis is Takin' Too Long",
+    "focusPower": "Full Action",
+    "action": "1m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Weirdboy makes Opposed Willpower Test against single foe within range. If Weirdboy wins, target suffers 1d5 Rending Damage per Degree of Success that is not reduced by armour or toughness. If target suffers damage after any reductions in excess of twice their Toughness Bonus from the attack and does not have Daemonic or Machine Trait, they are permenantly transformed into a Squig. Effectively dying instantly as this cannot be reversed. Characters with Fate points may burn a fate point to avoid this.\nNote: Squig stats are listed below \"Weird Fings\" Table",
+    "effect": "500xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hvXMVEI1F6ROBfY3"
+}

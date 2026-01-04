@@ -1,0 +1,17 @@
+{
+  "name": "Glowy Bubble",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork Weirdboy, Da Power of Waaagh!, Willpower 40",
+    "effect": "When entering combat, a bubble of energy surrounds the character. It Imposes -30 on all Concealment Tests and provides Psy Rating AP of Cover to the Character and anyone standing behind them. This Cover's AP reduces as normal when penetrated, but can be refreshed with a +0 Willpower Test as a Half Action.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>When entering combat, a bubble of energy surrounds the character. It Imposes -30 on all Concealment Tests and provides Psy Rating AP of Cover to the Character and anyone standing behind them. This Cover's AP reduces as normal when penetrated, but can be refreshed with a +0 Willpower Test as a Half Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YXi27je0zwSHBDAx"
+}

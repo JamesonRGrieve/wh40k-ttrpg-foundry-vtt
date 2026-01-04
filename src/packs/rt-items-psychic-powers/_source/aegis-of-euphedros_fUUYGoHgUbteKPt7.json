@@ -1,0 +1,22 @@
+{
+  "name": "Aegis of Euphedros",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 7, Infamy 70+, F. Lore(Warp), Sch. Lore (Occult), Child of the Warp",
+    "focusPower": "Full Action Concentration",
+    "action": "Self",
+    "range": "-30 Willpower",
+    "opposed": "No",
+    "sustained": "Power lasts for Psy Rating Rounds. This power cannot be used at Fettered Level, and no other powers can be manifested at Unfettered Level by the Pskyer for this power's duration, for the purposes of Psychic Strength, the Psyker counts as Daemonic when manifesting this power. For its duration, the Psyker gains the Incorporeal and Hover(6) Traits, +20 to all Willpower Tests, but may only take actions to move or cast Psychic Powers which can affect those not incorporeal. Focus Power Tests targeting Psyker have -10. All Psychic Bolt, Barrage, Blast, and Storm Powers the Psyker uses gain the Warp Weapon and Tainted Qualities, all Daemons and other warp entities (and those possessed by them must end their turns at least 10 metres from the psyker or sacrifice all actions attempting to move that far away from them. Psychic Phenomena that occur whilst using power remain in the area they occur/affect forever, affecting any that enter that area randomly.",
+    "effect": "1000xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>1000xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fUUYGoHgUbteKPt7"
+}

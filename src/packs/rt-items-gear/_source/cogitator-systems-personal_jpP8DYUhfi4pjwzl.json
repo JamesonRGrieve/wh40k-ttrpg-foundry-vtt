@@ -1,0 +1,20 @@
+{
+  "name": "Cogitator Systems (Personal)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1.5kg",
+    "availability": "A Portable Cogitator capable of analyising information from data-slates or similar sources. Provides +10 to Relevent Tests, typically Literacy, Logic, and Lore Tests.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "750 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 750 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jpP8DYUhfi4pjwzl"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Infernus Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Melta",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+8",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": 4,
+    "reload": "Full",
+    "special": "SM Wep, Melta",
+    "weight": "5kg",
+    "availability": "Famed",
+    "cost": "35 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1dPzbf479vb6Mr0L"
+}

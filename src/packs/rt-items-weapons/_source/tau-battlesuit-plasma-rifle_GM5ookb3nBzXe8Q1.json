@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Plasma Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "90m",
+    "rof": "S/2/4",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 16,
+    "reload": "Full",
+    "special": null,
+    "weight": "15kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. ",
+    "description": {
+      "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GM5ookb3nBzXe8Q1"
+}

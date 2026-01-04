@@ -1,0 +1,17 @@
+{
+  "name": "Blazing Exemplar",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Blazing Exemplar Spec\n300xp",
+    "descriptionText": "When Order is issued, If Comrade is in Cohesion, whenever the Character inflicts Righteous fury on an enemy, each ally within Cohesion Range (default 5m) of the Comrade can inflict Righteous Fury on a 9 or 10 Damage Roll until the end of this next turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When Order is issued, If Comrade is in Cohesion, whenever the Character inflicts Righteous fury on an enemy, each ally within Cohesion Range (default 5m) of the Comrade can inflict Righteous Fury on a 9 or 10 Damage Roll until the end of this next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S0mQEtxRc5ltP915"
+}

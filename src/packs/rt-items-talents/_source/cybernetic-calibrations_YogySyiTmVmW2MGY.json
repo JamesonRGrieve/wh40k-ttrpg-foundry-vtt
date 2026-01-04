@@ -1,0 +1,17 @@
+{
+  "name": "Cybernetic Calibrations",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; 2+ Cybernetics, Tech-Use +10, Cybernetic Boost. Aptitudes: Intelligence, Tech",
+    "effect": "All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YogySyiTmVmW2MGY"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Lasgun (Lucius)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "100m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 35,
+    "reload": "Full",
+    "special": null,
+    "weight": "5kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Can fire on high-power mode: +1 Damage, consumes two ammo per shot and Gains Unreliable Quality\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and,  Gains Overheats and Unreliable Qualities",
+    "description": {
+      "value": "<p><b>Note:</b> Can fire on high-power mode: +1 Damage, consumes two ammo per shot and Gains Unreliable Quality\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and,  Gains Overheats and Unreliable Qualities</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Cre0meGOXaTHoygr"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Incinerator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Daemonbane, Flame, Spray",
+    "weight": "3kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Flame, Spray</p><p><b>Note:</b> Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v6xKUslza0No68vp"
+}

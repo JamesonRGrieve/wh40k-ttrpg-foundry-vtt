@@ -1,0 +1,17 @@
+{
+  "name": "Classified Competence",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Tau (Innate)",
+    "effect": "Gain the chosen Classified Competence from Adept Machinist, Dauntless Bulwark, Exemplar of Unity, Finder of Ways, Precise Hunter, and Windstrider",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Gain the chosen Classified Competence from Adept Machinist, Dauntless Bulwark, Exemplar of Unity, Finder of Ways, Precise Hunter, and Windstrider</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YBLOysIzHtGoUaZP"
+}

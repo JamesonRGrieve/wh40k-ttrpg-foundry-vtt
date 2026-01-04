@@ -1,0 +1,22 @@
+{
+  "name": "Xenohide Cloak",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Dark Eldar",
+    "locations": "All",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "3kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Common Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>Common Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZyfulAX8ykhkoapU"
+}

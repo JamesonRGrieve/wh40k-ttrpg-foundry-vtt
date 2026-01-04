@@ -1,0 +1,17 @@
+{
+  "name": "Feat of Strength",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Strength 45, Bulging Biceps \nAptitudes: Offence, Strength",
+    "effect": "Character can spend a Fate Point to gain Unnatual Strength (X), or increase it by X until the end of their turn. Where X any number up to the character's Strength Bonus. At the end of their turn, the character gains X Fatigue.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character can spend a Fate Point to gain Unnatual Strength (X), or increase it by X until the end of their turn. Where X any number up to the character's Strength Bonus. At the end of their turn, the character gains X Fatigue.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "el5916aEFIyDiDss"
+}

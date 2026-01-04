@@ -1,0 +1,18 @@
+{
+  "name": "Nascent Psyker",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Non Psyker/Tech Priest.",
+    "characteristic": "0xp",
+    "descriptor": "In times of extreme stress, very rarely, some may manifest psychic powers. This is no gift however, for the unsanctioned are feared for they are a danger to all around them.",
+    "uses": "Gain Nascent Power Trait. Can purchase Deceive and Psyniscience for 100xp each.\nIf this Elite Advance was gained as a reuslt of extreme stress, the character immeidately suffers Psychic Phenomena of some kind, and may make a Willpower test to regain control. If the character is discovered to possess Psychic powers, they must at some point either go rogue or be sanctioned. Neither option is pleasent, but sanctioning is less likely to result in death.",
+    "useTime": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>In times of extreme stress, very rarely, some may manifest psychic powers. This is no gift however, for the unsanctioned are feared for they are a danger to all around them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dJTXw50urbmEwSsp"
+}

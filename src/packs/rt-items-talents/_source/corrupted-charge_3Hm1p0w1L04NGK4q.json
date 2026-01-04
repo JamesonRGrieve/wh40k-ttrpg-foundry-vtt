@@ -1,0 +1,17 @@
+{
+  "name": "Corrupted Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Acolyte of Abraxis Alternative Advance, 500xp\nInt 45, 2+ Integrated Psychic Xenos Artifacts",
+    "effect": "The Character's Luminen Shock and Luminen Blast Talents gain the Force Quality. If the character fails the Focus Power Test to activate this Force Quality, they suffer 1d5 Energy Damage not reduced by Armour and Toughness.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>The Character's Luminen Shock and Luminen Blast Talents gain the Force Quality. If the character fails the Focus Power Test to activate this Force Quality, they suffer 1d5 Energy Damage not reduced by Armour and Toughness.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3Hm1p0w1L04NGK4q"
+}

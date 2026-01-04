@@ -1,0 +1,28 @@
+{
+  "name": "Flamer Array (Magnus) \"Hydra\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "8m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Flame, Proven (3), Spray",
+    "weight": "10kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Consists of several flamers strapped to each forearm linked to a single canister. Usually worn under heavy robes. Allows wearer to wave their hands about, spewing fire.\nAfter firing the weapon, gain Fear(1) until end of encounter. Spray Quality affects 90 degree cone rather than 30 degree. Weight includes backpack fuel supply.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Proven (3), Spray</p><p><b>Note:</b> Consists of several flamers strapped to each forearm linked to a single canister. Usually worn under heavy robes. Allows wearer to wave their hands about, spewing fire.\nAfter firing the weapon, gain Fear(1) until end of encounter. Spray Quality affects 90 degree cone rather than 30 degree. Weight includes backpack fuel supply.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LJHvT0vQHYFb3Xkl"
+}

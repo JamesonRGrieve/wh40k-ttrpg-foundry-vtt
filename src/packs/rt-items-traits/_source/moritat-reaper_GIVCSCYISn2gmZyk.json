@@ -1,0 +1,17 @@
+{
+  "name": "Moritat Reaper",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Assassin Career, DH Rank 6+. Mus be a member of the Moritat and remain true to its code.",
+    "descriptionText": "Members of an ancient Imperial Death Cult, devoted to a bloody interpretation of the Imperial Creed. They believe they serve the God Emperor humself, their killings divinely liscened and ordained. They see blood as sacred, and its shedding from the Heretic, Mutant, Cultist, and Witch by the finest blades an ultimate art.",
+    "effects": "Replace new Rank's Advances with that of the Moritat Reaper\nAllows for the purchasing of the Unique Talent The Reaping",
+    "source": "DH: Inquisitor's Handbook (Page 74)",
+    "description": {
+      "value": "<p>Members of an ancient Imperial Death Cult, devoted to a bloody interpretation of the Imperial Creed. They believe they serve the God Emperor humself, their killings divinely liscened and ordained. They see blood as sacred, and its shedding from the Heretic, Mutant, Cultist, and Witch by the finest blades an ultimate art.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Moritat Reaper\nAllows for the purchasing of the Unique Talent The Reaping</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GIVCSCYISn2gmZyk"
+}

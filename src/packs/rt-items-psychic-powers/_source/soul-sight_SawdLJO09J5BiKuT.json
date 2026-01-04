@@ -1,0 +1,22 @@
+{
+  "name": "Soul Sight",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Threshold 23",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, character can read the auras of anyone they can see as a Full Action, requiring a Psyniscience Test gaining information based on Degrees of Success: 0 DoS - Hue: 3 strongest current emotions, race, whether they are psychic or untouchable, and a rough idea of physical and mental wellbeing. 1 DoS: Flow - all of target's feelings, insight into nature and habitual sentiments (depressive, optimistic, misanthropic, etc), gain +10 to Fellowship with target whilst power is active, subconcious emotions from things like hunger, desire, pain, etc, target's current wounds and fatigue, and disciplines of any psychic powers. 2 DoS: Shape - Target's Insanity Points and if they have Corruption Points, three major emotions they have experienced within last 12 hours, any madness or addictions, Psy Rating. 3 DoS - Pattern: Corruption Points, whether they have Minor Psychic Powers, whether their aura is genuine or faked (eg Daemonic, psychic, or artificial mask).",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SawdLJO09J5BiKuT"
+}

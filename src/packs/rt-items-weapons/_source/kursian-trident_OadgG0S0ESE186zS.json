@@ -1,0 +1,28 @@
+{
+  "name": "Kursian Trident",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Kursian",
+    "range": "3m",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Balanced",
+    "weight": "7kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Needs Exotic Weapon Training(Kursian Pit Weapons). Best Quality versions gain Shocking Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Balanced</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons). Best Quality versions gain Shocking Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OadgG0S0ESE186zS"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Laspistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 30,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "1.5kg",
+    "availability": "Common",
+    "cost": "50 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a73zGLZW2hcAKWuG"
+}

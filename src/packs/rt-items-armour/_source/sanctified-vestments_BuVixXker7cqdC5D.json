@@ -1,0 +1,22 @@
+{
+  "name": "Sanctified Vestments",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Arms, Body, Legs",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "12kg",
+    "availability": "Rare",
+    "cost": "-",
+    "notes": "Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BuVixXker7cqdC5D"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Mental Alacrity",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "Inspire",
+    "focusPower": "Half Action",
+    "action": "Self, 1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker gains bonus to Perception Characteristic equal to their Psy Rating + Willpower Bonus, and can bestow this bonus to any ally within range, lasts for one round unless maintained.",
+    "effect": "200xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fXu7Yvg7ONVa5YND"
+}

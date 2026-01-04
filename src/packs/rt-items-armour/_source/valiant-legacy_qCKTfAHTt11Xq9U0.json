@@ -1,0 +1,22 @@
+{
+  "name": "Valiant Legacy",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field Relic Astartes",
+    "locations": "All",
+    "ap": 0.55,
+    "maxAg": "-",
+    "weight": "10kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "notes": "Master Crafted Relic Astartes Storm Shield of the Sons of Orar Chapter. Overload 01. Wielder can trigger a demeanour one additional time each session.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Storm Shield of the Sons of Orar Chapter. Overload 01. Wielder can trigger a demeanour one additional time each session.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qCKTfAHTt11Xq9U0"
+}

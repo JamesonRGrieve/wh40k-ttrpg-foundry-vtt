@@ -1,0 +1,20 @@
+{
+  "name": "Trophy Rack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "2kg",
+    "availability": "Melee Attacks suffer -5 to Weapon Skill Tests unless they are Immune to Fear, Beasts, Mechnical Constructs.\nWearer gains +10 to Intimidation Tests but suffers -10 to Steath Tests.",
+    "cost": "Often used by Chaos, Consists of Ornate Banners and/or the skulls and helmets of vanquished enemies.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0X2ztKcTSViVdW9Y"
+}

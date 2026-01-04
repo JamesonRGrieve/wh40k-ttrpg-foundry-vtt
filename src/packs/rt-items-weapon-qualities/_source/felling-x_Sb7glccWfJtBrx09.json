@@ -1,0 +1,14 @@
+{
+  "name": "Felling (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Reduces Toughness Bonus gained as a result of Unnatural Toughness by X. Doesn't reduce base Toughness Bonus. \n(EG: Unnatural Toughness(+4) with TB 4 would result in TB 8, Felling (5) would reduce this back to TB 4)",
+    "description": {
+      "value": "<p>Reduces Toughness Bonus gained as a result of Unnatural Toughness by X. Doesn't reduce base Toughness Bonus. \n(EG: Unnatural Toughness(+4) with TB 4 would result in TB 8, Felling (5) would reduce this back to TB 4)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Sb7glccWfJtBrx09"
+}

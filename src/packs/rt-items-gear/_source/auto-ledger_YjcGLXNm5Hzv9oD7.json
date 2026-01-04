@@ -1,0 +1,20 @@
+{
+  "name": "Auto-Ledger",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "90kg",
+    "availability": "Can help prevent financial errors and mistakes. When a Misfortune event occurs for a Rogue Trader who possess this (or one of their subordinates who possesses it), Subtract 5 from the result of the roll to determine the severity of the misfortune.",
+    "cost": "Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YjcGLXNm5Hzv9oD7"
+}

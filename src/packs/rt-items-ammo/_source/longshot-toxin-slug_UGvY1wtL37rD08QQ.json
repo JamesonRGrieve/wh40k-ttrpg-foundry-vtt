@@ -1,0 +1,20 @@
+{
+  "name": "Longshot: Toxin Slug",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Longshot",
+    "damageOrEffect": "Comes in pack of 5. 1d10+1 Damage, 2 Penetration. Blast (1), Corrosive, Toxic (2).\nHalve Range and No Accurate Quality when firing this.",
+    "qualities": "Blast (1), Corrosive, Toxic (2)",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Comes in pack of 5. 1d10+1 Damage, 2 Penetration. Blast (1), Corrosive, Toxic (2).\nHalve Range and No Accurate Quality when firing this.</p><p><b>Qualities:</b> Blast (1), Corrosive, Toxic (2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UGvY1wtL37rD08QQ"
+}

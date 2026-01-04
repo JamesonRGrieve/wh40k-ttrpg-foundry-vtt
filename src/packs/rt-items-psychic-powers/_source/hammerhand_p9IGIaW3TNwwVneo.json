@@ -1,0 +1,22 @@
+{
+  "name": "Hammerhand",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Sanctic Daemonology",
+    "prerequisites": "Psy Rating 3,\nPurge Soul",
+    "focusPower": "Half Action\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Character chooses up to Psy Rating allies within range (that can include themselves), whilst power is sustained, all selected individuals gain Unnatural Strength (+X), where X = Psy Rating, or increase their Unnatural Strength by 4. Benefit ends for an individual if they move out of range.",
+    "effect": "300xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p9IGIaW3TNwwVneo"
+}

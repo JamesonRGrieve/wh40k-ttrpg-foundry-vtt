@@ -1,0 +1,17 @@
+{
+  "name": "Sidearm",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; WS 40, BS 40, Two-Weapon Wielder (Ranged and Melee) Aptitudes: WS, BS, Unaligned",
+    "effect": "Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pONHr7kr6XDyhTOx"
+}

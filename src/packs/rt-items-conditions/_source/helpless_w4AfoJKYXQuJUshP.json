@@ -1,0 +1,22 @@
+{
+  "name": "Helpless",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Attacks against helpless targets: Autohit",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Attacks against helpless targets: Autohit</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "target"
+    }
+  },
+  "_id": "w4AfoJKYXQuJUshP"
+}

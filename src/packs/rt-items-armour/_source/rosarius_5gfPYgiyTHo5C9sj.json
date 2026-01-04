@@ -1,0 +1,22 @@
+{
+  "name": "Rosarius",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.5,
+    "maxAg": "-",
+    "weight": "0.6kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5gfPYgiyTHo5C9sj"
+}

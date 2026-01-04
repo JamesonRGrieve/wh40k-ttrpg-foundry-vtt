@@ -1,0 +1,28 @@
+{
+  "name": "Launcher \"Longflame\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Primitive",
+    "range": "200m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "-",
+    "special": "Blast (4), Flame, Inaccurate, Primitive (8)",
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Single-Use item, can't be reloaded. A Primitive Rocket Launcher with a firey payload.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Flame, Inaccurate, Primitive (8)</p><p><b>Note:</b> Single-Use item, can't be reloaded. A Primitive Rocket Launcher with a firey payload.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2iz8PEIRLZtT546e"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Chemical Flamer (Magnus) \"Gorgon\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Corrosive, Felling(1), Flame, Spray, Toxic (2)",
+    "weight": "8kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Can't use other Unusual Flamer Ammunition",
+    "description": {
+      "value": "<p><b>Special:</b> Corrosive, Felling(1), Flame, Spray, Toxic (2)</p><p><b>Note:</b> Can't use other Unusual Flamer Ammunition</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OqTiBYejETOH1bLw"
+}

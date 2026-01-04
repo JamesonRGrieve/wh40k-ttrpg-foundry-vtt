@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Servo-Arm",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Extends 1.5 metres, has Strength of 75 and Unnatural Strength x2. Can anchor oneself to a suitable point as a Free Action using the limb. Can be used to attack as a Reaction or Standard Attack (can only make one attack per round), deals 2d10+14 I Damage with Pen 10. Exceptional Craftsmanship has 85 Strength and 2d10+16 Damage, and +10 to Grapple Tests.",
+    "cost": "Space Marine only, used by Techmarines",
+    "effects": "Initiated",
+    "notes": "30 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 30 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7N2RDNwYBRvazNNF"
+}

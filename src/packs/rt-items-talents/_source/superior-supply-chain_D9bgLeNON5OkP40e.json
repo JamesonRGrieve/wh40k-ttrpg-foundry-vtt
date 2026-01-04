@@ -1,0 +1,17 @@
+{
+  "name": "Superior Supply Chain",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau",
+    "effect": "The Explorer gains +20 to Acquisition Tests to acquire Tau Weapons, wargear, and other equipment.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The Explorer gains +20 to Acquisition Tests to acquire Tau Weapons, wargear, and other equipment.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D9bgLeNON5OkP40e"
+}

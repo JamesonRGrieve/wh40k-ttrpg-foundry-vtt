@@ -1,0 +1,21 @@
+{
+  "name": "Saturine-Pattern 4A \"Ultra\" Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive",
+    "hullType": "Battlecruisers",
+    "powerUsage": -90,
+    "spaceUsage": 14,
+    "spCost": "-",
+    "effect": "Generates power rather than using it.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Generates power rather than using it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N4W6DVcoMxr1F5dO"
+}

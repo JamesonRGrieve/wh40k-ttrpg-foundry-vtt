@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Iron Halo",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field (Astartes)",
+    "locations": "All",
+    "ap": 0.5,
+    "maxAg": "-",
+    "weight": "0.5kg",
+    "availability": "Hero",
+    "cost": "40 R",
+    "notes": "Always Master-Crafted",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Always Master-Crafted</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oZzHJsjI0uMoS0CA"
+}

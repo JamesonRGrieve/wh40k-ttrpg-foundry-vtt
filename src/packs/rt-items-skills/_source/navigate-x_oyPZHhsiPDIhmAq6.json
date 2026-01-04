@@ -1,0 +1,18 @@
+{
+  "name": "Navigate (X)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Apt: Intelligence, Fieldcraft, Unaligned",
+    "characteristic": "Intelligence",
+    "descriptor": "Plot a Course between two points, be it across a continent or through the Warp. Successful test provides estimated navigation time, cosmography, conditions, weather, warp tides, and so on. Often makes use of maps, charts, or Innate Abilities.",
+    "uses": "Navigate (Surface): Journey across unfamiliar Terrain, Getting ones bearins, Finding the quickest land route from once place to another.\nNavigate (Stellar): Journey across a Star System, Find Rough Location in unknown space, Quickest route from once space place to another\nNavitate (Warp): Guiding a Starship through the warp. Usually the domain of Navigators.       Navigate (Webway): Generally Eldar Only, used for Navigating the Webway.",
+    "useTime": "1 Minute for Simple, 1d5 Hours for plotting courses or routes.",
+    "description": {
+      "value": "<p>Plot a Course between two points, be it across a continent or through the Warp. Successful test provides estimated navigation time, cosmography, conditions, weather, warp tides, and so on. Often makes use of maps, charts, or Innate Abilities.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oyPZHhsiPDIhmAq6"
+}

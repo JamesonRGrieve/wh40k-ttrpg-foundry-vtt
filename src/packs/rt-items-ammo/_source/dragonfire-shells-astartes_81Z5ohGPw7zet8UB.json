@@ -1,0 +1,20 @@
+{
+  "name": "Dragonfire Shells (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Any Astartes",
+    "damageOrEffect": "Reduce Damage by 2. Target and everyone within 2m of them must make +0 Agility Test or catch on fire. Can choose to target object or specific area instead of specific target. The Shot is +20, and everyone within 2m must test to avoid fire as usual.",
+    "qualities": "Flame",
+    "weight": "10% wep",
+    "availability": "Respected",
+    "cost": "28 R / Clip",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Reduce Damage by 2. Target and everyone within 2m of them must make +0 Agility Test or catch on fire. Can choose to target object or specific area instead of specific target. The Shot is +20, and everyone within 2m must test to avoid fire as usual.</p><p><b>Qualities:</b> Flame</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "81Z5ohGPw7zet8UB"
+}

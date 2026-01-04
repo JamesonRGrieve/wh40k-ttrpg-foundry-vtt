@@ -1,0 +1,20 @@
+{
+  "name": "Grav Chute",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "15kg",
+    "availability": "Allows user to slow and guide their fall, or hover for up to a minute. Has a one-hour use before power supply needs replacing.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ffuQtPIkGak3NGyD"
+}

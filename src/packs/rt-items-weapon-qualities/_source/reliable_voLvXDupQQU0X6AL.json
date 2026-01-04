@@ -1,0 +1,14 @@
+{
+  "name": "Reliable",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 162,
+    "description": {
+      "value": "<p>162</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "voLvXDupQQU0X6AL"
+}

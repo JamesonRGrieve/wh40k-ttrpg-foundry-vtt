@@ -1,0 +1,17 @@
+{
+  "name": "Lissen Ta Me, Cos I'z Da Biggest",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork, Might Makes Right, Intimidate +10",
+    "effect": "The Ork can now use Might Makes Right Trait (Can use Intimidate to perform all functions of Command) on Non Orks as well as Orks, and can affect a number of creatures with Might Makes Right equal to 10x Strength Bonus.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The Ork can now use Might Makes Right Trait (Can use Intimidate to perform all functions of Command) on Non Orks as well as Orks, and can affect a number of creatures with Might Makes Right equal to 10x Strength Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MCcfydIeQN4xZqYq"
+}

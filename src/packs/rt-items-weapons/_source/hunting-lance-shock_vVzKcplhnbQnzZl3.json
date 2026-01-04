@@ -1,0 +1,28 @@
+{
+  "name": "Hunting Lance (Shock)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking, Recharge",
+    "weight": "4kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Tip recharges after hit. During recharge counts as Cavalry Spear. (Requires Weapon Training for Primitive and Shocking)\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking, Recharge</p><p><b>Note:</b> Tip recharges after hit. During recharge counts as Cavalry Spear. (Requires Weapon Training for Primitive and Shocking)\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vVzKcplhnbQnzZl3"
+}

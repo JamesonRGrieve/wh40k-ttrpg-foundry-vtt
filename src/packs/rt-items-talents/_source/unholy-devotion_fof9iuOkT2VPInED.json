@@ -1,0 +1,17 @@
+{
+  "name": "Unholy Devotion",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Minion of Chaos\nAptitudes: Unaligned",
+    "effect": "Character's Minions are Fanatically devoted to them, whenever the character would be hit with a ranged attack, they may make an Agility Test for any number of their Minions within Agility Bonus Metres, if successful the minion suffers the hit instead. Effectively using the minions as human shields. Only works on the Character's own Minions, not allied NPC's or other player character's minions.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character's Minions are Fanatically devoted to them, whenever the character would be hit with a ranged attack, they may make an Agility Test for any number of their Minions within Agility Bonus Metres, if successful the minion suffers the hit instead. Effectively using the minions as human shields. Only works on the Character's own Minions, not allied NPC's or other player character's minions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fof9iuOkT2VPInED"
+}

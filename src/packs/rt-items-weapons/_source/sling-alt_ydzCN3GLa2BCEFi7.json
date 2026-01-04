@@ -1,0 +1,28 @@
+{
+  "name": "Sling (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10-2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Primitive (5)",
+    "weight": "0.5kg",
+    "availability": "Plentiful",
+    "cost": "10 T",
+    "source": "Only War: Core",
+    "note": "Can be used to throw grenades, retains weapon range but replaces damage with that of the grenade.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (5)</p><p><b>Note:</b> Can be used to throw grenades, retains weapon range but replaces damage with that of the grenade.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ydzCN3GLa2BCEFi7"
+}

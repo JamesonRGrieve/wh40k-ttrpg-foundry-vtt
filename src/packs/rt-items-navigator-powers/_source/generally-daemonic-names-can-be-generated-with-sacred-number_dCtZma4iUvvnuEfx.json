@@ -1,0 +1,21 @@
+{
+  "name": "Generally, Daemonic names can be generated with Sacred Numbers worth of Syllables, +1d5 for Herald Daemons, +1d10 on top of that for Daemon Princes or Greater Daemons. Roll 2 1d10 rolls to determine one syllable then reorder to make something vaguely comprehensible. Or just make it up.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": -10,
+    "novice": "- The Enactor Knows Little of what they are trying to do\n- The veil between Reality and the Warp is strong\n- The Ritual is conducted on Hallowed Ground, or antagonistic individuals of faith are present (Sisters of Battle, Ecclesiarchy Priests, Grey Knights, Chaplains, etc)",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> - The Enactor Knows Little of what they are trying to do\n- The veil between Reality and the Warp is strong\n- The Ritual is conducted on Hallowed Ground, or antagonistic individuals of faith are present (Sisters of Battle, Ecclesiarchy Priests, Grey Knights, Chaplains, etc)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dCtZma4iUvvnuEfx"
+}

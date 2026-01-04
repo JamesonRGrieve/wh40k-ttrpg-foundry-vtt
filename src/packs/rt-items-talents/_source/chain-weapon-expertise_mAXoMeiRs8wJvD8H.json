@@ -1,0 +1,17 @@
+{
+  "name": "Chain Weapon Expertise",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; WS 40, Weapon Training (Chain)\nAptitudes: Weapon Skill, Offence",
+    "effect": "When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mAXoMeiRs8wJvD8H"
+}

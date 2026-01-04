@@ -1,0 +1,20 @@
+{
+  "name": "Web Missile",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Missile Launcher",
+    "damageOrEffect": "Blast (6), Snare",
+    "qualities": "Blast (6), Snare",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Blast (6), Snare</p><p><b>Qualities:</b> Blast (6), Snare</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "e5nsBP9urbiPg2fK"
+}

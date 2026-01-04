@@ -1,0 +1,22 @@
+{
+  "name": "Boon of Tzeentch",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker gains a Bonus to their Psy Rating equal to the number of Degrees of Success they achieve on the Focus Power Test which may be used to augment the next Psychic Power they manifest, which must be at Unfettered Level or higher for the bonus to be applied. After manifesting this power and using the bonus, it goes away and the Psyker suffers an immediate 1d5+ Psy Rating of the Second Power with Pen 4 and Shocking Quality. This hit cannot be dodged, parried, or blocked via a force field.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pwKWf1Tft0kvEtLo"
+}

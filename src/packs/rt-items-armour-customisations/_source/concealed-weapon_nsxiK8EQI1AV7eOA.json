@@ -1,0 +1,18 @@
+{
+  "name": "Concealed Weapon",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour covering all locations, any Carapace or Power Armour.",
+    "effect": "Hides Compact Pistol, Micro-weapon, or knife-sized melee wep in the armour.   -30 to tests to detect weapon. Availability is one higher than weapon, minimum rare.",
+    "weight": "+ wep wgt",
+    "availability": "Special",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Hides Compact Pistol, Micro-weapon, or knife-sized melee wep in the armour.   -30 to tests to detect weapon. Availability is one higher than weapon, minimum rare.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nsxiK8EQI1AV7eOA"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Plaguewort Venom",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Poison",
+    "weight": "-",
+    "availability": "Numbs on skin contact, if coating weapon it gains Toxic Quality for 1d5 Rounds of combat. In addition to toxic damage, if target fails the toxic-induced Toughness Test, target also takes 1d10 Agility Damage. No Good or Best Craftsmanship.",
+    "cost": "Deadly Poison extracted from crushed Plaguewort leaves. ",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xTc4TU1wvDuxayR5"
+}

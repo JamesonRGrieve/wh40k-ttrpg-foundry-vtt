@@ -1,0 +1,22 @@
+{
+  "name": "Warp-Flame Ward",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned\nPsy Rating 5, Infamy 40+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "Self",
+    "range": "- 10 Willpower",
+    "opposed": "No",
+    "sustained": "Power lasts for Psy Rating Rounds, whilst active the Psyker can perform the Lash of Warpflame Reaction. As a Half Action they can prematurely end this power to create make a -10 Willpower Test to create a Psychic Blast surrounding them (they are unaffected by it), wth radius of 5xPsy Rating Metres that can be avoided as if an Area of Effect Attack. Those that fail to avoid take 1d10 + Psy Rating Energy Damage with Pen 5, Flame, and Felling(2) Qualities. If the attack inflicts Zealous Hatred on any target, that target must make a +0 Toughness Test or suffer a random Gift of the Gods, minor NPCs may instead be killed instantly at GM discretion, degenerated into mewling chaos spawn.\nLash of Warp Flame (Reaction, Attack, Melee): In reaction to being targeted by a melee attack, after it has been resolved can make +0 Willpower Test, on success attacker takes 1d10+Psy Rating Damage with Pen 5 and Flame Quality.",
+    "effect": "500xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SqrAOeJTULeTVoWh"
+}

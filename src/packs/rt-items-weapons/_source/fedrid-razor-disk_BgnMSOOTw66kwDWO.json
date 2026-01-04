@@ -1,0 +1,28 @@
+{
+  "name": "Fedrid Razor Disk",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (8)",
+    "weight": "0.5kg",
+    "availability": "Average",
+    "cost": "50 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours\nMay require Exotic Weapon Training to use. Creates an audible low humming sound when thrown which can be followed by the thrower or those nearby.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours\nMay require Exotic Weapon Training to use. Creates an audible low humming sound when thrown which can be followed by the thrower or those nearby.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BgnMSOOTw66kwDWO"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Penal World",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Home World",
+    "descriptionText": "-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military",
+    "effects": "-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.home-world",
+      "step": "Home World",
+      "stepIndex": 1,
+      "number": "5"
+    }
+  },
+  "_id": "YrNPE9VtthnQHtcF"
+}

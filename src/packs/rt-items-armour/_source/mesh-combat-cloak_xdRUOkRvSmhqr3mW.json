@@ -1,0 +1,22 @@
+{
+  "name": "Mesh Combat Cloak",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Mesh",
+    "locations": "Arms, Body, Legs",
+    "ap": 4,
+    "maxAg": 60,
+    "weight": "3kg",
+    "availability": "Very Rare",
+    "cost": "350 T",
+    "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xdRUOkRvSmhqr3mW"
+}

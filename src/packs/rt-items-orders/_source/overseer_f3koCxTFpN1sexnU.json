@@ -1,0 +1,17 @@
+{
+  "name": "Overseer",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Sanctioned Psyker Spec\n300xp",
+    "descriptionText": "If Comrade in Cohesion, for next round they are hit by any attacks that would hit Chracter unless attack roll was a double.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>If Comrade in Cohesion, for next round they are hit by any attacks that would hit Chracter unless attack roll was a double.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f3koCxTFpN1sexnU"
+}

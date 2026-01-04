@@ -1,0 +1,21 @@
+{
+  "name": "Jovian-Pattern Class 8.3 Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive",
+    "hullType": "Cruisers",
+    "powerUsage": -74,
+    "spaceUsage": 15,
+    "spCost": 1,
+    "effect": "Generates Power rather than using it.  On being Damaged, Depressurised, or suffering Critical Hit (even ones targeting drive/engines), roll 1d10, on 4 or higher, effect is ignored.",
+    "availability": "Rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Generates Power rather than using it.  On being Damaged, Depressurised, or suffering Critical Hit (even ones targeting drive/engines), roll 1d10, on 4 or higher, effect is ignored.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FKBXQtWEWfwE3Dyi"
+}

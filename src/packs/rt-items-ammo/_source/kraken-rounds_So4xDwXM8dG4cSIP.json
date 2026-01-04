@@ -1,0 +1,20 @@
+{
+  "name": "Kraken Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP/Bolt Weapon",
+    "damageOrEffect": "Increase Penetration by 4, but reduce damage by 1.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Increase Penetration by 4, but reduce damage by 1.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "So4xDwXM8dG4cSIP"
+}

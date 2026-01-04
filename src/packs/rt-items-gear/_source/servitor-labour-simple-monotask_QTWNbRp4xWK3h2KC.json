@@ -1,0 +1,20 @@
+{
+  "name": "Servitor (Labour, Simple Monotask)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Lobotomised, Augmented Human that performs basic tasks (see Rogue Trader: Core, Page 374)",
+    "cost": null,
+    "effects": "Scarce / Distinguished",
+    "notes": "15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Distinguished</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QTWNbRp4xWK3h2KC"
+}

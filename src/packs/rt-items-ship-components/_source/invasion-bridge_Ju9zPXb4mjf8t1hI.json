@@ -1,0 +1,21 @@
+{
+  "name": "Invasion Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Cruisers",
+    "powerUsage": 4,
+    "spaceUsage": 3,
+    "spCost": "-",
+    "effect": "Where Characters command the ship. +10 to BS Tests against Planetary Based Targets. Ground-Based forces in vox communications with a ship with this component count as having a Multicompass.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Where Characters command the ship. +10 to BS Tests against Planetary Based Targets. Ground-Based forces in vox communications with a ship with this component count as having a Multicompass.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ju9zPXb4mjf8t1hI"
+}

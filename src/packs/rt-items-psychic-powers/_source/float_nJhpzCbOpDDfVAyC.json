@@ -1,0 +1,22 @@
+{
+  "name": "Float",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, character can float upwards or downwards, up to a maximum height of 5 metres.\nPower can be used to prevent fall damage, but requires a -10 Willpower Test after manifesting power.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nJhpzCbOpDDfVAyC"
+}

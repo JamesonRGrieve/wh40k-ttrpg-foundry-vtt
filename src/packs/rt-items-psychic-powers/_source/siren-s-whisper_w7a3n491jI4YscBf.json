@@ -1,0 +1,22 @@
+{
+  "name": "Siren's Whisper",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Daemon",
+    "prerequisites": "Daemonic Trait",
+    "focusPower": "Half Action",
+    "action": "20m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Daemon selects target in range, making Opposed Fellowship Test vs Target's Willpower. If Daemon Wins target takes 1d10 non-permenant Willpower Damage, +1d5 per two Degrees of Success. If target's willpower drops to zero, if falls under the sway of the Daemon for as long as the power is sustained, instead of the usual effect of 0 Willpower. Targets under Daemon's sway cannot act of their own volition and will stand catatonic. Each round at the start of its turn, the Daemon can make a +0 Fellowship Test to convince the target to take any action, that will be obeyed without question, an ally may use their Reaction to make an Opposed Fellowship Test vs Daemon, winner decides the action target takes. When power stops being sustained, if target's willpower at 0, they then suffer usual consequences until it can be recovered.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "w7a3n491jI4YscBf"
+}

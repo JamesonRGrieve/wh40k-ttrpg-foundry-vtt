@@ -1,0 +1,17 @@
+{
+  "name": "Stand/Mount",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nHalf Action",
+    "requirements": "--",
+    "descriptionText": "Comrade out of Cohesion perofmrs the Stand/Mount Action. They stand up from prone or mount/dismount a riding animal.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade out of Cohesion perofmrs the Stand/Mount Action. They stand up from prone or mount/dismount a riding animal.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wIAzTMbuZdwOjpYw"
+}

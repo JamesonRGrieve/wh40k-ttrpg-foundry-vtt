@@ -1,0 +1,28 @@
+{
+  "name": "Blind Grenade (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Smoke (3)",
+    "weight": "0.5kg",
+    "availability": "Scarce",
+    "cost": "25 T",
+    "source": "Only War: Core",
+    "note": "Produces dense smoke and blinds most forms of vision enhancement that would pierce throgh normal obscuring smoke",
+    "description": {
+      "value": "<p><b>Special:</b> Smoke (3)</p><p><b>Note:</b> Produces dense smoke and blinds most forms of vision enhancement that would pierce throgh normal obscuring smoke</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "waQMQMyPIrO1xycd"
+}

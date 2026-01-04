@@ -1,0 +1,14 @@
+{
+  "name": "SM Wep",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 203,
+    "description": {
+      "value": "<p>203</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QaTJo3zjLAyAb443"
+}

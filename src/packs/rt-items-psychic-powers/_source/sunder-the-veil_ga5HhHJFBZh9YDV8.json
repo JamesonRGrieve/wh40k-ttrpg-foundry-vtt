@@ -1,0 +1,22 @@
+{
+  "name": "Sunder the Veil",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 5, Forbidden Lore (Warp) +20",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "10m x Psy Rating Radius",
+    "range": "-40 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "The Psyker creates a bubble of destabilsed reality of listed radius. Within this area all Psychic Powers must be used at Push Level, and add +20 to all Psychic Phenomena Rolls. Additionally for each Degree of Success on the Focus Power Test the Psyker summons one lesser Daemon that manifests within this area and remains for Psy Rating Rounds before vanishing again. This power cannot be recast until its effects have ended.",
+    "effect": "500xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ga5HhHJFBZh9YDV8"
+}

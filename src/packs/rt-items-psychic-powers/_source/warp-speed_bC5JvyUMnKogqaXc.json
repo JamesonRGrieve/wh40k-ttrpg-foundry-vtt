@@ -1,0 +1,22 @@
+{
+  "name": "Warp Speed",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 5",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "-10 Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Psyker gains Unnatural Weapon Skill(+X), Unnatural Ballistic Skill(+X), and Unnatural Agility(+X) Traits, where X = Psy Rating.\nNote: Use Only War Unnatural Characteristics Trait",
+    "effect": "500xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bC5JvyUMnKogqaXc"
+}

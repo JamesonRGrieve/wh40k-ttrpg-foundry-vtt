@@ -1,0 +1,28 @@
+{
+  "name": "Spear (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8)",
+    "weight": "3kg",
+    "availability": "Common",
+    "cost": "15 T",
+    "source": "Only War: Core",
+    "note": "Two-Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Two-Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dv620BYkeYmI0fBp"
+}

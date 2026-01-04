@@ -1,0 +1,22 @@
+{
+  "name": "Mantle of Lies",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, Int 40+, Fel 40+",
+    "focusPower": "Half Action Concentration",
+    "action": "25m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst Sustained, The Psyker will appear identical to a Target Individual within range and line of sight. Telling which is fake requires a -5*Psy Rating Awareness Test (or proper context, such as seeing the psyker transform).",
+    "effect": "200xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sqHAo9uodynPSx6u"
+}

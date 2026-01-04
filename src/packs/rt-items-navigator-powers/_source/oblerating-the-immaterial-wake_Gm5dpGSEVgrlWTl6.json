@@ -1,0 +1,21 @@
+{
+  "name": "Oblerating the Immaterial Wake",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "Ship",
+    "test": "None",
+    "sustain": "No",
+    "novice": "Any other Navigator attempting to use Tracks in the Stars or Similar Powers suffer -10 on Perception Test to track the trail of the ship the Navigator was on when using this power. Navigator suffers one level of Fatigue on using the power. Power can only be used once per 24 Hours.",
+    "adept": "Navigator makes +0 Willpower test. On success Navigators have additional -10 per Degree of Success. Failing test causes power to work at Novice Level. Afterwards make +0 Toughness Test or suffer 1 Fatigue per Degree of Success on Willpower Test.",
+    "master": "Navigator obliterates any trail in real space and the immaterium of the ship they are on. Making it impossible for their ship to be tracked through powers mentioned in Novice Level. Then makes +0 Toughness Test or falls unconcious for 1d5+8 hours.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Novice:</b> Any other Navigator attempting to use Tracks in the Stars or Similar Powers suffer -10 on Perception Test to track the trail of the ship the Navigator was on when using this power. Navigator suffers one level of Fatigue on using the power. Power can only be used once per 24 Hours.</p><p><b>Adept:</b> Navigator makes +0 Willpower test. On success Navigators have additional -10 per Degree of Success. Failing test causes power to work at Novice Level. Afterwards make +0 Toughness Test or suffer 1 Fatigue per Degree of Success on Willpower Test.</p><p><b>Master:</b> Navigator obliterates any trail in real space and the immaterium of the ship they are on. Making it impossible for their ship to be tracked through powers mentioned in Novice Level. Then makes +0 Toughness Test or falls unconcious for 1d5+8 hours.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gm5dpGSEVgrlWTl6"
+}

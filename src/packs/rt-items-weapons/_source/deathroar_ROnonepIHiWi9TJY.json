@@ -1,0 +1,28 @@
+{
+  "name": "Deathroar",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Relic - Astartes",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "2d10+13",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 10,
+    "reload": "3 Full",
+    "special": "SM Wep, Blast (1), Felling (4), Volatile, Maximal",
+    "weight": "7kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only. Master-Crafted Relic Plasma Pistol of the Dark Angels. Maximal Setting does not cause Overheats Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (1), Felling (4), Volatile, Maximal</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Plasma Pistol of the Dark Angels. Maximal Setting does not cause Overheats Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ROnonepIHiWi9TJY"
+}

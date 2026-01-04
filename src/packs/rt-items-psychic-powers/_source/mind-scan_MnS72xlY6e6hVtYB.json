@@ -1,0 +1,22 @@
+{
+  "name": "Mind Scan",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "Mind's Eye, Mind Probe",
+    "focusPower": "Full Action",
+    "action": "250m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker extends mind to identify sentient minds within range. Does not require line of sight. Gains general information depending on Degrees of Success on Focus Power Test. Cannot detect Untouchables, mindless creatures (such as servitors or robots), or other Psychicically Inert Creatures. Anyone with Resistance (Psychic Powers) inflicts -10 on Test (only once). 1 DoS: Crude impression of number of concious minds in range and General position relative to them. 2 DoS: Psyker knows number, general location, and \"Strength\" of minds within area, can determine if any are Psykers with +0 Psyniscience Test. 3 DoS: Same as 2 DoS, but Psyker can make Telepathic Communication with any in area. 4+ DoS: Same as 3 DoS, but Psyker may attempt a \"Mind Probe\" Power on one sensed in the area. ",
+    "effect": "300xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MnS72xlY6e6hVtYB"
+}

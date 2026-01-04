@@ -1,0 +1,22 @@
+{
+  "name": "Foul Cage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "25m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Psyker creates an Psy Rating Radius Psychic Blast centred around a point in range that deals 1d10+3 Rending Damage with Crippling(1d10), Snare(2), and Tearing Qualities.\nCrippling(X): If target suffers at least 1 Wound, for rest of encounter or until healed of all damage, if it takes more than a half action it suffers X damage to the same location it took damage originally from (Ignores Armour/Toughness).\nSnare(X): Target makes Agility Test with -10*X. Failiure causes target to be immobilised, target can make Strength or Agility Test to Escape (same Penalty Applies).\nTearing: Roll one additional damage die, discard the lower result.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RVp5WQvUK12tehG1"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Divine Protection",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Ballistic Skill 45, Willpower 35 \nAptitudes: Finesse",
+    "effect": "When attacking with a weapon with the Spray Quality, it only affects enemies within the Spray Area and leaves allies unharmed.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>When attacking with a weapon with the Spray Quality, it only affects enemies within the Spray Area and leaves allies unharmed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8I7SXaVDRPLDs1dD"
+}

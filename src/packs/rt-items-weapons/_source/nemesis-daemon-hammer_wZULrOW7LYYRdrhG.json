@@ -1,0 +1,28 @@
+{
+  "name": "Nemesis Daemon Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+1",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemonbane, Force, Power Field, Unwieldy",
+    "weight": "10kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Can be One Handed, if Two Handed, gains Concussive (X), where X = wielder's Psy Rating.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Can be One Handed, if Two Handed, gains Concussive (X), where X = wielder's Psy Rating.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wZULrOW7LYYRdrhG"
+}

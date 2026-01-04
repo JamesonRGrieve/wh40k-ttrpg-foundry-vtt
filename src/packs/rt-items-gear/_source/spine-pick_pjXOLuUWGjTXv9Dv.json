@@ -1,0 +1,20 @@
+{
+  "name": "Spine Pick",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "The Spine of a large porcupine-like animal, fashioned into a climbing aid. Provides +10 to Climb Tests. Can also be used as an improvised weapon.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "25 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 25 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pjXOLuUWGjTXv9Dv"
+}

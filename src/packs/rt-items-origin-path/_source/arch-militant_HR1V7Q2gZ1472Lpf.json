@@ -1,0 +1,25 @@
+{
+  "name": "Arch-Militant",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Career",
+    "descriptionText": "The Weapons Masters, Body Guards, and Leaders of soldiers. Warriors without peer.\nSkills: Common Lore (War), Dodge, Intimidate, Scholastic Lore (Tactica Imperialis), Secret Tongue (Military), Speak Language (Low Gothic).\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Thrown Weapon Training (Universal), Sound Constitution.\nGear: Good Hellgun or Best Longlas or two Common Boltpistols, one Good Primitive Melee Weapon of choice with mono upgrade, Micro-bead, void suit, Enforcer Light Carapace Armour, Bolt Shell Keepsake, Medikit, Manacles, Dataslate full of Wanted Bounties or Arms coffer or 3 doses of Stimm.\nSpecial Ability: Weapon Master: Choose one class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class.",
+    "effects": "The Weapons Masters, Body Guards, and Leaders of soldiers. Warriors without peer.\nSkills: Common Lore (War), Dodge, Intimidate, Scholastic Lore (Tactica Imperialis), Secret Tongue (Military), Speak Language (Low Gothic).\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Thrown Weapon Training (Universal), Sound Constitution.\nGear: Good Hellgun or Best Longlas or two Common Boltpistols, one Good Primitive Melee Weapon of choice with mono upgrade, Micro-bead, void suit, Enforcer Light Carapace Armour, Bolt Shell Keepsake, Medikit, Manacles, Dataslate full of Wanted Bounties or Arms coffer or 3 doses of Stimm.\nSpecial Ability: Weapon Master: Choose one class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>The Weapons Masters, Body Guards, and Leaders of soldiers. Warriors without peer.<br>Skills: Common Lore (War), Dodge, Intimidate, Scholastic Lore (Tactica Imperialis), Secret Tongue (Military), Speak Language (Low Gothic).<br>Talents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Thrown Weapon Training (Universal), Sound Constitution.<br>Gear: Good Hellgun or Best Longlas or two Common Boltpistols, one Good Primitive Melee Weapon of choice with mono upgrade, Micro-bead, void suit, Enforcer Light Carapace Armour, Bolt Shell Keepsake, Medikit, Manacles, Dataslate full of Wanted Bounties or Arms coffer or 3 doses of Stimm.<br>Special Ability: Weapon Master: Choose one class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.career",
+      "step": "Career",
+      "stepIndex": 6,
+      "number": "2"
+    }
+  },
+  "_id": "HR1V7Q2gZ1472Lpf"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Lascutter (Mezoa)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "5m",
+    "rof": "S/-/-",
+    "damage": "2d10+3",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Cuts through Hull Metal or Adamantium up to 5cm thick at a rate of 25cm/round, using one weapon charge in the clip to do so. Cannot use unusual ammo.",
+    "description": {
+      "value": "<p><b>Note:</b> Cuts through Hull Metal or Adamantium up to 5cm thick at a rate of 25cm/round, using one weapon charge in the clip to do so. Cannot use unusual ammo.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R5Na99T2n2UNSjIF"
+}

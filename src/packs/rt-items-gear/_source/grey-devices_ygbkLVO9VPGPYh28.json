@@ -1,0 +1,20 @@
+{
+  "name": "Grey Devices",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "3kg",
+    "availability": "Brushed Metal Boxes that take power to operate, emitting chiming noises to unknown factors. They have no clear purpose, but act strangely. Some consider them heretical, some consider them entertaining enough to make gambling games around.",
+    "cost": "-30 to Tests to find one if a Tech-Priest or accompanied by one. Tech-Heresy?\nHB: Does even stranger things if you plug it into something.",
+    "effects": "Rare",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ygbkLVO9VPGPYh28"
+}

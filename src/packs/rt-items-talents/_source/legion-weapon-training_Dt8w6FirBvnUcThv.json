@@ -1,0 +1,17 @@
+{
+  "name": "Legion Weapon Training",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1: Chaos Space Marine\nAptitudes: Unaligned",
+    "effect": "Gain Weapon Training Talents for all Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, SP, Thrown, and Launcher Weapons. Effectively, become trained in all non-exotic weapons.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Gain Weapon Training Talents for all Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, SP, Thrown, and Launcher Weapons. Effectively, become trained in all non-exotic weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dt8w6FirBvnUcThv"
+}

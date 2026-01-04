@@ -1,0 +1,17 @@
+{
+  "name": "Maglev Grace",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Mechanicus Implants",
+    "effect": "As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8AXWAVkYrCLkFdjL"
+}

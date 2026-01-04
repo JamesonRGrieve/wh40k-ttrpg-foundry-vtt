@@ -1,0 +1,22 @@
+{
+  "name": "Gate of Infinity",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Psy Rating 5",
+    "focusPower": "Extended Action (3)\nConcentration",
+    "action": "1km x Psy Rating",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker chooses a point within 5m x Psy Rating, and another within the power's range that they are aware of, such as due to having visited it, seen it from afar, or studied it from a map. The Psyker creates a Warp Gate that connects these two points together, such that anyone that can fit through one side instantly transports to the other. The Gate lasts Psy Rating Rounds, and is Psy Rating Metres in Radius. This power can only be used once every 12 hours, due to the strain it puts on the body. ",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PYUFDhAxlbjYNl9N"
+}

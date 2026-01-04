@@ -1,0 +1,28 @@
+{
+  "name": "Stryxis Aetherlash",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Stryxis",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible",
+    "weight": "1kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Ignores armour and toughness. Does no damage to non-living items or creatures with Daemonic or Machine (5+) Traits. If it touches a ward/untouchable it is disabled for 1d10 days.",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible</p><p><b>Note:</b> Xenotech. Ignores armour and toughness. Does no damage to non-living items or creatures with Daemonic or Machine (5+) Traits. If it touches a ward/untouchable it is disabled for 1d10 days.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9Z7zzhMQYgVfH3VR"
+}

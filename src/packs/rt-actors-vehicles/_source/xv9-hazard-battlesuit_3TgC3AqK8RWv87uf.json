@@ -1,0 +1,25 @@
+{
+  "name": "XV9 Hazard Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "14 All",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "4 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Two Fusion Cascades/Two twin-linked Burst Cannons/Two Phased Ion Guns, Vectored Retro Thrusters, Drone Controller/Target Lock",
+    "passengers": "Battle Suit Strength: 65\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker\nSpecial: Equipped with Photon Casters, knee mounted dischargers that dazzle foes. As a Half Action or Reaction, the pilot can make +20 Ballistic Skill Test to activate,  acts like Tau Photon Grenade centered on Self (Blast (12)).",
+    "cargo": "Near Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "3TgC3AqK8RWv87uf"
+}

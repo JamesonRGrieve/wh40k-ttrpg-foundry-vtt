@@ -1,0 +1,22 @@
+{
+  "name": "The Six Blades of Prosepheron",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned, Agility 50+, Lightning Attack, Two-Weapon Wielder",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "Psyker must be wielding two melee weapons capable of Lightning Attacking when using this power. After manifesting it, for Psy Rating Rounds Psyker is capable of making two Lightning Attack Actions per turn, and must do so, performing one Lightning Attack with each weapon they are wielding, These Lightning Attacks do not have a -10 Penalty, but instead bonus of 5 x Degrees of Success on Focus Power Test. If the psyke chooses not to make a Lightning Attack, the power ends prematurely. Regardless, when the power ends the Psyker gains 1d5 Fatigue.\nIf this power triggers Psychic Phenomena, in addition to its normal effects all Heavily damaged creatures within 30m of the Psyker gain one level of Fatigue.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E1n5o3dIENTpQO8A"
+}

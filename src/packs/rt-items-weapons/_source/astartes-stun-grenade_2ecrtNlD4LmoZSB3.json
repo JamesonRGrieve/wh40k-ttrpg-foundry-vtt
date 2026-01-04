@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Stun Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Blast (5)",
+    "weight": "0.8kg",
+    "availability": "Initiated",
+    "cost": "10 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Causes loud flash and incapacitating sound. Those in blast make +0 Toughness Test or become Stunned for 1d10 Rounds. Photo-Visors and Sealed armour provide +20 to test, input filtering or additional visual and sound protection provides immunity.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Causes loud flash and incapacitating sound. Those in blast make +0 Toughness Test or become Stunned for 1d10 Rounds. Photo-Visors and Sealed armour provide +20 to test, input filtering or additional visual and sound protection provides immunity.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2ecrtNlD4LmoZSB3"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Strength of Truth",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Chorus of the Righteous\nOW: Psy Rating 5",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker chooses a number of allies, up to their Psy Rating (excluding themselves). As long as power is sustained, each ally gains +5, with additional +5 per Degree of Success on Focus power Test, to their Intelligence and Perception characteristics, up to a maximum of +30. The Psyker shares their faith with their allies, bolstering their minds.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZcC7sY9FCESNaRaI"
+}

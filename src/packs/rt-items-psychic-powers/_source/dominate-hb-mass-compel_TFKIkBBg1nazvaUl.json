@@ -1,0 +1,22 @@
+{
+  "name": "Dominate (HB: Mass Compel)",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Willpower 40+",
+    "focusPower": "Full Action Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker selects Psy Rating/2 Target Individuals (rounded up) within range and line of sight. Each individual makes an Opposed Willpower Test with Psyker. Those that fail must follow a simple command that can be achieved in a single round given by the psyker, such as \"Flee\", \"Fall Over\", or \"Attack your allies\". If the command is potentially suicidal, the targets get +20 to their Willpower Tests. ",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TFKIkBBg1nazvaUl"
+}

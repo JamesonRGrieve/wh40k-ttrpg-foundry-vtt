@@ -1,0 +1,20 @@
+{
+  "name": "Null Rod",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "30cm obsidian cylinders, causes all psykers within 2d10 metres to take all tests to use psychic powers at -30. When on the user's person, they provide +30 to resist any psychic powers that directly affect them. Can be used as a Power Weapon to hit people (use Power Sword Profile without Balanced Quality)",
+    "cost": null,
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "A4RKfyhZ3CWkrevg"
+}

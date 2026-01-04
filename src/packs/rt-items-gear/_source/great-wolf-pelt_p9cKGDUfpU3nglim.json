@@ -1,0 +1,20 @@
+{
+  "name": "Great Wolf Pelt",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "2kg",
+    "availability": "Variant of the Wolf Pelt Chapter Trapping (Adds +2 to Intimidate Tests). Also Grants +10 to Fellowship Tests with Astartes, and +20 Loyalty with Fenrisian Wolf Followers.",
+    "cost": null,
+    "effects": "Respected",
+    "notes": "10 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Respected</p><p><b>Notes:</b> 10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p9cKGDUfpU3nglim"
+}

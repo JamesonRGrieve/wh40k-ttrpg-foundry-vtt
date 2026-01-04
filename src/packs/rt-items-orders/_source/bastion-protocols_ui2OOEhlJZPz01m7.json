@@ -1,0 +1,17 @@
+{
+  "name": "Bastion Protocols",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Servitor Comrade: Any\nApt: Intelligence, Defence",
+    "descriptionText": "Character orders Servitor Comrade to protect them, on this and subsequent rounds, until told to stand down as a Free Action, As long as Comrade is in Cohesion whenever attack would strike Character it strikes servitor, and vice versa.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character orders Servitor Comrade to protect them, on this and subsequent rounds, until told to stand down as a Free Action, As long as Comrade is in Cohesion whenever attack would strike Character it strikes servitor, and vice versa.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ui2OOEhlJZPz01m7"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Grenade*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 84,
+    "description": {
+      "value": "<p>84</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2ZXSfHBcR7pkaa9Y"
+}

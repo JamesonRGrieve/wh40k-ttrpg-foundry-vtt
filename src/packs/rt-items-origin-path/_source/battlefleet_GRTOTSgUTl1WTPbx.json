@@ -1,0 +1,25 @@
+{
+  "name": "Battlefleet",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Home World",
+    "descriptionText": "+5 Willpower, +3 Fellowship, -5 Perception. Gain Common Lore (Imperial Navy),  Speak Language (Battlefleet War Cant) and either Navigation (Stellar) or Pilot(Space Craft) as Trained skills. Gain +5 to all Command Tests. Zero/Low Gravity Environments are not Difficult Terrain, and don't get space travel sickness. Suffer -2 to Initiative and Double penalty for firing weapons at Long Range or Greater unless inside confined space.",
+    "effects": "+5 Willpower, +3 Fellowship, -5 Perception. Gain Common Lore (Imperial Navy),  Speak Language (Battlefleet War Cant) and either Navigation (Stellar) or Pilot(Space Craft) as Trained skills. Gain +5 to all Command Tests. Zero/Low Gravity Environments are not Difficult Terrain, and don't get space travel sickness. Suffer -2 to Initiative and Double penalty for firing weapons at Long Range or Greater unless inside confined space.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>+5 Willpower, +3 Fellowship, -5 Perception. Gain Common Lore (Imperial Navy),  Speak Language (Battlefleet War Cant) and either Navigation (Stellar) or Pilot(Space Craft) as Trained skills. Gain +5 to all Command Tests. Zero/Low Gravity Environments are not Difficult Terrain, and don&#x27;t get space travel sickness. Suffer -2 to Initiative and Double penalty for firing weapons at Long Range or Greater unless inside confined space.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.home-world",
+      "step": "Home World",
+      "stepIndex": 1,
+      "number": "4"
+    }
+  },
+  "_id": "GRTOTSgUTl1WTPbx"
+}

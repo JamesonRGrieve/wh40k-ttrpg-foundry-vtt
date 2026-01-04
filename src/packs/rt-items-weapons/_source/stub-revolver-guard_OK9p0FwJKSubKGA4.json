@@ -1,0 +1,28 @@
+{
+  "name": "Stub Revolver (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Reliable",
+    "weight": "1.5kg",
+    "availability": "Plentiful",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OK9p0FwJKSubKGA4"
+}

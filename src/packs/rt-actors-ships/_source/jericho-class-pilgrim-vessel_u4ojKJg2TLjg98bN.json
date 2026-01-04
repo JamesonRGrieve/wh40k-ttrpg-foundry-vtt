@@ -1,0 +1,28 @@
+{
+  "name": "Jericho-class Pilgrim Vessel",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Transport",
+    "size": "2.25km long, 0.3km wide",
+    "crew": 20000,
+    "speed": 3,
+    "manoeuvrability": -10,
+    "detection": 5,
+    "hull": 50,
+    "armour": 12,
+    "turrets": 1,
+    "space": 45,
+    "shipPoints": 20,
+    "weaponCapacity": "1 Prow, 1 Port, 1 Starboard",
+    "notes": "Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "u4ojKJg2TLjg98bN"
+}

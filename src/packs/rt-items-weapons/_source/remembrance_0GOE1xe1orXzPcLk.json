@@ -1,0 +1,28 @@
+{
+  "name": "Remembrance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+7",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Devastating (2), Concussive (1), Power Field, Tearing, Unwieldy",
+    "weight": "20kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Thunder Hammer of the Aurora Chapter. As with all Astartes Thunder Hammers, increase Unnatural Strength from x2 to x3 for damage purposes.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Devastating (2), Concussive (1), Power Field, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Thunder Hammer of the Aurora Chapter. As with all Astartes Thunder Hammers, increase Unnatural Strength from x2 to x3 for damage purposes.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0GOE1xe1orXzPcLk"
+}

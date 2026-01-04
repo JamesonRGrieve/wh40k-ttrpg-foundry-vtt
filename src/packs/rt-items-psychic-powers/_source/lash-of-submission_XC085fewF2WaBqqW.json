@@ -1,0 +1,22 @@
+{
+  "name": "Lash of Submission",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned WP 50+, Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "1m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range and line of sight resists Focus Power Test using their Willpower. If they fail, their actions are controlled by the Psyker for Psy Rating Turns. The target can only perform one Half Action per Turn, and no actions of the Concentration Subtype.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XC085fewF2WaBqqW"
+}

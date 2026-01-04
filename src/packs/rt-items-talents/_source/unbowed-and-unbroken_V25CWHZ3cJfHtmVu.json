@@ -1,0 +1,17 @@
+{
+  "name": "Unbowed and Unbroken",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Astartes, Fellowship 40",
+    "effect": "If the Character's Squad has suffered Cohesion Damage in the current or previous round, the character can choose to declare that they will use this talent. In doing so, they either make a Melee Attack, Ranged Attack, or +0 Fellowship Test to roar in defiance. If this test succeeds, be it the attack or defiant roar, all characters within support range regain the Cohesion they lost to Cohesion lost in the current or prior round.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>If the Character's Squad has suffered Cohesion Damage in the current or previous round, the character can choose to declare that they will use this talent. In doing so, they either make a Melee Attack, Ranged Attack, or +0 Fellowship Test to roar in defiance. If this test succeeds, be it the attack or defiant roar, all characters within support range regain the Cohesion they lost to Cohesion lost in the current or prior round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "V25CWHZ3cJfHtmVu"
+}

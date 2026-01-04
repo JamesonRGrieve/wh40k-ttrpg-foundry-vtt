@@ -1,0 +1,22 @@
+{
+  "name": "Sharpened Senses",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 3, Perception 30+",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker gains Unnatural Senses(%) Trait, in addition to selecting one sense with which they will gain +30 to any Perception Based Tests that involve it, as well as potential additional bonuses:\nSmell: Additional +20 to Survival Tests to track if the Psyker has an Item or part of the target (stacks with +30 of power). Touch: Psyker can \"see\" any objects they touch regardless of available light, EG: running fingers across embossed lettering to read it. Taste: can make a +0 Awareness Test prior to swalling any consumable, assuming it is not laced with an overwhelming poison dose, if they pass the test they can detect any poison and spit the food back out before it takes effect.\nPower lasts for Psy Rating Rounds, can be activated multiple times to gain different sense effects (although the +30 bonus doesn't stack). The Psyker can, instead of gaining any of the bonuses here, turn off one of their senses using this power.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Reh0K9v8W6mocg5c"
+}

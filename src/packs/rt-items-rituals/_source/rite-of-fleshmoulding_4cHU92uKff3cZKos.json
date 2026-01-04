@@ -1,0 +1,19 @@
+{
+  "name": "Rite of Fleshmoulding",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-30 Medicae Test or \n-10 Scholastic Lore (Occult)",
+    "requirements": "Requires a Subject, and one or more sacrificial flesh donors, who do not need to be willing. Takes place within an operating theatre that doubles as a Shrine to Slaanesh. If Character is an actual Flesh Shaper, they get +10 to test, if the subject is unwilling, it is +20.",
+    "effect": "The Subject gains one of the following Traits, +1 Trait up to 6 per Donor Sacrificed in the ritual: Amphibious, Blind, Burrower(X), Crawler, Dark Sight, Fear(X), Deadly Natural Weapons, Flyer(X), Machine(X), Multiple Arms(X), Natural Armour(X), Quadruped, Regeneration(X), Size(X), Sturdy, Toxic(X), or Unnatural Characteristic(X). For each Degree of Success, the value of \"X\" may be increased by 1, up to 6.\nThe Ritual takes 6 Hours to perfor, +1 Hour per Degree of Failiure. The applied Modifications are Permenant.",
+    "costs": "If Ritual is sucessful the subject must spend 1d10-WP Bonus days recovering. The donors die regardless of Success or Failiure.",
+    "failure": "Character rolls 1d10, +1 per Degree of Failiure on Test on the Rending Critical Effects table, and applies the result to the Subject.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> The Subject gains one of the following Traits, +1 Trait up to 6 per Donor Sacrificed in the ritual: Amphibious, Blind, Burrower(X), Crawler, Dark Sight, Fear(X), Deadly Natural Weapons, Flyer(X), Machine(X), Multiple Arms(X), Natural Armour(X), Quadruped, Regeneration(X), Size(X), Sturdy, Toxic(X), or Unnatural Characteristic(X). For each Degree of Success, the value of \"X\" may be increased by 1, up to 6.\nThe Ritual takes 6 Hours to perfor, +1 Hour per Degree of Failiure. The applied Modifications are Permenant.</p><p><b>Costs:</b> If Ritual is sucessful the subject must spend 1d10-WP Bonus days recovering. The donors die regardless of Success or Failiure.</p><p><b>Failure:</b> Character rolls 1d10, +1 per Degree of Failiure on Test on the Rending Critical Effects table, and applies the result to the Subject.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4cHU92uKff3cZKos"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Void Watcher",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Void Dreamer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "10 VU x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "Void Dreamer makes Focus Power Test. On Success they detect all foreign celestial objects within range, such as mines, debris, void creatures, and other void ships. If scoring 3+ Degrees of Success on Focus Power Test, they detect the immediate desires and intentions of any living beings in range unless those beings are aware of the Void Dreamer's psychic vigil and pass -30 Deceive Test.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aYzXIE0P8xeqK4n4"
+}

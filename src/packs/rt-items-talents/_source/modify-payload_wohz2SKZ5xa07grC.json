@@ -1,0 +1,17 @@
+{
+  "name": "Modify Payload",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Tech-Use \nAptitudes: Intelligence, Tech",
+    "effect": "When preparing a Grenade, Missile or Round with the Explosive or Smoke Quality, they can make a +0 Tech-Use Test using the Demolitions Special Use. If they succeed they increase the Damage (if it would do damage) and Blast Radius by 1, +1 per Three Degrees of Success beyond the first. If test is failed by more Degrees of Failiure than their Intelligence Bonus, they accidentally trigger the device and it detonates immediately.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When preparing a Grenade, Missile or Round with the Explosive or Smoke Quality, they can make a +0 Tech-Use Test using the Demolitions Special Use. If they succeed they increase the Damage (if it would do damage) and Blast Radius by 1, +1 per Three Degrees of Success beyond the first. If test is failed by more Degrees of Failiure than their Intelligence Bonus, they accidentally trigger the device and it detonates immediately.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wohz2SKZ5xa07grC"
+}

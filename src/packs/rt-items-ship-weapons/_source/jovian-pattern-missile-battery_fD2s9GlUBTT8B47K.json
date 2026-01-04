@@ -1,0 +1,25 @@
+{
+  "name": "Jovian-Pattern Missile Battery",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "damage": "1d10+1",
+    "strength": 5,
+    "critRating": 6,
+    "range": 6,
+    "availability": "Scarce",
+    "notes": "Can only fire every other turn",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> Can only fire every other turn</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fD2s9GlUBTT8B47K"
+}

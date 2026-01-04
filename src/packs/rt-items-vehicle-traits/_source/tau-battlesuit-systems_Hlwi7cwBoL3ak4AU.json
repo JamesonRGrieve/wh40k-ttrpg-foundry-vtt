@@ -1,0 +1,14 @@
+{
+  "name": "Tau Battlesuit Systems",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hlwi7cwBoL3ak4AU"
+}

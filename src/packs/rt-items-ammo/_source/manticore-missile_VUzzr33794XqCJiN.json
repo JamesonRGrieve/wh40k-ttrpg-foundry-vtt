@@ -1,0 +1,20 @@
+{
+  "name": "Manticore Missile",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Manticore Vehicle",
+    "damageOrEffect": "4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive (5)",
+    "qualities": "Blast(15+1d10), Concussive (5)",
+    "weight": "4000kg",
+    "availability": "Rare",
+    "cost": null,
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive (5)</p><p><b>Qualities:</b> Blast(15+1d10), Concussive (5)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VUzzr33794XqCJiN"
+}

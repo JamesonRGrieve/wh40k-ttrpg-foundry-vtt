@@ -1,0 +1,17 @@
+{
+  "name": "Brute of Burden",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Strength 45\nAptitudes: Strength, General",
+    "effect": "Character adds a value equal to that of their Size Trait to their Strength and Toughness Bonus for determining the amount they can Lift, Carry, or Push Heavy Objects.\nThey also gain +20 to Toughness Tests to avoid gaining Fatigue from Forced Marching.\nRatlings are Scrawny, Size 3. Humans are Average, Size 4. Ogryns are Hulking, Size 5.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character adds a value equal to that of their Size Trait to their Strength and Toughness Bonus for determining the amount they can Lift, Carry, or Push Heavy Objects.\nThey also gain +20 to Toughness Tests to avoid gaining Fatigue from Forced Marching.\nRatlings are Scrawny, Size 3. Humans are Average, Size 4. Ogryns are Hulking, Size 5.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RVh3JL1qOXiSk78Y"
+}

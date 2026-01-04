@@ -1,0 +1,28 @@
+{
+  "name": "Shock Stars",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Shock",
+    "range": "SBx3",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking",
+    "weight": "0.2kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Throwing stars that deliver shock on contact.",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Throwing stars that deliver shock on contact.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k6Q3Xk3a61lkhyoE"
+}

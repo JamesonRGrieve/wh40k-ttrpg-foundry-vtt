@@ -1,0 +1,14 @@
+{
+  "name": "Proven",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 27,
+    "description": {
+      "value": "<p>27</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "74M2YoJSPRR1P2PS"
+}

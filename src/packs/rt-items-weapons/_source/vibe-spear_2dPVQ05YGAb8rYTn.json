@@ -1,0 +1,28 @@
+{
+  "name": "Vibe Spear",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (8), Snare",
+    "weight": "2kg",
+    "availability": "Scarce",
+    "cost": "14 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours. Any Injured by this weapon must make a +0 Toughness Test or suffer 1 Fatigue. Requires a +0 Medicae Test to remove it stuck in, failiure causes 1d5 damage that ignores armour and toughness.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Snare</p><p><b>Note:</b> PEN Only applies to Primitive Armours. Any Injured by this weapon must make a +0 Toughness Test or suffer 1 Fatigue. Requires a +0 Medicae Test to remove it stuck in, failiure causes 1d5 damage that ignores armour and toughness.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2dPVQ05YGAb8rYTn"
+}

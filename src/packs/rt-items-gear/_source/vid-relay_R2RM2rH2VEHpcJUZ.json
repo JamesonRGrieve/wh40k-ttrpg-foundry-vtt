@@ -1,0 +1,20 @@
+{
+  "name": "Vid-Relay",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1kg",
+    "availability": "Helmet or Shoulder mounted camera and receiver. Common Craftsmanship has 10km range, Good has 50km, Best can maintain connection between planet surface and orbital ship with minor delay. Effective range and video quality affected by intervening materials, environment, and so on. ",
+    "cost": "Usually Accompanied with Vox System.",
+    "effects": "Average",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R2RM2rH2VEHpcJUZ"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Mesh Gloves",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Mesh",
+    "locations": "Arms",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "120 T",
+    "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uZ41Ipa7orwA7Fgf"
+}

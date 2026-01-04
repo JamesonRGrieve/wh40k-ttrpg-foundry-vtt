@@ -1,0 +1,22 @@
+{
+  "name": "Divining the Future",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "Augury",
+    "focusPower": "Full Action + 1 Minute",
+    "action": "Self",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "The Psyker or another individual asks the psyker a single question that can be as vague or specific as they like. Taking Roughly one minute, they make a Focus power Test. They receive an answer, with additional information every 2 Degrees of Success. Psychic Phenomena rolls from this power add +10. Results: 0 DoF: Opposition: Psyker can determine the greatest opposition that will be faced. 2 DoF: Fears, the Psyker also determines other negative forces, equal to their Psy Rating, that may be at play. 4 DoF: Hopes: The Psyker can also determine the greatest advantage or tool the subject has at hand. 6 DoF: Outcome: The Psyker can offer two sentences of advice, granting the subject +10 on a number of tests equal to the psyker's Psy Rating for hte next month, or until the question is resolved, whichever is first.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZCIDD9XuWCkhkQKX"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Unshakeable Will",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Willpower 35\nAptitudes: Nurgle",
+    "effect": "Character can Re-Roll failed Willpower Tests to avoid the effects of Fear. \nJust the heretical version of Unshakeable Faith.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear. \nJust the heretical version of Unshakeable Faith.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tTGygXOzAIzytV9F"
+}

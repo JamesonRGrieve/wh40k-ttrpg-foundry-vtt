@@ -1,0 +1,17 @@
+{
+  "name": "Cut Loose!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Ogryn Comrade, Strength 35,\nApt: Ballistic Skill, Offence",
+    "descriptionText": "Until the end of the Turn, Comrade in Cohesion forces enemies to re-roll successful Dodge Tests made to avoid Character's Attacks.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Until the end of the Turn, Comrade in Cohesion forces enemies to re-roll successful Dodge Tests made to avoid Character's Attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q7oGsu0Rl5xoAl74"
+}

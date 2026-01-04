@@ -1,0 +1,20 @@
+{
+  "name": "Almace's Tactica",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic",
+    "weight": "1kg",
+    "availability": "A user that possesses this tome gains +20 to Scholatic Lore (Heraldry, Imperial Creed, Judgement, Legend, Philosophy, and Tactica Imperialis) Tests. Once per session, the user may spend a fate point to automatically succeed at unjamming a weapon or enacting a minor repair with 1d5 DoS.",
+    "cost": "A Tome Written in High Gothic that covers much on archeotech, military tradition, and faith. Relics are unique, one of a kind items, they must be earned as opposed to acquired.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MX7czHmb780a6ZcU"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Fierce Loyalty",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Ogryn Specialty\n300xp",
+    "effect": "When Comrade is not in Cohesion or within 10 metres of another player character and engaged in melee with an enemy, Character becomes Frenzied, gaining +10 Strength and +10 Toughness until Comrade is safe or dead. If dead, Character becomes Inconsolable for hours.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When Comrade is not in Cohesion or within 10 metres of another player character and engaged in melee with an enemy, Character becomes Frenzied, gaining +10 Strength and +10 Toughness until Comrade is safe or dead. If dead, Character becomes Inconsolable for hours.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cc0iaso3HszVYruE"
+}

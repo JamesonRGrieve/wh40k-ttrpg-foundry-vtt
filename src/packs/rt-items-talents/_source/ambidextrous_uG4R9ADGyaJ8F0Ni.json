@@ -1,0 +1,17 @@
+{
+  "name": "Ambidextrous",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Agility 30\nAptitudes; Weapon Skill, Ballistic Skill, Unaligned",
+    "effect": "Character can use either hand equally well for any task, and does not suffer -20 for using their offhand. When combined with Two-Weapon Wielder Talent, reduces the penalty for making an attack with both weapons to -10.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can use either hand equally well for any task, and does not suffer -20 for using their offhand. When combined with Two-Weapon Wielder Talent, reduces the penalty for making an attack with both weapons to -10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uG4R9ADGyaJ8F0Ni"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Acolyte of Abraxas",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Explorator, RT Rank 3+, Willpower 35+, Forbidden Lore (Archeotech) +10 Skill. Does not have \"Untouchable\" Trait, has uncovered at least one psychically active artifact to which they have a morbid fascination of.",
+    "descriptionText": "These deeply heretical Explorators install strange Xeno-Tech into their very beings that possess psychic properties. This technology bestows onto them psuedo-psychic powers at the great chagrin of the wider Mechanicus who may hunt them down should they be found out.",
+    "effects": "Replace new Rank's Advances with that of the Acolyte of Abraxas\nAutomatically Gain Enemy (Mechanicus) and Rival (Mechanicus) Talents.\nAllows for the purchasing of the Unique Talents Corrupted Charge and Unhallowed Discovery",
+    "source": "RT: The Navis Primer\n(Page 65)",
+    "description": {
+      "value": "<p>These deeply heretical Explorators install strange Xeno-Tech into their very beings that possess psychic properties. This technology bestows onto them psuedo-psychic powers at the great chagrin of the wider Mechanicus who may hunt them down should they be found out.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Acolyte of Abraxas\nAutomatically Gain Enemy (Mechanicus) and Rival (Mechanicus) Talents.\nAllows for the purchasing of the Unique Talents Corrupted Charge and Unhallowed Discovery</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YZKKHWhlLMO5QDY4"
+}

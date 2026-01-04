@@ -1,0 +1,28 @@
+{
+  "name": "Goliath-Class Factory Ship",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Transport",
+    "size": "4.9km long, 0.9km wide",
+    "crew": 41000,
+    "speed": 3,
+    "manoeuvrability": -10,
+    "detection": 4,
+    "hull": 50,
+    "armour": 14,
+    "turrets": 1,
+    "space": 40,
+    "shipPoints": 25,
+    "weaponCapacity": "1 Dorsal, 1 Port, 1 Starboard",
+    "notes": "Comes with two \"Main Cargo Hold\" and one \"Plasma Refinery\" components, size already reduced, can't be removed, Must be able to provide power for it. If plasma is harvested at least once per year using Plasma Refinery, provides +10 Power.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Comes with two \"Main Cargo Hold\" and one \"Plasma Refinery\" components, size already reduced, can't be removed, Must be able to provide power for it. If plasma is harvested at least once per year using Plasma Refinery, provides +10 Power.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "73k6ZMYASYsb3HzS"
+}

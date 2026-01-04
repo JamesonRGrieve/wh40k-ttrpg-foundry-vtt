@@ -1,0 +1,20 @@
+{
+  "name": "Medical Care: Excellent",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Skilled Physician in high Demand\nInt 60, Medicae +20, Master Chirurgeon Talent.",
+    "cost": "For Extended Care, Cost is per day. Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Very Rare",
+    "notes": "500 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0H67CXo3szyMlvdO"
+}

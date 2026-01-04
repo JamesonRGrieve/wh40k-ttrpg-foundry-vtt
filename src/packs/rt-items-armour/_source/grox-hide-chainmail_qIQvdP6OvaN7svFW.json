@@ -1,0 +1,22 @@
+{
+  "name": "Grox Hide / Chainmail",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "15kg",
+    "availability": "Common",
+    "cost": "60 T",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qIQvdP6OvaN7svFW"
+}

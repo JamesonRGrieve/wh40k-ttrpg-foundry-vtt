@@ -1,0 +1,18 @@
+{
+  "name": "Subsystem: Auto-Senses",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour, Legion/Astartes Power Armour",
+    "effect": "Whilst Helmet is on, wearer has Dark Sight and Heightened Senses(Sight, Sound). Immune to Photon Flash and Stun Grenades. Can make a Called Shot as a Half Action.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Whilst Helmet is on, wearer has Dark Sight and Heightened Senses(Sight, Sound). Immune to Photon Flash and Stun Grenades. Can make a Called Shot as a Half Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Otb9fKYDjzQTJDFP"
+}

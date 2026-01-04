@@ -1,0 +1,19 @@
+{
+  "name": "Omnissianic Congregator",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Performs rites to appease the Vessel's Machine Spirits.",
+    "careerPreferences": "Explorators or chars with Forge World background",
+    "subordinates": "Shipwrights, lexmechanics of cogitation vaults, keepers of the Altar Omnissiah",
+    "importantSkills": "Tech-Use, Forbidden Lore (Adeptus Mechanicus), Trade (Technomat)",
+    "effect": "+10 to \"Aid the Machine Spirit\" Extended Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Performs rites to appease the Vessel's Machine Spirits.</p><p><b>Effect:</b> +10 to \"Aid the Machine Spirit\" Extended Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xrPayHAbdvI3H2wS"
+}

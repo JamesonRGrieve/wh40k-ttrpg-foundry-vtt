@@ -1,0 +1,28 @@
+{
+  "name": "Chain Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+6",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (2), Tearing, Unwieldy",
+    "weight": "20kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Two Handed Weapon, requires Strength Bonus of 4+ to wield.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (2), Tearing, Unwieldy</p><p><b>Note:</b> Two Handed Weapon, requires Strength Bonus of 4+ to wield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qF9AdhWLETxxfefx"
+}

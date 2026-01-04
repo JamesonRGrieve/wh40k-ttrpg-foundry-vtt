@@ -1,0 +1,28 @@
+{
+  "name": "Death of Steel",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "35m",
+    "rof": "S/-/-",
+    "damage": "2d10+16",
+    "damageType": "Energy",
+    "penetration": 14,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "SM Wep, Blast (1), Melta",
+    "weight": "15kg",
+    "availability": "Hero",
+    "cost": "55 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Meltagun of the Doom Legion Chapter. Does +1d10 damage vs Vehicles.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (1), Melta</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Meltagun of the Doom Legion Chapter. Does +1d10 damage vs Vehicles.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oS3wNqDIeE5LHq3h"
+}

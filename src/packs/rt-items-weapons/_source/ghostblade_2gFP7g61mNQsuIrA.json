@@ -1,0 +1,28 @@
+{
+  "name": "Ghostblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Felling (4), Razor Sharp, Overheats",
+    "weight": "6kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Razor Sharp, Overheats</p><p><b>Note:</b> Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2gFP7g61mNQsuIrA"
+}

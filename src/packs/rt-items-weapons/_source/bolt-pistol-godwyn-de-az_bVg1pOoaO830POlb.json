@@ -1,0 +1,28 @@
+{
+  "name": "Bolt Pistol (Godwyn-De'az)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Bolt",
+    "range": "40m",
+    "rof": "S/2/-",
+    "damage": "1d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 10,
+    "reload": "Full",
+    "special": "Reliable, Tearing",
+    "weight": "3kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Tearing</p><p><b>Note:</b> Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bVg1pOoaO830POlb"
+}

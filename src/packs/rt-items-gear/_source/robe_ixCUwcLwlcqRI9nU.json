@@ -1,0 +1,20 @@
+{
+  "name": "Robe",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Hodded Robes holding various meanings often hard to discern even by those of the Dark Angels themselves. Can be a Scholar's Robe (Choose one Scholastic Lore, add +3 to all Tests with it), a Robe of Secrets (Choose one Forbidden Lore, add +3 to all Tests with it), or a Seeker's Robe (+3 to Scrutiny Tests).",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Dark Angels (alternative is a Ceremonial sword in Weapons Section)",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ixCUwcLwlcqRI9nU"
+}

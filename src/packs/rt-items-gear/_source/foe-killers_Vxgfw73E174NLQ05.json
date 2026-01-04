@@ -1,0 +1,20 @@
+{
+  "name": "Foe Killers",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "Gain +10 to Intelligence Tests related to the relevent Foe (including Scholastic Lore (Tactica Imperialis). Also, gain +1 Penetration when attacking the foe.\nKill Markers can't be acquired, only earned.",
+    "cost": "Informal Kill Marker: Squad has Completed two or more Full Campaigns, or slain 150 of a particular foe. Such as Orks, Rebels, Dark Eldar, Chaos Worshippers, Kroot, Etc.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Vxgfw73E174NLQ05"
+}

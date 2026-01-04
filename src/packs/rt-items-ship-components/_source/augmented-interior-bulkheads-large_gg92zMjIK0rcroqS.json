@@ -1,0 +1,21 @@
+{
+  "name": "Augmented Interior Bulkheads (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 0,
+    "spaceUsage": 3,
+    "spCost": 2,
+    "effect": "+3 to Hull Integrity",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+3 to Hull Integrity</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gg92zMjIK0rcroqS"
+}

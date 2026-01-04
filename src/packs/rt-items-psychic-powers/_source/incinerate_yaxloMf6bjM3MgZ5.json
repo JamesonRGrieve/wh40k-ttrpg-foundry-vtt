@@ -1,0 +1,22 @@
+{
+  "name": "Incinerate",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "10m",
+    "range": "Threshold 19",
+    "opposed": "Yes",
+    "sustained": "Target within range and line of sight takes 1d10 + 1 Energy Damage with Flame Quality, damage increases by 1 and repeats each subsequent round, each round the psyker must use their Full Action to concentrate on the power.\nDamage caused by this power Irnogres Armour and Toughness.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yaxloMf6bjM3MgZ5"
+}

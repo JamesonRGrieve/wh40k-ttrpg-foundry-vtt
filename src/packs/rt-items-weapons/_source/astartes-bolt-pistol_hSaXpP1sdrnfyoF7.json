@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Bolt Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Bolt",
+    "range": "30m",
+    "rof": "S/3/4",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 14,
+    "reload": "Full",
+    "special": "SM Wep, Tearing",
+    "weight": "5.5kg",
+    "availability": "Initiated",
+    "cost": "5 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Standard Issue for all Space Marines. Renown Cost is only for extras.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Standard Issue for all Space Marines. Renown Cost is only for extras.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hSaXpP1sdrnfyoF7"
+}

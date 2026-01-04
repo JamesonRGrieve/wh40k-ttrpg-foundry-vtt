@@ -1,0 +1,14 @@
+{
+  "name": "Extremely Volatile",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Double the chance to explode if catching on fire. If it does explode, those in blast must make -10 Agility Test or catch on fire.",
+    "description": {
+      "value": "<p>Double the chance to explode if catching on fire. If it does explode, those in blast must make -10 Agility Test or catch on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MQy6NLpupkkNfMIe"
+}

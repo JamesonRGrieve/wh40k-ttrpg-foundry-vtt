@@ -1,0 +1,22 @@
+{
+  "name": "Special Power: Astral Telepathy",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy\n(Communication)",
+    "prerequisites": "Soul-Bound to the Emperor (Astropaths)",
+    "focusPower": "1d5 Hours or more.",
+    "action": "Varies",
+    "range": "Psyniscience/Willpower",
+    "opposed": "No",
+    "sustained": "The Ability to Send and Receive Astropathic messages across interstellar distances. To receive signal within range is Psynscience test with +10 if prepared, +0 if not, and -20 if distracted, additional -20 if out of range.\nSending Distance affects Sending Time, Minimum Psy Rating, and Test Difficulty:  (To Orbit, Instant, Psy 2, +20), (Nearby In-System, 1d5 Rounds, Psy 2, +10), (Distant In-System, 1d10 Rounds, Psy 3, +0),  (Nearby System, 1d10 Minutes, Psy 6, -10), (Sub Sector, 1d5 Hours, Psy 10, -20), (Sector, 1d5 Weeks, Psy 15, -30), (Segmentum, 1d5 Months, Psy 18, -30).",
+    "effect": "Free (Astropaths Only)",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Free (Astropaths Only)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "raeawR9bN6XAh04L"
+}

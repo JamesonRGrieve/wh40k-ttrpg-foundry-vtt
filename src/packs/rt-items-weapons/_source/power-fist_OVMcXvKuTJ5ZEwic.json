@@ -1,0 +1,28 @@
+{
+  "name": "Power Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unwieldy",
+    "weight": "13kg",
+    "availability": "Very Rare",
+    "cost": "3100 T",
+    "source": "Only War: Core",
+    "note": "Add 2x Strength Bonus to melee damage rather than 1x",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Add 2x Strength Bonus to melee damage rather than 1x</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OVMcXvKuTJ5ZEwic"
+}

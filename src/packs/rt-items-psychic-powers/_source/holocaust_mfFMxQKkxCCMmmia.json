@@ -1,0 +1,22 @@
+{
+  "name": "Holocaust",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Sanctic Daemonology",
+    "prerequisites": "Psy Rating 5,\nCleansing Flame\nor Sanctuary",
+    "focusPower": "Full Action\nAttack\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower",
+    "opposed": "Yes (Full Action)",
+    "sustained": "Character emits a Psychic Blast of Psy Rating Metre Radius each turn this power is sustained centred on themselves, this blast can be avoided in the same way as a Blast Weapon. Those who do not avoid the blast suffer 1d10 x Psy Rating damage with PEN 0, Flame and Warp Weapon qualities. However, each turn the power is sustained, the Psyker suffers 1d10 + Psy Rating Energy damage that ignores Armour and Toughness.",
+    "effect": "500xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mfFMxQKkxCCMmmia"
+}

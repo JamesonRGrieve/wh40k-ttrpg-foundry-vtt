@@ -1,0 +1,18 @@
+{
+  "name": "Subsystem (SM): Bio-Monitor and Injectors",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Legion/Astartes Power Armour",
+    "effect": "Gain +10 to tests to resist Toxins/Poisons. Has 6 Pain Suppressant doses, Allowing Wearer to ignore Chacteristic Damage/Penalties from crit-damage for 1d10 rounds. If wearer is stunned, effect is automatically ended after one round.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Gain +10 to tests to resist Toxins/Poisons. Has 6 Pain Suppressant doses, Allowing Wearer to ignore Chacteristic Damage/Penalties from crit-damage for 1d10 rounds. If wearer is stunned, effect is automatically ended after one round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "txVHeNSoo15W2elo"
+}

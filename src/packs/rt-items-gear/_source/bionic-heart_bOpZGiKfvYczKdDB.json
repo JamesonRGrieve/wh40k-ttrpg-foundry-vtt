@@ -1,0 +1,20 @@
+{
+  "name": "Bionic Heart",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Gain +1 AP to body (stacks with armour) and Sprint Talent.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bOpZGiKfvYczKdDB"
+}

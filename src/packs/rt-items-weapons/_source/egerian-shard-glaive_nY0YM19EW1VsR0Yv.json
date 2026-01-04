@@ -1,0 +1,28 @@
+{
+  "name": "Egerian Shard Glaive",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Egerian",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Toxic",
+    "weight": "4kf",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Poles of black metal tipped with crystalline growths. When hitting someone, leaves behind painful shards in them. For some reason, mass of shards + mass of crystal is greater after shattering.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Poles of black metal tipped with crystalline growths. When hitting someone, leaves behind painful shards in them. For some reason, mass of shards + mass of crystal is greater after shattering.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nY0YM19EW1VsR0Yv"
+}

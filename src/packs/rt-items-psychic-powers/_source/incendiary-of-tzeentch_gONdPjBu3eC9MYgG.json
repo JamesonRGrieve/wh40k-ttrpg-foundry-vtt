@@ -1,0 +1,22 @@
+{
+  "name": "Incendiary of Tzeentch",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned\nPsy Rating 2, Thousand Sons Sorcerer",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Power enhances one shell of Standard SP or Bolt Ammunition designed for a weapon that does not have the Primitive Quality. This ammunition gains the Warp Weapon and Blast(2) Quality, if the Psyker gets 5+ Degrees of Success on their Focus Power Test, it also gains the Tainted Quality (use Corruption Bonus to determine additional damage dealt). Psychic Powers that target someone hit by this shell have +10 to their Focus Power Tests, and that target adds +20 to any Psychic Phenomena they trigger. The Shell remains enhanced for one hour before returning to normal and any effects it causes dissapearing.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gONdPjBu3eC9MYgG"
+}

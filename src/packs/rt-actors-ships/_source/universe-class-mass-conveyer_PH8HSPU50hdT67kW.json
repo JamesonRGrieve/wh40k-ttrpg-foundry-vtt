@@ -1,0 +1,28 @@
+{
+  "name": "Universe-Class Mass Conveyer",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Transport",
+    "size": "12km long, 1.3km wide",
+    "crew": 60000,
+    "speed": 2,
+    "manoeuvrability": -20,
+    "detection": 5,
+    "hull": 65,
+    "armour": 12,
+    "turrets": 1,
+    "space": 94,
+    "shipPoints": 45,
+    "weaponCapacity": "1 Dorsal, 1 Port, 1 Starboard",
+    "notes": "CHONKY, 200k-500k passenger capacity. Speed can't be increased from components, has 4 \"Main Cargo Hold\" and one \"Secondary Power Genetorium\" (+10 Power), can't remove, size already reduced, must provide power.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>CHONKY, 200k-500k passenger capacity. Speed can't be increased from components, has 4 \"Main Cargo Hold\" and one \"Secondary Power Genetorium\" (+10 Power), can't remove, size already reduced, must provide power.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "PH8HSPU50hdT67kW"
+}

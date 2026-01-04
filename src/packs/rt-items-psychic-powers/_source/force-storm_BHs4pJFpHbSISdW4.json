@@ -1,0 +1,22 @@
+{
+  "name": "Force Storm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Force Bolt, Mind over Matte",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker fires storm of force bolts, firing one bolt, +1 per Degree of Success on the Focus Power Test at a target individual, any bolt after the first may hit either the target or anyone within 2 metres of them. \nEach bolt does 1d10 +3xPsy Rating Impact Damage.",
+    "effect": "350xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>350xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BHs4pJFpHbSISdW4"
+}

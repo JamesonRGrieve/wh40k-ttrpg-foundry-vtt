@@ -1,0 +1,20 @@
+{
+  "name": "Vehicle Interface Circuits",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Grants +10 to Pilot Tests when operating a vehicle with interface receptors. The Character can also make a Perception Test to determine the Vehicle's current status and condition as a Free Action.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "2000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 2000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4Bh3A3LzdfMxFIHG"
+}

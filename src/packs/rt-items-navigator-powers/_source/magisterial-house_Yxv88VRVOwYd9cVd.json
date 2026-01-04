@@ -1,0 +1,21 @@
+{
+  "name": "Magisterial House",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Warp Focus: Once per game, the Navigator may force a single opponent to re-roll a successful test to resist the effects of \"The Lidless Stare\" Navigator Power\nPure Genes: Tests to avoid gaining mutation are +20 instead of +10.\nExalted Lineage: Gain +10 to any interaction skill test when dealing with Imperial Nobility.\nInitial Mutation: Start with one chosen Navigator Mutation: Strangely Jointed Limbs, Elongated Form, Pale and Hairless Flesh, Eyes as Dark as the Void. Other mutations gained normally.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Yxv88VRVOwYd9cVd"
+}

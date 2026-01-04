@@ -1,0 +1,20 @@
+{
+  "name": "Madani's Music Box",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Profane)",
+    "weight": "?",
+    "availability": "Rougly the size of a thick dataslate, a baroque exterior hides impossible gearing operated by a crank. It only plays a single piece of music \"Nuella's Lament to the Fallen of Juno\", to which few know the context of. Those who hear it become enraptured and driven mad when it absent. Only the original music capable of satiating an all consuming desire. As long as the music is played, nobody except the one that played it can leave the area it is played, or even turn away from it unless passing a -40 Willpower Test. Those that fail suffer an addiction to the music box. Afflicted characters suffer 1d5 Insanity a day they do not hear the music (recordings don't suffice, must be original). Further insanity may come from enraptured crowds.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GwlcTj0RUtjEzk6p"
+}

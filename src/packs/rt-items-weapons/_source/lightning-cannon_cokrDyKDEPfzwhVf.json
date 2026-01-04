@@ -1,0 +1,28 @@
+{
+  "name": "Lightning Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "2d5+4",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 2,
+    "reload": "Full",
+    "special": "Overheats, Shocking",
+    "weight": "0.5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.",
+    "description": {
+      "value": "<p><b>Special:</b> Overheats, Shocking</p><p><b>Note:</b> Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cokrDyKDEPfzwhVf"
+}

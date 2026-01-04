@@ -1,0 +1,28 @@
+{
+  "name": "Forearm Powerblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Balanced, Defensive",
+    "weight": "1.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Balanced, Defensive</p><p><b>Note:</b> Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iqGM9YeMTedhUz4d"
+}

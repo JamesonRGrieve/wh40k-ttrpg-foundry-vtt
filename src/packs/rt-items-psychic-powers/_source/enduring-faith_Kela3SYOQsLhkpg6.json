@@ -1,0 +1,22 @@
+{
+  "name": "Enduring Faith",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Chorus of the Righteous\nOW: Psy Rating 5",
+    "focusPower": "Full Action",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker touches or makes physical contact with a number willing targets up to Half their Psy Rating (excluding themselves), and makes a Focus Power Test. On success, the target(s) remove a number of Fatigue Levels equal to the number of degrees of success on the Focus Power Test. ",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Kela3SYOQsLhkpg6"
+}

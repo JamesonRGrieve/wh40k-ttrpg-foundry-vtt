@@ -1,0 +1,22 @@
+{
+  "name": "Aura of Fear",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Fellowship 35, 5+ Insanity Points",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower Test",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Character gains Fear (1) trait as long as power is sustained. \nIf Power causes Psychic Phenomena instead of rolling character makes a test against Fear (4) (-30 Willpower Test) and suffers from Warp Shock if they fail (gain corruption equal to any gained insanity).",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HVWPecKjYVymbzKP"
+}

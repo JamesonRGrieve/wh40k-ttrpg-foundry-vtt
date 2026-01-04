@@ -1,0 +1,22 @@
+{
+  "name": "Embolden",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Warlock)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Warlock makes Focus Power Test, for as long as they sustain power all allies in 2m x Psy Rating receive +10 + Psy Rating + (5 x DoS) Bonus to their Willpower Characteristic. Multiple instances of this power are not cumulative. The Warlock shares a portion of their courage with their allies.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZKkl64t5fDn2aubn"
+}

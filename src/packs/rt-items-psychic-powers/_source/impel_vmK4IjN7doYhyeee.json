@@ -1,0 +1,22 @@
+{
+  "name": "Impel",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Willpower 30",
+    "focusPower": "Half Action\nAttack\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed +10 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual or object within range and line of sight is pushed Psy rating Metres directly away from the character., Determine Maximum Rate using the Carrying, Lifting, and Pushing Weights Table, subsituting Strength and Toughness Bonuses for Psy Rating and Willpower Bonus. If targeting an individual they can opposed power with +0 Strength Test, if target fails by 2+ DoF they are also knocked prone, if psyker wins by 3+ DoS, target suffers 1d5 + Psy Rating damage and 1 level of fatigue.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vmK4IjN7doYhyeee"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Photo-Visors/Contacts",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "Gain Dark Sight Trait while wearing, Good Craftmanship or better make user immune to photo flash grenades",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "100 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xVaAniBZ683lAMjw"
+}

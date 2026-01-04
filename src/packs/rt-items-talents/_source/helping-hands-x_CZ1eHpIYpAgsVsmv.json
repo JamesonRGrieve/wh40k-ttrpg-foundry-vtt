@@ -1,0 +1,17 @@
+{
+  "name": "Helping Hands (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Fixer Advanced Specialty (300xp)",
+    "effect": "The Character gains an extra Comrade. This advance can be taken multiple times, up to the character's Fellowship Bonus, indicated by \"X\"",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>The Character gains an extra Comrade. This advance can be taken multiple times, up to the character's Fellowship Bonus, indicated by \"X\"</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CZ1eHpIYpAgsVsmv"
+}

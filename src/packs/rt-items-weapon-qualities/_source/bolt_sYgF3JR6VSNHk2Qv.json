@@ -1,0 +1,14 @@
+{
+  "name": "Bolt*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 60,
+    "description": {
+      "value": "<p>60</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sYgF3JR6VSNHk2Qv"
+}

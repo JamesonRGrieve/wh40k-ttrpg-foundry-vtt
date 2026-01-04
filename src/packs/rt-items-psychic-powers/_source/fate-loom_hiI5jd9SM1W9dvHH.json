@@ -1,0 +1,22 @@
+{
+  "name": "Fate Loom",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned,\nPsy Rating 6, Corruption 40+, Infamy 40+",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "-20 Corruption",
+    "opposed": "No",
+    "sustained": "Power lasts for 1d5+Psy Rating Rounds. For this duration Psyker gains +20 to all Tests involving Toughness, Willpower, and one other Characteristic of choice. They regain all spent Infamy Points and may spend them freely, even spending more than they would normally be allowed to. Finally, they heal 1d5 Wounds and all Critical Damage (although effects caused by Critical Damage are not removed). \nWhen the power ends, they lose all unspent Infamy Points, drop to 0 wounds (or increase damage total to equal their wounds), and suffer 1d5 Fatigue.",
+    "effect": "500xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hiI5jd9SM1W9dvHH"
+}

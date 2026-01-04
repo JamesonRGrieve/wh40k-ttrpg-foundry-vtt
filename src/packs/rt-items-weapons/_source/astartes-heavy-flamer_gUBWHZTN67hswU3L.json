@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Heavy Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Flame",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "SM Wep, Flame, Spray",
+    "weight": "65kg",
+    "availability": "Initiated",
+    "cost": "15 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gUBWHZTN67hswU3L"
+}

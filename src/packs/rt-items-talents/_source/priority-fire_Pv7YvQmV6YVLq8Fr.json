@@ -1,0 +1,17 @@
+{
+  "name": "Priority Fire",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Tau Drone Handler Alternative Advance, 300xp. Perception 35+, Quick Draw",
+    "effect": "Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Pv7YvQmV6YVLq8Fr"
+}

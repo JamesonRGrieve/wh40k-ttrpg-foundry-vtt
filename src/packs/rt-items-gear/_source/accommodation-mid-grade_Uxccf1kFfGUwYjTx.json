@@ -1,0 +1,20 @@
+{
+  "name": "Accommodation: Mid Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Single Night's Accomodation in a Down Cell, Single-Lodge Room, Mid Cabin, or somewhere else that is mostly safe if lacking in luxury.",
+    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Common",
+    "notes": "20 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Uxccf1kFfGUwYjTx"
+}

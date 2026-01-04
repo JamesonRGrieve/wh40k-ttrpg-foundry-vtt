@@ -1,0 +1,25 @@
+{
+  "name": "Calamity",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Trials and Travails",
+    "descriptionText": "Gain Light Sleeper, and either Hardy or Nerves of Steel Talents. -1 Starting Profit Factor.",
+    "effects": "Gain Light Sleeper, and either Hardy or Nerves of Steel Talents. -1 Starting Profit Factor.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>Gain Light Sleeper, and either Hardy or Nerves of Steel Talents. -1 Starting Profit Factor.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.trials-and-travails",
+      "step": "Trials and Travails",
+      "stepIndex": 4,
+      "number": "3"
+    }
+  },
+  "_id": "dIJXPQpY7MIAh0uX"
+}

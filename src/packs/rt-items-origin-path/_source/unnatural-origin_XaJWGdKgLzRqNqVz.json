@@ -1,0 +1,25 @@
+{
+  "name": "Unnatural Origin",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Birthright",
+    "descriptionText": "1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).\n2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.\n3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.",
+    "effects": "1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).\n2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.\n3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).<br>2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.<br>3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.birthright",
+      "step": "Birthright",
+      "stepIndex": 2,
+      "number": "2 and 3"
+    }
+  },
+  "_id": "XaJWGdKgLzRqNqVz"
+}

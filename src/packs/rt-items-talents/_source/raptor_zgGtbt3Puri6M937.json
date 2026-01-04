@@ -1,0 +1,17 @@
+{
+  "name": "Raptor",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1: Operate (Aeronautica)\nAptitudes: Unaligned",
+    "effect": "When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zgGtbt3Puri6M937"
+}

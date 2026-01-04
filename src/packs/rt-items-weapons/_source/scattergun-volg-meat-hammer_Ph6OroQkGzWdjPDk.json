@@ -1,0 +1,28 @@
+{
+  "name": "Scattergun (Volg) \"Meat Hammer\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d5+6",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "3 Full",
+    "special": "Scatter, Tearing",
+    "weight": "5kg",
+    "availability": "Scarce",
+    "cost": "80 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Takes three shotgun shells to load, fires them all at once.",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter, Tearing</p><p><b>Note:</b> Takes three shotgun shells to load, fires them all at once.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ph6OroQkGzWdjPDk"
+}

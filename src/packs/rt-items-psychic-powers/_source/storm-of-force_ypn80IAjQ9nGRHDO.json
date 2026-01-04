@@ -1,0 +1,22 @@
+{
+  "name": "Storm of Force",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Telekinetic Weapon\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating Radius",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker Rains force bolts on their enemies. Picking out a number of targets within range up to their Psy Rating for each round they maintain the power.  The Psyker makes a +0 Willpower Test to hit each target,                        dealing 2d10 + 3xPsy Rating Impact Damage to them. No target can be hit by this power more than once per round. This attack can be dodged as with other ranged attacks.",
+    "effect": "500xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ypn80IAjQ9nGRHDO"
+}

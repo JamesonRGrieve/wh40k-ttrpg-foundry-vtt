@@ -1,0 +1,20 @@
+{
+  "name": "Manic",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] For 3d10 Minutes add +30 to any Willpower Tests, ignore Fatigue, and cannot be Pinned or Stunned. Afterwards make -20 Toughness Test or fall unconcious for 1d5 Hours",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Average",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rYaq3H5LCV0LTobK"
+}

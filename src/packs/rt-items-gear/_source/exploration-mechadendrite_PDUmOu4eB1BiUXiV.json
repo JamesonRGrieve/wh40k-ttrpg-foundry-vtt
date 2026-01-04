@@ -1,0 +1,20 @@
+{
+  "name": "Exploration Mechadendrite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "6kg",
+    "availability": "Can collect, store, and sterilise up to 10 seperate material samples. has built in Auspex, Chrono, Glow-lamp, and compass. +5 to Awareness and Search Tests,  +10 to Chem-Use and Trade(Chymist) Tests. Can fire sample as ranged attack. Wep Stats: Pistol; 5m; S/-/-; 1d5+2; Pen 0; Clip 1; Reload 2 Full. May have Toxic/Snare/Unstable dependent on Sample.",
+    "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PDUmOu4eB1BiUXiV"
+}

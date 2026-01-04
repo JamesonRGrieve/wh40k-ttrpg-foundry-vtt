@@ -1,0 +1,22 @@
+{
+  "name": "The Void's Touch",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n(Cryokinesis)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker chooses a target and makes a Focus Power Test, on success the psyker drains the heat from any surface that both touching, this cold pulse travels in a line towards the target across this connecting surface, dealing 1d5 + Psy Rating, PEN 6 damage that ignores cover as well as 1 fatigue. This attack can be dodged, but target has -5 to dodge test per Degree of Success psyker scored on Focus Power Test if target is still touching connecting surface at the end of the dodge. If the target suffers damage from this attack after armour and toughness, they make +0 Toughness Test or halve their movement rate (round up) until the end of the next round. As this power requires a connecting surface, it is ineffective if there is not one (such as vs a flying target).",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YT1YgKjOxReCWJVo"
+}

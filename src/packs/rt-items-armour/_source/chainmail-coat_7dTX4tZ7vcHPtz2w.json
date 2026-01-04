@@ -1,0 +1,22 @@
+{
+  "name": "Chainmail Coat",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "28kg",
+    "availability": "Average",
+    "cost": "50 T",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7dTX4tZ7vcHPtz2w"
+}

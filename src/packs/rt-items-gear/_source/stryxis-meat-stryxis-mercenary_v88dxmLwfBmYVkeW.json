@@ -1,0 +1,20 @@
+{
+  "name": "Stryxis Meat: Stryxis Mercenary",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The hiring of mercenaries from the Alien Stryxis, Will fight for you for a set time period. Heretical.",
+    "cost": "Dealing with the Alien Stryxis Rarely just requires an Acquisition Roll, and may require other, stranger costs…",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v88dxmLwfBmYVkeW"
+}

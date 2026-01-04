@@ -1,0 +1,28 @@
+{
+  "name": "Stiletto",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5-1",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Fast, Primitive (8)",
+    "weight": "0.2kg",
+    "availability": "Scarce",
+    "cost": "25 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours",
+    "description": {
+      "value": "<p><b>Special:</b> Fast, Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ehku8hPnvIK7K7rS"
+}

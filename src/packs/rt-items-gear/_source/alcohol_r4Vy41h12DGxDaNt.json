@@ -1,0 +1,20 @@
+{
+  "name": "Alcohol",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "[Addictive] Grants +10 to Toughness Tests for one hour, can also help deaden pain or cleanse a wound. After Imbibing, make a Toughness Test (varies with craftsmanship), failiure gives -10 to Agility, Perception, Intelligence, and Willpower for one hour, +1 per DoF. Poor: +0 Test, Common: +10 Test, Good: +20 Test, Best: +30 Test. ",
+    "cost": "Availability Varies with Craftsmanship: Poor: Common, Common: Average, Good/Best: Scarce",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r4Vy41h12DGxDaNt"
+}

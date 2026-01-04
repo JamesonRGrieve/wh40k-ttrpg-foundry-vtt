@@ -1,0 +1,28 @@
+{
+  "name": "Quill Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "50m",
+    "rof": "S/-/6",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 50,
+    "reload": "2 Full",
+    "special": "Tearing, Overheats",
+    "weight": "5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Ammo can be any metal chunks fed into its rear hopper, which are processed into thin, super hot and sharp metal spines on firing.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Overheats</p><p><b>Note:</b> Ammo can be any metal chunks fed into its rear hopper, which are processed into thin, super hot and sharp metal spines on firing.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sTKzFKJbHF9Xi3VP"
+}

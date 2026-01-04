@@ -1,0 +1,22 @@
+{
+  "name": "Corpse Burst",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned,\nPsy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "30m",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker targets a Corpse of Average Size or Larger within range and detonates it, creating a Psychic Blast of Psy Rating Metres Radius that may be dodged as if an Area of Effect Attack. Those that fail to avoid it take 1d10+Psy Rating Damage with Toxic(2), and Tearing Qualities, and must immediately make a Pinning Test. All within line of sight of the explosion except the psyker must make a Fear(2) Test.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0a7orVhqdrwojfuG"
+}

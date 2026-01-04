@@ -1,0 +1,17 @@
+{
+  "name": "Demagogue",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Air of Authority\nAptitudes: Slaanesh",
+    "effect": "When character uses Charm or Intimidate to affect multiple people, they can affect up to 100x their Fellowship Bonus. They add +10 Loyalty to their Minions.\nWhen in a Social Conflict against one or more opponent (including crowds), character saps 1d10 Willpower instead of 1d5 if using Charm or Intimidate Opposed Tests.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>When character uses Charm or Intimidate to affect multiple people, they can affect up to 100x their Fellowship Bonus. They add +10 Loyalty to their Minions.\nWhen in a Social Conflict against one or more opponent (including crowds), character saps 1d10 Willpower instead of 1d5 if using Charm or Intimidate Opposed Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oobYwI8wK4gkEzIs"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Catch Projectiles",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Reaction",
+    "action": "1m x Willpower Bonus",
+    "range": "Threshold 16",
+    "opposed": "No",
+    "sustained": "Used in reaction to being shot at by Solid Projectiles (Bullets/Bolt shells/Arrows/etc, but not Las/Plasma/Fire/etc), until end of next turn automatically reduce the number of incoming shots by Willpower Bonus, causing them to stop and hang in midair. When the power stops they fall harmlessly to the ground.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "syLyHyFNGVqgzrcb"
+}

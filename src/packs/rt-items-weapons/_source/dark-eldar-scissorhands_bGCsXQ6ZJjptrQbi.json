@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Scissorhands",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "3d5",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing",
+    "weight": "0.5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bGCsXQ6ZJjptrQbi"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Ork Iron Gob",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Ork",
+    "locations": "Head",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "For Orks, Scarce. Gives +10 to Intimidation Tests, AP Stacks with other armour in the head location. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>For Orks, Scarce. Gives +10 to Intimidation Tests, AP Stacks with other armour in the head location. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vSbD31NJjMJEBUVv"
+}

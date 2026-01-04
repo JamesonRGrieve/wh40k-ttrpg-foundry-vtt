@@ -1,0 +1,21 @@
+{
+  "name": "Mezoa Gellar Void Integrant",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Gellar Field",
+    "hullType": "Transports, Raiders",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": "-",
+    "effect": "Integrates Gellarfield into Void Shields. Suffers +5 to Rolls on Warp Travel Encounter Table. If Vessels Void Shields are damaged by a critical hit, the Gellar fields are also damaged.",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Integrates Gellarfield into Void Shields. Suffers +5 to Rolls on Warp Travel Encounter Table. If Vessels Void Shields are damaged by a critical hit, the Gellar fields are also damaged.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Asm1aG0HQeUIqwDt"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Necron Gauntlet of Fire [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Necron",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10+9",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Flame, Spray",
+    "weight": "3kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Flame, Spray</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q3MUiKrWAa87qiDa"
+}

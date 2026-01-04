@@ -1,0 +1,20 @@
+{
+  "name": "Modified Bolt Shell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Shotguns",
+    "damageOrEffect": "Does 1d10+5 X, Pen 4, Tearing Damage, +30 Metres. However Shotgun Gains Unreliable quality (or loses reliable), and loses Scatter.",
+    "qualities": "Tearing, Unreliable, Scatter (lose)",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Does 1d10+5 X, Pen 4, Tearing Damage, +30 Metres. However Shotgun Gains Unreliable quality (or loses reliable), and loses Scatter.</p><p><b>Qualities:</b> Tearing, Unreliable, Scatter (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "luzN3x1FUXYe65Yc"
+}

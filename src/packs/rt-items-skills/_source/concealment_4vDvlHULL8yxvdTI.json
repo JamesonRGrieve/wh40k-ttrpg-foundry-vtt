@@ -1,0 +1,18 @@
+{
+  "name": "Concealment",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Basic",
+    "characteristic": "Agility",
+    "descriptor": "Hiding things, from small objects, to starships, to people, either somewhere or someplace. Requires appropriate environment to hide.",
+    "uses": "Opposed Test vs Awareness/Scrutiny/Search to hide thing/person. +10 to test if the thing/person remains perfectly still",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Hiding things, from small objects, to starships, to people, either somewhere or someplace. Requires appropriate environment to hide.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4vDvlHULL8yxvdTI"
+}

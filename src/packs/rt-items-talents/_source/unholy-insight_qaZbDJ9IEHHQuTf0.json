@@ -1,0 +1,17 @@
+{
+  "name": "Unholy Insight",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait (Elite)",
+    "requirements": "Elite Advance, survived a traumatic experience giving at least 5 Insanity/Corruption.",
+    "effect": "Whenever the charater makes a Forbidden Lore test, they can choose to gain +10 to the test, but in so doing gain 1 Insanity or 1 Corruption (whichever is appropriate). Additionally, whenever attempting Willpower or Intelligence Tests, they may substitute either their Insanity Points or Corruption Points for those characteristics.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Whenever the charater makes a Forbidden Lore test, they can choose to gain +10 to the test, but in so doing gain 1 Insanity or 1 Corruption (whichever is appropriate). Additionally, whenever attempting Willpower or Intelligence Tests, they may substitute either their Insanity Points or Corruption Points for those characteristics.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qaZbDJ9IEHHQuTf0"
+}

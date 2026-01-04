@@ -1,0 +1,28 @@
+{
+  "name": "Tanglefoot Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (2), Snare",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Snare</p><p><b>Note:</b> Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RNWYQVoAxcUGVTAX"
+}

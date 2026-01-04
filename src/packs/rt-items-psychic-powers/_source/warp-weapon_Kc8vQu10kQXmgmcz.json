@@ -1,0 +1,22 @@
+{
+  "name": "Warp Weapon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "Soul of Adamantium, Sanctuary\nOW: Psy Rating 5",
+    "focusPower": "Full Action",
+    "action": "Special",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker gives a single melee weapon they are wielding the Warp Weapon Trait for as long as they sustain the power.",
+    "effect": "300xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Kc8vQu10kQXmgmcz"
+}

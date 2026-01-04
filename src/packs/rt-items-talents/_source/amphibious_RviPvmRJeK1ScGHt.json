@@ -1,0 +1,17 @@
+{
+  "name": "Amphibious",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Creature can breath some non-air substance such as water, ammonia, carbon-dioxide, etc, in addition to air.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature can breath some non-air substance such as water, ammonia, carbon-dioxide, etc, in addition to air.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RviPvmRJeK1ScGHt"
+}

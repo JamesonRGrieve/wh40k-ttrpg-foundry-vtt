@@ -1,0 +1,17 @@
+{
+  "name": "Pure Faith",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FKYw2XzF4dyiNDYw"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Sanctuary",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "Soul of Adamantium\nOW: Psy Rating 5",
+    "focusPower": "Half Action/ Full Action",
+    "action": "Self / 5m",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "The Psyker wraps themselves in warp energy. Anyone making ranged attacks or approaching to within 3 metres of psyker must make +0 Willpower Test or forgo their turn, additionally, attacks with the Warp Weapon Trait do not ignore armour, and deal half damage to the psyker while this power is sustained. If the psyker makes any kind of ranged attack, the power ends immediately. If making this power with a Half Action, the power protects the Psyker, if made as a Full Action, if protects the Psyker and one other ally they can see within range. The protections, restrictions, and conditions of the power apply to the ally independantly of the pskyer, as long as the psyker maintains the power.",
+    "effect": "300xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PEp5HPTbVpRS3Fsy"
+}

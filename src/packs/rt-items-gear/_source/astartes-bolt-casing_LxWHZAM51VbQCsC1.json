@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Bolt Casing",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.1kg",
+    "availability": "Wearing one or more grants +5 to Willpower Tests to avoid Fear and Pinning",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LxWHZAM51VbQCsC1"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Bastion of the Imperium",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Heresy's Price",
+    "focusPower": "Half Action",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker touches target and makes Focus Power Test, on success target glows with light and is protected by a shield that reduces damage of all attacks by Psyker's Psy Rating. As long as power is maintained, it can reduce the damage of one attack, +1 per Degree of Success on Focus Power Test, after which it dissappears.\nNote: Does not state if damage reduction occurs before or after AP/Toughness, wording most favours reduction after AP and Toughness.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Stp8uItzFwp4gUAU"
+}

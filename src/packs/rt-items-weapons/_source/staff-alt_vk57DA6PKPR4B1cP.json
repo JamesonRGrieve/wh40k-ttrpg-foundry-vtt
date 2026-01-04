@@ -1,0 +1,28 @@
+{
+  "name": "Staff (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Primitive (7)",
+    "weight": "3kg",
+    "availability": "Plentiful",
+    "cost": "10 T",
+    "source": "Only War: Core",
+    "note": "Two-Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Primitive (7)</p><p><b>Note:</b> Two-Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vk57DA6PKPR4B1cP"
+}

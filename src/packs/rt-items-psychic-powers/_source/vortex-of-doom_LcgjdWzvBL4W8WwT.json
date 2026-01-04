@@ -1,0 +1,22 @@
+{
+  "name": "Vortex of Doom",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Psy 5, Crush,Obj Mechanicum, Shockwave",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "The Psyker chooses a point within range and line of sight, and creates a 2m Radius Vortex of Energy that deals 2d10 +2xPsy Rating damage with a Penetration equal to Vortex Radius to anyone touching it at the end of the Psyker's Turn. The Psyker cannot willingly end the power, instead they must a +0 Willpower Test with -5 per metre the Vortex's Radius is. If they pass they can do one of: Increase Radius by 1 Metre, Decrease Radius by 1 Metre or Move the Vortex Psy Rating Metres in any direction. If failing the Vortex grows one metre and moves Psy Rating metres in a random direction. If reaching zero metres, power ends, if reaching more than Psy Rating Metres Radius Vortex explodes, doing 2d10 +4xPsy Rating Energy Damage with Pen Vortex Radius to anyone within 2xPsy Rating metres of vortex centre. The Psyker also takes this damage, regardless of proximity.",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LcgjdWzvBL4W8WwT"
+}

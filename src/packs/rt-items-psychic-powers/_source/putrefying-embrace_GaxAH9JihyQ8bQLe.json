@@ -1,0 +1,22 @@
+{
+  "name": "Putrefying Embrace",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Mark of Nurgle",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "-30 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, Psyker's Unarmed attacks deal 1d10+Psy Rating Impact Damage with Toxic(3), and they count as having the Deadly Natural Weapons Trait. The Psyker's Strength Bonus is not added to this damage.\nDeadly Natural Weapons: Unarmed Attacks do not have the primitive quality.",
+    "effect": "200xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GaxAH9JihyQ8bQLe"
+}

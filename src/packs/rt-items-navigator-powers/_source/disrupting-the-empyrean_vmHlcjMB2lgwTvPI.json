@@ -1,0 +1,21 @@
+{
+  "name": "Disrupting the Empyrean",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "1 VU x Willpower Bonus",
+    "test": "-20 Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator warps space within range, ships wishing to enter or exit within this range suffer -10 to Pilot (Space Craft) Skill Tests per Degree of Success on Navigator's Willpower Test. Ships that fail take 1 Hull Damage that cannot be reduced by Void Shields or Armour.",
+    "adept": "Range becomes 2 VU x Willpower Bonus. Vessels that fail Pilot Skill Test take 1d5 damage that can't be reduced by Shields or Armour.",
+    "master": "Vessels that fail Pilot Skill Test take 1d5 damage + 1 per Degree of Success on Navigator's Willpower Test. Can't be reduced by Shields or Armour.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator warps space within range, ships wishing to enter or exit within this range suffer -10 to Pilot (Space Craft) Skill Tests per Degree of Success on Navigator's Willpower Test. Ships that fail take 1 Hull Damage that cannot be reduced by Void Shields or Armour.</p><p><b>Adept:</b> Range becomes 2 VU x Willpower Bonus. Vessels that fail Pilot Skill Test take 1d5 damage that can't be reduced by Shields or Armour.</p><p><b>Master:</b> Vessels that fail Pilot Skill Test take 1d5 damage + 1 per Degree of Success on Navigator's Willpower Test. Can't be reduced by Shields or Armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vmHlcjMB2lgwTvPI"
+}

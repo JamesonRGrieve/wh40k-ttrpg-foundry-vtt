@@ -1,0 +1,17 @@
+{
+  "name": "Blessed Radiance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Pure Faith, Divine Ministration, The Emperor Protects, OR Wrath of the Righteous",
+    "effect": "When spending a fate point to activate Pure Faith, extend effects to 2x WP Bonus Targets. Can bestow a Fate point as a free action, that returns at the end of the encounter if unspent. When burning a fate point, Explorer and 2xWP Bonus Allies become immune to Daemonic Presence, Fear, and Corruption Tests, gain +10 to Resist Psychic Attack or Manipulation, and take half Damage from psychic and warp sources until the end of the encounter.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When spending a fate point to activate Pure Faith, extend effects to 2x WP Bonus Targets. Can bestow a Fate point as a free action, that returns at the end of the encounter if unspent. When burning a fate point, Explorer and 2xWP Bonus Allies become immune to Daemonic Presence, Fear, and Corruption Tests, gain +10 to Resist Psychic Attack or Manipulation, and take half Damage from psychic and warp sources until the end of the encounter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4E0eWCCZ7x0tz6ap"
+}

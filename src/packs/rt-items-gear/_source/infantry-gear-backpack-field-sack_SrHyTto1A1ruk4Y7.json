@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Backpack / Field Sack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "2kg",
+    "availability": "Doubles as a Body Bag. Holds ~50kg",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Common",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SrHyTto1A1ruk4Y7"
+}

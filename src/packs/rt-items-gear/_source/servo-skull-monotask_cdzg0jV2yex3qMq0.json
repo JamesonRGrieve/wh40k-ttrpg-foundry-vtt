@@ -1,0 +1,20 @@
+{
+  "name": "Servo-Skull (Monotask)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Servo-Skull designed for a singular utility function. Examples include: Auger, Courier, Illuminator, Loud Hailer, Medicae, Utility, etc.",
+    "cost": "See Bestiary/InqHandbook Pg 145. Augur: (Rare/1500), Courier (Rare/1800), Illuminator (Scarce/950), Loud Hailer(Scarce/1000), Medicae(Rare/2500), Utility(Scarce/1500)",
+    "effects": "Rare",
+    "notes": "Varies T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> Varies T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cdzg0jV2yex3qMq0"
+}

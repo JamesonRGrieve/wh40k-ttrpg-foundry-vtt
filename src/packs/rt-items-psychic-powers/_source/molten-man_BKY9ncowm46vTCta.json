@@ -1,0 +1,22 @@
+{
+  "name": "Molten Man",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Psy Rating 6, 4+ Pyromancy Powers",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "For Psy Rating Rounds, the Psyker becomes an avatar of flame. All equipment and weapons they carry burst into flame and disintegrate, even metal. The Psyker reduces all damage from heat and fire, and half from plasma, las, and melta weapons before applying Armour and Toughness. The Psyker gains the Stuff of Nightmares and Unnatural Toughness(3) Traits. All creatures and objects within 5 metres of the psyker suffer 1d5 Energy Damage at the beginning of each of the Psyker's turns. The Psyker gains the Deadly Natural Weapons Trait, their touch deals 1d10+Psy Rating+Strength Energy Damage. They (Presumably) count as a source of Flame for their other Pyromancy Powers.\nWhen the power ends, the Psyker reverts back to normal and suffers 1d5 Fatigue.",
+    "effect": "700xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>700xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BKY9ncowm46vTCta"
+}

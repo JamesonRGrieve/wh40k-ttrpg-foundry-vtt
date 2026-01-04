@@ -1,0 +1,17 @@
+{
+  "name": "Mentor",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Storm Trooper Specialty\n300xp",
+    "effect": "Once per Session, for 10 minutes or until the end of an Encounter, all Squad Members, including Player characters within comms range can take all Skill Tests in one chosen skill as if they had Character's Skill Training.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Session, for 10 minutes or until the end of an Encounter, all Squad Members, including Player characters within comms range can take all Skill Tests in one chosen skill as if they had Character's Skill Training.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1A6AdKuV2zuEZxBO"
+}

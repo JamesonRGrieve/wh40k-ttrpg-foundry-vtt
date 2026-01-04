@@ -1,0 +1,17 @@
+{
+  "name": "Beloved Leader",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Charm, Fellowship 40\nAptitudes: Slaanesh",
+    "effect": "The Character's minions are incredibly devoted to them, increasing their Loyalty by +10.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>The Character's minions are incredibly devoted to them, increasing their Loyalty by +10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hZgs7FkO9TuP8iaj"
+}

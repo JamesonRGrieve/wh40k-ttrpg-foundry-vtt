@@ -1,0 +1,17 @@
+{
+  "name": "Templar Calix of the Scholastica Psykana",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Psyker Career, DH Rank 4+. <10 Insanity and Corruption Points.",
+    "descriptionText": "Psykers who focus on martial skill instead of Intellectualism, mixing blade and psychic power trough training within the schools of the Psykana Temples. Their speciality are the powerful Force Weapons which allow the warp to be channeled through them to devastating effect.",
+    "effects": "Replace new Rank's Advances with that of the Templar Calix of the Scholastica Psykana\nFrom now on, the character's Characteristic Advances change: Weapon Skill (100/250/500/750). Intelligence (500/750/1000/2500)",
+    "source": "DH: Inquisitor's Handbook (Page 80)",
+    "description": {
+      "value": "<p>Psykers who focus on martial skill instead of Intellectualism, mixing blade and psychic power trough training within the schools of the Psykana Temples. Their speciality are the powerful Force Weapons which allow the warp to be channeled through them to devastating effect.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Templar Calix of the Scholastica Psykana\nFrom now on, the character's Characteristic Advances change: Weapon Skill (100/250/500/750). Intelligence (500/750/1000/2500)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oC6PP1bgDffw2RAM"
+}

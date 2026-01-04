@@ -1,0 +1,22 @@
+{
+  "name": "Push",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 13",
+    "opposed": "No",
+    "sustained": "Against Target Individual within range and line of sight, make an Opposed Willpower vs target's Strength Test. If successful the target is knocked to the ground and suffers one Fatigue per Degree of Success.\nFor every 5 points above threshold can either increase range by 10m or gain +10 to Willpower Test.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tGzZFKZsy8ZzhroN"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Longshooter",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Ratling",
+    "descriptionText": "Ratling Snipers are some of the best there are, those prominent amongst even these high standards may become nicknamed \"Longshooters\", hitting shots to nearly a supernatural degree of efficency. Some such Longshooters seek to make their shots as dramatic as possible, swaying battle with a perfectly timed headshot.",
+    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Longshooter. Apt: Agility, Ballistic Skill, Fieldcraft, Finesse, Offence, Perception, Willpower \nAdd. Equipment:  Good Needle Rifle or Best Long-Las+Telescopic Sight or Best Sniper Rifle+Telescopic Sight, Chameleoline Cloak, Magnoculars. Gain Talents: Leap Up+Meditation or The Bigger They Are. Can Purchase the Basic Orders: Countersnipe and Weak Spot",
+    "source": "OW: Shield of Humanity (Page 74)",
+    "description": {
+      "value": "<p>Ratling Snipers are some of the best there are, those prominent amongst even these high standards may become nicknamed \"Longshooters\", hitting shots to nearly a supernatural degree of efficency. Some such Longshooters seek to make their shots as dramatic as possible, swaying battle with a perfectly timed headshot.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Longshooter. Apt: Agility, Ballistic Skill, Fieldcraft, Finesse, Offence, Perception, Willpower \nAdd. Equipment:  Good Needle Rifle or Best Long-Las+Telescopic Sight or Best Sniper Rifle+Telescopic Sight, Chameleoline Cloak, Magnoculars. Gain Talents: Leap Up+Meditation or The Bigger They Are. Can Purchase the Basic Orders: Countersnipe and Weak Spot</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gfe4x7bvsfXWsqLm"
+}

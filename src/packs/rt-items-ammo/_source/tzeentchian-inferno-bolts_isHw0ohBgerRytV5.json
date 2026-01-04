@@ -1,0 +1,20 @@
+{
+  "name": "Tzeentchian Inferno Bolts",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Legion Bolt Pistols, Bolters, and Combi-Bolters",
+    "damageOrEffect": "Loses Tearing, gains Warp Weapon and Blast(2) Qualities. Only functions when used is dedicated to Tzeentch. Can only fire on Single Shot mode. Warp Weapon Quality only applies to Living Targets. Heretical.",
+    "qualities": "Warp Weapon, Blast(2)",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Loses Tearing, gains Warp Weapon and Blast(2) Qualities. Only functions when used is dedicated to Tzeentch. Can only fire on Single Shot mode. Warp Weapon Quality only applies to Living Targets. Heretical.</p><p><b>Qualities:</b> Warp Weapon, Blast(2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "isHw0ohBgerRytV5"
+}

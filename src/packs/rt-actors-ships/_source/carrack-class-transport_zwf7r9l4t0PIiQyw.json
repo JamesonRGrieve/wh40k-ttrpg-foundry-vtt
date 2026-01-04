@@ -1,0 +1,28 @@
+{
+  "name": "Carrack-Class Transport",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Transport",
+    "size": "2.1km long, 0.4km wide",
+    "crew": 19500,
+    "speed": 4,
+    "manoeuvrability": -5,
+    "detection": 10,
+    "hull": 45,
+    "armour": 15,
+    "turrets": 1,
+    "space": 38,
+    "shipPoints": 25,
+    "weaponCapacity": "2 Dorsal",
+    "notes": "Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "zwf7r9l4t0PIiQyw"
+}

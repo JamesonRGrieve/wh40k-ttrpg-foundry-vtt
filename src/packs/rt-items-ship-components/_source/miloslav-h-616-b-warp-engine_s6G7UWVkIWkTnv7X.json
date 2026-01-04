@@ -1,0 +1,21 @@
+{
+  "name": "Miloslav H-616.b Warp Engine",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Warp Engine",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 10,
+    "spaceUsage": 12,
+    "spCost": "-",
+    "effect": "Allows for a vessel to enter and exit the immaterium. Halve warp travel time, however roll on Warp Travel Encounter table every 3 days, rather than every 5.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Allows for a vessel to enter and exit the immaterium. Halve warp travel time, however roll on Warp Travel Encounter table every 3 days, rather than every 5.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "s6G7UWVkIWkTnv7X"
+}

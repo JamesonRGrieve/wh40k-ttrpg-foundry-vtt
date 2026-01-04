@@ -1,0 +1,22 @@
+{
+  "name": "Field of Pestilence",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned",
+    "focusPower": "Full Action Concentration",
+    "action": "5m x Psy Rating",
+    "range": "-20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, all Ground within range turns swamp-like, any creature except the Psyker within range that attempts to move faster than their normal Half-Action Movement Rate must pass a +0 Agility Test or fall over.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W68VPyWlPDz5yt1U"
+}

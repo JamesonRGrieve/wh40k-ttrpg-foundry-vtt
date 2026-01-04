@@ -1,0 +1,28 @@
+{
+  "name": "Silver Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Impact",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive",
+    "weight": "5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "A Shield with a mirrored finish, sometimes mounted with small braziers to provide light.\nProvides 4 AP to Body and Arm Wielding it, or 8 AP vs weapons that cause Energy Damage. Stacks with armour as all shields.",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive</p><p><b>Note:</b> A Shield with a mirrored finish, sometimes mounted with small braziers to provide light.\nProvides 4 AP to Body and Arm Wielding it, or 8 AP vs weapons that cause Energy Damage. Stacks with armour as all shields.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XcVIk964eFvt2Kw0"
+}

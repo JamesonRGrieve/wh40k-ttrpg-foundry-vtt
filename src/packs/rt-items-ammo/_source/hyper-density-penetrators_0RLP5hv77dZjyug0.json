@@ -1,0 +1,20 @@
+{
+  "name": "Hyper Density Penetrators",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP/Bolt: Hand Cannons, Hunting Rifles, Shotguns, Bolt Pistols, Bolters",
+    "damageOrEffect": "Reduce Range by Half, Increase Penetration by 2. Gain Tearing Quality. Average sized target or smaller must make +10 Toughness Test when hit or be knocked prone. If shotgun, lose Scatter Qualiy. If Bolt weapon, change damage type to Impact.",
+    "qualities": "Tearing, Scatter (lose)",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": "100T Each",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Reduce Range by Half, Increase Penetration by 2. Gain Tearing Quality. Average sized target or smaller must make +10 Toughness Test when hit or be knocked prone. If shotgun, lose Scatter Qualiy. If Bolt weapon, change damage type to Impact.</p><p><b>Qualities:</b> Tearing, Scatter (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0RLP5hv77dZjyug0"
+}

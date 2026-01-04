@@ -1,0 +1,18 @@
+{
+  "name": "Disguise",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Basic",
+    "characteristic": "Fellowship",
+    "descriptor": "Masking Features or assuming a different identity. Difficult varies on available materials and difference between character and any they would try to imitate.",
+    "uses": "Skill Test: Assume disguise, basic disguise takes 1 minute, advanced disguise could take weeks or months for prosthetics, surgery, and learning mannerisms.\nOpposed Skill Test vs Scutiny to test whether a person who would recognise difference does so.",
+    "useTime": "1 Minute (Basic)\nWeeks/Months (Advanced)",
+    "description": {
+      "value": "<p>Masking Features or assuming a different identity. Difficult varies on available materials and difference between character and any they would try to imitate.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dQEueDa41vXdpVms"
+}

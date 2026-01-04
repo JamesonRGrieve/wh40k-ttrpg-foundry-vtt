@@ -1,0 +1,28 @@
+{
+  "name": "Storm Bolter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "90m",
+    "rof": "S/2/4",
+    "damage": "1d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Storm, Tearing",
+    "weight": "9kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Storm, Tearing</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XC7M1z6Hr68vcBYf"
+}

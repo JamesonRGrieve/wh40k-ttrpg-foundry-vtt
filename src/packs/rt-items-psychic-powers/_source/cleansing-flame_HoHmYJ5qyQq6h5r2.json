@@ -1,0 +1,22 @@
+{
+  "name": "Cleansing Flame",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Sanctic Daemonology",
+    "prerequisites": "Psy Rating 4,\nPurge Soul",
+    "focusPower": "Half Action\nAttack\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "+0 Willpower",
+    "opposed": "No",
+    "sustained": "Fire Psychic \"Bolt\" Spray of Psychic Fire which can be dodged as with a ranged Spray Attack using a +0 Agility Test. Deals 1d10 + Psy Rating + Willpower Bonus energy Damage with PEN 0, Flame, Sanctified, and Spray Qualities.\nThose set on fire by this treat the fire damage as also possessing the Sanctified Trait.",
+    "effect": "300xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HoHmYJ5qyQq6h5r2"
+}

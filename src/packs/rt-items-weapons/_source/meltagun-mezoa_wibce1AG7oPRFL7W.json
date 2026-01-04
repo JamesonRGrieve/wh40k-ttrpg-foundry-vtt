@@ -1,0 +1,28 @@
+{
+  "name": "Meltagun (Mezoa)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Melta",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+8",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": 10,
+    "reload": "3 Full",
+    "special": null,
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wibce1AG7oPRFL7W"
+}

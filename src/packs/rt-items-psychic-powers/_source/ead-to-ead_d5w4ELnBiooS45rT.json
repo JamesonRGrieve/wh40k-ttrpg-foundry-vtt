@@ -1,0 +1,22 @@
+{
+  "name": "'Ead to 'Ead",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Dis is Takin' Too Long, Smash da Gitz",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Weirdboy makes Opposed Willpower Test against single foe within range. If Weirdboy wins, target is stunned for one round and takes 1d5 Energy damage which ignores armour and toughness. Each Degree of Success stuns for an additional round and does additional 1d5 Energy damage. If Weirdboy succeeds by three or more Degrees of Success, each allied ork within 10 metres of them who witnessed the attack can immediately make a Free Charge Action.",
+    "effect": "500xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d5w4ELnBiooS45rT"
+}

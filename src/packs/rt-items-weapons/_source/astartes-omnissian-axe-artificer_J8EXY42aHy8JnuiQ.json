@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Omnissian Axe (Artificer)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+9",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unbalanced",
+    "weight": "10kg",
+    "availability": "Distinguished",
+    "cost": "25 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. Always Master-Crafted. +10 to Fellowship Tests with members of the Machine Cult. Counts as a Combi-Tool.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unbalanced</p><p><b>Note:</b> Space Marines Only. Always Master-Crafted. +10 to Fellowship Tests with members of the Machine Cult. Counts as a Combi-Tool.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J8EXY42aHy8JnuiQ"
+}

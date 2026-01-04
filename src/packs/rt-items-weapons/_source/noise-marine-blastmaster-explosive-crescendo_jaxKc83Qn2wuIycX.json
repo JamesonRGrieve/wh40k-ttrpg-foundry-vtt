@@ -1,0 +1,28 @@
+{
+  "name": "Noise Marine Blastmaster (Explosive Crescendo)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "250m",
+    "rof": "S/-/-",
+    "damage": "3d10+10",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (4), Devastating (2)",
+    "weight": "41kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Devastating (2)</p><p><b>Note:</b> Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jaxKc83Qn2wuIycX"
+}

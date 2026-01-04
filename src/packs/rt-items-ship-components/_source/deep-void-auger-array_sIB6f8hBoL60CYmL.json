@@ -1,0 +1,21 @@
+{
+  "name": "Deep Void Auger Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Augurs",
+    "hullType": "All Ships",
+    "powerUsage": 7,
+    "spaceUsage": 0,
+    "spCost": 1,
+    "effect": "The eyes and ears of the ship. Adds +10 to Ship's Detection. Can only be damaged/destroyed by a critical hit despite being external.",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>The eyes and ears of the ship. Adds +10 to Ship's Detection. Can only be damaged/destroyed by a critical hit despite being external.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sIB6f8hBoL60CYmL"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Precognitive Dodge",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Free Action",
+    "action": "Self",
+    "range": "Threshold 11",
+    "opposed": "No",
+    "sustained": "Until the end of the character's next turn, all Ballistic Skill Tests made to hit them with ranged weapons have -30.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VFW7eCxxlaCi5mkD"
+}

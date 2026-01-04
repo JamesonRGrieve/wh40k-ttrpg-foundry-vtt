@@ -1,0 +1,17 @@
+{
+  "name": "Delicate Interrogation",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Coordinated Interrogation, Fellowship 50. Aptitudes: Intelligence, Finesse.",
+    "effect": "Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pnsO9omfTKMJo69u"
+}

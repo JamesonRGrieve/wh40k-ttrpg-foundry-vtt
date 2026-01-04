@@ -1,0 +1,28 @@
+{
+  "name": "Lunar-class Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Cruiser",
+    "size": "5km long, 0.8km wide",
+    "crew": 95000,
+    "speed": 5,
+    "manoeuvrability": 10,
+    "detection": 10,
+    "hull": 70,
+    "armour": 20,
+    "turrets": 2,
+    "space": 75,
+    "shipPoints": 60,
+    "weaponCapacity": "1 Prow, 2 Port, 2 Starboard",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "CDXc7fZ6ub9qzUHZ"
+}

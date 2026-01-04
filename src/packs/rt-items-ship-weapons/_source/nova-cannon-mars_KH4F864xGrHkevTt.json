@@ -1,0 +1,25 @@
+{
+  "name": "Nova Cannon (Mars)",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Nova Cannon",
+    "hullType": "Cruisers",
+    "powerUsage": 3,
+    "spaceUsage": 7,
+    "spCost": 3,
+    "damage": "2d5+4",
+    "strength": "-",
+    "critRating": "-",
+    "range": "6-40",
+    "availability": "Very Rare",
+    "notes": "Standard Nova Cannon, Check separate Nova Cannon Rules Block.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 2d5+4</p><p><b>Notes:</b> Standard Nova Cannon, Check separate Nova Cannon Rules Block.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KH4F864xGrHkevTt"
+}

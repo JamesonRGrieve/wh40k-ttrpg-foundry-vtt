@@ -1,0 +1,17 @@
+{
+  "name": "Rites of Banishment",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Common Lore (Imperial Creed) +10 or Forbidden Lore (Daemonology) \nAptitudes: Offence, Willpower",
+    "effect": "Once per round as a Half Action, character can speak litanies and invocations to disrupt daemons. Until the beginning of their next turn, Daemonis within Willpower Bonus x 2 metres suffer -10 to Willpower Tests.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Once per round as a Half Action, character can speak litanies and invocations to disrupt daemons. Until the beginning of their next turn, Daemonis within Willpower Bonus x 2 metres suffer -10 to Willpower Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WelNs2XksgKE25CG"
+}

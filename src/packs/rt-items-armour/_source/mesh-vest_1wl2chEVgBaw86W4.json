@@ -1,0 +1,22 @@
+{
+  "name": "Mesh Vest",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Mesh",
+    "locations": "Body",
+    "ap": 4,
+    "maxAg": "-",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "150 T",
+    "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1wl2chEVgBaw86W4"
+}

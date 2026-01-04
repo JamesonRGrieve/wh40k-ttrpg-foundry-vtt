@@ -1,0 +1,17 @@
+{
+  "name": "Abiding Resilience",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Toughness 40 \nAptitudes: Toughness, Defence",
+    "effect": "When the character expends a Fate Point to regain wounds, they regain 1d5+Toughness Bonus Wounds and removes 1 Fatigue (instead of just 1d5 Wounds)",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When the character expends a Fate Point to regain wounds, they regain 1d5+Toughness Bonus Wounds and removes 1 Fatigue (instead of just 1d5 Wounds)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0qODOWU16Be9XY8Y"
+}

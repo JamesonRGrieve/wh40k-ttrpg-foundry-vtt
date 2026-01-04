@@ -1,0 +1,17 @@
+{
+  "name": "More fer Me!",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork, Weapon Skill 40",
+    "effect": "When the Ork is outnumbered in Melee Combat, they gain the same bonuses to hit as their enemies would from outnumbering the Ork. This effect stacks with Combat Master Talent, denying the outnumbering benefit to the enemies but still giving it to you.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>When the Ork is outnumbered in Melee Combat, they gain the same bonuses to hit as their enemies would from outnumbering the Ork. This effect stacks with Combat Master Talent, denying the outnumbering benefit to the enemies but still giving it to you.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UuB3oMX698QWSJVH"
+}

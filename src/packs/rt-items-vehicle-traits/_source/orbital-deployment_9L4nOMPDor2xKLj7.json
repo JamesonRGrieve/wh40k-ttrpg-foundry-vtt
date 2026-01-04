@@ -1,0 +1,14 @@
+{
+  "name": "Orbital Deployment",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Deployed from space. Choose location, scatter 2d10 metres. Shooting at vehicle being orbitally deployed has -30 to hit. Once landed, must wait a Full Round before disembarking, firing, or moving.",
+    "description": {
+      "value": "<p>Deployed from space. Choose location, scatter 2d10 metres. Shooting at vehicle being orbitally deployed has -30 to hit. Once landed, must wait a Full Round before disembarking, firing, or moving.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9L4nOMPDor2xKLj7"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Sprint",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; None\nAptitudes: Agility, Fieldcraft, Slaanesh",
+    "effect": "When taking a Full Move Action, can move an additional Agility Bonus Metres. When taking the Run Action, can double their movement for one Round. Character gains one Fatigue if they use this Talent's benefits for two turns in a row.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When taking a Full Move Action, can move an additional Agility Bonus Metres. When taking the Run Action, can double their movement for one Round. Character gains one Fatigue if they use this Talent's benefits for two turns in a row.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D3bWkGFUrD3H7FAP"
+}

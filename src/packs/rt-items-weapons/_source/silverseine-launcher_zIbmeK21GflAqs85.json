@@ -1,0 +1,28 @@
+{
+  "name": "Silverseine Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Blast (4), Reliable, Sanctified, Snare (2)",
+    "weight": "25kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "A netlauncher for capturing daemons. The sanctified wiring eating through their warpflesh. Weapon doubles Snare value against characters with Daemonic Trait. Daemonic targets snared by the weapon must test for Warp Instability at the start of each round they are snared.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Reliable, Sanctified, Snare (2)</p><p><b>Note:</b> A netlauncher for capturing daemons. The sanctified wiring eating through their warpflesh. Weapon doubles Snare value against characters with Daemonic Trait. Daemonic targets snared by the weapon must test for Warp Instability at the start of each round they are snared.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zIbmeK21GflAqs85"
+}

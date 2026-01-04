@@ -1,0 +1,22 @@
+{
+  "name": "Magistratum Carapace (Hax-Orthlack)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "All",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "16kg",
+    "availability": "Rare",
+    "cost": "1100 T",
+    "notes": "Built-In Respirator, Comm-Bead, and Photo-Visor",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Built-In Respirator, Comm-Bead, and Photo-Visor</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aBbYXNfcpYEj2ZAe"
+}

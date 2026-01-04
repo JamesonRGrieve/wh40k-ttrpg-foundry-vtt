@@ -1,0 +1,17 @@
+{
+  "name": "Bulging Biceps",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Strength 45\nAptitudes: Strength, Offence, Nurgle",
+    "effect": "Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FIVxIyneptJATaIv"
+}

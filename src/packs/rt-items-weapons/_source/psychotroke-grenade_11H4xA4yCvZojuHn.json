@@ -1,0 +1,28 @@
+{
+  "name": "Psychotroke Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Hallucinogenic (4)",
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Respirators and Sealed Armour grant no bonuses against the nerve-agents these grenades release. If Toughness Test to resist Hallucinogenics if failed, add +1 to Hallucinogen Roll per Degree of Failiure (max 10)",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Hallucinogenic (4)</p><p><b>Note:</b> Respirators and Sealed Armour grant no bonuses against the nerve-agents these grenades release. If Toughness Test to resist Hallucinogenics if failed, add +1 to Hallucinogen Roll per Degree of Failiure (max 10)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "11H4xA4yCvZojuHn"
+}

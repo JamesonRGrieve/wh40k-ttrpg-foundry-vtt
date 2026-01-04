@@ -1,0 +1,28 @@
+{
+  "name": "Entropic Accelerator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "3d10+4",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 1,
+    "reload": "-",
+    "special": "Recharge, Toxic",
+    "weight": "5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.",
+    "description": {
+      "value": "<p><b>Special:</b> Recharge, Toxic</p><p><b>Note:</b> A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bYQFVlUhL4eauO8a"
+}

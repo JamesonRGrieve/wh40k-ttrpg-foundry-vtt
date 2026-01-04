@@ -1,0 +1,28 @@
+{
+  "name": "Flying Claw",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic",
+    "range": "10m",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Primitive (8), Snare, Tearing",
+    "weight": "1.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can be used in Melee or Thrown.",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Primitive (8), Snare, Tearing</p><p><b>Note:</b> Can be used in Melee or Thrown.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "g4ToJGPyLg1Qt4XE"
+}

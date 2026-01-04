@@ -1,0 +1,17 @@
+{
+  "name": "Disciple of Mont'Ka",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Agility 40, Silent Move +10",
+    "effect": "Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vN0XQRhFX948m34e"
+}

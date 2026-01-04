@@ -1,0 +1,17 @@
+{
+  "name": "Thunderous Castigation",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Command +20,Scholastic Lore (Imperial Creed). Aptitudes: Fellowship, Leadership",
+    "effect": "Character can Orate to their Enemies as a Free Action after rolling initiative, they make a -20 Command Test, if successful enemies treat character as possessing Fear(1) Trait (+1 per three degrees of success, up to Fear(3)) for the remainder of the encounter.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can Orate to their Enemies as a Free Action after rolling initiative, they make a -20 Command Test, if successful enemies treat character as possessing Fear(1) Trait (+1 per three degrees of success, up to Fear(3)) for the remainder of the encounter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jPc0Is4TmH5S8NUl"
+}

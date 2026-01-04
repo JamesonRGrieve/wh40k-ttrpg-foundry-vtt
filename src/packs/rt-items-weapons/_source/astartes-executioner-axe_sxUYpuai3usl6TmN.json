@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Executioner Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+8",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unwieldy, Felling (4)",
+    "weight": "22kg",
+    "availability": "Famed",
+    "cost": "25 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy, Felling (4)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sxUYpuai3usl6TmN"
+}

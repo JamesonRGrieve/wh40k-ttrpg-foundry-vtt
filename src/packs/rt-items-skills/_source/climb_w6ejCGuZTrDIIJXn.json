@@ -1,0 +1,18 @@
+{
+  "name": "Climb",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Basic, Movement",
+    "characteristic": "Strength",
+    "descriptor": "Ascending/Descending Ropes, pipes, walls, other surfaces that would be hard to climb due to lack of hand holds or difficult environmental conditions. Not neccesary for trivial climbing methods such as well-maintained ladders.",
+    "uses": "Simple Climb: Skill Test only made in difficult condition or if climbing quickly to ascend or descend at half normal movement rate., +1 metre per DoS. On fail, fall. \nSheer Surface: Same as simple Climb but test must always be made. \n",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Ascending/Descending Ropes, pipes, walls, other surfaces that would be hard to climb due to lack of hand holds or difficult environmental conditions. Not neccesary for trivial climbing methods such as well-maintained ladders.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "w6ejCGuZTrDIIJXn"
+}

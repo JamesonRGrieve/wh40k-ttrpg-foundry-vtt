@@ -1,0 +1,17 @@
+{
+  "name": "Take Cover!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nFull Action",
+    "requirements": "--",
+    "descriptionText": "Comrade in Cohesion hunkers down behind nearby cover, for the next round all attacks that hit the comrade must roll damage, if it does not exceed 3+Cover AP the comrade is not damaged. Comrades will not use actively hide behind cover unless this order is given to them.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade in Cohesion hunkers down behind nearby cover, for the next round all attacks that hit the comrade must roll damage, if it does not exceed 3+Cover AP the comrade is not damaged. Comrades will not use actively hide behind cover unless this order is given to them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0hYTun0S5pql8WrC"
+}

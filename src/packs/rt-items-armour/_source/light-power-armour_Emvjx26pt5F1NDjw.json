@@ -1,0 +1,22 @@
+{
+  "name": "Light Power Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 7,
+    "maxAg": 40,
+    "weight": "40kg",
+    "availability": "Extremely Rare",
+    "cost": "8500 T",
+    "notes": "+10 to Strength, armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+10 to Strength, armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Emvjx26pt5F1NDjw"
+}

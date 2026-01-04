@@ -1,0 +1,17 @@
+{
+  "name": "Good Repuation (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Fel 50, Peer (X)",
+    "effect": "Additional +10 (+20 with peer) to Fellowship Tests with relevent Group. Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers. Ork Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Additional +10 (+20 with peer) to Fellowship Tests with relevent Group. Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers. Ork Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a3Jyv1QGntNw9KeH"
+}

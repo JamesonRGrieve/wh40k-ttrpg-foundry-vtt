@@ -1,0 +1,28 @@
+{
+  "name": "Deathwatch Graviton Cannon [Focused]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Astartes",
+    "range": "45m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": 5,
+    "reload": "3 Full",
+    "special": "SM Wep",
+    "weight": "65kg",
+    "availability": "Distinguished",
+    "cost": "45 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Focused] targets single enemy up to Enormous Size, forces -40 Strength Test to avoid being Knocked down and pinned, damaged each round, up to 2d10 rounds. Damage ignores armour. Attempting to move whilst affected requires Opposed Strength Test vs Strength 70 (Unnatural Strength x2)",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Focused] targets single enemy up to Enormous Size, forces -40 Strength Test to avoid being Knocked down and pinned, damaged each round, up to 2d10 rounds. Damage ignores armour. Attempting to move whilst affected requires Opposed Strength Test vs Strength 70 (Unnatural Strength x2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qrbVCkmKwQbsCeGP"
+}

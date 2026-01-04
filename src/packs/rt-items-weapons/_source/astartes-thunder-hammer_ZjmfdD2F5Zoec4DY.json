@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Thunder Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Concussive (1), Unwieldy",
+    "weight": "18kg",
+    "availability": "Distinguished",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Concussive (1), Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZjmfdD2F5Zoec4DY"
+}

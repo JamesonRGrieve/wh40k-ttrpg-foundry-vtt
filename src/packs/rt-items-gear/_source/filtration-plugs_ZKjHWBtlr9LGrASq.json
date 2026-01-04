@@ -1,0 +1,20 @@
+{
+  "name": "Filtration Plugs",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "-",
+    "availability": "+20 To Toughness Test to resist effects of gas. Good Craftsmanship adds another +10. Poor Craftsmanship only lasts 5 hours before filter becomes unusable.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "15 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 15 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZKjHWBtlr9LGrASq"
+}

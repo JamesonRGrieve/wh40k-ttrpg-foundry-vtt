@@ -1,0 +1,17 @@
+{
+  "name": "The Bigger They Are",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Ballistic Skill 40 \nAptitudes: Ballistic Skill, Finesse",
+    "effect": "When makin a Single-Shot Rnaged attack against a Target with a Size Trait larger than the character's, the character can modify the hit Location result by an amount up to twice the value of the target's size Triat.\nEG: Character hits a Leman Russ Tank (Size 7, Massive) with hit roll of 13, hit roll is reversed to 31, the Hull, but can be modified by up to +/- 14, in this instance, 31-->20 (Change of -11), which hits the motive system instead",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When makin a Single-Shot Rnaged attack against a Target with a Size Trait larger than the character's, the character can modify the hit Location result by an amount up to twice the value of the target's size Triat.\nEG: Character hits a Leman Russ Tank (Size 7, Massive) with hit roll of 13, hit roll is reversed to 31, the Hull, but can be modified by up to +/- 14, in this instance, 31-->20 (Change of -11), which hits the motive system instead</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t1ZqeKrxHn5XWSQ6"
+}

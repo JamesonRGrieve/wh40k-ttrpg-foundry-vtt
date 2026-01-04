@@ -1,0 +1,22 @@
+{
+  "name": "Heresy's Price",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker makes Opposed Willpower test against target within range and line of sight. If Successful, as long as Psyker maintains power or target breaks free of it, target has Penalty to Weapon Skill, Ballistic Skill, and Dodge Tests equal to 3xPsy Rating (max -30). At the start of each turn, target can attempt to break free of effect by repeating Opposed Willpower Test as a Free Action.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "e65szSjcdBN7VQGj"
+}

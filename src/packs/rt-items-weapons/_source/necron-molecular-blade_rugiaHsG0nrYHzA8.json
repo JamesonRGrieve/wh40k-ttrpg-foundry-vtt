@@ -1,0 +1,28 @@
+{
+  "name": "Necron Molecular Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Necron",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Corrosive, Razor Sharp, Tearing",
+    "weight": "15kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "A Strangely shaped blade that extends from either side of the grip, the blade monomolecularly thin and seem to flicker in and out of reality.\nInfinite Ammo, No Reloads needed.",
+    "description": {
+      "value": "<p><b>Special:</b> Corrosive, Razor Sharp, Tearing</p><p><b>Note:</b> A Strangely shaped blade that extends from either side of the grip, the blade monomolecularly thin and seem to flicker in and out of reality.\nInfinite Ammo, No Reloads needed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rugiaHsG0nrYHzA8"
+}

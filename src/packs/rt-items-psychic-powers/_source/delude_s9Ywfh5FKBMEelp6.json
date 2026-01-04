@@ -1,0 +1,22 @@
+{
+  "name": "Delude",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "On Successful Test, Psyker convinces target that they are a person deserving of respect, and will act positively to any friendly interactions the psyker maks. As long as power is maintained, Psyker gains +30 to all Interaction Skill Tests against the target. This does not mean the Psyker can make the target act against their better judgement, harm themselves, or hide obvious hostility (for that, see later powers).",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "s9Ywfh5FKBMEelp6"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Zealot's Presence",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T3)",
+    "requirements": "Tier 3: Sister of Battle E.Adv, Fellowship 35, Spirit of the Martyr. \nAptitudes: Fellowship, Offence",
+    "effect": "As a Free Action,the Sister can choose one foe and spend a Fate Point to grant themselves and all allies within Willpower Bonus metres to gain the Hatred Talent for that kind of foe until the end of the encounter.\nEG: Targeting an Ork Nob would give Hatred (Orks).",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>As a Free Action,the Sister can choose one foe and spend a Fate Point to grant themselves and all allies within Willpower Bonus metres to gain the Hatred Talent for that kind of foe until the end of the encounter.\nEG: Targeting an Ork Nob would give Hatred (Orks).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UwnwdZuGSUmabfI7"
+}

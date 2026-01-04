@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Balefire Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "SM Wep, Flame, Spray, Toxic",
+    "weight": "7kg",
+    "availability": "Respected",
+    "cost": "16 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray, Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vk7dUeiE0IT5teoM"
+}

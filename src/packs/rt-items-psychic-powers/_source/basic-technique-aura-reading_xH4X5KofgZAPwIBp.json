@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: Aura Reading",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "Sight",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Basic Technique of the Divination Discipline, available to any with this Discipline. Psyker targets one person they can see, on successful Focus Power Test, gaining information based on number of Degrees of Success. Each successive turn the Psyker maintains the power focused on the target, they can increase their DoS by 1, up to the maximum of 3. Switching to a different target requires activating the power again. Doesn't work on Untouchables, but does tell you if target is one. For effects, see \"Aura Reading\" Box next to Divination Discipline.",
+    "effect": "Free",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xH4X5KofgZAPwIBp"
+}

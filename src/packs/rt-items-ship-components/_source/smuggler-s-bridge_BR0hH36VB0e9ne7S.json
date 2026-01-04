@@ -1,0 +1,21 @@
+{
+  "name": "Smuggler's Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Transports",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": "-",
+    "effect": "Appears as any normal bridge, but contains advanced sensors, hidden compartments, and secret vox commincators to converse with crime syndicates. +50 Achievement Points towards Criminal Objectives.",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Appears as any normal bridge, but contains advanced sensors, hidden compartments, and secret vox commincators to converse with crime syndicates. +50 Achievement Points towards Criminal Objectives.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BR0hH36VB0e9ne7S"
+}

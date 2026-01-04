@@ -1,0 +1,17 @@
+{
+  "name": "Wisdom of the Ancients",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Intelligence 40\nAptitudes: Tzeentch",
+    "effect": "Character can spend an Infamy Point to gain insight on a situation or ask the GM a question about an immdiate situation the character faces which they GM should answer helpfully. The question can be anything the character may legimiately know through stories heard or their own experiences. For example: \"Where are the Navigator's Quarters aboard an Imperial Cruiser usually Located?\"",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character can spend an Infamy Point to gain insight on a situation or ask the GM a question about an immdiate situation the character faces which they GM should answer helpfully. The question can be anything the character may legimiately know through stories heard or their own experiences. For example: \"Where are the Navigator's Quarters aboard an Imperial Cruiser usually Located?\"</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "42slKX4NzWraztem"
+}

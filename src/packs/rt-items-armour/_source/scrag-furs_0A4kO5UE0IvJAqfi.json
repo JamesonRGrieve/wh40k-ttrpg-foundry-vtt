@@ -1,0 +1,22 @@
+{
+  "name": "Scrag Furs",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Body",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "7kg",
+    "availability": "Common",
+    "cost": "5 T",
+    "notes": "Suffer -10 to all Fellowship Tests due to the armour's fur stench\nHalve primitive armour AP vs non primitive weapons",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Suffer -10 to all Fellowship Tests due to the armour's fur stench\nHalve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0A4kO5UE0IvJAqfi"
+}

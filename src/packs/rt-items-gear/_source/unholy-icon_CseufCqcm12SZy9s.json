@@ -1,0 +1,20 @@
+{
+  "name": "Unholy Icon",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "Very Heretical, and instantly recognisable as blasphemous to any loyal imperial citizen. Provides +20 to Charm Tests with heretical individuals.",
+    "cost": "A Great way of getting killed if displayed openly in Imperial Territory. Heretical",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CseufCqcm12SZy9s"
+}

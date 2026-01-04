@@ -1,0 +1,22 @@
+{
+  "name": "Mantle of the Daemon Prince",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy 6, Corruption 40+, Infamy 40+, Child of the Warp, Hatred (Any)",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "Self",
+    "range": "-20 Corruption",
+    "opposed": "No",
+    "sustained": "Power lasts for Psy Rating Rounds, if the Psyker reaches 0 Wounds it ends early and they are Stunned for one round. The Psyker gains Daemonic(Psy Rating/2), Fear(3), and Warp Instability, and can select two of the following packages of traits:\nDaemonic Resistance - choose three of: Natural Armour(2), Regeneration(4), Sturdy, The Stuff of Nightmares, and Unnatural Toughness(3)\nBestial Form - choose three of: Amphibious, Amorphous, Dark Sight, Flyer(3), Multiple Arms(1), Quadruped, Toxic(2), and Unnatural Senses(5)\nPredatory Gifts: Gain Deadly Natural Weapons, Unnatural Strength(3), and Warp Weapon Traits, choose one effect to add to natural weapons: Crippling(3), Felling(3), Flame, Flexible, Tearing, Toxic(2), or Tainted",
+    "effect": "700xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>700xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vDc6gbYXMIId6CDI"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Cyclone Missile Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Mounted",
+    "type": "Launcher",
+    "range": "300m",
+    "rof": "S/2/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 12,
+    "reload": "3 Full",
+    "special": "SM Wep",
+    "weight": "95kg",
+    "availability": "Famed",
+    "cost": "25 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Obkc9mgU7Rhc8xB1"
+}

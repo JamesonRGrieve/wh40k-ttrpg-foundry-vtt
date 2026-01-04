@@ -1,0 +1,20 @@
+{
+  "name": "Plasma Missile (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Astartes Missile Launcher",
+    "damageOrEffect": "2d10+12 E, Pen 8, Blast (3), Volatile. Continues to do full damage within blast area for 1d5 rounds after detonation. If targeting a vehicle on 4+ DoS Blast centres on vehicle rather than a stationary point.",
+    "qualities": "Blast(3), Volatile",
+    "weight": "3kg",
+    "availability": "Distinguished",
+    "cost": "25 R Each",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 2d10+12 E, Pen 8, Blast (3), Volatile. Continues to do full damage within blast area for 1d5 rounds after detonation. If targeting a vehicle on 4+ DoS Blast centres on vehicle rather than a stationary point.</p><p><b>Qualities:</b> Blast(3), Volatile</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rGu4Gl9pM68Pw1Ad"
+}

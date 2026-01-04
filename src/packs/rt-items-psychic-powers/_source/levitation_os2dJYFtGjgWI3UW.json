@@ -1,0 +1,22 @@
+{
+  "name": "Levitation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Precision Telekinesis",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker can lift themselves or other objects/people into the air up to Psy Rating metres. The maximum weight they can lift follows Carrying/Lifting/Pushing rules, but uses Psyker's Willpower and Intelligence Bonuses in place of Strength and Toughness Bonuses. Anything over the maximum weight cannot be lifted. This is not true flight, just vertical movement.",
+    "effect": "400xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "os2dJYFtGjgWI3UW"
+}

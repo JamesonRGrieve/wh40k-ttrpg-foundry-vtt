@@ -1,0 +1,22 @@
+{
+  "name": "Neural Storm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker fires a Psychic barrage of one bolt, +1 per two degrees of Success on Focus Power Test up to a maximum number of bolts equal to their Psy Rating. The first hits their target, with each further bolt hitting the target or anyone within 2 metres of them (can be dodged as if semi-auto ranged attack). Each bolt deals 1d10 + Toughness Bonuss Damage with Psy Rating Penetration. If succeeding Focus Power Test by 3+ DoS, can add either the Shocking or Haywire Qualities to the damage, with 5+ DoS, add both.",
+    "effect": "250xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>250xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "w2unJgQGD3NSjC4P"
+}

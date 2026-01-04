@@ -1,0 +1,20 @@
+{
+  "name": "Neural Interface",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "0.5kg",
+    "availability": "Allows direct interfacing with Cogitators, and +10 to Tech-Use Tests made with such systems. Provides +2 to Initiative Rolls. Can be linked to one piece of technology on user's person that possesses some kind of interface connector as a Full Action, in so doing provides +20 to Tech-Use tests to use this device.",
+    "cost": "Requires Mechanicus Implants to use.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "ChatGPT",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d5qEDY0jEkjGS0m0"
+}

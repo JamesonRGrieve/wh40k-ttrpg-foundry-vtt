@@ -1,0 +1,20 @@
+{
+  "name": "Necron Veil of Darkness",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "As Full Action, make +10 Tech-Use Test to teleport user and any number of accompanying Necrons within 10 metres to anywhere within 200m.  If test failed, arrive 1d10m from intended destination, scattered randomly.",
+    "cost": "Rarely gifted to Necron Royalty by specialised Crypteks. Always Best Quality.  Xenotech.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "44yrJqcGcuWc9hfm"
+}

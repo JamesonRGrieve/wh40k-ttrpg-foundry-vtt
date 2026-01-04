@@ -1,0 +1,28 @@
+{
+  "name": "Power Maul",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Shocking",
+    "weight": "3.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Can also use \"Low\" Setting (1d10+1 E, Pen 2, Shocking)",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Shocking</p><p><b>Note:</b> Can also use \"Low\" Setting (1d10+1 E, Pen 2, Shocking)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AW35tAHKfoavKbWu"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Xenos Weapon Proficiency (Ork)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork",
+    "effect": "The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uiB9pcAUje2WrbpC"
+}

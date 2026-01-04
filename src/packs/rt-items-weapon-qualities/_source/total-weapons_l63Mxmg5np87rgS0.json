@@ -1,0 +1,14 @@
+{
+  "name": "Total Weapons",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 1155,
+    "description": {
+      "value": "<p>1155</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l63Mxmg5np87rgS0"
+}

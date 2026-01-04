@@ -1,0 +1,28 @@
+{
+  "name": "Hellfire Assault Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "100m",
+    "rof": "S/3/-",
+    "damage": "1d10+5",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": 20,
+    "reload": "2 Full",
+    "special": "Tearing, Accurate",
+    "weight": "5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "ChatGPT",
+    "note": "Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Accurate</p><p><b>Note:</b> Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HQ6ocloWLg8zQnUX"
+}

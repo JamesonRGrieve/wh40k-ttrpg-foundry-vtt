@@ -1,0 +1,20 @@
+{
+  "name": "Vox-Thief (Long-Range)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "15kg",
+    "availability": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Long Range Versions are the size of a backpack and have a range of 50km.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "3000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 3000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IW9pzbTd5IuhOTVF"
+}

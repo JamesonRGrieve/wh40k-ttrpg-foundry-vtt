@@ -1,0 +1,22 @@
+{
+  "name": "Force of Asuryan",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "2m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Farseer makes a Focus Power Test. All Allies within 2m x Psy Rating, +2m per Degree of Success, gain an additional Half Action and Reaction as long as Power is Sustained.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YhfJMGjAjHz0XTWv"
+}

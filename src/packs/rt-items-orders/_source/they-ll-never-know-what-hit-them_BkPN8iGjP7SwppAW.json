@@ -1,0 +1,17 @@
+{
+  "name": "They'll Never Know What Hit Them!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf or Full Action",
+    "requirements": ".Ratling, Ratling Comrade, Stealth +10.\nApt: Agility, Fieldcraft",
+    "descriptionText": "Comrade in Cohesion spends a Half Action, or Full Action if their Character has made an attack since the beginning of their last Turn. All Attempts to spot the character or their Comrade suffer -20 during any round this order is enacted. Can be enacted out of combat, in which case it is maintained until Comrade ceases to work on maintaining it for whatever reason.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Comrade in Cohesion spends a Half Action, or Full Action if their Character has made an attack since the beginning of their last Turn. All Attempts to spot the character or their Comrade suffer -20 during any round this order is enacted. Can be enacted out of combat, in which case it is maintained until Comrade ceases to work on maintaining it for whatever reason.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BkPN8iGjP7SwppAW"
+}

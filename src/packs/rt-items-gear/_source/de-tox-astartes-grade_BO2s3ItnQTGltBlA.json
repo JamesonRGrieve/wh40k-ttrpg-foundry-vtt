@@ -1,0 +1,20 @@
+{
+  "name": "De-Tox (Astartes-Grade)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Adminstered Manually. Immediately ends all ongoing effects of drugs, toxins, or gases affecting the character, be they positive or negative. Renders the character immune to them for another 1d10 rounds.",
+    "cost": "Astartes Grade Drugs require +10 Medicae Test if adminstered to humans, failing administers anyway but also causes 1d5 Fatigue and 1 Round of Stun.",
+    "effects": "Initiated",
+    "notes": "10 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BO2s3ItnQTGltBlA"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Blunderbuss (Iocanthos)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+1",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "5 Full",
+    "special": "Inaccurate, Primitive (8), Scatter, Unreliable",
+    "weight": "4kg",
+    "availability": "Rare",
+    "cost": "35 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Primitive (8), Scatter, Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nR8hmiLqYH8Evgal"
+}

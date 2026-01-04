@@ -1,0 +1,14 @@
+{
+  "name": "Anti-Air (Advanced)",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "No Penalty for firing at Aircraft",
+    "description": {
+      "value": "<p>No Penalty for firing at Aircraft</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qlDOwrv5iFWTePMw"
+}

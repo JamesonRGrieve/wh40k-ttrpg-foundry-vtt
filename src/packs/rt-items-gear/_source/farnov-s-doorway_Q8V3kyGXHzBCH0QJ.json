@@ -1,0 +1,20 @@
+{
+  "name": "Farnov's Doorway",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Xenos)",
+    "weight": "?",
+    "availability": "A Stone Archway discovered by Ordo Xenos Inquisitor Deynisia Farnov, it is covered in wires and tubes that allow it to draw upon the power of Psykers to open a webway-like portal to another, unknown location. Characters with Forbidden Lore (Psykers) can make a -30 Tech-Use Test to implant a psyker into the device via its glowing cables, psykers suffer 1d5 E Damage to the head per Degree of Failiure that ignores Armour and Toughness. Once connected, the gate can be activated with a -60 Tech-Use Test, with +10 per Psyker connected after the first. The door remains open for 10 seconds per Total Psy Rating of all the connected psykers. Psykers removed during operation suffer 2d10 E Damage to the head that ignores Armour and Toughness, as do all the pskyers when the gateway shuts down. Travel through the portal can occur in both directions whilst the portal is open, something on the other side may use this opportunity to go through.",
+    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q8V3kyGXHzBCH0QJ"
+}

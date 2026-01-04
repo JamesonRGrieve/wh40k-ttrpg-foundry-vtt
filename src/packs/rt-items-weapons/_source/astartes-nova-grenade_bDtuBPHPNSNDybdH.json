@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Nova Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Blast (3)",
+    "weight": "0.8kg",
+    "availability": "Initiated",
+    "cost": "15 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Everyone in blast range must make -30 Toughness Test or be Blinded for 1d10 Rounds. Flash protections do not grant immunity, but instead make test -10. Works like a normal Flash Grenade out to 20 metres, requiring +0 Toughness Test or blinding for 1d5 rounds.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (3)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Everyone in blast range must make -30 Toughness Test or be Blinded for 1d10 Rounds. Flash protections do not grant immunity, but instead make test -10. Works like a normal Flash Grenade out to 20 metres, requiring +0 Toughness Test or blinding for 1d5 rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bDtuBPHPNSNDybdH"
+}

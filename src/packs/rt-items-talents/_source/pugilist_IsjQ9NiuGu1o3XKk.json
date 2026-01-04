@@ -1,0 +1,17 @@
+{
+  "name": "Pugilist",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Strength 30 \nAptitudes: Offence, Strength",
+    "effect": "Character can make a Fient Action as a Free Action when also making an Unarmed All-Out Attack or Standard Attack Action.\nAdditionally, they make Unarmed Called Shot Actions as Half Actions.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character can make a Fient Action as a Free Action when also making an Unarmed All-Out Attack or Standard Attack Action.\nAdditionally, they make Unarmed Called Shot Actions as Half Actions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IsjQ9NiuGu1o3XKk"
+}

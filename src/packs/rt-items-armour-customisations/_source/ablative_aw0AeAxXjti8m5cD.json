@@ -1,0 +1,18 @@
+{
+  "name": "Ablative",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Flak, Mesh, Carapace, or Power",
+    "effect": "Gain +5 AP, each hit agains the armour reduces AP by 1 until reaching standard AP. \nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+    "weight": "+1.5kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Gain +5 AP, each hit agains the armour reduces AP by 1 until reaching standard AP. \nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aw0AeAxXjti8m5cD"
+}

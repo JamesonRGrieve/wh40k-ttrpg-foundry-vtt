@@ -1,0 +1,28 @@
+{
+  "name": "Radiant Arrow",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "120m",
+    "rof": "S/2/-",
+    "damage": "1d10+14",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 24,
+    "reload": "4 Full",
+    "special": "SM Wep, Volatile, Maximal",
+    "weight": "27kg",
+    "availability": "Hero",
+    "cost": "50 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only.  Master-Crafted Relic Astartes Plasma Gun of the Consecrators Chapter. Cannot Jam, Overheat, or otherwise fail to fire (except by running out of ammo). Psychic Powers that affect machine spirits or the Haywire effect also have no effect.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only.  Master-Crafted Relic Astartes Plasma Gun of the Consecrators Chapter. Cannot Jam, Overheat, or otherwise fail to fire (except by running out of ammo). Psychic Powers that affect machine spirits or the Haywire effect also have no effect.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wWCr23pnMTCnKznR"
+}

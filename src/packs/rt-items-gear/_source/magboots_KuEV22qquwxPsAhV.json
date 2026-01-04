@@ -1,0 +1,20 @@
+{
+  "name": "Magboots",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "2kg",
+    "availability": "When activated, half Movement and Agility Bonus, but allow for normal movement in low or zero gravity environments. Provided a suitable surface to walk on.",
+    "cost": "Worn over normal boots or plates fitted to the bottom of armoured boots.",
+    "effects": "Rare",
+    "notes": "65 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 65 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KuEV22qquwxPsAhV"
+}

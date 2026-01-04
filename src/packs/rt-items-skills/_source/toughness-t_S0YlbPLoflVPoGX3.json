@@ -1,0 +1,18 @@
+{
+  "name": "Toughness (T)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Apt: Toughness, Defence, Nurgle",
+    "characteristic": "The ability for a character to shrug of injuries and ailments such as toxins, poisons, harmful environments, and disease. Toughness Bonus reduces damage taken and determiens starting health.",
+    "descriptor": null,
+    "uses": null,
+    "useTime": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S0YlbPLoflVPoGX3"
+}

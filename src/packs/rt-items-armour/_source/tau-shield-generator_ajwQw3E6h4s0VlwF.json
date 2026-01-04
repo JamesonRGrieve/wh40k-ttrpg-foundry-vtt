@@ -1,0 +1,22 @@
+{
+  "name": "Tau Shield Generator",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Tau (Force Field)",
+    "locations": "All",
+    "ap": "40%",
+    "maxAg": null,
+    "weight": "~",
+    "availability": "Special",
+    "cost": "-",
+    "notes": "Designed for Tau Drones and Battlesuits as opposed to personal use. Acts like a Refractor Field, projecting energy waves to intercept and disable projectiles.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Designed for Tau Drones and Battlesuits as opposed to personal use. Acts like a Refractor Field, projecting energy waves to intercept and disable projectiles.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ajwQw3E6h4s0VlwF"
+}

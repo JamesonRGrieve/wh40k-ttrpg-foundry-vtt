@@ -1,0 +1,22 @@
+{
+  "name": "Reap the Flesh",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Half Action",
+    "action": "3m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker chooses target location, all individuals within 1m x Psy Rating, +1m per Degree of Success of target location take 1d10 + Psy Rating Rending damage with Pen 4 and Tearing Quality. Victims of this attack have skin torn from them.\nTearing: Roll extra d10 for damage, drop lowest d10.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h0AWCnA4eSpq6qs4"
+}

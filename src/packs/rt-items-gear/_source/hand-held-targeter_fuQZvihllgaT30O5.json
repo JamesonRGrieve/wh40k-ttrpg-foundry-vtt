@@ -1,0 +1,20 @@
+{
+  "name": "Hand-Held Targeter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.5kg",
+    "availability": "Can spend a Half Action to give another character +20 on their next Ballistic Skill Test when firing an Indirect weapon.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fuQZvihllgaT30O5"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Witch Bolts",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Any",
+    "damageOrEffect": "Creatures with Psy Rating that are damaged by this ammo reduce their Psy Rating by 1 for 1d10 Rounds, effect stacks. During this time target cannot Push their Psychic Powers and targets with Warp Instability Trait must immediately make a Willpower test for it.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Distinguished",
+    "cost": "12 R / Clip",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Creatures with Psy Rating that are damaged by this ammo reduce their Psy Rating by 1 for 1d10 Rounds, effect stacks. During this time target cannot Push their Psychic Powers and targets with Warp Instability Trait must immediately make a Willpower test for it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XVPAMDLemrxpqY1x"
+}

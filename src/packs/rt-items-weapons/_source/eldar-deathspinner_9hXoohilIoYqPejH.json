@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Deathspinner",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "40m",
+    "rof": "S-/-/-",
+    "damage": "4d10+5",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 30,
+    "reload": "2 Full",
+    "special": "Reliable, Blast (2), Tearing",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Eldar weapon, Fires a gossamer of monofilamet threads that entangle and tear apart anyone caught in them.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Blast (2), Tearing</p><p><b>Note:</b> Eldar weapon, Fires a gossamer of monofilamet threads that entangle and tear apart anyone caught in them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9hXoohilIoYqPejH"
+}

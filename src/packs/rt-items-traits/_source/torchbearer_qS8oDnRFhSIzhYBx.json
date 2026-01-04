@@ -1,0 +1,17 @@
+{
+  "name": "Torchbearer",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Missionary, RT Rank 2+, Toughness 35+, Willpower 35+, Sound Constituion (X) Talent.",
+    "descriptionText": "A Missionary who becomes a torchbearer seeks to bring the light of the Emperor to untouched worlds across the expanse no matter how inhospitable they are, such that those ungraced may join in the Light of the Imperial Faith. ",
+    "effects": "Replace new Rank's Advances with that of the Torchbearer\nAllows for the purchasing of the Unique Talent Survival Master",
+    "source": "RT: Into the Storm\n(Page 98)",
+    "description": {
+      "value": "<p>A Missionary who becomes a torchbearer seeks to bring the light of the Emperor to untouched worlds across the expanse no matter how inhospitable they are, such that those ungraced may join in the Light of the Imperial Faith. </p><p><b>Effects:</b> Replace new Rank's Advances with that of the Torchbearer\nAllows for the purchasing of the Unique Talent Survival Master</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qS8oDnRFhSIzhYBx"
+}

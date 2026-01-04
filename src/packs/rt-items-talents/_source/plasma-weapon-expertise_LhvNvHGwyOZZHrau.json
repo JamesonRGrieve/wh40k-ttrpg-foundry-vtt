@@ -1,0 +1,17 @@
+{
+  "name": "Plasma Weapon Expertise",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 40, Weapon Training (Plasma) \nAptitudes: Ballistic Skill, Tech",
+    "effect": "When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LhvNvHGwyOZZHrau"
+}

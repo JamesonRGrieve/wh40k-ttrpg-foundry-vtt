@@ -1,0 +1,28 @@
+{
+  "name": "Praesidium Protectiva",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive, Power Field, Sanctified",
+    "weight": "7kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "If wielder has the Pure Faith Talent while wielding this, gain +30 to Tests to resist Psychic Techniques and gains a Force Field with Protection 50 against Daemonic Attacks. +3 AP on Body and Arm.",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Power Field, Sanctified</p><p><b>Note:</b> If wielder has the Pure Faith Talent while wielding this, gain +30 to Tests to resist Psychic Techniques and gains a Force Field with Protection 50 against Daemonic Attacks. +3 AP on Body and Arm.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F0Lke1AjRIFtXOUT"
+}

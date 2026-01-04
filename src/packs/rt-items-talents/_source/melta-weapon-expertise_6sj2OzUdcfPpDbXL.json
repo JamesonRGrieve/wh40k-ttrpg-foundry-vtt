@@ -1,0 +1,17 @@
+{
+  "name": "Melta Weapon Expertise",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 40, Weapon Skill (Melta)\nAptitudes: Ballistic Skill, Offence",
+    "effect": "Whenever this character wields a Melta Weapon, they count its range as being increased by +2xBallistic Skill Bonus metres.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever this character wields a Melta Weapon, they count its range as being increased by +2xBallistic Skill Bonus metres.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6sj2OzUdcfPpDbXL"
+}

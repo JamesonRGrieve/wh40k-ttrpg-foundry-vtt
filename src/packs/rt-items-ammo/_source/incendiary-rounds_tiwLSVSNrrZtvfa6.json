@@ -1,0 +1,20 @@
+{
+  "name": "Incendiary Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Stubbers, hand cannons, autopistol, autoguns",
+    "damageOrEffect": "Change damage type to energy, can ignite flammable materials.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Change damage type to energy, can ignite flammable materials.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tiwLSVSNrrZtvfa6"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Service Pistol(Hax-Orthlack)\n\"Armsman-10\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "35m",
+    "rof": "S/3/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 13,
+    "reload": "Full",
+    "special": null,
+    "weight": "1.5kg",
+    "availability": "Plentiful",
+    "cost": "50 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mZ2XmMJaoJQo8p5W"
+}

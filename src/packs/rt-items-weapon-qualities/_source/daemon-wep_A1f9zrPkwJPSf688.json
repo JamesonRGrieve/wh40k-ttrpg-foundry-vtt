@@ -1,0 +1,14 @@
+{
+  "name": "Daemon Wep",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 26,
+    "description": {
+      "value": "<p>26</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "A1f9zrPkwJPSf688"
+}

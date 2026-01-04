@@ -1,0 +1,21 @@
+{
+  "name": "Warp Antenna",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Archeotech",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "Navigators receive +20 to Tests to find the Astronomicon, -10 on Warp Travel Encounter Tests. Component cannot be damaged or destroyed except via a Critical Hit.",
+    "availability": "Extremely Rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Navigators receive +20 to Tests to find the Astronomicon, -10 on Warp Travel Encounter Tests. Component cannot be damaged or destroyed except via a Critical Hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cOg0a7P4fApD1wqq"
+}

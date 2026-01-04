@@ -1,0 +1,28 @@
+{
+  "name": "Cavalry Sabre",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Razor-Sharp",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Often used as a secondary weapon for cavalry riders.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Razor-Sharp</p><p><b>Note:</b> Often used as a secondary weapon for cavalry riders.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SJFwDJNpOM8xpYYZ"
+}

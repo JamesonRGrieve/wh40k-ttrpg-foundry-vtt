@@ -1,0 +1,20 @@
+{
+  "name": "The Rite of Setesh",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "The Living Mummification of a dying body within an all encompassing exoskeleton. Considered borderline techno-heretical, it will keep one alive beyond near death. Character gains Machine (4) and the Regeneration Trait. Halve Weapon Skill, Ballistic Skill, and Agility (round down), and gain 2d10 Insanity Points, as well as adding +5 to any critical effects.",
+    "cost": "Can't be removed, becomes part of the character.",
+    "effects": "Near Unique",
+    "notes": "100000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 100000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "koS813x9GOsezckM"
+}

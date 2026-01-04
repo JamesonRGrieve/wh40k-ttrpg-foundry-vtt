@@ -1,0 +1,25 @@
+{
+  "name": "Shard Cannon Battery",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon (Xenotech)",
+    "hullType": "All Ships",
+    "powerUsage": 0,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "damage": "1d10+2",
+    "strength": 4,
+    "critRating": 3,
+    "range": 6,
+    "availability": "Near Unique",
+    "notes": "Cannot be unpowered, if destroyed, explodes, dealing 2d5 Hull Damage to ship, no reduction by shields or armour.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> Cannot be unpowered, if destroyed, explodes, dealing 2d5 Hull Damage to ship, no reduction by shields or armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "y4vC7CftyLgljedi"
+}

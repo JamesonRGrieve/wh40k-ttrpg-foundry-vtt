@@ -1,0 +1,28 @@
+{
+  "name": "The Torch of the Vigil",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Relic - Astartes",
+    "range": "35m",
+    "rof": "S/-/-",
+    "damage": "1d10+14",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "SM Wep, Flame, Spray",
+    "weight": "65kg",
+    "availability": "Famed",
+    "cost": "40 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Heavy Flamer of the Death Spectres Chapter. Imposes -10 to Agility Tests to avoid damage or catching fire. Anything hiding within 30m of something set on fire by this weapon suffers -30 to Concealment Tests. As with all Astartes Flamers, those on fire take +4 damage from being on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Heavy Flamer of the Death Spectres Chapter. Imposes -10 to Agility Tests to avoid damage or catching fire. Anything hiding within 30m of something set on fire by this weapon suffers -30 to Concealment Tests. As with all Astartes Flamers, those on fire take +4 damage from being on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NUnU4St4w3JA03UE"
+}

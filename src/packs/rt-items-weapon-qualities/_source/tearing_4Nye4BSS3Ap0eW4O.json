@@ -1,0 +1,14 @@
+{
+  "name": "Tearing",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 213,
+    "description": {
+      "value": "<p>213</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4Nye4BSS3Ap0eW4O"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Vitality Coils",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; T 45, Potentia Coil Induction, Implanted Potentia or Mechanicus Implants.\nAptitudes: Toughness, Tech",
+    "effect": "Once per Game Session when in the presence of a suitable power source, such as a Portable Generator or Regimental Vehicle Power Plant, they can make a +0 Toughness Tet as a Full Action. If Successful they remove 1d5 Wounds, +1 per Degree of Success. They cannot remove Critical Damage this way. If they Fail the test, they take 1 Damage, +1 per 3 Degress of Failiure, ignoring Armour and Toughness Bonus.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Once per Game Session when in the presence of a suitable power source, such as a Portable Generator or Regimental Vehicle Power Plant, they can make a +0 Toughness Tet as a Full Action. If Successful they remove 1d5 Wounds, +1 per Degree of Success. They cannot remove Critical Damage this way. If they Fail the test, they take 1 Damage, +1 per 3 Degress of Failiure, ignoring Armour and Toughness Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kSRpOiyow5LeTLdQ"
+}

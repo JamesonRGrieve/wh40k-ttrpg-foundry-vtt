@@ -1,0 +1,22 @@
+{
+  "name": "Icon of the Just",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.55,
+    "maxAg": "-",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Opponents with the Daemonic Trait suffer -10 to attack tests and Focus Power tests against the wearer.\nOnly available to those must trusted by the Ordo Malleus.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Opponents with the Daemonic Trait suffer -10 to attack tests and Focus Power tests against the wearer.\nOnly available to those must trusted by the Ordo Malleus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XS7ZXbluhbyg5vcT"
+}

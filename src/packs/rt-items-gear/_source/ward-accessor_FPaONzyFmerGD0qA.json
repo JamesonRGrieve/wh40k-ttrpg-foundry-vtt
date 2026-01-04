@@ -1,0 +1,20 @@
+{
+  "name": "Ward Accessor",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Electronic Passess that allow access to restricted areas, a common security measure to ward off-limits areas. Cost listed is for a Blank Accessor, which can be programmed with a code.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "25 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 25 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FPaONzyFmerGD0qA"
+}

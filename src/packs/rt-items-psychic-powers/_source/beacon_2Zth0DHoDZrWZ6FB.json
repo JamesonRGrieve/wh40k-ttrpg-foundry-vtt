@@ -1,0 +1,22 @@
+{
+  "name": "Beacon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "Special",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker creates a static beacon that can be detected only with psychic senses up to 5km*Psy Rating away, any that do can determine how far away they are from it. Navigators who know the beacon's existence and get at least one degree of success on a -10 Psyniscience Test can also detect and locate it from a distance 1 Light Year x your Psy Rating. By knowing the location of and successful sensing the beacon, they may in place of locating the Astronomicon make a -30 Navigation (Warp) Test using the beacon to chart a successful course through the warp. This beacon may become obscured by warp storms or otherwise destroyed.\nHB: Just make it a -20 Psyniscience test to successfully locate rather than mess around with \"1 degree of success\", because otherwise you can pass test with 0 DoS but not actually get anything.",
+    "effect": "200xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2Zth0DHoDZrWZ6FB"
+}

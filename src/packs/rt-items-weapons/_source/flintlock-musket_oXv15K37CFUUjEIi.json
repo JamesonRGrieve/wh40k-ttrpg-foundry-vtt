@@ -1,0 +1,28 @@
+{
+  "name": "Flintlock Musket",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Inaccurate, Primitive (8), Unreliable",
+    "weight": "7kg",
+    "availability": "Common",
+    "cost": "30 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Primitive (8), Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oXv15K37CFUUjEIi"
+}

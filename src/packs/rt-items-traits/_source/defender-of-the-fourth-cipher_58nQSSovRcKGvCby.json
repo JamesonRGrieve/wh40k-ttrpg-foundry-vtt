@@ -1,0 +1,17 @@
+{
+  "name": "Defender of the Fourth Cipher",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Missionary or Arch-Militant. RT Rank 2+, Willpower 30+. Character is Initiated into the Vigil in the Fourth Cipher, and studied with other members to learn its ways.",
+    "descriptionText": "A Group consisting of warriors of faith and former soldiers taught a philosphy of redemption. Such people seek those wayward psykers and witches lost from warmth the Emperor's light such that they may help return them to it. Often via a bullet to the skull.",
+    "effects": "Replace new Rank's Advances with that of the Defender of the Fourth Cipher\nAutomatically Gain Unfaltering Redemption Unique Talent\nAllows for the purchasing of the Unique Talent Eternal Vigilance",
+    "source": "RT: The Navis Primer\n(Page 74)",
+    "description": {
+      "value": "<p>A Group consisting of warriors of faith and former soldiers taught a philosphy of redemption. Such people seek those wayward psykers and witches lost from warmth the Emperor's light such that they may help return them to it. Often via a bullet to the skull.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Defender of the Fourth Cipher\nAutomatically Gain Unfaltering Redemption Unique Talent\nAllows for the purchasing of the Unique Talent Eternal Vigilance</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "58nQSSovRcKGvCby"
+}

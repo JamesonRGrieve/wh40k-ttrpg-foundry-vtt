@@ -1,0 +1,19 @@
+{
+  "name": "Master Helmsman",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Directs Vessel movements and the crew that make it so.",
+    "careerPreferences": "Usually Void-Master, any but Explorator/Arch-Militant",
+    "subordinates": "Helm Crew, Engine Tech-Priests, less Auspex Officers",
+    "importantSkills": "Pilot (Space Craft), Scholastic Lore (Astromancy), Trade (Voidfarer)",
+    "effect": "+10 to \"Evasive Manoeuvres\" Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Directs Vessel movements and the crew that make it so.</p><p><b>Effect:</b> +10 to \"Evasive Manoeuvres\" Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fNS408uEHm13pKpR"
+}

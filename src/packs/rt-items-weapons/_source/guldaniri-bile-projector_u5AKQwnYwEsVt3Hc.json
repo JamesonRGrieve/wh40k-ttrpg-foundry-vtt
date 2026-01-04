@@ -1,0 +1,28 @@
+{
+  "name": "Guldaniri Bile Projector",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Energy",
+    "penetration": "-",
+    "clip": 10,
+    "reload": "3 Full",
+    "special": "Blast (2), Corrosive, Toxic (2)",
+    "weight": "11kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Considered Dangerously Easy to find for those who know where to look.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Corrosive, Toxic (2)</p><p><b>Note:</b> Considered Dangerously Easy to find for those who know where to look.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u5AKQwnYwEsVt3Hc"
+}

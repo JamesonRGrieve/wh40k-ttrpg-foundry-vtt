@@ -1,0 +1,28 @@
+{
+  "name": "Boarding Gun (Lathe)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 1,
+    "clip": 3,
+    "reload": "2 Full",
+    "special": "Inaccurate, Reliable, Scatter",
+    "weight": "6kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Unless Wielder has strength bonus of 4+, have -20 to hit with weapon due to extreme recoil (recoil gloves may nullify this although not specified). Can be used as two-handed melee weapon (1d10 I, Pen 0, Unwieldy).",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Reliable, Scatter</p><p><b>Note:</b> Unless Wielder has strength bonus of 4+, have -20 to hit with weapon due to extreme recoil (recoil gloves may nullify this although not specified). Can be used as two-handed melee weapon (1d10 I, Pen 0, Unwieldy).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rQ9tIbegbnJq51JD"
+}

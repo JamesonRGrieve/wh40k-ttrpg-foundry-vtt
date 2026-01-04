@@ -1,0 +1,22 @@
+{
+  "name": "Assail",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m x Psy Rating",
+    "range": "+10 Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker lifts a nearby object or rips out a piece of terrain and fires at a target individual, dealing 1d10+Psy Rating Impact Damage with Pen 2. If the Psyker scores 2+ Degrees of Success on Focus Power test, the target is also thrown back 1d5 metres and knocked prone, very large targets such as Tanks, Titans, or Greater Daemons are immune to this. The Target may attempt to dodge this attack as they would a ranged weapon attack.",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N1l5cPXUjxnkfGAJ"
+}

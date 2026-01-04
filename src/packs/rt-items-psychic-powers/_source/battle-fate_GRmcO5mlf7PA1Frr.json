@@ -1,0 +1,22 @@
+{
+  "name": "Battle Fate",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Farseer makes a Focus Power Test, All allies within 2m x Psy Rating, +2m per Degree of Success, gain 10+Psy Rating to Weapon Skill for as long as Power is Sustained.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GRmcO5mlf7PA1Frr"
+}

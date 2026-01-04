@@ -1,0 +1,20 @@
+{
+  "name": "Illumination Round",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Artillery/Battle Cannons",
+    "damageOrEffect": "Fully Illuminates region below it (Roughly 1 Square Kilometre). Fired Indirectly, stays in the air for a while with a parachute.",
+    "qualities": null,
+    "weight": null,
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Fully Illuminates region below it (Roughly 1 Square Kilometre). Fired Indirectly, stays in the air for a while with a parachute.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hKXFh9yzKwFU3qTk"
+}

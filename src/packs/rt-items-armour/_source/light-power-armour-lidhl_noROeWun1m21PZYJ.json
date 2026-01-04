@@ -1,0 +1,22 @@
+{
+  "name": "Light Power Armour (Lidhl)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 6,
+    "maxAg": 40,
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "8000 T",
+    "notes": "An ornamental armour worn by some heavily decorated guard regiment officers.",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>An ornamental armour worn by some heavily decorated guard regiment officers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "noROeWun1m21PZYJ"
+}

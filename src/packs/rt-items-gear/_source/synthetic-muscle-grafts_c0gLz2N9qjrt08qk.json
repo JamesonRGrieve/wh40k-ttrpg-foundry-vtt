@@ -1,0 +1,20 @@
+{
+  "name": "Synthetic Muscle Grafts",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Normal: +1 Strength Bonus (+1 degrees of success on pass), Best: Unnatural Strength x2, -10 to agility tests.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c0gLz2N9qjrt08qk"
+}

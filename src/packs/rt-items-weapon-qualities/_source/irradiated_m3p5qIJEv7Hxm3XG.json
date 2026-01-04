@@ -1,0 +1,14 @@
+{
+  "name": "Irradiated",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 1,
+    "description": {
+      "value": "<p>1</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m3p5qIJEv7Hxm3XG"
+}

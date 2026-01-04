@@ -1,0 +1,22 @@
+{
+  "name": "Telekinetic Crush",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker crushes target opponent, make Opposed Willpower vs Target's Toughness Test. If Psyker wins, inflicts 1d10 + Psy Rating Impact Damage and grapples the opponent. For the purposes of this Grappling, The Psyker Substitutes their Willpower for their Strength Bonus",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "imaVH4kBEtPlehsk"
+}

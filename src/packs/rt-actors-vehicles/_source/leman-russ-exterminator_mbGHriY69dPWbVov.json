@@ -1,0 +1,25 @@
+{
+  "name": "Leman Russ Exterminator",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "14m",
+    "tacticalSpeed": "40kph",
+    "cruisingSpeed": "-10",
+    "maneuverability": "55",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 40\nSide 32,\nRear 20",
+    "rearArmour": "Commander (Turret), Driver, Gunner (Turret), Loader/Gunner, 2 Add. Gunners",
+    "structuralIntegrity": "None",
+    "crew": "Turret: Exterminator Cannon (500m; S/6/–; 3d10+8 I; Pen 6; Clip 120; Reload 2 Full; Reliable, Twin-Linked)\nHull, one of: Front Facing Heavy Bolter, Lascannon, or Heavy Flamer\nSponsons (Optional), one of: 2 Heavy Bolters, 2 Heavy Flamers, 2 Plasma Cannons\nPintle (Optional), one of: Heavy Stubber or Storm Bolter\n---\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nLascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nPlasma Cannon(120m, S/-/-, 2d10+10 E, Pen 8, Clip 32, Rld 5 Full, Blast (1), Maximal, Overheat)\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)",
+    "passengers": "Traits: Anti-Air (Rudimentary), Enclosed, Reinforced Armour, Rugged, Tracked Vehicle\nSummary: Halve Penalties for firing at Air Craft, Halve Crit Damage from non-Righteous Fury, +20 to Repair \nSpecial Rules: Can be a Gryphonne Iv Pattern, counts as AP 42 on any hit striking the Turret, exterminator cannon ignores penalties for firing whilst moving.",
+    "cargo": "Rare",
+    "availability": "OW: Shield of Humanity",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "mbGHriY69dPWbVov"
+}

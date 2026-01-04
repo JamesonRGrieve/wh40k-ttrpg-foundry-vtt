@@ -1,0 +1,22 @@
+{
+  "name": "Leper's Curse",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Mark of Nurgle, Psy Rating 5",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker fires a Psychic Bolt which may be dodged as if a ranged attack. If it hits target rolls 1d10 and suffers a Rending Critical Effect of that value to the hit location of the bolt, possibly leading to instant death or loss of limbs. An Opponent can only be affected by this power once per combat encounter.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Y0WK7EDtH5eQqw2t"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "XV88 Broadside Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "15 All",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "3 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Twin-Linked Heavy Rail Rifle/Twin-Linked High-Yield Missile Pod, Twin-Linked Smart Missile System/Twin-Linked Plasma Rifle, Target Lock/Velocity Tracker",
+    "passengers": "Battle Suit Strength: 65\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker",
+    "cargo": "Near Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "IrPZKeFCBo9gftj8"
+}

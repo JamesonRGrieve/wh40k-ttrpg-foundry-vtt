@@ -1,0 +1,22 @@
+{
+  "name": "Telepathy",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "-",
+    "focusPower": "Free Action",
+    "action": "1km x Willpower Bonus",
+    "range": "Threshold 11",
+    "opposed": "Yes",
+    "sustained": "Can send one's thoughts into the minds of others. Can either take the form of \"Placed Sending\", where the thoughts are heard by a select group of individuals within range, or \"Broadcasting\" where the thoughts are heard by everyone within range.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "s6Zov9oQ10KiKIjd"
+}

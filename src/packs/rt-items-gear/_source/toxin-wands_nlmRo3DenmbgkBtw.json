@@ -1,0 +1,20 @@
+{
+  "name": "Toxin Wands",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.2kg",
+    "availability": "A device to detect poisons and display recommended counter-agents and immnisers, Can make a +0 Perception Test or +20 Medicae Test to use on a perons to determine whether they are poisoned and the best response to it, if 2+ Degrees of Success, also grants enough information to identify any existing antidote.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "100 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nlmRo3DenmbgkBtw"
+}

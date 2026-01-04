@@ -1,0 +1,28 @@
+{
+  "name": "Man Portable Lascannon (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "5d10+10",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": "Proven (3)",
+    "weight": "55kg",
+    "availability": "Very Rare",
+    "cost": "5000 T",
+    "source": "Only War: Core",
+    "note": "Usually operated by a crew of two, uses a Separate Power Pack.",
+    "description": {
+      "value": "<p><b>Special:</b> Proven (3)</p><p><b>Note:</b> Usually operated by a crew of two, uses a Separate Power Pack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ptLNtqSRIcdeyurX"
+}

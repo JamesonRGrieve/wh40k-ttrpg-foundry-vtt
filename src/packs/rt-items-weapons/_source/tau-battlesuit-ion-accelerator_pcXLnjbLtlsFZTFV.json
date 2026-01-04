@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Ion Accelerator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "200m",
+    "rof": "S/3/6",
+    "damage": "3d10+5",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 90,
+    "reload": "2 Full",
+    "special": "Overcharge (8)",
+    "weight": "45kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Typically not mountable on anything smaller than an XV104 Riptide",
+    "description": {
+      "value": "<p><b>Special:</b> Overcharge (8)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Typically not mountable on anything smaller than an XV104 Riptide</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pcXLnjbLtlsFZTFV"
+}

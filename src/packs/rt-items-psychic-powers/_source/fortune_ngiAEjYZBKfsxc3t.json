@@ -1,0 +1,22 @@
+{
+  "name": "Fortune",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Farseer makes a Focus Power Test, all allies within 2m x Psy Rating, +2m per Degree of Success, are affected by the power. An enemy that attempts to attack a character under this effect must reroll the first successful Weapon Skill or Ballistic Skill Test they make each round, using the second result regardless of if it is worse or better.\nNote: Range in original description states 5m x Psy Rating, but range in Range category stated 2m x Psy Rating. Likely 2m rather than 5m, as this fits with other powers.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ngiAEjYZBKfsxc3t"
+}

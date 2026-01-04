@@ -1,0 +1,25 @@
+{
+  "name": "Prestige",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Motivation",
+    "descriptionText": "Gain either Talented (any one skill) or Peer (any one) Talent.",
+    "effects": "Gain either Talented (any one skill) or Peer (any one) Talent.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>Gain either Talented (any one skill) or Peer (any one) Talent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.motivation",
+      "step": "Motivation",
+      "stepIndex": 5,
+      "number": "6"
+    }
+  },
+  "_id": "rn7fg6IEWDmbH86S"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Shotgun Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Reliable, Scatter",
+    "weight": "1kg",
+    "availability": "Average",
+    "cost": "60 T",
+    "source": "Rogue Trader: Core",
+    "note": "-10 to BS tests unless 2 handed or wearing recoil gloves",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Scatter</p><p><b>Note:</b> -10 to BS tests unless 2 handed or wearing recoil gloves</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zMqUHhcr7117mkGT"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Robes of Torment",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Only functions if Dedicated to Slaanesh. First time character takes damage each round, suffers +1 damage, but gains +10 to the next Test made before the end of next turn. Can intentionally take 1 Damage (ignoring all forms of Protection) to gain the benefit.",
+    "weight": "+6kg",
+    "availability": "Rare",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>Only functions if Dedicated to Slaanesh. First time character takes damage each round, suffers +1 damage, but gains +10 to the next Test made before the end of next turn. Can intentionally take 1 Damage (ignoring all forms of Protection) to gain the benefit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Phz5EXpCNzvCZZ5R"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Spetum",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive, Unbalanced",
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "45 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours\nTwo-Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive, Unbalanced</p><p><b>Note:</b> PEN Only applies to Primitive Armours\nTwo-Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F3REfoeGadyvXPKU"
+}

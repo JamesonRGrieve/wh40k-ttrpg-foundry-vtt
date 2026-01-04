@@ -1,0 +1,21 @@
+{
+  "name": "Auxiliary Plasma Banks",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": -8,
+    "spaceUsage": 5,
+    "spCost": 1,
+    "effect": "Generates Power rather than uses it. If this component is damaged, it explodes, doing 1d5 Hull Damage to the ship and setting the plasma drive on fire.",
+    "availability": "Scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Generates Power rather than uses it. If this component is damaged, it explodes, doing 1d5 Hull Damage to the ship and setting the plasma drive on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6y7bv1ogyU7YinHH"
+}

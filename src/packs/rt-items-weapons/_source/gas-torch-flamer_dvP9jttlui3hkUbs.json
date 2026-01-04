@@ -1,0 +1,28 @@
+{
+  "name": "Gas Torch Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "5m",
+    "rof": "S/-/-",
+    "damage": "1d10+1",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": "Flame, Spray",
+    "weight": "20kg",
+    "availability": "Scarce",
+    "cost": "150 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dvP9jttlui3hkUbs"
+}

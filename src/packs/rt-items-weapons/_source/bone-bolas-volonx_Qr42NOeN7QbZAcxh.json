@@ -1,0 +1,28 @@
+{
+  "name": "Bone Bolas (Volonx)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "8m",
+    "rof": "S/-/-",
+    "damage": "1d5",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "-",
+    "special": "Primitive (8), Snare, Toxic",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "12 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A set of balls connected by cords that can wrap around a target when thrown at them",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Snare, Toxic</p><p><b>Note:</b> A set of balls connected by cords that can wrap around a target when thrown at them</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qr42NOeN7QbZAcxh"
+}

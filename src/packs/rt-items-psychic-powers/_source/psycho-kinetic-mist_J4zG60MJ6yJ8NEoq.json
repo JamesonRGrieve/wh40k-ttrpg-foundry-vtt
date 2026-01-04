@@ -1,0 +1,22 @@
+{
+  "name": "Psycho-kinetic Mist",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating Radius",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker manifests a vapour that covers the area, attempts to attack those in range have -10 to Weapon Skill Tests and -20 to Ballistic Skill Tests. The mist follows the psyker as they move and lasts a number of rounds equal to the number of Degrees of Success Psyker achieved on Focus Power Test, disappearing afterwards.",
+    "effect": "200xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J4zG60MJ6yJ8NEoq"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Banishing Rod",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "8kg",
+    "availability": "Psykers within 5m of one or more Banishing rods cannot push Psychic Powers, and apply -20 to any Psychic Phenomena Rolls (min 1). Characters with the Daemonic Trait treat this area as Treacherous Environment. When used as part of an Exorcism, each rod placed around the target grants +5 to the Daemonic Mastery Test",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5aop5wAkmnSikdJZ"
+}

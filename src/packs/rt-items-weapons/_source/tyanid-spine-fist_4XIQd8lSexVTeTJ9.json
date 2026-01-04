@@ -1,0 +1,28 @@
+{
+  "name": "Tyanid Spine Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Tyranid",
+    "range": "25m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Living Ammunition, Twin-Linked",
+    "weight": "-",
+    "availability": "Special",
+    "cost": "-",
+    "source": "DW: Mark of the Xenos",
+    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. If wielder has Swift Attack talent weapon can be fired Semi Auto with RoF of 2. If wielder has Lightning Attack talent weapon can be fired in Full-Auto with RoF of 4. Add Strength Bonus to damage dealt.",
+    "description": {
+      "value": "<p><b>Special:</b> Living Ammunition, Twin-Linked</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. If wielder has Swift Attack talent weapon can be fired Semi Auto with RoF of 2. If wielder has Lightning Attack talent weapon can be fired in Full-Auto with RoF of 4. Add Strength Bonus to damage dealt.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4XIQd8lSexVTeTJ9"
+}

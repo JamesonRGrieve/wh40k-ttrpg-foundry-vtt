@@ -1,0 +1,17 @@
+{
+  "name": "Operative Conditioning",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "House Operative Alternate Advance, 750xp\nWP 30",
+    "effect": "Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x5MOjbeqx2reqmJW"
+}

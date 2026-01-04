@@ -1,0 +1,17 @@
+{
+  "name": "Instrument of His Will",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Willpower 50 \nAptitudes: Offence, Willpower",
+    "effect": "After making a successful attack against a Daemon (including striking it with a Psychic Power), the character can spend a Fate Point to increase the damage of the first hit they inflict as part of that attack by twice their Willpower Bonus. This additional damage ignores armour and toughness bonus.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>After making a successful attack against a Daemon (including striking it with a Psychic Power), the character can spend a Fate Point to increase the damage of the first hit they inflict as part of that attack by twice their Willpower Bonus. This additional damage ignores armour and toughness bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DBAqymwRHuwZtfDd"
+}

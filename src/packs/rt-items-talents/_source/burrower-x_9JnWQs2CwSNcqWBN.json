@@ -1,0 +1,17 @@
+{
+  "name": "Burrower (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Can move through solid objects by burrowing, at a speed of X. Can burrow through soil, rock, sand, and so on. Some creatures can burrow through metal. Burrowing leaves behind a tunnel that creatures one size smaller can enter without impediment. Each round, there is a 50% chance the tunnel collapses behind the creature.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can move through solid objects by burrowing, at a speed of X. Can burrow through soil, rock, sand, and so on. Some creatures can burrow through metal. Burrowing leaves behind a tunnel that creatures one size smaller can enter without impediment. Each round, there is a 50% chance the tunnel collapses behind the creature.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9JnWQs2CwSNcqWBN"
+}

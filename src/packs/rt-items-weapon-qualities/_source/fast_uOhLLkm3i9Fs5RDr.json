@@ -1,0 +1,14 @@
+{
+  "name": "Fast",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 5,
+    "description": {
+      "value": "<p>5</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uOhLLkm3i9Fs5RDr"
+}

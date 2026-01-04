@@ -1,0 +1,21 @@
+{
+  "name": "Navigator Houses",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "All Navigators hail from ancient houses in various states of being, from the greatest and richest to those shrouded or even exiled from humanity. The house a Navigator comes from affects the Navigator's Lineage, benefits, disadvantages, and mutations gained from countless generations of questionable genetic intermingling and experimentation.",
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OqxWAEgvEy2MI51K"
+}

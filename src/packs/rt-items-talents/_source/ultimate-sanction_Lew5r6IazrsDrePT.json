@@ -1,0 +1,17 @@
+{
+  "name": "Ultimate Sanction",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Sanctioned Psyker Specialty\n250xp",
+    "effect": "If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Lew5r6IazrsDrePT"
+}

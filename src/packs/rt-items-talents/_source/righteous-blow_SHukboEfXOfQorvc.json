@@ -1,0 +1,17 @@
+{
+  "name": "Righteous Blow",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 45 or WS 45 or Willpower 45 \nAptitudes: Offence, Willpower",
+    "effect": "When the character inflicts Righteous Fury with an Attack or Psychic Power that they achieved 3+ Degrees of Success on the Test for, they roll twice to etermine the amount of Critical damage inflicted with Righteous Fury, and take the higher result.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When the character inflicts Righteous Fury with an Attack or Psychic Power that they achieved 3+ Degrees of Success on the Test for, they roll twice to etermine the amount of Critical damage inflicted with Righteous Fury, and take the higher result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SHukboEfXOfQorvc"
+}

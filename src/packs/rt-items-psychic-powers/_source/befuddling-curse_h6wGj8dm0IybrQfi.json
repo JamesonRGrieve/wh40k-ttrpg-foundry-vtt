@@ -1,0 +1,22 @@
+{
+  "name": "Befuddling Curse",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, Psy Rating 3",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual is treated as being struck by a weapon with Hallucinogenic(X), where X is equal to Psy Rating. Target does not gain any bonuses for Respirators or other protective equipment that would work agains hallucinogenic poisons/gasses. If Psyker rolls 5+ Degrees of Success on Focus Power Test, target must make +0 Willpower Test or suffer a Disorder.",
+    "effect": "250xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>250xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h6wGj8dm0IybrQfi"
+}

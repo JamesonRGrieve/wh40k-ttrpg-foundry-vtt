@@ -1,0 +1,22 @@
+{
+  "name": "Crush",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Assail",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker makes opposed Willpower vs Target Individual's Toughness. If target fails they suffer 1d10+Psy Rating Impact Damage with Pen 2 to the Body, they also count as being under the effects of Snare(Psy Rating/2) (round down)",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BCNF4vmjl4GKTTIs"
+}

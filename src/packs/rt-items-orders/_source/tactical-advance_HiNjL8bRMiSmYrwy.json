@@ -1,0 +1,17 @@
+{
+  "name": "Tactical Advance",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nFull Action",
+    "requirements": "--",
+    "descriptionText": "Comrade out of Cohesion performs the Tactical Advance Action. They move from one position of cover to another, moving up to a Full Move of distance. For the duration of this move they continue to benefit from the cover they left even when moving briefly in the open.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade out of Cohesion performs the Tactical Advance Action. They move from one position of cover to another, moving up to a Full Move of distance. For the duration of this move they continue to benefit from the cover they left even when moving briefly in the open.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HiNjL8bRMiSmYrwy"
+}

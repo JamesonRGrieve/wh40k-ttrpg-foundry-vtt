@@ -1,0 +1,14 @@
+{
+  "name": "Chain*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 32,
+    "description": {
+      "value": "<p>32</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X6ImH6BY5v5bltpY"
+}

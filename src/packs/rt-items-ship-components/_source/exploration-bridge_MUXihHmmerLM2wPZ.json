@@ -1,0 +1,21 @@
+{
+  "name": "Exploration Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 4,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Where Characters command the ship. +5 Detection while using Active Augury, +50 Achievement Points towards Exploration Objectives.",
+    "availability": "Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Where Characters command the ship. +5 Detection while using Active Augury, +50 Achievement Points towards Exploration Objectives.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MUXihHmmerLM2wPZ"
+}

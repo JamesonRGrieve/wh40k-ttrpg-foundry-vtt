@@ -1,0 +1,17 @@
+{
+  "name": "Unarmed Specialist",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Agility 35, Ambidextrious, WS 35\nAptitudes: Strength, Offence",
+    "effect": "Character gains Deadly Natural Weapons Trait, and counts as armed even whilst facing a weapon wielding opponent whilst barehanded (or using their own natural weapons). Whilst fihgting barehanded they can re-roll the damage they inflict.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Character gains Deadly Natural Weapons Trait, and counts as armed even whilst facing a weapon wielding opponent whilst barehanded (or using their own natural weapons). Whilst fihgting barehanded they can re-roll the damage they inflict.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UUYbaIcgfJpY3I3K"
+}

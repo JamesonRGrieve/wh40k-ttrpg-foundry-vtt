@@ -1,0 +1,22 @@
+{
+  "name": "Toxic Siphon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Touch",
+    "range": "Threshold 11",
+    "opposed": "No",
+    "sustained": "Target is expunged of all toxins as if under the effects of De-Tox, although only loses a Full Action as the toxins expel themselves.\nFor every 5 points above threshold, can effect one additional individual who is in contact with psyker.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ao8mKgRGO1sSHFr2"
+}

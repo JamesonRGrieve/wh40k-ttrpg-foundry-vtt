@@ -1,0 +1,22 @@
+{
+  "name": "Protean Form",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Mark of Tzeentch, Corr. 50+, T 50+, WP 50+, Psy 6, CorpusConversion",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "Self",
+    "range": "Corruption",
+    "opposed": "Yes",
+    "sustained": "The Psyker gains a number of points equal to twice their Psy Rating. They can repeatedly spend one point to gain Unnatural Characteristics (+1)(Any one Characteristic), or repeatedly spend two points to gain one of the following Traits: Amphibious, Amorphous, Burrower(2), Flyer(3), Deadly Natural Weapons, Multiple Arms(1), Natural Armour(2), Sonar Sense, Sturdy, or Unnatural Senses(5). Traits with a number can be taken multiple times, each time after the first adding +1 to the number. The Psyker also gains the Warp Instability Trait, if they reach 0 wounds the power ends and they are stunned until the end of their next turn. Traits remain as long as power is sustained.\nIf this Power causes Psychic Phenomena, at the start of each of the psyker's turns that this power is sustained, roll psychic phenomena and apply the result (reroll if 75+, second roll stands however).",
+    "effect": "500xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8McSse2oRnwBVjfq"
+}

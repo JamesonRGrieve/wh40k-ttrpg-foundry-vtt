@@ -1,0 +1,28 @@
+{
+  "name": "Abyssal Charge",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Crippling (2), Tainted",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Standard Explosives packed with daemon-touched materials",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Crippling (2), Tainted</p><p><b>Note:</b> Standard Explosives packed with daemon-touched materials</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JGiLuTBiNEIMK3J0"
+}

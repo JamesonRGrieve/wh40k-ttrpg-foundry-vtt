@@ -1,0 +1,17 @@
+{
+  "name": "Unnatural Characteristic (xX)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Multiply Relevent Characteristic Bonus by X, Unnatural Agility does not affect movement, as this is based on base agility. During Opposed Characteristic Tests, gain a free number of Degrees of Success equal to the multiplier X. Examples: Unnatural Strength, Toughness, Agility, Intelligence, Perception,Willpower, Fellowship, and Speed.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Multiply Relevent Characteristic Bonus by X, Unnatural Agility does not affect movement, as this is based on base agility. During Opposed Characteristic Tests, gain a free number of Degrees of Success equal to the multiplier X. Examples: Unnatural Strength, Toughness, Agility, Intelligence, Perception,Willpower, Fellowship, and Speed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3l7b3dTAsogwLYZX"
+}

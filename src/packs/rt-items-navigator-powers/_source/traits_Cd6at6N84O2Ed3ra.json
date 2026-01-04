@@ -1,0 +1,21 @@
+{
+  "name": "Traits",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "All Daemonhosts have: Baneful Presence (WP Bonus / 2), Brutal Charge (3), Daemonic (4), Dark-Sight, Deadly Natural Weapons (Claws), From Beyond, Size (5), and Stuff of Nightmares\nUnbound: Fear (4), Hoverer (5), Unnatural Strength (+5).               Once-Bound: Fear (3), Hoverer (4), Unnatural Strength (+4).       \nTwice-Bound: Fear (3), Hoverer (3), Unnatural Strength (+4).    Thrice-Bound: Fear (2), Hoverer (2), Unnatural Strength (+3)\nDaemonhost Natural Weapons have Penetration 2 and inflict Rending Damage. Their Hoverer Trait does not require any action to be expended to remain hovering.\n",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Cd6at6N84O2Ed3ra"
+}

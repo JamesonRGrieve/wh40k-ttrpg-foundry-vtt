@@ -1,0 +1,20 @@
+{
+  "name": "Maglev Coils",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "As Half Action, can hover 20-30cm off of the ground for 1d10+TB Minutes. Can then use Half Actions each round to keep operating implant, can use other action to move normally. Can be used to slow descent while falling to max fall damage of 1d10+3 I. Takes 24 hours to recharge.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mC716TjYNBdDXNoI"
+}

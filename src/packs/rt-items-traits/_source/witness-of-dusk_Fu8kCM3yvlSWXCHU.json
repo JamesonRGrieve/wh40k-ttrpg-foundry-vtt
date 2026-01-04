@@ -1,0 +1,17 @@
+{
+  "name": "Witness of Dusk",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Astropath, RT Rank 1+, Intelligence 40+. Character has history with the Witnesses of Dusk, and trained with their order for some time before selecting rank.",
+    "descriptionText": "A mysterious group of Astropaths whom hide their eyes or faces with ornate metal plates bonded to their flesh. They focus on mastering the Astropath's innate ability to see without eyes such that despite their supposed blindness their perception is far greater than any normal human.",
+    "effects": "Replace new Rank's Advances with that of the Witness of Dusk\nAutomatically Gain Blind Fighting, Dark Soul, Rival (Astropaths, and Inqusition), and Enemy (Astropaths) Talents.",
+    "source": "RT: The Navis Primer\n(Page 80)",
+    "description": {
+      "value": "<p>A mysterious group of Astropaths whom hide their eyes or faces with ornate metal plates bonded to their flesh. They focus on mastering the Astropath's innate ability to see without eyes such that despite their supposed blindness their perception is far greater than any normal human.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Witness of Dusk\nAutomatically Gain Blind Fighting, Dark Soul, Rival (Astropaths, and Inqusition), and Enemy (Astropaths) Talents.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Fu8kCM3yvlSWXCHU"
+}

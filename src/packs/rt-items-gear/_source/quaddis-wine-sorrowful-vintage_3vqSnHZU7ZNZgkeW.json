@@ -1,0 +1,20 @@
+{
+  "name": "Quaddis Wine (Sorrowful Vintage)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Highly Regarded Wines, the cheapest of the three and sometimes seen as a pretender.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "250 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 250 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3vqSnHZU7ZNZgkeW"
+}

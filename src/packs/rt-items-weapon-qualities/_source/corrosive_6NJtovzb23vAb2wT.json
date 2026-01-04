@@ -1,0 +1,14 @@
+{
+  "name": "Corrosive",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 10,
+    "description": {
+      "value": "<p>10</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6NJtovzb23vAb2wT"
+}

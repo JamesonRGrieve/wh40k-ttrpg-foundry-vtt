@@ -1,0 +1,14 @@
+{
+  "name": "Concussive (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Target makes Toughness Test with -10*X, failiure causes stun for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone. (DW: Auditory Protection provides +10 to the test).",
+    "description": {
+      "value": "<p>Target makes Toughness Test with -10*X, failiure causes stun for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone. (DW: Auditory Protection provides +10 to the test).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QiT8S621Ki1RR2oG"
+}

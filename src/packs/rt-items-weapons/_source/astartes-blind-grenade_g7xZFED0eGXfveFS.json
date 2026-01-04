@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Blind Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Smoke",
+    "weight": "0.9kg",
+    "availability": "Initiated",
+    "cost": "10 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Smoke</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "g7xZFED0eGXfveFS"
+}

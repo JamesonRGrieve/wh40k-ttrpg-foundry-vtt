@@ -1,0 +1,17 @@
+{
+  "name": "Eye of Vengeance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Ballistic Skill 50\nAptitudes: Ballistic Skill, Offence, Tzeentch",
+    "effect": "Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mp8Z9dhDstyziO3T"
+}

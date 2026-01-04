@@ -1,0 +1,20 @@
+{
+  "name": "Opus Magna",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "An Icon of the Ommnissiah, contains within it numerous ciphers and data-djinn that proclaim the worth of their owner to whomever has the capacity to listen to the electromagnetic choirs. Anyone with Common Lore (Machine Cult) can bear this symbol to gain +10 to Fellowship Tests with Tech-Priests and Followers of the Machine God",
+    "cost": "Tech Priests Only",
+    "effects": "Near Unique",
+    "notes": "1500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 1500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TBgbZJpkn1BvVYjm"
+}

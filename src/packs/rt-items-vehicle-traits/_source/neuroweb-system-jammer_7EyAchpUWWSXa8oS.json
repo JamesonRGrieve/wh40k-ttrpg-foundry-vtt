@@ -1,0 +1,14 @@
+{
+  "name": "Neuroweb System Jammer",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Wearer can make a -10 Tech-Use Test as a Half Action. If Successful one powered device within 15 metres overloads and fails, +1 per Degree of Success. If the device was a weapon, it instead gains the Overheats Weapon Quality.\nOverheat: Attack roll of 91+ causes overheat, weapon must be dropped or does its damage to user with PEN 0, cools off next turn.",
+    "description": {
+      "value": "<p>Wearer can make a -10 Tech-Use Test as a Half Action. If Successful one powered device within 15 metres overloads and fails, +1 per Degree of Success. If the device was a weapon, it instead gains the Overheats Weapon Quality.\nOverheat: Attack roll of 91+ causes overheat, weapon must be dropped or does its damage to user with PEN 0, cools off next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7EyAchpUWWSXa8oS"
+}

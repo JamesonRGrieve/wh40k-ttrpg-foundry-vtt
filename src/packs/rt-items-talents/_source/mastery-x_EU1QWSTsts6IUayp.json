@@ -1,0 +1,17 @@
+{
+  "name": "Mastery (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Rank 4 in chosen Skill\nAptitudes: Intelligence, Knowledge, Unaligned",
+    "effect": "Character can spend an Infamy/Fate Point to automatically Pass a Skill Test with chosen skill by a number of Degrees of Success equal to Characteristic Bonus of the skill's associated characteristic, provided the final modifier of the skill Test is +0 or better.\nThis Talent can be taken multiple times, each time for a different skill that meets the talent's requirements. Takes the format of, for example: Mastery(Intimidate), Mastery(Tech-Use)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can spend an Infamy/Fate Point to automatically Pass a Skill Test with chosen skill by a number of Degrees of Success equal to Characteristic Bonus of the skill's associated characteristic, provided the final modifier of the skill Test is +0 or better.\nThis Talent can be taken multiple times, each time for a different skill that meets the talent's requirements. Takes the format of, for example: Mastery(Intimidate), Mastery(Tech-Use)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EU1QWSTsts6IUayp"
+}

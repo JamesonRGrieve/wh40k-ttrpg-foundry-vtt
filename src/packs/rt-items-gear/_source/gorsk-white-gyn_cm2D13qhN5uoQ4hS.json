@@ -1,0 +1,20 @@
+{
+  "name": "Gorsk White Gyn",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Distilled from Modified Engine Coolant, a powerful, cloudy spirit. If Diluted it can help mitigate the effects of tainted water and foods. Drunk Umixed requires a -20 Carouse Test.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cm2D13qhN5uoQ4hS"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Shock Glove",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Shock",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking",
+    "weight": "1.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JQuSobESYMRgVuJE"
+}

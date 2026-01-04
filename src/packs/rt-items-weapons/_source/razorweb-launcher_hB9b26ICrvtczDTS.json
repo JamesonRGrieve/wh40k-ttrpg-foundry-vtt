@@ -1,0 +1,28 @@
+{
+  "name": "Razorweb Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Blast (1), Tearing, Inaccurate",
+    "weight": "3kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Fires a mass of Monofilament threads that rip enemies apart.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1), Tearing, Inaccurate</p><p><b>Note:</b> Fires a mass of Monofilament threads that rip enemies apart.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hB9b26ICrvtczDTS"
+}

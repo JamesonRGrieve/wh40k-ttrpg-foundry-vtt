@@ -1,0 +1,21 @@
+{
+  "name": "The Warp Unbound\n(Unique, Elutrian Devotee Alternative Advance Only)",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "3m x Perception Bonus",
+    "test": "Opposed Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator chooses a Daemon or Psyker within Range and Line of Sight. If Navigator is successful on Opposed Test, target suffers 1d10 Energy damage ignoring Armour and Toughness Bonus and they cannot use Psychic Powers at the Fettered Level until the end of the next round, +1 round per Degree of Success on test. Only one foe can suffer from the effects of this power at a time.\nIf Navigator has Hatred Talent that includes target, they gain +10 to the Opposed Willpower Test.",
+    "adept": "Psyker also cannot use powers at the Unfettered level for the same period of time. If Navigator has Hatred Talent that includes the target, they now get +20 to the Opposed Test.",
+    "master": "Power also affects all Daemons and Psykers within Perception Bonus Metres in addition to the target. Appropriate Hatred Talent now increases damage by Navigator's Perception Bonus",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator chooses a Daemon or Psyker within Range and Line of Sight. If Navigator is successful on Opposed Test, target suffers 1d10 Energy damage ignoring Armour and Toughness Bonus and they cannot use Psychic Powers at the Fettered Level until the end of the next round, +1 round per Degree of Success on test. Only one foe can suffer from the effects of this power at a time.\nIf Navigator has Hatred Talent that includes target, they gain +10 to the Opposed Willpower Test.</p><p><b>Adept:</b> Psyker also cannot use powers at the Unfettered level for the same period of time. If Navigator has Hatred Talent that includes the target, they now get +20 to the Opposed Test.</p><p><b>Master:</b> Power also affects all Daemons and Psykers within Perception Bonus Metres in addition to the target. Appropriate Hatred Talent now increases damage by Navigator's Perception Bonus</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UlAVho9b8aWXHnRF"
+}

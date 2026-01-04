@@ -1,0 +1,18 @@
+{
+  "name": "Extreme Heat/Cold Protection",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.",
+    "weight": "+1kg",
+    "availability": "Very Rare",
+    "source": "RT: Stars of Inequity",
+    "description": {
+      "value": "<p>Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gvjgBR0YkZVZ7Dyy"
+}

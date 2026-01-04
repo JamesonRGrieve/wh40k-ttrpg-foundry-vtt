@@ -1,0 +1,28 @@
+{
+  "name": "Concussion Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "4d10",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (1), Blast (3)",
+    "weight": "0.5kg",
+    "availability": "Initiated",
+    "cost": "18 R",
+    "source": "DW: Rites of Battle",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (1), Blast (3)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WtFBBX2y0JftAPX0"
+}

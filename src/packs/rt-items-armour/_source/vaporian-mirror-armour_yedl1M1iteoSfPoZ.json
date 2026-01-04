@@ -1,0 +1,22 @@
+{
+  "name": "Vaporian Mirror Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Arms, Body, Legs",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Additional +5 AP vs Energy Damage, but -30 to Concealment and Silent move tests due to armour conspicuousness.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Additional +5 AP vs Energy Damage, but -30 to Concealment and Silent move tests due to armour conspicuousness.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yedl1M1iteoSfPoZ"
+}

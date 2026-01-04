@@ -1,0 +1,17 @@
+{
+  "name": "Mark of Tzeentch",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Rewards of the Dark Gods: Tzeentch",
+    "effect": "Character is marked by the Master of Fate upon their soul and possibly their body. They are compelled to dig yet further into arcane and hidden secrets to share Tzeentch.\nThe Character gains Unnatural Willpower (+1) and Psy Rating (+1), they also gain the Psyker Trait if they didn't already have it. the Mark itself also may be required for some other abilities.\nLeaving the path of Tzeentch will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character is marked by the Master of Fate upon their soul and possibly their body. They are compelled to dig yet further into arcane and hidden secrets to share Tzeentch.\nThe Character gains Unnatural Willpower (+1) and Psy Rating (+1), they also gain the Psyker Trait if they didn't already have it. the Mark itself also may be required for some other abilities.\nLeaving the path of Tzeentch will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eBxAFwdHRFe3dZgY"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Steam Drill",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive, Unbalanced, Unwieldy",
+    "weight": "18kg",
+    "availability": "Very Rare",
+    "cost": "100 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Powered by a weighty packpack steam compressor. Requires a Strength Bonus of 4+ or suffer -10 to WS per SB Less than this. Imposes -10 to Agility whilst carried.\nPEN Only applies to Primitive Armours. Two-Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive, Unbalanced, Unwieldy</p><p><b>Note:</b> Powered by a weighty packpack steam compressor. Requires a Strength Bonus of 4+ or suffer -10 to WS per SB Less than this. Imposes -10 to Agility whilst carried.\nPEN Only applies to Primitive Armours. Two-Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zZJqgxJrv09hUcRP"
+}

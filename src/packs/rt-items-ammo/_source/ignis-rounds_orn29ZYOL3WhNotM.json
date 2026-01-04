@@ -1,0 +1,20 @@
+{
+  "name": "Ignis Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Autoguns, Autopistols, Shotguns",
+    "damageOrEffect": "Change damage type to Energy, targets hit by weapon must make Agility Test or be set on fire.",
+    "qualities": "Flame",
+    "weight": "10% wep",
+    "availability": "Famed",
+    "cost": "10 R / Clip",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Change damage type to Energy, targets hit by weapon must make Agility Test or be set on fire.</p><p><b>Qualities:</b> Flame</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "orn29ZYOL3WhNotM"
+}

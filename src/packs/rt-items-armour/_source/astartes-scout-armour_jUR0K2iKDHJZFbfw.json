@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Scout Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace (Astartes)",
+    "locations": "All",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "30kg",
+    "availability": "Initiated",
+    "cost": "-",
+    "notes": "+10 to Concealment Tests, no penalty to Silent Move and Concealment based on AP.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>+10 to Concealment Tests, no penalty to Silent Move and Concealment based on AP.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jUR0K2iKDHJZFbfw"
+}

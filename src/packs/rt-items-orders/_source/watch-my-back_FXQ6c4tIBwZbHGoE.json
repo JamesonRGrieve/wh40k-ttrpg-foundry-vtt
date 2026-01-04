@@ -1,0 +1,17 @@
+{
+  "name": "Watch my Back!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Brawler Spec\n300xp",
+    "descriptionText": "If Comrade is in Comms Range, until the start of the next turn, all enemies suffer -10 to WS Tests to hit the Character, and they can take one extra Dodge or Parry Action.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>If Comrade is in Comms Range, until the start of the next turn, all enemies suffer -10 to WS Tests to hit the Character, and they can take one extra Dodge or Parry Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FXQ6c4tIBwZbHGoE"
+}

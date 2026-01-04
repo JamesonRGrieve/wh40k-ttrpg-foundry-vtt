@@ -1,0 +1,20 @@
+{
+  "name": "Rose",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Lasts ~3 Hours, heightens all sensory inputs to extreme degrees. User gains Dark Sight Trait and +20 to all Perception based Tests. However if user ever passes a Test by 5+ Degrees of Success, they must immediately make a +0 Willpower Test or become stunned for 1d5 rounds from sensation overload.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9BqHpBEHq75TdqzA"
+}

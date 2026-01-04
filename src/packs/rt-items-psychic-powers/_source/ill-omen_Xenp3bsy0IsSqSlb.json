@@ -1,0 +1,22 @@
+{
+  "name": "Ill Omen",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Psyniscience Skill",
+    "focusPower": "Full Action\nConcentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range and line of sight opposes this test with +0 Logic Test. If target fails they suffer -10 to all tests for Psy Rating rounds, or if narrative time, the character chooses some time within the next Psy Rating Hours for the target to suffer the Ill Omen with GM determining the effect on the target's behaviour, but it likely results in a target rethinking a course of action or direction of travel. Degrees of Success and Psy Rating may affect the form of the omen and its outcome.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Xenp3bsy0IsSqSlb"
+}

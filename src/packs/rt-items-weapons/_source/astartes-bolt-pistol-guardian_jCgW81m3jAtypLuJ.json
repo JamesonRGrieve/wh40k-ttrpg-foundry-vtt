@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Bolt Pistol (Guardian)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Bolt",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 14,
+    "reload": "Full",
+    "special": "SM Wep, Tearing, Accurate, Reliable",
+    "weight": "5.5kg",
+    "availability": "Distinguished",
+    "cost": "-",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Issued as an award for excellent gallantry, courage, or other actions above and beyond the call of duty. Worn by those recognised as veterans with the deeds of the wielder inscribed on it.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing, Accurate, Reliable</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Issued as an award for excellent gallantry, courage, or other actions above and beyond the call of duty. Worn by those recognised as veterans with the deeds of the wielder inscribed on it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jCgW81m3jAtypLuJ"
+}

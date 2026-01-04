@@ -1,0 +1,22 @@
+{
+  "name": "One with the Flame",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "None",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Power requires a source of flame within Psy Rating Metres. Psyker can do one of the following: 1. Expand a fire by 1m per DoS on Focus Power Test, if this fire has nothing to burn it shrinks back next round, otherwise it combusts available fuel and remains at its new size, anyone in this area must make a +10 Agility Test or catch fire. 2. Shrink an area of fire by 1m per DoS on Focus Power Test, if the fire reaches 0m it is extinguished. 3. Create an animated shape in flames, such as a person, creature, or object. 4. Send a gout of flame through the air up to 2xPsy Rating metres from the orignal fire, if this fire has nothing to burn it shrinks back next round, otherwise it combusts available fuel and remains at its new size, anyone in this area must make a +10 Agility Test or catch fire. 5. Cause a fire to drastically increase brightness filling the area with bright light, or cause it to create a 2d10m Radius smoke cloud. If sustained, each round can choose a new effect.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kT5coUTDJtG5qYwt"
+}

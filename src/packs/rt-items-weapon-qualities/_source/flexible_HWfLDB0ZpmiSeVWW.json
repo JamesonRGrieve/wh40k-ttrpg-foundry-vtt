@@ -1,0 +1,14 @@
+{
+  "name": "Flexible",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 32,
+    "description": {
+      "value": "<p>32</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HWfLDB0ZpmiSeVWW"
+}

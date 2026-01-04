@@ -1,0 +1,17 @@
+{
+  "name": "Veteren of the Angevin Crusade",
+  "type": "shipUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "spCost": "3",
+    "shipAvailability": "All Ships",
+    "effects": "+10 to BS Tests to fire ship weapons. -40 to Silent Running Tests, +10 to Charm and Intimidate Tests if target knows what ship you are from and would understand your vessel's legacy.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>+10 to BS Tests to fire ship weapons. -40 to Silent Running Tests, +10 to Charm and Intimidate Tests if target knows what ship you are from and would understand your vessel's legacy.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hKRUAN7WgBh3MB53"
+}

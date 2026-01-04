@@ -1,0 +1,20 @@
+{
+  "name": "Psycrystal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.3kg",
+    "availability": "Give off a purple glow if a psychic power is being used, or targeting someone, within 5 metres. Gives of false indications and can cause mental distress when held by anyone capable of channeling the warp.",
+    "cost": "Found often on certain worlds that are devoid of life, they look quartzlike",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JqHXQS141quMrTsU"
+}

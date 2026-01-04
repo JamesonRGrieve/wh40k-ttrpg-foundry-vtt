@@ -1,0 +1,21 @@
+{
+  "name": "Augmented Interior Bulkheads",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 0,
+    "spaceUsage": 2,
+    "spCost": 2,
+    "effect": "+3 to Hull Integrity",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+3 to Hull Integrity</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L2vLu0Id1lBhTaxh"
+}

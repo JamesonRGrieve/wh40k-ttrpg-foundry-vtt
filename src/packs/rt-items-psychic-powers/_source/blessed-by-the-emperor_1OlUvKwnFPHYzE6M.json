@@ -1,0 +1,22 @@
+{
+  "name": "Blessed by the Emperor",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "Divining the Future\nOW: Psy Rating 5",
+    "focusPower": "Free Action",
+    "action": "5m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "After the Psyker Succeeds on their Focus Power Test, they gain +5*Psy Rating to Weapon Skill and Ballistic Skill Tests. Ballistic Skill Tests to target them have -5*Psy Rating. As a Half Action, can warn all allies within 5m x Psy Rating of them about incoming attacks, causing Ballistic Skill Tests against them to have -10. This Power cannot be used at Fettered Strength.",
+    "effect": "300xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1OlUvKwnFPHYzE6M"
+}

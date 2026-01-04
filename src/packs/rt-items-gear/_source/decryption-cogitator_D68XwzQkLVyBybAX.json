@@ -1,0 +1,20 @@
+{
+  "name": "Decryption Cogitator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "200kg",
+    "availability": "A Large machine useful for decoding ciphers or strange writings. A User in possession of one counts Ciphers, Literacy, Scholastic Lore (Cryptography), Secret Tongue, Speak Language, and Trade (Cryptographer) Skills as Basic Skills, and may use Tech-Use Skill in place of any of them if using this item, although it takes twice as long.",
+    "cost": "Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D68XwzQkLVyBybAX"
+}

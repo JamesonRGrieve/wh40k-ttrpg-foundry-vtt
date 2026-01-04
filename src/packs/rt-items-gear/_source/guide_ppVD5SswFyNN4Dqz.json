@@ -1,0 +1,20 @@
+{
+  "name": "Guide",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Someone knowledgable with the local area, who may aid in pointing out its threat and finding where to go.\nProvides +20 to Navigation and Survival Tests, as well as other potential bonuses.",
+    "cost": "Paid Weekly",
+    "effects": "Scarce",
+    "notes": "15 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 15 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ppVD5SswFyNN4Dqz"
+}

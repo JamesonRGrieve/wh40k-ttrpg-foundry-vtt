@@ -1,0 +1,20 @@
+{
+  "name": "Fyceline",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "1kg",
+    "availability": "A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of kg.",
+    "cost": "Effects are advised to taper off to prevent blowing up a planet with a few tonnes of the stuff.",
+    "effects": "Average",
+    "notes": "70 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 70 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h2uILiE5RFimkDDw"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Calculated Barrage",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Intelligence 35\nAptitudes: Ballistic Skill, Knowledge",
+    "effect": "Whenever character or their Comrade fire a weapon with the indirect quality, if at least on hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever character or their Comrade fire a weapon with the indirect quality, if at least on hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dE6QGbavHotbIsHi"
+}

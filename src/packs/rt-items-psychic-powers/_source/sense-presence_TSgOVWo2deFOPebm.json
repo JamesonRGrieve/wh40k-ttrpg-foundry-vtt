@@ -1,0 +1,22 @@
+{
+  "name": "Sense Presence",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "50m",
+    "range": "Threshold 7\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained, character can detect all living creatures within range that are not blocked by thick walls (1m thick baseline, may be thinner for denser materials). Character is aware of the direction each living creature is in, although not exiact distance or location, they can distinguish different sizes but not specific species or race of creatures.\nFor every 5 Points above Threshold / 1 DoS on Focus Test, increase range by 10m",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TSgOVWo2deFOPebm"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Stalker Bolt Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt Weapons",
+    "damageOrEffect": "Awareness Tests to hear shots have -30, and can only be attempted within 30 metres of the firer. Reduce damage by 2.\nStacks with Stalker Boltgun such that no test to detect the shot can be made.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Very Rare / Initiated",
+    "cost": "5 R / Clip",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Awareness Tests to hear shots have -30, and can only be attempted within 30 metres of the firer. Reduce damage by 2.\nStacks with Stalker Boltgun such that no test to detect the shot can be made.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "52smOBTudhNSW7Ft"
+}

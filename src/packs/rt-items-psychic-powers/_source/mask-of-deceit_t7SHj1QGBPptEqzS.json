@@ -1,0 +1,22 @@
+{
+  "name": "Mask of Deceit",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, Psy Rating 4, Fellowship 40+",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "-10/-30/-50\nWillpower",
+    "opposed": "No",
+    "sustained": "The Psyker takes the form of an individual they know, appearing exactly like that person although their clothing and equipment are not altered. This may require new clothing to properly blend in. The change is purely cosmetic, the Psyker does not gain access to any abilities or knowledge the target they have transformed into possesses. After Psy Rating Minutes, they either revert back to normal or can make a -10 Focus Power Test as a Free Action to maintain the power without reverting, if they fail this test they suffer a Gift of the Gods that lasts 1d5 Rounds (can't be exchanged for a reward of Tzeentch) and returns to their natural form.\nThe Difficulty of test varies with how well the Psyker knows the target they are transforming into: -10: Intimately Familiar, sees and interacts with every day. -30: Familiar, sees and interacts with occasionally. -50: Acquainted, met recently.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t7SHj1QGBPptEqzS"
+}

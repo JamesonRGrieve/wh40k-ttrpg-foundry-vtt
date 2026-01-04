@@ -1,0 +1,20 @@
+{
+  "name": "Vengeance Rounds (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Any Astartes",
+    "damageOrEffect": "Gain Felling(4) Quality, increase Penetration to 9. Rounds detonate Prematurely on attack roll of 91-100, causing firer to suffer damage instead to their arm (with Pen 5 instead of 9), weapon then Jams. Cannot avoid damage by dropping weapon.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Famed",
+    "cost": "25 R / Clip",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Felling(4) Quality, increase Penetration to 9. Rounds detonate Prematurely on attack roll of 91-100, causing firer to suffer damage instead to their arm (with Pen 5 instead of 9), weapon then Jams. Cannot avoid damage by dropping weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L3Gan4buYblYlc00"
+}

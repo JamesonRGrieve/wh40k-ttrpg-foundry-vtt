@@ -1,0 +1,20 @@
+{
+  "name": "Runes of Warding",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "0.5kg",
+    "availability": "Eldar Rune often used by Farseers. Enemy Psykers within Perception Characteristic Metres add +10 to rolls on Psychic Phenomena and Perils of the Warp Tables.",
+    "cost": "Xenotech. Not something a character would normally be able to acquire.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Navis Primer",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IrHdX8tvfU5mMUG5"
+}

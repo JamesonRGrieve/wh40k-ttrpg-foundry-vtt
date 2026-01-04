@@ -1,0 +1,17 @@
+{
+  "name": "Daemonic Anathema",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T3)",
+    "requirements": "Tier 3: Untouchable E.Adv, Warp Anathema, Willpower 55. Aptitudes: Willpower",
+    "effect": "All creatures with the Daemonic Trait within Willpower Bonus metres of the Untouchable do not gain any of the benefits of that trait.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>All creatures with the Daemonic Trait within Willpower Bonus metres of the Untouchable do not gain any of the benefits of that trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZiOoB4qkKwSoZFhW"
+}

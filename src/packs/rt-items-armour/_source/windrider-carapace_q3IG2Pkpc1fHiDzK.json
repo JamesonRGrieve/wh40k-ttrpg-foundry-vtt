@@ -1,0 +1,22 @@
+{
+  "name": "Windrider Carapace",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "Body",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "6kg",
+    "availability": "Scarce",
+    "cost": "800 T",
+    "notes": "Makes wearer immune to powerful winds.",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Makes wearer immune to powerful winds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q3IG2Pkpc1fHiDzK"
+}

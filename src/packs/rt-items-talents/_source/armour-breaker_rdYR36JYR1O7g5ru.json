@@ -1,0 +1,17 @@
+{
+  "name": "Armour-Breaker",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 35, Comon Lore (Tech)\nAptitudes: Ballistic Skill, Finesse\nVeteran Talent Requirement Fulfilled",
+    "effect": "Veteran Talent Requirement: Character is part of a Squad that has Destroyed 3+ Enemy Vehicles in one mission\nCharacter adds +2 to Critical Damage they deal to a Vehicle.",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p>Veteran Talent Requirement: Character is part of a Squad that has Destroyed 3+ Enemy Vehicles in one mission\nCharacter adds +2 to Critical Damage they deal to a Vehicle.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rdYR36JYR1O7g5ru"
+}

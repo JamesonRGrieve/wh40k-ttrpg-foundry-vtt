@@ -1,0 +1,28 @@
+{
+  "name": "Rune Weapon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Tainted, Tearing, Vengeful (8), Rune Wep",
+    "weight": "3kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Generic Rune Weapon, in this case a sword but can be any Primitive Melee Weapon. DH 2E Rune Weapons give Tainted, Tearing, and Vengeful (8), Lose Primitive, are Immune to Power Fields, and cause wielder to gain 1d5  Corruption whenever they trigger Righteous Fury.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Tainted, Tearing, Vengeful (8), Rune Wep</p><p><b>Note:</b> Generic Rune Weapon, in this case a sword but can be any Primitive Melee Weapon. DH 2E Rune Weapons give Tainted, Tearing, and Vengeful (8), Lose Primitive, are Immune to Power Fields, and cause wielder to gain 1d5  Corruption whenever they trigger Righteous Fury.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4tVYCMvKM0hYaBSU"
+}

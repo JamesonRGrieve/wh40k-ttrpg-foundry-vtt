@@ -1,0 +1,28 @@
+{
+  "name": "Force Rod",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Force",
+    "weight": "1kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Force</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UNwQHGVVwk9nj23S"
+}

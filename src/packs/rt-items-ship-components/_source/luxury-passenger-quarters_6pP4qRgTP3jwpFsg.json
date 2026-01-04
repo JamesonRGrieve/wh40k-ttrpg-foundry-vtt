@@ -1,0 +1,21 @@
+{
+  "name": "Luxury Passenger Quarters",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "All Ships",
+    "powerUsage": 2,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Comfortable Quarters for honoured guests or paying customers. +100 Achievement Points towards Trade, Criminal, or Creed Objecties. -3 Morale due to Crew Jealousy.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Comfortable Quarters for honoured guests or paying customers. +100 Achievement Points towards Trade, Criminal, or Creed Objecties. -3 Morale due to Crew Jealousy.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6pP4qRgTP3jwpFsg"
+}

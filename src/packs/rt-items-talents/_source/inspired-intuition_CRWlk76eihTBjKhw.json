@@ -1,0 +1,17 @@
+{
+  "name": "Inspired Intuition",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Inq) (T2)",
+    "requirements": "Tier 2: Inquisitor E.Adv, Intelligence 50\nAptitudes: Perception, Social",
+    "effect": "Player can spend a Fate Point to ask the GM a question about the current situtation that their character is in, the GM should answer as helpfully as possible, granting in the form of exceptional insight to the Inquisitor's current status.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Player can spend a Fate Point to ask the GM a question about the current situtation that their character is in, the GM should answer as helpfully as possible, granting in the form of exceptional insight to the Inquisitor's current status.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CRWlk76eihTBjKhw"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Chitin Shell",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 2, Toughness 30+",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker adds 2 AP to all areas of their body not covered in synthetic or natural armour, each Degree of Success gives them one point with which they may increase one of these areas' AP by one.\n(EG: If covering head and body and have 2 DoS, can add 2 points to the body to have AP 2 Head and AP 4 Body)",
+    "effect": "200xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ky7CIHM8VIwCBV24"
+}

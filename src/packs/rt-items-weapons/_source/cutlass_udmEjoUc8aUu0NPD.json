@@ -1,0 +1,28 @@
+{
+  "name": "Cutlass",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Unbalanced",
+    "weight": "3kg",
+    "availability": "Common",
+    "cost": "10 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Power Fielded Variants exist amongst Imperial Navy Officers",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Unbalanced</p><p><b>Note:</b> Power Fielded Variants exist amongst Imperial Navy Officers</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "udmEjoUc8aUu0NPD"
+}

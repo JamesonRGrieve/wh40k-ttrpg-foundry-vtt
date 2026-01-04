@@ -1,0 +1,28 @@
+{
+  "name": "Graviton Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Impact",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (3), Graviton",
+    "weight": "8kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Two-Handed Weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (3), Graviton</p><p><b>Note:</b> Two-Handed Weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tIVFSoSZkUm6HtT4"
+}

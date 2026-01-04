@@ -1,0 +1,20 @@
+{
+  "name": "Envenomed Ammo",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive Ranged Weapon",
+    "damageOrEffect": "Weapon gains Toxic(2)",
+    "qualities": "Toxic(2)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon gains Toxic(2)</p><p><b>Qualities:</b> Toxic(2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gw4ENBALsRSkJq6i"
+}

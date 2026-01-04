@@ -1,0 +1,17 @@
+{
+  "name": "Sonar Sense",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Can detect objects within 30 metres through sound. Other Creatures can make a -10 Awareness check to detect the noise this creature makes to detect things.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can detect objects within 30 metres through sound. Other Creatures can make a -10 Awareness check to detect the noise this creature makes to detect things.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aGzRQ7W2CuNs6GNr"
+}

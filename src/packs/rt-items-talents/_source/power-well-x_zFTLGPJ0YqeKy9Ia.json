@@ -1,0 +1,17 @@
+{
+  "name": "Power Well (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Psy Rating",
+    "effect": "Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zFTLGPJ0YqeKy9Ia"
+}

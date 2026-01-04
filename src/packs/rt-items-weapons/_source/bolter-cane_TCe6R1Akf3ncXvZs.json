@@ -1,0 +1,28 @@
+{
+  "name": "Bolter Cane",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Bolt",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Tearing",
+    "weight": "3kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Concealed Weapon, looks like a regular cane, staff, or baton. Stops being concealed after being fired, unless false bottom is replaced. Can use any bolt ammo",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Concealed Weapon, looks like a regular cane, staff, or baton. Stops being concealed after being fired, unless false bottom is replaced. Can use any bolt ammo</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TCe6R1Akf3ncXvZs"
+}

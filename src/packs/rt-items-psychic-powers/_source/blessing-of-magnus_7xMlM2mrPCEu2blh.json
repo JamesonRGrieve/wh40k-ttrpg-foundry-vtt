@@ -1,0 +1,22 @@
+{
+  "name": "Blessing of Magnus",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned\nPsy Rating 4\nThousand Sons Sorcerer",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Thousand Sons Sorcerer gains the following Benefits whilst power is sustained: Gain +5xPsy Rating to all Willpower Tests, once per turn can make a free Half Action Aim with any force weapon they wield, when targeted by a Psychic Power they can make a -20 Willpower Test as a Reaction and if successful the power fails.\nThe Character must be Heavily Damaged for this power to activate.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7xMlM2mrPCEu2blh"
+}

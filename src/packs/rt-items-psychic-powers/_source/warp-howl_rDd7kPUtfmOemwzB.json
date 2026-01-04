@@ -1,0 +1,22 @@
+{
+  "name": "Warp Howl",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "50m Radius",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Let loose a deafening screech that drowns out all other sounds within range for 1 Round.\nFor every 5 Points above Threshold / 1 DoS on Focus Test, increase range by 10 metres.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rDd7kPUtfmOemwzB"
+}

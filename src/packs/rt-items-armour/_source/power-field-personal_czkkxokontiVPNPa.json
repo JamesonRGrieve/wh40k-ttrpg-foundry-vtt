@@ -1,0 +1,22 @@
+{
+  "name": "Power Field (Personal)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.8,
+    "maxAg": "-",
+    "weight": "50kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "czkkxokontiVPNPa"
+}

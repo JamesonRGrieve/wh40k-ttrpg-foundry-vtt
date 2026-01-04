@@ -1,0 +1,25 @@
+{
+  "name": "Chimera Armoured Transport",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "15m",
+    "tacticalSpeed": "70kph",
+    "cruisingSpeed": "+0",
+    "maneuverability": "35",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 30\nSide 22\nRear 16",
+    "rearArmour": "Commander (Turret), Driver, Gunner (Hull Weapon)",
+    "structuralIntegrity": "12 Passengers or equivilent cargo",
+    "crew": "Turret (Commander), one of: Multilaser, Heavy Bolter, Autocannon, Heavy Flamer\nHull (Front) (Gunner), one of: Heavy Bolter, Heavy Flamer\nPintle (Optional), one of: Storm Bolter, Heavy Stubber\nHull (Left and Right) (Passengers) (Optional): 3x Lasguns (Basic, 100m, S/3/-, 1d10+3 E, Pen 0, Clip 60, Rld Full)\n---\nMulti-Laser     (150m; –/–/5; 2d10+10 E; Pen 2; Clip 100; Reload 2 Full; Reliable)\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nAutocannon     (300m; S/3/–; 3d10+8 I; Pen 6; Clip 40; Reload 2 Full; Reliable)\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter    (90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)",
+    "passengers": "Traits: Amphibious, Enclosed, Rugged, Tracked Vehicle\nIf 3x Lasgun option not taken, instead have firing holes that allow passengers to shoot their own Basic or Pistol weapons through, or Heavy Weapons if vehicle is stationary (may or may not then count as Enclosed?)",
+    "cargo": "Extremely Rare",
+    "availability": "Dark Heresy 2E: Core",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "CBJtaByLKYRss0ik"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Thermal Armour \"Frost\"",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "All",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "12kg",
+    "availability": "Rare",
+    "cost": "-",
+    "notes": "Negates Effects of extreme heat and possibly flames. Comes with rebreather to protect against flame and smoke inhalation.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Negates Effects of extreme heat and possibly flames. Comes with rebreather to protect against flame and smoke inhalation.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "afvSRBJBwNgyPegz"
+}

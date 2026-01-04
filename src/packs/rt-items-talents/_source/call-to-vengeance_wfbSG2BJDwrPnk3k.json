@@ -1,0 +1,17 @@
+{
+  "name": "Call to Vengeance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Astartes, Fellowship 40",
+    "effect": "Whenever another member of the character's squad is killed or otherwise taken out of action, the character can spend a Full Action and Spend a Fate Point to inspire their remaining comrades to vengeance. In doing so the character and all those in Support Range of them return to their starting Cohesion scores.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Whenever another member of the character's squad is killed or otherwise taken out of action, the character can spend a Full Action and Spend a Fate Point to inspire their remaining comrades to vengeance. In doing so the character and all those in Support Range of them return to their starting Cohesion scores.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wfbSG2BJDwrPnk3k"
+}

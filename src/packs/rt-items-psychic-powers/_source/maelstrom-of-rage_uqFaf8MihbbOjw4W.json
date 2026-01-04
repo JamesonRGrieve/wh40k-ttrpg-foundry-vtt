@@ -1,0 +1,22 @@
+{
+  "name": "Maelstrom of Rage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 6, Frenzy, Hatred (Any)",
+    "focusPower": "Half Action\nAttack",
+    "action": "10m x Psy Rating Radius",
+    "range": "Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst Sustained, the Psyker and all creatures within range immediately enter a Frenzied State, as if possessing the Frenzy Talent. Additionally, they all gain the Hatred(All) Talent.\nHatred(All): Gain +10 to WS against all enemies.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uqFaf8MihbbOjw4W"
+}

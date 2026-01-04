@@ -1,0 +1,22 @@
+{
+  "name": "Wind Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "All",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "18kg",
+    "availability": "Rare",
+    "cost": "2200 T",
+    "notes": "Designed for places with winds of hundreds of kilometres per hour. Contains air filters and a rebreather with 3 hours of air. An Inbuilt Vox System and Photo-Visor. Wearer is immune to environmental effects of strong winds and powerful storms.",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Designed for places with winds of hundreds of kilometres per hour. Contains air filters and a rebreather with 3 hours of air. An Inbuilt Vox System and Photo-Visor. Wearer is immune to environmental effects of strong winds and powerful storms.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "osaujvYNwIwfE2Cx"
+}

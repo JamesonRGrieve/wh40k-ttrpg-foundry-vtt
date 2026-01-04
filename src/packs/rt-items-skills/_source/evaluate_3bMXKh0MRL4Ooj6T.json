@@ -1,0 +1,18 @@
+{
+  "name": "Evaluate",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Basic, Investigation",
+    "characteristic": "Intelligence",
+    "descriptor": "Determine the Value of an object or group of items. Difficult varies with user's access to the item, time allowed for evaluation, etc. Can also determine requirements for Endeavours.",
+    "uses": "Skill Test: Determine value of a single item, more DoS means more information given about object, more DoF means miscalculation of value.\nExtended Skill Test: Determine value of large cargos of items, same as previous.\n Note: Test rolled by GM, who gives the information the user thinks they know, whether it is correct or not.",
+    "useTime": "1 Minute or more",
+    "description": {
+      "value": "<p>Determine the Value of an object or group of items. Difficult varies with user's access to the item, time allowed for evaluation, etc. Can also determine requirements for Endeavours.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3bMXKh0MRL4Ooj6T"
+}

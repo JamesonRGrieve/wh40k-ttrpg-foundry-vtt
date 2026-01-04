@@ -1,0 +1,17 @@
+{
+  "name": "Maglev Transcendence",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Maglev Coils, Mechanicus Implants\nAptitudes: Intelligence, Tech, Unaligned",
+    "effect": "Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "79zm4ZG13yQbgm0D"
+}

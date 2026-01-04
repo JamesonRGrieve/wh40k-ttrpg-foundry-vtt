@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Combat Shield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field (Astartes)",
+    "locations": "All",
+    "ap": 0.25,
+    "maxAg": "-",
+    "weight": "3kg",
+    "availability": "Distinguished",
+    "cost": "20 R",
+    "notes": "Straps onto the arm. Acts as a Balanced weapon dealing 1d5+1 Impact Damage.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Straps onto the arm. Acts as a Balanced weapon dealing 1d5+1 Impact Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hlz5fzv5jkSQvlJW"
+}

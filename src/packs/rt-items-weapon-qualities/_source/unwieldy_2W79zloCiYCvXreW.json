@@ -1,0 +1,14 @@
+{
+  "name": "Unwieldy",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 67,
+    "description": {
+      "value": "<p>67</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2W79zloCiYCvXreW"
+}

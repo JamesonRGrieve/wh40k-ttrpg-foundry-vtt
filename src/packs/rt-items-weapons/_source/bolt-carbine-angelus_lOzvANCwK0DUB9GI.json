@@ -1,0 +1,28 @@
+{
+  "name": "Bolt Carbine (Angelus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "100m",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 3,
+    "reload": "3 Full",
+    "special": "Accurate",
+    "weight": "11kg",
+    "availability": "Very Rare",
+    "cost": "2000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Highly Illegal due to chambering Unmarked Astartes Bolt Rounds, regular ammo won't work.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Highly Illegal due to chambering Unmarked Astartes Bolt Rounds, regular ammo won't work.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lOzvANCwK0DUB9GI"
+}

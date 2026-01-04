@@ -1,0 +1,22 @@
+{
+  "name": "Summon Vermin",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Fellowship 30",
+    "focusPower": "Full Action\nConcentration",
+    "action": "1km x Psy Rating",
+    "range": "+0 Willpower",
+    "opposed": "No",
+    "sustained": "Character summons up to Psy Rating small animals such as rats, snakes, etc. ",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4aGyLHIwZbibuSbx"
+}

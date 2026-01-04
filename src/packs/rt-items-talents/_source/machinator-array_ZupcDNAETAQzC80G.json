@@ -1,0 +1,17 @@
+{
+  "name": "Machinator Array",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Mechanicus Secutor Alternative Advance, 500xp, Tech-Priest, Mechadendrite Use (Ballistic)",
+    "effect": "The Character's Cyber-Mantle and Potentia Coil are further upgraded. Gain +10 Strength and Toughness, but -5 Agility and Fellowship. Now weight three times as much, can no longer swim, and suffer -10 to tests to move silently.\nHowever, any Ballistic Mechadendrites the character equips can now mount any pistol (without requiring compact upgrade) or one-handed melee weapon.",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>The Character's Cyber-Mantle and Potentia Coil are further upgraded. Gain +10 Strength and Toughness, but -5 Agility and Fellowship. Now weight three times as much, can no longer swim, and suffer -10 to tests to move silently.\nHowever, any Ballistic Mechadendrites the character equips can now mount any pistol (without requiring compact upgrade) or one-handed melee weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZupcDNAETAQzC80G"
+}

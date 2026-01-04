@@ -1,0 +1,22 @@
+{
+  "name": "Quest for Warmth",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n(Cryokinesis)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "2 VU x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "Activating this power extends the psykers mind into the void to search for other active minds, gaining information on possible sentient life within range with more Degrees of Success on their Focus Power Test: Success: Reveals the direction and distance of concentrations of sentient life regardless of any shielding or attempts at concealment. 2 DoF: Also reveals rough number of living minds within a reasonable margin of error, but no specifics about species. 3+ DoF: Also reveals the species of the minds, even if the psyker is unfamiliar with that species. \nDuring the use of this power, the psyker suffers -20 to resisting invasive Psychic Techniques, such as mind control or reading.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7AyaOETyfKPzienr"
+}

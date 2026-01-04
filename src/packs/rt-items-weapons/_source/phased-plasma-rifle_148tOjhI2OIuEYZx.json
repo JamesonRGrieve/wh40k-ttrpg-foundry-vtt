@@ -1,0 +1,28 @@
+{
+  "name": "Phased Plasma Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Plasma",
+    "range": "100m",
+    "rof": "S/2/4",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Integrated Weapon",
+    "weight": "12kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.",
+    "description": {
+      "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "148tOjhI2OIuEYZx"
+}

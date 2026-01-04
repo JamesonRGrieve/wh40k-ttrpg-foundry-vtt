@@ -1,0 +1,22 @@
+{
+  "name": "Imperial Robes",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Arms, Body, Legs",
+    "ap": 1,
+    "maxAg": "-",
+    "weight": "4kg",
+    "availability": "Average",
+    "cost": "-",
+    "notes": null,
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KpONRR0TAk2qOmv1"
+}

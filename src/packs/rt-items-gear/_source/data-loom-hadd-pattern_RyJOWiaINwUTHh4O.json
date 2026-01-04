@@ -1,0 +1,20 @@
+{
+  "name": "Data-Loom (Hadd-Pattern)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "13kg",
+    "availability": "+10 to Logic tests, can reduce time taken for research and investigation if character has Tech-Use",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RyJOWiaINwUTHh4O"
+}

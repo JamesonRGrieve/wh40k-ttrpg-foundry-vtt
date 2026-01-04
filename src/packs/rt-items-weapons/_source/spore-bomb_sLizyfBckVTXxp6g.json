@@ -1,0 +1,28 @@
+{
+  "name": "Spore Bomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (5)",
+    "weight": "2kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Highly Illegal and Heretical. Contains fresh Mind-Mould Spores. If released, its outbreak can last months and kill thousands. Those exposed make +10 Toughness Test (or -10 test if Psyker), if failed infected devleop painful rash, after 2d10 hours growths emerge from their skin, must make Toughness Test each hour with -10 cumulative penalty, if passing three tests fight off fungus and recover (Medicae Skill Tests can assist), if test is failed suffer 10 nonpermenant Toughness and 5 Intelligence Damage and roll for Hallucinogen effect. If Toughness Test reaches 0, head explodes and scatter spores over 5 metres, repeating cycle. Infected Psykers must push all powers by at least 2, and if they are killed by the mould also generate a psychic eruption that causes all psykers within 1d10 * WP Bonus to make +10 Willpower Test to avoid infection.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Highly Illegal and Heretical. Contains fresh Mind-Mould Spores. If released, its outbreak can last months and kill thousands. Those exposed make +10 Toughness Test (or -10 test if Psyker), if failed infected devleop painful rash, after 2d10 hours growths emerge from their skin, must make Toughness Test each hour with -10 cumulative penalty, if passing three tests fight off fungus and recover (Medicae Skill Tests can assist), if test is failed suffer 10 nonpermenant Toughness and 5 Intelligence Damage and roll for Hallucinogen effect. If Toughness Test reaches 0, head explodes and scatter spores over 5 metres, repeating cycle. Infected Psykers must push all powers by at least 2, and if they are killed by the mould also generate a psychic eruption that causes all psykers within 1d10 * WP Bonus to make +10 Willpower Test to avoid infection.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sLizyfBckVTXxp6g"
+}

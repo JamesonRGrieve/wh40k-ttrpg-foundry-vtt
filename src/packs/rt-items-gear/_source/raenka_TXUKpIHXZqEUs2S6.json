@@ -1,0 +1,20 @@
+{
+  "name": "Raenka",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Space Brandy. Well fermented Ploin Juice, has subtle taste and rich hues. Traders can make a small yet tidy profit from carrying barrels at special request to impatient buyers.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TXUKpIHXZqEUs2S6"
+}

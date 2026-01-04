@@ -1,0 +1,17 @@
+{
+  "name": "Tireless",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Toughness 40, Willpower 35 \nAptitudes: Defence, Willpower",
+    "effect": "Character ignores -10 Penalty to all Tests as a result of Fatigue, they still suffer any other effects from Fatigue as Normal.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character ignores -10 Penalty to all Tests as a result of Fatigue, they still suffer any other effects from Fatigue as Normal.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YydN0ul1ocXfWZnI"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Ghibelline Hyperwave Clarion Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "6d10",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 24,
+    "reload": "6 Full",
+    "special": "Concussive (1), Devastating (3), Melta, Overcharge, Overheats, Spray",
+    "weight": "45kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Sonic Weapon, uses a backpack ammo supply included in weapon weight. When weapon overheats, it only inflicts half the normal Overheat damage on the user.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (1), Devastating (3), Melta, Overcharge, Overheats, Spray</p><p><b>Note:</b> Sonic Weapon, uses a backpack ammo supply included in weapon weight. When weapon overheats, it only inflicts half the normal Overheat damage on the user.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dMq6IuGWdM9V9rJR"
+}

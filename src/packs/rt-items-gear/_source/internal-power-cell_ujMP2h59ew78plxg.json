@@ -1,0 +1,20 @@
+{
+  "name": "Internal Power Cell",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Acts as an ammo charge pack for lasguns or hellguns. Doesn't have have the power for complex machinery like a potentia coil but might be able to charge other simple things. Takes a Full Day to Recharge through internal body heat and movement.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ujMP2h59ew78plxg"
+}

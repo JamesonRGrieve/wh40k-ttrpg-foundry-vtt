@@ -1,0 +1,17 @@
+{
+  "name": "Take 'em Down!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Ogryn, Strength 45, \nApt: Strength, Offence",
+    "descriptionText": "Comrade in Cohesion engages one foe within their Charge Move Distance, target must make a +0 Dodge Test or be knocked prone.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Comrade in Cohesion engages one foe within their Charge Move Distance, target must make a +0 Dodge Test or be knocked prone.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2FFQ2CSqlZB2Tof5"
+}

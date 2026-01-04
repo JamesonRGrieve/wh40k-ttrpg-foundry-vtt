@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Power Claymore",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unwieldty, Devastating",
+    "weight": "18kg",
+    "availability": "Distinguished",
+    "cost": "15 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. \nTwo Handed.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldty, Devastating</p><p><b>Note:</b> Space Marines Only, not easily acquirable. \nTwo Handed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m39fA62Zcj0WWaXK"
+}

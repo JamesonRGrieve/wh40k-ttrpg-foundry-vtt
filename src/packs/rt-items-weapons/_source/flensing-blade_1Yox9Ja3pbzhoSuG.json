@@ -1,0 +1,28 @@
+{
+  "name": "Flensing Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Razor-Sharp, Balanced",
+    "weight": "2kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Razor-Sharp, Balanced</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1Yox9Ja3pbzhoSuG"
+}

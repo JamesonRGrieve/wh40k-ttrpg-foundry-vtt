@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Shredder",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - DEldar",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "3d10+5",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 12,
+    "reload": "2 Full",
+    "special": "Reliable, Blast (4), Tearing",
+    "weight": "2kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Fires clusters of monofilament wire that unfurl and blend enemies.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Blast (4), Tearing</p><p><b>Note:</b> Xenotech. Fires clusters of monofilament wire that unfurl and blend enemies.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XzFzIH7jRTw9CWxg"
+}

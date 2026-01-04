@@ -1,0 +1,21 @@
+{
+  "name": "Segrazian \"Viperdrive\" Pirate Engine",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive",
+    "hullType": "Raider, Frigate",
+    "powerUsage": -45,
+    "spaceUsage": 16,
+    "spCost": 2,
+    "effect": "Increase Ship Speed by +2, and Manoeuvrability by +5. If the \"Engines Crippled\" critical result is rolled on the Critical Hit table, always treat d10 result as 8-10 (engines wrecked).",
+    "availability": "Very Rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Increase Ship Speed by +2, and Manoeuvrability by +5. If the \"Engines Crippled\" critical result is rolled on the Critical Hit table, always treat d10 result as 8-10 (engines wrecked).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zJ9ox7W5kF7pXjRI"
+}

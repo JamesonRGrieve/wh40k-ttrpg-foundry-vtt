@@ -1,0 +1,22 @@
+{
+  "name": "Dark Flame",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Malefic Daemonology",
+    "prerequisites": "10+ Corruption, \nCursed Earth",
+    "focusPower": "Half Action\nAttack\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "+0 Willpower",
+    "opposed": "No",
+    "sustained": "Fires out a flamethrower-like spray of Warpfire. Can be avoided as if a Spray Weapon. Deals 1d10 + Psy Rating + Corruption Bonus Energy Damage with Corruption Bonus Penetration and Flame and Spray Qualities. Characters that suffer damage from this attack must make a +30 Willpower Test or suffer 1 Corruption per Degree of Failiure.\nIf power is Successfully manifested, gain Corruption Points equal to the Psy Rating used to manifest this power after its effects have been resolved.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EjdMOHeLuQKgbIME"
+}

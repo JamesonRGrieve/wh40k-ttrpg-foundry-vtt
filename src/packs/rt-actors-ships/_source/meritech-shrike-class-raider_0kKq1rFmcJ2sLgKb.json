@@ -1,0 +1,28 @@
+{
+  "name": "Meritech Shrike-Class Raider",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Raider",
+    "size": "2km long, 0.25km wide",
+    "crew": 15000,
+    "speed": 10,
+    "manoeuvrability": 25,
+    "detection": 20,
+    "hull": 30,
+    "armour": 16,
+    "turrets": 2,
+    "space": 35,
+    "shipPoints": 34,
+    "weaponCapacity": "1 Dorsal, 1 Prow",
+    "notes": "+5 to BS Tests to fire ship weapons thanks to ship advanced ship cogitator linkings. ",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>+5 to BS Tests to fire ship weapons thanks to ship advanced ship cogitator linkings. </p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "0kKq1rFmcJ2sLgKb"
+}

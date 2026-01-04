@@ -1,0 +1,20 @@
+{
+  "name": "Shrieker Ammunitiion",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Shuriken Cannons",
+    "damageOrEffect": "Halves RoF of weapon (round up). Gain Toxic Quality, but if Toughness Test failed, does 3d10 Explosive Damage instead.",
+    "qualities": "Toxic",
+    "weight": "10% wep",
+    "availability": "Unique",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Halves RoF of weapon (round up). Gain Toxic Quality, but if Toughness Test failed, does 3d10 Explosive Damage instead.</p><p><b>Qualities:</b> Toxic</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dsh3dn2VDeQsSM6h"
+}

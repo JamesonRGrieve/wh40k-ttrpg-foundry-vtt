@@ -1,0 +1,28 @@
+{
+  "name": "Tau Pulse Carbine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "60m",
+    "rof": "S/-/3",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 24,
+    "reload": "Full",
+    "special": "Gyro-Stabilised",
+    "weight": "6kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Has an undermounted Grenade Launcher (Grenade Launcher (Mezoa) - RoF S/-/-, Range 80m, Clip 1, Rld Half). Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Gyro-Stabilised</p><p><b>Note:</b> Has an undermounted Grenade Launcher (Grenade Launcher (Mezoa) - RoF S/-/-, Range 80m, Clip 1, Rld Half). Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v0jL0IZO1BQEAeuD"
+}

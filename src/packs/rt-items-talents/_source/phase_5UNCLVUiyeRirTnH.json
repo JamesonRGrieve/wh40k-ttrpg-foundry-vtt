@@ -1,0 +1,17 @@
+{
+  "name": "Phase",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Can Switch between a Corporeal State and an Incorporeal State as a Half Action. While Incorporeal it can pass through objects such as walls and weapons. Has +30 to Stealth Tests when hiding inside something, makes no sound when moving, and is immune to normal weapons. Daemons, Psychic Powers, Warp Creatures, Force Weapons, and Other Incorporeal Creatures still may be able to inflict damage.  However Incorporeal Creatures can't (usually) affect the mortal world or deal damage to non-incorporeal creatures. Cannot pass through certain barriers, such as wards and gellar fields.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can Switch between a Corporeal State and an Incorporeal State as a Half Action. While Incorporeal it can pass through objects such as walls and weapons. Has +30 to Stealth Tests when hiding inside something, makes no sound when moving, and is immune to normal weapons. Daemons, Psychic Powers, Warp Creatures, Force Weapons, and Other Incorporeal Creatures still may be able to inflict damage.  However Incorporeal Creatures can't (usually) affect the mortal world or deal damage to non-incorporeal creatures. Cannot pass through certain barriers, such as wards and gellar fields.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5UNCLVUiyeRirTnH"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Sorcerous Power",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent  (Elite)",
+    "requirements": "Sorcerer, Cost of power + 250xp",
+    "effect": "Gain a new psychic power as long as all prerequisites are met.",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>Gain a new psychic power as long as all prerequisites are met.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5ELYmMRdZhh6oZVK"
+}

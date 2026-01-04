@@ -1,0 +1,21 @@
+{
+  "name": "Shadowblind Bays",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "effect": "Has secret \"Mirror Hold\" that is screened against Auspex. +50 Achievement Points towards Trade Objectives, +75 Achievement Points towards Criminal Objectives. Locating Bays while their systems are engaged requires -40 Scrutiny Test.",
+    "availability": "Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Has secret \"Mirror Hold\" that is screened against Auspex. +50 Achievement Points towards Trade Objectives, +75 Achievement Points towards Criminal Objectives. Locating Bays while their systems are engaged requires -40 Scrutiny Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BudMqANv9PMo3Fr9"
+}

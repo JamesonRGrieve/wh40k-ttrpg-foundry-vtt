@@ -1,0 +1,22 @@
+{
+  "name": "Ward of Worms",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned, Psy Rating 5, Infamy 40+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "Self",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Power lasts for Psy Rating Rounds, whilst active the Psyker can perform the Worm Infestation Reaction. As a Half Action they can prematurely end this power and make -10 Willpower Test, firing a Psychic Storm ranged attack at target individual within 5m x Psy Rating, if successful hits once, +1 per Degree of Success (can be dodged as if full auto ranged attack) and deals 1d10+Psy Rating Rending Damage with Pen 5, Toxic(2), and Tearing Qualities, each hit after thie first can hit either the original target or another within 2 metres. If all shots hit the same target and they die, their corpse becomes a puppet under character's control that can be commanded to make a standard attack or half move as a Free Action. The puppet can perform no other actions beyond this beyond the most basic of commands, it has half the Characteristics of the original target and can use no skills or talents, it has 5 wounds and cannot be healed, it dies after 1d5+Psy Rating rounds.",
+    "effect": "500xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gf6vEwwAKlnX7bP8"
+}

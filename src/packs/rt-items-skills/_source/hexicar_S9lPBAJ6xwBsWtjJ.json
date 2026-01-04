@@ -1,0 +1,18 @@
+{
+  "name": "Hexicar",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Human, Psy Rating, Soul Bound Trait",
+    "characteristic": "300xp",
+    "descriptor": "The Astropath's bond to the Emperor, and any benefits that come with it are destroyed, replaced with something accursed.",
+    "uses": "Lose Soul-Bound Trait, gain Accursed Trait instead. Gain 1d10 Corruption, 1d10 Insanity, and one Malignancy of character's choice.",
+    "useTime": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>The Astropath's bond to the Emperor, and any benefits that come with it are destroyed, replaced with something accursed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S9lPBAJ6xwBsWtjJ"
+}

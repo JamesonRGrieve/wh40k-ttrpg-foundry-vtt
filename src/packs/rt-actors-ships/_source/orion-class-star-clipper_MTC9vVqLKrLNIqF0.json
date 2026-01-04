@@ -1,0 +1,28 @@
+{
+  "name": "Orion-Class Star Clipper",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Transport",
+    "size": "3km long, 0.4km wide",
+    "crew": 14000,
+    "speed": 10,
+    "manoeuvrability": 25,
+    "detection": 10,
+    "hull": 35,
+    "armour": 12,
+    "turrets": 1,
+    "space": 40,
+    "shipPoints": 25,
+    "weaponCapacity": "1 Dorsal, 1 Keel",
+    "notes": "Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Comes with one \"Main Cargo Hold\" component, size already reduced, can't be removed, Must be able to provide power for it.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MTC9vVqLKrLNIqF0"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Ork Copper Channeling Rod",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8)",
+    "weight": "5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: The Navis Primer",
+    "note": "If wielded by a Weirdboy, counts as Psy Focus, once per encounter when rolling on 'Eadbang Table, may make -30 Willpower Test as Free Action, if suceeded, can choose result and avoid most consequences to themselves. If fail, add +10 to roll. Affected by Kraftsmanship.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> If wielded by a Weirdboy, counts as Psy Focus, once per encounter when rolling on 'Eadbang Table, may make -30 Willpower Test as Free Action, if suceeded, can choose result and avoid most consequences to themselves. If fail, add +10 to roll. Affected by Kraftsmanship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0tQ3TUEMtR20S9TO"
+}

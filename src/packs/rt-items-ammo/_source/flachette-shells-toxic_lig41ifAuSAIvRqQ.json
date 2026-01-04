@@ -1,0 +1,20 @@
+{
+  "name": "Flachette Shells (Toxic)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Shotguns",
+    "damageOrEffect": "Gain +10% Range and +2 PEN. Also gain Toxic Quality",
+    "qualities": "Toxic",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain +10% Range and +2 PEN. Also gain Toxic Quality</p><p><b>Qualities:</b> Toxic</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lig41ifAuSAIvRqQ"
+}

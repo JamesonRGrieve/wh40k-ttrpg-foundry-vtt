@@ -1,0 +1,25 @@
+{
+  "name": "XV8-02 Iridium Crisis Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "15 All",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "3 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Twin-Linked Fusion Blaster/Twin-Linked Plasma Rifle, Burst Cannon or Flamer, Shield Generator or Stimulant Injectors.",
+    "passengers": "Battle Suit Strength: 55\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker",
+    "cargo": "Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fMDx1VleKqmQ0nW3"
+}

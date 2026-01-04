@@ -1,0 +1,28 @@
+{
+  "name": "Memor Nihilis",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Tearing, Unwieldy",
+    "weight": "22kg",
+    "availability": "Hero",
+    "cost": "35 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Eviscerator Chainsword of the Flesh Tearers Chapter. Two-Handed. +10 to all Willpower Test whilst wielded, or +20 if failing the test would lead to gaining Insanity Points.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Eviscerator Chainsword of the Flesh Tearers Chapter. Two-Handed. +10 to all Willpower Test whilst wielded, or +20 if failing the test would lead to gaining Insanity Points.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k1i71ZK9wTtgIlYD"
+}

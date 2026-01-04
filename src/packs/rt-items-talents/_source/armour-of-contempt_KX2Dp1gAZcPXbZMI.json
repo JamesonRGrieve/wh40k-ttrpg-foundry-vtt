@@ -1,0 +1,17 @@
+{
+  "name": "Armour of Contempt",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "WP 40",
+    "effect": "Any time corruption points are gained, reduce value by 1 (min 0). May make a Free Action to ignore accumulated effects of corruption points for 1 Round.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Any time corruption points are gained, reduce value by 1 (min 0). May make a Free Action to ignore accumulated effects of corruption points for 1 Round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KX2Dp1gAZcPXbZMI"
+}

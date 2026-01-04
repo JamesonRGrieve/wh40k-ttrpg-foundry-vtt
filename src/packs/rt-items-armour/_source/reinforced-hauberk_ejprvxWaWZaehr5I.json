@@ -1,0 +1,22 @@
+{
+  "name": "Reinforced Hauberk",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Chest",
+    "ap": 4,
+    "maxAg": null,
+    "weight": "15kg",
+    "availability": "Special",
+    "cost": "-",
+    "notes": "Generated as Treasure from Treasure Generator.",
+    "source": "RT: Stars of Inequity",
+    "description": {
+      "value": "<p>Generated as Treasure from Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ejprvxWaWZaehr5I"
+}

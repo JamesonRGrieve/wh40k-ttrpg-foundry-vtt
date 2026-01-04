@@ -1,0 +1,18 @@
+{
+  "name": "Contortionist",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Basic, Combat",
+    "characteristic": "Agility",
+    "descriptor": "Escaping bonds, squeezing through thin gaps, fitting into small areas not normally meant for the character.",
+    "uses": "Use: Escape Bonds. Opposed Test vs opponent's Intelligence. Success Escapes, takes 1 minute, -10 seconds per DoS. Quality of bonds effects test. Use: Escape Grapple. Opposed Test vs Strength, success frees from grapple. Use: Squeeze Through. Skill Test to fit into or through small gap or space. Failiure means cannot pass or fit, 4+ DoF character is stuck. Difficulty dependent on size of space. Takes 1 minute, -10 seconds per DoS.",
+    "useTime": "Full Action unless stated otherwise.",
+    "description": {
+      "value": "<p>Escaping bonds, squeezing through thin gaps, fitting into small areas not normally meant for the character.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7c3orPNWzD65Wofw"
+}

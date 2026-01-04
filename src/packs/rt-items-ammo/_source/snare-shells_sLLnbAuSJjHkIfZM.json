@@ -1,0 +1,20 @@
+{
+  "name": "Snare Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Shotguns, Shotgun Pistols, and Shotcannons",
+    "damageOrEffect": "-2 Damage, gives weapon Snare Quality.",
+    "qualities": "Snare",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> -2 Damage, gives weapon Snare Quality.</p><p><b>Qualities:</b> Snare</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sLLnbAuSJjHkIfZM"
+}

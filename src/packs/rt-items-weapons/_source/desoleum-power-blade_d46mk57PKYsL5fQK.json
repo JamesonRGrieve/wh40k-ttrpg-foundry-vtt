@@ -1,0 +1,28 @@
+{
+  "name": "Desoleum Power Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field",
+    "weight": "2kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d46mk57PKYsL5fQK"
+}

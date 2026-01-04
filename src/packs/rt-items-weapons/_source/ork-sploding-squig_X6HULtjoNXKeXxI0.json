@@ -1,0 +1,28 @@
+{
+  "name": "Ork 'Sploding Squig",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic - Ork",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (2)",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Living, highly explosive creature. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Living, highly explosive creature. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X6HULtjoNXKeXxI0"
+}

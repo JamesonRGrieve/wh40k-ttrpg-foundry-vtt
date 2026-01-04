@@ -1,0 +1,20 @@
+{
+  "name": "Scrambler Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP/Bolt: Any",
+    "damageOrEffect": "Gain Hallucinogenic (2) and Recharge Qualities",
+    "qualities": "Hallucinogenic (2), Recharge",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Hallucinogenic (2) and Recharge Qualities</p><p><b>Qualities:</b> Hallucinogenic (2), Recharge</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J0NYgS4qXUJnGobg"
+}

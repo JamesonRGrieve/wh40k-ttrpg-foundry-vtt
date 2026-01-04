@@ -1,0 +1,14 @@
+{
+  "name": "Multi-Tracker",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "May fire a weapon in each hand as if having the Two-Weapon Wielder Talent. If already possessing this talent, gives +10 to Weapon Skill or Ballistic Skill when making an attack with one weapon in each hand.",
+    "description": {
+      "value": "<p>May fire a weapon in each hand as if having the Two-Weapon Wielder Talent. If already possessing this talent, gives +10 to Weapon Skill or Ballistic Skill when making an attack with one weapon in each hand.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iUoUnBnZBAZSiSyf"
+}

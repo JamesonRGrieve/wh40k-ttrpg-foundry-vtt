@@ -1,0 +1,20 @@
+{
+  "name": "Recaf",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Space Tea/Coffee. Removes one level of Fatigue from the Character. If taking more than once in 24 hours, make cumulative -20 Toughness Test, if failed recaf has no effect for 24 hours.",
+    "cost": null,
+    "effects": "Abundant",
+    "notes": "5 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Wt9wSv6ZAXrO13IE"
+}

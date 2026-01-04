@@ -1,0 +1,21 @@
+{
+  "name": "A Cloud in the Warp",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "Self",
+    "test": "Willpower Test",
+    "sustain": "Yes",
+    "novice": "The Navigator is shrouded in an Immaterial cloak. Anyone that uses Psychic Sight, Detection, or Divination must make a    +0 Perception Test to successfully see the Navigator. This also applies to all Daemons and Warp Entities. Normal Sight is unaffected. The Power lasts as long as it is sustained, but doing so prevents the Navigator from using any other Navigator Powers.",
+    "adept": "Perception Test becomes -10 instead of +0.",
+    "master": "Power Extends to cover everyone in Willpower Bonus Metres of the Navigator.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Novice:</b> The Navigator is shrouded in an Immaterial cloak. Anyone that uses Psychic Sight, Detection, or Divination must make a    +0 Perception Test to successfully see the Navigator. This also applies to all Daemons and Warp Entities. Normal Sight is unaffected. The Power lasts as long as it is sustained, but doing so prevents the Navigator from using any other Navigator Powers.</p><p><b>Adept:</b> Perception Test becomes -10 instead of +0.</p><p><b>Master:</b> Power Extends to cover everyone in Willpower Bonus Metres of the Navigator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0DdWW0P8JTJdkUi6"
+}

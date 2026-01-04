@@ -1,0 +1,22 @@
+{
+  "name": "Meshweave Cloak",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Mesh",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "6kg",
+    "availability": "Special",
+    "cost": "-",
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity",
+    "description": {
+      "value": "<p>Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jjKhsF1dWBsFM5ES"
+}

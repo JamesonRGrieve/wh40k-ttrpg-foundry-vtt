@@ -1,0 +1,17 @@
+{
+  "name": "Luminen Shock",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Luminen Capacitors, Mechanicus Implants. Aptitudes: Weapon Skill, Tech, Unaligned",
+    "effect": "Character can use their Luminen Capacitors to make a melee attack. Either a Half Action WS Test with no penalty for being unarmed or as an alternative to doing damage during a grapple. Character must then pass a Toughness Test or gain a level of Fatigue,\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can use their Luminen Capacitors to make a melee attack. Either a Half Action WS Test with no penalty for being unarmed or as an alternative to doing damage during a grapple. Character must then pass a Toughness Test or gain a level of Fatigue,\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fQPORlrL0bxS459u"
+}

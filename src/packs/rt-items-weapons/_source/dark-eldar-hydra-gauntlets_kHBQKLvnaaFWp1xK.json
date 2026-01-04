@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Hydra Gauntlets",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing",
+    "weight": "1.5kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Come in and are equipped in pairs. When making an All-Out-Attack with this weapon, can spend reaction to make additional attack per 3 DoS on original WS Test.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Come in and are equipped in pairs. When making an All-Out-Attack with this weapon, can spend reaction to make additional attack per 3 DoS on original WS Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kHBQKLvnaaFWp1xK"
+}

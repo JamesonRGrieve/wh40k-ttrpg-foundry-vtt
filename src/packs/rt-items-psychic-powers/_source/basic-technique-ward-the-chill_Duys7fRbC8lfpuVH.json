@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: Ward the Chill",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Basic Technique of Voidfrost Discipline, available to any with this Discipline. As a Full Action, the Psyker isolates themselves from the chill and isolation of the void. A Successful Focus Power Test creates a bubble of warmth and air which allows the psyker to survive unprotected in a vacuum for Psy Rating number of hours. Every Degree of Success allows the psyker to protect one additional person within the bubble for the power's duration.\nNote: The bubble, presumably, has a radius equal to the power's range, and moves with the Psyker, although this isn't stated directly.",
+    "effect": "Free",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Duys7fRbC8lfpuVH"
+}

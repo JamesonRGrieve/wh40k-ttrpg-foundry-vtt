@@ -1,0 +1,17 @@
+{
+  "name": "Warp Conduit",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Psy Rating, Srong Minded, WP 50\nAptitudes: Willpower, Psyker, Tzeentch",
+    "effect": "When the Character pushes a Psyhcic Power, they can spend a Fate Point to add 1d5 to their Psy Rating when determining the effects of the psychic power they are manifesting. However they add +30 to any resulting Psycic Phenomena Rolls.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When the Character pushes a Psyhcic Power, they can spend a Fate Point to add 1d5 to their Psy Rating when determining the effects of the psychic power they are manifesting. However they add +30 to any resulting Psycic Phenomena Rolls.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DO1rTxuYJ5fDC4LS"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Burst Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "60m",
+    "rof": "-/3/6",
+    "damage": "2d10+3",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 40,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one.Often used on Stealth Suits",
+    "description": {
+      "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.Often used on Stealth Suits</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iXNGyqciVoFHHrvc"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Dumdum Bullets",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Stubbers, hand cannons",
+    "damageOrEffect": "+2 Damage, but AP counts as double",
+    "qualities": "-",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": "5T per 6",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +2 Damage, but AP counts as double</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NyMNMIev3P8gffLz"
+}

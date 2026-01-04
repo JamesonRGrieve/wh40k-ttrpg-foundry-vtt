@@ -1,0 +1,17 @@
+{
+  "name": "Frenzy",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Strength, Offence, Khorne",
+    "effect": "Can spend a Full Round to fuel anger before entering into a Frenzy. On the next round, gain +10 to Weapon Skill, Strength, Toughness, and Willpower, and become Immune to Fear, Pinning, Stunning, Fatigue Effects, suffer -20 to Ballistic Skill, Intelligence, and Fellowship (can't reduce below 1), also cannot Parry, Retreat, Flee, or use Psychic Powers. Whilst Frenzied, character must move to and attack nearest enemy in Melee Combat if reasonably possible. Lasts for the remainder of Combat. After combat ends, can make a Willpower test to snap out, if failing must continue to frenzy against friendlies, prioritising NPCs. Each successive round make Willpower Test again with cumulative +10. After ending frenzy, cannot re-enter it for at least 1 Hour.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can spend a Full Round to fuel anger before entering into a Frenzy. On the next round, gain +10 to Weapon Skill, Strength, Toughness, and Willpower, and become Immune to Fear, Pinning, Stunning, Fatigue Effects, suffer -20 to Ballistic Skill, Intelligence, and Fellowship (can't reduce below 1), also cannot Parry, Retreat, Flee, or use Psychic Powers. Whilst Frenzied, character must move to and attack nearest enemy in Melee Combat if reasonably possible. Lasts for the remainder of Combat. After combat ends, can make a Willpower test to snap out, if failing must continue to frenzy against friendlies, prioritising NPCs. Each successive round make Willpower Test again with cumulative +10. After ending frenzy, cannot re-enter it for at least 1 Hour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h0r6im1YDlmrxdAC"
+}

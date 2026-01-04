@@ -1,0 +1,20 @@
+{
+  "name": "Skeletal Petrification",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "User gains Bulging Biceps and Iron Jaw Talents, and gains +2 to Unarmed Attack Damage.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gY4qef2wRIwxvirt"
+}

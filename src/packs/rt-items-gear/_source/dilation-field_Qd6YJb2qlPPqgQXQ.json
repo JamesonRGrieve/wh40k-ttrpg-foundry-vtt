@@ -1,0 +1,20 @@
+{
+  "name": "Dilation Field",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "When activated with the Ready Action, user gains Unnaural Agility x2 and Unnatural Speed x2 Traits for 1d10 Rounds (Recalculating Initative Order), On the first round the effect starts, and the round after it ends user has -10 WS and BS from adapting to the change in the flow of time. After usage requires 1 hour to recharge. Can't be used with Force Fields and vice versa.",
+    "cost": "Archeotech device that alters the flow of time for the wearer.",
+    "effects": "Famed",
+    "notes": "45 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 45 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qd6YJb2qlPPqgQXQ"
+}

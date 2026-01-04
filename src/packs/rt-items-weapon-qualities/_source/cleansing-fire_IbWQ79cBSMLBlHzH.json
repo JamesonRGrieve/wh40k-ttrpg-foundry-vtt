@@ -1,0 +1,14 @@
+{
+  "name": "Cleansing Fire",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 3,
+    "description": {
+      "value": "<p>3</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IbWQ79cBSMLBlHzH"
+}

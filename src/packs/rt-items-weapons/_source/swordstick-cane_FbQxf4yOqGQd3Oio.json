@@ -1,0 +1,28 @@
+{
+  "name": "Swordstick Cane",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Balanced",
+    "weight": "2kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Looks like a cane until unsheathed",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Balanced</p><p><b>Note:</b> Looks like a cane until unsheathed</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FbQxf4yOqGQd3Oio"
+}

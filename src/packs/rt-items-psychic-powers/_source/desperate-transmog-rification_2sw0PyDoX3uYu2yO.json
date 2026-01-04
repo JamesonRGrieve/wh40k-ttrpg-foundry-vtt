@@ -1,0 +1,22 @@
+{
+  "name": "Desperate Transmog-rification",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker touches a willing, living target (including themselves) that has suffered damage, and makes a Focus Power Test. The Psyker removes 1d5+Psy Rating Damage taken, +2 per Degree of Success. However the target immediately gains a number of corruption points equal to the amount of damage removed. This technique does not work on Untouchables, Machines, or non-living creatures such as Daemons.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2sw0PyDoX3uYu2yO"
+}

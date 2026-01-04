@@ -1,0 +1,21 @@
+{
+  "name": "Turbo-Weapon Batteries",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "Can be acquired once per macro-battery, lets it ignore penalty for firing at double range. Poor: -1 Range, Good: +1 Range, Best: +1 Range and +5 BS Tests to Fire.",
+    "availability": "Very Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Can be acquired once per macro-battery, lets it ignore penalty for firing at double range. Poor: -1 Range, Good: +1 Range, Best: +1 Range and +5 BS Tests to Fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cZQnBtEWWj6ZVCZw"
+}

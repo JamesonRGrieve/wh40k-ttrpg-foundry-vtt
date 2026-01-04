@@ -1,0 +1,22 @@
+{
+  "name": "Realm of Decay",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Daemon",
+    "prerequisites": "Daemonic Trait",
+    "focusPower": "Half Action",
+    "action": "3m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Daemon makes Focus Power Test, while power is sustained any creature in range without the Daemonic Trait suffers Psy Rating Penality to all Tests, with additional -2 per Degree of Success. Additionally, whenever a creature fails a Toughness Test, regardless of the cause, they suffer additional 1d5 Impact Damage not reduced by Armour or Toughness. No mundane shielding or air filtration may overcome the warp induced putrid stench the power emits.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iPPwKMiS9R2RZoAN"
+}

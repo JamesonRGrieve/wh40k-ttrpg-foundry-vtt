@@ -1,0 +1,17 @@
+{
+  "name": "Nowhere to Hide",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Perception 30\nAptitudes: Perception, Offence",
+    "effect": "When the character damages cover, they add their degrees of success from the attack to the reduction of the cover's Armour Value. If using a weapon that doesn't require a skill test, add 1 instead.\nIf making multiple attacks, calculate each one at a time as earlier attacks will degrade or destroy cover for later attacks.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>When the character damages cover, they add their degrees of success from the attack to the reduction of the cover's Armour Value. If using a weapon that doesn't require a skill test, add 1 instead.\nIf making multiple attacks, calculate each one at a time as earlier attacks will degrade or destroy cover for later attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yXxECRWR4jmtyKDd"
+}

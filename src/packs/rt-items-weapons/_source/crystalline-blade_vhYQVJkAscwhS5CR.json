@@ -1,0 +1,28 @@
+{
+  "name": "Crystalline Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Power Field",
+    "weight": "3kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vhYQVJkAscwhS5CR"
+}

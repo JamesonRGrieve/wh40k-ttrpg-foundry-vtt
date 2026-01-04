@@ -1,0 +1,17 @@
+{
+  "name": "Watchful for Betrayal",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Legend of the Expanse Alternate Advance, 500xp. Awareness, Light Sleeper, Paranoia, Perception 40+",
+    "effect": "You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fYoYPcMWEOsHRv9U"
+}

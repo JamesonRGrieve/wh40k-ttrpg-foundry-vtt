@@ -1,0 +1,17 @@
+{
+  "name": "Close Quarters",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nHalf Action",
+    "requirements": "--",
+    "descriptionText": "Comrade in Cohesion provides provides the benefits of Ganging Up in Melee,  if Character has Multiple Comrades this Order can only be given to one each turn. This benefit is applied even if the Character and their comrade do not outnumber their opponents.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade in Cohesion provides provides the benefits of Ganging Up in Melee,  if Character has Multiple Comrades this Order can only be given to one each turn. This benefit is applied even if the Character and their comrade do not outnumber their opponents.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "G76VbqJjuvTZ7nRB"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Noise Marine Doom Siren",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+12",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "Spray",
+    "weight": "18kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Mounted on the wearer's shoulders, leaving the hands free. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.",
+    "description": {
+      "value": "<p><b>Special:</b> Spray</p><p><b>Note:</b> Mounted on the wearer's shoulders, leaving the hands free. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "85cyan9bhaxb9o52"
+}

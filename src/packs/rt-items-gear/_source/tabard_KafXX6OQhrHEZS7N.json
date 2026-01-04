@@ -1,0 +1,20 @@
+{
+  "name": "Tabard",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Bearing Heraldry or Ornamental designs, usually worn below the waist but occasionally as full tabards. Can be Ornamental (+2 to Fellowship Tests), Deathwatch/Squad Heraldry (+1 Cohesion per achieved Primary Objective), or Chapter Heraldry (+1 Effective Rank when determining Solo Ability Effectiveness and -1 Squad Cohesion).",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Black Templars",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KafXX6OQhrHEZS7N"
+}

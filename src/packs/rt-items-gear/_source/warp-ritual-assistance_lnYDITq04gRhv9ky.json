@@ -1,0 +1,20 @@
+{
+  "name": "Warp Ritual Assistance",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Contact is made with a powerful warp entity such as a Greater Daemon to teach the rites of a Warp Ritual or give their unholy blessing on it. Given example: A Ritual Capable of transporting a small warband from one world to another.",
+    "cost": "Heretical",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lnYDITq04gRhv9ky"
+}

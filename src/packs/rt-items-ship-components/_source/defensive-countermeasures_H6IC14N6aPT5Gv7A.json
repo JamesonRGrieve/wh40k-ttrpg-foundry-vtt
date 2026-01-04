@@ -1,0 +1,21 @@
+{
+  "name": "Defensive Countermeasures",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "Deploys countermeasures that for the next 1d5+1 turns causes all ships targeting this one to have -20 on BS Tests and all torpedos to have -30. Single use, once deployed requires successful upkeep test outside of combat at a suitable location such as a shipyard before it can be used again. One per Vessel.",
+    "availability": "Rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Deploys countermeasures that for the next 1d5+1 turns causes all ships targeting this one to have -20 on BS Tests and all torpedos to have -30. Single use, once deployed requires successful upkeep test outside of combat at a suitable location such as a shipyard before it can be used again. One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H6IC14N6aPT5Gv7A"
+}

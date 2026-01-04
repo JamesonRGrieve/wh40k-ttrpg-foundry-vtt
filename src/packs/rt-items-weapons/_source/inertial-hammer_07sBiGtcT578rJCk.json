@@ -1,0 +1,28 @@
+{
+  "name": "Inertial Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+7",
+    "damageType": "Impact",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unwieldy",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Performing an All Out Atttack with this weapon does an extra 1d10+3 I Damage. Requires two hands to use.",
+    "description": {
+      "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Performing an All Out Atttack with this weapon does an extra 1d10+3 I Damage. Requires two hands to use.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "07sBiGtcT578rJCk"
+}

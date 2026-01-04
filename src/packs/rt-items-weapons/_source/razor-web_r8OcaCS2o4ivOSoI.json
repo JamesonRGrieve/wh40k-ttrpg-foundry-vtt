@@ -1,0 +1,28 @@
+{
+  "name": "Razor Web",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Blast (2), Crippling (3), Snare (1)",
+    "weight": "12kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Razor Bladed Webber",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Crippling (3), Snare (1)</p><p><b>Note:</b> Razor Bladed Webber</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r8OcaCS2o4ivOSoI"
+}

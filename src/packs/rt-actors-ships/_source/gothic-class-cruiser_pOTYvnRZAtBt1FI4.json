@@ -1,0 +1,28 @@
+{
+  "name": "Gothic-Class Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Cruiser",
+    "size": "5km long, 0.8km wide",
+    "crew": 95000,
+    "speed": 5,
+    "manoeuvrability": 10,
+    "detection": 10,
+    "hull": 70,
+    "armour": 20,
+    "turrets": 2,
+    "space": 56,
+    "shipPoints": 60,
+    "weaponCapacity": "1 Prow, 2 Port, 2 Starboard",
+    "notes": "Lunar-Class Variant: Has \"Jovian Warcruiser Drive\" and \"Auxiliary Plasma Banks\", size already reduced, can't remove, must be able to power. Usually has Titanforge Lances, Torpedos, and an Armoured Prow.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Lunar-Class Variant: Has \"Jovian Warcruiser Drive\" and \"Auxiliary Plasma Banks\", size already reduced, can't remove, must be able to power. Usually has Titanforge Lances, Torpedos, and an Armoured Prow.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "pOTYvnRZAtBt1FI4"
+}

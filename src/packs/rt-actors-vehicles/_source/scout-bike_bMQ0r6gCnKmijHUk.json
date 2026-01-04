@@ -1,0 +1,25 @@
+{
+  "name": "Scout Bike",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Ground Vehicle",
+    "size": "18m",
+    "tacticalSpeed": "90kph",
+    "cruisingSpeed": "+8",
+    "maneuverability": "10",
+    "frontArmour": "Hulking (+10)",
+    "sideArmour": "Front 16,\nSide 12,\nRear 12",
+    "rearArmour": "Driver",
+    "structuralIntegrity": "Personal gear in side-mounted saddlebags",
+    "crew": "One of:\nTwin-linked Boltguns (Front, Range 90m, Basic, S/2/4, 1d10+5, Pen 4, Clip 48, Reload 3 Full, Twin-Linked)\nAutomatic Grenade Launcher (Front, Range 60m, Basic S/2/-, Clip 12, Reload 2 Full, Inaccurate, [Damage+Qualities vary with Grenade])",
+    "passengers": "The Driver of the Vehicle gains the Auto-Stabilised Trait for the purpose of firing this vehicles weapons. This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action.\n",
+    "cargo": "Very Rare",
+    "availability": "RT: Into the Storm",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "bMQ0r6gCnKmijHUk"
+}

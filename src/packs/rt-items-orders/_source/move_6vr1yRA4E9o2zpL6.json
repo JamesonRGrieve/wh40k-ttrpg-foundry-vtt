@@ -1,0 +1,17 @@
+{
+  "name": "Move",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nHalf or Full Action",
+    "requirements": "--",
+    "descriptionText": "Comrade out of Cohesion performs the Move Action. Moving their Half or Full Move distance and taking the appropriate Half or Full Action.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade out of Cohesion performs the Move Action. Moving their Half or Full Move distance and taking the appropriate Half or Full Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6vr1yRA4E9o2zpL6"
+}

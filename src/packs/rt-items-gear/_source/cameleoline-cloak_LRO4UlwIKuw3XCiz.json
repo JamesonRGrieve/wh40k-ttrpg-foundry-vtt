@@ -1,0 +1,20 @@
+{
+  "name": "Cameleoline Cloak",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "+20 to Concealment/Stealth Tests, either count as one range bracket further if standing still (EG: Normal Range --> Long Range) or impose -30 to BS Tests.",
+    "cost": "Covers the Body",
+    "effects": "Rare",
+    "notes": "500 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LRO4UlwIKuw3XCiz"
+}

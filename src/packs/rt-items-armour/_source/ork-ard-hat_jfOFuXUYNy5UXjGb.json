@@ -1,0 +1,22 @@
+{
+  "name": "Ork 'Ard Hat",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Ork",
+    "locations": "Head",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "3kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "notes": "For Orks, Common. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>For Orks, Common. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jfOFuXUYNy5UXjGb"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Preternatural Awareness",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 9",
+    "opposed": "Yes",
+    "sustained": "Whilst power is sustained, character's eyes roll white and they gain impressions of future events, granting +20 to all Awareness Tests and adding +Willpower Bonus to Initiative Count.\nFor every 10 points above threshold,can add Willpower Bonus to initiative again.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "497MFKCLdvDMT5FA"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Augmented Senses",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Grants Heightened Senses Talent for relevent sense (Sight, Smell, Hearing, etc)",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "slX4HhmdM7yUbFvW"
+}

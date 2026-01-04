@@ -1,0 +1,17 @@
+{
+  "name": "Deflect Shot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Agility 50\nAptitudes: Weapon Skill, Defence, Unaligned",
+    "effect": "When the Character is wielding a Melee Weapon, they can add their Weapon Skill Bonus to their Armour Points on all Locations (even those unarmoured) when calculating damage from ranged weapons with the Primitive Quality, or Thrown Weapons.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When the Character is wielding a Melee Weapon, they can add their Weapon Skill Bonus to their Armour Points on all Locations (even those unarmoured) when calculating damage from ranged weapons with the Primitive Quality, or Thrown Weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xAr07OQu4DIgtceb"
+}

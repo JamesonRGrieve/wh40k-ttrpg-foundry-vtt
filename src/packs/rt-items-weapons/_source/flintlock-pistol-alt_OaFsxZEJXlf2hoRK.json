@@ -1,0 +1,28 @@
+{
+  "name": "Flintlock Pistol (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Primitive",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "3 Full",
+    "special": "Primitive (8), Inaccurate, Unreliable",
+    "weight": "3kg",
+    "availability": "Common",
+    "cost": "10 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Inaccurate, Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OaFsxZEJXlf2hoRK"
+}

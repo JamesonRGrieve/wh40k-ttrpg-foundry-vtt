@@ -1,0 +1,17 @@
+{
+  "name": "Warp Anathema (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T3)",
+    "requirements": "Tier 3: Untouchable E.Adv, Warp Disruption, Willpower 55.\nAptitudes: Intelligence, Willpower",
+    "effect": "Those affected by the Warp Disruption Talent reduce their Psy Rating by 2 rather than 1. This talent can be purchased multiple times, each purchase reduces psy rating by a further 1. \n(EG: Warp Anathema (3) would reduce Psy rating within range by 4)",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Those affected by the Warp Disruption Talent reduce their Psy Rating by 2 rather than 1. This talent can be purchased multiple times, each purchase reduces psy rating by a further 1. \n(EG: Warp Anathema (3) would reduce Psy rating within range by 4)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7Gbip9Va8KrC2evf"
+}

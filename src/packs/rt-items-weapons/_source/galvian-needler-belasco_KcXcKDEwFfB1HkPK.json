@@ -1,0 +1,28 @@
+{
+  "name": "Galvian Needler (Belasco)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "1d10-1",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 7,
+    "reload": "Full",
+    "special": "Toxic",
+    "weight": "1kg",
+    "availability": "Very Rare",
+    "cost": "950 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Can come with an optional rig to attach to wearer's forearm and fired by a palm trigger, making the weapon concealed (costs 300 Thrones, or treat as one higher rarity)",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Can come with an optional rig to attach to wearer's forearm and fired by a palm trigger, making the weapon concealed (costs 300 Thrones, or treat as one higher rarity)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KcXcKDEwFfB1HkPK"
+}

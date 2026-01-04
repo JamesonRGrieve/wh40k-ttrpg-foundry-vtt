@@ -1,0 +1,28 @@
+{
+  "name": "Combat Knife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive",
+    "weight": "0.8kg",
+    "availability": "Average",
+    "cost": "40 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Can be affixed to most weapons as a bayonet",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> Can be affixed to most weapons as a bayonet</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cnkn0FqmcYvnRdkj"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Alignment",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Alignment is used by Heretics and Renegade to determine XP Costs. Alignment relates to that of the Chaos Gods. One may be Unaligned (Chaos Undivided), Khorne, Tzeentch, Nurgle, and Slaanesh. Alignment may be True, Allied, or Opposed.",
+    "characteristic": null,
+    "descriptor": null,
+    "uses": null,
+    "useTime": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RIORj88zxOxRshD0"
+}

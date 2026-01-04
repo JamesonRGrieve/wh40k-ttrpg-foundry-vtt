@@ -1,0 +1,22 @@
+{
+  "name": "Manifest Flame",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker Manifests a small sphere of flames just above one of their hands that burns similarly to a Glow-Globe (~15m Radius of Light). It can be used to set flammable objects alight although isn't that useful as a weapon.\nIt is however a source of flame, which is required for some other Pyromancy powers to draw upon.",
+    "effect": "100xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xwqKmye7OIRzdkFP"
+}

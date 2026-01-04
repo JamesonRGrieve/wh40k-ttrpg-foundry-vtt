@@ -1,0 +1,22 @@
+{
+  "name": "Freeze the Soul",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Voidfrost\n(Cryokinesis)",
+    "prerequisites": "Breathstealing Barrage\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker nominates point within range and line of sight, each target within 2m x Psy Rating of this point are effected by this technique, they may attempt to dodge as if it were an area of effect attack (need to actually be able to move out of the way). Any hit by the technique take 2d10 + Psy Rating + Target's Fatigue, Pen 6 Energy Damage. Attack has Snare quality, locking victims in bands of ice.\nSnare: Target makes Agility Test. Failiure causes target to be immobilised, target can make Strength or Agility Test to Escape (any Penalties Applies to avoid snare also apply here).",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Jz8jb7vFIkPijSJU"
+}

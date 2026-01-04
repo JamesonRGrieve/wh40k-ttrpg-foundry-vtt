@@ -1,0 +1,22 @@
+{
+  "name": "Seize the Machine",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Full Action",
+    "action": "3m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker targets mechanical or electronic automated weapon with mass no more than 50kg*Psy Rating. If successful, psyker seizes control of weapon for as long as they sustain the power. If a machine spirit occupies this weapon, such as to automatically target enemies, it is killed. As a result, when no longer controlled the device will fall silent and be unable to perform any functions the machine spirit would have performed until a new machine spirit is coaxed into replacing it by a Tech-Priest or other suitable individual.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vJFYT7h0cNqRT5Dv"
+}

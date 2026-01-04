@@ -1,0 +1,22 @@
+{
+  "name": "Artificer Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 10,
+    "maxAg": null,
+    "weight": "70kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Legendary Armour of ancient make. +20 to Strength Characteristic, +1 Size. Power lasts 24 hours before needing recharging or replacing. Armour is sealed when helmet attached, has built-in Auspex, Photovisor and Recoil Gloves. Grants wearer the Sturdy Trait.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Legendary Armour of ancient make. +20 to Strength Characteristic, +1 Size. Power lasts 24 hours before needing recharging or replacing. Armour is sealed when helmet attached, has built-in Auspex, Photovisor and Recoil Gloves. Grants wearer the Sturdy Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8PJHndkjILiVjdq1"
+}

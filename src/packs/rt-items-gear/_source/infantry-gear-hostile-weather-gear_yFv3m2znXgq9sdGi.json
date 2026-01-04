@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Hostile Weather Gear",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "2kg",
+    "availability": "Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Common",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 10 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yFv3m2znXgq9sdGi"
+}

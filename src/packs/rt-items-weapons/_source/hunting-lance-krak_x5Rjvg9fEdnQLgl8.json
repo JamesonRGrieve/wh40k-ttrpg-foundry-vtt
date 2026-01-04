@@ -1,0 +1,28 @@
+{
+  "name": "Hunting Lance (Krak)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (3), Proven (2), Unbalanced",
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (3), Proven (2), Unbalanced</p><p><b>Note:</b> Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x5Rjvg9fEdnQLgl8"
+}

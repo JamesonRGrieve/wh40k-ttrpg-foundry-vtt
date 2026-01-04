@@ -1,0 +1,21 @@
+{
+  "name": "Creating the Daemonhost",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Wings",
+    "sustain": "2",
+    "novice": "Leathering Wings, pinions of sinew and bone, or some other form sprout from the Daemonhost's back. They gain Flyer (X) trait.\nX = Agility Bonus x 2",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Leathering Wings, pinions of sinew and bone, or some other form sprout from the Daemonhost's back. They gain Flyer (X) trait.\nX = Agility Bonus x 2</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tiqQkJcMeHo4JNVb"
+}

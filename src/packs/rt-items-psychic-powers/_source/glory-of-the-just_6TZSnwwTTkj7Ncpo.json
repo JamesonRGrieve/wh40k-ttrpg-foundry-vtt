@@ -1,0 +1,22 @@
+{
+  "name": "Glory of the Just",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "Strength of Truth\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker chooses a number of allies, up to their Psy Rating (excluding themselves). As long as power is sustained, each ally gains +5, with additional +5 per two Degrees of Success on Focus power Test, to their Strength and Toughness characteristics, up to a maximum of +30.  Additionally, any time one of these allies spends a Fate Point, the psyker may make a -40 Willpower Test as a Free Action. If they succeed, he restores the Fate Point t the character who spent it and gains one level of Fatigue. At the end of the Round, if the psyker chooses to sustain the power, they gain one level of Fatigue.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6TZSnwwTTkj7Ncpo"
+}

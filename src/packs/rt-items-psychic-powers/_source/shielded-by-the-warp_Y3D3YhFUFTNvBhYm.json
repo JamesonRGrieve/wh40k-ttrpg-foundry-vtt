@@ -1,0 +1,22 @@
+{
+  "name": "Shielded by the Warp",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Desperate Transmogrification\nOW: Psy Rating 6",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker creates a warp-fueled shield that inflicts a penalty equal to their Psy Rating on any Weapon Skill or Ballistics Skill Tests targeting them. Additionally, if an enemy fails a Weaponskill or Ballistic Skill Test to attack the psyker, they gain 1 Insanity Point per two degrees of success the psyker scored on the Focus Power Test. The Psyker can only make Move Actions while sustaining this power.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Y3D3YhFUFTNvBhYm"
+}

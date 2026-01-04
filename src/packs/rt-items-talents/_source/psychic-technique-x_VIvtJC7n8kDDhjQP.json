@@ -1,0 +1,17 @@
+{
+  "name": "Psychic Technique (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Psy Rating",
+    "effect": "Can select a new Psychic technique with an XP cost equal to or lower than this talent's XP stated cost, to then gain that technique, pay the cost of the psychic technique, not of this talent (EG, if \"Psychic Technique\" were to cost 200xp, selecting a 100xp Technique would only require spending 100xp, not 200xp). Talent can be taken multiple times to gain more techniques.\nIf there is a number after the Talent (EG Psychic Technique (x2)) it can be purchased that many times that rank, each purchase giving one extra technique.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Can select a new Psychic technique with an XP cost equal to or lower than this talent's XP stated cost, to then gain that technique, pay the cost of the psychic technique, not of this talent (EG, if \"Psychic Technique\" were to cost 200xp, selecting a 100xp Technique would only require spending 100xp, not 200xp). Talent can be taken multiple times to gain more techniques.\nIf there is a number after the Talent (EG Psychic Technique (x2)) it can be purchased that many times that rank, each purchase giving one extra technique.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VIvtJC7n8kDDhjQP"
+}

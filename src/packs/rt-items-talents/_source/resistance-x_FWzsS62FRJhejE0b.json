@@ -1,0 +1,17 @@
+{
+  "name": "Resistance (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Toughness, Defence, Nurgle",
+    "effect": "Gain +10 to resist effects of this type. GM may wish to approve or have choices justified by character's past or actions. Talent can be taken multiple times.\nTypes: Cold, Fear, Heat, Poisons, Psychic Powers, Radiation, Vacuum, Other.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Gain +10 to resist effects of this type. GM may wish to approve or have choices justified by character's past or actions. Talent can be taken multiple times.\nTypes: Cold, Fear, Heat, Poisons, Psychic Powers, Radiation, Vacuum, Other.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FWzsS62FRJhejE0b"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Storm",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 17,
+    "description": {
+      "value": "<p>17</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TPrNSb63uK7mM2y9"
+}

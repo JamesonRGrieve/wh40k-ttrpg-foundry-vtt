@@ -1,0 +1,17 @@
+{
+  "name": "Assassin Strike",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Agility 40, Acrobatics Skill\nAptitudes; Weapon Skill. Fieldcraft, Slaanesh",
+    "effect": "Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KTrYgKpxzvt1pWMK"
+}

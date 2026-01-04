@@ -1,0 +1,20 @@
+{
+  "name": "Scribe-tines",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Replaces hand and lower forearm, +10 to investigation-based skill tests. Liked by scholars and lexmechanics.\nAlternative: Gives +10 to Lore Skill Tests.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FFmhLREaEyaXIh7i"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Tracks in the Stars",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "Ship",
+    "test": "Perception Test",
+    "sustain": "No",
+    "novice": "Navigator Tracks the rail of a ship through Real Space as if using the Tracking Skill as long as the trail is no older than Perception Bonus Weeks (may vary with size and power of vessel).",
+    "adept": "Can track a ship's trail up to Perception Bonus Months old, can track ships through the warp in the same manner.",
+    "master": "Can track a ship's trail up to Perception Bonus Years old, although information may be errtic and fragmented.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator Tracks the rail of a ship through Real Space as if using the Tracking Skill as long as the trail is no older than Perception Bonus Weeks (may vary with size and power of vessel).</p><p><b>Adept:</b> Can track a ship's trail up to Perception Bonus Months old, can track ships through the warp in the same manner.</p><p><b>Master:</b> Can track a ship's trail up to Perception Bonus Years old, although information may be errtic and fragmented.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EtKnx1FO9Fy5j1r9"
+}

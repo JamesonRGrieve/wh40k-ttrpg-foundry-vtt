@@ -1,0 +1,22 @@
+{
+  "name": "Sensory Deprivation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "Compel",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Target is struck deaf and blind, and is unable to smell or taste anything for as long as the Psyker maintains the power, plus an additional 1d5 rounds. This power can act as a crude invisibility, Psyker instead selects a group of targets up to their Willpower Bonus, and selects one sense to supress in all of them, making an Opposed Willpower Test for each target, and on success supressing that sense. Targets that fail notice nothing out of the ordinary as long as Psyker maintains power, unable to detect the psyker via that sense.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iXwl6PzkD3uyl2Tp"
+}

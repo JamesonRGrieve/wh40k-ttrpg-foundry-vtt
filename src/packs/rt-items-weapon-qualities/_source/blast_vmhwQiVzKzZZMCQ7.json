@@ -1,0 +1,14 @@
+{
+  "name": "Blast",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 151,
+    "description": {
+      "value": "<p>151</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vmhwQiVzKzZZMCQ7"
+}

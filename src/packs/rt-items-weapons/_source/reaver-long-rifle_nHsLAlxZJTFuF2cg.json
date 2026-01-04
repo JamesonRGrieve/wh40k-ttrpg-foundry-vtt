@@ -1,0 +1,28 @@
+{
+  "name": "Reaver Long Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 4,
+    "reload": "Full",
+    "special": "Accurate, Felling (3), Toxic (0)",
+    "weight": "3kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Fires heavy glass or iron darts filled with toxins",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Felling (3), Toxic (0)</p><p><b>Note:</b> Fires heavy glass or iron darts filled with toxins</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nHsLAlxZJTFuF2cg"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Signature Wargear (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Astartes",
+    "effect": "Select one Requisitionable Item from the Armoury except Unusual Ammunition with a Requisition Cost of X or less (including upgrades/craftsmanship, etc), this item is permenantly in possession of the Character without need to be requisitioned. Can be purchased multiple times in accordance to career advances. Can come in the form of Signature Wargear Basic (X = 20), Master (X = 40), or Hero (X = 70).",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Select one Requisitionable Item from the Armoury except Unusual Ammunition with a Requisition Cost of X or less (including upgrades/craftsmanship, etc), this item is permenantly in possession of the Character without need to be requisitioned. Can be purchased multiple times in accordance to career advances. Can come in the form of Signature Wargear Basic (X = 20), Master (X = 40), or Hero (X = 70).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AsIrU8dJ1RoZyp84"
+}

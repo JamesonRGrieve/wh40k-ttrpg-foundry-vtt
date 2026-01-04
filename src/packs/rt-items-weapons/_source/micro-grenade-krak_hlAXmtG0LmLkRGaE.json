@@ -1,0 +1,28 @@
+{
+  "name": "Micro Grenade (Krak)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/4/-",
+    "damage": "2d10+2",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Comes as a Dispenser of 12 Grenades, of which several can be thrown at once, like as if firing on Semi-Auto. Grenades that do not hit scatter following random scattering rules, exploding regardless of miss or hit.",
+    "description": {
+      "value": "<p><b>Note:</b> Comes as a Dispenser of 12 Grenades, of which several can be thrown at once, like as if firing on Semi-Auto. Grenades that do not hit scatter following random scattering rules, exploding regardless of miss or hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hlAXmtG0LmLkRGaE"
+}

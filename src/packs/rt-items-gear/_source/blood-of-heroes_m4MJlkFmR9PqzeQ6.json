@@ -1,0 +1,20 @@
+{
+  "name": "Blood of Heroes",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "-",
+    "availability": "Relic Blood Drop Amulets. Adds 1d5 Cohesion to the group. Once per mission can enter Squad Mode as a Free Action",
+    "cost": "Blood Angels Only",
+    "effects": "Initiated",
+    "notes": "15 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m4MJlkFmR9PqzeQ6"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Precognition",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 6\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained Character gains +10 to Dodge and Parry Tests.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Km5bFoCFkrv8FUVZ"
+}

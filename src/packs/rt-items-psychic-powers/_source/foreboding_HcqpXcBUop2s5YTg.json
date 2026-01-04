@@ -1,0 +1,22 @@
+{
+  "name": "Foreboding",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "Psyniscience",
+    "focusPower": "Reaction Concentration",
+    "action": "Self",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "The Psyker may use this power in place of making a Dodge/Parry Test, if the focus power test is successful, they avoid the attack as if passing the Evasion Test.",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HcqpXcBUop2s5YTg"
+}

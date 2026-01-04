@@ -1,0 +1,17 @@
+{
+  "name": "Double Team",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: General, Offence, Unaligned",
+    "effect": "Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EphjySAz93EkLRz9"
+}

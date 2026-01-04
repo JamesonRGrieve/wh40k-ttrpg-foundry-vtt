@@ -1,0 +1,28 @@
+{
+  "name": "Tau Rail Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "3d10+2",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 12,
+    "reload": "Full",
+    "special": "Felling (4), Proven (2)",
+    "weight": "8kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (2)</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lT5sPnx2IR1tPMoA"
+}

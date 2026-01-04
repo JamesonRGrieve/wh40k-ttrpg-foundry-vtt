@@ -1,0 +1,28 @@
+{
+  "name": "Force Scythe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Force, Unbalanced",
+    "weight": "10kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Force, Unbalanced</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rVvPOHU3VM7VpNEX"
+}

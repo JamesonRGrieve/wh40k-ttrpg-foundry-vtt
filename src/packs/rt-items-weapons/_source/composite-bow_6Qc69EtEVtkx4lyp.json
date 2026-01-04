@@ -1,0 +1,28 @@
+{
+  "name": "Composite Bow",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": 1,
+    "reload": "Half",
+    "special": "Accurate, Primitive (8)",
+    "weight": "3kg",
+    "availability": "Scarce",
+    "cost": "50 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "PEN Only applies to Primitive Armours",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6Qc69EtEVtkx4lyp"
+}

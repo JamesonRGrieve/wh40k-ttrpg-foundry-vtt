@@ -1,0 +1,22 @@
+{
+  "name": "Necron Shadow Ankh",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.5,
+    "maxAg": "-",
+    "weight": "-",
+    "availability": "Unique",
+    "cost": "-",
+    "notes": "Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality.",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MNJlBS4tQqgIAE2a"
+}

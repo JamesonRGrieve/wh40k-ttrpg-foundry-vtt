@@ -1,0 +1,25 @@
+{
+  "name": "XV8-05 Enforcer Crisis Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "11 All",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "4 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Fusion Blaster/Plasma Rifle/Cyclic Ion Blaster, Burst Cannon/Flamer, Target Lock, Shield Generator/Vectored Retro Thrusters.",
+    "passengers": "Battle Suit Strength: 60\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker",
+    "cargo": "Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fMR8z0KzL6AEXJty"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Honour Blades",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field",
+    "weight": "8kg",
+    "availability": "Respected",
+    "cost": "20 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. Ultramarines variant set of two Power Swords. When wielded together grant the wielder the \"Wall of Steel\" talent, and +20 to Parry Tests in addition to the +10 from the Balanced Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Ultramarines variant set of two Power Swords. When wielded together grant the wielder the \"Wall of Steel\" talent, and +20 to Parry Tests in addition to the +10 from the Balanced Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zmcCpLvWEQew0541"
+}

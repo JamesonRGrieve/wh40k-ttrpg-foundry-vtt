@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: The Emperor's Guidance",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Soul Ward (Divine Grace)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Basic Technique of Soul Ward Discipline, available to any with this Discipline. When activating this power with a focus power test, all allies within Psy Rating metres, except the psyker themselves, gain +10 to their Willpower Characteristic for as long as Psyker Sustains power. If Psyker gets 3+ Degrees of Success on Focus Power Test, allies can also reroll any failed tests to resist Fear.\nNote: Inconsistent stated range in range category and description. Either \"Range\" is range at which power is deployed, at which point it acts as a bubble of range Psy Rating metres. Otherwise, acts as bubble of Psy Rating metres radius surrounding psyker, and 10m x Psy Rating is an error.",
+    "effect": "Free",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x2Ito7O0TBFI5RQB"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Far Sight",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "1km x Willpower Bonus",
+    "range": "Threshold 17",
+    "opposed": "Yes",
+    "sustained": "Target a single space within range, don't need to be aware of space or be able to see it, merely state how far one is looking away. If target is inside a solid object the power fails, however can look inside buildings, bodies of liquid, pockets of gas, etc. Once space has been chosen character's sight is transported to look from this point, can change facing by 90 degrees by spending a Half Action, can't change point once its chosen. Does not give any specific form of sight, so unless able to see in the dark, cannot see through darkenss, thick smog, etc. Doesn't pick up sound either. Effect remains whilst power is sustained, during this time character is disoriented and cannot spend more than a Half Action per round, and has -30 to all tests.\nFor every 10 points above threshold, double power's range.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "57ro8mjrv6b11eUp"
+}

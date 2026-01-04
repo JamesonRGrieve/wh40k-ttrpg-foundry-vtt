@@ -1,0 +1,21 @@
+{
+  "name": "Non-Khorne Daemonhosts gain 2000xp's worth of powers, from any disciplines and ignoring requirements.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Beweaponed Extremities",
+    "sustain": "1",
+    "novice": "Daemonhost gains bony blades or other such weapons that fuse to their limbs. Their natural weapnons now inflict 2d10 damage.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Daemonhost gains bony blades or other such weapons that fuse to their limbs. Their natural weapnons now inflict 2d10 damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5XQuO7tEJhJ00KBA"
+}

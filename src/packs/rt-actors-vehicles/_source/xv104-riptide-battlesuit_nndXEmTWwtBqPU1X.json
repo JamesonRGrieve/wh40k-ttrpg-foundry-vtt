@@ -1,0 +1,25 @@
+{
+  "name": "XV104 Riptide\nBattlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "14 all",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "3 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Heavy Burst Ion Cannon/Ion Accelerator, Twin-Linked Smart Missile System/Twin-Linked Plasma Rifle/Twin-Linked Fusion Blaster, Shield Generator.",
+    "passengers": "Battle Suit Strength: 80. Primary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker. Special: Equipped with Nova Reactor, Once per Round as Half Action or Reaction, can make -10 Tech-Use Test, if fail suffer 1 damage ignoring armour and Toughness +1 per DoF. If success until next turn do one of: Gain Prot 10 Forcefield +10 per DoS (max 95) that doesn't overload, One weapon gains Storm Quality, One Weapon gains Overcharge (5) or increases Overcharge by 5, Increase Flyer Trait by 1, +1 per DoS.",
+    "cargo": "Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "nndXEmTWwtBqPU1X"
+}

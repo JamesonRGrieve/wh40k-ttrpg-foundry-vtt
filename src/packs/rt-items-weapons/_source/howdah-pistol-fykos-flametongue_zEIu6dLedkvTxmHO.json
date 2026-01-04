@@ -1,0 +1,28 @@
+{
+  "name": "Howdah Pistol (Fykos) \"Flametongue\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+6",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 2,
+    "reload": "2 Full",
+    "special": "Primitive (8), Reliable",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "140 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Reliable</p><p><b>Note:</b> A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zEIu6dLedkvTxmHO"
+}

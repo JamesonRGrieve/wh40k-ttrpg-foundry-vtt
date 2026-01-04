@@ -1,0 +1,25 @@
+{
+  "name": "Forge World",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Home World",
+    "descriptionText": "-5 Weapon Skill, +5 Intelligence, and +3 to any one Characteristic. Common Lore (Tech) and Common Lore (Machine Cult) are untrained basic skills. Gain Technical Knock Talent. Suffer -10 to Tests involving knowledge of the Imperial Creed and -5 to Fellowship tests to interact with members of the Ecclesiarchy in formal settings.",
+    "effects": "-5 Weapon Skill, +5 Intelligence, and +3 to any one Characteristic. Common Lore (Tech) and Common Lore (Machine Cult) are untrained basic skills. Gain Technical Knock Talent. Suffer -10 to Tests involving knowledge of the Imperial Creed and -5 to Fellowship tests to interact with members of the Ecclesiarchy in formal settings.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>-5 Weapon Skill, +5 Intelligence, and +3 to any one Characteristic. Common Lore (Tech) and Common Lore (Machine Cult) are untrained basic skills. Gain Technical Knock Talent. Suffer -10 to Tests involving knowledge of the Imperial Creed and -5 to Fellowship tests to interact with members of the Ecclesiarchy in formal settings.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.home-world",
+      "step": "Home World",
+      "stepIndex": 1,
+      "number": "3"
+    }
+  },
+  "_id": "8rKUJtvkUzqxcpmO"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Cog Whisperer",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Per 30, WP 30",
+    "characteristic": "300xp",
+    "descriptor": "Become associated and possibly obsessed with a specific machine, gaining an understanding of its deepest intricacies.",
+    "uses": "Treat this advance as a Talent. Select one specific sophisiticated Machine, such as a voidship component, specific starfighter, or archeotech relic. The character can spend a Fate Point to immediately determine the cause of a problem afflicting that machine, and add a bonus to 5xIntelligence Bonus (max +30) to next test to repair or alleviate the problem. Gain +10 to all tests to use machine. If machine is destroyed, even if character not present, gain 2d10 Insanity Points and are immediately aware of its destruction. Can transfer this talent to a new machine if given time to bond with and understand it.",
+    "useTime": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Become associated and possibly obsessed with a specific machine, gaining an understanding of its deepest intricacies.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UqjJd4Ia46sYa6X8"
+}

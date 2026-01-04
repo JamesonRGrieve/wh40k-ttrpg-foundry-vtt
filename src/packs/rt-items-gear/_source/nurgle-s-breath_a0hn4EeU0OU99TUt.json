@@ -1,0 +1,20 @@
+{
+  "name": "Nurgle's Breath",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Disease",
+    "weight": "-",
+    "availability": "Infected Character gains new attack: (Pistol; 10m;S/-/-;2d10 E;Pen 2; Corrosive, Spray, Toxic(2)). Cannot Jam,  any that fail the Toxic Toughness Test contract Disease. If damage roll is ever 2 7's, Character instantly dies in a gorey, pus filled explosion. Everyone within 3d10m is hit by weapon. Cured by 2 Week rest and -20 Medicae Test. ",
+    "cost": "Acquired in batch of 5. Any exposed to disease must make listed Toughness Test or catch it.\nNurgle Dedicated suffer disease as normal, although do not see it as suffering.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a0hn4EeU0OU99TUt"
+}

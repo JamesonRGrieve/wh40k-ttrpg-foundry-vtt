@@ -1,0 +1,28 @@
+{
+  "name": "Necron Rod of Covenant [Melee]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Necron",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+17",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Concussive (1), Power Field",
+    "weight": "6kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality. Has [Ranged] and [Melee] Profile.",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Concussive (1), Power Field</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "T8ZezeDUPslYSkE3"
+}

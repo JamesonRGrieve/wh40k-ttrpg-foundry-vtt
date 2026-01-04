@@ -1,0 +1,22 @@
+{
+  "name": "Inspire",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker bolsters their allies' spirits. A Number of targets, including the Psyker, up to the Psyker's Psy Rating immediately overcome the effects of Pinning, and gain +10 to Willpower Tests to resist Fear. Effect lasts as long as target stays within range of Psyker and Psyker maintains power.",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ztobUqZ2hXWkO7ba"
+}

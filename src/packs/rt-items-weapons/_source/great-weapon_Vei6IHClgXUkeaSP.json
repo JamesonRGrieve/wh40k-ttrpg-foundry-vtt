@@ -1,0 +1,28 @@
+{
+  "name": "Great Weapon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unbalanced",
+    "weight": "7kg",
+    "availability": "Scarce",
+    "cost": "70 T",
+    "source": "Rogue Trader: Core",
+    "note": "Requires Two Hands to wield",
+    "description": {
+      "value": "<p><b>Special:</b> Unbalanced</p><p><b>Note:</b> Requires Two Hands to wield</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Vei6IHClgXUkeaSP"
+}

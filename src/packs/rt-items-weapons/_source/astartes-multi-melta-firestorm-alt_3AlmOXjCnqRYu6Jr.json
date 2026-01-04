@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Multi-Melta (Firestorm)  (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "100m",
+    "rof": "S/2/-",
+    "damage": "2d10+20",
+    "damageType": "Energy",
+    "penetration": 14,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "SM Wep, Blast (2), Recharge, Volatile, Melta",
+    "weight": "70kg",
+    "availability": "Distinguished",
+    "cost": "65 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (2), Recharge, Volatile, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3AlmOXjCnqRYu6Jr"
+}

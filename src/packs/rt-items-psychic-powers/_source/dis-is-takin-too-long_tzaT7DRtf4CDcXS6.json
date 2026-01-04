@@ -1,0 +1,22 @@
+{
+  "name": "Dis is Takin' Too Long!",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Up an' at 'Em!",
+    "focusPower": "Full Action",
+    "action": "Special",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Weirdboy accelerates themselves or a vehicle they happen to be riding in, even if it's a voidship. If made to accelerate themselves on foot, Weirdboy can immediately make the Run or Charge Action as a free action, increasing this move by 2 metres per Degree of Success on Focus Power Test. If made to accelerate a vehicle or voidship they are in, it grants any character on board a bonus of +5xPsy Rating (max +30) to the next Test to increase that vehicle or voidship's speed.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tzaT7DRtf4CDcXS6"
+}

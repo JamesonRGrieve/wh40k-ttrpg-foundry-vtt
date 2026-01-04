@@ -1,0 +1,14 @@
+{
+  "name": "Environmental Seal",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Battlesuit is Environmentally Sealed and can proide air for several days as long as power source is operable and seal remains intact. This system provides breathable air and protection from the elements.",
+    "description": {
+      "value": "<p>Battlesuit is Environmentally Sealed and can proide air for several days as long as power source is operable and seal remains intact. This system provides breathable air and protection from the elements.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ozpvz0bHjfXdfAXD"
+}

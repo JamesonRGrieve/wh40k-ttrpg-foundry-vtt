@@ -1,0 +1,22 @@
+{
+  "name": "Hallucination",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nConcentration",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Target individual within range and line of sight Opposes Test with Willpower, if they fail they roll on the Hallucinogenic Effects table, and immediately suffer the effects. These effects last for Psy Rating/2 Rounds (round up).",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u7p9LlF9RiBI7kp3"
+}

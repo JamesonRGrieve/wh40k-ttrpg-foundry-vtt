@@ -1,0 +1,28 @@
+{
+  "name": "Thunder Hammer (Lathe)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unwieldy",
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YFLxQmJJoxNuil1f"
+}

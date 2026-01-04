@@ -1,0 +1,28 @@
+{
+  "name": "Chainflail",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flexible, Tearing, Unwieldy",
+    "weight": "14kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Inflicts Righteous Fury on a natural 9 or 10 damage roll. If failing a WS Test by more Degrees of Failiure than Weapon Skill Bonus, hit yourself. Two Handed Weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Tearing, Unwieldy</p><p><b>Note:</b> Inflicts Righteous Fury on a natural 9 or 10 damage roll. If failing a WS Test by more Degrees of Failiure than Weapon Skill Bonus, hit yourself. Two Handed Weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jYxO3NQPlExucb6F"
+}

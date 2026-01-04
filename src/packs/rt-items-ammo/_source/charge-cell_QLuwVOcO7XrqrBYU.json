@@ -1,0 +1,20 @@
+{
+  "name": "Charge Cell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Las: Laslocks",
+    "damageOrEffect": "Clip size of 1. Used by worlds of limited production capacities. Must be recharged after each use. (same way as charge packs)",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Common",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Clip size of 1. Used by worlds of limited production capacities. Must be recharged after each use. (same way as charge packs)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QLuwVOcO7XrqrBYU"
+}

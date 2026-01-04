@@ -1,0 +1,22 @@
+{
+  "name": "Mind's Eye",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "N/A",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Successful Test allows Psyker to increase the range of all Telepathic Communications (except Astro-Telepathy) by a factor of 10 while this power is sustained.\nWith this, Thought Sending has range of 100m x Psy Rating, Mind Link is 10km x Psy Rating, and so on.",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gW9RkKDILZFagqnb"
+}

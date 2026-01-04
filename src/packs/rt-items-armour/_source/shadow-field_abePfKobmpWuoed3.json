@@ -1,0 +1,22 @@
+{
+  "name": "Shadow Field",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Dark Eldar (Force Field)",
+    "locations": "All",
+    "ap": "80%",
+    "maxAg": null,
+    "weight": "0.5kg",
+    "availability": "Unique",
+    "cost": "-",
+    "notes": "Near Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Immediately Overloads if its deflection roll doesn't protect the wearer as opposed to normal overload rules. Requires 1 hour and -30 Tech-Use Test to repair outside of combat.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>Near Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Immediately Overloads if its deflection roll doesn't protect the wearer as opposed to normal overload rules. Requires 1 hour and -30 Tech-Use Test to repair outside of combat.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "abePfKobmpWuoed3"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Terrify",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "Mind Probe",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Successful Test forces Target to believe Psyker has Fear(1) Trait, and therefore make Appropriate Fear Tests.\nPsyker can Increase level of Fear by 1 per 3 Psy Rating used on Focus Power Test. (EG: Psy 3 --> Fear(2), Psy 6 --> Fear(3), Psy 9 --> Fear(4))",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JpaK1voMGysFCuTC"
+}

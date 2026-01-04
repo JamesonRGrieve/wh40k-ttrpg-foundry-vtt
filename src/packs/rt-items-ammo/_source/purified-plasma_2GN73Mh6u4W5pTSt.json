@@ -1,0 +1,20 @@
+{
+  "name": "Purified Plasma",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Plasma Weapon",
+    "damageOrEffect": "Weapon loses Overheats Quality",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon loses Overheats Quality</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2GN73Mh6u4W5pTSt"
+}

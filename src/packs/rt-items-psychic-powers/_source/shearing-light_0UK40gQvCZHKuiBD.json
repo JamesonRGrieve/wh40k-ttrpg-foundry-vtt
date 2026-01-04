@@ -1,0 +1,22 @@
+{
+  "name": "Shearing Light",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Void Dreamer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Void Dreamer makes Focus Power Test. On Success, calls forth a Psychic Weapon that tears through all protections:\nCarmine Lance of Khaine (Melee; 1d10 + Psy Rating E; Pen Psy Rating; Tearing) or (Thrown; Range Psy Rating x 10m; 1d10 + Psy Rating E; Pen Psy Rating; Tearing)\nThe Weapon ignores Armour or Toughness bonuses, and other Psychic Defences or those of the Daemonic Trait. Only the Psyker may wield weapon, and it dissapears after they stop sustaining it or after it strikes/misses when thrown.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0UK40gQvCZHKuiBD"
+}

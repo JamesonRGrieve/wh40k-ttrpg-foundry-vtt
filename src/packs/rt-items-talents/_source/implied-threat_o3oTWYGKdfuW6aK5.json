@@ -1,0 +1,17 @@
+{
+  "name": "Implied Threat",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Fel 35\nAptitudes: Unaligned",
+    "effect": "When winning a Social Conflict Opposed Test, for every extra Degree of Success beyond the first the character succeeds by, the opponent takes an additional 1d5 Willpower Loss for the round.\nThe Character must contain at least one veiled threat within their contribution to the social conflict for this talent to be applied.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>When winning a Social Conflict Opposed Test, for every extra Degree of Success beyond the first the character succeeds by, the opponent takes an additional 1d5 Willpower Loss for the round.\nThe Character must contain at least one veiled threat within their contribution to the social conflict for this talent to be applied.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "o3oTWYGKdfuW6aK5"
+}

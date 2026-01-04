@@ -1,0 +1,17 @@
+{
+  "name": "Battle Rage",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Frenzy\nAptitudes; Strength, Defence, Khorne",
+    "effect": "Character can Parry whilst Frenzied. They can also re-roll a failed test to snap out of Frenzy or resist entering Frenzy if they choose to.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can Parry whilst Frenzied. They can also re-roll a failed test to snap out of Frenzy or resist entering Frenzy if they choose to.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HuiJSiUJ57Ykx1ZP"
+}

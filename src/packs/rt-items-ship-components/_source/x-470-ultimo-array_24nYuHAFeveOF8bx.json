@@ -1,0 +1,21 @@
+{
+  "name": "X-470 Ultimo Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Augurs",
+    "hullType": "All Ships",
+    "powerUsage": 6,
+    "spaceUsage": 0,
+    "spCost": "-",
+    "effect": "The eyes and ears of the ship. +10 to Ship Detecting, and +15 to Detect vessels on silent running when using \"Active Augury\". Vessels targeting a ship with this component have +5 to BS Tests. Component can only be damaged or destroyed by a critical hit.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>The eyes and ears of the ship. +10 to Ship Detecting, and +15 to Detect vessels on silent running when using \"Active Augury\". Vessels targeting a ship with this component have +5 to BS Tests. Component can only be damaged or destroyed by a critical hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "24nYuHAFeveOF8bx"
+}

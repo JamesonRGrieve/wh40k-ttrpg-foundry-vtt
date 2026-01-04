@@ -1,0 +1,28 @@
+{
+  "name": "Catalytic Mass Driver",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "120m",
+    "rof": "S/-/5",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 12,
+    "clip": "-",
+    "reload": "-",
+    "special": "Integrated Weapon",
+    "weight": "7kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Rare example of Ballistic Integrated Weapon\nInfinite clip, no reload.",
+    "description": {
+      "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Rare example of Ballistic Integrated Weapon\nInfinite clip, no reload.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mU2TMWlmDSHVABw3"
+}

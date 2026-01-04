@@ -1,0 +1,22 @@
+{
+  "name": "White Noise",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "10m Radius",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained all tests made with Psychic or Technological means to detect the character's presence, as well as anyone else within range, have -20. Means of detection that do not require a test must make a +10 Willpower if Psychic or +10 Intelligence if not technological or also fail to detect the psyker and those near them.\nFor every 5 Points above Threshold / 1 DoS on Focus Test, increase range by 10 metres.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L5SQrimhDKCa7agC"
+}

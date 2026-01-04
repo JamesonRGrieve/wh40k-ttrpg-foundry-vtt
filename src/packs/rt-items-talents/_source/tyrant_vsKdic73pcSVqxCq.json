@@ -1,0 +1,17 @@
+{
+  "name": "Tyrant",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Any Minion of Chaos Talent, Fellowship 35. Aptitudes: Unaligned.",
+    "effect": "Base Loyalty of the Character's minions is equal to their Infamy instead of their Fellowship.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>Base Loyalty of the Character's minions is equal to their Infamy instead of their Fellowship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vsKdic73pcSVqxCq"
+}

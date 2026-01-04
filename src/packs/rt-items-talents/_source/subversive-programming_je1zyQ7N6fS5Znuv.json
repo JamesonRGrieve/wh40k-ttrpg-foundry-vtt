@@ -1,0 +1,17 @@
+{
+  "name": "Subversive Programming",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Arch-Heretek Alternate Advance, 500xp\nMechanicus Implants",
+    "effect": "As a Half Action, Character can try to command any creature with the Machine Trait and an Intelligence 20 or less, making an Opposed Tech-Use vs Willpower Test. If successful the target creature follows the Character's commands for the following round. The Character can maintain control by spending a Half Action each round, and making another Opposed Test every four rounds to maintain the link. Commands given must be simple and achievable within a single round, such as Flee, Fall, Attack nearby target.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>As a Half Action, Character can try to command any creature with the Machine Trait and an Intelligence 20 or less, making an Opposed Tech-Use vs Willpower Test. If successful the target creature follows the Character's commands for the following round. The Character can maintain control by spending a Half Action each round, and making another Opposed Test every four rounds to maintain the link. Commands given must be simple and achievable within a single round, such as Flee, Fall, Attack nearby target.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "je1zyQ7N6fS5Znuv"
+}

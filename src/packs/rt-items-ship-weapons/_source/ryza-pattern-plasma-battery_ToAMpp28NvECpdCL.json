@@ -1,0 +1,25 @@
+{
+  "name": "Ryza Pattern Plasma Battery",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "All Ships",
+    "powerUsage": 8,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "damage": "1d10+4",
+    "strength": 4,
+    "critRating": 4,
+    "range": 5,
+    "availability": "Rare",
+    "notes": "When this component rolls a 1 or 2 on the Critical Hit Chart, it affects two Components instead of one.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+4</p><p><b>Notes:</b> When this component rolls a 1 or 2 on the Critical Hit Chart, it affects two Components instead of one.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ToAMpp28NvECpdCL"
+}

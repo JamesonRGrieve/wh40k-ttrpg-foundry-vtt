@@ -1,0 +1,22 @@
+{
+  "name": "Touch of Madness",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "100m",
+    "range": "Threshold 11\n+10 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range makes +0 Willpower Test. If failed they roll 1d100 on the Mental Trauma Table and suffer the effect. \nFor every 10 Points above Threshold / 2 DoS on Focus Test, can affect one additional target.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IK8ADo55YfnkHVyw"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Memorance Implant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Helps with remembering things, linked to eyes and lets you record things and replay them later. +10 to Trade (Rememberancer) or any other test relying on memory and grants Total Recall Talent.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n0TfFSrghLo0QsjG"
+}

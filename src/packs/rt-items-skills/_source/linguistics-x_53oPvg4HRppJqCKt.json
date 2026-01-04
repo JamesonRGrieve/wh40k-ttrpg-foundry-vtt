@@ -1,0 +1,18 @@
+{
+  "name": "Linguistics (X)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Apt: Intellgience, General, Unaligned",
+    "characteristic": "Intelligence",
+    "descriptor": "Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.",
+    "uses": "From Prior editions includes: Ciphers, Literacy, Secret Tongue, and Speak Language)\nUse: Deciphering an Archaic version of a known language, writing a moving piece of prose, conveying a message in subtext or with limited vocabulary. All Guardsman know Low Gothic and Imperial Codes.\nExample Languages: Chapter Runes, Chaos Marks, Eldar, High Gothic, Imperial Codes, Kroot, Low Gothic, Mercenary Cant, Ork, Techna-Lingua, Tau, Underworld, Xenos Markings",
+    "useTime": "Free Action unless doing something complex",
+    "description": {
+      "value": "<p>Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "53oPvg4HRppJqCKt"
+}

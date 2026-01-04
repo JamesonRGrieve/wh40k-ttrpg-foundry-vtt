@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Dragon's Breath Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 20,
+    "reload": "Full",
+    "special": "Flame, Spray",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "U5IEbrvd8cGYNd7a"
+}

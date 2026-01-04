@@ -1,0 +1,17 @@
+{
+  "name": "Daemonic Disruption",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Bane of the Daemon, Willpower 50, Untouchable Elite Advance\nAptitudes: Willpower",
+    "effect": "Whenever a creature with the Warp Instability Trait makes a successful attack against the character, it must immediately test for Warp Instability after resolving the attack.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Whenever a creature with the Warp Instability Trait makes a successful attack against the character, it must immediately test for Warp Instability after resolving the attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6mpBKLhj3EBDAPap"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Salvation Auger (Basic)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Detects Harmful Radiation, Airborne Toxins, and Pollutants, about the size of a Chrono. The Basic Version simply detects danger is present.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "20 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1LWOHki3bPpDrUWd"
+}

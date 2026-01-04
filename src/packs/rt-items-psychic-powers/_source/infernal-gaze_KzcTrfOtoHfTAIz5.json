@@ -1,0 +1,22 @@
+{
+  "name": "Infernal Gaze",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Malefic Daemonology",
+    "prerequisites": "15+ Corruption, Willpower 45, Dark Flame",
+    "focusPower": "Half Action\nAttack\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Everyone within range and line of sight, friend or foe, who do not have the Daemonic Trait make a +0 Willpower Test. Those that fail suffer Psy Rating + Corruption Bonus Energy damage ignoring Armour and Toughness, and gain Psy Rating / 2 Corruption and Insanity Points.\nIf power is Successfully manifested, gain Corruption Points equal to the Psy Rating used to manifest this power after its effects have been resolved.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KzcTrfOtoHfTAIz5"
+}

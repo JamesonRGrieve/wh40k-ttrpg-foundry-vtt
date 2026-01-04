@@ -1,0 +1,17 @@
+{
+  "name": "Unshakeable Faith",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Willpower 35\nAptitudes: Willpower, Defence",
+    "effect": "Character can Re-Roll failed Willpower Tests to avoid the effects of Fear.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iOEQr0ljJ5zJdofj"
+}

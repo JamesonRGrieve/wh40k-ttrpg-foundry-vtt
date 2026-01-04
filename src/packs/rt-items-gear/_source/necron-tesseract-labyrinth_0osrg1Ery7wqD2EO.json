@@ -1,0 +1,20 @@
+{
+  "name": "Necron Tesseract Labyrinth",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "If used by a Necron, as a Full Action can be used against target within 2 metres who must make -20 Dodge/Strength Test. If failed they are trapped within the Extra-Dimensional Prison of the Labyrinth, and can only leave if the user allows it. Requires 10 rounds to recharge after use. ",
+    "cost": "Non-Necrons must make -30 Logic test (or -10 if having Tech-Use) to use, if test failed by 4+ DoF become target of the Tesseract Labyrinth. Always Best Quality.  Xenotech.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0osrg1Ery7wqD2EO"
+}

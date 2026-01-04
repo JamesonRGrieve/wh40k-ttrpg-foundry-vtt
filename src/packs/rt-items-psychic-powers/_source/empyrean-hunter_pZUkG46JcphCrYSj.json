@@ -1,0 +1,22 @@
+{
+  "name": "Empyrean Hunter",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Void Dreamer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "5 VU x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "As long as Void Dreamer sustains this power, they can use the Tracking Skill to follow the trail of a ship no older than Perception Bonus Months, +1 per Degree of Success on Focus Power Test.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pZUkG46JcphCrYSj"
+}

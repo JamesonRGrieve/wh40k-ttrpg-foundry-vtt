@@ -1,0 +1,17 @@
+{
+  "name": "Protector",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Storm Trooper Specialty\n300xp",
+    "effect": "Whenever any Comrade within 10 metres of Character would take a hit that would kill them, Character can take hit instead.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Whenever any Comrade within 10 metres of Character would take a hit that would kill them, Character can take hit instead.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oCWyUejrh4vU2rZ8"
+}

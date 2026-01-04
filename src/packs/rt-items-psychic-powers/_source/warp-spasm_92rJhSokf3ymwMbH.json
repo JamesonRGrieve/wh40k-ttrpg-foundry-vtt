@@ -1,0 +1,22 @@
+{
+  "name": "Warp Spasm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Shielded by the Warp\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker bolsters themselves with the Warp. On Successful Focus Power Test, they gain 1d10 + 1d10 per Degree of Success to their Strength and Toughness Characteristics for as long as power is sustained. However each round they sustain the power for, they gain 1 Corruption Point.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "92rJhSokf3ymwMbH"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Warknife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "2kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9dcJLgeJ5d5tySHf"
+}

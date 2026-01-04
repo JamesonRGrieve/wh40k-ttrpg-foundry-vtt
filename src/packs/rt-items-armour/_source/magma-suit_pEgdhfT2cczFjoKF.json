@@ -1,0 +1,22 @@
+{
+  "name": "Magma Suit",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 9,
+    "maxAg": null,
+    "weight": "90kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Human sized power armour, has Power Armour Systems; Osmatic Gill Life Sustainer, Vox Link, Sustainable Power Source, and Recoil Suppression.\nGrants user Resistance(Heat) Talent whilst worn.",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>Human sized power armour, has Power Armour Systems; Osmatic Gill Life Sustainer, Vox Link, Sustainable Power Source, and Recoil Suppression.\nGrants user Resistance(Heat) Talent whilst worn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pEgdhfT2cczFjoKF"
+}

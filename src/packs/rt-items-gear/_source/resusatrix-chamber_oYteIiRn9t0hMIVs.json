@@ -1,0 +1,20 @@
+{
+  "name": "Resusatrix Chamber",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "200kg",
+    "availability": "Allows for a person to be placed inside and hooked up to a life support system, suspended in a thick curative solution. It halves the time required to Naturally Heal wounds, provides +10 to Toughness Tests to overcome the effects of poisons/disease and +20 to Medicae Tests to Diagnose a patient. Operating on a character inside requires Medicae and Tech-Use.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "7500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 7500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oYteIiRn9t0hMIVs"
+}

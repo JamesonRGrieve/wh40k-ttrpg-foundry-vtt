@@ -1,0 +1,22 @@
+{
+  "name": "Fiery Form",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Psy Rating 4, Fire Shield",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "The Psyker engulfs themselves in warpfire. While sustained, all of the psyker's Melee Attacks deal an additional Psy Rating energy damage and gain the Flame Quality, additionally at the end of each of their turns they emit a Psy Rating Radius Blast centred on themselves that deals 1d10+Psy Rating E Damage with Pen 0 and Flame quality to all creatures within range except themselves. Creatures may attempt to dodge as they would an area of effect attack.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IW8HCMLpkswcKnMi"
+}

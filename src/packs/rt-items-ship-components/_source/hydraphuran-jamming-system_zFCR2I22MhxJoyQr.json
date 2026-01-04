@@ -1,0 +1,21 @@
+{
+  "name": "Hydraphuran Jamming System",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 4,
+    "spaceUsage": 0,
+    "spCost": 1,
+    "effect": "While active, ship cannot perform Silent Running, but Focused Augury Tests to scan it have -20. Component cannot be damaged or destroyed except via a critical hit. One per Vessel.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>While active, ship cannot perform Silent Running, but Focused Augury Tests to scan it have -20. Component cannot be damaged or destroyed except via a critical hit. One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zFCR2I22MhxJoyQr"
+}

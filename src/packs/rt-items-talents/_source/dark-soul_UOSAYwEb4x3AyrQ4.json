@@ -1,0 +1,17 @@
+{
+  "name": "Dark Soul",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Hardened Soul, 20+ Corruption\nAptitudes: Toughness, Willpower",
+    "effect": "When character would test to gain a mutation as a result of corruption. They can choose to automatically pass the test, instead they gain a Malignancy and 1d10 Corruption.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>When character would test to gain a mutation as a result of corruption. They can choose to automatically pass the test, instead they gain a Malignancy and 1d10 Corruption.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UOSAYwEb4x3AyrQ4"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Secondary Power Genetorium",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Unique)",
+    "hullType": "Special",
+    "powerUsage": -10,
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "\"Universe-Class Mass Conveyer\" Unique Component. Generates +10 Power in addition to that provided by the ship's plasma drive. One per vessel, designed only for its listed ship.",
+    "availability": "Unique",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>\"Universe-Class Mass Conveyer\" Unique Component. Generates +10 Power in addition to that provided by the ship's plasma drive. One per vessel, designed only for its listed ship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sBd8jHYFxwS8W3KL"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Hunting Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 5,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "5kg",
+    "availability": "Scarce",
+    "cost": "100 T",
+    "source": "Dark Heresy: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dx6vHM3A04iYHxnt"
+}

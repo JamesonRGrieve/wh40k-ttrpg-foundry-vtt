@@ -1,0 +1,28 @@
+{
+  "name": "Knife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "5m",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8)",
+    "weight": "1kg",
+    "availability": "Abundant",
+    "cost": "5 T",
+    "source": "Rogue Trader: Core",
+    "note": "Can be Thrown",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Can be Thrown</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D17cgHUOzqT86zFf"
+}

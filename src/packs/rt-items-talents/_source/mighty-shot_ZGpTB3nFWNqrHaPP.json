@@ -1,0 +1,17 @@
+{
+  "name": "Mighty Shot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Ballistic Skill 40\nAptitudes: Ballistic Skill, Offence, Nurgle",
+    "effect": "The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZGpTB3nFWNqrHaPP"
+}

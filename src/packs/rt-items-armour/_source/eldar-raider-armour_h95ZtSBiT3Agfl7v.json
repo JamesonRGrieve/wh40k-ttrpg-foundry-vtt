@@ -1,0 +1,22 @@
+{
+  "name": "Eldar Raider Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Eldar",
+    "locations": "All",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Spikey armour means always counts as having Mono-knife in melee combat.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Spikey armour means always counts as having Mono-knife in melee combat.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h95ZtSBiT3Agfl7v"
+}

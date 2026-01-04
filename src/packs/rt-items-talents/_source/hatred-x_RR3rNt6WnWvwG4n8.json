@@ -1,0 +1,17 @@
+{
+  "name": "Hatred (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; None\nAptitudes: Weapon Skill, Social, Khorne",
+    "effect": "The Character despises a group or organisation that has wronged them. Gain +10 to all Weapon Skill Tests made against this group. \nThe character finds it difficult to back down from a fight with this foe, and must make a Willpower Test to retreat or surrender to them when fighting, unless Massively outnumbered and outclassed.\nGroups Include: Chaos Space Marines, Daemons, Mutants, Psykers, Xenos (specific), Criminals, Rogue Trader (specific), Pirates, other",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Character despises a group or organisation that has wronged them. Gain +10 to all Weapon Skill Tests made against this group. \nThe character finds it difficult to back down from a fight with this foe, and must make a Willpower Test to retreat or surrender to them when fighting, unless Massively outnumbered and outclassed.\nGroups Include: Chaos Space Marines, Daemons, Mutants, Psykers, Xenos (specific), Criminals, Rogue Trader (specific), Pirates, other</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RR3rNt6WnWvwG4n8"
+}

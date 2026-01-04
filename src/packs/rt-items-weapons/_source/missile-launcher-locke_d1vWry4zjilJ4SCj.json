@@ -1,0 +1,28 @@
+{
+  "name": "Missile Launcher (Locke)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Launcher",
+    "range": "250m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Full",
+    "special": null,
+    "weight": "12kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Traits vary with ammo (Ammo - Missiles)",
+    "description": {
+      "value": "<p><b>Note:</b> Traits vary with ammo (Ammo - Missiles)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d1vWry4zjilJ4SCj"
+}

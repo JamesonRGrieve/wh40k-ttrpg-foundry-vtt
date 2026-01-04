@@ -1,0 +1,28 @@
+{
+  "name": "Longshot",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "350m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "6kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rx1DUFD55OyHdLcg"
+}

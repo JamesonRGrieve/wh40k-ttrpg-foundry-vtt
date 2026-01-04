@@ -1,0 +1,22 @@
+{
+  "name": "Displacer Field",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": "55%",
+    "maxAg": "-",
+    "weight": "2kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d2OWFP44r6NwIXMH"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Phased Ion Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "40m",
+    "rof": "S/4/8",
+    "damage": "1d10+9",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 150,
+    "reload": "2 Full",
+    "special": "Overcharge (6)",
+    "weight": "35kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one.",
+    "description": {
+      "value": "<p><b>Special:</b> Overcharge (6)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lFG6ZAN21CaZVWOS"
+}

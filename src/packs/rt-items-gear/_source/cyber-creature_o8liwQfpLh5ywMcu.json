@@ -1,0 +1,20 @@
+{
+  "name": "Cyber Creature",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Upgrades Creature of Size Scrawny or smaller to Cyber Creature. They gain Machine(2) Trait. +2 Wounds, Lose Primitive on natural attacks, +5 Strength and Toughness, -5 Agility. They may be further Upgraded. If Cyber Creature fails a Willpower Test by 4+ DoF, or takes a Critical hit to the head, 50% chance to go into a Frenzy until destroyed. Cyber Familiars can usually use gear and weapons has humans can.",
+    "cost": "Does not include costs of creature for Cyber Creature Upgrade and any equipment or abilities that are also implanted.",
+    "effects": "Scarce",
+    "notes": "3000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 3000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "o8liwQfpLh5ywMcu"
+}

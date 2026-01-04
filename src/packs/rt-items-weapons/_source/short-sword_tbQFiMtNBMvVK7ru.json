@@ -1,0 +1,28 @@
+{
+  "name": "Short Sword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10-1",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive",
+    "weight": "1.5kg",
+    "availability": "Common",
+    "cost": "12 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Primitive</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tbQFiMtNBMvVK7ru"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Preparing the Host",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "A Prepared host must be a living human whose body is agonisingly prepared. The human need not be willing.",
+    "range": null,
+    "test": "Maddening Vapours",
+    "sustain": "5",
+    "novice": "The Daemonhost produces a mind-breaking mist. Its attacks gain the Hallucinogenic (3) quality.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> The Daemonhost produces a mind-breaking mist. Its attacks gain the Hallucinogenic (3) quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9XuCNMyA7w3oHcZk"
+}

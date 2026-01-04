@@ -1,0 +1,14 @@
+{
+  "name": "Near Unique",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 116,
+    "description": {
+      "value": "<p>116</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yAi9HNJSDuP3phtx"
+}

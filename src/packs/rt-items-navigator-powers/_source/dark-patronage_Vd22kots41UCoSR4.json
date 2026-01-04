@@ -1,0 +1,21 @@
+{
+  "name": "Dark Patronage",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Dark Patronage is the act of gaining power through performing contractual obligations or favours for the Chaos Gods, or more commonly one of their Daemonic Minions",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Vd22kots41UCoSR4"
+}

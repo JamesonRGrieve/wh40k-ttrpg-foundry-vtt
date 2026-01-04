@@ -1,0 +1,17 @@
+{
+  "name": "Solid Projectile Weapon Mastery",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 45, Solid Projectile Weapon Mastery \nAptitudes: Ballistic Skill, Finesse",
+    "effect": "When Character fires a Solid Projectile Weapon, it gains Proven(Ballistic Skill Bonus/2), rounded up.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When Character fires a Solid Projectile Weapon, it gains Proven(Ballistic Skill Bonus/2), rounded up.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "toQxF0dPCNNX88HF"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Micro-blast Needles",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Dartcaster, Needle Pistol/Rifle",
+    "damageOrEffect": "Loses Toxic Quality, but +4 damage, gain Tearing Quality. Change damage type to Explosive",
+    "qualities": "Toxic (lose)",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Loses Toxic Quality, but +4 damage, gain Tearing Quality. Change damage type to Explosive</p><p><b>Qualities:</b> Toxic (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KtLtNPpNUPqMfygk"
+}

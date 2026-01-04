@@ -1,0 +1,22 @@
+{
+  "name": "See Me Not",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "20m",
+    "range": "Threshold 14",
+    "opposed": "Yes",
+    "sustained": "Select Willpower Bonus targets within range, each of whom must succeed on a Willpower Test or become incapable of perceiving the psyker whilst power is sustained though sight, hearing, smelling, or any other kind of perception, although doesn't mean targets don't know someone is there or that something is happening if they have prior knowledge or can intuit something being wrong. Power has no effect on creatures with 10 or less Intelligence.\nFor every 5 Points above threshold, either increase number of targets by 1 or impose a -10 penalty on one target's willpower test made to resist the power.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O1gGjhbhNHITGEP2"
+}

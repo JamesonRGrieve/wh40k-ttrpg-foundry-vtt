@@ -1,0 +1,20 @@
+{
+  "name": "Macharian Cross",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to all Logic or Scholastic Lore(Tactica Imperialis) Tests made in the heat of battle.\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Large Cross Pattee with a centre flanked by Laurel Leaves.",
+    "cost": "Distinguished Service Medal: Awarded for a victory achieved because of exceptional quick thinking, strong strategy, and tactical acumen.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TUznVoL01iMokYRk"
+}

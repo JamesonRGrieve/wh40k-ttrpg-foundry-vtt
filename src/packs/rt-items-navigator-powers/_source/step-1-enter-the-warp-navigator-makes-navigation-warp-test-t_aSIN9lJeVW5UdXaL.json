@@ -1,0 +1,21 @@
+{
+  "name": "Step 1: Enter the Warp: Navigator makes Navigation (Warp) Test to determine travel time, success gets rough estimate of travel time based on Degrees of Success.\nGM selects travel time, if Navigation (Warp) Test passed, arrive in this amount of time, if 2+ DoS, in half the time. If failed test by 2+ DoF, Double the time and get no estimate. Entering the warp happens regardless of pass or fail.\nExternal effects such as warp storms or Navigator charts may alter test difficulty. For example, if the Astronomicon is blocked out, get -30 to roll.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": "Example Warp Travel Durations:\nShort, well-travelled Passage between close systems: ~1 day. Journey within the same sub-sector with good information: ~5-10 days. Journey across the Sector with good information: ~30-60 days. Journey across the Segmentum at good speed: 100+ Days. Odyssey across the galaxy: Several Years.\nNote: Time passes strangely between warp and real space, generally 1 Day in the Warp is 12 Days in Reality, but this can vary dramatically.",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Adept:</b> Example Warp Travel Durations:\nShort, well-travelled Passage between close systems: ~1 day. Journey within the same sub-sector with good information: ~5-10 days. Journey across the Sector with good information: ~30-60 days. Journey across the Segmentum at good speed: 100+ Days. Odyssey across the galaxy: Several Years.\nNote: Time passes strangely between warp and real space, generally 1 Day in the Warp is 12 Days in Reality, but this can vary dramatically.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aSIN9lJeVW5UdXaL"
+}

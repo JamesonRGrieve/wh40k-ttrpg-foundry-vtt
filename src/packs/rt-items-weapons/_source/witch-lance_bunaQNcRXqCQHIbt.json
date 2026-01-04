@@ -1,0 +1,28 @@
+{
+  "name": "Witch Lance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "10m",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field",
+    "weight": "5kg",
+    "availability": "Very Rare",
+    "cost": "2800 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bunaQNcRXqCQHIbt"
+}

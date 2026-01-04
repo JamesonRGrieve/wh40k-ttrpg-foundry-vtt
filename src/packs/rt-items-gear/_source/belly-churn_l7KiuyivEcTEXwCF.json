@@ -1,0 +1,20 @@
+{
+  "name": "Belly-Churn",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "1kg",
+    "availability": "Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l7KiuyivEcTEXwCF"
+}

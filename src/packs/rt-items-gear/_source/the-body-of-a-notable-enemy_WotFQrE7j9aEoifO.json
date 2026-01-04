@@ -1,0 +1,20 @@
+{
+  "name": "The Body of a Notable Enemy",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The Head of an enemy, the skull of a Saint, the skin of a Sinner, etc. Can be used both in the rituals of dark gods and Imperial Holy Relics, depending on the presentation.",
+    "cost": "Either Heretical or not depending on the body in question.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WotFQrE7j9aEoifO"
+}

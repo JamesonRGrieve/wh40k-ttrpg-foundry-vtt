@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Stasis Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Blast (2)",
+    "weight": "1kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (2)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mzOSuMqZZ3t6sOh4"
+}

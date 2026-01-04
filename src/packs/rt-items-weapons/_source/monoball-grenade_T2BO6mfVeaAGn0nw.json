@@ -1,0 +1,28 @@
+{
+  "name": "Monoball Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "5d10+5",
+    "damageType": "Rending",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Tearing",
+    "weight": "0.5kg",
+    "availability": "Distinguished",
+    "cost": "50 R",
+    "source": "DW: Rites of Battle",
+    "note": "Suspiciously similar to Eldar designed grenades. Contains monofilament wire that shreds those in range.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Tearing</p><p><b>Note:</b> Suspiciously similar to Eldar designed grenades. Contains monofilament wire that shreds those in range.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "T2BO6mfVeaAGn0nw"
+}

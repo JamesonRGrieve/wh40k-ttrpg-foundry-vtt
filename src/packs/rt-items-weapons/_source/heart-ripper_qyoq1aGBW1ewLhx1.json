@@ -1,0 +1,28 @@
+{
+  "name": "Heart-Ripper",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "300m",
+    "rof": "S/4/-",
+    "damage": "3d10+13",
+    "damageType": "Impact",
+    "penetration": 11,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Reliable, Tearing, Twin-Linked",
+    "weight": "55kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  ",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Reliable, Tearing, Twin-Linked</p><p><b>Note:</b> Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qyoq1aGBW1ewLhx1"
+}

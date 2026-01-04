@@ -1,0 +1,20 @@
+{
+  "name": "Psybolts",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt: Any",
+    "damageOrEffect": "Gain Daemonbane and Sanctified Qualities. Ignore Protective Benefits from Psychic Powers. +1 Damage per Psy Rating of Target.",
+    "qualities": "Daemonbane, Sanctified",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Daemonbane and Sanctified Qualities. Ignore Protective Benefits from Psychic Powers. +1 Damage per Psy Rating of Target.</p><p><b>Qualities:</b> Daemonbane, Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qSejJGs0mnkZvPTs"
+}

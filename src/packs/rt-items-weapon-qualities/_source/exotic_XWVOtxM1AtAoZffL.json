@@ -1,0 +1,14 @@
+{
+  "name": "Exotic*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 335,
+    "description": {
+      "value": "<p>335</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XWVOtxM1AtAoZffL"
+}

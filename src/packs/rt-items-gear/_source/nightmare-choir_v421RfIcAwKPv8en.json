@@ -1,0 +1,20 @@
+{
+  "name": "Nightmare Choir",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "12kg",
+    "availability": "Worn on the back as a harness or on top of a Power Armour Power Pack. Once per combat as a Full Action, character can cause all those not dedicated to Slaanesh within 6d10 metres to make a -20 Willpower Test or become stunned for 1 Round per Degree of Failiure. They also allow Character to reroll initiative at start of any combat round.",
+    "cost": "Must be Dedicated to Slaanesh to use. Can't use at the same time as a Noise Marine Doom Siren Weapon, as neither work in proximity of the other. Heretical.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v421RfIcAwKPv8en"
+}

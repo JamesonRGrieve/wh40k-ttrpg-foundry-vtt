@@ -1,0 +1,22 @@
+{
+  "name": "Spontaneous Combustion",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack",
+    "action": "20m x Psy Rating",
+    "range": "+10 Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker attempts to erupt the target individual into ash and flame, dealing 1d10+2, +2xPsy Rating Energy Damage with Pen 0 and Flame Quality. The target may attempt to dodge as they would a Ranged Weapon attack.",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FOuawGg5xZfJlfki"
+}

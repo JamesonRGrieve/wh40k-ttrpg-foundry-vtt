@@ -1,0 +1,22 @@
+{
+  "name": "Umbral Halo",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Corruption 30+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating Radius",
+    "range": "Corruption",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Whilst Sustained, everything in range not already in darkness become one step darker (Bright->Shadowed->Darkness). The Psyker themselves does not suffer any negative effects from the lower light level, which follows them as they move. All Creatures except the psyker must test Fear(2) when entering the radius of the power.",
+    "effect": "200xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "njZFvyg1Ovu1lhg6"
+}

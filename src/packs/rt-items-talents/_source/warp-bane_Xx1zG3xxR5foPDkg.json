@@ -1,0 +1,17 @@
+{
+  "name": "Warp Bane",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T3)",
+    "requirements": "Tier 3: Untouchable E.Adv, Warp Disruption, Willpower 55. Aptitudes: Willpower",
+    "effect": "The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Xx1zG3xxR5foPDkg"
+}

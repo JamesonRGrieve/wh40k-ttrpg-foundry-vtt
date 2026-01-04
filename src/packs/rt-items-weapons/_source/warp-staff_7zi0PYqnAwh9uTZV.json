@@ -1,0 +1,28 @@
+{
+  "name": "Warp Staff",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced",
+    "weight": "6kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7zi0PYqnAwh9uTZV"
+}

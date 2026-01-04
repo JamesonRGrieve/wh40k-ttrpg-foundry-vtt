@@ -1,0 +1,20 @@
+{
+  "name": "Chieftan Trophy Rack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Counts as a Back Banner (If Kill-Team's Leader, when spending Fate Point to regain Cohesion, regain +1 extra). Can choose one enemy type to be displayed as a trophy, be it a race, organisation, or specific foe. When fighting members of that race, organisation, or foe, character counts as having Fear +1. Character may first have to defeat such a foe to be able to display the trophy.",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: White Scars",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BTxoEYa4EBaJNb0f"
+}

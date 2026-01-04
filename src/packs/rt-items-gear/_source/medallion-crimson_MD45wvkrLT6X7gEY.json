@@ -1,0 +1,20 @@
+{
+  "name": "Medallion Crimson",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "When the wearer takes damage for the first time during a combat encounter, reduce that damage by 1 (min 0)\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull with three sylised gems inset beneath",
+    "cost": "Distinguished Service Medal: Awarded for continuing to fight despite suffering a Critical Wound.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MD45wvkrLT6X7gEY"
+}

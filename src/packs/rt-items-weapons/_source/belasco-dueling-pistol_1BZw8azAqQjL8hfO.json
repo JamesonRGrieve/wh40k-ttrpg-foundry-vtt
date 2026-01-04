@@ -1,0 +1,28 @@
+{
+  "name": "Belasco Dueling Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "45m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "1.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1BZw8azAqQjL8hfO"
+}

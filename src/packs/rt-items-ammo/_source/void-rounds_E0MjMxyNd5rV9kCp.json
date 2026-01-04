@@ -1,0 +1,20 @@
+{
+  "name": "Void Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP Weapon",
+    "damageOrEffect": "Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n",
+    "qualities": "Reliable (conditional)",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": "8 T each",
+    "source": "RT: Into the Storm / DH: Inquisitor's HB",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n</p><p><b>Qualities:</b> Reliable (conditional)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E0MjMxyNd5rV9kCp"
+}

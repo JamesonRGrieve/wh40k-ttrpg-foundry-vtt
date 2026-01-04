@@ -1,0 +1,14 @@
+{
+  "name": "Overcharge (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "User can choose to increase weapon's damage by X, but weapon gains \"Overheats\" Quality for those shots.",
+    "description": {
+      "value": "<p>User can choose to increase weapon's damage by X, but weapon gains \"Overheats\" Quality for those shots.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3iOKgwvs2J9QEvIb"
+}

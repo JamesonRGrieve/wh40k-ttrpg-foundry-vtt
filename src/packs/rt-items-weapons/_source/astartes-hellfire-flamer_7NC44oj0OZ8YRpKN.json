@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Hellfire Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+9",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "SM Wep, Flame, Tearing",
+    "weight": "15kg",
+    "availability": "Initiated",
+    "cost": "25 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only.  Deathwatch variant Astartes Flamer. Ignores Natural Armour and inflicts Righteous Fury on a 9 or 10.\nThose set on fire by Astartes flamer weapons take +4 damage from the flames.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Tearing</p><p><b>Note:</b> Space Marines Only.  Deathwatch variant Astartes Flamer. Ignores Natural Armour and inflicts Righteous Fury on a 9 or 10.\nThose set on fire by Astartes flamer weapons take +4 damage from the flames.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7NC44oj0OZ8YRpKN"
+}

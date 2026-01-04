@@ -1,0 +1,17 @@
+{
+  "name": "Keep Them Off Balance!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Ratling Comrade, Agility 40\nApt: Agility, Finesse",
+    "descriptionText": "Character can use Order after inflicting damage on an enemy with an attack. If Comrade is in Cohesion, the damaged enemy must make a +0 Toughness Test, if failed they are Stunned for one Round.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can use Order after inflicting damage on an enemy with an attack. If Comrade is in Cohesion, the damaged enemy must make a +0 Toughness Test, if failed they are Stunned for one Round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yFYEGhwiwZ9Y0vsM"
+}

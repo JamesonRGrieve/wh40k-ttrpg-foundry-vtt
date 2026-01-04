@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: Powa' Burst",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "Varies",
+    "range": "Varies",
+    "opposed": "Varies",
+    "sustained": "Basic Technique of Waaagh! Discipline, all Ork Weirdboyz have this. Once per Round instead of using a Psychic Technique, may instead roll 1d100, if result is a psychic power, make Focus Power Test to manifest it, Powa' Burst Effects: 1-5: Anticlimatic Fizzle, nothing happens. 6-20: Frazzle. 21-30: Up an' at 'Em!. 31-40: Warpath. 41-50: Zzap. 51-60: Dis is Takin' Too Long!. 61-70: Smash da Gitz. 71-75: 'Ere we Go. 76-80: We'z Gotta Be Lucky. 81-85: Deff Wave. 86-90: Krump 'Em All. 91-95: 'Ead to 'Ead. 96-99: I'z Gonna Squig Ya! 100: Overload! Choose any other result, roll on 'Eadbang Table afterwards.\nWeirdboy does not need to know the power in order to manifest it by this method. If Weirdboy has 3+ Psy Rating, may add or subtract their Willpower Bonus from the result of their roll.",
+    "effect": "Free",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "y475VBPlsoJSDlyA"
+}

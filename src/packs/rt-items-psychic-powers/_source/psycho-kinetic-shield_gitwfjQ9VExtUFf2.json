@@ -1,0 +1,22 @@
+{
+  "name": "Psycho-kinetic Shield",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Psycho-Kinetic Mist, Precision Telekinesis.",
+    "focusPower": "Full Action",
+    "action": "Self, 2m",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker creates a 90 degree arc shield around themselves or someone else within range as long as power is sustained. The shield provides a Psy Rating AP, defending against Melee, Ranged, Psychic, and Daemonic Attacks. The shield can be moved from the psyker to an ally or vice versa as a half action. ",
+    "effect": "300xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gitwfjQ9VExtUFf2"
+}

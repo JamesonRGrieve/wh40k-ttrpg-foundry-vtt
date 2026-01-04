@@ -1,0 +1,20 @@
+{
+  "name": "! Default: Backpack Ammo/Power Pack",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Any Plasma, Melta, Las, Bolt, SP, Flame. No Heavy except Stubber/Bolter/Flamer",
+    "damageOrEffect": "Multiply weapon clip size by 5x and is linked to backpack. If weapon jams only use one clip's worth of ammo and don't need to reload.\nWeapon can't be reloaded during combat.",
+    "qualities": "-",
+    "weight": "15lg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Multiply weapon clip size by 5x and is linked to backpack. If weapon jams only use one clip's worth of ammo and don't need to reload.\nWeapon can't be reloaded during combat.</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oWd8OrE8AYBL48Mx"
+}

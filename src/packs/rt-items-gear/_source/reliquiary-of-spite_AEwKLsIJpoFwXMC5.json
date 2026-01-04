@@ -1,0 +1,20 @@
+{
+  "name": "Reliquiary of Spite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "7kg",
+    "availability": "Master Crafted Relic Reliquary of the Sons of Medusa Chapter. Bearer adds twice their Willpower Bonus to all Toughness Tests. Can also spend a Fate Point to ignore Stunning, Fatigue, and Critical Effects (excluding limb loss and death) for 1d5 Rounds.",
+    "cost": null,
+    "effects": "Famed",
+    "notes": "30 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 30 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AEwKLsIJpoFwXMC5"
+}

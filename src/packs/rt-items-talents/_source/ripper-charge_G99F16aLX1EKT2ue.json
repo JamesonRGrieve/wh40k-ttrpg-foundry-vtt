@@ -1,0 +1,17 @@
+{
+  "name": "Ripper Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Strength 45, Bulging Biceps \nAptitudes: Ballistic Skill, Offence",
+    "effect": "Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "G99F16aLX1EKT2ue"
+}

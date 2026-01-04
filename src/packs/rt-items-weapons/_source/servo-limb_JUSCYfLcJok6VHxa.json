@@ -1,0 +1,28 @@
+{
+  "name": "Servo Limb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Special",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unbalanced",
+    "weight": "-",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Servo Limb Cybernetic, crude bionic arm with built-in tool. Can be either Impact or Rending. (See \"Servo Limbs\" Cybernetic, in \"Gear\" Table).",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Servo Limb Cybernetic, crude bionic arm with built-in tool. Can be either Impact or Rending. (See \"Servo Limbs\" Cybernetic, in \"Gear\" Table).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JUSCYfLcJok6VHxa"
+}

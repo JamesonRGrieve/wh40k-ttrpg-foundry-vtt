@@ -1,0 +1,20 @@
+{
+  "name": "Glimmer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Induces Relaxation and intoxication to those exposed to light filtered through this liquid substance. When using it imposes -1d10 to Perception and Willpower for an hour, and must make +0 Toughness check or fall unconcious. Only seems to work on Humans.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x6wyqKgOaG0eABqg"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Blood Boil",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 19",
+    "opposed": "Yes",
+    "sustained": "Whilst power is sustained, once per round can spend a Half Action to make an Opposed Willpower vs Target Individual's Toughness. If successful target suffers 1 Fatigue, +1 per Degree of Success, if the target would be rendered unconcious through this Fatigue any excess Fatigue instead causes 5 Damage each. If this damage exceeds the target's wounds they instantly die, their heart and brain detonating.\nFor every 5 points above threshold, gain +10 to Opposed Willpower Test.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yVcf2P0WtEm4IR42"
+}

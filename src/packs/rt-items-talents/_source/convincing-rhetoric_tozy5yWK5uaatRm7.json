@@ -1,0 +1,17 @@
+{
+  "name": "Convincing Rhetoric",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Order of the Hammer Initiate Alternative Advance, 750xp. ComLore(Any One), Schol. Lore(Any One), Trade(Any One), Total Recall",
+    "effect": "The Character can use their Intelligence Characteristic in place of their Fellowship Characteristics for Charm, Command, Blather, and Performer(Storyteller) Tests",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>The Character can use their Intelligence Characteristic in place of their Fellowship Characteristics for Charm, Command, Blather, and Performer(Storyteller) Tests</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tozy5yWK5uaatRm7"
+}

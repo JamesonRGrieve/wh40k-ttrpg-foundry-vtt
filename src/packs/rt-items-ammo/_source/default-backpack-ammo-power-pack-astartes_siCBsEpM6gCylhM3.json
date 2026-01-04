@@ -1,0 +1,20 @@
+{
+  "name": "! Default: Backpack Ammo/Power Pack (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Any Plasma, Melta, Las, Bolt, SP, Flame (Astartes)",
+    "damageOrEffect": "Backpack contains one of: Plasma/Melta/Las = 100 , SP/Bolt = 250, Flame = 75\nReplaces weapon's default clip size with this. Automatically issued alongside any Heavy Weapon.",
+    "qualities": null,
+    "weight": "40kg",
+    "availability": "Special",
+    "cost": null,
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Backpack contains one of: Plasma/Melta/Las = 100 , SP/Bolt = 250, Flame = 75\nReplaces weapon's default clip size with this. Automatically issued alongside any Heavy Weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "siCBsEpM6gCylhM3"
+}

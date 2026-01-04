@@ -1,0 +1,28 @@
+{
+  "name": "Melta Bomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "0m",
+    "rof": "S/-/-",
+    "damage": "6d10+7",
+    "damageType": "Energy",
+    "penetration": 15,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (5)",
+    "weight": "4kg",
+    "availability": "Initiated",
+    "cost": "12 R",
+    "source": "DW: Rites of Battle",
+    "note": "Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0jSLSqyq0Ht8UOCt"
+}

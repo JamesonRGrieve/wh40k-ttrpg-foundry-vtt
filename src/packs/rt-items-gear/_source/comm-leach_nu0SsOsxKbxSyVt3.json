@@ -1,0 +1,20 @@
+{
+  "name": "Comm Leach",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "Allows user to tap into local vox signals and data transmissions, set up with Tech-use Test. Can receive within 1km for number of minutes equal to Tech-Use Test. If test failed by more DoF than Intelligence Bonus, sender/receiver becomes aware of the tapping. Advanced versions allow broadcasts to be copied, allowing them to be hidden and retrieved later.",
+    "cost": "Considered tech-heresy unless properly consecrated by the mechanicus.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nu0SsOsxKbxSyVt3"
+}

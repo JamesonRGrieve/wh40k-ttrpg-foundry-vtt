@@ -1,0 +1,21 @@
+{
+  "name": "Step 4.5: Warp Travel Encounters: Roll on Warp Travel Encounters Table once per 5 Days of travel, add +20 if passing \"Chart Vessel Course\".\nEvery 5 Full days of Warp travel, Navigator rolls on Warp Travel Encounters Table (minimum 1 roll). If Navigator succeeded at Step 3's Chart Vessel Course Test, they add +20 to the roll.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": "See \"Warp Travel Encounters\" Table.",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Adept:</b> See \"Warp Travel Encounters\" Table.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iZARE8W7ImXxcCk8"
+}

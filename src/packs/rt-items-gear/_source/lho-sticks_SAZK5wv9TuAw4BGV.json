@@ -1,0 +1,20 @@
+{
+  "name": "Lho-Sticks",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Space Spliff",
+    "cost": "Midly Addictive",
+    "effects": "Common",
+    "notes": "10 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 10 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SAZK5wv9TuAw4BGV"
+}

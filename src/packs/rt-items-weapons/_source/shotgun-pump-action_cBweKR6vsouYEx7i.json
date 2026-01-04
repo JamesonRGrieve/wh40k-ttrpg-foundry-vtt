@@ -1,0 +1,28 @@
+{
+  "name": "Shotgun (Pump-Action)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 8,
+    "reload": "2 Full",
+    "special": "Scatter",
+    "weight": "5kg",
+    "availability": "Average",
+    "cost": "150 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cBweKR6vsouYEx7i"
+}

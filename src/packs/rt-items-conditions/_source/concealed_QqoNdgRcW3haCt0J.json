@@ -1,0 +1,22 @@
+{
+  "name": "Concealed",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Shooting at a concealed target: -30",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Shooting at a concealed target: -30</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "target"
+    }
+  },
+  "_id": "QqoNdgRcW3haCt0J"
+}

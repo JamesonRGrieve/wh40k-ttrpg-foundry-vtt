@@ -1,0 +1,28 @@
+{
+  "name": "Tau Longshot Pulse Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "200m",
+    "rof": "S/2/-",
+    "damage": "2d10+3",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 12,
+    "reload": "2 Full",
+    "special": "Accurate, Tearing",
+    "weight": "8kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Tearing</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mBSgBTspZFPkj7s3"
+}

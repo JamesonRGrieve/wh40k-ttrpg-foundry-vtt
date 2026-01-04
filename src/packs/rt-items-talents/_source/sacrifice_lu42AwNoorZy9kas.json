@@ -1,0 +1,17 @@
+{
+  "name": "Sacrifice",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Psy Rating\nAptitudes: Unaligned",
+    "effect": "Any reasonable time before Manifesting a Psychic Power, character can spend 2d5 minutes preparing a sacrifice, requiring a Forbidden Lore (Warp) Skill Test, where a living victim is bounded and anointed. Once prepared, they may spend a Full Action to sacrifice the target, in the subsequent turn they gain +5 to their Focus Power Test per Degree of Success on the Forbidden Lore(Warp) Test. Any occuring Psychic Phenomena or Perils of the Warp will target the sacrifice, if this would cause an effect that would affect the character, the body burns in warpfire, dealing 1d10 Energy Damage to anyone within 3m, or 1d10 Energy Damage with Warp Weapon Trait to anyone within 5m if Perils of the Warp.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Any reasonable time before Manifesting a Psychic Power, character can spend 2d5 minutes preparing a sacrifice, requiring a Forbidden Lore (Warp) Skill Test, where a living victim is bounded and anointed. Once prepared, they may spend a Full Action to sacrifice the target, in the subsequent turn they gain +5 to their Focus Power Test per Degree of Success on the Forbidden Lore(Warp) Test. Any occuring Psychic Phenomena or Perils of the Warp will target the sacrifice, if this would cause an effect that would affect the character, the body burns in warpfire, dealing 1d10 Energy Damage to anyone within 3m, or 1d10 Energy Damage with Warp Weapon Trait to anyone within 5m if Perils of the Warp.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lu42AwNoorZy9kas"
+}

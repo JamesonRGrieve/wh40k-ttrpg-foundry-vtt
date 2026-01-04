@@ -1,0 +1,28 @@
+{
+  "name": "Triflame Vambrace",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": 12,
+    "reload": "3 Full",
+    "special": "SM Wep, Flame, Spray",
+    "weight": "13kg",
+    "availability": "Famed",
+    "cost": "45 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Flamer of the Deathwatch. Gauntlet Mounted, has three modes of fire. Concentrated: -20 to Agility Tests to avoid being set on fire or to put out the fire from this weapon. Wide: Increase cone of fire to 60 degrees, +1d5 damage to Hordes. Burst: Replace Spray with Blast (2). Those set on fire by Astartes flamer weapons take +4 damage from the flames.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Flamer of the Deathwatch. Gauntlet Mounted, has three modes of fire. Concentrated: -20 to Agility Tests to avoid being set on fire or to put out the fire from this weapon. Wide: Increase cone of fire to 60 degrees, +1d5 damage to Hordes. Burst: Replace Spray with Blast (2). Those set on fire by Astartes flamer weapons take +4 damage from the flames.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lquJ8bQxuYhtsVAy"
+}

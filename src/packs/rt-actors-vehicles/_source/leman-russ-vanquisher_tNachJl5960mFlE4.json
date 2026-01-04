@@ -1,0 +1,25 @@
+{
+  "name": "Leman Russ Vanquisher",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "12m",
+    "tacticalSpeed": "35kph",
+    "cruisingSpeed": "-10",
+    "maneuverability": "55",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 40,\nSide 32,\nRear 20",
+    "rearArmour": "Commander, Driver, Turret Gunner, Loader, 2 Add. Gunners",
+    "structuralIntegrity": "None",
+    "crew": "Turret: Vanquisher Cannon (Turret, 900m, S/-/-, 3d10+5X, Pen 16, Pen 16, Clip 6, Rld 2  Full, Accurate)\nHull, one of: Front Facing, Heavy Bolter/Lascannon/Heavy Flamer\nSponson (Optional): Left/Right, 2x Heavy Bolter/2x Heavy Flamer/2x Plasma Cannon\nPintle (Optional): one of: Facing All, Heavy Stubber/Storm Bolter\n---\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nLascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nPlasma Cannon(120m, S/-/-, 2d10+10 E, Pen 8, Clip 32, Rld 5 Full, Blast (1), Maximal, Overheat)\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)",
+    "passengers": "Vehicle Traits: Command and Control, Enclosed, Reinforced Armour, Tracked Vehicle\nSummary: Halve Damage from non-Righteous Fury, +10 to Command for Commander, +10 to Difficult Terrain Tests, halve Critical roll that determines if Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.\nSpecial Rule: Can be a Stygies-Pattern Variant, features a Co-Axial Storm Bolter attached on main Turret.",
+    "cargo": "Extremely Rare",
+    "availability": "Only War Core",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "tNachJl5960mFlE4"
+}

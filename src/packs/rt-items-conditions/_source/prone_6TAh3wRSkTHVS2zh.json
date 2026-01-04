@@ -1,0 +1,22 @@
+{
+  "name": "Prone",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Attacking prone target with melee weapon: +10\nShooting at prone target: -10\nDodging while prone: -20",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Attacking prone target with melee weapon: +10<br>Shooting at prone target: -10<br>Dodging while prone: -20</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "self/target"
+    }
+  },
+  "_id": "6TAh3wRSkTHVS2zh"
+}

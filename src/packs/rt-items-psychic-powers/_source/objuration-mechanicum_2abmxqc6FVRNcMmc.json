@@ -1,0 +1,22 @@
+{
+  "name": "Objuration Mechanicum",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Assail",
+    "focusPower": "Half Action\nConcentration",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker chooses a point within range and line of sight, and creates a Haywire Field of Psy Rating Metres Radius. Causing chaos within machines.\nHaywire Field, roll 1d10. 1-2 No Effect, 3-4: -10 to use Technology and -1 Movement in Power Armour, 5-6 -20 to use Technology -3 Movement in Power Armour and Tech Melee acts as Primtiive Melee, 7+ Technology doesn't function, Power Armour movement set to 1 and Characters with Cybernetic Organs gain 1 Fatigue per round the spend in Haywire Field.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2abmxqc6FVRNcMmc"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Unbalanced Mind",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 5, Phantom Parry",
+    "focusPower": "Reaction\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "As a Reaction to another Psyker manifesting a power, Psyker makes Focus power Test opposed by target's Willpower. If Psyker Succeeds they can redirect target's Psychic Power to any valid target of their choosing, or cancel the power entirely. The Target must immediately roll for Perils of the Warp with +5 per Degree of Success on Opposed Test, this is in addition to any other Perils or Phenomena they cause. Finally, the target is stunned until the start of their next turn.",
+    "effect": "500xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wx0VB8c1hJb2HgpJ"
+}

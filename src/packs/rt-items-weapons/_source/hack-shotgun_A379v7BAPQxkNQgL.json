@@ -1,0 +1,28 @@
+{
+  "name": "Hack Shotgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Inaccurate, Scatter, Tearing",
+    "weight": "3kg",
+    "availability": "Common",
+    "cost": "60 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "A cutdown Double-Barreled Shotgun that fires both shots at once. If only loaded with a single shell deals 1d10+4 Damage without Tearing Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Scatter, Tearing</p><p><b>Note:</b> A cutdown Double-Barreled Shotgun that fires both shots at once. If only loaded with a single shell deals 1d10+4 Damage without Tearing Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "A379v7BAPQxkNQgL"
+}

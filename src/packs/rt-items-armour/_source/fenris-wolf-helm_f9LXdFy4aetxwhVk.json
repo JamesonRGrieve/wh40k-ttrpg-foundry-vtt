@@ -1,0 +1,22 @@
+{
+  "name": "Fenris Wolf Helm",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "Head",
+    "ap": 8,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Respected",
+    "cost": "-",
+    "notes": "Worn sometimes by Space Wolves, allows them to use their Wolf Senses Solo Mode ability and still gain the benefits of helmet Auto-Senses.",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>Worn sometimes by Space Wolves, allows them to use their Wolf Senses Solo Mode ability and still gain the benefits of helmet Auto-Senses.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f9LXdFy4aetxwhVk"
+}

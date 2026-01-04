@@ -1,0 +1,22 @@
+{
+  "name": "Power Field (Vehicle/Emplacement)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": "80%",
+    "maxAg": "-",
+    "weight": "500kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Bulky Installation, projects force wall out 3 metres. Ranged attacks within 3 metres, and any melee attacks are unaffected by field.  Visibly glows and crackles, giving -40 to Stealth while active. This version is equipped in vechiles or inside small buildings. Ranged can be modified but also varies power usage.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Bulky Installation, projects force wall out 3 metres. Ranged attacks within 3 metres, and any melee attacks are unaffected by field.  Visibly glows and crackles, giving -40 to Stealth while active. This version is equipped in vechiles or inside small buildings. Ranged can be modified but also varies power usage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2b76Ws9IEX5WbiSk"
+}

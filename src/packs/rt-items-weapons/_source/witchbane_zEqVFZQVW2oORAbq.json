@@ -1,0 +1,28 @@
+{
+  "name": "Witchbane",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Tearing",
+    "weight": "8kg",
+    "availability": "Famed",
+    "cost": "10 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Chainsword of the Black Templars. +5 to Willpower Tests to resist the effects of Psychic Powers",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Chainsword of the Black Templars. +5 to Willpower Tests to resist the effects of Psychic Powers</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zEqVFZQVW2oORAbq"
+}

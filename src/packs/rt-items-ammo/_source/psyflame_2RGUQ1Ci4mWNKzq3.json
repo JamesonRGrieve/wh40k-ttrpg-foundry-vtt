@@ -1,0 +1,20 @@
+{
+  "name": "Psyflame",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Flame: Any",
+    "damageOrEffect": "Gain Sanctified Quality. Ignore Protective Benefits from Psychic Powers. Targets suffer - 5 x Their Psy Rating Penalty to Agility Tests to avoid being hit by weapon",
+    "qualities": "Sanctified",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. Ignore Protective Benefits from Psychic Powers. Targets suffer - 5 x Their Psy Rating Penalty to Agility Tests to avoid being hit by weapon</p><p><b>Qualities:</b> Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2RGUQ1Ci4mWNKzq3"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Liberator's Honourium",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to Fellowship Tests when interacting with Campaign Command or Imperial Nobility.\nMedals can't be acquired, only earned. Looks Like a Platinum Medallion encrusted with Gemstones.",
+    "cost": "Distinguished Service Medal: Save an Important Imperial Official, Cleric, or Noble from the clutches of the Dark Eldar.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WKY7ahappulsFX0I"
+}

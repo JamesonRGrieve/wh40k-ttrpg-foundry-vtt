@@ -1,0 +1,22 @@
+{
+  "name": "Tau Combat Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Tau",
+    "locations": "All",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "12kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Designed for Tau rather than Humans, debatably wearable by humans with some modification. ",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Designed for Tau rather than Humans, debatably wearable by humans with some modification. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7QXJ9dCbg8OfyLlx"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Armour Negation Protocols",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Servitor Comrade: Lathe-Pattern Breacher Servitor\nApt: Weapon Skill, Offence",
+    "descriptionText": "Servitor Comrade in Cohesion grants Character +5 Penetration to all Melee Attacks until the end of their turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Servitor Comrade in Cohesion grants Character +5 Penetration to all Melee Attacks until the end of their turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BwQ37Rml7bQDGywG"
+}

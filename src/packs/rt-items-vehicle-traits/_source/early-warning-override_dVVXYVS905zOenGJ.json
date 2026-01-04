@@ -1,0 +1,14 @@
+{
+  "name": "Early Warning Override",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Once per Encounter, the wearer can make the Overwatch Action as a Reaction.",
+    "description": {
+      "value": "<p>Once per Encounter, the wearer can make the Overwatch Action as a Reaction.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dVVXYVS905zOenGJ"
+}

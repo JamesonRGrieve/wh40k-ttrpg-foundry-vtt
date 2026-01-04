@@ -1,0 +1,28 @@
+{
+  "name": "Rak'Gol Rad-Beam Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Rak'Gol",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "4d10+5",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "90kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Koronus Bestiary",
+    "note": "Radioactive",
+    "description": {
+      "value": "<p><b>Note:</b> Radioactive</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ULNRMQeDY3JWhTeD"
+}

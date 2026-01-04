@@ -1,0 +1,18 @@
+{
+  "name": "Drive (X)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Advanced, Operator",
+    "characteristic": "Agility",
+    "descriptor": "Drive Group Vehicle of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to drive under normal conditions without test.",
+    "uses": "Skill Test: Success controls vehicle during maneouver, failiure doesn't, more DoF cause worse result.\nSkill Groups: Ground Vehicle, Skimmer/Hover, Walker.  ",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Drive Group Vehicle of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to drive under normal conditions without test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XwbDQ1DmvW3T7zEa"
+}

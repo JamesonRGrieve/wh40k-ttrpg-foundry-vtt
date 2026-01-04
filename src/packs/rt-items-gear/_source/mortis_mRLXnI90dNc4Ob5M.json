@@ -1,0 +1,20 @@
+{
+  "name": "Mortis",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Lasts 4d10 minutes. Renders the user into a near-death state, any tests to determine the user's status suffer -30, with failiure indicating the user is dead. Good Craftsmanship allows user to specify how long the state lasts, up to an hour. Poor Craftsmanship only applies a -10 to tests to determine whether the user is alive.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mRLXnI90dNc4Ob5M"
+}

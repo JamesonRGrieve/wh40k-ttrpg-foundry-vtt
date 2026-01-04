@@ -1,0 +1,22 @@
+{
+  "name": "Dirge of Decay",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned, Disturbing Voice, Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "All Creatures who have suffered damage within range must make +0 Toughness Test or immediatley suffer Psy Rating Rending Damage. For each turn the power is sustained all creatures who have taken damage within range must make a +0 Toughness Test or suffer 1 Rending Damage. Damage caused by this power ignores Armour and Toughness. Those devoted to Nurgle ignore this effect, as do those who have not taken damage.\nIf the Psyker uses Incantations with this power, they can choose to make the time taken to sustain this power a Full Action, if doing so each turn the Psyker sustains the power they can target on creature suffering the effects of it and force them to make a +0 Willpower Test, dealing 1d10+6 Rending Damage with Toxic(2) Quality (this counts as an Attack).",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "I6P1m3d7T1H7E4Gx"
+}

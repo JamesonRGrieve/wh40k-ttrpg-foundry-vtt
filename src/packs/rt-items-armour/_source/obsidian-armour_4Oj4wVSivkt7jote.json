@@ -1,0 +1,22 @@
+{
+  "name": "Obsidian Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Arms, Body, Legs",
+    "ap": 7,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "notes": "Weapons with the Force Quality have it negated while attacking anyone wearing this armour.",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Weapons with the Force Quality have it negated while attacking anyone wearing this armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4Oj4wVSivkt7jote"
+}

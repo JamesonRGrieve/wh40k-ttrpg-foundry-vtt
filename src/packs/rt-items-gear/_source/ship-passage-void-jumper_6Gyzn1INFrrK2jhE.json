@@ -1,0 +1,20 @@
+{
+  "name": "Ship Passage: Void Jumper",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Passage aboard a Void Craft, to another planet or star system. Small vessels meant for shor-range Trade Routes between nearby systems, making quick journeys back and fourth of 1-2 jumps. A quick way to get to somewhere nearby in astronomical terms although you'll have little ability to dictate a specific location. Decent enough comfort.",
+    "cost": "Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed",
+    "effects": "Scarce",
+    "notes": "2800 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 2800 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6Gyzn1INFrrK2jhE"
+}

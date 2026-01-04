@@ -1,0 +1,17 @@
+{
+  "name": "Stabilise",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Heavy Gunner Spec\n250xp",
+    "descriptionText": "Comrade in Cohesion allows Character to make the Semi or Full Auto Burst Actions with a base +10 Modifier instead of the +0/-10 they usually have.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade in Cohesion allows Character to make the Semi or Full Auto Burst Actions with a base +10 Modifier instead of the +0/-10 they usually have.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5I5610P3GKrdrpIr"
+}

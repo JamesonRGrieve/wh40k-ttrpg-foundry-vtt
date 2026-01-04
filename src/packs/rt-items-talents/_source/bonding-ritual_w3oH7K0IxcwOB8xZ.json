@@ -1,0 +1,17 @@
+{
+  "name": "Bonding Ritual",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, WP 35",
+    "effect": "The Tau carries a symbolic bonding knife that solidifies their bond with other Tau Wrarriors. As long as the Tau is in a group with another member who also has this talent, the first time in an encounter that they suffer Critical Damage, if there is another member with this Talent in 20 metres, they automatically pass any tests to ignore non-permenant effects such as Gaining Fatigue or being knocked prone. It does not help against losing limbs or being instantly killed.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The Tau carries a symbolic bonding knife that solidifies their bond with other Tau Wrarriors. As long as the Tau is in a group with another member who also has this talent, the first time in an encounter that they suffer Critical Damage, if there is another member with this Talent in 20 metres, they automatically pass any tests to ignore non-permenant effects such as Gaining Fatigue or being knocked prone. It does not help against losing limbs or being instantly killed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "w3oH7K0IxcwOB8xZ"
+}

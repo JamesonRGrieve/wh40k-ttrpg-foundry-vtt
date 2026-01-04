@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Lamp Pack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "1kg",
+    "availability": "Compact light source held in the hand or attached to the bayonet lug of most rifles. Light beam can be adjusted via a focusing dial to cover a wide area or a tighter, longer range illumination. Lasts about 1d5+5 hours before needing recharge.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Average",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2X4VDUwxrIpmufQC"
+}

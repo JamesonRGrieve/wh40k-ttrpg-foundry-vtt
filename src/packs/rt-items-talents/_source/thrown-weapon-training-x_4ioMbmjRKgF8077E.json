@@ -1,0 +1,17 @@
+{
+  "name": "Thrown Weapon Training (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Can use Thrown Weapons without a -20 Penalty to WS/BS. Such as: Universal(Primitive, Chain, Shock, and Power). Everyone can throw grenades without penalty by default.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Can use Thrown Weapons without a -20 Penalty to WS/BS. Such as: Universal(Primitive, Chain, Shock, and Power). Everyone can throw grenades without penalty by default.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4ioMbmjRKgF8077E"
+}

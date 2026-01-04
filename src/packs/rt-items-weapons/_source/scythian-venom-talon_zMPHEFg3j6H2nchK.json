@@ -1,0 +1,28 @@
+{
+  "name": "Scythian Venom Talon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Toxic",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zMPHEFg3j6H2nchK"
+}

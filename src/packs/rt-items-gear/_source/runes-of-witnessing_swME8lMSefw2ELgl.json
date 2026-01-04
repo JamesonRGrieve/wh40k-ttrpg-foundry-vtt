@@ -1,0 +1,20 @@
+{
+  "name": "Runes of Witnessing",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "0.5kg",
+    "availability": "Eldar Rune often used by Farseers. Once per Round, the user may choose to reduce or increase the roll they made on a Psychic Phenomena or Perils of the Warp Table by a number up to their Perception Bonus.",
+    "cost": "Xenotech. Not something a character would normally be able to acquire.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Navis Primer",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "swME8lMSefw2ELgl"
+}

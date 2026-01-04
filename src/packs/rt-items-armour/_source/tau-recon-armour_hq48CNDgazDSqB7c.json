@@ -1,0 +1,22 @@
+{
+  "name": "Tau Recon Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Tau",
+    "locations": "All",
+    "ap": 4,
+    "maxAg": null,
+    "weight": "3kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hq48CNDgazDSqB7c"
+}

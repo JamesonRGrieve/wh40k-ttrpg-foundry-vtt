@@ -1,0 +1,20 @@
+{
+  "name": "Wounded Staff",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Xenos)",
+    "weight": "?",
+    "availability": "A clearly Eldar weapon that contains the souls of an entire craftworld lost during the fall of the ancient race, it is sought by all manner of Eldar Corsairs, Inquisitors, and Slaaneshi Cultists. The first time a character moves within 5m of the staff they must make a -20 Willpower test (-40 if a Psyker) or gain 1d10 Insanity Points. Psykers who cause Psychic Phenomena automatically roll twice on Perils of the Warp instead. Weapon can be used as a Force Staff, but those wielding it gain Enemy (Eldar) (4), and Eldar fighting them gain +20 to WS against them.",
+    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E75pjq4Y3TsRQQ6h"
+}

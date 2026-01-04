@@ -1,0 +1,21 @@
+{
+  "name": "Pressed-Crew Quarters",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 1,
+    "spaceUsage": 2,
+    "spCost": "-",
+    "effect": "Where the regular crew live. Decrease Morale by 2 Permenately due to cramped crew conditions.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where the regular crew live. Decrease Morale by 2 Permenately due to cramped crew conditions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9ZUm7P44wXEZMM8e"
+}

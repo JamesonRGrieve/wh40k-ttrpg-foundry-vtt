@@ -1,0 +1,28 @@
+{
+  "name": "Chainsword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Balanced",
+    "weight": "6kg",
+    "availability": "Average",
+    "cost": "275 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Balanced</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zqRAbFEx0QTcJ5iE"
+}

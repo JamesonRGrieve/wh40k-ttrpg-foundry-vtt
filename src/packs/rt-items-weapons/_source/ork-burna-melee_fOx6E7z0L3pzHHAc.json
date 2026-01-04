@@ -1,0 +1,28 @@
+{
+  "name": "Ork Burna [Melee]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unwieldy",
+    "weight": "8kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fOx6E7z0L3pzHHAc"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Medicus Ministorum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "4kg",
+    "availability": "A High-quality medikit. User gains 2 additional Degrees of Success on successful medicae tests and reduces Degress of Faiiure on failed Medicae Tests by 2 to a minimum of 0.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2aJKl7Tkzmhu1bBd"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Kabalite Splinter Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Kabalite",
+    "range": "50m",
+    "rof": "S/3/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": 120,
+    "reload": "2 Full",
+    "special": "Toxic",
+    "weight": "1kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Common Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Knife in Melee Combat. ",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Common Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Knife in Melee Combat. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ViwNMi9EcjAfyqRZ"
+}

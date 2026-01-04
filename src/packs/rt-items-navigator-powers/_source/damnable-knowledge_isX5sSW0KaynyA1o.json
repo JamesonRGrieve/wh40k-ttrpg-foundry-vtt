@@ -1,0 +1,21 @@
+{
+  "name": "Damnable Knowledge",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Daemonhost require the knowledge to create them. Something beyond a simple Requisition Test to find. Consider it Unique Availability.",
+    "range": null,
+    "test": "Warp Fire",
+    "sustain": "3",
+    "novice": "The Daemonhost burns with unholy flames. Their natural weapons now inflict Energy damage and gain the Flames Quality.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> The Daemonhost burns with unholy flames. Their natural weapons now inflict Energy damage and gain the Flames Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "isX5sSW0KaynyA1o"
+}

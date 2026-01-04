@@ -1,0 +1,20 @@
+{
+  "name": "Null Box",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "20kg",
+    "availability": "Portable Stasis Field generators the shape of small armoured boxes up to large chests or sarcophagi. Time is near-halted inside a Stasis field once activated. These are Dark-Age Relics, incredibly durable and capable of remaining powered for eternity, keeping whatever is inside temporally disconnected from reality and in perfect condition.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "25000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 25000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TSDchLR7vwdQ2NQg"
+}

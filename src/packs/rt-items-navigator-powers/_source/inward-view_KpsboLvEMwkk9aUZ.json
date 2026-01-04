@@ -1,0 +1,21 @@
+{
+  "name": "Inward View",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "5 Minutes",
+    "range": "Self",
+    "test": "Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator removes one level of Fatigue, and adds +10 to Investigation Test made within the next Hour. Can only use power once every 24 hours.",
+    "adept": "Navigator isntead removes up to 2 Fatigue, and also adds +5 to all Navigation(Warp) Tests made in the next hour.",
+    "master": "Navigator instead removes up to 3 Fatigue, and instead adds +10 to all Navigation (Warp) Tests for the next eight hours.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator removes one level of Fatigue, and adds +10 to Investigation Test made within the next Hour. Can only use power once every 24 hours.</p><p><b>Adept:</b> Navigator isntead removes up to 2 Fatigue, and also adds +5 to all Navigation(Warp) Tests made in the next hour.</p><p><b>Master:</b> Navigator instead removes up to 3 Fatigue, and instead adds +10 to all Navigation (Warp) Tests for the next eight hours.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KpsboLvEMwkk9aUZ"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Duty Unto Death",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Sister Oblatia Alternative Advance, 300xp, WP 45",
+    "effect": "Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qSY5Bw1rRcQ07Ebs"
+}

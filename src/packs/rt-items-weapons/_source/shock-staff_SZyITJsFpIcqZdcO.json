@@ -1,0 +1,28 @@
+{
+  "name": "Shock Staff",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Shock",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SZyITJsFpIcqZdcO"
+}

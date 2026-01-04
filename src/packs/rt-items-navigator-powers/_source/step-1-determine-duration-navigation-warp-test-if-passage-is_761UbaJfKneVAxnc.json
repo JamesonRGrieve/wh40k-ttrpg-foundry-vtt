@@ -1,0 +1,21 @@
+{
+  "name": "Step 1: Determine Duration:  Navigation(Warp) Test if passage is known, give rough estimate to travel duration. Pass/Fail kept secret by GM, as are additional modifiers.\nWhen setting out on a journey the GM selects an appropriate duration of the voyage. If the Navigator knows the passage, or has good information such as via a Navigational Chart or Cipher they may make a Navigation (Warp) Test (whether it passes or fails is known only to the GM, who applies secret modifiers to it). Pass gives rough estimate, fail gives increasingly incorrect estimate. If the Navigator does not know passage, can only make \"Educated Guess\".",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": "Example Warp Travel Durations:\nShort, well-travelled Passage between close systems: ~1 day. Journey within the same sub-sector with good information: ~5-10 days. Journey across the Sector with good information: ~30-60 days. Journey across the Segmentum at good speed: 100+ Days. Odyssey across the galaxy: Several Years.\nNote: Time passes strangely between warp and real space, generally 1 Day in the Warp is 12 Days in Reality, but this can vary dramatically.",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Adept:</b> Example Warp Travel Durations:\nShort, well-travelled Passage between close systems: ~1 day. Journey within the same sub-sector with good information: ~5-10 days. Journey across the Sector with good information: ~30-60 days. Journey across the Segmentum at good speed: 100+ Days. Odyssey across the galaxy: Several Years.\nNote: Time passes strangely between warp and real space, generally 1 Day in the Warp is 12 Days in Reality, but this can vary dramatically.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "761UbaJfKneVAxnc"
+}

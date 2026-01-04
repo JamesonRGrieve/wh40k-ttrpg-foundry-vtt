@@ -1,0 +1,20 @@
+{
+  "name": "Voidbait (Warp)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "75kg",
+    "availability": "More advanced void-bait that sends weak psychic signals discernable by astropaths and Navigators. Requires 1d5+1 hours and -40 Tech-Use Test to set up. Can be detected up to 10 Light Years away by a Psynscience Test. Can be determined as false with Scrutiny test with -10 per DoS on the Tech-Use Test.",
+    "cost": "Good or Best Quality Voidbait.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BvyzxZNAfpi1XtT3"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "The Corroded Falchion",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Devastating (1), Toxic",
+    "weight": "8kg",
+    "availability": "Hero",
+    "cost": "30 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Power Falchion of the Deathwatch. A Heavily Damaged Relic kept in a stasis sheath. Cannot be kept out of the sheath for long periods of time. Every time the weapon hits roll 1d10, on a 1 it shatters and is permenantly lost.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Devastating (1), Toxic</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Falchion of the Deathwatch. A Heavily Damaged Relic kept in a stasis sheath. Cannot be kept out of the sheath for long periods of time. Every time the weapon hits roll 1d10, on a 1 it shatters and is permenantly lost.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zcp8et42pqKpmzWo"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Ligature Oils",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "If applied to a weapon as a Full Aciton, it becomes Immune to jamming for one game session. Extracted from ritually sacrificed captives and brewed by renegade technomats and techpriests.",
+    "cost": "Heretical",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HlpGpaFRLsftV82d"
+}

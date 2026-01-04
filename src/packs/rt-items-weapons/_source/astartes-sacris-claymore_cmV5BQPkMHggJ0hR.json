@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Sacris Claymore",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Unbalanced",
+    "weight": "10kg",
+    "availability": "Initiated",
+    "cost": "3 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Traditional Weapon of the Storm Wardens Space Marine Chapter. Replaces Combat Knife if preferred.\nTwo Handed Weapon. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Unbalanced</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Traditional Weapon of the Storm Wardens Space Marine Chapter. Replaces Combat Knife if preferred.\nTwo Handed Weapon. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cmV5BQPkMHggJ0hR"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Disturbing Voice",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Fellowship, Social, Nurgle",
+    "effect": "Character gains +10 to all Intimidate Tests but suffers -10 to Fellowship Tests when dealing with others in a non-threatening manner, such as animals, children, or the easily startled. \nWhen using the Command Skill's Special use \"Terrify\", add +10 to Command Skill Tests to counter the effects of Fear.\nIn Social Conflicts, character gains +10 to Opposed Tests if they use the Intimidate Skill, however incur a -10 if using any other Skill or Fellowship.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character gains +10 to all Intimidate Tests but suffers -10 to Fellowship Tests when dealing with others in a non-threatening manner, such as animals, children, or the easily startled. \nWhen using the Command Skill's Special use \"Terrify\", add +10 to Command Skill Tests to counter the effects of Fear.\nIn Social Conflicts, character gains +10 to Opposed Tests if they use the Intimidate Skill, however incur a -10 if using any other Skill or Fellowship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kwwkUK9eOFe9OxNt"
+}

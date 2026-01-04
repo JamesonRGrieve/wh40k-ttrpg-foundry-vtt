@@ -1,0 +1,17 @@
+{
+  "name": "Cover-Up",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Intelligence 35\nAptitudes: Intelligence, Knowledge",
+    "effect": "At GM Discretion, Character can reduce their Influence by X to increase their Subtlety by Xd5.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>At GM Discretion, Character can reduce their Influence by X to increase their Subtlety by Xd5.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HVQSq7ECIgqhoHio"
+}

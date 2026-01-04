@@ -1,0 +1,21 @@
+{
+  "name": "Emergency Field",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Gellar Field",
+    "hullType": "All Ships",
+    "powerUsage": 6,
+    "spaceUsage": 1,
+    "spCost": "-",
+    "effect": "Protects the vessel whilst in the immaterium. If the ship enters the warp unexpectedly, roll 1d10, on a 3 the Gellar Field activates automatically. Protecting the Vessel from warp intrusions.",
+    "availability": "Scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Protects the vessel whilst in the immaterium. If the ship enters the warp unexpectedly, roll 1d10, on a 3 the Gellar Field activates automatically. Protecting the Vessel from warp intrusions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wPlrGPdEJteLnoYm"
+}

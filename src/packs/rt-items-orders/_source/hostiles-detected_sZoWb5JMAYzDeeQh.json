@@ -1,0 +1,17 @@
+{
+  "name": "Hostiles Detected!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nSpecial",
+    "requirements": ".Ratling, Perception 40\nApt: Perception, Fieldcraft",
+    "descriptionText": "Character can use Order when one or more Player Characters have been Surpised. All Comrades affected spend a Half Action to benefit from cover as if receiving the Take Cover! Generic Order, even if their controlling Player Characters cannot act due to being Suprised.\nTake Cover!: All shots that hit the Comrade must roll damage, if doing less than 3+Cover AP damage, the Comrade is unharmed.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can use Order when one or more Player Characters have been Surpised. All Comrades affected spend a Half Action to benefit from cover as if receiving the Take Cover! Generic Order, even if their controlling Player Characters cannot act due to being Suprised.\nTake Cover!: All shots that hit the Comrade must roll damage, if doing less than 3+Cover AP damage, the Comrade is unharmed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sZoWb5JMAYzDeeQh"
+}

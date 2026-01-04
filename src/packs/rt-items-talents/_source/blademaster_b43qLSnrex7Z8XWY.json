@@ -1,0 +1,17 @@
+{
+  "name": "Blademaster",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; WS 30, Weapon Training (any Melee)\nAptitudes: Weapon Skill, Finesse, Khorne",
+    "effect": "Once per Round, may reroll a missed attack with a bladed weapon, (sword, chainaxe, power sword, etc)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Round, may reroll a missed attack with a bladed weapon, (sword, chainaxe, power sword, etc)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b43qLSnrex7Z8XWY"
+}

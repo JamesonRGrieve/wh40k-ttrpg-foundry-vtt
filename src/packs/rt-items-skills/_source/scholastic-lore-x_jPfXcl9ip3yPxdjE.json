@@ -1,0 +1,18 @@
+{
+  "name": "Scholastic Lore (X)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Investigation, Interaction\nApt:Intelligence,Knowledge, Unaligned",
+    "characteristic": "Intelligence",
+    "descriptor": "In-depth, Academic Knowledge of a group that may be complex or esoteric, providing a depth of knowledge far more than that of Common Lore due to the Experience required to obtain it.",
+    "uses": "Use: Recall relevent academic information for relevent group. Used for detailed knowledge such as recounting past legends, obscure rulings of the Arbites, Complex Legal Relationships, Identifying rare beasts.\nSkill Groups: Archaic, Astromancy, Beasts, Bureaucracy, Chymistry, Cryptology, Heraldry, Imperial Warrants, Imperial Creed, Judgement, Legend, Navis Nobilite, Numerology, Occult, Philosphy, Tactica Imperialis, etc.",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>In-depth, Academic Knowledge of a group that may be complex or esoteric, providing a depth of knowledge far more than that of Common Lore due to the Experience required to obtain it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jPfXcl9ip3yPxdjE"
+}

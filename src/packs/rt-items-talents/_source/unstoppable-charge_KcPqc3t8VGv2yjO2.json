@@ -1,0 +1,17 @@
+{
+  "name": "Unstoppable Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 40, Survival +10 \nAptitudes: Fieldcraft, Weapon Skill",
+    "effect": "When the character makes a melee attack as part of a Charge Action or Crushing Charge Mounted Special Action, their attack gains Felling(Weapon Skill Bonus/2), rounded up.\nAdditionally, when character makes a melee attack as part of a Crushing Charge Mounted Special Action, they deal additional damage equal to the Mount's Strength Bonus.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When the character makes a melee attack as part of a Charge Action or Crushing Charge Mounted Special Action, their attack gains Felling(Weapon Skill Bonus/2), rounded up.\nAdditionally, when character makes a melee attack as part of a Crushing Charge Mounted Special Action, they deal additional damage equal to the Mount's Strength Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KcPqc3t8VGv2yjO2"
+}

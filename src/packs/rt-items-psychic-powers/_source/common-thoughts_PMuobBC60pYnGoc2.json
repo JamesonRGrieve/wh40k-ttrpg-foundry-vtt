@@ -1,0 +1,22 @@
+{
+  "name": "Common Thoughts",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Alter Memories\nOW: Psy Rating 6",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Psyker selects 1 individuals and two additional individuals per Degree of Success on Focus Power Test who are within range, creating a psychic link between themselves and these targets. As long as power is sustained, the psyker and targets may intuintively communicate telepathically with each other, not requiring a shared language or even similar modes of thought. However the psyker and all targets suffer -30 to Deceive Tests to lie to each others while under the effect of the power.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PMuobBC60pYnGoc2"
+}

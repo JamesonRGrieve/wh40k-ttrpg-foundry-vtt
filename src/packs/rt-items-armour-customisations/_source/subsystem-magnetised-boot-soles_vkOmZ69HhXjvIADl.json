@@ -1,0 +1,18 @@
+{
+  "name": "Subsystem: Magnetised Boot Soles",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour, Legion/Astartes Power Armour",
+    "effect": "Allows user to adhere to metal surfaces such as hull plating in low or zero gravity. This halves their Agility (and as a result movement), but otherwise allows normal movement.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Allows user to adhere to metal surfaces such as hull plating in low or zero gravity. This halves their Agility (and as a result movement), but otherwise allows normal movement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vkOmZ69HhXjvIADl"
+}

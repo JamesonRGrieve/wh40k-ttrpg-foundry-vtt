@@ -1,0 +1,17 @@
+{
+  "name": "Calixian Privateer",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Rogue Trader, RT Rank 2+. Possesses Renowned Warrant Talent. May need a Patron and their Letter of Marque.",
+    "descriptionText": "A Rogue Trader turns to a Piratical lifestyle via a Letter of Marque amended to their Warrant of Trade. This allows such acts of piracy with legal legitimacy against some specific group while maintaining the protection of a patron backer.",
+    "effects": "Replace new Rank's Advances with that of the Calixian Privateer",
+    "source": "RT: Into the Storm \n(Page 76)",
+    "description": {
+      "value": "<p>A Rogue Trader turns to a Piratical lifestyle via a Letter of Marque amended to their Warrant of Trade. This allows such acts of piracy with legal legitimacy against some specific group while maintaining the protection of a patron backer.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Calixian Privateer</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HJSXQXSn33zPqv7z"
+}

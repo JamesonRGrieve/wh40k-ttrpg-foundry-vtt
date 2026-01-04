@@ -1,0 +1,28 @@
+{
+  "name": "M41 Multi-Laser",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "150m",
+    "rof": "-/-/5",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 100,
+    "reload": "2 Full",
+    "special": "Reliable",
+    "weight": "35kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HhOAygOCb4HD0Ywk"
+}

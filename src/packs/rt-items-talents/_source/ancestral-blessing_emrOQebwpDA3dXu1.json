@@ -1,0 +1,17 @@
+{
+  "name": "Ancestral Blessing",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Kroot, Shamanic Powers",
+    "effect": "Once a day, A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them +2 to Melee Damage Rolls for WP Bonus Rounds. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Once a day, A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them +2 to Melee Damage Rolls for WP Bonus Rounds. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "emrOQebwpDA3dXu1"
+}

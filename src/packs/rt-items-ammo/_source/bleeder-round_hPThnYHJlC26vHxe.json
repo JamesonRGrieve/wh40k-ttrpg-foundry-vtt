@@ -1,0 +1,20 @@
+{
+  "name": "Bleeder Round",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Stubbers, hand cannons, autopistols, autoguns",
+    "damageOrEffect": "+3 Damage to Biological Targets",
+    "qualities": "-",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +3 Damage to Biological Targets</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hPThnYHJlC26vHxe"
+}

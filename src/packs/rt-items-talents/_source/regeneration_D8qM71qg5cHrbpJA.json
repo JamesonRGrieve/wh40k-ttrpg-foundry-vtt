@@ -1,0 +1,17 @@
+{
+  "name": "Regeneration",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Each round at the start of its turn, this creature removes 1 point of damage. It loses this trait when slain.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Each round at the start of its turn, this creature removes 1 point of damage. It loses this trait when slain.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D8qM71qg5cHrbpJA"
+}

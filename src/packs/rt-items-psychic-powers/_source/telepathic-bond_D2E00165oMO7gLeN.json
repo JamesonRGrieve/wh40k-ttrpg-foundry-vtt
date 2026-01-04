@@ -1,0 +1,22 @@
+{
+  "name": "Telepathic Bond",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy - Astropath Elite Advance",
+    "prerequisites": "Telepathic Link, Fellowship 35",
+    "focusPower": "Full Action\nConcentration",
+    "action": "20m x Psy Rating",
+    "range": "-10 Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Character establishes a telepathic bond with a number of individuals equal to half their Psy Rating, who resist the power with a Willpower Test. As long as power is sustained and each remain within range of each other, psyker and target can send and receive telepathic messages. This does not grant full awareness of each other's toughts, but allows each to choose what they send. All characters involved receive all messages. If target is aware of characteris action, they can choose to fail, counting as having rolled a 100. Power ends for an individual if they move out of range.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D2E00165oMO7gLeN"
+}

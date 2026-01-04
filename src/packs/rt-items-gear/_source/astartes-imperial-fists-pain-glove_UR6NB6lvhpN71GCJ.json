@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Imperial Fists Pain Glove",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "-",
+    "availability": "Ancient Torture device, used for self-penitence. Used in Downtime after a mission is complete, though must be acquired using the requisition for a mission. Entering the Pain Glove allows the character to spend Experience Points to remove Insanity or Corruption, and lose an additional 1d5 Insanity and 1 Corruption when doing so.",
+    "cost": "Imperial Fists Only.",
+    "effects": "Rare",
+    "notes": "15 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UR6NB6lvhpN71GCJ"
+}

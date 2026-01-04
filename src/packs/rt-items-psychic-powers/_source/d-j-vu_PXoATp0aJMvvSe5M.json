@@ -1,0 +1,22 @@
+{
+  "name": "Déjà vu",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Willpower 35",
+    "focusPower": "Half Action\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Opposed Willpower Test",
+    "opposed": "No",
+    "sustained": "Target Individual Opposes with +10 Willpower Test, if character succeeds target must repeat the last action they performed such as firing a weapon at a target that is no longer there, diving from a grenade that has already detonated, or so on. If the action is obviously harmful to the individual themselves then the target automatically wins the Opposed test.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PXoATp0aJMvvSe5M"
+}

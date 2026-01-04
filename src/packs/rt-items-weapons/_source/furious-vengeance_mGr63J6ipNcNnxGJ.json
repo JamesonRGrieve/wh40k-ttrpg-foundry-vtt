@@ -1,0 +1,28 @@
+{
+  "name": "Furious Vengeance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "100m",
+    "rof": "S/2/4",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 8,
+    "clip": 28,
+    "reload": "Full",
+    "special": "SM Wep, Tearing, Felling (4)",
+    "weight": "18kg",
+    "availability": "Hero",
+    "cost": "25 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Dark Angels. Has PEN 8 and Felling (4), listen in its profile.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing, Felling (4)</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Dark Angels. Has PEN 8 and Felling (4), listen in its profile.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mGr63J6ipNcNnxGJ"
+}

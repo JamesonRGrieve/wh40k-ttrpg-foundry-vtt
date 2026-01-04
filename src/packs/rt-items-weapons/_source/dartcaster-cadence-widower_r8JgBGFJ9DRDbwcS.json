@@ -1,0 +1,28 @@
+{
+  "name": "Dartcaster (Cadence) \"Widower\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "35m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": "1000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "The Weapon is near slient and makes no flash when firing. Comes with an attachable Stock and long-barralled impellor to turn the weapon into a Two-Handed Basic Weapon if attached the weapon instead has a Range of 150m and weight of 4.5kg. Ammo is Rare and costs 15 Thrones each.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> The Weapon is near slient and makes no flash when firing. Comes with an attachable Stock and long-barralled impellor to turn the weapon into a Two-Handed Basic Weapon if attached the weapon instead has a Range of 150m and weight of 4.5kg. Ammo is Rare and costs 15 Thrones each.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r8JgBGFJ9DRDbwcS"
+}

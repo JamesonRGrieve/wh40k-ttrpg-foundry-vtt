@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Fusion Cascade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "16m",
+    "rof": "-/3/6",
+    "damage": "1d10+12",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 16,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "20kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.",
+    "description": {
+      "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f7pqNZGO0MhvLTTw"
+}

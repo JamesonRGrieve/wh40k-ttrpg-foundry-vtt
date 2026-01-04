@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Crossbow (Selvanus) \"Castigator\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Primitive",
+    "range": "70m",
+    "rof": "S/-/-",
+    "damage": "1d10+6",
+    "damageType": "Impact",
+    "penetration": 1,
+    "clip": 14,
+    "reload": "2 Full",
+    "special": "Concussive (2), Reliable",
+    "weight": "12kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Fires Metre-Length Bolts that Knock anyone of Size 5 (Hulking) or smaller Prone if hit by them.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (2), Reliable</p><p><b>Note:</b> Fires Metre-Length Bolts that Knock anyone of Size 5 (Hulking) or smaller Prone if hit by them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OSGKNk3OA3OlWM8l"
+}

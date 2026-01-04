@@ -1,0 +1,17 @@
+{
+  "name": "Machine (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Does not need to breath, immune to vaccum effects, extreme cold, and mind-affecting Psychic Powers. They have X AP (between 1 and 5) on each location. these apply against fire damage.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Does not need to breath, immune to vaccum effects, extreme cold, and mind-affecting Psychic Powers. They have X AP (between 1 and 5) on each location. these apply against fire damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IG4zQSqf7IBQ1HGy"
+}

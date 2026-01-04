@@ -1,0 +1,22 @@
+{
+  "name": "Mirker's Greaves",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Legs",
+    "ap": 4,
+    "maxAg": null,
+    "weight": "8kg",
+    "availability": "Average",
+    "cost": "50 T",
+    "notes": "Durable and Spiked Legwear to ward off vermin and filth. Allows wearer to kick as if wearing Brass Knuckles (1d5-1, Pen 0, Primitive(8))",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Durable and Spiked Legwear to ward off vermin and filth. Allows wearer to kick as if wearing Brass Knuckles (1d5-1, Pen 0, Primitive(8))</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hxlxjg0PYRmG4zsD"
+}

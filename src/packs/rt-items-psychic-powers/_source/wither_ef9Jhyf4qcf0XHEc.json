@@ -1,0 +1,22 @@
+{
+  "name": "Wither",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "3d10m",
+    "range": "Threshold 6\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Character emits a wave of energy that withers all normal plant life within the area, leaving the ground barren and dead.\nFor every 5 Points above Threshold / 1 DoS on Focus Test, increase range by 1d10 metres.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ef9Jhyf4qcf0XHEc"
+}

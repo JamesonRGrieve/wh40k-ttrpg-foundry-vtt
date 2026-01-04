@@ -1,0 +1,19 @@
+{
+  "name": "Dark Mirror [Curse]",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-30 Forbidden Lore (The Warp) or -30 Scholastic Lore (Occult)",
+    "requirements": "Must be Dedicated to Slaanesh. Ritual involves the destruction something that belongs to the target, in full view of a representation of the target (wax effigy, picture, painting done by a relative, etc). They may choose to curse the target's bloodline, however this requires a belonging of exceptional value and significance, and Ritual Test must be made twice (both must pass).",
+    "effect": "Whenever target causes any damage, they must make a -10 Willpower Test or a -30 Willpower Test if the damage they dealt killed their victim, or the target immediately suffers 1d5 Damage that ignores Armour, Forcefields, and Toughness.\nIf this curse was cast on the target's bloodline, they, and all who follow them, suffer this effect.",
+    "costs": "None",
+    "failure": "Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased. If cursing a bloodline, failing either test causes this result.",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Whenever target causes any damage, they must make a -10 Willpower Test or a -30 Willpower Test if the damage they dealt killed their victim, or the target immediately suffers 1d5 Damage that ignores Armour, Forcefields, and Toughness.\nIf this curse was cast on the target's bloodline, they, and all who follow them, suffer this effect.</p><p><b>Costs:</b> None</p><p><b>Failure:</b> Character and those involved in the curse suffer its effects for WP bonus weeks, +1 per DoF. Cannot perform curse again until Infamy has Increased. If cursing a bloodline, failing either test causes this result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DODPFEtlm4GF3cKB"
+}

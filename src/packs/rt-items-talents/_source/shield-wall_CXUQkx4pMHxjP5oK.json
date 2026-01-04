@@ -1,0 +1,17 @@
+{
+  "name": "Shield Wall",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Ambidextrous, Weapon Skill 40 \nAptitudes: Defence, Weapon Skill",
+    "effect": "When character is armed with a shield, they can re-roll one failed Evasion test to Parry per round.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>When character is armed with a shield, they can re-roll one failed Evasion test to Parry per round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CXUQkx4pMHxjP5oK"
+}

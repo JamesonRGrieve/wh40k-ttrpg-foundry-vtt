@@ -1,0 +1,20 @@
+{
+  "name": "Servo-Claw",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Mounted at Waist Height, can act as Melee Weapon dealing 1d10+10 I, Pen 4 Damage with Tearing. Makes Melee attacks normally or as a Reaction to make one standard melee attack. Can also lift things, having strength 50 and Unnatural Toughness (+5). Mechadendrite Use (Manipulator) Talent Applies to this.",
+    "cost": "Attached at waist height.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Q6cBQjpoht1x1Z6B"
+}

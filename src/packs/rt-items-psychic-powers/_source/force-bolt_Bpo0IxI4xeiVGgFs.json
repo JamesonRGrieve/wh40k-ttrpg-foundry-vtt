@@ -1,0 +1,22 @@
+{
+  "name": "Force Bolt",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker hurls a bolt of force at a target. On suceeding Focus Power Test, bolt automatically hits, dealing 1d10+2+(2xPsy Rating) Impact Damage. If psyker scores 3 degrees of success on focus power test, bolt also knocks target prone and pushes them back by 1d5 metres. As this is a ranged attack, it can be dodged.",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bpo0IxI4xeiVGgFs"
+}

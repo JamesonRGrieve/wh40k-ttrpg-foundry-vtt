@@ -1,0 +1,20 @@
+{
+  "name": "Tracer Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP/Bolt Weapon",
+    "damageOrEffect": "+5 to BS Tests to fire weapon on Full Auto, for the rest of the round, +5 to all tests to hit you through smoke/darkness/etc. ",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Average",
+    "cost": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> +5 to BS Tests to fire weapon on Full Auto, for the rest of the round, +5 to all tests to hit you through smoke/darkness/etc. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eEyAuZikm3s5p4Gl"
+}

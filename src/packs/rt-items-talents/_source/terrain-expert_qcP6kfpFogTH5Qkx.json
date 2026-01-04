@@ -1,0 +1,17 @@
+{
+  "name": "Terrain Expert",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Scout Advanced Speciality\n300xp",
+    "effect": "As long as the Character's Comrade is in Cohesion, the Character gains +10 to Stealth and Survival Tests andimposes an additional -20 on anyone attemptint to use the Tracking Special Use of Survival to follow them.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>As long as the Character's Comrade is in Cohesion, the Character gains +10 to Stealth and Survival Tests andimposes an additional -20 on anyone attemptint to use the Tracking Special Use of Survival to follow them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qcP6kfpFogTH5Qkx"
+}

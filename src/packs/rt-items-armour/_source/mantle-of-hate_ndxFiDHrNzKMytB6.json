@@ -1,0 +1,22 @@
+{
+  "name": "Mantle of Hate",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All (H/B/A/L)",
+    "ap": "8/10/8/8",
+    "maxAg": null,
+    "weight": "150kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Must be Dedicated to Khorne to Wear. Legion Power Armour with Enhanced Ceramite Plating, Osmatic Gill Life Sustainer, and Sustainable Power Source. Also has Chain Bandoliers. In melee Combat, wearer can make -10 Opposed WP Test vs target (or +10 if character has Hatred(Target), if passed target suffers -20 to WS, Dodge, and Parry for rest of combat. If character fails the Opposed Test by 2+ DoF, they gain a Disorder.",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p>Must be Dedicated to Khorne to Wear. Legion Power Armour with Enhanced Ceramite Plating, Osmatic Gill Life Sustainer, and Sustainable Power Source. Also has Chain Bandoliers. In melee Combat, wearer can make -10 Opposed WP Test vs target (or +10 if character has Hatred(Target), if passed target suffers -20 to WS, Dodge, and Parry for rest of combat. If character fails the Opposed Test by 2+ DoF, they gain a Disorder.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ndxFiDHrNzKMytB6"
+}

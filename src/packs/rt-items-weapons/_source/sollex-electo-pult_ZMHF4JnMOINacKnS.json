@@ -1,0 +1,28 @@
+{
+  "name": "Sollex Electo-pult",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Launcher",
+    "range": "500m",
+    "rof": "S/-/-",
+    "damage": "3d10+10",
+    "damageType": "Explosive",
+    "penetration": 10,
+    "clip": 1,
+    "reload": "3 Full",
+    "special": "Accurate, Blast (1), Overheats",
+    "weight": "38kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can't use Unusual Ammunition unless it is specifically designed for this weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Blast (1), Overheats</p><p><b>Note:</b> Can't use Unusual Ammunition unless it is specifically designed for this weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZMHF4JnMOINacKnS"
+}

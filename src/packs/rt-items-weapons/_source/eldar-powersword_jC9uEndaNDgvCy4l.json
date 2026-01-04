@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Powersword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Eldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Balanced",
+    "weight": "2kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Additional +10 to Parry",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Balanced</p><p><b>Note:</b> Additional +10 to Parry</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jC9uEndaNDgvCy4l"
+}

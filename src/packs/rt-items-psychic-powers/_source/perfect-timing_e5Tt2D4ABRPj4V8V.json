@@ -1,0 +1,22 @@
+{
+  "name": "Perfect Timing",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "Prescience",
+    "focusPower": "Half Action\nConcentration",
+    "action": "3m x Psy Rating",
+    "range": "-10 Psyniscience Test",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Psy Rating Allies within range plus the psyker ignore the effects of cover when firing at a target that is hiding behind it for as long as the power is sustained and allies remain within range of the power.\nIn other words, targets would not add the AP provided by cover to their AP for damage dealt from those benefiting from this power.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "e5Tt2D4ABRPj4V8V"
+}

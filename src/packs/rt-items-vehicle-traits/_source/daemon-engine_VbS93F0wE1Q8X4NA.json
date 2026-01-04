@@ -1,0 +1,14 @@
+{
+  "name": "Daemon Engine",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "A Horrifying fusion of Machine and Daemonflesh.\nHas Protection 30 Forcefield, never overloads. Bypassed by Sanctified or Force Weapons, or Damaging Psychic Powers.\nRegains 1d5 Structural Integrity, or 1 Critical Damage per Round.",
+    "description": {
+      "value": "<p>A Horrifying fusion of Machine and Daemonflesh.\nHas Protection 30 Forcefield, never overloads. Bypassed by Sanctified or Force Weapons, or Damaging Psychic Powers.\nRegains 1d5 Structural Integrity, or 1 Critical Damage per Round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VbS93F0wE1Q8X4NA"
+}

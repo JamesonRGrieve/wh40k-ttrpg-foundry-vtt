@@ -1,0 +1,28 @@
+{
+  "name": "Bilge Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (4), Unreliable, Toxic",
+    "weight": "0.5kg",
+    "availability": "Common",
+    "cost": "10 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Modified Frag Grenades mixed with toxic fungi, chemical waste, and diseased flesh. Used by Bilge Scum in the underdecks of some void ships, and likely elsewhere.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Unreliable, Toxic</p><p><b>Note:</b> Modified Frag Grenades mixed with toxic fungi, chemical waste, and diseased flesh. Used by Bilge Scum in the underdecks of some void ships, and likely elsewhere.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZD8YGWm5VzhUR12j"
+}

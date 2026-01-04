@@ -1,0 +1,28 @@
+{
+  "name": "Power Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Energy",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive, Power Field",
+    "weight": "6kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Provides +4 AP to wearer's Body and holding Arm.",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Power Field</p><p><b>Note:</b> Provides +4 AP to wearer's Body and holding Arm.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iuMaLhAEHkmpv08k"
+}

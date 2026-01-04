@@ -1,0 +1,17 @@
+{
+  "name": "Unblinking Watcher",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Sentry Advanced Speciality\n400xp",
+    "effect": "As long as the Character's Comrade is in Cohesion, the Character's Overwatch and Suppressing Fire Actions cover a 90 Degree Arc instead of a 45 Degree Arc.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>As long as the Character's Comrade is in Cohesion, the Character's Overwatch and Suppressing Fire Actions cover a 90 Degree Arc instead of a 45 Degree Arc.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zwUW53ZIfwOcA7Gt"
+}

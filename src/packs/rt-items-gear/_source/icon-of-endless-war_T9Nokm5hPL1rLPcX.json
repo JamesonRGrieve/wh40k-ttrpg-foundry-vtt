@@ -1,0 +1,20 @@
+{
+  "name": "Icon of Endless War",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "8kg",
+    "availability": "A Large Banner or icon that must be carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can Enter a Frenzy as a Free Action if they have the talent, and gain +10 to WS and BS as long as it remains in their sight. ",
+    "cost": "Bearer must be Dedicated to Khorne for it to function. Heretical",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "T9Nokm5hPL1rLPcX"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Necron Staff of Light [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Necron",
+    "range": "25m",
+    "rof": "S/4/-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep",
+    "weight": "10kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality. Has [Ranged] and [Melee] Profile.",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qL3vB739aToBTkTc"
+}

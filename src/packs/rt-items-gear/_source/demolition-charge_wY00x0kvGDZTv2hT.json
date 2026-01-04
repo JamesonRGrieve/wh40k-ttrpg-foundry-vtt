@@ -1,0 +1,20 @@
+{
+  "name": "Demolition Charge",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "Set/Defuse with Demolition Skill, 3d10 X Damage, 5 Metre Radius. +2 Damage and 5m Radius explosion for every additional kilogram",
+    "cost": null,
+    "effects": "Scarce / Initiated",
+    "notes": "250 T\n10 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 250 T\n10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wY00x0kvGDZTv2hT"
+}

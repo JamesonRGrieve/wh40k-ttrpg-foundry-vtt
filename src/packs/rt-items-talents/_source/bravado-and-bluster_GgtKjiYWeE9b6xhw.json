@@ -1,0 +1,17 @@
+{
+  "name": "Bravado and Bluster",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Fixer Advanced Specialty (500xp)",
+    "effect": "The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GgtKjiYWeE9b6xhw"
+}

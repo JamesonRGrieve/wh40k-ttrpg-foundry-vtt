@@ -1,0 +1,17 @@
+{
+  "name": "Aspire to Vengeance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 40, Willpower 40\nAptitudes: Fellowship, Offence",
+    "effect": "When a Character, Comrade, or Allied NPC is killed within 50 metres by an enemy, the character adds +3 to all damage dealt with Righteous Fury until the end of the Encounter.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When a Character, Comrade, or Allied NPC is killed within 50 metres by an enemy, the character adds +3 to all damage dealt with Righteous Fury until the end of the Encounter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7bj3mEaDhN8uf3gc"
+}

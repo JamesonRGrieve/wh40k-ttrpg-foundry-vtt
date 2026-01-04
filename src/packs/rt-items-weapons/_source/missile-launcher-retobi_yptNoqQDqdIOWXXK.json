@@ -1,0 +1,28 @@
+{
+  "name": "Missile Launcher (Retobi)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Launcher",
+    "range": "200m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 5,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "35kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Traits vary with ammo (Ammo - Missiles)",
+    "description": {
+      "value": "<p><b>Note:</b> Traits vary with ammo (Ammo - Missiles)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yptNoqQDqdIOWXXK"
+}

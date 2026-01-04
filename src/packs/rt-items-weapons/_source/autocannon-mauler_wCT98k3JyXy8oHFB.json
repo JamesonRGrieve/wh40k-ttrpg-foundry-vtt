@@ -1,0 +1,28 @@
+{
+  "name": "Autocannon (Mauler)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "60m",
+    "rof": "S/2/-",
+    "damage": "3d10+8",
+    "damageType": "Impact",
+    "penetration": 6,
+    "clip": 40,
+    "reload": "2 Full",
+    "special": "Ogryn-Proof, Twin-Linked",
+    "weight": "50kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Designed to be used by Ogryns, a modified Autocannon design.",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Twin-Linked</p><p><b>Note:</b> Designed to be used by Ogryns, a modified Autocannon design.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wCT98k3JyXy8oHFB"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "RPG Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Launcher",
+    "range": "120m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Full",
+    "special": null,
+    "weight": "15kg",
+    "availability": "Rare",
+    "cost": "1200 T",
+    "source": "Dark Heresy: Core",
+    "note": "Damage and Penetration Vary with Ammunition",
+    "description": {
+      "value": "<p><b>Note:</b> Damage and Penetration Vary with Ammunition</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ScPV8BirFIgRx39I"
+}

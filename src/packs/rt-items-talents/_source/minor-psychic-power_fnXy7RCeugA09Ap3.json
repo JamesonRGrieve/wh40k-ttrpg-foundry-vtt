@@ -1,0 +1,17 @@
+{
+  "name": "Minor Psychic Power",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Psy Rating",
+    "effect": "Gain a Minor Psychic Power",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>Gain a Minor Psychic Power</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fnXy7RCeugA09Ap3"
+}

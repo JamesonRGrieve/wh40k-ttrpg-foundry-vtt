@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Gun 438",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "120m",
+    "rof": "S/2/-",
+    "damage": "1d10+12",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": 40,
+    "reload": "4 Full",
+    "special": "SM Wep, Volatile, Maximal",
+    "weight": "30kg",
+    "availability": "Distinguished",
+    "cost": "25 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Plasma Gun of the Deathwatch. User suffers -20 to Fellowship with other Space Marines and -1 to base Squad Cohesion due to the potentially heretical source of the weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Plasma Gun of the Deathwatch. User suffers -20 to Fellowship with other Space Marines and -1 to base Squad Cohesion due to the potentially heretical source of the weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZChHBal3Z3bM9dRo"
+}

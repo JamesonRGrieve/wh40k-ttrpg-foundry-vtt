@@ -1,0 +1,28 @@
+{
+  "name": "Command Baton",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Shock",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Shocking",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5ZrfO8plYihCodSg"
+}

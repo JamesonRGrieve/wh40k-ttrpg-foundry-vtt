@@ -1,0 +1,22 @@
+{
+  "name": "In Harm's Way",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "None",
+    "focusPower": "Free Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker looks into the future to anticipate the actions of their enemies. The Psyker gains +5*Psy Rating (Max +20) to all Weapon Skill and Ballistic Skill Tests, and all Ballistic Skill Tests made against them have -5*Psy Rating (Max -20) until the end of their next turn. ",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bnX4e0VvrxvBBNdC"
+}

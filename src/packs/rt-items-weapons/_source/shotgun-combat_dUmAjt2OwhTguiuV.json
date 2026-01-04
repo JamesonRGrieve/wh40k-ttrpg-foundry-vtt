@@ -1,0 +1,28 @@
+{
+  "name": "Shotgun (Combat)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 18,
+    "reload": "Full",
+    "special": "Scatter",
+    "weight": "6.5kg",
+    "availability": "Scarce",
+    "cost": "150 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dUmAjt2OwhTguiuV"
+}

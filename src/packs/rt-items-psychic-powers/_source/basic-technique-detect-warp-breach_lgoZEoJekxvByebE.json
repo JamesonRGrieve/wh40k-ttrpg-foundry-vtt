@@ -1,0 +1,22 @@
+{
+  "name": "Basic Technique: Detect Warp Breach",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "1km x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Basic Technique of Theosphamy Discipline, available to any with this Discipline. Psyker can detect cracks in existence, warp gates, or other warp passages within range area. Successful Focus power test narrows down direction of such breaches, maintaining the power in an area increases number of Degrees of Success by +1 per round. Results: 1 DoF: Determine breach is occuring within range.  2 DoS: Determine whether it is behind or in front of Psyker. 3 DoS: Determine direction of breach. The power can also detect if a warp incursion has occured nearby within the last 1d5 minutes of the event occuring (such as posession, warp gates, etc).",
+    "effect": "Free",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Free</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lgoZEoJekxvByebE"
+}

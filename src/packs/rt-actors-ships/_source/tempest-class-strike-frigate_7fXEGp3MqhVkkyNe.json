@@ -1,0 +1,28 @@
+{
+  "name": "Tempest-class Strike Frigate",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Frigate",
+    "size": "1.5km long, 0.4km wide",
+    "crew": 30500,
+    "speed": 8,
+    "manoeuvrability": 18,
+    "detection": 12,
+    "hull": 36,
+    "armour": 19,
+    "turrets": 1,
+    "space": 42,
+    "shipPoints": 40,
+    "weaponCapacity": "2 Dorsal",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "7fXEGp3MqhVkkyNe"
+}

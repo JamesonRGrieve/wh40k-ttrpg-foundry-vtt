@@ -1,0 +1,17 @@
+{
+  "name": "Hardened Soul",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Willpower 35, 10+ Corruption\nAptitudes: Defence, Willpower",
+    "effect": "Whenever character would gain Corruption, they may halve the amount (rounding up), and gain an equal amount of Insanity.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Whenever character would gain Corruption, they may halve the amount (rounding up), and gain an equal amount of Insanity.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TjPMUhPWrIYPEEPw"
+}

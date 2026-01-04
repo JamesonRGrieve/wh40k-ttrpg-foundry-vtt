@@ -1,0 +1,20 @@
+{
+  "name": "Helmet Augmentations",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "1kg",
+    "availability": "Improvements to basic helmets to add advanced vox links and visual augmentations. Common Versions provide the benefits of: Rebreather, Photo-Visor, Vox-Caster, and Microbead. Good Craftsmanship Versions also have Presense Goggles. Poor Versions choose two of the prior options.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fOfJJj9W5JyUFWxx"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Maintain Cohesion",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nHalf Action",
+    "requirements": "-",
+    "descriptionText": "Whilst in Cohesion, when the Player Character moves, the Comrade Duplicates the player's movement action (Move, Disengage, Run, Stand/Mount, Tactical Advance, etc). This always takes one of the Comrade's Half Actions even if the Player Character used more than a Half Action to move.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Whilst in Cohesion, when the Player Character moves, the Comrade Duplicates the player's movement action (Move, Disengage, Run, Stand/Mount, Tactical Advance, etc). This always takes one of the Comrade's Half Actions even if the Player Character used more than a Half Action to move.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VVFCiYEv0lF3I2B5"
+}

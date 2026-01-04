@@ -1,0 +1,21 @@
+{
+  "name": "Clemency-pattern Life Sustainer (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Life Sustainer",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 5,
+    "spaceUsage": 5,
+    "spCost": "-",
+    "effect": "Recycles air and water. Reduce Crew Population and Morale loss from Depressurisation by 4, to a minimum of 0. +1 Morale Permenantly.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Recycles air and water. Reduce Crew Population and Morale loss from Depressurisation by 4, to a minimum of 0. +1 Morale Permenantly.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R9bSVs03HdLvPnUG"
+}

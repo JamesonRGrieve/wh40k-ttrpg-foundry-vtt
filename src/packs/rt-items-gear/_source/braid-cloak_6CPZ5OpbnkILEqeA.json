@@ -1,0 +1,20 @@
+{
+  "name": "Braid Cloak",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "2kg",
+    "availability": "Provides +10 to Concealment/Stealth Tests in a forest or jungle. Provides +1 Primitive AP to body",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "80 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 80 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6CPZ5OpbnkILEqeA"
+}

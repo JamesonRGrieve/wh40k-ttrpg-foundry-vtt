@@ -1,0 +1,28 @@
+{
+  "name": "Egerian Geode",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10+3",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3)",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7zpg9wLeOyFkmwkO"
+}

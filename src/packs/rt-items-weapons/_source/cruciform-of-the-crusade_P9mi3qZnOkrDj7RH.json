@@ -1,0 +1,28 @@
+{
+  "name": "Cruciform of the Crusade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Concussive (1), Unwieldy",
+    "weight": "30kg",
+    "availability": "Respected",
+    "cost": "30 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. Relic \"Astartes Thunder Hammer\" (aka: Giant Stone Cross with an Aquilla on it). Two-Handed, increase Strength Bous from x2 to x3 when wielding. Squad Mode abiltiies cost one less Cohesion Point to activate.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Concussive (1), Unwieldy</p><p><b>Note:</b> Space Marines Only. Relic \"Astartes Thunder Hammer\" (aka: Giant Stone Cross with an Aquilla on it). Two-Handed, increase Strength Bous from x2 to x3 when wielding. Squad Mode abiltiies cost one less Cohesion Point to activate.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "P9mi3qZnOkrDj7RH"
+}

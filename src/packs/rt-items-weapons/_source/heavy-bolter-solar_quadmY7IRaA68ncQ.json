@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Bolter (Solar)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Bolt",
+    "range": "120m",
+    "rof": "-/-/10",
+    "damage": "2d10+2",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Tearing",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "2000 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "quadmY7IRaA68ncQ"
+}

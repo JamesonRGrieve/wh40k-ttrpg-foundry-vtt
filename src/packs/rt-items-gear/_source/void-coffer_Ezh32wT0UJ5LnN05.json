@@ -1,0 +1,20 @@
+{
+  "name": "Void Coffer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "1000kg",
+    "availability": "A Large, void shielded, near-impenetrable storage vault that may be locked to almost any trigger key. Attempts to open without a key requires -60 Tech-Use Test (using Security Systems Special Use) to disable Void shield, then -30 Security Test to open physical lock. Excess Brute force would destroy contents.",
+    "cost": "Locking trigger examples: Biometric Information (fingerprint, retinal scan, DNA etc.), a personal sigil, a rare blooming flower, the sound of a particular chainsword, etc.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ezh32wT0UJ5LnN05"
+}

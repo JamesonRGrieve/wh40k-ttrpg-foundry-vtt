@@ -1,0 +1,18 @@
+{
+  "name": "Vac-Sealed",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Mesh, Carapace, or Power Armour that covers all locations and not sealed.",
+    "effect": "Armour becomes sealed and wearer can survive for 6 hours in a vacuum without adverse effects such as suffocation.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+    "weight": "+0.75kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Armour becomes sealed and wearer can survive for 6 hours in a vacuum without adverse effects such as suffocation.\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uLGyo1JVTR5WTuMo"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Vanquisher Battle Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "SP",
+    "range": "900m",
+    "rof": "S/-/-",
+    "damage": "3d10+10",
+    "damageType": "Explosive",
+    "penetration": 16,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Accurate",
+    "weight": "400kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks\nAccurate Quality works as if Basic Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks\nAccurate Quality works as if Basic Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LbdeIF6aogrh31mQ"
+}

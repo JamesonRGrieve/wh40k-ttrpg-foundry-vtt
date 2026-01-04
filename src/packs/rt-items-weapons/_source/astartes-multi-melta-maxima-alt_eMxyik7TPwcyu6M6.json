@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Multi-Melta (Maxima) (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "2d10+16",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 12,
+    "reload": "2 Full",
+    "special": "SM Wep, Melta, Blast (1)",
+    "weight": "72kg",
+    "availability": "Respected",
+    "cost": "35 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Melta, Blast (1)</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eMxyik7TPwcyu6M6"
+}

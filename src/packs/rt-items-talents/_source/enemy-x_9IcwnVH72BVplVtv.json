@@ -1,0 +1,17 @@
+{
+  "name": "Enemy (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "-10 to Fellowship with relevent Group, such as: Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers.\nOrk Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>-10 to Fellowship with relevent Group, such as: Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers.\nOrk Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9IcwnVH72BVplVtv"
+}

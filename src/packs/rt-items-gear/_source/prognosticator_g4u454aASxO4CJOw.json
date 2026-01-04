@@ -1,0 +1,20 @@
+{
+  "name": "Prognosticator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "150kg",
+    "availability": "Allows making untrained Psyniscience and Navigation (Warp) Tests to navigate the warp as if a Navigator, even if the user is not one. Must make +0 Willpower Test or gain 1d5 Insanity. Gain no benefit if already possessing these skills.",
+    "cost": "Disliked by the Navis Nobilite. Used aboard a warp-capable void ship.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "g4u454aASxO4CJOw"
+}

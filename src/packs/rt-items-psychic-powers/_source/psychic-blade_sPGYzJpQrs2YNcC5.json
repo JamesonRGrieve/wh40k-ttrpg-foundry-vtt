@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Blade",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 19",
+    "opposed": "Yes",
+    "sustained": "Whilst sustained, create a psychic blade (Treat as a Sword that does not require a free hand to hold or training to use). The blade cannot parry and uses Willpower Characteristic in place of Weapon Skill to use. Deals 1d10 + 2xWillpower Bonus Rending damage with 2xWillpower Bonus Penetration.\nWhen rolling 95-00 when attacking with this weapon, it automatically strikes the nearest being within range, if there are multiple it hits whoever is most significant to the psyker's current emotional state, if there is no-one it hits the psyker.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sPGYzJpQrs2YNcC5"
+}

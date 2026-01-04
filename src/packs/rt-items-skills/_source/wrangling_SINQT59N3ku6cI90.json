@@ -1,0 +1,18 @@
+{
+  "name": "Wrangling",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Advanced",
+    "characteristic": "Intelligence",
+    "descriptor": "Taming, Training, and riding of animals for any purpose the user wishes. Not useful for Cybernetic, Psy-Bonded, or Sapient Animals.",
+    "uses": "Extended Skill Test: Taming and Training an Animal to break them to the user's will, or at least form a mutual partnership. Issuing Commands to such an animal is a Half Action.\nSkill Test: Full Action, make test against Hostile or Wild animal to change their disposition by one level per 2 DoS, up to 3 levels. Possible penalties for well-trained or strong-willed/intelligent animals.",
+    "useTime": "Varies",
+    "description": {
+      "value": "<p>Taming, Training, and riding of animals for any purpose the user wishes. Not useful for Cybernetic, Psy-Bonded, or Sapient Animals.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SINQT59N3ku6cI90"
+}

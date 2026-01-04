@@ -1,0 +1,22 @@
+{
+  "name": "Rebuke the Mutant",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating (max 50m)",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Psyker puts the fear of the God Emperor into any mutants before them. Power only affects targets with any kind of mutation (including Navigators), not affecting pure humans, abhumans, or xenos. Successful Focus Power Test, affected targets treat Psyker as having Fear (1) Trait, any target starting their turn within 10 metres of the psyker must make -20 Willpower test or take 1d10 Rending damage not reduced by Armour or Toughness. ",
+    "effect": "200xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VWGKWJnRXSkDGra4"
+}

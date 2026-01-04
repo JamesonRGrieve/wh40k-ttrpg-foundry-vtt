@@ -1,0 +1,22 @@
+{
+  "name": "Nurgle's Rot",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned, Corruption 30+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating Radius",
+    "range": "Corruption",
+    "opposed": "Yes (Half Action)",
+    "sustained": "All Creatures within range except those devoted to Nurgle immediately suffer 1d10+Psy Rating Damage with the Tainted and Toxic(4) Qualities. The Damage ignores armour that is not Environmentally Sealed.\nIf this power triggers Psychic Phenomena, in addition to normal effects all creatures within range that are not devoted to Nurgle suffer -5 to Weapon Skill, Ballistic Skill, Intelligence, Perception, and Fellowship Tests",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZDjvx4GWdEx1MoDU"
+}

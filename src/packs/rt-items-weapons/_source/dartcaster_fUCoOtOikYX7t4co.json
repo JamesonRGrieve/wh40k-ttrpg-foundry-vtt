@@ -1,0 +1,28 @@
+{
+  "name": "Dartcaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Toxic",
+    "weight": "2.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Ammo can be covered in any poision (such as choke/hallucinogen), or silvered",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Ammo can be covered in any poision (such as choke/hallucinogen), or silvered</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fUCoOtOikYX7t4co"
+}

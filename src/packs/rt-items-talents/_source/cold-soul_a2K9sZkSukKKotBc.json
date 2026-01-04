@@ -1,0 +1,17 @@
+{
+  "name": "Cold Soul",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Reaver Alternative Advance, 300xp\n20+ Insanity Points",
+    "effect": "The Character gains +30 when opposing any Fellowship or Interrogation Tests, and suffers -20 to any Fellowship-based tests they make. The Character removes any current Mental Disorders and never rolls for Mental Traumas.\nThey must however pay double xp (200xp) to remove Insanity Points. If they somehow drop below 10 Insanity they may remove this talent at GM discretion.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>The Character gains +30 when opposing any Fellowship or Interrogation Tests, and suffers -20 to any Fellowship-based tests they make. The Character removes any current Mental Disorders and never rolls for Mental Traumas.\nThey must however pay double xp (200xp) to remove Insanity Points. If they somehow drop below 10 Insanity they may remove this talent at GM discretion.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a2K9sZkSukKKotBc"
+}

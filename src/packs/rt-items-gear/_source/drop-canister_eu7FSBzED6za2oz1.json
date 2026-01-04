@@ -1,0 +1,20 @@
+{
+  "name": "Drop Canister",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "25kg",
+    "availability": "Canister large enough for a single Heavy Weapon + Bipod/Tripod and ammo, or a comparable amount of equipment. Equipped with Grav-chute and can be delivered by dropping it from an Aircraft. Requires +10 Operate(Aeronautica) or +0 Intelligence Test. If test failed, canister drop scatters DoFx10m away.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eu7FSBzED6za2oz1"
+}

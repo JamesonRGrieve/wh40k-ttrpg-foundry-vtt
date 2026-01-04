@@ -1,0 +1,22 @@
+{
+  "name": "Assassin's Bodyglove",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "All",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "5kg",
+    "availability": "Special",
+    "cost": "-",
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity",
+    "description": {
+      "value": "<p>Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J0WNiI6249FP8EuB"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Man Portable Lascannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "5d10+10",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "55kg",
+    "availability": "Very Rare",
+    "cost": "5000 T",
+    "source": "Rogue Trader: Core",
+    "note": "Req. Separate Power Pack",
+    "description": {
+      "value": "<p><b>Note:</b> Req. Separate Power Pack</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mhl5HJ0nWtGGKUpp"
+}

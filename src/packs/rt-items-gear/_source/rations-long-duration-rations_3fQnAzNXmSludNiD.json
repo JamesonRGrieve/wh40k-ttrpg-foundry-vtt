@@ -1,0 +1,20 @@
+{
+  "name": "Rations: Long Duration Rations",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "1kg",
+    "availability": "Similar to regular ration packs but with higher energy items for long forward marches or intense activities away from central command.",
+    "cost": "One day's worth of food for one person",
+    "effects": "Common",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3fQnAzNXmSludNiD"
+}

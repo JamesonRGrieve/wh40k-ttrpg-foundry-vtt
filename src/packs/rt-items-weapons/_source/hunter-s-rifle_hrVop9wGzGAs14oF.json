@@ -1,0 +1,28 @@
+{
+  "name": "Hunter's Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "200m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 4,
+    "clip": 5,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "5kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hrVop9wGzGAs14oF"
+}

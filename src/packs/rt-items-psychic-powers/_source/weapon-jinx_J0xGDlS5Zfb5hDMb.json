@@ -1,0 +1,22 @@
+{
+  "name": "Weapon Jinx",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Intelligence 35",
+    "focusPower": "Half Action\nConcentration",
+    "action": "5m x Psy rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Choose up to Psy rating weapons within range, with Best Craftsmanship weapons counting as two weapons for purpose of this power. Affected weapons couunt as Poor Craftsmanship until repaired. Degrees of Success exceed Psy Rating of the power, the affected weapons immediately jam. Should the character fail the test by 2+ Degrees of Failiure their own weapons immediately jam.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J0xGDlS5Zfb5hDMb"
+}

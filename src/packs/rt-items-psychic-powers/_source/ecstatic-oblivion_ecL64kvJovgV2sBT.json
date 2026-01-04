@@ -1,0 +1,22 @@
+{
+  "name": "Ecstatic Oblivion",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Mark of Slaanesh, T 40+, Psy Rating 4",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Power is Sustained, Psyker cannot be Stunned, Rendered Unconvious, or be affected by Fatigue. They also gain Unnatural Strength(X) and Unnatural Agility(X) where X is half Psy Rating. However they suffer -20 to all Perception Tests.",
+    "effect": "250xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>250xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ecL64kvJovgV2sBT"
+}

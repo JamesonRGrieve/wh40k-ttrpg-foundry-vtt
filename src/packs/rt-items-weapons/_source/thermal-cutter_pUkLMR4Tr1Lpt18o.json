@@ -1,0 +1,28 @@
+{
+  "name": "Thermal Cutter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+6",
+    "damageType": "Impact",
+    "penetration": 10,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "40kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pUkLMR4Tr1Lpt18o"
+}

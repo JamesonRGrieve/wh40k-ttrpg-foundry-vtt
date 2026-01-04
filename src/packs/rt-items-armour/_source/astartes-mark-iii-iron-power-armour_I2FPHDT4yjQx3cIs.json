@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Mark III \"Iron\" Power Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "All",
+    "ap": "9/10/9/9",
+    "maxAg": null,
+    "weight": "300kg",
+    "availability": "Special",
+    "cost": "-",
+    "notes": "The Armour of the Great Crusade, less an upgrade and more an alternate to the Mk II. Additional -20 to Concealment and Silent Move, +5 to prevent Cohesion Damage, +20 Fellowship with Space Marines. +25 Strength. utosenses (+5), Osmotic Sustainer, Pain Suppressant (8), Vox Link, Magnetised Boots, Nutrient Recycling (1 Week), Recoil Suppression. -20 Manual Dexterity Mod. Has 6 AP All if shot from the back. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>The Armour of the Great Crusade, less an upgrade and more an alternate to the Mk II. Additional -20 to Concealment and Silent Move, +5 to prevent Cohesion Damage, +20 Fellowship with Space Marines. +25 Strength. utosenses (+5), Osmotic Sustainer, Pain Suppressant (8), Vox Link, Magnetised Boots, Nutrient Recycling (1 Week), Recoil Suppression. -20 Manual Dexterity Mod. Has 6 AP All if shot from the back. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "I2FPHDT4yjQx3cIs"
+}

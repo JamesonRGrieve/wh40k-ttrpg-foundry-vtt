@@ -1,0 +1,22 @@
+{
+  "name": "Sculpt Flame",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "5m x Willpower Bonus",
+    "range": "Threshold 13",
+    "opposed": "Yes",
+    "sustained": "Whilst sustained, each round character can choose one of the following effects when targeting an existing fire: Double fire's area (requires existing combustables), Halve fire's area, Spread fire into Willpower Bonus number of 1m squares, create basic shapes in the fire that resemble creatures/people/objects/etc, create a burst of fire that requires all adjacent targets to make an Agility Test or catch fire, cause fire to spew smoke that fills three times the area of the fire with fog.\nFor every 5 points above threshold, gain better control over the fire and increas erange: +5 Points - Easily Recognisable Images, Range = 5m x 2xWP Bonus. +10 Points: near-lifelike figures, Range = 5m x 4xWP Bonus.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C3ykeuApStu4yCXB"
+}

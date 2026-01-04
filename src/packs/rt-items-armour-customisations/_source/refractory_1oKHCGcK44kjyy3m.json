@@ -1,0 +1,18 @@
+{
+  "name": "Refractory",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Mesh",
+    "effect": "Add +3 AP vs Las Weapons\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+    "weight": "+0.5kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Add +3 AP vs Las Weapons\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1oKHCGcK44kjyy3m"
+}

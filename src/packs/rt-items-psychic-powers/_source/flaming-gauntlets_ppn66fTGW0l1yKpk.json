@@ -1,0 +1,22 @@
+{
+  "name": "Flaming Gauntlets",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Manifest Flame",
+    "focusPower": "Free Action\nConcentration",
+    "action": "Self",
+    "range": "+10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Power requires a source of flame within Psy Rating Metres. Flames cover the Psykers hands although they do not harm them. Whilst sustained, Psyker's Unarmed attacks deal +Psy Rating Damage and gain the Flame Quality. They do not count as armed when facing opponents with weapons whilst bare handed (which imposes -20 to WS). Items they hold whilst this power is active can become damaged as if set on fire or exposed to high temperatures (GM Dependant).\nEffects stack with Unarmed Warrior and Unarmed Master Talents. With Unarmed Warrior the Psyker counts as armed vs armed opponents and attacks deal 1d10+Str+Psy Rating Damage with Primitive(7). With Unarmed Master they remove Primitive(7).",
+    "effect": "200xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ppn66fTGW0l1yKpk"
+}

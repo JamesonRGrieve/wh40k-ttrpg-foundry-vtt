@@ -1,0 +1,28 @@
+{
+  "name": "Boiler Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Primitive",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 10,
+    "reload": "3 Full",
+    "special": "Primitive (7), Overheats, Spray, Toxic (3)",
+    "weight": "30kg",
+    "availability": "Common",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Primitive Flamethrower-esque weapon that uses a toxic stream that scalds the skin and burns the lungs.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (7), Overheats, Spray, Toxic (3)</p><p><b>Note:</b> Primitive Flamethrower-esque weapon that uses a toxic stream that scalds the skin and burns the lungs.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D5vbIeMkER0MSaj5"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Almanac Astrae Divinitus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "4kg",
+    "availability": "+10 to Navigation, Pilot, Scholastic Lore (Astromancy), or Trade (Astrographer) when relevent.",
+    "cost": "Tome for making one's way through the stars.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "i0DraXQ3lgmsYxra"
+}

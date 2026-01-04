@@ -1,0 +1,17 @@
+{
+  "name": "Quick Draw",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None \nAptitudes: Agility, Finesse, Unaligned",
+    "effect": "Character can draw and ready a weapon as a Free Action when armed with a Pistol or Basic ranged weapon, or a one-handed Melee Weapon.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can draw and ready a weapon as a Free Action when armed with a Pistol or Basic ranged weapon, or a one-handed Melee Weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qdn5GQvS11uRvnIO"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Heavy Firepower Assault",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Attack Order\nFull Action",
+    "requirements": ".Servitor Comrade: Jovian-Pattern Gun Servitor\nApt: None",
+    "descriptionText": "Jovian-Pattern Gun Servitor Primary Function. Servitor Comrade in Cohesion makes Standard Ranged Attack, Semi-Auto Burst, or Full Auto Burst with one of its weapons against a target within weapon range.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Jovian-Pattern Gun Servitor Primary Function. Servitor Comrade in Cohesion makes Standard Ranged Attack, Semi-Auto Burst, or Full Auto Burst with one of its weapons against a target within weapon range.\nAttack Orders have Attack Action Subtype, counts as Player's Attack for the turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6LU11Vu4k5eFruuD"
+}

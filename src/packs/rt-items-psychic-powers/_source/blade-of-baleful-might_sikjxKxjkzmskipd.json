@@ -1,0 +1,22 @@
+{
+  "name": "Blade of Baleful Might",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 4,\nInfamy 30+\nForce Weapon",
+    "focusPower": "Full Action Concentration",
+    "action": "Self",
+    "range": "-10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker gains a number of points equal to the Degrees of Success on Focus Power Test with which they can spend to add qualities to their Force Weapon. If quality has brackets, can buy multiple times, adding +1 each time.\n1 Point: Flame, Power Field, Razor Sharp, Tainted, Tearing. 2 Points: Crippling(2), Felling(2), Proven(3), Shocking, Toxic(1). 3 Points: Warp Weapon\nThe Psyker can disable qualities gained from this power for one turn to make a Ranged Attack with range of 5xPsy Rating.\nAll Qualities last as long as power is sustained. If using Corpus Conversion Talent with power can delay Toughness Damage until ending power, however must attack or try to engage enemy each turn or power ends early.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sikjxKxjkzmskipd"
+}

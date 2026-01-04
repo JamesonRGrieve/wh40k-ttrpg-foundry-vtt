@@ -1,0 +1,20 @@
+{
+  "name": "Purgatus Stake-Bolts",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Crossbows",
+    "damageOrEffect": "Gain Sanctified Quality. If a Psyker or Warp entity is hit by this ammo, must make +0 Willpower Test or immediately roll on Perils of the Warp table.",
+    "qualities": "Sanctified",
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. If a Psyker or Warp entity is hit by this ammo, must make +0 Willpower Test or immediately roll on Perils of the Warp table.</p><p><b>Qualities:</b> Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aPKTRPtRszWyuGjH"
+}

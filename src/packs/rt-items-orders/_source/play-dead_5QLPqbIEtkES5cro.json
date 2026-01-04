@@ -1,0 +1,17 @@
+{
+  "name": "Play Dead",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ",Deceive Skill\nApt: General, Social",
+    "descriptionText": "Comrade within comms range pretends to be dead, if out of Cohesion they do not draw Hostile Attention unless the enemy is within 5 metres of the Comrade and passes a +10 Awareness Test. If the Comrade is in Cohesion, they are only hit by attacks that roll an 11, on any other roll, the Character is hit instead. The Comrade can continue to maintain this order on further turns without being ordered to, but in doing so cannot make any other actions.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Comrade within comms range pretends to be dead, if out of Cohesion they do not draw Hostile Attention unless the enemy is within 5 metres of the Comrade and passes a +10 Awareness Test. If the Comrade is in Cohesion, they are only hit by attacks that roll an 11, on any other roll, the Character is hit instead. The Comrade can continue to maintain this order on further turns without being ordered to, but in doing so cannot make any other actions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5QLPqbIEtkES5cro"
+}

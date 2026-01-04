@@ -1,0 +1,28 @@
+{
+  "name": "Lathe-class Monitor-cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Light Cruiser",
+    "size": "4.2km long, 0.5km wide",
+    "crew": 35000,
+    "speed": 5,
+    "manoeuvrability": 15,
+    "detection": 15,
+    "hull": 63,
+    "armour": 20,
+    "turrets": 1,
+    "space": 60,
+    "shipPoints": 55,
+    "weaponCapacity": "1 Prow, 1 Port, \n1 Starboard",
+    "notes": "Crew also has 25,000 servitors.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Crew also has 25,000 servitors.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "1lbWh4Snnx381SBy"
+}

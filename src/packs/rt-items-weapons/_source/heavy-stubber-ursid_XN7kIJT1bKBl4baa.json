@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Stubber (Ursid)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "120m",
+    "rof": "-/-/10",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": 40,
+    "reload": "Full",
+    "special": null,
+    "weight": "35kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XN7kIJT1bKBl4baa"
+}

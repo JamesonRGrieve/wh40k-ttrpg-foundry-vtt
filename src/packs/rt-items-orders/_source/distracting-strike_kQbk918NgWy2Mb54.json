@@ -1,0 +1,17 @@
+{
+  "name": "Distracting Strike",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ",Double Team Talent\nApt: Offence, Weapon Skill",
+    "descriptionText": "Comrade in Cohesion allows Character to make the Feint Attack as a Free Action but with a -10 Penalty.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Comrade in Cohesion allows Character to make the Feint Attack as a Free Action but with a -10 Penalty.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kQbk918NgWy2Mb54"
+}

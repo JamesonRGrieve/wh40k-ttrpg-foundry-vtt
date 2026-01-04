@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Bolter (Godywn)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "100m",
+    "rof": "S/2/4",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 28,
+    "reload": "Full",
+    "special": "SM Wep, Tearing",
+    "weight": "18kg",
+    "availability": "Initiated",
+    "cost": "5 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4paQVOj4cfTOOJFG"
+}

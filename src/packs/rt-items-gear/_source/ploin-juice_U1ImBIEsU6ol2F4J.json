@@ -1,0 +1,20 @@
+{
+  "name": "Ploin Juice",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Space Orange Juice. Brewed non-alcoholic beverage from lopsided ploin fruit designed to counter poor diets from extended space travel. Can be cheaply fermented into a strong alcohol called \"Wobble\", or well fermented into a brandy called \"Raenka\".",
+    "cost": null,
+    "effects": "Ubiquitous",
+    "notes": "25 T",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Ubiquitous</p><p><b>Notes:</b> 25 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "U1ImBIEsU6ol2F4J"
+}

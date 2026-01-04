@@ -1,0 +1,17 @@
+{
+  "name": "Rapid Reaction",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Agility Test\nAptitudes: Agility, Fieldcraft, Slaanesh",
+    "effect": "Can make an Agility Test when Surprised or Ambushed, if passed, Character is not Surprised and can act normally.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can make an Agility Test when Surprised or Ambushed, if passed, Character is not Surprised and can act normally.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BT0Hfjbcs0dLoPWN"
+}

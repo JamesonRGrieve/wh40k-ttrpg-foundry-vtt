@@ -1,0 +1,22 @@
+{
+  "name": "Acidium Vitae",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned\nPsy Rating 4",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "For Psy Rating Rounds, any time Psyker is suffers Impact, Rending, or Explosive Damage, or any other effect that causes bleeding, all creatures except psyker within three metres of the psyker must make a -10 Agility Test or take 1d10 E Damage with Pen 5 and Toxic(1) Quality. Creatures attacking the Psyker with natural weapons such as claws or teeth take damage in same way, but armour is ignored. Psyker is immune to effects of their own power.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YnBEoyhvz9KPQUlU"
+}

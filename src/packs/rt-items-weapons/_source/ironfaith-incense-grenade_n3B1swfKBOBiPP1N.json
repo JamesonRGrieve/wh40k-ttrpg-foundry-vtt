@@ -1,0 +1,28 @@
+{
+  "name": "Ironfaith Incense Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemonbane, Sanctified, Smoke (3)",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Targets that are hit, enters the smoke, or starts their turn in the smoke, they suffer damage equal to their Corruption Bonus or their Daemonic (X) trait, whichever is higher. Damage ignores Armour and Toughness.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Sanctified, Smoke (3)</p><p><b>Note:</b> Targets that are hit, enters the smoke, or starts their turn in the smoke, they suffer damage equal to their Corruption Bonus or their Daemonic (X) trait, whichever is higher. Damage ignores Armour and Toughness.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n3B1swfKBOBiPP1N"
+}

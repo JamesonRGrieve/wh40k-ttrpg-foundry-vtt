@@ -1,0 +1,22 @@
+{
+  "name": "Force Barrage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "10m x Willpower Bonus",
+    "range": "Threshold 21",
+    "opposed": "No",
+    "sustained": "Create Willpower Bonus bolts of force, each bolt is fired with a Separate Willpower Test at any targets within range dealing 1d10 + Willpower Bonus Impact Damage.\nFor every 5 points above threhsold, create an additional bolt of force.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MhhV3DmarDPG7Y2E"
+}

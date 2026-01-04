@@ -1,0 +1,14 @@
+{
+  "name": "Average",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 62,
+    "description": {
+      "value": "<p>62</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iIsQGhCIaBsbYEQ3"
+}

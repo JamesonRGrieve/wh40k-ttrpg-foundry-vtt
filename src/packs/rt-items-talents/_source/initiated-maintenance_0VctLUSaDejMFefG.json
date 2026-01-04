@@ -1,0 +1,17 @@
+{
+  "name": "Initiated Maintenance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Common Lore (Mechanicus) +10 \nAptitudes: Ballistic Skill, Tech",
+    "effect": "Weapons this character wields only Jam on the result of a 100, while Weapons with the Overheat Quality only overheat on a 96-100",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Weapons this character wields only Jam on the result of a 100, while Weapons with the Overheat Quality only overheat on a 96-100</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0VctLUSaDejMFefG"
+}

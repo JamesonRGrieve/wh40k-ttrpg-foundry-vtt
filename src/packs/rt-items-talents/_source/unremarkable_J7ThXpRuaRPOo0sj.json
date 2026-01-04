@@ -1,0 +1,17 @@
+{
+  "name": "Unremarkable",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: General, Social, Slaanesh",
+    "effect": "Attempts to Recall the character's face or spot them in a crowd suffer -20. Character gains +20 when using the Deceive Skill to either convince someone they have never seen or met them or trying to appear harmless and ordinary.\nIn a Social Conflict, character gains +20 to the Deceive Skill if using it in the Opposed Test, however halves their Infamy Reserves at the start of the Conflict.\nTalent doesn't work if the character wears distinctive clothes, armour, or carries unique weaponry or gear.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Attempts to Recall the character's face or spot them in a crowd suffer -20. Character gains +20 when using the Deceive Skill to either convince someone they have never seen or met them or trying to appear harmless and ordinary.\nIn a Social Conflict, character gains +20 to the Deceive Skill if using it in the Opposed Test, however halves their Infamy Reserves at the start of the Conflict.\nTalent doesn't work if the character wears distinctive clothes, armour, or carries unique weaponry or gear.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J7ThXpRuaRPOo0sj"
+}

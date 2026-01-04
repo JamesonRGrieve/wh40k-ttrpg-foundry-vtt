@@ -1,0 +1,21 @@
+{
+  "name": "Augmented Retro-Thrusters (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Cruisers",
+    "powerUsage": 5,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yVUkr2cO8bnh1d4w"
+}

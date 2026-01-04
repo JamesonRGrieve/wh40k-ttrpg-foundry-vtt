@@ -1,0 +1,21 @@
+{
+  "name": "Vision of Hell",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Full Action",
+    "range": "15m (or 5m in fog/mist, etc).",
+    "test": "Opposed Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it). Target Immediately Rolls on Halluciongen Table (5-5, Page 126, Rogue Trader), effects last for Degree of Success Rounds. Navigator gains 1 Fatigue. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.",
+    "adept": "Target adds +20 to Roll on Hallucinogen Table, and automaticaly gains 2 Insanity. If Navigator fails test, they gain 1 Insanity in addition to the 1 Fatigue.",
+    "master": "Target rolls twice on Warp Travel Hallucinations Table (2-5, Page 31, Navis Primer) with +50 on each result, and gains 1d5+1 Insanity. If Navigator Fails, they roll on Hallucinogen Table and suffer results in addition to prior effects.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator makes Opposed Willpower Test vs all living beings looking into their Warp eye (Navigator tests once, all others compare to it). Target Immediately Rolls on Halluciongen Table (5-5, Page 126, Rogue Trader), effects last for Degree of Success Rounds. Navigator gains 1 Fatigue. Non-living, Untouchable, or Daemonic/Warp targets are immune. Forewarned/Unaware targets have +30 on Roll to resist.</p><p><b>Adept:</b> Target adds +20 to Roll on Hallucinogen Table, and automaticaly gains 2 Insanity. If Navigator fails test, they gain 1 Insanity in addition to the 1 Fatigue.</p><p><b>Master:</b> Target rolls twice on Warp Travel Hallucinations Table (2-5, Page 31, Navis Primer) with +50 on each result, and gains 1d5+1 Insanity. If Navigator Fails, they roll on Hallucinogen Table and suffer results in addition to prior effects.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oThZU2oHJVtMpeA6"
+}

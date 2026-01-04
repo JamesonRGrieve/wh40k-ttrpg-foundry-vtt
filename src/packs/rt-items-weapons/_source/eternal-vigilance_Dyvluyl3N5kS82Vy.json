@@ -1,0 +1,28 @@
+{
+  "name": "Eternal Vigilance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Proven (3), Razor Sharp",
+    "weight": "12kg",
+    "availability": "Famed",
+    "cost": "40 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Sword of the Knights of Blood Chapter. Two-Handed. Cannot be destroyed by Power Fields.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Proven (3), Razor Sharp</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Sword of the Knights of Blood Chapter. Two-Handed. Cannot be destroyed by Power Fields.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dyvluyl3N5kS82Vy"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Flame",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Flame, Spray",
+    "weight": "45kg",
+    "availability": "Rare",
+    "cost": "1000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Requires a crew of 2 to use, one to wield the weapon, another to carry the large backpack mounted tank of incredibly explosive promethium.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Requires a crew of 2 to use, one to wield the weapon, another to carry the large backpack mounted tank of incredibly explosive promethium.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "opW7uMOoBMoUJKXd"
+}

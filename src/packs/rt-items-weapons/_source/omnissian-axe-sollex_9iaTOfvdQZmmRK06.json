@@ -1,0 +1,28 @@
+{
+  "name": "Omnissian Axe (Sollex)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unbalanced",
+    "weight": "8kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Also Functions as a Combi-Tool (+10 Tech-Use)",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Also Functions as a Combi-Tool (+10 Tech-Use)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9iaTOfvdQZmmRK06"
+}

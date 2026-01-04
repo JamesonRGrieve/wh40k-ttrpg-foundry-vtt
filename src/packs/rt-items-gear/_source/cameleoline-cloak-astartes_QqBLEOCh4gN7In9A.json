@@ -1,0 +1,20 @@
+{
+  "name": "Cameleoline Cloak (Astartes)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "+20 to Concealment Tests, count as one range bracket further if standing still (EG: Normal Range --> Long Range)",
+    "cost": "Covers the Body",
+    "effects": "Initiated",
+    "notes": "20R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 20R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QqBLEOCh4gN7In9A"
+}

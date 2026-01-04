@@ -1,0 +1,28 @@
+{
+  "name": "Gate Maker [Melta]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+16",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": "SM Wep, Blast (3), Melta",
+    "weight": "25kg",
+    "availability": "Hero",
+    "cost": "40 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Combi-Melta. Has [Boltgun] and [Melta] Profile. Each uses different ammo source and is reloaded seperately.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (3), Melta</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Combi-Melta. Has [Boltgun] and [Melta] Profile. Each uses different ammo source and is reloaded seperately.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AUTplfm3pKkBftPD"
+}

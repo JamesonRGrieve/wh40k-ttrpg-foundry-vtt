@@ -1,0 +1,18 @@
+{
+  "name": "Devotional Iconography",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.",
+    "weight": "1kg",
+    "availability": "Common",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6pGJnmX8jLAQhsJo"
+}

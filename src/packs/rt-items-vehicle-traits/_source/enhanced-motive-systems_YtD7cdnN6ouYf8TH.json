@@ -1,0 +1,14 @@
+{
+  "name": "Enhanced Motive Systems",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Explorer's Strength and Size become that of the Battlesuit, and Pilot gains Auto-Stabilised Trait. If this system is disabled, Pilot cannot perform movement actions in addition to losing other benefits (size remains the same). Auto-Stabilised: No need to brace Heavy Weapons.",
+    "description": {
+      "value": "<p>Explorer's Strength and Size become that of the Battlesuit, and Pilot gains Auto-Stabilised Trait. If this system is disabled, Pilot cannot perform movement actions in addition to losing other benefits (size remains the same). Auto-Stabilised: No need to brace Heavy Weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YtD7cdnN6ouYf8TH"
+}

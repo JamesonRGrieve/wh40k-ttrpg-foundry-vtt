@@ -1,0 +1,17 @@
+{
+  "name": "Independent Targeting",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Ballistic Skill 40\nAptitudes: Ballistic Skill, Finesse, Unaligned",
+    "effect": "When Firing two weapons as part of a single action, the targets do not need to be within 10 metres",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nKqa8bHY24DQgOxs"
+}

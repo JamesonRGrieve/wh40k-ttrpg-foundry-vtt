@@ -1,0 +1,22 @@
+{
+  "name": "Flak Coat/Jacket",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Flak",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": 60,
+    "weight": "5kg",
+    "availability": "Average",
+    "cost": "100 T",
+    "notes": "+1 AP against Blast Weapons if not at centre of blast.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6InBEnIDpJFou3fN"
+}

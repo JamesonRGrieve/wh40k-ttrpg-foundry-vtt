@@ -1,0 +1,22 @@
+{
+  "name": "Pangs of Misery",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned, Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Psyker Targets individual within range and line of sight, at which point the target is invisibly marked for Psy Rating Rounds. Up to once per round, whilst the power is sustained, the Psyker can make a +0 Opposed Willpower Test vs Target's Toughness immedately after the target fully resolves any kind of action or reaction. If the psyker wins, the target suffers 2d10 nonpermenant Willpower Damage, gains 1 Fatigue, and is treated as though hit by a weapon with the Shocking Quality.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mlYH4SoqIHyuPgAz"
+}

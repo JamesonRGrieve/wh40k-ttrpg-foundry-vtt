@@ -1,0 +1,28 @@
+{
+  "name": "Inferno Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Melta",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 3,
+    "reload": "Full",
+    "special": "Melta",
+    "weight": "3kg",
+    "availability": "Near Unique",
+    "cost": "7500 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Melta</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ssFq43pgtVs9gGDu"
+}

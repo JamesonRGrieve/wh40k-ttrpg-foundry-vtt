@@ -1,0 +1,14 @@
+{
+  "name": "Proven (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Damage Rolls below X count as if X was Rolled",
+    "description": {
+      "value": "<p>Damage Rolls below X count as if X was Rolled</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cJhuwkgGIoftsqY7"
+}

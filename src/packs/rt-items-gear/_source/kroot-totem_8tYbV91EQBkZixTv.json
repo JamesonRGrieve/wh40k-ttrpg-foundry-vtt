@@ -1,0 +1,20 @@
+{
+  "name": "Kroot Totem",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "For Kroot, Extremely Rare. A Totem of a Kroothawk, a Kroot Shaper gains an Extra Fate point while carrying it, the Fate Point can be spent but not burnt.",
+    "cost": "Xeno \"Tech\"",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8tYbV91EQBkZixTv"
+}

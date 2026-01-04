@@ -1,0 +1,28 @@
+{
+  "name": "Photon Flash Grenade (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (10)",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "60 T",
+    "source": "Only War: Core",
+    "note": "Make +10 Agility Test if in radius. If fail be blinded for Rounds equal to Degrees of Failiure",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Make +10 Agility Test if in radius. If fail be blinded for Rounds equal to Degrees of Failiure</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uUNzo4fKh1SilVVD"
+}

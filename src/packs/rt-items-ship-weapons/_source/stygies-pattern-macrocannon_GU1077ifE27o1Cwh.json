@@ -1,0 +1,25 @@
+{
+  "name": "Stygies-pattern Macrocannon",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "All Ships",
+    "powerUsage": 4,
+    "spaceUsage": 3,
+    "spCost": 1,
+    "damage": "1d10+2",
+    "strength": 3,
+    "critRating": 5,
+    "range": 5,
+    "availability": "Scarce",
+    "notes": "Reduce target vessel's armour by 3 when calculating damage of salvos that include shots from this weapon (effectively, weapon has PEN 3). Armour reduction isn't permenant.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> Reduce target vessel's armour by 3 when calculating damage of salvos that include shots from this weapon (effectively, weapon has PEN 3). Armour reduction isn't permenant.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GU1077ifE27o1Cwh"
+}

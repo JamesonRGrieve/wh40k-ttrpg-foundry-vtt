@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Immolation Rifle (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "25m",
+    "rof": "S/-/-",
+    "damage": "1d10+12",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 5,
+    "reload": "Full",
+    "special": "SM Wep, Flame, Spray",
+    "weight": "5kg",
+    "availability": "Initiated",
+    "cost": "15 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable.  Ineffective against inorganic targets such as machinery. Doesn't set things on fire despite having Flame Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only, not easily acquirable.  Ineffective against inorganic targets such as machinery. Doesn't set things on fire despite having Flame Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cxCXQX3G58tfXv18"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Emergency Overrides",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": ".Servitor Comrade: Any\nTech-Use +10\nApt: Intelligence, Tech",
+    "descriptionText": "Character makes +20 Tech-Use Test on wounded Servitor Comrade in Cohesion. If successful comrade can act as if not Wounded or Dead until the end of the encounter regardless of further damage. At the end of the Encounter character makes -20 Tech-Use Test, if successful Servitor becomes Wounded, if failed it dies from being overstrained.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character makes +20 Tech-Use Test on wounded Servitor Comrade in Cohesion. If successful comrade can act as if not Wounded or Dead until the end of the encounter regardless of further damage. At the end of the Encounter character makes -20 Tech-Use Test, if successful Servitor becomes Wounded, if failed it dies from being overstrained.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wiQOFi3RudFCE0q1"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Veteran's Reflexes",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Tau Battlesuit Pilot Alternative Advance, 1000xp, Agility 45+, Talented(Pilot)",
+    "effect": "Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X5Lif0wSCRYNk6OP"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Power Lance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "2m",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field",
+    "weight": "9kg",
+    "availability": "Initiated",
+    "cost": "10 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. White Scars Astartes Power Blade on a stick. When making a charge action whilst riding a beast or vehicle, can add additional Strength Bonus damage to attack. Weapon can attack targets up to 2m away, doesn't count as being in melee unless enemies have melee weapons with range (such as whips).",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field</p><p><b>Note:</b> Space Marines Only. White Scars Astartes Power Blade on a stick. When making a charge action whilst riding a beast or vehicle, can add additional Strength Bonus damage to attack. Weapon can attack targets up to 2m away, doesn't count as being in melee unless enemies have melee weapons with range (such as whips).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iLlD7KgmcPffUq3b"
+}

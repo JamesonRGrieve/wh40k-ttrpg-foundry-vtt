@@ -1,0 +1,20 @@
+{
+  "name": "Mind Impulse Unit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Good: +10 to communicate with machine spirits, Tech-Use, Pilot, Drive, Logic, Inquiry, and Ballistic Skill. Can also experience senses of cyber familiars.",
+    "cost": null,
+    "effects": "Rare / Initiated",
+    "notes": "1750 T\n15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1750 T\n15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7i1u1EtOIfqRad6O"
+}

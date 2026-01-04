@@ -1,0 +1,17 @@
+{
+  "name": "Combat Formation",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Intelligence 40\nAptitudes: Leadership, Fieldcraft, Tzeentch",
+    "effect": "All Squad Members, including the character, add +1 to Initiative Rolls.\nAny Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>All Squad Members, including the character, add +1 to Initiative Rolls.\nAny Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ySfG09YOza4F8pCC"
+}

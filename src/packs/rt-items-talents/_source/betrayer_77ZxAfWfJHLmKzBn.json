@@ -1,0 +1,17 @@
+{
+  "name": "Betrayer",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Cold Hearted, Intimidate\nAptitudes: Unaligned",
+    "effect": "Once per game session, character can killed an allied NPC (an NPC that trusts and is friendly towards them), or one of their own Minions. They gain +10 to their next Infamy Test if killing an NPC, or +20 if a Minion. This may have consequences as determined by GM.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Once per game session, character can killed an allied NPC (an NPC that trusts and is friendly towards them), or one of their own Minions. They gain +10 to their next Infamy Test if killing an NPC, or +20 if a Minion. This may have consequences as determined by GM.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "77ZxAfWfJHLmKzBn"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Dragonfire Bolts",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt Pistols, Bolters, Heavy Bolters",
+    "damageOrEffect": "Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.",
+    "qualities": "Blast (2)",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p><p><b>Qualities:</b> Blast (2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sdxZMZl3T1eE2sEh"
+}

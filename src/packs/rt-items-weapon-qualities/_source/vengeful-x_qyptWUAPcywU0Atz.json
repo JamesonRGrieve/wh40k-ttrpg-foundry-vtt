@@ -1,0 +1,14 @@
+{
+  "name": "Vengeful (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Weapon causes Righteous Fury on a value of X or higher.",
+    "description": {
+      "value": "<p>Weapon causes Righteous Fury on a value of X or higher.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qyptWUAPcywU0Atz"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Venomblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Felling (4), Toxic",
+    "weight": "2kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. ",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (4), Toxic</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4JEUMIQ1WC3gDDjq"
+}

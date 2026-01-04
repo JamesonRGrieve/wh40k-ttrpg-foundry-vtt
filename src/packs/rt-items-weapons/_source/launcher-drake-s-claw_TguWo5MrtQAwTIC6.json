@@ -1,0 +1,28 @@
+{
+  "name": "Launcher \"Drake's Claw\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Primitive",
+    "range": "200m",
+    "rof": "S/-/-",
+    "damage": "1d10+2",
+    "damageType": "Explosive",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "-",
+    "special": "Blast (3), Crippling (1), Inaccurate, Primitive (7), Tearing",
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Single-Use item, can't be reloaded A Primitive Rocket Launcher with a spiked payload that shatters into splinters.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Crippling (1), Inaccurate, Primitive (7), Tearing</p><p><b>Note:</b> Single-Use item, can't be reloaded A Primitive Rocket Launcher with a spiked payload that shatters into splinters.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TguWo5MrtQAwTIC6"
+}

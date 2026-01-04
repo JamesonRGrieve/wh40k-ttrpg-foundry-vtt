@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Pistol (Ryza)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Plasma",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 10,
+    "reload": "3 Full",
+    "special": "Maximal, Overheats",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "4000 T",
+    "source": "Rogue Trader: Core",
+    "note": "Can choose between firing normally or maximally",
+    "description": {
+      "value": "<p><b>Special:</b> Maximal, Overheats</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZDKrk2tgAcQ3AjK8"
+}

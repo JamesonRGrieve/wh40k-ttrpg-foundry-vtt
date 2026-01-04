@@ -1,0 +1,21 @@
+{
+  "name": "Skills and Talents",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Khorne: Athletics +10, Dodge +10, Intimidate +10\nTzeentch: Deceive +20, Psyniscience +30\nNurgle: Intimidate +20, Medicae +10\nSlaanesh: Awareness +10, Charm +20, Deceive +10, Dodge +10",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": "Khorne: Ambidextrous, Combat Master, Deathdealer (Melee), Devastating Assault, Crushing Blow, Frenzy, Swift Attack, Two-Weapon Master, Two-Weapon Wielder (Melee)\nTzeentch: Constant Vigilance (Intelligence), Favoured by the Warp.\nNurgle: Thunder Charge, True Grit.               Slaanesh: Constant Vigilance (Perception), Hard Target, Preternatural Speed",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Khorne: Ambidextrous, Combat Master, Deathdealer (Melee), Devastating Assault, Crushing Blow, Frenzy, Swift Attack, Two-Weapon Master, Two-Weapon Wielder (Melee)\nTzeentch: Constant Vigilance (Intelligence), Favoured by the Warp.\nNurgle: Thunder Charge, True Grit.               Slaanesh: Constant Vigilance (Perception), Hard Target, Preternatural Speed</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Xmy9ZRHWRyo79t44"
+}

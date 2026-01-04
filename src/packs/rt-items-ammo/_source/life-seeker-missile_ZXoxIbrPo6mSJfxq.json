@@ -1,0 +1,20 @@
+{
+  "name": "Life-Seeker Missile",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Missile Launcher",
+    "damageOrEffect": "2d10+4 X, Pen 8, Blast (1). Must make -20 Tech-Use check prior to firing to awaken missile. If suceeds, gains +10 to BS Tests to hit with missile until end of encounter. Target must reroll dodge tests made against that attack.",
+    "qualities": "Blast (1)",
+    "weight": "1kg",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 2d10+4 X, Pen 8, Blast (1). Must make -20 Tech-Use check prior to firing to awaken missile. If suceeds, gains +10 to BS Tests to hit with missile until end of encounter. Target must reroll dodge tests made against that attack.</p><p><b>Qualities:</b> Blast (1)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZXoxIbrPo6mSJfxq"
+}

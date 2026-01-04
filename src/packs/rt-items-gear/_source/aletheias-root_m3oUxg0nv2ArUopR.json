@@ -1,0 +1,20 @@
+{
+  "name": "Aletheias Root",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "Can spend 10 minutes to be distilled with +20 Trade (Chymist) Test. Requires +0 Chem-Use Test to Administer. If done so, Tests to detect in food and water have -30. If injested, character must make -20 Toughness Test or suffer -20 to Opposed Interaction Tests for one minute, +1 minute per DoF.",
+    "cost": "Root of the Aletheias Plant, can be distilled into a tasteless substance that lowers a person's inhibitions, becoming more likely to confess things.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m3oUxg0nv2ArUopR"
+}

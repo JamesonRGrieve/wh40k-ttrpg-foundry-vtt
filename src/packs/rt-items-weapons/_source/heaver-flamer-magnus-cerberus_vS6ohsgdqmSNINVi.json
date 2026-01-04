@@ -1,0 +1,28 @@
+{
+  "name": "Heaver Flamer (Magnus) \"Cerberus\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Flame",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Flame, Reliable, Spray, Vengeful (9)",
+    "weight": "50kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Weight includes backpack fuel supply.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Reliable, Spray, Vengeful (9)</p><p><b>Note:</b> Weight includes backpack fuel supply.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vS6ohsgdqmSNINVi"
+}

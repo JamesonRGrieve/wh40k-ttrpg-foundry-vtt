@@ -1,0 +1,17 @@
+{
+  "name": "Crippling Strike",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 50\nAptitudes: Weapon Skill, Finesse, Slaanesh",
+    "effect": "Whenever the Character's Melee Attacks inflict Critical Damage, add +2 to the damage result.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Whenever the Character's Melee Attacks inflict Critical Damage, add +2 to the damage result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wdmo0R0QkHPiVIhD"
+}

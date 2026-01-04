@@ -1,0 +1,17 @@
+{
+  "name": "Mortar Strike",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Master of Ordinance Spec\n300xp",
+    "descriptionText": "If Comrade equipped with Indirect Weapon, Character can have them fire it on their behalf whilst out of Cohesion. Character makes +0 Command Test in place of BS Test for an attack action. Comrade makes attack with the Indirect Weapon, their success based upon the previous test. Can't make another attack during turn making the order.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>If Comrade equipped with Indirect Weapon, Character can have them fire it on their behalf whilst out of Cohesion. Character makes +0 Command Test in place of BS Test for an attack action. Comrade makes attack with the Indirect Weapon, their success based upon the previous test. Can't make another attack during turn making the order.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3Na4LZIR4VSKJH4d"
+}

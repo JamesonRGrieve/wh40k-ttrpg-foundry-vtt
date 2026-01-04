@@ -1,0 +1,17 @@
+{
+  "name": "Bonetrader",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Not Astropath, Navigator, or Ork Weirdboy. RT Rank 3+, Intelligence 35+, Willpower 35+. Does not have a Psy Rating or Untouchable Trait. Has sold a psychic artiface, or been involved with dealings with psykers.",
+    "descriptionText": "Bonetraders are those knowledgable in the ways of the psyker and the witch both human and otherwise, as well as of psychic relics and the myriad dangers associated with all of them. They use this, naturally, to best judge how to profit from such endeavours where their knowledge is essential.",
+    "effects": "Replace new Rank's Advances with that of the Bonetrader\nAutomatically Gain Profit by the Witch Unique Talent\nAllows for the purchasing of the Unique Talent Mindtrap Maze ",
+    "source": "RT: The Navis Primer\n(Page 70)",
+    "description": {
+      "value": "<p>Bonetraders are those knowledgable in the ways of the psyker and the witch both human and otherwise, as well as of psychic relics and the myriad dangers associated with all of them. They use this, naturally, to best judge how to profit from such endeavours where their knowledge is essential.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Bonetrader\nAutomatically Gain Profit by the Witch Unique Talent\nAllows for the purchasing of the Unique Talent Mindtrap Maze </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GIVwWnRn332lXvZX"
+}

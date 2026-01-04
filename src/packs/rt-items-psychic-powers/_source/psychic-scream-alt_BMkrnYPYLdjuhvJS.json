@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Scream (Alt)",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Thought Sending",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "Psyker fires a Psychic Bolt  at target individual which may be dodged as if a ranged attack. If not avoided it deals 1d10 +2*Psy Rating Explosive Damage with Shocking and Warp Weapon Qualities. The target suffers a -5*Psy Rating Penalty to their Toughness Test to resist the Shocking Quality. This attack does not determine hit location randomly, instead always hitting the head.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BMkrnYPYLdjuhvJS"
+}

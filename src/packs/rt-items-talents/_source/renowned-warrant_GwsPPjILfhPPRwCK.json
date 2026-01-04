@@ -1,0 +1,17 @@
+{
+  "name": "Renowned Warrant",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Warrant of Trade carries increased signficance, +10 to Interaction Tests with those who understand the importance of the Warrant, such as traders and imperial officials.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Warrant of Trade carries increased signficance, +10 to Interaction Tests with those who understand the importance of the Warrant, such as traders and imperial officials.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GwsPPjILfhPPRwCK"
+}

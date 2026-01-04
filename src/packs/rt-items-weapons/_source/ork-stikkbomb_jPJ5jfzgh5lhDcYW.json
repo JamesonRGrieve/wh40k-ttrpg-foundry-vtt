@@ -1,0 +1,28 @@
+{
+  "name": "Ork Stikkbomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic - Ork",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (2), Unreliable",
+    "weight": "1kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Not Unreliable when wielded by an Ork. Counts as a Truncheon in Melee Combat, if Weapon Skill Test failed by 3+ DoF, it explodes.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Counts as a Truncheon in Melee Combat, if Weapon Skill Test failed by 3+ DoF, it explodes.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jPJ5jfzgh5lhDcYW"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Assault Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Mounted",
+    "type": "SP",
+    "range": "150m",
+    "rof": "-/-/10",
+    "damage": "3d10+6",
+    "damageType": "Impact",
+    "penetration": 6,
+    "clip": 200,
+    "reload": "3 Full",
+    "special": "SM Wep, Tearing",
+    "weight": "80kg",
+    "availability": "Famed",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Can be wielded by Terminators.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Can be wielded by Terminators.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UmlJvE24kJInl4NT"
+}

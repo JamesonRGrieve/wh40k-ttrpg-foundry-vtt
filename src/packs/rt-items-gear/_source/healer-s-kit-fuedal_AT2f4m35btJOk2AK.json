@@ -1,0 +1,20 @@
+{
+  "name": "Healer's Kit (Fuedal)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "3kg",
+    "availability": "Contains needle, thread, cloth bandages, scalpels, etc. Slightly better than its Feral Varient.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "100 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AT2f4m35btJOk2AK"
+}

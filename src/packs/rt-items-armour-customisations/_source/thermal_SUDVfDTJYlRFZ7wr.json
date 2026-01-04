@@ -1,0 +1,18 @@
+{
+  "name": "Thermal",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Do not need to make Toughness Tests due to Cold Temperaetures/Environments, within reason.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+    "weight": "+1kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Do not need to make Toughness Tests due to Cold Temperaetures/Environments, within reason.\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SUDVfDTJYlRFZ7wr"
+}

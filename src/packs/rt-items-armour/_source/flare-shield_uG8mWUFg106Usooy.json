@@ -1,0 +1,22 @@
+{
+  "name": "Flare Shield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.25,
+    "maxAg": "-",
+    "weight": "3kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Protection Rating doubles against Spray and Blast Weapons. If shield overloads it inflicts 1d10 Energy damage to wearer that ignores Armour and Toughness",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>Protection Rating doubles against Spray and Blast Weapons. If shield overloads it inflicts 1d10 Energy damage to wearer that ignores Armour and Toughness</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uG8mWUFg106Usooy"
+}

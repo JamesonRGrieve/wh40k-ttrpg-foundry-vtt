@@ -1,0 +1,14 @@
+{
+  "name": "Plasma*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 29,
+    "description": {
+      "value": "<p>29</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JvILAcPu7HLXg8IQ"
+}

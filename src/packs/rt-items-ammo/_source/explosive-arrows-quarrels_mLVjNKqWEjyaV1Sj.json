@@ -1,0 +1,20 @@
+{
+  "name": "Explosive Arrows/Quarrels",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Bows, Crossbows, Hand bows",
+    "damageOrEffect": "-10 BS to attack, damage type explosive. Weapon loses Primitive Quality",
+    "qualities": "Primitive (lose)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> -10 BS to attack, damage type explosive. Weapon loses Primitive Quality</p><p><b>Qualities:</b> Primitive (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mLVjNKqWEjyaV1Sj"
+}

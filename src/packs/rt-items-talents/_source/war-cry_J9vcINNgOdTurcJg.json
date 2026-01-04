@@ -1,0 +1,17 @@
+{
+  "name": "War Cry",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Strength 50, Willpower 50, Disturbing Voice. Aptitudes: Nurgle",
+    "effect": "Character can make a War Cry as a Free Action at the start of their turn. All creatures within 50m treat the character as having Fear(1) if they can hear them until the start of the character's next turn. Whilst screaming in such a way, the character cannot communicate in any other way, can repeat the War Cry at the start of any turn. At the end of an Encounter where a War Cry was performed, character gains one Fatigue.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character can make a War Cry as a Free Action at the start of their turn. All creatures within 50m treat the character as having Fear(1) if they can hear them until the start of the character's next turn. Whilst screaming in such a way, the character cannot communicate in any other way, can repeat the War Cry at the start of any turn. At the end of an Encounter where a War Cry was performed, character gains one Fatigue.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J9vcINNgOdTurcJg"
+}

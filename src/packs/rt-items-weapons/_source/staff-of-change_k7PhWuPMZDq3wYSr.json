@@ -1,0 +1,28 @@
+{
+  "name": "Staff of Change",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Force, Warp Weapon",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Two Handed Weapon. If inflicting Zealous Hatred, the target gains one random mutation or reduced to a gibbering, harmless warpspawn if the attack would have killed them. If the wielder fails a Focus Power Test whilst wielding this, they gain 1 Corruption Point.",
+    "description": {
+      "value": "<p><b>Special:</b> Force, Warp Weapon</p><p><b>Note:</b> Two Handed Weapon. If inflicting Zealous Hatred, the target gains one random mutation or reduced to a gibbering, harmless warpspawn if the attack would have killed them. If the wielder fails a Focus Power Test whilst wielding this, they gain 1 Corruption Point.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k7PhWuPMZDq3wYSr"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Double-Edged Chainsword (Locke)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing",
+    "weight": "12kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "A Chainsword with no protective covering on this side facing you. For those with extreme confidence.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> A Chainsword with no protective covering on this side facing you. For those with extreme confidence.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rqxTg9zdi5w8doqq"
+}

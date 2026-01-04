@@ -1,0 +1,17 @@
+{
+  "name": "Envoy of the Greater Good",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Fellowship 45, Charm +10",
+    "effect": "The Tau loses the Speak Not Unto the Alien Trait. Whenever they meet an organisation or race that has not previously encountered Tau, they may spend a Fate Point and make a +20 Charm Test, if successful, they gain +10 to all Interaction skills with that organisation or race for the remainder of the encounter. Additionally, they extract important information regarding the culture, group, or species with which they are speaking with that would be helpful in subsequent dealings with the group. (GM Discretion)",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The Tau loses the Speak Not Unto the Alien Trait. Whenever they meet an organisation or race that has not previously encountered Tau, they may spend a Fate Point and make a +20 Charm Test, if successful, they gain +10 to all Interaction skills with that organisation or race for the remainder of the encounter. Additionally, they extract important information regarding the culture, group, or species with which they are speaking with that would be helpful in subsequent dealings with the group. (GM Discretion)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x3R0FLnMg5d9peAd"
+}

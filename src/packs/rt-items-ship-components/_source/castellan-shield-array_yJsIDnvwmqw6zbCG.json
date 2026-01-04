@@ -1,0 +1,21 @@
+{
+  "name": "Castellan Shield Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Void Shield (Archeotech)",
+    "hullType": "Cruisers",
+    "powerUsage": 7,
+    "spaceUsage": 2,
+    "spCost": 2,
+    "effect": "Counts as two void shields, absorbing two attacks from any attacking ship. Once during Opponent's turn, Enginseer Prime can make -10 Tech-Use Check to double Void Shields for that opponent's turn. Doesn't count as Extended Action. If component selected, must be used as Ship's Void Shield.",
+    "availability": "Extremely Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Counts as two void shields, absorbing two attacks from any attacking ship. Once during Opponent's turn, Enginseer Prime can make -10 Tech-Use Check to double Void Shields for that opponent's turn. Doesn't count as Extended Action. If component selected, must be used as Ship's Void Shield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yJsIDnvwmqw6zbCG"
+}

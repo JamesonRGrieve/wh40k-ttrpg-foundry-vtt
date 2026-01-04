@@ -1,0 +1,18 @@
+{
+  "name": "Subsystem (SM): Recoil Suppression",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Legion/Astartes Power Armour",
+    "effect": "Allows wearer to fire Basic Weapons one-handed, although not in melee.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Allows wearer to fire Basic Weapons one-handed, although not in melee.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sy10HCuFaZnw92QF"
+}

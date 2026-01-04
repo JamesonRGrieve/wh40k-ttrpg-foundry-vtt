@@ -1,0 +1,20 @@
+{
+  "name": "Tracer Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP Weapon",
+    "damageOrEffect": "When making a Full Auto Attack, gain additional Degrees of Success equal to Half Initial Degrees of Success, rounding up. At Point Blank Range, gain Flame Quality, may ignite things at longer ranges. Comrades provide additional +5 to BS tests with Ranged Volley Order.",
+    "qualities": "Flame (conditional)",
+    "weight": "10% wep",
+    "availability": "Common",
+    "cost": null,
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> When making a Full Auto Attack, gain additional Degrees of Success equal to Half Initial Degrees of Success, rounding up. At Point Blank Range, gain Flame Quality, may ignite things at longer ranges. Comrades provide additional +5 to BS tests with Ranged Volley Order.</p><p><b>Qualities:</b> Flame (conditional)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AQ3OLqq44BboRAYn"
+}

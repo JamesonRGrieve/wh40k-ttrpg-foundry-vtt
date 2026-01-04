@@ -1,0 +1,22 @@
+{
+  "name": "Eldritch Storm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Farseer makes Focus Power Test against target and all living beings within 2m x Psy Rating of target, +2m per Degree of Success on Focus Power Test. Anyone hit tajes 3d10 + Psy Rating Energy damage with Penetration 8 and is knocked prone. This attack can be dodged as an area of effect ranged attack. Targets are consumed in a corona of energy and crackling lightning.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vtiWrTAlI3Z1eehA"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Telekinetic Sledge",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Half Action",
+    "action": "3m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker produces a sudden force that can abruptly move an object up 100kg x Psy Rating 10 metres in any direction, and to deal 1d10+Psy Rating Impact Damage to a foe within range. Each 2 Degrees of Success adds 100kg to max object weight. Attack hits automatically, but can be dodged as with a ranged attack.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ts533uyIyllWhqPF"
+}

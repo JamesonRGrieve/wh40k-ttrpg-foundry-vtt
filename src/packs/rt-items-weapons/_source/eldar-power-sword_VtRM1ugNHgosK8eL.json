@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Power Sword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Eldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Power Field",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "A Status Symbol amongst some Radical Inquisitors and Rogue Traders, either acquired as a gift from alien partners or taken as battle spoils.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> A Status Symbol amongst some Radical Inquisitors and Rogue Traders, either acquired as a gift from alien partners or taken as battle spoils.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VtRM1ugNHgosK8eL"
+}

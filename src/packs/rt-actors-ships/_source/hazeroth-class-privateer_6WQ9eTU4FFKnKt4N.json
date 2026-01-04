@@ -1,0 +1,28 @@
+{
+  "name": "Hazeroth-class Privateer",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Raider",
+    "size": "1.5km long, 0.25km wide",
+    "crew": 22000,
+    "speed": 10,
+    "manoeuvrability": 23,
+    "detection": 12,
+    "hull": 32,
+    "armour": 14,
+    "turrets": 1,
+    "space": 35,
+    "shipPoints": 30,
+    "weaponCapacity": "1 Dorsal, 1 Prow",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "6WQ9eTU4FFKnKt4N"
+}

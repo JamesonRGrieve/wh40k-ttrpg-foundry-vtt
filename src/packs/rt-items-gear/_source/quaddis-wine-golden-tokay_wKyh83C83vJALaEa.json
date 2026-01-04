@@ -1,0 +1,20 @@
+{
+  "name": "Quaddis Wine (Golden Tokay)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Highly Regarded Wines, the most accessible of those considered \"True\" Quaddis Wines.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "1000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 1000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wKyh83C83vJALaEa"
+}

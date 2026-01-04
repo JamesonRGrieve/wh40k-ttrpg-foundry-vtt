@@ -1,0 +1,28 @@
+{
+  "name": "Needle of Desire",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Crippling (3), Razor-Sharp, Toxic (6), Crippling (6)",
+    "weight": "1kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Weapon: Embedded Spike. Daemon WP 62 (Slaaneshi Daemon), Bind Str 2 . Att.: Envenomed, Piercing, Voidchill, Wounding. Weapon is embedded into Character's Arm, it cannot be dropped, disarmed, or parried. Removing it requires Opposed -30 Medicae vs Daemon's Willpower, if fail suffer 1d5 damage per DoF. Requires Mark of Slaanesh to wield. Add 6 to any Critical Damage dealt by weapon, deals 1d10 nonpermenant Toughness Damage.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Crippling (3), Razor-Sharp, Toxic (6), Crippling (6)</p><p><b>Note:</b> Weapon: Embedded Spike. Daemon WP 62 (Slaaneshi Daemon), Bind Str 2 . Att.: Envenomed, Piercing, Voidchill, Wounding. Weapon is embedded into Character's Arm, it cannot be dropped, disarmed, or parried. Removing it requires Opposed -30 Medicae vs Daemon's Willpower, if fail suffer 1d5 damage per DoF. Requires Mark of Slaanesh to wield. Add 6 to any Critical Damage dealt by weapon, deals 1d10 nonpermenant Toughness Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NcAmgjSD9bqPteSx"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Ork Tankhammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+3",
+    "damageType": "Explosive",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unbalanced, Blast (1d5-3)",
+    "weight": "10kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Koronus Bestiary",
+    "note": "One use weapon, as it explodes when it hits something. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "description": {
+      "value": "<p><b>Special:</b> Unbalanced, Blast (1d5-3)</p><p><b>Note:</b> One use weapon, as it explodes when it hits something. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5PgriEJ5PtY7G5cW"
+}

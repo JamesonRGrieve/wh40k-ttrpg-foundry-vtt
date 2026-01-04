@@ -1,0 +1,28 @@
+{
+  "name": "Krak Grenade (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (0)",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "50 T",
+    "source": "Only War: Core",
+    "note": "Triggers Righteous Fury on a 9 or 10 damage roll",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (0)</p><p><b>Note:</b> Triggers Righteous Fury on a 9 or 10 damage roll</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ywoXSxGVaK5psimV"
+}

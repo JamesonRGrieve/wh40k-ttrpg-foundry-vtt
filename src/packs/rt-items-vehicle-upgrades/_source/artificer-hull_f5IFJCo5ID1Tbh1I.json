@@ -1,0 +1,19 @@
+{
+  "name": "Artificer Hull",
+  "type": "vehicleUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "type": "Integral",
+    "allowedVehicles": "Any",
+    "difficulty": "-40",
+    "descriptionText": "Reduce all Critical Damage by 4, gain +10 to Jink Actions. Suffer no Damage from Ram Actions. All Repair Tests have additional -20 as this is a sacred piece of technology.",
+    "availability": "Near Unique",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Reduce all Critical Damage by 4, gain +10 to Jink Actions. Suffer no Damage from Ram Actions. All Repair Tests have additional -20 as this is a sacred piece of technology.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f5IFJCo5ID1Tbh1I"
+}

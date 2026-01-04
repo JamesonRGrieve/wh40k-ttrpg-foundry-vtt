@@ -1,0 +1,28 @@
+{
+  "name": "Execution Pistol \"Puritan-14\" (Hax-Orthlack) [Shotgun]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Scatter",
+    "weight": "1.75kg",
+    "availability": "Scarce",
+    "cost": "100 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Imposes -10 to Ballistic Skill Test if not used in two hands, see [Pistol] Profile for main gun.\nCan only fire as a [Pistol] or [Shotgun] at once.",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Imposes -10 to Ballistic Skill Test if not used in two hands, see [Pistol] Profile for main gun.\nCan only fire as a [Pistol] or [Shotgun] at once.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2julUd4NGqUAav7r"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Simple Action",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nVarying Time",
+    "requirements": "--",
+    "descriptionText": "The Comrade performs some basic action that could be performed without requiring a Skill Test, such as helping a Character perform an activity (which reduces the time it takes by one Round per Comrade, to a minimum of one).",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Comrade performs some basic action that could be performed without requiring a Skill Test, such as helping a Character perform an activity (which reduces the time it takes by one Round per Comrade, to a minimum of one).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tLz8BONCOXR3nYJa"
+}

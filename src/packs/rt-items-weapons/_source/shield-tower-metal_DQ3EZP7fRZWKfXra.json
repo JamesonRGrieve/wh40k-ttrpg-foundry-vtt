@@ -1,0 +1,28 @@
+{
+  "name": "Shield (Tower - Metal)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Defensive, Primitive",
+    "weight": "7kg",
+    "availability": "Rare",
+    "cost": "60 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Provides AP 8 Primitive Cover to arm and body. Imposes -2 to Agility Bonus whilst wielded.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Primitive</p><p><b>Note:</b> Provides AP 8 Primitive Cover to arm and body. Imposes -2 to Agility Bonus whilst wielded.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DQ3EZP7fRZWKfXra"
+}

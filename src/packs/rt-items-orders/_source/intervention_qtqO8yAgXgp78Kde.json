@@ -1,0 +1,17 @@
+{
+  "name": "Intervention",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Veteran Order\nFree Action",
+    "requirements": ".Vet. Comrade\nApt: Defence, Weapon Skill",
+    "descriptionText": "Comrade in Cohesion allows the Character to re-roll Failed Parry or Dodge Tests vs Melee Attacks (must accept second result). However if they fail the test even after the reroll the Comrade is struck by the attack instead. Can only use this order once per Round.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Comrade in Cohesion allows the Character to re-roll Failed Parry or Dodge Tests vs Melee Attacks (must accept second result). However if they fail the test even after the reroll the Comrade is struck by the attack instead. Can only use this order once per Round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qtqO8yAgXgp78Kde"
+}

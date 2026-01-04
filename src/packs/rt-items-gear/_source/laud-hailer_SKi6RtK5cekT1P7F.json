@@ -1,0 +1,20 @@
+{
+  "name": "Laud Hailer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "4kg",
+    "availability": "Space Megaphone. A user wearing one may activate it as a Half Action to gain Fear (1) for 1d5 rounds by blasting righteous vitriol, additionally anyone in 5 metres, including the user, must make a +20 Toughness test or be deafened for 1d5 rounds.",
+    "cost": "Often attached to servo-skulls or servitors that can play pre-recorded messages. ",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SKi6RtK5cekT1P7F"
+}

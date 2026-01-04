@@ -1,0 +1,21 @@
+{
+  "name": "Barracks",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "All Ships",
+    "powerUsage": 2,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "effect": "Barracks that house potentially thousands of soldiers. +100 Achievement Points towards Military Objectives, +20 to Command Tests involving Hit and Run Boarding Actions if troops are present.",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Barracks that house potentially thousands of soldiers. +100 Achievement Points towards Military Objectives, +20 to Command Tests involving Hit and Run Boarding Actions if troops are present.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yVYssueVxPInNt6O"
+}

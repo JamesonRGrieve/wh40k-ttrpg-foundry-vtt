@@ -1,0 +1,17 @@
+{
+  "name": "Deadeye Shot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Ballistic Skill 30\nAptitudes: Ballistic Skill, Finesse, Tzeentch",
+    "effect": "When making a Called Shot with a Ranged Weapon, reduce penalty by 10 (-20 to -10)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When making a Called Shot with a Ranged Weapon, reduce penalty by 10 (-20 to -10)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4DOynDQ10MFaL5mT"
+}

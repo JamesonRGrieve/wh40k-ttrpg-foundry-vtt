@@ -1,0 +1,20 @@
+{
+  "name": "Smoke Flare",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "Gradually gives off a thick black smoke up to a 40m area. Lasts anywhere from 1d5 rounds in strong wind to 2d10 minutes indoors.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "12 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 12 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k3IsjXvcSWMfncwa"
+}

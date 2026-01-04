@@ -1,0 +1,22 @@
+{
+  "name": "Serpent's Ward",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned, Psy Rating 5, Infamy 40+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "Self",
+    "range": "-10 Willpower Test",
+    "opposed": "No",
+    "sustained": "Power lasts for Psy Rating Rounds, whilst active the Psyker can perform the Charmer's Gaze Reaction. As a Half Action they can prematurely end this power to immediately end any Grapples, Crippling Effects, and Fires they were suffering and make a Half Move as a Free Action which does not provoke Opportunity Attacks.\nCharmer's Gaze (Reaction, Attack): Used in response to being targeted by a Ranged or Melee Attack, after the attack has been resolved the Psyker makes +0 Willpower Test. If successful they stun the target until the end of their next turn. Target must have line of sight and the ability to see the Psyker (EG: if target is blind or firing indirectly, this effect does nothing). ",
+    "effect": "500xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zHcrSYZPjrB3sgn8"
+}

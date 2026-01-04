@@ -1,0 +1,22 @@
+{
+  "name": "Augmetic Engine-Plate",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 7,
+    "maxAg": null,
+    "weight": "20kg",
+    "availability": "Rare",
+    "cost": "-",
+    "notes": "Environmentally Sealed, gives +30 to resist extreme environmental conditions and has 8 hours of air. Contains internal vox, mag-boots, and photo-visor. -10 to Agility and Further -10 for tests requiring fine manipulation using the gauntlets. Counts as AP 10 vs Flame/Energy weapons.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Environmentally Sealed, gives +30 to resist extreme environmental conditions and has 8 hours of air. Contains internal vox, mag-boots, and photo-visor. -10 to Agility and Further -10 for tests requiring fine manipulation using the gauntlets. Counts as AP 10 vs Flame/Energy weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0Nu5BOjjY4Mm0D0I"
+}

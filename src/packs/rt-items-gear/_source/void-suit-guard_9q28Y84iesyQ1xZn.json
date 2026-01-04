@@ -1,0 +1,20 @@
+{
+  "name": "Void Suit (Guard)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "8kg",
+    "availability": "Protects user against vacuum. Provides 12 hours of air, but imposes -10 to Agility Tests. Poor Versions have six hours. Good/Best have no Agility Penalty. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9q28Y84iesyQ1xZn"
+}

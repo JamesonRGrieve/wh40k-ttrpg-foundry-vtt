@@ -1,0 +1,21 @@
+{
+  "name": "Pharmacia",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 2,
+    "spCost": 2,
+    "effect": "Component can sythesis drugs in quantity to supply the crew. Requires Scholastic Lore (Chymistry) test, difficulty dependant on compound availability. Also provides +50 Achievement Points to Criminal or Trade Endeavours where Medical help or pharmaceuticals would be useful. GM Discretion on what is synthesisable. One per Vessel.",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Component can sythesis drugs in quantity to supply the crew. Requires Scholastic Lore (Chymistry) test, difficulty dependant on compound availability. Also provides +50 Achievement Points to Criminal or Trade Endeavours where Medical help or pharmaceuticals would be useful. GM Discretion on what is synthesisable. One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ateNVlt4RgbcpCV3"
+}

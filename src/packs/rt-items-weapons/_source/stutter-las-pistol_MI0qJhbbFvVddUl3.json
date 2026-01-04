@@ -1,0 +1,28 @@
+{
+  "name": "Stutter-Las Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "35m",
+    "rof": "S/-/5",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 25,
+    "reload": "Full",
+    "special": "Inaccurate",
+    "weight": "2kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MI0qJhbbFvVddUl3"
+}

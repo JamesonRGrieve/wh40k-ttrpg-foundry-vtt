@@ -1,0 +1,22 @@
+{
+  "name": "Dark Curse",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "Warp Secrets\nOW: Psy Rating 5",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Make Opposed Willpower Test vs Target. If psyker wins, target suffers -10 to all Skill and Characteristic tests for one hour, +1 hour per Degree of Success. If Psyker wins by 3+ Degrees of Success, they can choose to blind or deafen the target for one hour (provided target can be blinded/deafened). If Psyker wins by 5+ Degrees of Success, can Permenantly Blind/Deafen Target, rupturing the organ to deal 2d5 Rending Damage to the head, causing 1d10 Insanity Points to the target. If Psyker fails Opposed Test, they gain 1d5 Corruption Points. (Note, Permenant sense loss can be repaired with augmetics).",
+    "effect": "300xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xxthlK66V11dOvdI"
+}

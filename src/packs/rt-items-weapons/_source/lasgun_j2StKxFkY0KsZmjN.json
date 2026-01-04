@@ -1,0 +1,28 @@
+{
+  "name": "Lasgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "100m",
+    "rof": "S/3/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "4kg",
+    "availability": "Common",
+    "cost": "75 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j2StKxFkY0KsZmjN"
+}

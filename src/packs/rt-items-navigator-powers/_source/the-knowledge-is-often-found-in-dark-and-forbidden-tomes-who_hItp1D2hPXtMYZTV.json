@@ -1,0 +1,21 @@
+{
+  "name": "The Knowledge is often found in dark and forbidden tomes, whose owners would be purged for possessing. The primary steps are:\nPreparing the Host, then Summoning and Binding the Daemon. Texts may contain some of these steps, maybe even a Daemon's True name.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Charred Form",
+    "sustain": "4",
+    "novice": "The Daemonhost's body is charred and eternally smoulders. They are immune to Energy damage that does not come from Psychic or Holy attacks.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> The Daemonhost's body is charred and eternally smoulders. They are immune to Energy damage that does not come from Psychic or Holy attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hItp1D2hPXtMYZTV"
+}

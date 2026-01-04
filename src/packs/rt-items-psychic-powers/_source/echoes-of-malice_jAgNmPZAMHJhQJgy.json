@@ -1,0 +1,22 @@
+{
+  "name": "Echoes of Malice",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating Radius",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "Psyker designates each creature within range as either an Ally or Enemy (can choose to designate themselves as an ally or ignore effects entirely). Allies within range must make +0 Willpower Test or sacrifice their reaction to make a Standard Attack against a target of their choice. Enemies within range must make a +0 Willpower Test or lose their reaction and suffer -5xPsy Rating to all Skill and Characteristic Tests until the start of the Psyker's next turn.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jAgNmPZAMHJhQJgy"
+}

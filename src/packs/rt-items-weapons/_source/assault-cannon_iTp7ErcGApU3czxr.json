@@ -1,0 +1,28 @@
+{
+  "name": "Assault Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "120m",
+    "rof": "-/-/10",
+    "damage": "3d10+5",
+    "damageType": "Impact",
+    "penetration": 5,
+    "clip": 200,
+    "reload": "2 Full",
+    "special": "Tearing, Unreliable",
+    "weight": "60kg",
+    "availability": "Extremely Rare",
+    "cost": "7000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Exceptionally lethal but often requires high maintenance due to the strain placed on the barrels",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Exceptionally lethal but often requires high maintenance due to the strain placed on the barrels</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iTp7ErcGApU3czxr"
+}

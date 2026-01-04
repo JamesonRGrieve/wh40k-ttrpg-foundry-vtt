@@ -1,0 +1,17 @@
+{
+  "name": "Blessing of Flame",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; WP 45, Scholastic Lore (Imperial Creed) +20. Aptitudes: Ballistic Skill, Knowledge",
+    "effect": "As a Full Action, the character can make a +0 Scholastic Lore (Imperial Creed) Test to bless a single weapon with the Flame Quality. If successful, for Willpower Bonus Rounds or until the weapon's Clip is depleted, the weapon gains the Sanctified Quality and automatically sets Daemons on Fire when it strikes them.\nSanctified: Weapon damage counts as \"Holy\", Ignoring the Toughness Bonus granted by the \"Daemonic\" Trait. Weapons with this trait can destroy creatures with the \"Stuff of Nightmares\" Trait.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>As a Full Action, the character can make a +0 Scholastic Lore (Imperial Creed) Test to bless a single weapon with the Flame Quality. If successful, for Willpower Bonus Rounds or until the weapon's Clip is depleted, the weapon gains the Sanctified Quality and automatically sets Daemons on Fire when it strikes them.\nSanctified: Weapon damage counts as \"Holy\", Ignoring the Toughness Bonus granted by the \"Daemonic\" Trait. Weapons with this trait can destroy creatures with the \"Stuff of Nightmares\" Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZKy8trsGlBStadJk"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Flesh Replenishment",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Allows User to siphon energy into their own body from a functioning machine or battery. Making +10 Toughness Test near an external source of energy, success removes one Fatigue, +1 per Degree of Success. They can alternatively use this to recharge an internal resoervoir implant.",
+    "cost": null,
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XjspcX7nYa5uoyzP"
+}

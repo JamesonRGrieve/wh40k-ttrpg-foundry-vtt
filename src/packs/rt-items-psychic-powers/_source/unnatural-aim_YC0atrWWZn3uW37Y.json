@@ -1,0 +1,22 @@
+{
+  "name": "Unnatural Aim",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Any ranged attacks made by the character before the end of their next turn gain a +30 bonus to the test.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YC0atrWWZn3uW37Y"
+}

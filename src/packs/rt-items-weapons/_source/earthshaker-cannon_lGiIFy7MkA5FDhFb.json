@@ -1,0 +1,28 @@
+{
+  "name": "Earthshaker Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "SP",
+    "range": "3500m",
+    "rof": "S/-/-",
+    "damage": "4d10+10",
+    "damageType": "Explosive",
+    "penetration": 8,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Blast (10+1d10), Concussive (5), Indirect (5)",
+    "weight": "800kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10+1d10), Concussive (5), Indirect (5)</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lGiIFy7MkA5FDhFb"
+}

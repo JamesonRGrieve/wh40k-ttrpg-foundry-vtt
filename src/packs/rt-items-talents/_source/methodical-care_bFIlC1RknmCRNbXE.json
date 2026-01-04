@@ -1,0 +1,17 @@
+{
+  "name": "Methodical Care",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Intelligence 40, Swift Suture \nAptitudes: Intelligence, Knowledge",
+    "effect": "Whenever the character Fails a test as part of the Extended Care Medicae Special Use that leads to their Patient taking damage, the character can reduce that damage by their Int Bonus.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever the character Fails a test as part of the Extended Care Medicae Special Use that leads to their Patient taking damage, the character can reduce that damage by their Int Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bFIlC1RknmCRNbXE"
+}

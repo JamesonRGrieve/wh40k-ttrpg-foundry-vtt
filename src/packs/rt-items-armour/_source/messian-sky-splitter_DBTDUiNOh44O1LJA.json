@@ -1,0 +1,22 @@
+{
+  "name": "Messian Sky-Splitter",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.65,
+    "maxAg": "-",
+    "weight": "20kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Projects field outwards 2 Metres, covering user and anything close by (such as a bike or person). Whilst Active it provices Resistance(Heat) and immunity to intense flashes such as from Photon Flash Grenades. Can be used for 10 hours before requiring 5 hour recharge. Uses a backpack power supply.",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p>Projects field outwards 2 Metres, covering user and anything close by (such as a bike or person). Whilst Active it provices Resistance(Heat) and immunity to intense flashes such as from Photon Flash Grenades. Can be used for 10 hours before requiring 5 hour recharge. Uses a backpack power supply.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DBTDUiNOh44O1LJA"
+}

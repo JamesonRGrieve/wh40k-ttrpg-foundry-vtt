@@ -1,0 +1,22 @@
+{
+  "name": "Volcanis Shroud",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "All",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "20kg",
+    "availability": "Average",
+    "cost": "350 T",
+    "notes": "AP 6 vs Fire, Acids, and Corrosives. Imposes -10 to Agility Tests when worn.\nHas inbuilt Rebreather and Photovisor",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>AP 6 vs Fire, Acids, and Corrosives. Imposes -10 to Agility Tests when worn.\nHas inbuilt Rebreather and Photovisor</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p8mQjOdMYMs4qm9n"
+}

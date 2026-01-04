@@ -1,0 +1,28 @@
+{
+  "name": "EMP Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Haywire (3)",
+    "weight": "0.5kg",
+    "availability": "Respected",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Xenos device, often seen used by Tau and Eldar.",
+    "description": {
+      "value": "<p><b>Special:</b> Haywire (3)</p><p><b>Note:</b> Xenos device, often seen used by Tau and Eldar.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "swCyyf59Z92iC55P"
+}

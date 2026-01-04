@@ -1,0 +1,21 @@
+{
+  "name": "Cypra-Pattern Class 2 Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive (Archeotech)",
+    "hullType": "Raiders, Frigates",
+    "powerUsage": -40,
+    "spaceUsage": 12,
+    "spCost": 2,
+    "effect": "Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).",
+    "availability": "Extremely Rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z8bzhVhp4l9WTmTR"
+}

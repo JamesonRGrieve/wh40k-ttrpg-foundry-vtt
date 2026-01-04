@@ -1,0 +1,17 @@
+{
+  "name": "Into the Jaws of Hell",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Adamantium Faith, Halo of Command, Will of the Inquisitor.\nAptitudes: Leadership, Willpower",
+    "effect": "Servants and Allies within 10m can subtract the character's Fellowship bonus from their Degrees of failiure on any failed Fear or Pinning Test as long as the Character themselves passed the test. If this reduces the Degrees of Failiure to 0, they instead pass by 1 degree of success. Effects apply to anyone in the character's group, other servants of the Imperium fighting under their orders, and anyone else the GM deems appropriate.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Servants and Allies within 10m can subtract the character's Fellowship bonus from their Degrees of failiure on any failed Fear or Pinning Test as long as the Character themselves passed the test. If this reduces the Degrees of Failiure to 0, they instead pass by 1 degree of success. Effects apply to anyone in the character's group, other servants of the Imperium fighting under their orders, and anyone else the GM deems appropriate.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Uk2bMMG1RhPrZudx"
+}

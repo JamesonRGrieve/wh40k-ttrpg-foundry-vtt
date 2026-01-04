@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Anti-Plant Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Blast (3)",
+    "weight": "0.5kg",
+    "availability": "Initiated",
+    "cost": "18 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Only damages plants. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (3)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Only damages plants. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JwIH9DqNTCsQcRsF"
+}

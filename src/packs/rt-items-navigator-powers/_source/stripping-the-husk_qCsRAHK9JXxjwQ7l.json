@@ -1,0 +1,21 @@
+{
+  "name": "Stripping the Husk",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "100m",
+    "test": "Opposed Willpower Test",
+    "sustain": "No",
+    "novice": "Navigator makes Opposed Willpower Test vs target in range and line of sight. On success deals 1d10 Rending Damage. Damage ignores non-warded armour but not Toughness. Target is automatically knocked prone.",
+    "adept": "Damage increases to 1d10 Rending Damage + 1 per Degree of Success on Opposed Willpower Test.",
+    "master": "Damage increases to 2d10 +  1 per Degree of Success on Opposed Willpower Test. In addition to being knocked down, target is also pinned if they are able to be.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator makes Opposed Willpower Test vs target in range and line of sight. On success deals 1d10 Rending Damage. Damage ignores non-warded armour but not Toughness. Target is automatically knocked prone.</p><p><b>Adept:</b> Damage increases to 1d10 Rending Damage + 1 per Degree of Success on Opposed Willpower Test.</p><p><b>Master:</b> Damage increases to 2d10 +  1 per Degree of Success on Opposed Willpower Test. In addition to being knocked down, target is also pinned if they are able to be.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qCsRAHK9JXxjwQ7l"
+}

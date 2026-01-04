@@ -1,0 +1,22 @@
+{
+  "name": "Wychsuit",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Dark Eldar",
+    "locations": "All",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "0.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Common Availability if acquired from Dark Eldar Settlement. Likely Human Wearable, if uncomfortable.",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>Common Availability if acquired from Dark Eldar Settlement. Likely Human Wearable, if uncomfortable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3BTRpQj2IlurUaUc"
+}

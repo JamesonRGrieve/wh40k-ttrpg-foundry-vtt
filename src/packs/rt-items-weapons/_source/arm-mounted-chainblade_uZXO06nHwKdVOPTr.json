@@ -1,0 +1,28 @@
+{
+  "name": "Arm-Mounted Chainblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing",
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Can be used whilst gripping something else.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Can be used whilst gripping something else.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uZXO06nHwKdVOPTr"
+}

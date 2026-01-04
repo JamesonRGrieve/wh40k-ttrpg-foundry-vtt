@@ -1,0 +1,21 @@
+{
+  "name": "Daemonhosts (Dark Heresy 2E: Enemies Beyond)",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": "A Bound Daemon within a mortal shell is a powerful, yet incredibly dangerous being. Created only be mad cults and the most radical of Inquisitors.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> A Bound Daemon within a mortal shell is a powerful, yet incredibly dangerous being. Created only be mad cults and the most radical of Inquisitors.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3U1nFRXFjVt0CmPJ"
+}

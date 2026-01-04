@@ -1,0 +1,20 @@
+{
+  "name": "Venic Noose",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "A Trap to Ensnare Daemons. Grants +10 to any Ritual used to Summon and Bind a Daemon, each use requires Fresh Blood as Bait.\nConstructed from Sacrificial Sinew and hair, soaked in user's blood, the bone dust of a slain foe, and prepared within briny water.",
+    "cost": "Rare Availbility on War Moons of Talax. Somewhat Heretical.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rKjSlOxgtkAO0iyl"
+}

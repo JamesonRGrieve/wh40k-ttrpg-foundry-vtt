@@ -1,0 +1,22 @@
+{
+  "name": "Flay Reality",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Full Action",
+    "action": "1m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Everyone within power's range except the Psyker make Opposed Willpower Tests vs Psyker's Willpower, each that lose take 1d10 + Psy Rating non-permenant Characteristic Damage to random Characteristic,  +2 damage and 1 Insanity per Degree of Success Psyker made vs Target. Effect can be dodged as with an Area of Effect Ranaged attack.\nNote: Randomly choose characteristic with 1d10 (WS, BS, S, T, AG, INT, PER, WP, FEL), rerolling 0's",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gf56UwfgICbFVNgH"
+}

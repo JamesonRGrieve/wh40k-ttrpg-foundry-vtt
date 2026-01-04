@@ -1,0 +1,17 @@
+{
+  "name": "Astartes Weapon Training",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Astartes",
+    "effect": "Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lnjWDZ7hR7YwARQw"
+}

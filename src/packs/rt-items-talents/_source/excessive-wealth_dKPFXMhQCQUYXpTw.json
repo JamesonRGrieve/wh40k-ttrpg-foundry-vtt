@@ -1,0 +1,17 @@
+{
+  "name": "Excessive Wealth",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1: Infamy 40\nAptitudes: Slaanesh",
+    "effect": "Character adds +10 to their Infamy when making Acquisition Tests using Infamy.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character adds +10 to their Infamy when making Acquisition Tests using Infamy.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dKPFXMhQCQUYXpTw"
+}

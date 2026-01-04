@@ -1,0 +1,17 @@
+{
+  "name": "Soulless Aura",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T1)",
+    "requirements": "Tier 1: Untouchable E.Adv, Willpower 30\nAptitudes: Finesse, Willpower",
+    "effect": "Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OlkUv8pxfIAZ00yX"
+}

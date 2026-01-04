@@ -1,0 +1,22 @@
+{
+  "name": "Puppet Master",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "Dominate\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "1km x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker makes Opposed Willpower Test with -10. On Success they overtake target's body and supresses their conciousness, with the Psyker's mind leaving their original body in a deep (and vulnerable) sleep. Possessed Target retains WS, BS, Strength, Toughness, and Agility, but Intelligence, Willpower, and Fellowship replaced by Psyker's. Psyker can use any of their skills or the target's skills with -10 penalty. Suicidal Actions cause another Opposed Willpower Test but now target has -10 instead of Psyker. If target is killed, psyker is shunted back to their body, suffering 1d5 wounds (bypass everything), and 1d10 Insanity. If the Psyker ends the power, or leaves the power's range (based on Psyker's original body), they suffer 1d5 Fatigue.",
+    "effect": "500xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XHygVxa7nmCedrwn"
+}

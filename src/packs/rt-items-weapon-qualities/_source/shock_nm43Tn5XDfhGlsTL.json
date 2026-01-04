@@ -1,0 +1,14 @@
+{
+  "name": "Shock*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 18,
+    "description": {
+      "value": "<p>18</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nm43Tn5XDfhGlsTL"
+}

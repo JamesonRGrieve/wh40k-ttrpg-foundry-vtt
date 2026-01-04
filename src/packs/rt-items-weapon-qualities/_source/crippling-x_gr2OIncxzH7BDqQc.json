@@ -1,0 +1,14 @@
+{
+  "name": "Crippling (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "If target suffers at least 1 Wound from this weapon, for the rest of the encounter, or until healed of all damage, if it takes more than a half action on its turn, it takes X damage to the same location it took damage originally from this weapon (damage ignores AP and Toughness).",
+    "description": {
+      "value": "<p>If target suffers at least 1 Wound from this weapon, for the rest of the encounter, or until healed of all damage, if it takes more than a half action on its turn, it takes X damage to the same location it took damage originally from this weapon (damage ignores AP and Toughness).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gr2OIncxzH7BDqQc"
+}

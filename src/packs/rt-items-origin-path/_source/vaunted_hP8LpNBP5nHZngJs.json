@@ -1,0 +1,25 @@
+{
+  "name": "Vaunted",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Birthright",
+    "descriptionText": "+3 Agility or Fellowship, -3 Perception. Gain Decadence Talent. Gain 1d5 Corruption Points.",
+    "effects": "+3 Agility or Fellowship, -3 Perception. Gain Decadence Talent. Gain 1d5 Corruption Points.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>+3 Agility or Fellowship, -3 Perception. Gain Decadence Talent. Gain 1d5 Corruption Points.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.birthright",
+      "step": "Birthright",
+      "stepIndex": 2,
+      "number": "6"
+    }
+  },
+  "_id": "hP8LpNBP5nHZngJs"
+}

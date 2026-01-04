@@ -1,0 +1,22 @@
+{
+  "name": "Fatigued",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Any test while fatigued: -10",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Any test while fatigued: -10</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "self"
+    }
+  },
+  "_id": "1Hl4rLyG2M80WJiC"
+}

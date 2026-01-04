@@ -1,0 +1,17 @@
+{
+  "name": "Blood Tracker",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "When Turning in a bounty, gain +100 Objective Points for Military and Criminal Objectives",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When Turning in a bounty, gain +100 Objective Points for Military and Criminal Objectives</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hNSqevLz8O0Tmfbb"
+}

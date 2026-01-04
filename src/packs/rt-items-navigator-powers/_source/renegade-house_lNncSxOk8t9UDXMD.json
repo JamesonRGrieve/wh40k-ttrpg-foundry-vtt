@@ -1,0 +1,21 @@
+{
+  "name": "Renegade House",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "The Fruits of Corrupted Blood: Start with one additional Navigator Power, choose any three Navigator Powers (even those not currently possessed), gain +10 to all these tests in addition to other bonuses.\nUnchecked Mutation: Tests to avoid gaining mutation are +0 instead of +10, begin game with 1d5 Insanity Points.\nRenegades: Start with 1d5 Corruption Points, all tests to interact with official bodies of the Imperium have -10. Many who know of the characters house may be suspicious of them.\nInitial Mutation: Start with two Navigator Mutations, rolled randomly. Additional mutations may be gained when new Powers or Mastery is gained.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lNncSxOk8t9UDXMD"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Autocannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "300m",
+    "rof": "S/2/5",
+    "damage": "4d10+5",
+    "damageType": "Impact",
+    "penetration": 4,
+    "clip": 20,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "55kg",
+    "availability": "Very Rare",
+    "cost": "1000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Requires a team of two to operate effecitvely (a firer and loaded). Uses cased, explosive rounds.",
+    "description": {
+      "value": "<p><b>Note:</b> Requires a team of two to operate effecitvely (a firer and loaded). Uses cased, explosive rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ysbHbtiPUyOzWNUx"
+}

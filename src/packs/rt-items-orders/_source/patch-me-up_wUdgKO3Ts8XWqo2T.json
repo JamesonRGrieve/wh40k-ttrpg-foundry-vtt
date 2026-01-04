@@ -1,0 +1,17 @@
+{
+  "name": "Patch Me Up",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Veteran Order\nHalf Action",
+    "requirements": ".Vet. Comrade\nApt: General, Knowledge",
+    "descriptionText": "Character makes a +0 Intelligence or +20 Medicae Test, if successful a Comrade in Cohesion cures them of the Blood Loss Condition.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Character makes a +0 Intelligence or +20 Medicae Test, if successful a Comrade in Cohesion cures them of the Blood Loss Condition.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wUdgKO3Ts8XWqo2T"
+}

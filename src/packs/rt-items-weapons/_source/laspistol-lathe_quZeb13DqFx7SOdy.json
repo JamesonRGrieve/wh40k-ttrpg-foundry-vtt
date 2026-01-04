@@ -1,0 +1,28 @@
+{
+  "name": "Laspistol (Lathe)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "40m",
+    "rof": "S/2/-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Integrated Weapon",
+    "weight": "2kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Infinite clip, no reload.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Infinite clip, no reload.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "quZeb13DqFx7SOdy"
+}

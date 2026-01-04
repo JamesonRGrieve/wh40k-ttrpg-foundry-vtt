@@ -1,0 +1,17 @@
+{
+  "name": "Instinctual Understanding",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait (Unique)",
+    "requirements": "Kroot Shaper Alternate Advance (Innate)",
+    "effect": "Character selects one of their allies they can see. If the Character has previously devoured a member of the target's race they can make a +0 Scrutiny Test as a Half Action. If successful they determine the number of Wounds the target possesses and a number of the target's Characteristics equal to the degrees of success on the Scrutiny Test of their choice. Can be done once per target per encounter.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Character selects one of their allies they can see. If the Character has previously devoured a member of the target's race they can make a +0 Scrutiny Test as a Half Action. If successful they determine the number of Wounds the target possesses and a number of the target's Characteristics equal to the degrees of success on the Scrutiny Test of their choice. Can be done once per target per encounter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6kRWjD9fvd3INXq0"
+}

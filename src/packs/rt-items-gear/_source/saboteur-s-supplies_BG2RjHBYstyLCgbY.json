@@ -1,0 +1,20 @@
+{
+  "name": "Saboteur's Supplies",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "4kg",
+    "availability": "A Pack containing devices such as well-made lock-picks, sound amplification and nullifcation devices, and specialised drills. Grants +20 to Security Tests to open physical locks, remove secured objects, or otherwise defy mechanical obstacles, and -20 to Awareness tests to overhear such activities.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BG2RjHBYstyLCgbY"
+}

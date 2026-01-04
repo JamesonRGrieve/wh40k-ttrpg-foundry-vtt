@@ -1,0 +1,22 @@
+{
+  "name": "Grappled",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Hitting a target engaged in a grapple: +20",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Hitting a target engaged in a grapple: +20</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "target"
+    }
+  },
+  "_id": "YXbbdp31kNz8uPcL"
+}

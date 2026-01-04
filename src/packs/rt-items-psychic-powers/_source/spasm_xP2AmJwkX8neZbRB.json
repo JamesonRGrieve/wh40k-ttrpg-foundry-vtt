@@ -1,0 +1,22 @@
+{
+  "name": "Spasm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "50m",
+    "range": "Threshold 7\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Target individual within range makes +0 Willpower Test. If failed they fall prone as a result of muscle spasms. If they were holding a weapon, prior to falling prone they make a Ballistic Skill Tests targeting whichever target is closest to them.\nFor every 5 Points above Threshold / 1 DoS on Focus test, can affect one additional target or make opposed test one step harder.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xP2AmJwkX8neZbRB"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Crown of Propsero",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "2kg",
+    "availability": "Acts as Psychic Hood that also provides Protection Raiting 30 Forcefield with Overload 01-05. Protection rating is 60 vs Psychic Attacks. \nDesigned to Interface with Power Armour, wearer must be dedicated to Tzeentch to use item.",
+    "cost": "Heretical",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jP2bGDmBicrirKqH"
+}

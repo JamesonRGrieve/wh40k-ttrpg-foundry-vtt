@@ -1,0 +1,17 @@
+{
+  "name": "Luminen Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Mechanicus Implants",
+    "effect": "Can take one minute charge various machines/devices, making a Toughness Test dependant on the scale. +10: Power Cell, Illuminator. +0, Weapon Charge Pack, Data Slate, Bridge Terminal. -10: Hotshot charge pack, shuttle electronics, servo skull. -20: Lascannon Charge Pack, Servitor, Bridge Hololith. -30: Ship Cogitator Core, Reactor Machine Spirit, Xenos Technology. GM judges viability, afterwards must pass Toughness or gain a level of fatigue.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Can take one minute charge various machines/devices, making a Toughness Test dependant on the scale. +10: Power Cell, Illuminator. +0, Weapon Charge Pack, Data Slate, Bridge Terminal. -10: Hotshot charge pack, shuttle electronics, servo skull. -20: Lascannon Charge Pack, Servitor, Bridge Hololith. -30: Ship Cogitator Core, Reactor Machine Spirit, Xenos Technology. GM judges viability, afterwards must pass Toughness or gain a level of fatigue.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AuT50V9tts6o67b2"
+}

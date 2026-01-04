@@ -1,0 +1,22 @@
+{
+  "name": "Sabbat-pattern Helm",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "Head",
+    "ap": 5,
+    "maxAg": null,
+    "weight": "2.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cI0ns7Wz67Ol4RQL"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Force Staff",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Force",
+    "weight": "5kg",
+    "availability": "Respected",
+    "cost": "25 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Counts as an Exceptional Psy-Focus, granting +15 to Invocation Tests as long as it is held in at least 1 hand. \nNeeds to be wielded two-handed to attack with.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Force</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Counts as an Exceptional Psy-Focus, granting +15 to Invocation Tests as long as it is held in at least 1 hand. \nNeeds to be wielded two-handed to attack with.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l7mmygeZRhEVooi5"
+}

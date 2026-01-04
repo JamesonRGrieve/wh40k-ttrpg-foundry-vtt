@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Shotgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "2d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 18,
+    "reload": "Full",
+    "special": "SM Wep, Reliable, Scatter",
+    "weight": "10kg",
+    "availability": "Initiated",
+    "cost": "5 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Reliable, Scatter</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZnVHaYRTtzXqPAy8"
+}

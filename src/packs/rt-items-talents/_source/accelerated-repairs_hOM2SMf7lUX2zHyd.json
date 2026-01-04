@@ -1,0 +1,17 @@
+{
+  "name": "Accelerated Repairs",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Any Essential Repair Skill +20, Tech-Use +10. Aptitudes: Intelligence, Tech ",
+    "effect": "The Character can make Repair Tests as a Rush Job and suffer a -10 Penalty instead of the normal -30. \nWhen making Careful Repairs, they increase repair time by 25% instead of 50% (IE, a 12 Hour repair takes 15 Hours instead of 18).\nEssential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>The Character can make Repair Tests as a Rush Job and suffer a -10 Penalty instead of the normal -30. \nWhen making Careful Repairs, they increase repair time by 25% instead of 50% (IE, a 12 Hour repair takes 15 Hours instead of 18).\nEssential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hOM2SMf7lUX2zHyd"
+}

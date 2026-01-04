@@ -1,0 +1,20 @@
+{
+  "name": "Cylonic Missile",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Missile Launcher",
+    "damageOrEffect": "5d10+10 X, Pen 1, Blast (15). Make -10 Agility Test or catch on fire. Anythin in 10 metres of edge takes no damage, but must make +0 Agility test or catch on fire.",
+    "qualities": "Blast (15)",
+    "weight": "1kg",
+    "availability": "Near Unique",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 5d10+10 X, Pen 1, Blast (15). Make -10 Agility Test or catch on fire. Anythin in 10 metres of edge takes no damage, but must make +0 Agility test or catch on fire.</p><p><b>Qualities:</b> Blast (15)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EWwwnY7rSmYT02hl"
+}

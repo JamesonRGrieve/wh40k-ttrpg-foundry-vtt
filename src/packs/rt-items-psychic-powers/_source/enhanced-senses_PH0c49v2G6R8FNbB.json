@@ -1,0 +1,22 @@
+{
+  "name": "Enhanced Senses",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 10",
+    "opposed": "Yes",
+    "sustained": "Choose one sense (Sight, Smell, Hearing, Taste, or Touch), gain +30 to all tests made with this sense. During this time, the sense becomes strained and may cause weeping, dilation, red skin, mucus, etc, as appropriate.\nFor every 5 points above threshold, can enhance one additional sense.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PH0c49v2G6R8FNbB"
+}

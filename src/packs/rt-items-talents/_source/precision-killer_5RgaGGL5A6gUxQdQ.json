@@ -1,0 +1,17 @@
+{
+  "name": "Precision Killer",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Ballistic Skill 40, Weapon Skill 40\nAptitudes: Ballistic Skill or Weapon Skill, Finesse",
+    "effect": "When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5RgaGGL5A6gUxQdQ"
+}

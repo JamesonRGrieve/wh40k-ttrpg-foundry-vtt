@@ -1,0 +1,17 @@
+{
+  "name": "Genetor",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Explorator, RT Rank 3+. Toughness 35+, Intelligence 40+,  Autosanguine or Prosanguine Talents.",
+    "descriptionText": "Unlike many of the Mechanicus, the Genetor sees living flesh not as a weakness, but instead as another form of machine, one that through dedication may too be given strength and improved beyond its baseline form.",
+    "effects": "Replace new Rank's Advances with that of the Genetor\nAllows for the purchasing of the Unique Talent A Machine of Flesh\nErrata Note: A Machine of Flesh's Talent Group should not include Multiple Arms or Winged.",
+    "source": "RT: Into the Storm \n(Page 82)",
+    "description": {
+      "value": "<p>Unlike many of the Mechanicus, the Genetor sees living flesh not as a weakness, but instead as another form of machine, one that through dedication may too be given strength and improved beyond its baseline form.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Genetor\nAllows for the purchasing of the Unique Talent A Machine of Flesh\nErrata Note: A Machine of Flesh's Talent Group should not include Multiple Arms or Winged.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xOjSP93B17cY5kLn"
+}

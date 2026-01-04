@@ -1,0 +1,17 @@
+{
+  "name": "Navigator Power",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Navigator",
+    "effect": "Gain a new Navigator Power, can take this talent multiple times for different powers.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fFDnK0W9Q8sSx95t"
+}

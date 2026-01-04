@@ -1,0 +1,17 @@
+{
+  "name": "Integrated Weapons Mastery",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; T 40, WP 40, Implanted Potentia Coil or Mechanicus Implants, Integrated Weapon Expertise. Aptitudes: Ballistic Skill, Defence ",
+    "effect": "As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ddnCGlluwJV7m76g"
+}

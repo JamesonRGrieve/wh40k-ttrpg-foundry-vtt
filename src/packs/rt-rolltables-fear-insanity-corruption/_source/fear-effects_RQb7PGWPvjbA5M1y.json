@@ -1,0 +1,277 @@
+{
+  "name": "Fear Effects",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "rwdZy4uJx1sa9XaF",
+      "type": 0,
+      "text": "<p>Character is badly startled. May only take a single Half Action on next Turn, but afterwards he may act normally.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        20
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "LRDfu3cJkk1gDsQI",
+      "type": 0,
+      "text": "<p>Become withdrawn and Quiet. -10 to all Fellowship Tests for 3d10 Hours</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        40
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "i2gtQWmA6CnPNTq8",
+      "type": 0,
+      "text": "<p>Fear grips the character and they begin to shake and tremble. –10 penalty on all Tests for the rest of the encounter or until snapping out of it (by making Willpower Tests on subsequent turns).</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        21,
+        40
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "qW5LFjYQGFr0c650",
+      "type": 0,
+      "text": "<p>Cannot willingly approach the object of fear, –10 penalty on all Tests until the end of the encounter. \nOptional: Gain 1 Insanity Point.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        41,
+        60
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "HtbNl4V4s2e26Igq",
+      "type": 0,
+      "text": "<p>Compulsively performs an appropriate action such as praying, cleaning, etc. ignores most other things. -10 to Intelligence, Perception and Fellowship for 3d10 Hours.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        41,
+        70
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "2OhczMsxzV8qgocc",
+      "type": 0,
+      "text": "<p>Frozen in Fear, may make no Actions until Snapping out of it (by making Willpower Tests on subsequent turns). Afterwards,  –10 penalty to all tests for the rest of the encounter. \nOptional: Gain 1d5 Insanity Points</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        61,
+        80
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "jhvVhWpooKPM3xwp",
+      "type": 0,
+      "text": "<p>Becomes Constantly Fearful and Jumpy, +10 to Perception Tests, -10 to Willpower Tests for 1d5 Days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "jrjln3lHncKbz9la",
+      "type": 0,
+      "text": "<p>Must flee Source of fear as fast as possible until snapping out of it (by making Willpower Tests on subsequent turns), if prevented from doing so can only take Half Actions with -20 to all Tests. \nOptional: Gain 1d5 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        81,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Q5gZZ5X3LrTCpfCg",
+      "type": 0,
+      "text": "<p>Character Faints for 1d5 Rounds and can do nothing until awakening, they drop anything they were holding. Afterwards has -10 to all Tests until end of Encounter. \nOptional: Gain 1d5 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        101,
+        120
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "dggUO7i8q1UGifaG",
+      "type": 0,
+      "text": "<p>Temporarily suffers an appropriate \"Severe Phobia\" Mental Disorder for 1d5 Days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        101,
+        120
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "qrktk7yG11hwpnmC",
+      "type": 0,
+      "text": "<p>Screams and Vomits for 1d5 Rounds, is helpless during this time and drops anything holding. Afterwards can only make Half-Actions for rest of encounter until able to rest. \nOptional: Gain 1d5 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        121,
+        130
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Ehi3HqQkqcFrqPyE",
+      "type": 0,
+      "text": "<p>Becomes agitated by the slightest pressure. Whenever performing a task requiring a Test, must make Willpower Test or suffer -10. Combat automatically suffers -10. Lasts 1d5 days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        121,
+        130
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "haqGkEDEpSDH7ds3",
+      "type": 0,
+      "text": "<p>Laugh Hysterically and randomly attack nearest target, friend or foe, with whatever weapon they have. Lasts until snapping out (by making Willpower Tests on subsequent turns) or unconcious. \nOptional: Gain 1d5 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        131,
+        140
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ObKYxDplwYjuwSoF",
+      "type": 0,
+      "text": "<p>Character Suffers Extreme nightmares and will be exhausted for 1d10+1 days, gains a level of fatigue that lasts for a further 1d5 days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        131,
+        140
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "E2BC215vEoqHVbcq",
+      "type": 0,
+      "text": "<p>Crumples to the ground for 1d5+1 Rounds manically sobbing and tearing at their own flesh. \nAfterwards -20 on all tests until the end of the encounter. \nOptional: Gain 1d5+1 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        141,
+        160
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "x4LCOe5VU7yaI4ye",
+      "type": 0,
+      "text": "<p>Character is unable to speak for 1d5 days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        141,
+        150
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "MR9YJ7ZvuBb4UQbB",
+      "type": 0,
+      "text": "<p>Character refuses to eat or drink, and has -10 to all characteristics (cannot reduce below 1) for 1d10 days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        151,
+        160
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "wTTiVpJxtijlYddA",
+      "type": 0,
+      "text": "<p>Character's Mind Snaps, goes Catatonic for 1d5 Hours and cannot be roused. \nOptional: Gain 1d10 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        161,
+        170
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "KSDpc1pUGFISS1UU",
+      "type": 0,
+      "text": "<p>Character becomes hysterically blind or deaf for 1d10 days.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        161,
+        170
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "RQb7PGWPvjbA5M1y"
+}

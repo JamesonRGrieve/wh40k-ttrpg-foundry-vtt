@@ -1,0 +1,20 @@
+{
+  "name": "Synthmuscle",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Gain Unnatural Strength (+1), Best Craftsmanship gives Unnatural Strength (+4) but also gives -10 to Agility Tests.",
+    "cost": "Uses Only War Unnatural Strength, which adds +X to Strength Bonus rather than adding X*SB, so Unnatural Strenth (4) is SB+4",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oComsOJCI2yJ5PMJ"
+}

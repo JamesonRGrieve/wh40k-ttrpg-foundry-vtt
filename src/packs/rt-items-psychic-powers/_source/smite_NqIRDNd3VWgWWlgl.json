@@ -1,0 +1,22 @@
+{
+  "name": "Smite",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "None",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker projects a Psychic Barrage, consisting of one Bioenergy Lightning Bolt at target individual. dealing 1d10+Psy Rating Energy Damage with PEN 4.The Psyker fires one additional bolt per two Degrees of Success on Focus Power Test, up to a maximum number of bolts equal to Psy Rating. Subsequent bolts may hit the same target, or another within two metres that is still within range and line of sight. The Target may attempt to dodge as they would a Ranged Weapon attack.",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NqIRDNd3VWgWWlgl"
+}

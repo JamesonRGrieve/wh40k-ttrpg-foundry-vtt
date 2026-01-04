@@ -1,0 +1,17 @@
+{
+  "name": "Bastion of Iron Will",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Psy Rating, Strong Minded, WP 40\nAptitudes; Willpower, Psyker, Tzeentch",
+    "effect": "Character adds 5xPsy Rating to any Opposed Test involving defending against Psychic powers",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character adds 5xPsy Rating to any Opposed Test involving defending against Psychic powers</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J3tU8hWwqVaRAwdu"
+}

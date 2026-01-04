@@ -1,0 +1,28 @@
+{
+  "name": "Pyrophoric Vambrace",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Flame",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Corrosive, Flame, Spray",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Easily Concealed and leaves hands free, worn on wrist and connects to sealed case on the back. Fires a Corrosive Powedered Metal rather than promethium. Targets take additional 1d10 damage from being on fire, but put themselves out with +0 Agility Test.",
+    "description": {
+      "value": "<p><b>Special:</b> Corrosive, Flame, Spray</p><p><b>Note:</b> Easily Concealed and leaves hands free, worn on wrist and connects to sealed case on the back. Fires a Corrosive Powedered Metal rather than promethium. Targets take additional 1d10 damage from being on fire, but put themselves out with +0 Agility Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O1JS0aIZjYh7aBoK"
+}

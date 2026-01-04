@@ -1,0 +1,22 @@
+{
+  "name": "Xenos Hides",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "9.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "notes": "Hides of exotic and strange animals who provide more protection than one would expect.",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Hides of exotic and strange animals who provide more protection than one would expect.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Fucb7dD0kDvaNuP6"
+}

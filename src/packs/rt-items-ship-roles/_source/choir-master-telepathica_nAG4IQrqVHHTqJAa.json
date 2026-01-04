@@ -1,0 +1,19 @@
+{
+  "name": "Choir-Master Telepathica",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Directs Astropathic Choir Communications.",
+    "careerPreferences": "Only Astropath Transcendent",
+    "subordinates": "Less Astropathic Choir, Choir Support staff, Rite-masters of Astra Telepathica",
+    "importantSkills": "Psyniscience, Forbidden Lore (Warp), Command",
+    "effect": "May increase range of Astropathic Signals by one step.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Directs Astropathic Choir Communications.</p><p><b>Effect:</b> May increase range of Astropathic Signals by one step.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nAG4IQrqVHHTqJAa"
+}

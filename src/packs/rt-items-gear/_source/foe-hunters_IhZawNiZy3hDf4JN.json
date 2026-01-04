@@ -1,0 +1,20 @@
+{
+  "name": "Foe Hunters",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "Gain +10 to Perception Tests to spot or avoid being suprised, and Survival Tests to track the relevent foe on the battlefield\nKill Markers can't be acquired, only earned.",
+    "cost": "Informal Kill Marker: Squad has Completed one Full Campaign against, or slain 75 of a particular foe. Such as Orks, Rebels, Dark Eldar, Chaos Worshippers, Kroot, Etc.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IhZawNiZy3hDf4JN"
+}

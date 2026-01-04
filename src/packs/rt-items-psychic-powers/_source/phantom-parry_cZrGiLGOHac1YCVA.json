@@ -1,0 +1,22 @@
+{
+  "name": "Phantom Parry",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 4, Warp Sense Talent",
+    "focusPower": "Reaction\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "In response to a target within range using a Psychic Power, psyker makes Opposed Willpower Test vs Target. If Psyker Succeeds, target still manifests power but must make a Psychic Phenomena Roll (in addition to any others they make). For each Degree of Success, they add +5 to the Psychic Phenomena Roll. If the target succeeds the Opposed Test, they manifest their power unimpeded.\nFor the next 1d5 Turns, the target suffers -5 to all Focus Power Tests unless spending a Half Action to refocus themselves.\nIf the target rolls double on their Focus Power Test they also manifests the Warp Ghosts Psychic Phenomena in addition to regular effects.",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cZrGiLGOHac1YCVA"
+}

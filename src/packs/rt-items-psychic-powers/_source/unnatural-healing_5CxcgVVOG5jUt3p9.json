@@ -1,0 +1,22 @@
+{
+  "name": "Unnatural Healing",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action Concentration",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker, or target touched by them as part of this power, heals 1d10 + Psy Rating Damage, each usage of this power on the same individual after the first requires a -20 Toughness Test, which increases by -10 for each subsequent use. If this Toughness Test is failed, suffer 1d5 Rending Damage instead.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5CxcgVVOG5jUt3p9"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Reinforced Armour",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Halve Critical Damage taken (rounding up), doesn't effect Critical damage from Righteous Fury.",
+    "description": {
+      "value": "<p>Halve Critical Damage taken (rounding up), doesn't effect Critical damage from Righteous Fury.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dF8QAP7SfJDMJW1k"
+}

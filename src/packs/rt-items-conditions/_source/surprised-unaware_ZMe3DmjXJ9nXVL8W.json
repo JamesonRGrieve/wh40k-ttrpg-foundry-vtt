@@ -1,0 +1,22 @@
+{
+  "name": "Surprised / Unaware",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Attacks against surprised/unaware targets: +30",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Attacks against surprised/unaware targets: +30</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "target"
+    }
+  },
+  "_id": "ZMe3DmjXJ9nXVL8W"
+}

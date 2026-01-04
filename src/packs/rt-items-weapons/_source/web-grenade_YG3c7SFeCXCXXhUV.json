@@ -1,0 +1,28 @@
+{
+  "name": "Web Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (4), Snare",
+    "weight": "1kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Snare</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YG3c7SFeCXCXXhUV"
+}

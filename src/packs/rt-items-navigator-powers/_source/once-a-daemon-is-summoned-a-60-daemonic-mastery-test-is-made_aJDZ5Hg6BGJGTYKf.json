@@ -1,0 +1,21 @@
+{
+  "name": "Once a Daemon is summoned a -60 Daemonic Mastery Test is made, modified based on the Binding Modifiers (listed below). This is an Opposed Willpower Test vs the Daemon. If succeeded the Daemon is bound, if failed the Daemonhost is unbound, if failed by 3+ DoF, the Daemon is not bound at all and can do as it pleases, usually attacking immediately. Unbound Daemonhosts are in the host but uncontrolled, there is a very small chance they may not attack and be willing to negotiate regardless of the failiure, it is inadvisable to trust such things.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Seeming Normality",
+    "sustain": "10",
+    "novice": "The Daemonhost looks suspiciously normal, like a mortal even. Their only potential identifier the instruments of its binding, such as brandings, tattoos, chains, etc. If getting this option discard any other Unholy changes. Increase the Daemonhost's Fellowship by +1d10.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> The Daemonhost looks suspiciously normal, like a mortal even. Their only potential identifier the instruments of its binding, such as brandings, tattoos, chains, etc. If getting this option discard any other Unholy changes. Increase the Daemonhost's Fellowship by +1d10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aJDZ5Hg6BGJGTYKf"
+}

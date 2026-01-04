@@ -1,0 +1,21 @@
+{
+  "name": "Ship's Stores",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 1,
+    "spaceUsage": 5,
+    "spCost": 2,
+    "effect": "Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.",
+    "availability": "Rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DbHEif8nX6gGugRT"
+}

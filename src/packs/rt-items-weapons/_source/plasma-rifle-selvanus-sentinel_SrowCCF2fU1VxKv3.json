@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Rifle (Selvanus) \"Sentinel\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Plasma",
+    "range": "120m",
+    "rof": "S/5/10",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 3,
+    "clip": 40,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "20kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Safer than many Plasma Guns due to reducing the size of each plasma pulse, yet firing them much faster.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Safer than many Plasma Guns due to reducing the size of each plasma pulse, yet firing them much faster.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SrowCCF2fU1VxKv3"
+}

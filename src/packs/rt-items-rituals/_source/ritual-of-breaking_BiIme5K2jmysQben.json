@@ -1,0 +1,19 @@
+{
+  "name": "Ritual of Breaking",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-20 Forbidden Lore (Daemonology) \nOpposed Willpower ",
+    "requirements": "Character summons a Daemonic Beast, usually thorugh Rite of Wild Fury, this ritual replaces Daemonic Mastery Test. After making Lore Test, character then makes Opposed Willpower Test vs Daemonic Beast's Willpower.  (A Screamer of Tzeentch adds -20 to test, due to having to be reshaped into a disk). ",
+    "effect": "Daemonic Beast's will is broken, and they may be ridden as a mount and controlled with Wrangling. This act earns the character 2d5 Infamy. As long as the Daemon remains corporeal, such as sustained through salughter, psychic energy, or keeping it enraptured by new sensations, etc, they may ride it forever. The breaking ends only if the daemon is banished for any reason.",
+    "costs": "The Battle of wills between the Daemon and Character takes 10d5 hours, reduce by 1 hour per Degree of Success on Opposed Willpower Test. They gain 1 Fatigue per 10 hours (also reduced by DoS). The Character may sustain injuries.",
+    "failure": "The Character fails the break their would-be steed, and the Daemonic Beast attacks them, treat as surprise round. ",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Daemonic Beast's will is broken, and they may be ridden as a mount and controlled with Wrangling. This act earns the character 2d5 Infamy. As long as the Daemon remains corporeal, such as sustained through salughter, psychic energy, or keeping it enraptured by new sensations, etc, they may ride it forever. The breaking ends only if the daemon is banished for any reason.</p><p><b>Costs:</b> The Battle of wills between the Daemon and Character takes 10d5 hours, reduce by 1 hour per Degree of Success on Opposed Willpower Test. They gain 1 Fatigue per 10 hours (also reduced by DoS). The Character may sustain injuries.</p><p><b>Failure:</b> The Character fails the break their would-be steed, and the Daemonic Beast attacks them, treat as surprise round. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BiIme5K2jmysQben"
+}

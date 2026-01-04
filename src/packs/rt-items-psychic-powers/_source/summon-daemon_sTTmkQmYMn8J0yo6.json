@@ -1,0 +1,22 @@
+{
+  "name": "Summon Daemon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "Warp Secrets or Warpfire, Dark Curse.\nOW: Psy Rating 6\n",
+    "focusPower": "Three Full Actions",
+    "action": "1m",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "The psyker chooses a Daemon with a lower Willpower Characterstic than their own and makes an extended action to summon and compel it during which they may not move or perform any other action. After this, the Psyker makes an Opposed Willpower Test vs the Daemon. If psyker wins the daemon appears under their control within range and acts as directed. Every 5 Rounds, the psyker must spend a Half Action to make another Opposed Willpower Test vs the Daemon to retain control. If the Daemon ever wins one of these tests, they break free of control and attack their summoner if able, remaining for 5 Rounds before dissapearing back to the Warp. The Psyker gains 1d10+4 Corruption whenever using this power. The \"Dark Summoning\" Peril of the Warp effect may summon daemons eager for revenge for using this power on them.",
+    "effect": "700xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>700xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sTTmkQmYMn8J0yo6"
+}

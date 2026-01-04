@@ -1,0 +1,20 @@
+{
+  "name": "Anti-Tank Shell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Artillery/Battle Cannons",
+    "damageOrEffect": "Penetration 12, can’t be fired Indirectly.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Penetration 12, can’t be fired Indirectly.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IriEeB9b6tUNbpwd"
+}

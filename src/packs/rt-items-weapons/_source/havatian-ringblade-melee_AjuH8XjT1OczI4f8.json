@@ -1,0 +1,28 @@
+{
+  "name": "Havatian Ringblade [Melee]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Razor Sharp",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.",
+    "description": {
+      "value": "<p><b>Special:</b> Razor Sharp</p><p><b>Note:</b> Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AjuH8XjT1OczI4f8"
+}

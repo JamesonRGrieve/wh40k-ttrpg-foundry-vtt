@@ -1,0 +1,20 @@
+{
+  "name": "Pyre Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP Weapon",
+    "damageOrEffect": "Grants weapon Cleansing Fire and Sanctified Quality. If a psyker is shot by this ammo they auto-fail Cleansing Fire Quality Test with 1d5 DoF, and takes 1d10 Damage if trying to use a Psychic Technique while on fire this way (ignores Armour/Toughness).",
+    "qualities": "Cleansing Fire, Sanctified",
+    "weight": "10% wep",
+    "availability": "Near Unique",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Grants weapon Cleansing Fire and Sanctified Quality. If a psyker is shot by this ammo they auto-fail Cleansing Fire Quality Test with 1d5 DoF, and takes 1d10 Damage if trying to use a Psychic Technique while on fire this way (ignores Armour/Toughness).</p><p><b>Qualities:</b> Cleansing Fire, Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aBo4khB4E32haOl6"
+}

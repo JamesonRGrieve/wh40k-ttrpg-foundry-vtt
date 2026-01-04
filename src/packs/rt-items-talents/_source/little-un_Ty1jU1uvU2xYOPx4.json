@@ -1,0 +1,17 @@
+{
+  "name": "Little 'Un",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Fellowship 30, not an Ogryn \nAptitudes: Fellowship, General",
+    "effect": "Character scores +2 Degrees of Success whenever suceeding on a Fellowship-Based Test directed at an Ogryn.\nOgryn Allies may reroll any failed Tests to resist Coercion or other inducement to betray or turn against the Character.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character scores +2 Degrees of Success whenever suceeding on a Fellowship-Based Test directed at an Ogryn.\nOgryn Allies may reroll any failed Tests to resist Coercion or other inducement to betray or turn against the Character.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ty1jU1uvU2xYOPx4"
+}

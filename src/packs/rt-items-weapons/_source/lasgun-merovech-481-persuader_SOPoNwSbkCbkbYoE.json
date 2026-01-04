@@ -1,0 +1,28 @@
+{
+  "name": "Lasgun (Merovech 481) \"Persuader\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "40m",
+    "rof": "S/3/10",
+    "damage": "1d10+2",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 30,
+    "reload": "Full",
+    "special": "Inaccurate",
+    "weight": "3.5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can come with a \"Drum\" Power pack, that has a capacity of 50, increases weight by 2kg, and becomes one step rarer (Rare).",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Can come with a \"Drum\" Power pack, that has a capacity of 50, increases weight by 2kg, and becomes one step rarer (Rare).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SOPoNwSbkCbkbYoE"
+}

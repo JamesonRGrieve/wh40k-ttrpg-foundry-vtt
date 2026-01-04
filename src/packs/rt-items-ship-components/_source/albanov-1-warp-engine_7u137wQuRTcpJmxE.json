@@ -1,0 +1,21 @@
+{
+  "name": "Albanov 1 Warp Engine",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Warp Engine",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 10,
+    "spaceUsage": 11,
+    "spCost": 1,
+    "effect": "Double Base travel time through the warp (may be further modified by results of Navigation (Warp) Test). Add additional +20 Bonus to Assessing Warp Conditions and any Warp Travel Encounter Tests. +10 to tests made by the Navigator to fix the vessel's exit point from the warp.",
+    "availability": "Rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Double Base travel time through the warp (may be further modified by results of Navigation (Warp) Test). Add additional +20 Bonus to Assessing Warp Conditions and any Warp Travel Encounter Tests. +10 to tests made by the Navigator to fix the vessel's exit point from the warp.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7u137wQuRTcpJmxE"
+}

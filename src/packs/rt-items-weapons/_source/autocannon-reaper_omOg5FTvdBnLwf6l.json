@@ -1,0 +1,28 @@
+{
+  "name": "Autocannon (Reaper)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "300m",
+    "rof": "S/4/-",
+    "damage": "3d10+8",
+    "damageType": "Impact",
+    "penetration": 6,
+    "clip": 40,
+    "reload": "2 Full",
+    "special": "Reliable, Twin-Linked",
+    "weight": "60kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Rarely used by the Imperium, commonly seen on Chaos Terminators",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Twin-Linked</p><p><b>Note:</b> Rarely used by the Imperium, commonly seen on Chaos Terminators</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "omOg5FTvdBnLwf6l"
+}

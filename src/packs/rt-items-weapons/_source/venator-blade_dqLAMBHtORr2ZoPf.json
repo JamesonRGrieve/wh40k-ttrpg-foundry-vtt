@@ -1,0 +1,28 @@
+{
+  "name": "Venator Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "6m",
+    "rof": "-",
+    "damage": "1d5+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced, Felling (2), Razor-Sharp",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "A Long Dagger with strange properties. Cannot be destroyed by a Power Field. Can be Thrown.",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (2), Razor-Sharp</p><p><b>Note:</b> A Long Dagger with strange properties. Cannot be destroyed by a Power Field. Can be Thrown.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dqLAMBHtORr2ZoPf"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Scrier's Gaze",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "Psyniscience (Trained)",
+    "focusPower": "30 Minutes Concentration",
+    "action": "Self",
+    "range": "Psyniscience Test",
+    "opposed": "No",
+    "sustained": "The Psyker performs a 30 minute ritual, drawing Tarot cards, casting runes, or some other method of divination. After the 30 minutes they make a Focus Power Test, projecting their vision over a wide area or battlefield to divine its future. Results based on Degrees of Success, with each revealing further information: 0 DoF: A Single Key manuevre of significant importance that the enemy plans to make is revealed to the psyker. 1 DoF: The Psyker sees the movements of allied and enemy troops, but cannot see their movement or makeup. 2 DoF: The Psyker can determine the number and makeup of allied and enemy units. 3 DoF: The Psyker knows the details of the enemy commander's Battle Plans.",
+    "effect": "200xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wFU1o3ayFvzEyTiY"
+}

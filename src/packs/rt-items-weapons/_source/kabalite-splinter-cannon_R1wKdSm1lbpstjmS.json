@@ -1,0 +1,28 @@
+{
+  "name": "Kabalite Splinter Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Kabalite",
+    "range": "110m",
+    "rof": "-/-/10",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": 300,
+    "reload": "3 Full",
+    "special": "Tearing, Toxic",
+    "weight": "15kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Rare Availability if Acquired from Dark Eldar Settlement. May be equipped with Suspensors, but would be one step rarer, gives wielder the Auto-Stabilised Trait when using this weapon. ",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Rare Availability if Acquired from Dark Eldar Settlement. May be equipped with Suspensors, but would be one step rarer, gives wielder the Auto-Stabilised Trait when using this weapon. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R1wKdSm1lbpstjmS"
+}

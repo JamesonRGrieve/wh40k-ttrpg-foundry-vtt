@@ -1,0 +1,21 @@
+{
+  "name": "Baleful Watcher",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Half Action",
+    "range": "Line of Sight",
+    "test": "Perception Test",
+    "sustain": "No",
+    "novice": "Navigator Learns target's Armour Points at each location, total Toughness Bonus, and Psy Rating (if they have one)",
+    "adept": "Navigator also learns of any Invisible Defences such as Force Fields, and Sustained Psychic Techniques.",
+    "master": "Navigator also learns any Psychic Techniques or Navigator powers the target knows.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator Learns target's Armour Points at each location, total Toughness Bonus, and Psy Rating (if they have one)</p><p><b>Adept:</b> Navigator also learns of any Invisible Defences such as Force Fields, and Sustained Psychic Techniques.</p><p><b>Master:</b> Navigator also learns any Psychic Techniques or Navigator powers the target knows.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nI7DsZnkso26Tn9y"
+}

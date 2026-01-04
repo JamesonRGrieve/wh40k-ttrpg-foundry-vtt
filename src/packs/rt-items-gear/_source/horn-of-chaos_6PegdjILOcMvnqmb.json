@@ -1,0 +1,20 @@
+{
+  "name": "Horn of Chaos",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "4kg",
+    "availability": "Grants +20 to command Daemons. During combat as a Full Action any that are sanctified against Chaos that hear its sound (such as Priests, Grey Knights, Sisters of Battle, etc) to make an Opposed -10 Willpower Test vs Character's Willpower. If they fail they suffer a level of Fatigue. ",
+    "cost": "Doesn't have to be an actual horn, taking the form of Decaying Nurgle Bells or Great War Drums of Khorne, etc. Heretical.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6PegdjILOcMvnqmb"
+}

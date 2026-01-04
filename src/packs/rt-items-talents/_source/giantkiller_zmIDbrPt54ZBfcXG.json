@@ -1,0 +1,17 @@
+{
+  "name": "Giantkiller",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 50, The Bigger They Are \nAptitudes: Ballistic Skill, Finesse",
+    "effect": "When firing at a target with a Size Trait larger than the character's own, character adds the difference in Size Trait to their Damage.\nEG: A Ratling (Size 3, Scrawny) does +2 damage vs an Ork Nob (Size 5, Hulking)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When firing at a target with a Size Trait larger than the character's own, character adds the difference in Size Trait to their Damage.\nEG: A Ratling (Size 3, Scrawny) does +2 damage vs an Ork Nob (Size 5, Hulking)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zmIDbrPt54ZBfcXG"
+}

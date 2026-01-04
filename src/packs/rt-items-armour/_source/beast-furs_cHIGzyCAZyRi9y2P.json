@@ -1,0 +1,22 @@
+{
+  "name": "Beast Furs",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Body",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "10kg",
+    "availability": "Average",
+    "cost": "5 T",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cHIGzyCAZyRi9y2P"
+}

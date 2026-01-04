@@ -1,0 +1,22 @@
+{
+  "name": "Seal Wounds",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 20",
+    "opposed": "No",
+    "sustained": "Target Individual within range and line of sight removes 1d10 + WP Bonus damage. Can remove both Critical Damage and normal damage.\nFor every 5 points above threshold can do one of the following: Extend range by 10m, target one additional individual, or remove an additional 1d10 + WB Bonus damage.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zNXxUmlHjYeOBs8S"
+}

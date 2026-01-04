@@ -1,0 +1,28 @@
+{
+  "name": "Scrap Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Primitive",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "3 Full",
+    "special": "Scatter, Unreliable",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "150 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Average Availability in the Underhives of most Hive Worlds.\nAmmo is practically free (treat as Ubiquitous - 0 Thrones per 10 Clips)",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter, Unreliable</p><p><b>Note:</b> Average Availability in the Underhives of most Hive Worlds.\nAmmo is practically free (treat as Ubiquitous - 0 Thrones per 10 Clips)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rLc57Mg9FaMXHAS4"
+}

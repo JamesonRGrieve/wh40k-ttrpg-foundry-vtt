@@ -1,0 +1,20 @@
+{
+  "name": "Teleportation Pack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "25kg",
+    "availability": "User can make teleport up to 4d10 Metres as a movement action. Always emerging on solid ground in empty space if possible. If three of the 4 die have the same number, user does not emerge for 1d5 rounds and gains 1 Corruption. If all 4 dice have the same number, user also gains 1d5 insanity.",
+    "cost": "A Rare Archeotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fNFxU0zhISABvLBY"
+}

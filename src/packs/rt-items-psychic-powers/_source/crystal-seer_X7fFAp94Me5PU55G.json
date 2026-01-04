@@ -1,0 +1,22 @@
+{
+  "name": "Crystal Seer",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "Farseer makes Focus Power Test, on success, they may immediately make two Focus Power Tests, +1 per two Degrees of Success, to activate other Psychic Techniques they know (Except Crystal Seer) as Free Actions. These Techniques may not be used at a higher Psy Rating than what Crystal Seer was used at. Each Additional Technique activated this way causes one level of Fatigue.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X7fFAp94Me5PU55G"
+}

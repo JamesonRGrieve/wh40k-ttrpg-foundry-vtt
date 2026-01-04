@@ -1,0 +1,22 @@
+{
+  "name": "Skull Helm",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "Head",
+    "ap": 9,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Initiated",
+    "cost": "-",
+    "notes": "Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hwXqwjakC8pwjsJo"
+}

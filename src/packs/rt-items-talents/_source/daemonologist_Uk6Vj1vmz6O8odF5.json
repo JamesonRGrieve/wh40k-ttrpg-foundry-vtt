@@ -1,0 +1,17 @@
+{
+  "name": "Daemonologist",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Psy Rating, Willpower 45, Forbidden Lore (Daemonology)\nAptitudes: Psyker, Willpower",
+    "effect": "When character makes a Focus Power Test and the target of the psychic power is a Daemon, they gain +10 to the Test. At GM Discretion this can apply to other tests such as Rituals to summon or bind a Daemon.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>When character makes a Focus Power Test and the target of the psychic power is a Daemon, they gain +10 to the Test. At GM Discretion this can apply to other tests such as Rituals to summon or bind a Daemon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Uk6Vj1vmz6O8odF5"
+}

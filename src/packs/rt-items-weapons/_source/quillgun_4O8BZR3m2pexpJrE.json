@@ -1,0 +1,28 @@
+{
+  "name": "Quillgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "120m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 3,
+    "reload": "Full",
+    "special": null,
+    "weight": "6kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "A Dart Gun that fires tailor made toxins. Comes with one clip of Ataractic and Venenum Rounds, the only ammo it can use. \nAtaractic: (0 Damage, Pen 0, Concussive (5), Reliable) (Very Rare). Venenum: (1d10+1 I, Pen 3, Reliable, Toxic (4)) (Scarce)",
+    "description": {
+      "value": "<p><b>Note:</b> A Dart Gun that fires tailor made toxins. Comes with one clip of Ataractic and Venenum Rounds, the only ammo it can use. \nAtaractic: (0 Damage, Pen 0, Concussive (5), Reliable) (Very Rare). Venenum: (1d10+1 I, Pen 3, Reliable, Toxic (4)) (Scarce)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4O8BZR3m2pexpJrE"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Iron Faith",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Iron Resolve \nAptitudes: Defence, Willpower",
+    "effect": "Character is immune to the effects of the Baneful Presence Trait.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YzBnkUEUl8A6l1w8"
+}

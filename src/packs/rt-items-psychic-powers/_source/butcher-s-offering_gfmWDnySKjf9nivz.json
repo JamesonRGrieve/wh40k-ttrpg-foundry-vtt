@@ -1,0 +1,22 @@
+{
+  "name": "Butcher's Offering",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "None",
+    "focusPower": "Free Action\nConcentration",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Can make Focus Power Test immediately after killing another in combat as a Free Action. If Successful gain one of the following bonuses until the end of Psyker's next turn:\n +10 to next Test Rolled; Unnatural Characteristic(2)(Any Characteristic); or Jaded, Nerves of Steel, and Resistance(Fear) Talents; (Only If using Sacrifice Talent) +5xPsy Rating to all rolls of next Extended Test, lasts 24 Hours\nUsing this power sacrifices the character's reaction for the round.\nIf failing Focus Power Test and causing Psychic Phenomena, add +5 per Degree of Failiure to Psychic Phenomena Roll.",
+    "effect": "100xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gfmWDnySKjf9nivz"
+}

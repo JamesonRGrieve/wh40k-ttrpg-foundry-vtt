@@ -1,0 +1,18 @@
+{
+  "name": "Operate (X)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Apt: Agility, Fieldcraft, Unaligned",
+    "characteristic": "Agility",
+    "descriptor": "Drive/Fly Vehicle Group of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to Operate vehicle under normal conditions without test.",
+    "uses": "Operate(Surface): Includes Bikes, Hover/Skimmers, Tracked and Wheeled Vehicles, Walkers. Driving During a Combat Situation, Pushing a Vehicle to its limits, Overseeing a massive weapon.\nOperate(Aeronautica): Includes Flyers, Jump Packs/Grav Chutes, Spacecraft. Driving During a Combat Situation, Pushing a Vehicle to its limits, Overseeing a massive weapon.\nOperate(Voidship): Massive Starships. May require Intelligence Characteristic instead of Agility. Manoevering a Voidship, Overseeing a massive weapon.",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Drive/Fly Vehicle Group of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to Operate vehicle under normal conditions without test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bwsxYu2rSpnJ5dMr"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Ork Rokkit Launcha",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Ork",
+    "range": "150m",
+    "rof": "S/-/-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": 1,
+    "reload": "Half",
+    "special": "Blast (2), Inaccurate, Unreliable",
+    "weight": "6kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Inaccurate, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YkeXPLyOL5ZdAvrk"
+}

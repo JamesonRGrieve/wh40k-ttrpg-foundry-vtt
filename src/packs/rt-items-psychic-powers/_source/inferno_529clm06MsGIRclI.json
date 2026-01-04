@@ -1,0 +1,22 @@
+{
+  "name": "Inferno",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Psy Rating 5, Molten Beam, Sunburst",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker calls down a pillar of flame of radius Psy Rating on a point within range. All creatures within the blast suffer 2d10 + 3xPsy Rating Energy Damage with Pen 0 and Flame Quality. Creatures may attempt to dodge as they would an area of effect attack.",
+    "effect": "500xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "529clm06MsGIRclI"
+}

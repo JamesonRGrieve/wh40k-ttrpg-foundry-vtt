@@ -1,0 +1,22 @@
+{
+  "name": "Helmetless",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "Head",
+    "ap": 0,
+    "maxAg": null,
+    "weight": "0kg",
+    "availability": "Initiated",
+    "cost": "-",
+    "notes": "Some Spacemarines, and humans, choose not to wear a helmet. If they do, Helmet Autosenses do not function, and their armour is not airtight. Their Vox works but only Audio.\nThey gain +5 to Fellowship Tests and Tests to prevent Cohesion Damage. At GM discretion they may gain +1 Renown whenever it is awarded. ",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>Some Spacemarines, and humans, choose not to wear a helmet. If they do, Helmet Autosenses do not function, and their armour is not airtight. Their Vox works but only Audio.\nThey gain +5 to Fellowship Tests and Tests to prevent Cohesion Damage. At GM discretion they may gain +1 Renown whenever it is awarded. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LG7QB39WOgvKeZwn"
+}

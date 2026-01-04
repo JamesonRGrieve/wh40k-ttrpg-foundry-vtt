@@ -1,0 +1,22 @@
+{
+  "name": "Warp Vortex",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Psy Rating 2",
+    "focusPower": "Half Action Concentration",
+    "action": "25m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Psyker chooses point in range, all creatures within Psy Rating Metres of this point must make +0 Toughness Test or be knocked prone and slide two metres towards the point which becomes a Warp Vortex. Anyone that reaches the centre of the vortex suffers 2d10 Impact Damage. This effect repeats on each turn the power is sustained, although the point cannot be changed. Creatures trying to move away from the vortex must make a +0 Agility Test, if failed they can still move but must remain at the same distance or less from the vortex. Ranged Attacks that travel through the vortex's area of effect suffer -20.",
+    "effect": "200xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ljNIPYqOI1jNgsi9"
+}

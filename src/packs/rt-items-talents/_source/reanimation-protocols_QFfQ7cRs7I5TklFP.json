@@ -1,0 +1,17 @@
+{
+  "name": "Reanimation Protocols",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Necron, Regeneration",
+    "effect": "If dead, at the end of Each Turn, Roll a +0 Toughness Test, benefitting from any bonus to regeneration tests, such as Resurrection Orbs or Canoptek Spyder's Fabricator Arrays. If test is past, come back to life with number of wounds equal to Regeneration Trait. If test is failed by 3+ Degrees of Failiure, or have taken significantly thorough or spectacular damage, can no longer make these tests. In which case, disapear into a flash of light if able to.",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>If dead, at the end of Each Turn, Roll a +0 Toughness Test, benefitting from any bonus to regeneration tests, such as Resurrection Orbs or Canoptek Spyder's Fabricator Arrays. If test is past, come back to life with number of wounds equal to Regeneration Trait. If test is failed by 3+ Degrees of Failiure, or have taken significantly thorough or spectacular damage, can no longer make these tests. In which case, disapear into a flash of light if able to.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QFfQ7cRs7I5TklFP"
+}

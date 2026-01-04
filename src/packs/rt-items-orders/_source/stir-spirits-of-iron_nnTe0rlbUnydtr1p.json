@@ -1,0 +1,17 @@
+{
+  "name": "Stir, Spirits of Iron!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Architectus Magna Spec\nServitor Comrade\n400xp",
+    "descriptionText": "Once per Combat Encounter, whilst in Multi-Passenger vehicle with Servitor Comrade, Character makes +0 Tech-Use Test. If successful can either Increase Vehicle Manoeuvrability by +5 per Degree of Success, or increase damage of one Vehicle weapon by +1 per Degree of Success. These effects last for Intelligence Bonus Rounds.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Once per Combat Encounter, whilst in Multi-Passenger vehicle with Servitor Comrade, Character makes +0 Tech-Use Test. If successful can either Increase Vehicle Manoeuvrability by +5 per Degree of Success, or increase damage of one Vehicle weapon by +1 per Degree of Success. These effects last for Intelligence Bonus Rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nnTe0rlbUnydtr1p"
+}

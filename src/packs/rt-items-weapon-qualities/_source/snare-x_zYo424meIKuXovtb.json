@@ -1,0 +1,14 @@
+{
+  "name": "Snare (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Target makes Agility Test with -10*X. Failiure causes target to be immobilised, target can make Strength or Agility Test to Escape (same Penalty Applies). Target is considered Helpless until they escape.",
+    "description": {
+      "value": "<p>Target makes Agility Test with -10*X. Failiure causes target to be immobilised, target can make Strength or Agility Test to Escape (same Penalty Applies). Target is considered Helpless until they escape.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zYo424meIKuXovtb"
+}

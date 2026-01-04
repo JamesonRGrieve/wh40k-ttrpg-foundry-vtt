@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Firepike",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": 20,
+    "reload": "4 Full",
+    "special": "Reliable",
+    "weight": "6kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Eldar precision melta weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Xenotech. Eldar precision melta weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WqiPfvkPYTsmnLcd"
+}

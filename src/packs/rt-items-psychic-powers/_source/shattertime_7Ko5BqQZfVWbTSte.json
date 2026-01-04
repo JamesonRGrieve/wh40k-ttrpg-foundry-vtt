@@ -1,0 +1,22 @@
+{
+  "name": "Shattertime",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Precognition\nPsy Rating 6, ",
+    "focusPower": "Half Action Concentration",
+    "action": "Self",
+    "range": "-20 Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker gains Unnatural Weapon Skill(X), Unnatural Ballistic Skill(X), and Unnatural Agility(X), where X is equal to their Psy Rating. Additionally, they may choose to vanish from reality for a total number of rounds (not neccisarily consecutive) up to the Degrees of Success on their Focus Power Test. When they reappear they do so in the same place they vanish.",
+    "effect": "400xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7Ko5BqQZfVWbTSte"
+}

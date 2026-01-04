@@ -1,0 +1,20 @@
+{
+  "name": "Ataractic Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Quillgun",
+    "damageOrEffect": "0 Damage, Pen 0, Concussive (5), Reliable",
+    "qualities": "Concussive (5), Reliable",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 0 Damage, Pen 0, Concussive (5), Reliable</p><p><b>Qualities:</b> Concussive (5), Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Urm6efickml8qBua"
+}

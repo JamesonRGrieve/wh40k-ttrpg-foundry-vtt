@@ -1,0 +1,20 @@
+{
+  "name": "Ghostfire Pollen Extract",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "A Dangerous liquid drug that the majority of the sector's Frenzon is derived, although it is far less potent than this. For 2d10 Minutes Grants Fearless and Frenzy Talents, and Unnatural Agility(x2) Trait. However, user takes 1 point of damage ignoring armour and toughness due to bleeding through their pores.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "300 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 300 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N3GhILrrt6v3pj4B"
+}

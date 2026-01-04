@@ -1,0 +1,17 @@
+{
+  "name": "Thunder Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Strength 50\nAptitudes: Strength, Offence, Khorne",
+    "effect": "When the Character makes a Charge Action, they can ram right through anyone in their way by making an Opposed Strength Test vs each foe in their way (IE. Each foe their charge would take them past or through). Those that fail are knocked to the ground, once the character has tested to knock down those in their way they complete their charge and make attacks against their intended target. If the Opposed Strength Test is ever failed, stop the charge and resolve it against the enemy that it failed on.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When the Character makes a Charge Action, they can ram right through anyone in their way by making an Opposed Strength Test vs each foe in their way (IE. Each foe their charge would take them past or through). Those that fail are knocked to the ground, once the character has tested to knock down those in their way they complete their charge and make attacks against their intended target. If the Opposed Strength Test is ever failed, stop the charge and resolve it against the enemy that it failed on.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eeydig1YuGruDGqh"
+}

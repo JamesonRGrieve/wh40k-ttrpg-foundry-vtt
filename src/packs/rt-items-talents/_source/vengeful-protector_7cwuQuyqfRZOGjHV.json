@@ -1,0 +1,17 @@
+{
+  "name": "Vengeful Protector",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 45, Strength 45\nAptitudes: Strength, Offence",
+    "effect": "Whenever an Ally within 10 metres suffers Critical Damge because of an Enemy, the character increases the damage they inflict by the value of their Size Trait.\nRatlings (Size 3, Scrawny), Humans (Size 4, Average), Ogryns (Size 5, Hulking)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Whenever an Ally within 10 metres suffers Critical Damge because of an Enemy, the character increases the damage they inflict by the value of their Size Trait.\nRatlings (Size 3, Scrawny), Humans (Size 4, Average), Ogryns (Size 5, Hulking)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7cwuQuyqfRZOGjHV"
+}

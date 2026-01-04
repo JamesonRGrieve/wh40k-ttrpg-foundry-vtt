@@ -1,0 +1,18 @@
+{
+  "name": "Truesilver Filigree",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Characters with the Daemonic trait engaged in melee with wearer suffers penalty to Weapon Skill Tests equal to -5 x Wearer's Willpower Bonus.",
+    "weight": "0kg",
+    "availability": "Very Rare",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Characters with the Daemonic trait engaged in melee with wearer suffers penalty to Weapon Skill Tests equal to -5 x Wearer's Willpower Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cy7XHWaGSOZ7nTF9"
+}

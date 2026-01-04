@@ -1,0 +1,22 @@
+{
+  "name": "Pressure Carapace",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "All",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "16kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Sealed against the void. If this armour would be punctured, roll 1d10, on 6+ no puncture occurs (although any damage done happens as normal). Good and Best versions cannot suffer from breaches or punctures due to an internal fluid layer.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Sealed against the void. If this armour would be punctured, roll 1d10, on 6+ no puncture occurs (although any damage done happens as normal). Good and Best versions cannot suffer from breaches or punctures due to an internal fluid layer.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TMd3iVmSUUbXZ3rl"
+}

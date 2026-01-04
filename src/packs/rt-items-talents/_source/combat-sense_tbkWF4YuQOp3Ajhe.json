@@ -1,0 +1,17 @@
+{
+  "name": "Combat Sense",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Perception 30\nAptitudes: Perception, Fieldcraft, Unaligned",
+    "effect": "Character can use their Perception Bonus in place of Agility Bonus when Rolling Initiative.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can use their Perception Bonus in place of Agility Bonus when Rolling Initiative.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tbkWF4YuQOp3Ajhe"
+}

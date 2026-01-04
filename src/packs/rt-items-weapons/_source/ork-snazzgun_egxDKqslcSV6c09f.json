@@ -1,0 +1,28 @@
+{
+  "name": "Ork Snazzgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Ork",
+    "range": "100m",
+    "rof": "S/2/-",
+    "damage": "2d10",
+    "damageType": "Impact",
+    "penetration": "1d10",
+    "clip": 20,
+    "reload": "2 Full",
+    "special": "Inaccurate, Overheats, Unreliable",
+    "weight": "7kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Koronus Bestiary",
+    "note": "For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. Can be either Impact or Explosive Damage Type. Loses Inaccurate Quality if fitted with targeting equipment.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Overheats, Unreliable</p><p><b>Note:</b> For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. Can be either Impact or Explosive Damage Type. Loses Inaccurate Quality if fitted with targeting equipment.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "egxDKqslcSV6c09f"
+}

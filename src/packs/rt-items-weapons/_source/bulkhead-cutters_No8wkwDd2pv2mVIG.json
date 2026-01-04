@@ -1,0 +1,28 @@
+{
+  "name": "Bulkhead Cutters",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unwieldy",
+    "weight": "6kg",
+    "availability": "Average",
+    "cost": "75 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Two-Handed Weapon. May need Exotic Weapon Training to use as a weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Two-Handed Weapon. May need Exotic Weapon Training to use as a weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "No8wkwDd2pv2mVIG"
+}

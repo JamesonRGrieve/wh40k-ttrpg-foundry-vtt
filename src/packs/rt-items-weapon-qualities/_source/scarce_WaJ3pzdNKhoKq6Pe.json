@@ -1,0 +1,14 @@
+{
+  "name": "Scarce",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 105,
+    "description": {
+      "value": "<p>105</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WaJ3pzdNKhoKq6Pe"
+}

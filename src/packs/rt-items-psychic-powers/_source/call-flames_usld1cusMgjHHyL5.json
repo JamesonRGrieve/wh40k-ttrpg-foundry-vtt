@@ -1,0 +1,22 @@
+{
+  "name": "Call Flames",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 8",
+    "opposed": "Yes",
+    "sustained": "Whilst sustained character maintains a small ball of psychic fire the size of a burning torch in their hand. It adds 2 to unarmed attacks and makes their damage Energy (it may also set people on fire). It's primary purpose however is to create light. Can't use the hand the flame is in for anything else whilst power is sustained.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "usld1cusMgjHHyL5"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Krump 'Em All",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Smash da Gitz, Zzap",
+    "focusPower": "Full Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Everyone within power's range, including the Weirdboy, make +0 Agility Test with -5 per Degree of Success of Focus Power Test, or suffer 1d10 + Psy Rating Impact Damage with Psy Rating Penetration and are knocked prone. Success still drops prone as to avoid the attack.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E58TmD0k6M1prkKv"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Step 3: Chart Vessel Course: +10 Perception Test (or -60 Navigation (Warp) Test if Astronomicon not located) to detect warp disturbances en route. Pass/Fail kept secret by GM.\nIf Navigator has located the Astronomicon, makes +10 Perception Test to detect any warp disturbances along the route. If Astronomicon not located make -60 Navigation (Warp) Test. Pass/Fail amounts are kept secret by the GM. Failiure would mean the Navigator is unaware of any oncoming danger.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": "Pass/Fail of this step becomes relevent in Step 4.5",
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Adept:</b> Pass/Fail of this step becomes relevent in Step 4.5</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rKqw7fqEZ5abnEg6"
+}

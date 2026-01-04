@@ -1,0 +1,28 @@
+{
+  "name": "Stun Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Concussive (1)",
+    "weight": "0.2kg",
+    "availability": "Scarce",
+    "cost": "40 T",
+    "source": "Rogue Trader: Core",
+    "note": "Make +0 Toughness Test or be stunned for 1d5 rounds, photo-visors/sealed armour give +20 to test",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Concussive (1)</p><p><b>Note:</b> Make +0 Toughness Test or be stunned for 1d5 rounds, photo-visors/sealed armour give +20 to test</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OS28JMaEL6slVYFU"
+}

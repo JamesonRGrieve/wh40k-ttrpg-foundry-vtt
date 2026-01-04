@@ -1,0 +1,28 @@
+{
+  "name": "Legion Chainaxe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing,  SM Wep",
+    "weight": "14kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing,  SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SPn2VXAE0Ue8JDVg"
+}

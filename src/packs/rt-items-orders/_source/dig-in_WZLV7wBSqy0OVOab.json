@@ -1,0 +1,17 @@
+{
+  "name": "Dig In",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": "Commander Spec\n500xp",
+    "descriptionText": "Character makes +0 Command Test. If Successful each Player Character gains +2 AP of Cover and +10 to Pinning Tests per Comrade they have in Cohesion. Such Comrades count as benefitting from the \"Take Cover!\" Order. (If Comrade is hit by an attack it must roll damage, if less than 3+Cover AP, no damage dealt)",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Character makes +0 Command Test. If Successful each Player Character gains +2 AP of Cover and +10 to Pinning Tests per Comrade they have in Cohesion. Such Comrades count as benefitting from the \"Take Cover!\" Order. (If Comrade is hit by an attack it must roll damage, if less than 3+Cover AP, no damage dealt)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WZLV7wBSqy0OVOab"
+}

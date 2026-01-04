@@ -1,0 +1,28 @@
+{
+  "name": "Power Discus",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Power",
+    "range": "SBx4",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field",
+    "weight": "0.2kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "A 30cm diameter silvery throwing disc that activates a powerfield mid flight",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> A 30cm diameter silvery throwing disc that activates a powerfield mid flight</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "i1DyKDVVrtzJQHTl"
+}

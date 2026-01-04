@@ -1,0 +1,28 @@
+{
+  "name": "Laspistol (\"Emperor's Will\")",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "60m",
+    "rof": "S/2/-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 5,
+    "reload": "Half",
+    "special": "Accurate, Reliable",
+    "weight": "3kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Gain +1 Degree of Success on successful Intimidate Tests. Sometimes used by Commisars for disciplinary purposes.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Reliable</p><p><b>Note:</b> Gain +1 Degree of Success on successful Intimidate Tests. Sometimes used by Commisars for disciplinary purposes.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YxnIvS4KYeu0aEBx"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Nerves of Steel",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; None\nAptitudes: Willpower, Defence, Nurgle",
+    "effect": "Character can Reroll failed Willpower Tests to avoid or recover from Pinning. They also gain +10 to Willpower Tests to resist the effects of enemy intimidation effects.\nIn a Social Conflict, if the character's opponent's uses Intimidate, the character gains +20 to the Opposed Test.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can Reroll failed Willpower Tests to avoid or recover from Pinning. They also gain +10 to Willpower Tests to resist the effects of enemy intimidation effects.\nIn a Social Conflict, if the character's opponent's uses Intimidate, the character gains +20 to the Opposed Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ew2l7tuorQ7fCJD8"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Bolt Pistol (Hesh M38)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Bolt",
+    "range": "25m",
+    "rof": "S/3/-",
+    "damage": "1d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 12,
+    "reload": "2 Full",
+    "special": "Tearing",
+    "weight": "4kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Gains Unreliable Quality if Fired on Semi-Auto.\nThe Tech-Priests of the Lathes may not have this issue",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Gains Unreliable Quality if Fired on Semi-Auto.\nThe Tech-Priests of the Lathes may not have this issue</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "80bUA1JQXrFEvPZP"
+}

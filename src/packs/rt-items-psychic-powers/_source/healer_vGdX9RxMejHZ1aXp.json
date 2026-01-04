@@ -1,0 +1,22 @@
+{
+  "name": "Healer",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "10m",
+    "range": "Threshold 7\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual within range removes 1d5 points of damage. If power is used on the same individual again within 6 hours, they must make a Toughness Test prior to removing wounds, if failed they instead take 1d5 Damage that ignores Armour and Toughness.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vGdX9RxMejHZ1aXp"
+}

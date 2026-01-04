@@ -1,0 +1,28 @@
+{
+  "name": "Digi-Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "3m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Spray, Flame",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Worn on any finger (not thumb) as a ring, can be fired even when holding something",
+    "description": {
+      "value": "<p><b>Special:</b> Spray, Flame</p><p><b>Note:</b> Worn on any finger (not thumb) as a ring, can be fired even when holding something</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v83z0Fko47f18kKV"
+}

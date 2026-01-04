@@ -1,0 +1,17 @@
+{
+  "name": "Two Against The Odds",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Brawler Advanced Speciality\n400xp",
+    "effect": "As long as the Character's Comrade is in Cohesion, enemies gain no bonus for outnumbering them, and they can aso react to Melee Attacks even if Unaware or Suprised. ",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>As long as the Character's Comrade is in Cohesion, enemies gain no bonus for outnumbering them, and they can aso react to Melee Attacks even if Unaware or Suprised. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5tFT5QCgFU4IUvjQ"
+}

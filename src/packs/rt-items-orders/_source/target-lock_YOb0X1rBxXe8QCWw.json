@@ -1,0 +1,17 @@
+{
+  "name": "Target Lock",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Crimson Exemplar Spec\nServitor Comrade\n600xp",
+    "descriptionText": "Once per Combat Encounter, Character can spend their Full Action and make a +0 Intelligence Test. If Successful they inflict a single hit on a target within range of one of their weapons, +1 hit with another weapon on a target within range (not neccisarily the same one) per Degree of Success scored beyond the first. Each weapon can only inflict one hit. Servitor Comrade must be within Comms Range to provide target marks.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Once per Combat Encounter, Character can spend their Full Action and make a +0 Intelligence Test. If Successful they inflict a single hit on a target within range of one of their weapons, +1 hit with another weapon on a target within range (not neccisarily the same one) per Degree of Success scored beyond the first. Each weapon can only inflict one hit. Servitor Comrade must be within Comms Range to provide target marks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YOb0X1rBxXe8QCWw"
+}

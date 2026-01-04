@@ -1,0 +1,17 @@
+{
+  "name": "Crack Manoeuvring",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Tank Ace Advanced Speciality\n400xp",
+    "effect": "As long as both Character and their Comrade are in the same Multi-Passenger Vehicle, the Vehicles Operator (Who can be the Character) can make a -20 Operate Test in response to incoming fire as a Free Action. If successful the incoming fire can strike any side of the vehicle of the Character's Choice instead of the armour that was facing the incoming fire. (EG: Chance Incoming fire that would hit the low-armoured rear to hit the high-armoured front)",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>As long as both Character and their Comrade are in the same Multi-Passenger Vehicle, the Vehicles Operator (Who can be the Character) can make a -20 Operate Test in response to incoming fire as a Free Action. If successful the incoming fire can strike any side of the vehicle of the Character's Choice instead of the armour that was facing the incoming fire. (EG: Chance Incoming fire that would hit the low-armoured rear to hit the high-armoured front)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oq7NfPQuveGax0de"
+}

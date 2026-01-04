@@ -1,0 +1,22 @@
+{
+  "name": "The Action Again",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "Divining the Future",
+    "focusPower": "Free Action",
+    "action": "Self",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "The psyker catches a glimpse of the future. On successful Focus Power Test, they can re-roll any one Test within Psy Rating rounds, but must accept new roll. Power may only be used once every 24 hours (the fates dislike those that meddle too much in their own destiny), and cannot be used at Fettered Psychic Strength.",
+    "effect": "300xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3s6pKfqLOAdXP6PH"
+}

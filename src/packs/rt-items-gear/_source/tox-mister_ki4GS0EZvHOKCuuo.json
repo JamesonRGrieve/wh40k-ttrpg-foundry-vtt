@@ -1,0 +1,20 @@
+{
+  "name": "Tox-Mister",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.1kg",
+    "availability": "Fires a liquid (such as poision) as a spray. Contains tiny resoviour that can contain any liquid and should be replaced after use. To use, make WS Test to fire poison up to a metre away, can't be parried but can be dodged. Creatures caught in spray must make test to resist poison if appropriate.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ki4GS0EZvHOKCuuo"
+}

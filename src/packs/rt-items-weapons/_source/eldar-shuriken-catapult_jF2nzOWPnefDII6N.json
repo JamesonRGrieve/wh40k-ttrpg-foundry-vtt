@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Shuriken Catapult",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Eldar",
+    "range": "80m",
+    "rof": "S/3/10",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": 120,
+    "reload": "Full",
+    "special": "Razor Sharp, Reliable",
+    "weight": "2.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.",
+    "description": {
+      "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jF2nzOWPnefDII6N"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Electrical Succour",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Mechanicus Implants",
+    "effect": "When in contact with powered machine, battery, or power cell, make +10 Tech-Use check, on success reduce one level of fatigue, +1 for each Degree of success. Process takes 1 minute.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When in contact with powered machine, battery, or power cell, make +10 Tech-Use check, on success reduce one level of fatigue, +1 for each Degree of success. Process takes 1 minute.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zxQ4YRpHz7D4h1wP"
+}

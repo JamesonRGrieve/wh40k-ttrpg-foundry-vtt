@@ -1,0 +1,18 @@
+{
+  "name": "Customisation: Scavenged Reconstruction",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Legion Power Armour",
+    "effect": "Built from or upgraded with remnants of enemy Space Marine armour, gain +10 to Infamy, Intimidate, or command Tests vs Loyalist or Traitor Astartes",
+    "weight": "+1kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Built from or upgraded with remnants of enemy Space Marine armour, gain +10 to Infamy, Intimidate, or command Tests vs Loyalist or Traitor Astartes</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PWQuleFMktYAsFQm"
+}

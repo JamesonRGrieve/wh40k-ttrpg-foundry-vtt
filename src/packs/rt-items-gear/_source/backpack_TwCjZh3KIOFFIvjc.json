@@ -1,0 +1,20 @@
+{
+  "name": "Backpack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1kg",
+    "availability": "Carries up to 30-50kg. Taking an object out requires a Full Action. Mutually exlusive with a Combat Vest.\nUsually takes a Full Action to take something out of it.",
+    "cost": "Worn on the back (duh)",
+    "effects": "Plentiful",
+    "notes": "10 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 10 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TwCjZh3KIOFFIvjc"
+}

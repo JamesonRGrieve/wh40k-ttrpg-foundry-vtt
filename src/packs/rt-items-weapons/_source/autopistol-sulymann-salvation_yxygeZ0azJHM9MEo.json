@@ -1,0 +1,28 @@
+{
+  "name": "Autopistol (Sulymann) \"Salvation\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "10m",
+    "rof": "S/3/-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 7,
+    "reload": "-",
+    "special": null,
+    "weight": "0.75kg",
+    "availability": "Common",
+    "cost": "80 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Requires Partial Dissassembly to Reload, very compact.",
+    "description": {
+      "value": "<p><b>Note:</b> Requires Partial Dissassembly to Reload, very compact.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yxygeZ0azJHM9MEo"
+}

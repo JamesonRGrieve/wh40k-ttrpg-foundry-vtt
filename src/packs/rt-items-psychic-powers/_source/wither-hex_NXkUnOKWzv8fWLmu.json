@@ -1,0 +1,22 @@
+{
+  "name": "Wither Hex",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 6, Willpower 40+, Hatred (Any), Hex of Decrepitude",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "On turn of Manifesting, on on each subsequent turn the power is sustained, Psyker makes Opposed Willpower test vs Target's Toughness, Target has -10 to this Opposed Test. Only the first of these tests triggers Psychic Phenomena/Perils of the Warp and Psychic Strength. On each round the Psyker Succeeds, the target is rapidly aged, suffers 1d5 Fatigue, is stunned for that round, and takes 2d10+Psy Rating nonpermenant Strength, Toughness, and Agility Damage, if the target succeeds they suffer no ill effects that round although the power continues to be sustained. If a target survives the Wither Hex until it is no longer sustained they cannot be targeted by it again for one year (or until the planet Q'Sal completes its next orbit in the Screaming Vortex).",
+    "effect": "800xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>800xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NXkUnOKWzv8fWLmu"
+}

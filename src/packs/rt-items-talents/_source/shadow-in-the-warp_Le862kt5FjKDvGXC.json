@@ -1,0 +1,17 @@
+{
+  "name": "Shadow in the Warp",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Tyranid",
+    "effect": "All Non-Tyranid Psykers within Willpower Characteristic Metres Range suffer -20 to all Tests to use Psychic Powers.",
+    "source": "BC: Binding Contracts",
+    "description": {
+      "value": "<p>All Non-Tyranid Psykers within Willpower Characteristic Metres Range suffer -20 to all Tests to use Psychic Powers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Le862kt5FjKDvGXC"
+}

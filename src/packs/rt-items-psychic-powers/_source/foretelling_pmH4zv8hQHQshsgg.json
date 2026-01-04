@@ -1,0 +1,22 @@
+{
+  "name": "Foretelling",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Perception 35",
+    "focusPower": "Full Action\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Psyniscience",
+    "opposed": "No",
+    "sustained": "Character chooses single target individual or item within range and receives a brief or unclear image of the future, giving them a roguh idea of what one thing that will hapepen to the target within a number of minutes up to the Psyker's Psy Rating. GM decides what this information is., more Degrees of Success on Focus Test yields more information.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pmH4zv8hQHQshsgg"
+}

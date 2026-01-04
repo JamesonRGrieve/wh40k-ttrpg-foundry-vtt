@@ -1,0 +1,17 @@
+{
+  "name": "Tyranid",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Tyranid (Innate)",
+    "effect": "Tyranids are Immune to Pinning, Mind-Affecting Psychic Powers, Warp-Based Powers that affect the mind, cold, heat, disease, and poisons, and weapons with the Toxic Quality.",
+    "source": "BC: Binding Contracts",
+    "description": {
+      "value": "<p>Tyranids are Immune to Pinning, Mind-Affecting Psychic Powers, Warp-Based Powers that affect the mind, cold, heat, disease, and poisons, and weapons with the Toxic Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BTtaHOe7euZ7Vt6S"
+}

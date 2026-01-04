@@ -1,0 +1,25 @@
+{
+  "name": "Jovian-pattern Escort Bay",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Landing Bay",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 1,
+    "spaceUsage": 4,
+    "spCost": 1,
+    "damage": "-",
+    "strength": 1,
+    "critRating": "-",
+    "range": "-",
+    "availability": "Scarce",
+    "notes": "Must mount on Port/Starboard. Holds up to 3 squadrons although only 1 can be prepared to launch at any one time. ",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 3 squadrons although only 1 can be prepared to launch at any one time. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eeK4z98PUu0LJP1q"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Immobile",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Has a default +0 Maneouvrability and cannot make the Jink Action. Can't move under its own power, but may have had some other method of arrival (such as a drop pod). Motive system Critical Damage applies to these methods.",
+    "description": {
+      "value": "<p>Has a default +0 Maneouvrability and cannot make the Jink Action. Can't move under its own power, but may have had some other method of arrival (such as a drop pod). Motive system Critical Damage applies to these methods.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ngsQwxpm1uBWVWjC"
+}

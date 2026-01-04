@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Autopistol (Orthlack) \"Hecuter 9/5\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/3/6",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 15,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "2kg",
+    "availability": "Average",
+    "cost": "175 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ItfXZtAtALRVVTGg"
+}

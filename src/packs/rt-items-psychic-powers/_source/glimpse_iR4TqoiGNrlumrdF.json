@@ -1,0 +1,22 @@
+{
+  "name": "Glimpse",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 18",
+    "opposed": "No",
+    "sustained": "Gain a brief glimpse into the future and its potential outcomes. Character Gains +30 to any one Skill Test made before the end of the character's next turn.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iR4TqoiGNrlumrdF"
+}

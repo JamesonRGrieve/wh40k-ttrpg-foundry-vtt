@@ -1,0 +1,21 @@
+{
+  "name": "Navigating the Warp\n(RT: The Navis Primer)",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Navigating the Warp is the primary role of the Navigator. It allows the ship they are on the travel across vast distanes through the warp in relative safety. It is a complicated Process. There are two versions Rogue Trader: Core and The Navis Primer. This is the Navis Primer version, which is more complex.\nThe difficulty of a journey varies with distance, conditions, ship facilities, etc. On the way, the vessel will likely deal with Warp Travel Encounters of varying danger.\nNormally, only Navigators can perform these functions, without one a ship is limited to short hops through well travelled warp passages of a few light years. Alternatives include Certain Ork Weirdboys, Certain Eldar Psykers, and Heretical individuals.\n",
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "I46zAh2eUXn0bOtE"
+}

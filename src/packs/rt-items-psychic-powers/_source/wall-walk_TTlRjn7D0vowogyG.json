@@ -1,0 +1,22 @@
+{
+  "name": "Wall Walk",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained negate any penalties due to Low or High Gravity, and can walk on walls or ceilings at half movement rate.\nTo move between wall and ceiling and vice versa must either make an Agility Test or spend a Full Action.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TTlRjn7D0vowogyG"
+}

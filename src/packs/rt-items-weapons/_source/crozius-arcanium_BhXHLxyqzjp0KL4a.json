@@ -1,0 +1,28 @@
+{
+  "name": "Crozius Arcanium",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+7",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field",
+    "weight": "10kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Exclusively used by Chaplains. Chaplains armed with one gain the Hatred Talent for any foe they are currently engaged in Melee with, however cannot take the Defensive Stance against that enemy.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Exclusively used by Chaplains. Chaplains armed with one gain the Hatred Talent for any foe they are currently engaged in Melee with, however cannot take the Defensive Stance against that enemy.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BhXHLxyqzjp0KL4a"
+}

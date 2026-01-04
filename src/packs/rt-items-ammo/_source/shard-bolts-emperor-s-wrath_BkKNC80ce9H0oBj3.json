@@ -1,0 +1,20 @@
+{
+  "name": "Shard Bolts \"Emperor's Wrath\"",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Crossbows",
+    "damageOrEffect": "Gain Crippling (2) Quality",
+    "qualities": "Crippling (2)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Crippling (2) Quality</p><p><b>Qualities:</b> Crippling (2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BkKNC80ce9H0oBj3"
+}

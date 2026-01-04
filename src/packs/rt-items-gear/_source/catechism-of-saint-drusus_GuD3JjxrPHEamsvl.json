@@ -1,0 +1,20 @@
+{
+  "name": "Catechism of Saint Drusus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1kg",
+    "availability": " A user in possession of it gains +10 to Command Tests, and once per game session may take a Full Action and make a -10 Scholastic Lore (Military Tactics) Test. On success allies in 20 metres can make a Delay Action as a Free Action until the user's next turn",
+    "cost": "A Tome that provides wisdom to the reader.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GuD3JjxrPHEamsvl"
+}

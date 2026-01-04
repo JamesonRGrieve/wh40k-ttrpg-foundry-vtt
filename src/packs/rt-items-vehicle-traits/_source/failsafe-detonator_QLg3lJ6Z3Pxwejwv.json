@@ -1,0 +1,14 @@
+{
+  "name": "Failsafe Detonator",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "An inbuilt failsafe device. If the wearer dies, their Battlesuit Explodes, their body and the Battlesuit are destroyed, inflicting 3d10+10 Energy Damage to all Targets within 20 metres. The wearer can intentionally activate the device if they are alive by passing a -20 Willpower Test, in doing so also suffer the Damage that ignores their armour.",
+    "description": {
+      "value": "<p>An inbuilt failsafe device. If the wearer dies, their Battlesuit Explodes, their body and the Battlesuit are destroyed, inflicting 3d10+10 Energy Damage to all Targets within 20 metres. The wearer can intentionally activate the device if they are alive by passing a -20 Willpower Test, in doing so also suffer the Damage that ignores their armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QLg3lJ6Z3Pxwejwv"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Void-Mad Prophet",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "15+ Insanity",
+    "characteristic": "500xp",
+    "descriptor": "Use ones own insanity and internal voices to guide their mind into unlocking hidden memories not their own.",
+    "uses": "Gain 1d10 Insanity Points and Whisphers Unheard Trait",
+    "useTime": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Use ones own insanity and internal voices to guide their mind into unlocking hidden memories not their own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SoW6iJFOlthmgm54"
+}

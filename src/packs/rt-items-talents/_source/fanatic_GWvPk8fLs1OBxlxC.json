@@ -1,0 +1,17 @@
+{
+  "name": "Fanatic",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Minion",
+    "effect": "Minion is Fanatically devoted to their master, and would sacrifice their own life for them gladly. Once per Combat Encounter if an attack hits this Minion's Master, before damage is rolled the Minion can use their Reaction and move up to Half their Movement Rate to interpose themselves and take the hit. Suffering the damage in place of their master even if it kills them.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Minion is Fanatically devoted to their master, and would sacrifice their own life for them gladly. Once per Combat Encounter if an attack hits this Minion's Master, before damage is rolled the Minion can use their Reaction and move up to Half their Movement Rate to interpose themselves and take the hit. Suffering the damage in place of their master even if it kills them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GWvPk8fLs1OBxlxC"
+}

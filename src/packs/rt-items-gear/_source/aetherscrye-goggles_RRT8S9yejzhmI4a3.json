@@ -1,0 +1,20 @@
+{
+  "name": "Aetherscrye Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "1kg",
+    "availability": "Wearer has no penalty from darkness, smoke, or mundane obstructions such as solid objects. Can use Psyscience as Untrained Basic skill, or gain +10 if already has it. Rolling doubles on perception test while using causes 1 insanity point. Gain 1d10 insanity and 1d5 corruption on seeing a daemon ( once per daemon). ",
+    "cost": "Xenotech Goggles whose lenses let you see into the warp, filtered such as to not immedietly drive the wearer mad. Always good craftsmanship. Made by Stryxis, might be purchasble.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RRT8S9yejzhmI4a3"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Bedroll",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "4kg",
+    "availability": "Somewhat Comfortable, comes with heavy blankets.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Plentiful",
+    "notes": "8 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 8 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AUcBAWK5ddH6MmlV"
+}

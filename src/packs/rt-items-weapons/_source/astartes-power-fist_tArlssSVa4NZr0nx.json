@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Power Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unwieldy",
+    "weight": "25kg",
+    "availability": "Distinguished",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Replaces one of the Power Armour's Gauntlets. These gloves can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. For damage increase Unnatural Strength Bonus from x2 to x3",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Replaces one of the Power Armour's Gauntlets. These gloves can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. For damage increase Unnatural Strength Bonus from x2 to x3</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tArlssSVa4NZr0nx"
+}

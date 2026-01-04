@@ -1,0 +1,17 @@
+{
+  "name": "Disengage",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nFull Action",
+    "requirements": "--",
+    "descriptionText": "Comrade out of Cohesion performs the Disengage Action, Breaking off from Melee combat and making a Half Move. Opponents they were engaged with in Melee do not gain a free attack against the Comrade for Leaving Melee.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade out of Cohesion performs the Disengage Action, Breaking off from Melee combat and making a Half Move. Opponents they were engaged with in Melee do not gain a free attack against the Comrade for Leaving Melee.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2aAC9RKBhZEvXIJX"
+}

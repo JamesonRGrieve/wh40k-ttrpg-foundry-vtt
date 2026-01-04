@@ -1,0 +1,20 @@
+{
+  "name": "Upgrade: Enhanced Machine Trait",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Increases the Machine Trait of the Cyber Familiar by 1, up to a max of Machine(5)",
+    "cost": null,
+    "effects": "Special",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> 500 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JOBVm0scGAemjRXk"
+}

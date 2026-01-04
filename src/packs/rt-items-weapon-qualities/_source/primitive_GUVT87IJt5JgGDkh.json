@@ -1,0 +1,14 @@
+{
+  "name": "Primitive*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 175,
+    "description": {
+      "value": "<p>175</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GUVT87IJt5JgGDkh"
+}

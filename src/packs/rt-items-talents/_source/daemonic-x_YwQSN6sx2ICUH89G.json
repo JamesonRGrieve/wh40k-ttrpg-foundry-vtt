@@ -1,0 +1,17 @@
+{
+  "name": "Daemonic (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "A Creature of the warp. Increase Toughness Bonus by X against all damage that is not as a result of Force Weapons, Psychic Powers, Holy Attacks, or other Daemonic Creatures. Also Immune to Poison and Disease.\nCreature gains additional benefits if they are a Psyker. DH 2E: Also gain the Undying Trait",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>A Creature of the warp. Increase Toughness Bonus by X against all damage that is not as a result of Force Weapons, Psychic Powers, Holy Attacks, or other Daemonic Creatures. Also Immune to Poison and Disease.\nCreature gains additional benefits if they are a Psyker. DH 2E: Also gain the Undying Trait</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YwQSN6sx2ICUH89G"
+}

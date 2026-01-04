@@ -1,0 +1,20 @@
+{
+  "name": "Stryxis Meat: Vat-Slave",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The purchase of slaves from the Alien Stryxis, who simply refer to them as \"Meat\". Vat-Grown to fit specifications. Heretical.",
+    "cost": "Dealing with the Alien Stryxis Rarely just requires an Acquisition Roll, and may require other, stranger costs…",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8TtHhpnVSnNbpo5e"
+}

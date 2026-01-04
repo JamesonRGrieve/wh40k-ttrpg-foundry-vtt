@@ -1,0 +1,28 @@
+{
+  "name": "Foul Sceptre",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "70m",
+    "rof": "S/-/-",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "Recharge, Shocking, Toxic",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.",
+    "description": {
+      "value": "<p><b>Special:</b> Recharge, Shocking, Toxic</p><p><b>Note:</b> Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Jh4lDkhfJtBOwVLn"
+}

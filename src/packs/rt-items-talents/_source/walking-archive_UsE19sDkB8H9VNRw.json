@@ -1,0 +1,17 @@
+{
+  "name": "Walking Archive",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Rector Erudite Advanced Specialty (400xp)",
+    "effect": "When Asissted by their Comrade, the character gains +20 to all Common Lore, Forbidden Lore, Linguistics, and Scholastic Lore Tests.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When Asissted by their Comrade, the character gains +20 to all Common Lore, Forbidden Lore, Linguistics, and Scholastic Lore Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UsE19sDkB8H9VNRw"
+}

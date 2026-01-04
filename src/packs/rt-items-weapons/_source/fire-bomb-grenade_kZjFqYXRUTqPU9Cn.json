@@ -1,0 +1,28 @@
+{
+  "name": "Fire Bomb Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Flame",
+    "weight": "0.5kg",
+    "availability": "Plentiful",
+    "cost": "5 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Flame</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kZjFqYXRUTqPU9Cn"
+}

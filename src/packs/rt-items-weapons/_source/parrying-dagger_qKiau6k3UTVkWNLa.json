@@ -1,0 +1,28 @@
+{
+  "name": "Parrying Dagger",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8), Defensive",
+    "weight": "0.5kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Additional +5 to Parry",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Defensive</p><p><b>Note:</b> Additional +5 to Parry</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qKiau6k3UTVkWNLa"
+}

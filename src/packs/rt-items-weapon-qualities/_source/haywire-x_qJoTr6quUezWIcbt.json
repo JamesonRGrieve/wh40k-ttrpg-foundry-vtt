@@ -1,0 +1,14 @@
+{
+  "name": "Haywire (X)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Effects X metre radius, roll 1d10+X on Haywire field effects table. Each round, strength lessens by 1 step.",
+    "description": {
+      "value": "<p>Effects X metre radius, roll 1d10+X on Haywire field effects table. Each round, strength lessens by 1 step.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qJoTr6quUezWIcbt"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Rapid Intervention",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Field Chirurgeon Spec\n300xp",
+    "descriptionText": "Character sends their Comrade within Communication Range to stabilise another individual. Character makes +20 Medicae Test, if successful as long as the Comrade remains with the Patient and the Patient does not perform any strenuous actions or suffer further harm, they do not roll for Blood Loss and their Condition does not worsen.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>Character sends their Comrade within Communication Range to stabilise another individual. Character makes +20 Medicae Test, if successful as long as the Comrade remains with the Patient and the Patient does not perform any strenuous actions or suffer further harm, they do not roll for Blood Loss and their Condition does not worsen.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wsnky61yxO4g6pBj"
+}

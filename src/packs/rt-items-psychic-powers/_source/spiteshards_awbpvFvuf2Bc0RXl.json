@@ -1,0 +1,22 @@
+{
+  "name": "Spiteshards",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Aetheric Appendage\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker creates one shard of hate, plus one more per 2 Degrees of Success on Focus Power Test up to their Psy Rating. These are then fired at a target and hit automatically, although can be dodged as with a ranged attack. Each shard does 1d5 + Psy Rating Damage, Penetration 5+Psy Rating. Creatures that stuffer damage after Armour and Toughness from this must make +0 Willpower Test or gain 1d5 Corruption. The Psyker gains 1d5-2 Corruption (minimum 0) whenever they manifest this power.",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "awbpvFvuf2Bc0RXl"
+}

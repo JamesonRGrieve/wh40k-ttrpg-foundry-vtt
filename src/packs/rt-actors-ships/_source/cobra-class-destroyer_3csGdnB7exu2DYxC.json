@@ -1,0 +1,28 @@
+{
+  "name": "Cobra-Class Destroyer",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Raider",
+    "size": "1.5km long, 0.3km wide",
+    "crew": 15000,
+    "speed": 10,
+    "manoeuvrability": 30,
+    "detection": 10,
+    "hull": 30,
+    "armour": 15,
+    "turrets": 1,
+    "space": 35,
+    "shipPoints": 30,
+    "weaponCapacity": "1 Dorsal, 1 Prow",
+    "notes": "Usually Has torpedo bays although doesn't come with them by default.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Usually Has torpedo bays although doesn't come with them by default.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "3csGdnB7exu2DYxC"
+}

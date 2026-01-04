@@ -1,0 +1,14 @@
+{
+  "name": "Damage Control",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Can force Critical Damage as a result of Righteous Fury to be rerolled, but must accept the new roll even if it is worse. If a Vehicle with this trait is set on fire, putting it out is a Free Action.",
+    "description": {
+      "value": "<p>Can force Critical Damage as a result of Righteous Fury to be rerolled, but must accept the new roll even if it is worse. If a Vehicle with this trait is set on fire, putting it out is a Free Action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hw3TrFVysIbUOXt5"
+}

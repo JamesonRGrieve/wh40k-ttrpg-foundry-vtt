@@ -1,0 +1,20 @@
+{
+  "name": "Smoke Shell",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Vehicle: Artillery/Battle Cannons",
+    "damageOrEffect": "Does no damage, instead creates 10 metre radius smoke that blocks natural, thermal, and electronic visual devices from seeing though for 10 rounds.",
+    "qualities": null,
+    "weight": null,
+    "availability": "Rare",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Does no damage, instead creates 10 metre radius smoke that blocks natural, thermal, and electronic visual devices from seeing though for 10 rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p2H9ygvwFZtpUs16"
+}

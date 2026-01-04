@@ -1,0 +1,28 @@
+{
+  "name": "Virus Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Toxic",
+    "weight": "0.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "for 1d10 rounds, If damage done to target next round repeat on random target in d5 metres, ignores armour, although sealed armour or Machine (3) trait prevents.",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> for 1d10 rounds, If damage done to target next round repeat on random target in d5 metres, ignores armour, although sealed armour or Machine (3) trait prevents.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8fkO483qmtoxFATt"
+}

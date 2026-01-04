@@ -1,0 +1,28 @@
+{
+  "name": "Conquest-Class Star Galleon",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Cruiser",
+    "size": "5.1km long, 0.7km wide",
+    "crew": 65000,
+    "speed": 4,
+    "manoeuvrability": 5,
+    "detection": 10,
+    "hull": 65,
+    "armour": 16,
+    "turrets": 1,
+    "space": 56,
+    "shipPoints": 52,
+    "weaponCapacity": "2 Port, 2 Starboard",
+    "notes": "Comes with two \"Main Cargo Hold\" components (size already reduced), can't be removed. Must be able to power. Can use both Transport and Cruiser components, if both are options, use Cruiser.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Comes with two \"Main Cargo Hold\" components (size already reduced), can't be removed. Must be able to power. Can use both Transport and Cruiser components, if both are options, use Cruiser.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "0YSJrgeM4oLx8Xr4"
+}

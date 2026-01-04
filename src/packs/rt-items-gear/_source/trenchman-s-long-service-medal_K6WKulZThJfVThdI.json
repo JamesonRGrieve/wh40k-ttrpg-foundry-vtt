@@ -1,0 +1,20 @@
+{
+  "name": "Trenchman's Long Service medal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+5 to Ballistic Skill Tests made whilst the Squad is firing from cover.\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Two Crossed Spades, hanging from a triangular grey ribbon",
+    "cost": "Distinguished Service Medal: Awarded for Participating in a single trench deployment lasting for two months or more.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "K6WKulZThJfVThdI"
+}

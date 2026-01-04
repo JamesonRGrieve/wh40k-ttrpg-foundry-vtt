@@ -1,0 +1,22 @@
+{
+  "name": "Labyrinthine Condundrum",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, Psy Rating 4, Intelligence 50+, Logic Skill",
+    "focusPower": "Half Action\nConcentration",
+    "action": "20m x Psy Rating",
+    "range": "-20 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual has an all-consuming mystery implanted within their mind, each turn they must succeed on an Intelligence or Logic Test with -5xDegrees of Success on Focus Power Test. If failed target suffers 1d10 nonpermenant Intelligence Damage and is Stunned until the Start of their Next Turn. The effects of the power end if the target either reaches 0 Intelligence or Passes the test.\nIf used along side Incantations, the power deals 2d10 Nonpermnant Intelligence Damage rather than 1d10.",
+    "effect": "300xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "y4tj6giZh0KHiJKX"
+}

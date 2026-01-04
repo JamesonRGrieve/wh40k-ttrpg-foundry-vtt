@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Impaler",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - DEldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Razor-Sharp",
+    "weight": "2kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.",
+    "description": {
+      "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0RIEozsEVGNC1Zg5"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Blind Fighting",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Perception 30\nAptitudes: Perception, Fieldcraft, Tzeentch",
+    "effect": "Halves all Penalties (rounded up) for fighting with Melee Weapons without the benefit of sight due to some obscuring effect such as Fog, Smoke or Darkness.\nDH 2E: Ignore all penalties instead of half them.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Halves all Penalties (rounded up) for fighting with Melee Weapons without the benefit of sight due to some obscuring effect such as Fog, Smoke or Darkness.\nDH 2E: Ignore all penalties instead of half them.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xXSDf0PkAg9zLNzh"
+}

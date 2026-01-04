@@ -1,0 +1,22 @@
+{
+  "name": "Aetheric Appendage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Mental Force",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "On Successful Focus Power Test, the psyker creates an invisible dextrous limb, and one additional limb per 2 Degrees of Success on Focus Power Test. These limbs can stretch up to Psy Rating Metres, and perform any task the psyker can perform with their hands (with same benefits or penalties). They can also be thinned into elegant razors to make unarmed attacks. Effectively, the Psyker gains Multiple Arms (X) Trait, where X is the number of limbs created, and when the limb's unarmed attacks have the profile (Melee; Range: Psy Rating Metres; Damage: 1d5 + Psy Rating R; Pen: Psy Rating).",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nidbNBLV80L6Sszz"
+}

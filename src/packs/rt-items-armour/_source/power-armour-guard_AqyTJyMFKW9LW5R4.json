@@ -1,0 +1,22 @@
+{
+  "name": "Power Armour (Guard)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 8,
+    "maxAg": null,
+    "weight": "65kg",
+    "availability": "Near Unique",
+    "cost": "15000 T",
+    "notes": "Gives +2 Unnatural Strength and Perception. Increase size by 1. Environmentally sealed as long as helmet is worn. Power Pack lasts 1d5 Hours, or forever if powered by Potential Coil. (Use OW Unnatural Characteristics) Extremely Rare for Enginseers",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Gives +2 Unnatural Strength and Perception. Increase size by 1. Environmentally sealed as long as helmet is worn. Power Pack lasts 1d5 Hours, or forever if powered by Potential Coil. (Use OW Unnatural Characteristics) Extremely Rare for Enginseers</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AqyTJyMFKW9LW5R4"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Psyphon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Tzeentch Aligned, WP 40+, Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Target Individual within range and line of sight resists Focus Power Test with their own Willpower, if they fail they suffer 2d10 Willpower Damage and the Psyker gains Unnatural Willpower(+1), +1 per full 5 points of Willpower Damage the power inflicts. This Unnatural Willpower remains as long as the power is sustained.",
+    "effect": "200xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JoblWpyd3pTUmqxv"
+}

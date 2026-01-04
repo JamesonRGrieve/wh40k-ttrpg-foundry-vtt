@@ -1,0 +1,21 @@
+{
+  "name": "Special Rules",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Khorne: Daemonhost's Natural Weapons gain +2 Penetration and Tearing Quality. Attack rolls that score 3+ DoS inflict Blood Loss. Can enter a Frenzy as a Free Action.\nTzeentch: Daemonhost can re-roll any failed Focus Power Test. If result of either die on the second roll is a 9, causes Psychic Phenomena, or adds +10 to the result if it was already caused by the roll.\nNurgle: Daemonhost's Natural Weapons gain Toxic (3) Quality. Non-sanctified or other special weapons, armour, and equipment within 10m act as if they were Poor Quality.\nSlaanesh: Daemonhost's natural weapons gain +1 Penetration and Shocking QUality. Attacks impose -20 to Evasion Tests.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l9oH52USzq8XmOPf"
+}

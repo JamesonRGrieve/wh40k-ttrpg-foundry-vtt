@@ -1,0 +1,20 @@
+{
+  "name": "Champion's Commendation",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "Melee Attacks against Orks gain Felling(2)\nMedals can't be acquired, only earned. Looks Like a Silver Star with Gold Inlay, held in a Green Ribbon.",
+    "cost": "Distinguished Service Medal: Kill an Ork Warboss.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GsrMYuW8Hav92bPI"
+}

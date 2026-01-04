@@ -1,0 +1,14 @@
+{
+  "name": "Shield Generator",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "A Protection Rating 40 Shield. Overload varies with Craftsmanship: Poor - 01-20, Common - 01-10, \nGood - 01-05, Best - 1.",
+    "description": {
+      "value": "<p>A Protection Rating 40 Shield. Overload varies with Craftsmanship: Poor - 01-20, Common - 01-10, \nGood - 01-05, Best - 1.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RnTjRMnjQEdSHJWJ"
+}

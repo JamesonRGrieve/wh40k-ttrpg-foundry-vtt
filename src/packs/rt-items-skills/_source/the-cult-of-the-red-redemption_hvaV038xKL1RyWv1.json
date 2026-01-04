@@ -1,0 +1,18 @@
+{
+  "name": "The Cult of the Red Redemption",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Non Psyker/Tech Priest, not a member of any other sect, guild, or conspiracy.",
+    "characteristic": "150xp",
+    "descriptor": "The Character subscribes to the fixed and utterly merciless views of the Redemptionist. The Psyker Must be burned, the Mutant must be purged, and the heretic must be cleansed. There is no forgiveness, only the flaming pyre.",
+    "uses": "Gain access to several new advances (See DH: Inquisitor's Handbook, Page 88). Gain Flagellant and Frenzy Talents, Secret Tongue (Redemption) Skill, and True Believer Trait.",
+    "useTime": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>The Character subscribes to the fixed and utterly merciless views of the Redemptionist. The Psyker Must be burned, the Mutant must be purged, and the heretic must be cleansed. There is no forgiveness, only the flaming pyre.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hvaV038xKL1RyWv1"
+}

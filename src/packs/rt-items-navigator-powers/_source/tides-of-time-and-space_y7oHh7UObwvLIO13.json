@@ -1,0 +1,21 @@
+{
+  "name": "Tides of Time and Space",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Free Action",
+    "range": "Self",
+    "test": "Perception Test",
+    "sustain": "No",
+    "novice": "Navigator Doubles their Agility Bonus for determining initiative and takes an additional Half Action on the turn this power is used (can't Concentration subtype). If failing test Agility Bonus for initiative and only take a Half Action on that turn. If failing by 3+ DoF,  Navigator dissapears from existence for 1d5 rounds then reappearing where they were (or moving to player chosen place if something else occupies space). Regardless of pass or fail, gain 1 Fatigue at end of Round.",
+    "adept": "Now Instead Triple Agility Bonus for Initative.",
+    "master": "Now Instead Quadruple Agility Bonus for Initiative, and can take additional two Half Actions or one Full Action, instead of one Half Action. (still can't be concentration subtype).",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Novice:</b> Navigator Doubles their Agility Bonus for determining initiative and takes an additional Half Action on the turn this power is used (can't Concentration subtype). If failing test Agility Bonus for initiative and only take a Half Action on that turn. If failing by 3+ DoF,  Navigator dissapears from existence for 1d5 rounds then reappearing where they were (or moving to player chosen place if something else occupies space). Regardless of pass or fail, gain 1 Fatigue at end of Round.</p><p><b>Adept:</b> Now Instead Triple Agility Bonus for Initative.</p><p><b>Master:</b> Now Instead Quadruple Agility Bonus for Initiative, and can take additional two Half Actions or one Full Action, instead of one Half Action. (still can't be concentration subtype).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "y7oHh7UObwvLIO13"
+}

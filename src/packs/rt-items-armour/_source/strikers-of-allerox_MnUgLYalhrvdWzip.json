@@ -1,0 +1,22 @@
+{
+  "name": "Strikers of Allerox",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power Relic (Astartes)",
+    "locations": "Arms",
+    "ap": 9,
+    "maxAg": null,
+    "weight": "4kg",
+    "availability": "Famed",
+    "cost": "30 R",
+    "notes": "Space Marines Only. Master-Crafted Relic Gauntlets of the Imperial Fists Chapter. Grants +5 Strength when fighting Unarmed, or +15 Strength when Grappling.\nOnce used to Strangle a Herald of Khorne.",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p>Space Marines Only. Master-Crafted Relic Gauntlets of the Imperial Fists Chapter. Grants +5 Strength when fighting Unarmed, or +15 Strength when Grappling.\nOnce used to Strangle a Herald of Khorne.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MnUgLYalhrvdWzip"
+}

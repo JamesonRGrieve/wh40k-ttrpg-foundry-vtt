@@ -1,0 +1,28 @@
+{
+  "name": "Lasgun (Mars, Short)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "100m",
+    "rof": "S/3/-",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 60,
+    "reload": "Full",
+    "special": "Reliable",
+    "weight": "4kg",
+    "availability": "Average",
+    "cost": "75 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "The Standard armament of many guardsmen across the Calixis Sector.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> The Standard armament of many guardsmen across the Calixis Sector.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1ogM8i82dXYa3YCA"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Necron Warscythe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Necron",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+17",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "Necron Wep, Felling (3), Power Field, Unbalanced",
+    "weight": "12kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "BC: Tome of Fate",
+    "note": "Always Best Quality",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Felling (3), Power Field, Unbalanced</p><p><b>Note:</b> Always Best Quality</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XCF5LfipAyuaWPlc"
+}

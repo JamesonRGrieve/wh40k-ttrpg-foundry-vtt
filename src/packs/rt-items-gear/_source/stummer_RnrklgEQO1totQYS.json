@@ -1,0 +1,20 @@
+{
+  "name": "Stummer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "2kg",
+    "availability": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. ",
+    "cost": "Device Cancels out surrounding noise.",
+    "effects": "Average / Initiated",
+    "notes": "25 T\n5 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 25 T\n5 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RnrklgEQO1totQYS"
+}

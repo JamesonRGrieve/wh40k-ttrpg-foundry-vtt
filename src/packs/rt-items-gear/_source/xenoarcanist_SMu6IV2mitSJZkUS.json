@@ -1,0 +1,20 @@
+{
+  "name": "Xenoarcanist",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Provides information on xenos races, be they living or dead. Often possessing vast knowledge arrays and forbidden data on xenos species. May help in identifying xenos items or samples, excavating alien ruins, etc. Possesses Forbidden Lore (Xenos) +20 and Intelligence 45 at a minimum.",
+    "cost": "Researchers of aliens. Some are sanctioned for perform excavations and studies by the Mechanicus or Adminstratum. Some do so in secret, possessing vast forbidden libraries.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SMu6IV2mitSJZkUS"
+}

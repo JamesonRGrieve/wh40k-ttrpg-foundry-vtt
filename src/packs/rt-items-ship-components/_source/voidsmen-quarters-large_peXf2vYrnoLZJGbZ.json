@@ -1,0 +1,21 @@
+{
+  "name": "Voidsmen Quarters (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 4,
+    "spCost": "-",
+    "effect": "Where the regular crew live. Standard living quarters for long-distance traders. Considered the Default Option.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where the regular crew live. Standard living quarters for long-distance traders. Considered the Default Option.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "peXf2vYrnoLZJGbZ"
+}

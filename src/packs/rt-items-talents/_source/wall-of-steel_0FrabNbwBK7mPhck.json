@@ -1,0 +1,17 @@
+{
+  "name": "Wall of Steel",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ag 35",
+    "effect": "Can make one additional parry per round. Can only attempt a single parry against one attack.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Can make one additional parry per round. Can only attempt a single parry against one attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0FrabNbwBK7mPhck"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Tenebro Maze (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 3,
+    "spCost": 2,
+    "effect": "Ship Interior is maze-like. +10 to Command Tests to defend against Boarding and Hit and Run Actions. Ship Controller chooses component damaged by critical hit. Only one per Vessel.",
+    "availability": "Rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Ship Interior is maze-like. +10 to Command Tests to defend against Boarding and Hit and Run Actions. Ship Controller chooses component damaged by critical hit. Only one per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uxJ4YNiSWoG2rtHh"
+}

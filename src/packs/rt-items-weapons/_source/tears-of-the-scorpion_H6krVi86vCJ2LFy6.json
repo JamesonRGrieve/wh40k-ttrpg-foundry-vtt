@@ -1,0 +1,28 @@
+{
+  "name": "Tears of the Scorpion",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+7",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field",
+    "weight": "30kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Red Scorpions Chapter. Weapon Ignores the Power Field Quality of other weapons, when used to Parry an attack it has a 75% chance to destroy the attacking weapon regardless of whether it had a Power Field or not. ",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Red Scorpions Chapter. Weapon Ignores the Power Field Quality of other weapons, when used to Parry an attack it has a 75% chance to destroy the attacking weapon regardless of whether it had a Power Field or not. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H6krVi86vCJ2LFy6"
+}

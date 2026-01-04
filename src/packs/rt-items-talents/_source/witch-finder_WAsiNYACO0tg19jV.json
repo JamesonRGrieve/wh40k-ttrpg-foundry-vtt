@@ -1,0 +1,17 @@
+{
+  "name": "Witch Finder",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Forbidden Lore (Psykers) +10, WP 45.\nAptitudes: Knowledge, Perception",
+    "effect": "Character counts as possessing Psyniscience as a known skill (+0) even though they are not a psyker. They cannot spend experience to gain additional ranks.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Character counts as possessing Psyniscience as a known skill (+0) even though they are not a psyker. They cannot spend experience to gain additional ranks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WAsiNYACO0tg19jV"
+}

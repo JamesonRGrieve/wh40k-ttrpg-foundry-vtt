@@ -1,0 +1,17 @@
+{
+  "name": "Bombardier",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 40, Tech-Use, Wep. Training (Launcher) Aptitudes: ",
+    "effect": "Character can make ranged attacks with weapons with the indirect quality targeting locations they cannot see as a Half Action instead of a Full Action. When firing an Indirect Weapon or throwing a grenade, roll twice to determine scatter direction and choose either result.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character can make ranged attacks with weapons with the indirect quality targeting locations they cannot see as a Half Action instead of a Full Action. When firing an Indirect Weapon or throwing a grenade, roll twice to determine scatter direction and choose either result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QEEZuLBbisvUgLYD"
+}

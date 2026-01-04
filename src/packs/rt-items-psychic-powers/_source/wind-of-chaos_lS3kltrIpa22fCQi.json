@@ -1,0 +1,22 @@
+{
+  "name": "Wind of Chaos",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Unaligned)",
+    "prerequisites": "Corruption 30+",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Corruption",
+    "opposed": "No",
+    "sustained": "Psyker fires a 30 Degree Cone similar to a weapon with the Spray Quality. Those within the area opposed the Focus Power Test with their Agility, any that fail take 2d10+Psy Rating Energy Damage with Felling v(2), Tainted, and Warp Weapon Qualities, Plus additional Quality determined by Psyker's Chaos Alignment: Tzeentch: Flame, Slaanesh: Shocking, Nurgle: Toxic, Unaligned: Tearing. (No Khorne, he hates Psykers).\nIf this power causes Psychic Phenomena, in addition to normal effects until the start of the Psyker's next turn all creatures within 3d10 metres of the psyker suffer -10 to all Willpower Tests \nFelling v(X): Reduce Unnatural Toughness by X, Tainted: Add Psyker's Corruption Bonus to Damage, Warp Weapon: Ignore Cover and Non-Warded Armour AP.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lS3kltrIpa22fCQi"
+}

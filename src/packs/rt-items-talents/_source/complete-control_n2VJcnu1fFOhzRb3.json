@@ -1,0 +1,17 @@
+{
+  "name": "Complete Control",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Inq) (T2)",
+    "requirements": "Tier 2: Inquisitor E.Adv, Perception 45\nAptitudes: Intelligence, Social",
+    "effect": "Inquisitor can spend a Fate Point to increase or decrease their group's subtlety by 1d10 + Willpower Bonus at any time.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Inquisitor can spend a Fate Point to increase or decrease their group's subtlety by 1d10 + Willpower Bonus at any time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n2VJcnu1fFOhzRb3"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Spur",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] For 2d10 Minutes, character cannot be stunned or take fatigue. Afterwards character takes -20 to Toughness and Agility Tests for one hour, and takes one fatigue for every two they would have taken. If used more than 5 times in a week, user must make -20 Willpower Test or become addicted.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UB3pG934GlUfZxgs"
+}

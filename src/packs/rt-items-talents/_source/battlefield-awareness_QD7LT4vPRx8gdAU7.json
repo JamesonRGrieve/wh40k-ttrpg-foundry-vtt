@@ -1,0 +1,17 @@
+{
+  "name": "Battlefield Awareness",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Int 30, Per 30, Scholastic Lore (Tactica Imperialis) Aptitudes: Intelligence, Fieldcraft \nVeteran Talent Requirement Fulfilled",
+    "effect": "Veteran Talent Requirement: Character is part of a Squad that successfully suprises a group of foes that is attempting to remain concealed (and who achieved 1+ DoS on their Stealth Tests).\nWhenever this character spends a Fate Point to re-roll a failed Perception Test, roll 1d10, on a 9 they regain the spent Fate Point but still get the benefit of having spent it.",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p>Veteran Talent Requirement: Character is part of a Squad that successfully suprises a group of foes that is attempting to remain concealed (and who achieved 1+ DoS on their Stealth Tests).\nWhenever this character spends a Fate Point to re-roll a failed Perception Test, roll 1d10, on a 9 they regain the spent Fate Point but still get the benefit of having spent it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QD7LT4vPRx8gdAU7"
+}

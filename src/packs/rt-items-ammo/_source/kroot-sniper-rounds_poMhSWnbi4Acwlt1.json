@@ -1,0 +1,20 @@
+{
+  "name": "Kroot Sniper Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic: Kroot Rifles",
+    "damageOrEffect": "Replaces RoF with S/-/-, increases damage to 1d10+7 E, and penetration to 5, weapon gains Accurate Quality. However, decreases Clip Size to 1. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "qualities": "Accurate",
+    "weight": "0.1kg",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "RT: Tau Char. Guide",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Replaces RoF with S/-/-, increases damage to 1d10+7 E, and penetration to 5, weapon gains Accurate Quality. However, decreases Clip Size to 1. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p><p><b>Qualities:</b> Accurate</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "poMhSWnbi4Acwlt1"
+}

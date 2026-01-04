@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Storm Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Defensive",
+    "weight": "10kg",
+    "availability": "Distinguished",
+    "cost": "35 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Can make Guarded Attack as a Half Action.\nProvides +4 AP to Arm and Body. Counts as Prot 55 Forcefield.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Defensive</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Can make Guarded Attack as a Half Action.\nProvides +4 AP to Arm and Body. Counts as Prot 55 Forcefield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TvALF0CdP25ZEKJv"
+}

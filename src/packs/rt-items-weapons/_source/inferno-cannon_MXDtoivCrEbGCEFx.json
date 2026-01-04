@@ -1,0 +1,28 @@
+{
+  "name": "Inferno Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "Flame",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "2d10+15",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 50,
+    "reload": "-",
+    "special": "Flame, Spray",
+    "weight": "600kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks. Takes 30 Minutes to reload internal tank.\nOther vehicles do not add their value when trying to avoid catching on fire. ",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks. Takes 30 Minutes to reload internal tank.\nOther vehicles do not add their value when trying to avoid catching on fire. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MXDtoivCrEbGCEFx"
+}

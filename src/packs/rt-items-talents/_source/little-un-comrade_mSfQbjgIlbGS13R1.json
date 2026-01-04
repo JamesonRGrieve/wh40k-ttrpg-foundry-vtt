@@ -1,0 +1,17 @@
+{
+  "name": "Little 'Un (Comrade)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Ogryn Specialty\n250xp",
+    "effect": "Comrade gains an extra Wound State, they can be Healthy, Lightly Wounded, Heavily Wounded, or Dead.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade gains an extra Wound State, they can be Healthy, Lightly Wounded, Heavily Wounded, or Dead.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mSfQbjgIlbGS13R1"
+}

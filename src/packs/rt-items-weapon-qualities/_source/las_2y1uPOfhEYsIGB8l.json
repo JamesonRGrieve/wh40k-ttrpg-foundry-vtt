@@ -1,0 +1,14 @@
+{
+  "name": "Las*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 56,
+    "description": {
+      "value": "<p>56</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2y1uPOfhEYsIGB8l"
+}

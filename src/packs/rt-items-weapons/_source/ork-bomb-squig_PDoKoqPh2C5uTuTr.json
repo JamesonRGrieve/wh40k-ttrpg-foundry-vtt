@@ -1,0 +1,28 @@
+{
+  "name": "Ork Bomb Squig",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic - Ork",
+    "range": "3d10m",
+    "rof": "S/-/-",
+    "damage": "4d10+5",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Accurate, Blast (5)",
+    "weight": "5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. ",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Blast (5)</p><p><b>Note:</b> Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PDoKoqPh2C5uTuTr"
+}

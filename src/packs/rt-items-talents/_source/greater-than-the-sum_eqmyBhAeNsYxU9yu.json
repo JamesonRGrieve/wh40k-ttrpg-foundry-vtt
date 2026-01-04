@@ -1,0 +1,17 @@
+{
+  "name": "Greater than the Sum",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Fellowship 45, New Allies",
+    "effect": "Once per session, the explorer can spend a Fate Point and gain the benefits of a Talent an ally possess, or grant the benefits of a Talent they possess to an ally. Neither the ally nor the character must meet any requirements the Talent possesses. This effect persists until the end of the encounter.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Once per session, the explorer can spend a Fate Point and gain the benefits of a Talent an ally possess, or grant the benefits of a Talent they possess to an ally. Neither the ally nor the character must meet any requirements the Talent possesses. This effect persists until the end of the encounter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eqmyBhAeNsYxU9yu"
+}

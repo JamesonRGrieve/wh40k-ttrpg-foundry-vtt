@@ -1,0 +1,14 @@
+{
+  "name": "Ponderous",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Cannot use the Floor It! Action, moving Tactical Speed requires a Full Action. (cannot move 2x Tactical Speed). Mutually Cancels out Enhanced Motive Systems Trait and becomes regular vehicle. ",
+    "description": {
+      "value": "<p>Cannot use the Floor It! Action, moving Tactical Speed requires a Full Action. (cannot move 2x Tactical Speed). Mutually Cancels out Enhanced Motive Systems Trait and becomes regular vehicle. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qq5sJuCPoc3afizO"
+}

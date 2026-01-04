@@ -1,0 +1,22 @@
+{
+  "name": "Primordial Annihilation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Exalted Powers)",
+    "prerequisites": "Psy Rating 7, Corruption 70+",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "10m x Psy Rating Radius",
+    "range": "-20 Corruption",
+    "opposed": "No",
+    "sustained": "This Psychic Power must be used at Push Level. It is a Psychic Blast centred around the Psyker that may be dodged as if an area of effect attack. All Creatures within range except the Psyker take a single hit dealing 1d10 * Psy Rating Energy Damage, with Flame and Warp Weapon Qualities. If this power causes Psychic Phenomena, Roll twice instead of once, apply both results.\n\"Forget the Power of Technology and science, for so much has been forgotten, never to be relearned. Forget the Promise of Progress and Understanding, for in the grim dark future there is only war, there is no peace amongst the stars, only an eternity of carnage and slaugher, and the laughter of thirsting gods!\"",
+    "effect": "1000xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>1000xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HOSzzLuxWbEl5IHw"
+}

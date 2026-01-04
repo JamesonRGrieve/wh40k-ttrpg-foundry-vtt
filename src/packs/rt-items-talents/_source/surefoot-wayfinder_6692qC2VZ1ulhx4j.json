@@ -1,0 +1,17 @@
+{
+  "name": "Surefoot Wayfinder",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Survival +10 \nAptitudes: Perception, Fieldcraft",
+    "effect": "Character ignores penalties to their Movement Rate due to thick or difficult terrain, although not neccisarily for dangerous environments such as burning buildings.\nAdditionally, once per Session they may reroll one Failed Test for the Tracking Special Use of the Survival Skill.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character ignores penalties to their Movement Rate due to thick or difficult terrain, although not neccisarily for dangerous environments such as burning buildings.\nAdditionally, once per Session they may reroll one Failed Test for the Tracking Special Use of the Survival Skill.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6692qC2VZ1ulhx4j"
+}

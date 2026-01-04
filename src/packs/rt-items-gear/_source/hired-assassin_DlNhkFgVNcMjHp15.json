@@ -1,0 +1,20 @@
+{
+  "name": "Hired Assassin",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Request to have a specific individual killed. Effectiveness varies with Craftsmanship. Doesn't guarantee that the target dies.",
+    "cost": "Availability is equal to the Infamy of the target. May further vary depending on circumstances.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DlNhkFgVNcMjHp15"
+}

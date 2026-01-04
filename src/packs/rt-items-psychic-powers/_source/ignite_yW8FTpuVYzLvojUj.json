@@ -1,0 +1,22 @@
+{
+  "name": "Ignite",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Willpower 30",
+    "focusPower": "Half Action\nAttack\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "+0 Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Character creates small flame that is neither hot or large enough to cause damage. Illuminates a ~5m radius space and can ignire combustable materials that increases the longer the power is sustained.\nIf power is targeted at an individual within range they mus make a +0 Agility Test each round psyker sustains the power after the first or catch fire. Target gains +30 to the test on any round they performed an action with the Movement subtype.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yW8FTpuVYzLvojUj"
+}

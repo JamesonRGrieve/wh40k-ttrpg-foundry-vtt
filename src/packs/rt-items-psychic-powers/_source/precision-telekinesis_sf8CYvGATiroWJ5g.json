@@ -1,0 +1,22 @@
+{
+  "name": "Precision Telekinesis",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "None / Willpower",
+    "opposed": "Yes",
+    "sustained": "Allows psyker to do anything at range via telekinesis that they could do with their hands. If a task requires a Characteristic Test, it uses Willpower instead of whatever it normally would, with their Psy Rating substituting for Strength Bonus. This includes wielding melee and ranged weapons, which are affected by same bonuses or penalties as if Psyker wielded them (including weapon training), weapon range is counted from Psyker, not weapon, and firing weapon suffers blind firing penalty if Psyker cannot see target.",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sf8CYvGATiroWJ5g"
+}

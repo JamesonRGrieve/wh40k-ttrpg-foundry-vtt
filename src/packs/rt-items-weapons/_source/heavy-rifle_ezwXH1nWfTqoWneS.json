@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "60m",
+    "rof": "S/4/8",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": 48,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "35kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ezwXH1nWfTqoWneS"
+}

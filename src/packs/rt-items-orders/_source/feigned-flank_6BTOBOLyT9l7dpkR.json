@@ -1,0 +1,17 @@
+{
+  "name": "Feigned Flank",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": "Fixer Spec\n300xp",
+    "descriptionText": "At the Beginning of a Combat Encounter before Initiative is Roll, as long as Character is not Surprised, they can make a -10 Deceive Test, with +10 for each Comrade participating in the Order, Opposed by enemy's Scrutiny. Each foe who loses the Opposed Test suffers an Initiative Penalty equal to the number of Degrees of Success with which the Character won the Opposed Test.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>At the Beginning of a Combat Encounter before Initiative is Roll, as long as Character is not Surprised, they can make a -10 Deceive Test, with +10 for each Comrade participating in the Order, Opposed by enemy's Scrutiny. Each foe who loses the Opposed Test suffers an Initiative Penalty equal to the number of Degrees of Success with which the Character won the Opposed Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6BTOBOLyT9l7dpkR"
+}

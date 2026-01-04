@@ -1,0 +1,17 @@
+{
+  "name": "Target Selection",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Ballistic Skill 50\nAptitudes: Ballistic Skill, Finesse, Unaligned",
+    "effect": "Character can shoot into melee with no penalty. If they aim beforehand they have no chance of hitting friendly targets.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can shoot into melee with no penalty. If they aim beforehand they have no chance of hitting friendly targets.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EmMa2aWbNjNtG5R0"
+}

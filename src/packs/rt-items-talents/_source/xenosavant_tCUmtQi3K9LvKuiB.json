@@ -1,0 +1,17 @@
+{
+  "name": "Xenosavant",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Forbidden Lore (Xenos - Any) +20\nAptitudes: Intelligence, Knowledge",
+    "effect": "Character can attempt any Forbidden Lore (Xenos) Test in which they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test)",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>Character can attempt any Forbidden Lore (Xenos) Test in which they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tCUmtQi3K9LvKuiB"
+}

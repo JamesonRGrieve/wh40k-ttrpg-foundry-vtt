@@ -1,0 +1,21 @@
+{
+  "name": "Mark I.R Life Sustainer",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Life Sustainer",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 3,
+    "spaceUsage": 1,
+    "spCost": "-",
+    "effect": "Recycles air and water for the ship. Increase all Morale Loss by 1 due to low quality air and water.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Recycles air and water for the ship. Increase all Morale Loss by 1 due to low quality air and water.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jtVyUwkxUKYP7mvm"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Explosive Collar",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "Ensures Cooperation. Can be detonated by remote trigger, has 1-10km range although conditions can limit this. On Activation collar explodes, wearer is instantly killed, inflicts 1d10 Explosive Damage with 3 metre range. Remote Trigger can also disarm the collar. Removing Collar without it requires -20 Tech-Use, 3+ DoF causes collar to explode.",
+    "cost": "Can be set to automatically trigger of wearer goes outside control range.",
+    "effects": "Scarce",
+    "notes": "55 T",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t6ipYFZfz5Y4dwTD"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Zzap",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Frazzle",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Weirdboy strikes a target with a searing beam, dealing 1d5 + Psy Rating Energy Damage with Penetration 4 + 2 per Degree of Success on Focus Power Test. If target is within half of the maximum range of this technique, double the penetration value.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h4UXlw5HbpjS2d3g"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Warpfire",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Make Focus Power to hurl a multi-coloured flaming ball of warpfire at a single target within range. Attack deals 1d10+Psy Rating Energy Damage, target must then make Agility test or be set on fire. Attack can be dodged, but has -10 per Degree of Success psyker scored on focus power test.",
+    "effect": "200xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "s6bZ3CkQv8hClYRc"
+}

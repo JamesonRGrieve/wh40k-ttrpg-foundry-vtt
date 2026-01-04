@@ -1,0 +1,20 @@
+{
+  "name": "Static Generator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "3kg",
+    "availability": "Localised White Noise generator that prevents communications devices from functioning within 30 metres. Can be set on a timer.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x31EDkipzinNYMWd"
+}

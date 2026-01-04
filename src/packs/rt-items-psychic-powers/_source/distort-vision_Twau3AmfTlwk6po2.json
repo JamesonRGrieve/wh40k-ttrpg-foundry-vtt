@@ -1,0 +1,22 @@
+{
+  "name": "Distort Vision",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Free Action",
+    "action": "Self",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Character's physical form almost entirely dissapears, until the start of their next turn all attacks against them suffer -30, those with Blind Fighting talent only suffer -10. A +0 Psyniscience Test removes the penalty for an attacker. Optical sensors are fooled by this power, but those that read thermal patterns, use motion sensors, or some more esoteric detection system are not. Creatures and sensors that do not rely on sight are not affected by power.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Twau3AmfTlwk6po2"
+}

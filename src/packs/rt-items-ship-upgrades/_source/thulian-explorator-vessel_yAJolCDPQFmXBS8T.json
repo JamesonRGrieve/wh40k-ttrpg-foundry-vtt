@@ -1,0 +1,17 @@
+{
+  "name": "Thulian Explorator Vessel",
+  "type": "shipUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "spCost": "1",
+    "shipAvailability": "Frigates, Light Cruisers, and Cruisers",
+    "effects": "+10 Ship Detection, +50 Achievement points for Exploration Objectives. May equip one Archeotech component. Reduce Speed by 1 and Manoeuvrability by -5",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>+10 Ship Detection, +50 Achievement points for Exploration Objectives. May equip one Archeotech component. Reduce Speed by 1 and Manoeuvrability by -5</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yAJolCDPQFmXBS8T"
+}

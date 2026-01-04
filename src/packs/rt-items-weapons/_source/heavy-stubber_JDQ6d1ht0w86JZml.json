@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Stubber",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "100m",
+    "rof": "-/-/8",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": 75,
+    "reload": "2 Full",
+    "special": "Ogryn-Proof",
+    "weight": "30kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JDQ6d1ht0w86JZml"
+}

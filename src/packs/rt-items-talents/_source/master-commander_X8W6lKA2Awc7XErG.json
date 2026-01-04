@@ -1,0 +1,17 @@
+{
+  "name": "Master & Commander",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Int 35, Fel 35",
+    "effect": "Can use Half Action in Combat to direct allies, such that none of them suffer penalties for ganging up until your next turn. If defending against a boarding action, Can use a Half Action to give +10 in combat to armsmen.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Can use Half Action in Combat to direct allies, such that none of them suffer penalties for ganging up until your next turn. If defending against a boarding action, Can use a Half Action to give +10 in combat to armsmen.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X8W6lKA2Awc7XErG"
+}

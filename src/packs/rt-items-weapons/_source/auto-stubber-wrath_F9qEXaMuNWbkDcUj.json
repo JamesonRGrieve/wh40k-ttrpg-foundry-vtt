@@ -1,0 +1,28 @@
+{
+  "name": "Auto-Stubber (Wrath)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "60m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 9,
+    "clip": 20,
+    "reload": "2 Full",
+    "special": "Inaccurate, Tearing, Unreliable",
+    "weight": "4kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Uses special ammo, loses Tearing Quality if this special ammo is not used.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Tearing, Unreliable</p><p><b>Note:</b> Uses special ammo, loses Tearing Quality if this special ammo is not used.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F9qEXaMuNWbkDcUj"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Mercenary",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Kroot (Innate)",
+    "effect": "The kroot can use the Group's Profit Factor in place of their Willpower to attempt to resist Fear and Pinning. All Kroot start with this Talent.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The kroot can use the Group's Profit Factor in place of their Willpower to attempt to resist Fear and Pinning. All Kroot start with this Talent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mkcBSqrtcYbec3E3"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Chameleon",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 7\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained gain +30 to Concealment Tests, everyone else has -20 to Ballistic Skill Tests to hit the character. The Character's image appears as blended and disorts into the surroundings.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v4gVhK9FVkz85Iqf"
+}

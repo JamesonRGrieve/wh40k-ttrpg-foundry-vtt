@@ -1,0 +1,22 @@
+{
+  "name": "Reprogram",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Domination)",
+    "prerequisites": "Dominate, Mind Probe\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "1m",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker Forcibly Reprograms target over 2d5 Rounds for basic changes and 2d10 hours for complete personality restructuring. Make Opposed Willpower Test. Psyker gains +10 per 2 Psy Rating devoted to power and delves deeper into target's mind with every 2 DoS. If target wins, reprogramming is rejected, Psyker gains 1 Fatigue, and cannot re-attempt for 1d5 hours. Target is always aware their mind is being reordered until the process is complete. Effects of Reprogramming are permenant if successful, unless a situation leads to a paradox. A Paradox, such as being faced by evidence or major discrepencies may cause target to make -20 Willpower Test, if successful, programming breaks down. If failed, victim keeps believing, either case causes 1d10 Insanity. See \"Reprogramming\" box for more info on levels.",
+    "effect": "500xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DaFlnFIkSVNLEokD"
+}

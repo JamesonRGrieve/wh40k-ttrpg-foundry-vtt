@@ -1,0 +1,22 @@
+{
+  "name": "Conceal",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Warlock)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "Warlock makes Focus Power Test, for as long as they sustain power all allies in 2m x Psy Rating, +1m per Degree of Success of the Warlock are affected by the power. Anyone trying to attack such an affected ally suffer a penalty of 20+Psy Rating to Weapon Skill or Ballistic Skill Tests for that attack. Multiple instances of this power are not cumulative. The Warlock clouds the minds of oncoming attackers.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lNq2maYHIOyOLP2O"
+}

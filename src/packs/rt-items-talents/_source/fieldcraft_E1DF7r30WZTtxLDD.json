@@ -1,0 +1,17 @@
+{
+  "name": "Fieldcraft",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Kroot (Innate)",
+    "effect": "Kroot gain +10 to all Concealment, Shadowing, and Silent Move Tests. They may treat Forests, Jungles and other environments as open terrain.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Kroot gain +10 to all Concealment, Shadowing, and Silent Move Tests. They may treat Forests, Jungles and other environments as open terrain.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E1DF7r30WZTtxLDD"
+}

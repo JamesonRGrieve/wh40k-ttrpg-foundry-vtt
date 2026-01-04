@@ -1,0 +1,28 @@
+{
+  "name": "Assault Flamer (Hades)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 10,
+    "reload": "2 Full",
+    "special": "Flame, Spray, Reliable",
+    "weight": "12kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray, Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r1dS3q2WeWdniJ5d"
+}

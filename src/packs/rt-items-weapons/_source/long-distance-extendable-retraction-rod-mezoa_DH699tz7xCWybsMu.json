@@ -1,0 +1,28 @@
+{
+  "name": "Long-Distance Extendable Retraction Rod (Mezoa)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Can extend to 4 metres on activation, and hold 150kg if anchored. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg",
+    "description": {
+      "value": "<p><b>Note:</b> Can extend to 4 metres on activation, and hold 150kg if anchored. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH699tz7xCWybsMu"
+}

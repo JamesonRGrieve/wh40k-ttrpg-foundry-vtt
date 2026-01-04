@@ -1,0 +1,17 @@
+{
+  "name": "Get Behind Me!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Ogryn, Non-Ogryn Comrade, Toughness 50,\nApt: Toughness, Defence",
+    "descriptionText": "Comrade in Cohesion hides behind Player Character, until either of them move, Comrade does not get hit by attacks that would have hit them, which instead hit the Player Character, they also immediately recover from the effects of Fear and Pinning",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Comrade in Cohesion hides behind Player Character, until either of them move, Comrade does not get hit by attacks that would have hit them, which instead hit the Player Character, they also immediately recover from the effects of Fear and Pinning</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C3lVnDvYVLJmJoPo"
+}

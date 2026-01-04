@@ -1,0 +1,17 @@
+{
+  "name": "Bolter Drill",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Weapon Training(Bolt), BS 40\nAptitudes: Unaligned",
+    "effect": "Character firing any Bolt Weapon on Semi or Full Auto scores one extra Degree of Success on any successful test as long as they did not take the Move Action that turn.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character firing any Bolt Weapon on Semi or Full Auto scores one extra Degree of Success on any successful test as long as they did not take the Move Action that turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FGLOYPhiI7xqv4S7"
+}

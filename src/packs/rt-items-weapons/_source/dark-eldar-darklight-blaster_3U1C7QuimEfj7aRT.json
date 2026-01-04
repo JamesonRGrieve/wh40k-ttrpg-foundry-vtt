@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Darklight Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - DEldar",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Explosive",
+    "penetration": 16,
+    "clip": 18,
+    "reload": "3 Full",
+    "special": "Felling (4), Proven (3)",
+    "weight": "4kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Rare Availability if acquired from Dark Eldar Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (3)</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3U1C7QuimEfj7aRT"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Ranged Volley",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Generic Order\nHalf Action",
+    "requirements": "--",
+    "descriptionText": "Comrade in Cohesion provides +5 to Ballistics Skill Tests for this turn, if Character has Multiple Comrades this Order can only be given to one each turn.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade in Cohesion provides +5 to Ballistics Skill Tests for this turn, if Character has Multiple Comrades this Order can only be given to one each turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vz5ffTlnHyQS1QXR"
+}

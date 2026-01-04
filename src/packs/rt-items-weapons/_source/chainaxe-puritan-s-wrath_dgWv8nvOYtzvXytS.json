@@ -1,0 +1,28 @@
+{
+  "name": "Chainaxe (\"Puritan's Wrath\")",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Sanctified, Tearing, Unbalanced",
+    "weight": "12kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Felling (4) when used against Heretics, Daemons, or other Forces of Chaos. Requires Two hands to wield.",
+    "description": {
+      "value": "<p><b>Special:</b> Sanctified, Tearing, Unbalanced</p><p><b>Note:</b> Felling (4) when used against Heretics, Daemons, or other Forces of Chaos. Requires Two hands to wield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dgWv8nvOYtzvXytS"
+}

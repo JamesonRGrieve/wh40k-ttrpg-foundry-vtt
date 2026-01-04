@@ -1,0 +1,19 @@
+{
+  "name": "Rite of Many Eyes",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-20 Forbidden Lore (Daemonology) ",
+    "requirements": "Requires knowledge of Daemonic Entities that may be able to aid in informing the characters of something that cannot be learnt through normal means (may need -20 Scholastic Lore Test). If possessing this information, they decide on one question which they will ask then summon the daemon to answer it. The difficulty of the question may affect the test difficulty.",
+    "effect": "A Daemon is partially summoned, reaching through the mists of the warp. It will demand to know why it has been summoned to which the characters present it with a question worthy of its summong, and what they would be willing to do in return for the information. They may attempt a -40 Daemonic Mastery Test to make the Daemon more receptive, but if it fails the daemon may be angered, and make greater demands. After this the Daemon answers the question truthfully in whatever form it likes, be it vague, cryptic, or only partially until a favour has been completed for it. The Daemon is not omniscient, questions such as \"Locate the Black Library\", \"How do I kill the Emperor of Mankind\", or \"Where are all of the Daemon Weapons ever\" will be unanswerable.",
+    "costs": "None, however research required to find the right daemon to answer the question may take weeks, and the favours the Daemon required may need completing (a new ritual would be needed to tell them of completion, although no research.",
+    "failure": "Failing Lore Tests ritual can't be performed, meaning characters start from scratch. Failing the Daemon's favours triggers Contempt of the Warp if they tell it, or their eternal emnity if they do not. Regardless if will never help them again.",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> A Daemon is partially summoned, reaching through the mists of the warp. It will demand to know why it has been summoned to which the characters present it with a question worthy of its summong, and what they would be willing to do in return for the information. They may attempt a -40 Daemonic Mastery Test to make the Daemon more receptive, but if it fails the daemon may be angered, and make greater demands. After this the Daemon answers the question truthfully in whatever form it likes, be it vague, cryptic, or only partially until a favour has been completed for it. The Daemon is not omniscient, questions such as \"Locate the Black Library\", \"How do I kill the Emperor of Mankind\", or \"Where are all of the Daemon Weapons ever\" will be unanswerable.</p><p><b>Costs:</b> None, however research required to find the right daemon to answer the question may take weeks, and the favours the Daemon required may need completing (a new ritual would be needed to tell them of completion, although no research.</p><p><b>Failure:</b> Failing Lore Tests ritual can't be performed, meaning characters start from scratch. Failing the Daemon's favours triggers Contempt of the Warp if they tell it, or their eternal emnity if they do not. Regardless if will never help them again.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4tKdYYiME91KK9HW"
+}

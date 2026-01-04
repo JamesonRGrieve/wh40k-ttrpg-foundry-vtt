@@ -1,0 +1,28 @@
+{
+  "name": "The Righteous Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Unwieldy",
+    "weight": "35kg",
+    "availability": "Famed",
+    "cost": "35 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. Master-Crated Relic Power Fist of the Deathwatch. When attacking a target of size Hulking or larger add +8 to damage dealt.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crated Relic Power Fist of the Deathwatch. When attacking a target of size Hulking or larger add +8 to damage dealt.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "U2pfHPZP5rp7nGfm"
+}

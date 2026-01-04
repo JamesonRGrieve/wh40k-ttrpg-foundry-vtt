@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Dark Lance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - DEldar",
+    "range": "140m",
+    "rof": "S/-/-",
+    "damage": "2d10+16",
+    "damageType": "Explosive",
+    "penetration": 16,
+    "clip": 36,
+    "reload": "4 Full",
+    "special": "Felling (4), Proven (4)",
+    "weight": "16kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (4)</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LBoZN89mpUbfPn7Z"
+}

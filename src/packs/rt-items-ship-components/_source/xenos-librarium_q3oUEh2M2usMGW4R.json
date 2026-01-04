@@ -1,0 +1,21 @@
+{
+  "name": "Xenos Librarium",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 3,
+    "effect": "A Collection of Xenos Writings and artifacts. Considered heretical. While on the vessel Gain +10 to Forbidden Lore Tests that the GM deems appropriate.",
+    "availability": "Near Unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>A Collection of Xenos Writings and artifacts. Considered heretical. While on the vessel Gain +10 to Forbidden Lore Tests that the GM deems appropriate.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q3oUEh2M2usMGW4R"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Kabalite Splinter Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Kabalite",
+    "range": "80m",
+    "rof": "S/3/5",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": 200,
+    "reload": "2 Full",
+    "special": "Toxic",
+    "weight": "2.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "RT: The Soul Reaver",
+    "note": "Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. ",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1EHLGcXSeNR5mHjq"
+}

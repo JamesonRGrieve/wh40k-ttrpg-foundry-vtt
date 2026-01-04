@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Incendiary Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Blast (3)",
+    "weight": "1kg",
+    "availability": "Initiated",
+    "cost": "15 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Area remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (3)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Area remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IToLnfHaGe9ujgJd"
+}

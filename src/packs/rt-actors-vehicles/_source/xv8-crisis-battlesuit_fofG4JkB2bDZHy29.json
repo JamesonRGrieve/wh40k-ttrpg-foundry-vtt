@@ -1,0 +1,25 @@
+{
+  "name": "XV8 Crisis Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Battlesuit",
+    "size": "-",
+    "tacticalSpeed": "-",
+    "cruisingSpeed": "-",
+    "maneuverability": "-",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "10 All",
+    "rearArmour": "Wearer",
+    "structuralIntegrity": "None",
+    "crew": "3 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Fusion Blaster/Plasma Rifle/Burst Cannon, Burst Cannon/Flamer, Target Lock/Vectored Retro Thrusters",
+    "passengers": "Battle Suit Strength: 55\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker",
+    "cargo": "Near Unique",
+    "availability": "RT: Tau Character Guide",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fofG4JkB2bDZHy29"
+}

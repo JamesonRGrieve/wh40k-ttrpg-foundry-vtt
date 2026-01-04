@@ -1,0 +1,20 @@
+{
+  "name": "Beetle Tent",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "5kg",
+    "availability": "Dome-Shaped Tents formed of polycarbonate sides and plasteel rods. Difficult to transport but incredibly durable. Designs are modular and can be linked into larger structures. Usually has a camoflauged exterior. By Default, Primitive AP 8 but can be upgraded to Primitive AP 12 for extra cost. Comes in 3 Person and 6 Person variants.",
+    "cost": "3 Person Tent: 5kg, Common, 60 Thrones Cost | 6 Person Tent: 10kg, Scarce, 100 Thrones.\nBeetle Tent Armour Upgrade: +8kg, Rare, 80 Thrones, ",
+    "effects": "Common",
+    "notes": "60 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 60 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "99VnXoKFYy3bKUmq"
+}

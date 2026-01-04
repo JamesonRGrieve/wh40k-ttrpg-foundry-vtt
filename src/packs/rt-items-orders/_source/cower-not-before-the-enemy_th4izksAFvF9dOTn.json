@@ -1,0 +1,17 @@
+{
+  "name": "Cower Not Before the Enemy",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": ".Member of the Ministorum or 10+ Insanity.\nApt: Fellowship, Leadership",
+    "descriptionText": "Character makes +0 Charm or Command Test, if successful all Comrades in Comms range immediately overcome any ongoing Fear or Pinning Tests, and an act normally on subsequent turns.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character makes +0 Charm or Command Test, if successful all Comrades in Comms range immediately overcome any ongoing Fear or Pinning Tests, and an act normally on subsequent turns.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "th4izksAFvF9dOTn"
+}

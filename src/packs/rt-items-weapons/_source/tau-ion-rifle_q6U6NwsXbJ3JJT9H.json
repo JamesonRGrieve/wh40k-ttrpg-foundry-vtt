@@ -1,0 +1,28 @@
+{
+  "name": "Tau Ion Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "110m",
+    "rof": "S/2/4",
+    "damage": "2d10+5",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": 24,
+    "reload": "Full",
+    "special": "Overcharge (6)",
+    "weight": "12kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "description": {
+      "value": "<p><b>Special:</b> Overcharge (6)</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q6U6NwsXbJ3JJT9H"
+}

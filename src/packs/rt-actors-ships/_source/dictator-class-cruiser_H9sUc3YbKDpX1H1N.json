@@ -1,0 +1,28 @@
+{
+  "name": "Dictator-Class Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Cruiser",
+    "size": "5.1km long, 0,8km wide",
+    "crew": 85000,
+    "speed": 5,
+    "manoeuvrability": 8,
+    "detection": 18,
+    "hull": 70,
+    "armour": 20,
+    "turrets": 3,
+    "space": 65,
+    "shipPoints": 63,
+    "weaponCapacity": "1 Prow, 2 Port, 2 Starboard",
+    "notes": "Crew also has 15,000 pilots and support personnel. Comes with two \"Jovian Pattern Launch bay (either Landing or Escort)\" (port/starboard), space  already reduced, can't be removed, must be able to power.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Crew also has 15,000 pilots and support personnel. Comes with two \"Jovian Pattern Launch bay (either Landing or Escort)\" (port/starboard), space  already reduced, can't be removed, must be able to power.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "H9sUc3YbKDpX1H1N"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Skapulan Bolter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "120m",
+    "rof": "S/2/4",
+    "damage": "2d10+9",
+    "damageType": "Explosive",
+    "penetration": 7,
+    "clip": 28,
+    "reload": "Full",
+    "special": "SM Wep, Accurate, Tearing",
+    "weight": "16kg",
+    "availability": "Hero",
+    "cost": "75 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Boltgun of the Deathwatch. Has integrated Fire Selector, Targeter, and Melee Attachment (Master-Crafted Astartes Combat Knife). Never Jams. Reroll attack rolls of 96-100.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Accurate, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Boltgun of the Deathwatch. Has integrated Fire Selector, Targeter, and Melee Attachment (Master-Crafted Astartes Combat Knife). Never Jams. Reroll attack rolls of 96-100.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fASNLl2cZFVvztHn"
+}

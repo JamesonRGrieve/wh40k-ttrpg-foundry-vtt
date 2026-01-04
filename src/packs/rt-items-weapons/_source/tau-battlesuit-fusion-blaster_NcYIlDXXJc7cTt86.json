@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Fusion Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Tau",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+8",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 8,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "7.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on Stealth Suits",
+    "description": {
+      "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on Stealth Suits</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NcYIlDXXJc7cTt86"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Tactical Flexibility",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Sprint, Scholastic Lore (Tau Empire)",
+    "effect": "Once per encounter, the explorer can make a +0 Scholastic Lore (Tau Empire) Test. If successful, they and any other Tau allies within 20 metres may immediately disengage as a free action.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Once per encounter, the explorer can make a +0 Scholastic Lore (Tau Empire) Test. If successful, they and any other Tau allies within 20 metres may immediately disengage as a free action.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H7u4CMcAIJfzrVUc"
+}

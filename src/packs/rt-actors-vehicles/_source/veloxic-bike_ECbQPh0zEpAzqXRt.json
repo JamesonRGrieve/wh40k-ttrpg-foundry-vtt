@@ -1,0 +1,25 @@
+{
+  "name": "Veloxic Bike",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "35m",
+    "tacticalSpeed": "90kph",
+    "cruisingSpeed": "+20",
+    "maneuverability": "10",
+    "frontArmour": "Hulking (+10)",
+    "sideArmour": "Front 8\nSide 8\nRear 8",
+    "rearArmour": "Driver",
+    "structuralIntegrity": "1 Passenger\n(Note: Decreases Manoeuvrability to +10 with passenger)",
+    "crew": "Hull (Front) (Optional): Autogun (100m, S/3/-, 1d10+3 I, Pen 0, Clip 30, Rld 1 Full)",
+    "passengers": "Traits: Bike, Wheeled\nVersions that can be armed are Scarce Availability.",
+    "cargo": "Average",
+    "availability": "Dark Heresy 2E: Core",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "ECbQPh0zEpAzqXRt"
+}

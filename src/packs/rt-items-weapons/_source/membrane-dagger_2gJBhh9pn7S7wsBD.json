@@ -1,0 +1,28 @@
+{
+  "name": "Membrane Dagger",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Crippling (6), Toxic (3), Unwieldy",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Those wounded by weapon have 10% chance each turn of suffering Blood Loss until receiving First Aid. Medicae tests to heal damage dealt by weapon have -20.",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (6), Toxic (3), Unwieldy</p><p><b>Note:</b> Those wounded by weapon have 10% chance each turn of suffering Blood Loss until receiving First Aid. Medicae tests to heal damage dealt by weapon have -20.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2gJBhh9pn7S7wsBD"
+}

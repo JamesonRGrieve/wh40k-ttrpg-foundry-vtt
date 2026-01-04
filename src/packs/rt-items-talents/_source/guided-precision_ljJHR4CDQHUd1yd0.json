@@ -1,0 +1,17 @@
+{
+  "name": "Guided Precision",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Tau Pathfinder Alternative Advance, 300xp\nBS 40, Deadeye Shot",
+    "effect": "When Character hits a target with a Markerlight, other characters who attack the marked target gain an additional +10 to hit and ignore Character's Perception Bonus of Cover-provided AP.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>When Character hits a target with a Markerlight, other characters who attack the marked target gain an additional +10 to hit and ignore Character's Perception Bonus of Cover-provided AP.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ljJHR4CDQHUd1yd0"
+}

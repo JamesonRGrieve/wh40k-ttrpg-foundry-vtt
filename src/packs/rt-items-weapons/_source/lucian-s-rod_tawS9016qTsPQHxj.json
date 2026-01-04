@@ -1,0 +1,28 @@
+{
+  "name": "Lucian's Rod",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Force",
+    "weight": "5kg",
+    "availability": "Hero",
+    "cost": "65 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Force Staff of the Blood Ravens Chapter. Grants +20 to Focus Power Tests to channel power into the weapon for additional damage. Requires Psy Rating of 5 (after any modifications) to use the Force Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Force</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Force Staff of the Blood Ravens Chapter. Grants +20 to Focus Power Tests to channel power into the weapon for additional damage. Requires Psy Rating of 5 (after any modifications) to use the Force Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tawS9016qTsPQHxj"
+}

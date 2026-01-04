@@ -1,0 +1,17 @@
+{
+  "name": "Superior Chirurgeon",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Rank 2 in Medicae Skill\nAptitudes: Intelligence, Fieldcraft",
+    "effect": "Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oddwwlbXMV0u0aLB"
+}

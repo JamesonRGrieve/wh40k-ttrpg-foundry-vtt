@@ -1,0 +1,17 @@
+{
+  "name": "Dual Shot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "AG 40, Two-Weapon Wielder (Ballistic)",
+    "effect": "When wielding two guns, can fire both at the same point as a Full Action, make one BS Test, on success, target's AP counts as normal, but toughness only counts once against the combined damage roll. A successful dodge avoids attack.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When wielding two guns, can fire both at the same point as a Full Action, make one BS Test, on success, target's AP counts as normal, but toughness only counts once against the combined damage roll. A successful dodge avoids attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m6pJeeBiESlD5PmS"
+}

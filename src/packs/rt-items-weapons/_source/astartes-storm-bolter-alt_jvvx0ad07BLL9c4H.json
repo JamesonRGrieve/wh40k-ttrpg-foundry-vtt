@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Storm Bolter (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "100m",
+    "rof": "S/4/-",
+    "damage": "1d10+9",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 60,
+    "reload": "2 Full",
+    "special": "SM Wep, Storm, Tearing",
+    "weight": "26kg",
+    "availability": "Respected",
+    "cost": "20 R",
+    "source": "Deathwatch: Errata",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jvvx0ad07BLL9c4H"
+}

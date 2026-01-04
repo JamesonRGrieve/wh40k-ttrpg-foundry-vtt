@@ -1,0 +1,28 @@
+{
+  "name": "Leaper Mine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "2m",
+    "rof": "S/-/-",
+    "damage": "4d10+5",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (5)",
+    "weight": "2kg",
+    "availability": "Initiated",
+    "cost": "5 R",
+    "source": "DW: Rites of Battle",
+    "note": "Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KjBpMLRBIEQ05039"
+}

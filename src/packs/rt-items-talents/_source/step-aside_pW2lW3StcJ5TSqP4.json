@@ -1,0 +1,17 @@
+{
+  "name": "Step Aside",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Agility 40, Dodge or Parry\nAptitudes: Agility, Defence, Unaligned",
+    "effect": "Can make one additional Evasion Attempt (Either a Dodge or Parry) once per round. Can still only make a single dodge or parry against an individual attack.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can make one additional Evasion Attempt (Either a Dodge or Parry) once per round. Can still only make a single dodge or parry against an individual attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pW2lW3StcJ5TSqP4"
+}

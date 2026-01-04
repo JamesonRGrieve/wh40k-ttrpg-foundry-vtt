@@ -1,0 +1,20 @@
+{
+  "name": "Bounty Hunter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Hired to Capture or Kill a target. Success is determined based on the Degrees of Success on the Requisition/Acquisition Test exceeding the target's Threat Level or Influence Bonus (Whichever is higher). ",
+    "cost": "A Hired Hunter to track down and capture or kill a target of the hirer's choosing,",
+    "effects": "Average",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "w5vOp4tOo8vtXfbd"
+}

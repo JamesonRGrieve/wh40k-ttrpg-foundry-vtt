@@ -1,0 +1,17 @@
+{
+  "name": "Killer's Eye",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Headhunter Alternative Advance, 500xp\nPerception 35+, Sure Strike or Deadeye Shot",
+    "effect": "When the Character makes a Called Shot Action and achieves more Degrees of Success than the Target's Agility Bonus, they immediately inflict 1d5 Critical Damage on the location hit.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>When the Character makes a Called Shot Action and achieves more Degrees of Success than the Target's Agility Bonus, they immediately inflict 1d5 Critical Damage on the location hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t3f2unSxJ0ll0joe"
+}

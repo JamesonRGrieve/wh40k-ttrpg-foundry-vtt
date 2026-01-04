@@ -1,0 +1,28 @@
+{
+  "name": "Assault Lasgun (Merovech)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "50m",
+    "rof": "S/-/5",
+    "damage": "1d10+3",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": 120,
+    "reload": "2 Full",
+    "special": "Reliable",
+    "weight": "4.5kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Has two powerpack slots, could swap out one in half the Reload Time to restore half the ammo. \nHas build in bayonet, counts as Spear with Mono Upgrade. (1d10R, Pen 2)",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Has two powerpack slots, could swap out one in half the Reload Time to restore half the ammo. \nHas build in bayonet, counts as Spear with Mono Upgrade. (1d10R, Pen 2)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uCWHiqCEODuJpf4i"
+}

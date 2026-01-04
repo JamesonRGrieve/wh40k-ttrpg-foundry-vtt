@@ -1,0 +1,28 @@
+{
+  "name": "Needle Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10 ",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": 6,
+    "reload": "Full",
+    "special": "Accurate, Toxic",
+    "weight": "1.5kg",
+    "availability": "Very Rare",
+    "cost": "1250 T",
+    "source": "Rogue Trader: Core",
+    "note": "Ammo can be covered in any poision (such as choke/hallucinogen)",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Toxic</p><p><b>Note:</b> Ammo can be covered in any poision (such as choke/hallucinogen)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TIEt7zDZCeAvfXRd"
+}

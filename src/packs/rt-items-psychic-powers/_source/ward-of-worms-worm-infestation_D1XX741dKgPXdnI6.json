@@ -1,0 +1,22 @@
+{
+  "name": "Ward of Worms (Worm Infestation)",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Ward of Worms",
+    "focusPower": "Reaction\nAttack,\nMelee",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "In response to being the target of a melee attack, after attack has resolved make +0 Willpower Test, if successful attacker suffers 1d10 Rending Damage with Pen 5, Toxic(0), and Crippling(2) Qualities. Armour only reduces damage if it is environmentally sealed. Target can spend a Full Action to remove the Crippling Effect.\nThis action is gained on casting the Ward of Worms Psychic Power, it is not a Psychic Power.",
+    "effect": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D1XX741dKgPXdnI6"
+}

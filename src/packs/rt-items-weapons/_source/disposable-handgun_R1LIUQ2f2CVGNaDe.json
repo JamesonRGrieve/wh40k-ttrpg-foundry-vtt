@@ -1,0 +1,28 @@
+{
+  "name": "Disposable Handgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 8,
+    "reload": "2 Full",
+    "special": "Inaccurate, Unreliable",
+    "weight": "2kg",
+    "availability": "Ubiquitous",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Cannot use unusual ammo. Might be better off just throwing the weapon as opposed to reloading…",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> Cannot use unusual ammo. Might be better off just throwing the weapon as opposed to reloading…</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R1LIUQ2f2CVGNaDe"
+}

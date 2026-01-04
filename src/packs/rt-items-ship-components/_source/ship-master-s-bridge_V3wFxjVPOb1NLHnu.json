@@ -1,0 +1,21 @@
+{
+  "name": "Ship Master's Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Cruisers",
+    "powerUsage": 4,
+    "spaceUsage": 3,
+    "spCost": "-",
+    "effect": "Where characters command the ship. Gives +5 to all piloting and navigation tests by crew on the bridge. As well as +10 to BS Tests to fire shipboard weapons.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where characters command the ship. Gives +5 to all piloting and navigation tests by crew on the bridge. As well as +10 to BS Tests to fire shipboard weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "V3wFxjVPOb1NLHnu"
+}

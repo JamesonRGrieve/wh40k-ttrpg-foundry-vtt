@@ -1,0 +1,22 @@
+{
+  "name": "Rosarius (Guard/Astartes)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field",
+    "locations": "All",
+    "ap": 0.5,
+    "maxAg": "-",
+    "weight": "0.6kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Allies within 10 metres of a Priest with a Rosarius gain +10 to Fear and Pinning Tests.\nAlso used by Space Marine Chaplains",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Allies within 10 metres of a Priest with a Rosarius gain +10 to Fear and Pinning Tests.\nAlso used by Space Marine Chaplains</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gwt4FA2eE9ysG7YY"
+}

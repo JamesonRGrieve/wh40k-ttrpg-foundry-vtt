@@ -1,0 +1,28 @@
+{
+  "name": "Missile Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Launcher",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Full",
+    "special": null,
+    "weight": "35kg",
+    "availability": "Rare",
+    "cost": "1200 T",
+    "source": "Only War: Core",
+    "note": "Traits vary with ammo (Ammo - Missiles)",
+    "description": {
+      "value": "<p><b>Note:</b> Traits vary with ammo (Ammo - Missiles)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BLhxFgOErUQoeLbY"
+}

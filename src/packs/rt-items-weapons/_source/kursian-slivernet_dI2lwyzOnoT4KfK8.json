@@ -1,0 +1,28 @@
+{
+  "name": "Kursian Slivernet",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Kursian",
+    "range": "6m",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Crippling (2), Flexible, Inaccurate, Unwieldy",
+    "weight": "4kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "BC: Tome of Blood",
+    "note": "Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (2), Flexible, Inaccurate, Unwieldy</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dI2lwyzOnoT4KfK8"
+}

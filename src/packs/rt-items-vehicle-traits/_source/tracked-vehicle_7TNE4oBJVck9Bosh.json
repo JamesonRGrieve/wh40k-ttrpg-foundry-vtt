@@ -1,0 +1,14 @@
+{
+  "name": "Tracked Vehicle",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "-10 to Manoeuvrability and +10 to all tests involving Difficult Terrain. When suffering Critical Damage to Motive Sysems, halve the roll that determines whether Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.",
+    "description": {
+      "value": "<p>-10 to Manoeuvrability and +10 to all tests involving Difficult Terrain. When suffering Critical Damage to Motive Sysems, halve the roll that determines whether Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7TNE4oBJVck9Bosh"
+}

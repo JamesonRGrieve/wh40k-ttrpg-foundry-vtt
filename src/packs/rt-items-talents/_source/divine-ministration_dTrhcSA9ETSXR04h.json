@@ -1,0 +1,17 @@
+{
+  "name": "Divine Ministration",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Pure Faith",
+    "effect": "When Testing Medicae, may spend a fate point to restore damage to a target equal to WP Bonus or WP Bonus + Int Bonus if Lightly Wounded, or alternatively to remove all Fatigue from 2xWP people. \nMay Burn a Fate point to allow a recently dead character to instead be critically wounded, within reason, you can't undecapitate someone.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When Testing Medicae, may spend a fate point to restore damage to a target equal to WP Bonus or WP Bonus + Int Bonus if Lightly Wounded, or alternatively to remove all Fatigue from 2xWP people. \nMay Burn a Fate point to allow a recently dead character to instead be critically wounded, within reason, you can't undecapitate someone.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dTrhcSA9ETSXR04h"
+}

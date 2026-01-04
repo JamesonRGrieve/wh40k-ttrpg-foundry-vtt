@@ -1,0 +1,20 @@
+{
+  "name": "Concussion Bolts (Theta)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Crossbows",
+    "damageOrEffect": "Gain Blast (5) and Concussive (5) Qualities. In addition to normal effects anyone within Blast Radius must make -20 Strength Test or be thrown 1d5 metres from blast and knocked prone.",
+    "qualities": "Blast (5), Concussive (5)",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Blast (5) and Concussive (5) Qualities. In addition to normal effects anyone within Blast Radius must make -20 Strength Test or be thrown 1d5 metres from blast and knocked prone.</p><p><b>Qualities:</b> Blast (5), Concussive (5)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HsFcDhs9fCj65I6Y"
+}

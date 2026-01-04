@@ -1,0 +1,21 @@
+{
+  "name": "This test is then modified by various Ritual Modifiers. The Ritual likely requires a summoning circle, braziers containing a god-relevent substance, and a number of sacrifices who may need to fill some conditions prior to sacrifice, and finally a prayer to the god in question.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": null,
+    "sustain": 30,
+    "novice": "- The Enactor knows the Daemon's True Name\n- The Enactor has the Mark of the Daemon's Patron God\n- The Enactor is a Dark Apostle aligned with the Correct Chaos God\n- The Enactor has gained the Dark Patronage of a Chaos God or Daemon Aligned with the Ritual",
+    "adept": "If casting a curse fails, no Contempt of the Warp is rolled as with Rituals, instead those enacting the curse are affected by it for WP Bonus weeks, +1 day per Degree of Failiure. They also cannot reattempt the curse until their Infamy has increased.",
+    "master": "Some curses may not simply affect an individual, but that individual's entire bloodline. Such effects are incredibly powerful but also much harder to cast correctly, and with greater consequences for failiure.",
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> - The Enactor knows the Daemon's True Name\n- The Enactor has the Mark of the Daemon's Patron God\n- The Enactor is a Dark Apostle aligned with the Correct Chaos God\n- The Enactor has gained the Dark Patronage of a Chaos God or Daemon Aligned with the Ritual</p><p><b>Adept:</b> If casting a curse fails, no Contempt of the Warp is rolled as with Rituals, instead those enacting the curse are affected by it for WP Bonus weeks, +1 day per Degree of Failiure. They also cannot reattempt the curse until their Infamy has increased.</p><p><b>Master:</b> Some curses may not simply affect an individual, but that individual's entire bloodline. Such effects are incredibly powerful but also much harder to cast correctly, and with greater consequences for failiure.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UxTCVEiD9h8kghWd"
+}

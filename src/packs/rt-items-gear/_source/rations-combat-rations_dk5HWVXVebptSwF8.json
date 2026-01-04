@@ -1,0 +1,20 @@
+{
+  "name": "Rations: Combat Rations",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "1kg",
+    "availability": "Metallic Pouch containing one complete meal alongside vitamin supplements, salt, water purification tablets, a protein bar, and minor medical supplies. No cooking required but somewhat advised to get some level of taste out of the otherwise tasteless meal. Not advised for long term use.",
+    "cost": "One day's worth of food for one person",
+    "effects": "Plentiful",
+    "notes": "2 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 2 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dk5HWVXVebptSwF8"
+}

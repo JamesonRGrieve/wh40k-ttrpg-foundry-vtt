@@ -1,0 +1,20 @@
+{
+  "name": "Bionic Hand",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Functions as a normal hand, Exceptional/Good Quality providfes +10 to Fine Manipulation Tests.",
+    "cost": null,
+    "effects": "Distinguished",
+    "notes": "10 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tpAKHaA9bwp6xIop"
+}

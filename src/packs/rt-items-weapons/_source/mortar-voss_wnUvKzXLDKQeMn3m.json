@@ -1,0 +1,28 @@
+{
+  "name": "Mortar (Voss)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Launcher",
+    "range": "50-300m",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 3,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Inaccurate, Blast (5), Indirect",
+    "weight": "41kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Blast (5), Indirect</p><p><b>Note:</b> Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wnUvKzXLDKQeMn3m"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Cursewine",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "Grants +30 to performing a curse. Extremely poisonous, suffer 1d5 Energy Damage with Toxic(3) Quality on consumption that ignores Armour and Toughness",
+    "cost": "Heretical",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wmaZUJaImeqyRtRD"
+}

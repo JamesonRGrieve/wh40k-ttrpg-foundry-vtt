@@ -1,0 +1,19 @@
+{
+  "name": "Master of Etherics",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Responsible for the Auspex and Vox relays.",
+    "careerPreferences": "Usually Void-Master, any but Explorator/Arch-Militant",
+    "subordinates": "Auspex and Vox Officers, Etherics Tech-Priests.",
+    "importantSkills": "Scrutiny, Tech-Use, Trade (Voidfarer)",
+    "effect": "+10 to Focused Augury Extended Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Responsible for the Auspex and Vox relays.</p><p><b>Effect:</b> +10 to Focused Augury Extended Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZFe8j5k8woWRyun8"
+}

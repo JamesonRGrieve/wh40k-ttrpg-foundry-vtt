@@ -1,0 +1,17 @@
+{
+  "name": "Unarmed Master",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; WS 45, Agility 40, Unarmed Warrior\nAptitudes: Strength, Offence, Khorne",
+    "effect": "Character counts as having the Deadly Natural Weapons Trait applied to their unarmed capabilities.\nDeadly Natural Weapons: Natural weapons no longer have Primitive(7), doing a flat 1d10+Strength Bonus Damage.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character counts as having the Deadly Natural Weapons Trait applied to their unarmed capabilities.\nDeadly Natural Weapons: Natural weapons no longer have Primitive(7), doing a flat 1d10+Strength Bonus Damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IF62w3QEqhQwG75Z"
+}

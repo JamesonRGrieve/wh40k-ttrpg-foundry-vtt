@@ -1,0 +1,17 @@
+{
+  "name": "Overkill",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Perception 45, Bulging Biceps \nAptitudes: Perception, Offence",
+    "effect": "When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8T9MAYlSQuHRmOhW"
+}

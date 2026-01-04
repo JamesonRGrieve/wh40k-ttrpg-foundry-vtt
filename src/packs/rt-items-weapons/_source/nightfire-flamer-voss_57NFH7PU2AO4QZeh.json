@@ -1,0 +1,28 @@
+{
+  "name": "Nightfire Flamer (Voss)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 3,
+    "reload": "2 Full",
+    "special": "Flame, Spray, Toxic",
+    "weight": "6kg",
+    "availability": "Very Rare",
+    "cost": "400 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray, Toxic</p><p><b>Note:</b> Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "57NFH7PU2AO4QZeh"
+}

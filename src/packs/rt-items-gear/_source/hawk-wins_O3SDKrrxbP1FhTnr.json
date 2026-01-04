@@ -1,0 +1,20 @@
+{
+  "name": "Hawk Wins",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "55kg",
+    "availability": "Master Crafted Relic Astartes Jump Pack of the Hawk Lords Chapter. Doubles as an Astartes Backpack Ammo Suppy. Grants user Auto-Stabilised Trait.",
+    "cost": null,
+    "effects": "Distinguished",
+    "notes": "60 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 60 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O3SDKrrxbP1FhTnr"
+}

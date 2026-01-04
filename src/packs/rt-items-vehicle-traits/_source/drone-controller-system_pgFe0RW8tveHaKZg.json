@@ -1,0 +1,14 @@
+{
+  "name": "Drone Controller System",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Wearer counts as having a Tau Drone Controller Gear Item Equipped and gains the benefits of it.",
+    "description": {
+      "value": "<p>Wearer counts as having a Tau Drone Controller Gear Item Equipped and gains the benefits of it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pgFe0RW8tveHaKZg"
+}

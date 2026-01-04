@@ -1,0 +1,17 @@
+{
+  "name": "Technological Initiate",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Tau, Scholastic Lore (Tau Empire), Tech-Use +10",
+    "effect": "When wielding a weapon for which the character lacks the Ranged Weapon Training, Melee Weapon Training, or Exotic Weapon Training Talent for. The character can make a +0 Tech-use Test as a Half Action. If successful, they can operate the weapon without penalty as if they had the talent for one round, +1 round per Degree of success on test.",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>When wielding a weapon for which the character lacks the Ranged Weapon Training, Melee Weapon Training, or Exotic Weapon Training Talent for. The character can make a +0 Tech-use Test as a Half Action. If successful, they can operate the weapon without penalty as if they had the talent for one round, +1 round per Degree of success on test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0ehbCX4GLUHpckSx"
+}

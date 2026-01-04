@@ -1,0 +1,17 @@
+{
+  "name": "Mental Rage",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Frenzy, Psy Rating",
+    "effect": "Can use Psychic Powers whilst Frenzied",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>Can use Psychic Powers whilst Frenzied</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "30IL8rrzp1wKQs38"
+}

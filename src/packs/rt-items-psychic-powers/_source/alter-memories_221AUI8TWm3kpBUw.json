@@ -1,0 +1,22 @@
+{
+  "name": "Alter Memories",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Defraud",
+    "focusPower": "Full Action",
+    "action": "Touch",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "The psyker makesPhysical contact with a target and makes an Opposed Willpower Test, the target suffers -5 per Psy Rating. If successful they completely erase the memory of a single event that the psyker is aware of or implant a new memory of the psyker's choosing into the target, in both cases, the memory can be up to a minute long. The target believes them to be real and the effects are permenant. This may result in the changing of the target's opinions and personality.  The target may however make a -20 Logic Test to notice a change has occurred if they see discrepencies or a gap in their memory where there shouldn't otherwise be. Implanted memories only affect two senses, each Degree of Success allows adding one extra sense and extends the duration of memories implanted or erased by 1 minute.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "221AUI8TWm3kpBUw"
+}

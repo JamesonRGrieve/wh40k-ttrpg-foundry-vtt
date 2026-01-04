@@ -1,0 +1,21 @@
+{
+  "name": "Slave Quarters",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": "-",
+    "effect": "Grim and squalid living spaces for crew (although the officer's quarters are still luxurious). Permenantly decrease Morale by 5.",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Grim and squalid living spaces for crew (although the officer's quarters are still luxurious). Permenantly decrease Morale by 5.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AG8CTLWXrYvTzrV8"
+}

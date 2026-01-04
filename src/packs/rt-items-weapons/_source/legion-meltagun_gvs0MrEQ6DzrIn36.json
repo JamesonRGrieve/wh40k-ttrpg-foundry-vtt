@@ -1,0 +1,28 @@
+{
+  "name": "Legion Meltagun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Melta",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+13",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Melta, SM Wep",
+    "weight": "17kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "description": {
+      "value": "<p><b>Special:</b> Melta, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gvs0MrEQ6DzrIn36"
+}

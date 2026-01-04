@@ -1,0 +1,28 @@
+{
+  "name": "Meltagun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Melta",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 5,
+    "reload": "Full",
+    "special": "Melta",
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "4000 T",
+    "source": "Only War: Core",
+    "note": "Can be connected to backpack ammo via feedline, weighing 6kg. Doubles Clip Size.",
+    "description": {
+      "value": "<p><b>Special:</b> Melta</p><p><b>Note:</b> Can be connected to backpack ammo via feedline, weighing 6kg. Doubles Clip Size.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ge8F1mAk3gmhB13c"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Harlequinn's Kiss",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Eldar",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+8",
+    "damageType": "Rending",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "Felling (4), Tearing",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Tearing</p><p><b>Note:</b> Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BdEDcaDwzcTYFMFx"
+}

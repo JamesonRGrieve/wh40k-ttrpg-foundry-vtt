@@ -1,0 +1,22 @@
+{
+  "name": "Seal the Breach",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Theosophamy (Warp Manipulation)",
+    "prerequisites": "None\nOW: Psy Rating 5",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating Radius",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker makes Opposed Willpower Test vs all Daemonic creatures and Psykers/Warp Sorcerers within range. If Psyker suceeds against daemon, they take Psy Rating damage that ignores armour per Degree of Success. If Psyker Succeeds against Psyker/Warp Sorcerer, they have -10 per Degree of Success to any test made to try and manifest psychic powers.",
+    "effect": "300xp",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "96TClKsNXBFZhQxj"
+}

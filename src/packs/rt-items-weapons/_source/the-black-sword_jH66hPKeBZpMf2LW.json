@@ -1,0 +1,28 @@
+{
+  "name": "The Black Sword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Balanced, Power Field",
+    "weight": "7kg",
+    "availability": "Hero",
+    "cost": "35 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Black Templars Chapter. Can be Two-Handed to increase damage by 1d10.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Black Templars Chapter. Can be Two-Handed to increase damage by 1d10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jH66hPKeBZpMf2LW"
+}

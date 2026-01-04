@@ -1,0 +1,20 @@
+{
+  "name": "Hermetic Infusion",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Gain +10 to Tests to resist Toxins, Disease, and Radiation, Gain Die Hard Talent. Good Craftsmanship: Gain +20 to tests instead of +10, gain Regeneration Trait.\nCauses a Greying of the Skin, and Tech-Priest's Blood is replaced, meaning normal Blood Transfusions will not work. Requiring Instead more of whatever serum goes through them.",
+    "cost": "Must be Tech-Prist with Autosanguine Talent/Implant\nGood Craftsmanship costs 17000",
+    "effects": "Special",
+    "notes": "3000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> 3000 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NmjtJX6C6VHDFJtl"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Hectin Autocarriage",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "15m",
+    "tacticalSpeed": "70kph",
+    "cruisingSpeed": "+10",
+    "maneuverability": "20",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "Front 15\nSide 10\nRear 8",
+    "rearArmour": "Driver",
+    "structuralIntegrity": "5 Passengers or equivilent cargo",
+    "crew": "None (Default)",
+    "passengers": "Traits: Enclosed, Rugged, Wheeled\nCan be turned into a Gang Rider, replacing Enclosed Trait with Open Topped Trait, increasing Carrying Capacity to 8 passengers and allowing any Basic weapon to be Pintle-Mounted on the Chasis.\nAncient versions use Antigrav technology. They are Skimmers, and of Unique Availability.",
+    "cargo": "Rare",
+    "availability": "Dark Heresy 2E: Core",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MChTUgvatashpTUE"
+}

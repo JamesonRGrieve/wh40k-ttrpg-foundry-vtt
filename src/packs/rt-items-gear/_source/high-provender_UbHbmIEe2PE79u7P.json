@@ -1,0 +1,20 @@
+{
+  "name": "High Provender",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "High Quality Rations, Fine meats, fruits, grains, etc. Designed for a Noble to show their wealth",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UbHbmIEe2PE79u7P"
+}

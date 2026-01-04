@@ -1,0 +1,17 @@
+{
+  "name": "Two-Weapon Wielder (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; None\nAptitudes: WS or BS, Finesse, Unaligned",
+    "effect": "Character can wield two one-handed ranged weapons or two one-handed melee weapons at once. They can make a Two-Weapon Wielding Attack as a Half Action, Attacks are made at -20, however the character can make one Half-Action Duration attack action with each weapon (be it Single Attack, Swift Attack, Lightning Attack, Single Shot, Semi-Auto Burst, or Full Auto Burst), This can talent can be taken multiple times Two-Weapon Wielder (Ranged) (BS Aptitude), and Two-Weapon Wielder (Melee) (WS Aptitude), both are requried to wield a melee and ranged weapon combination. Other Talents, such as Ambidextrous, Blademaster, Gunslinger, Sidearm, etc, improve on this one.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can wield two one-handed ranged weapons or two one-handed melee weapons at once. They can make a Two-Weapon Wielding Attack as a Half Action, Attacks are made at -20, however the character can make one Half-Action Duration attack action with each weapon (be it Single Attack, Swift Attack, Lightning Attack, Single Shot, Semi-Auto Burst, or Full Auto Burst), This can talent can be taken multiple times Two-Weapon Wielder (Ranged) (BS Aptitude), and Two-Weapon Wielder (Melee) (WS Aptitude), both are requried to wield a melee and ranged weapon combination. Other Talents, such as Ambidextrous, Blademaster, Gunslinger, Sidearm, etc, improve on this one.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FBpi0y0EIrPliHme"
+}

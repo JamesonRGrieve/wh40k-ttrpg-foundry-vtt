@@ -1,0 +1,28 @@
+{
+  "name": "Hot-shot Lasgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "60m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": 30,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Uses 10kg Backpack power source, can also be linked to larger backpacks",
+    "description": {
+      "value": "<p><b>Note:</b> Uses 10kg Backpack power source, can also be linked to larger backpacks</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DNX2rkhbcSPwFqzK"
+}

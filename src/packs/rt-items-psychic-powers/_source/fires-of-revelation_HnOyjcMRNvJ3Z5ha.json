@@ -1,0 +1,22 @@
+{
+  "name": "Fires of Revelation",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Daemon",
+    "prerequisites": "Daemonic Trait",
+    "focusPower": "Full Action",
+    "action": "2m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Daemon selects target in range, making Opposed Willpower Test vs Target. If successful, the Daemon alters some aspect of the target's belief, with the severity based on the Daemon's Psy Rating. On 3+ Degrees of Success, the target does not realise this change has taken place. Characters with fate points to remove such an alteration, and become immune to this particular daemon using this power upon them permenantly.\nEffects: Psy 1-2: Change Minor Preference such as eating habit, stylistic choice, etc. Psy 3-4: Change Strong Preference such as attutite towards others, philosphical outlook. Psy 5-6: Change Priority, goal, plan, visceral reaction to something. Psy 7-8: Change Deep seated Value, allegiance, ingrained cultural nature. Psy 9+: Change Core Belief, faiths, dreams, desires.  Note: Some players may find this power unfun.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HnOyjcMRNvJ3Z5ha"
+}

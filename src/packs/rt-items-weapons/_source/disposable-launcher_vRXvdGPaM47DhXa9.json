@@ -1,0 +1,28 @@
+{
+  "name": "Disposable Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Launcher",
+    "range": "200m",
+    "rof": "S/-/-",
+    "damage": "3d10+3",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 1,
+    "reload": "-",
+    "special": null,
+    "weight": "10kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "One-use, can't use unusual ammo. Fires a suped-up Krak Missile (may or may not have Blast (1)?)",
+    "description": {
+      "value": "<p><b>Note:</b> One-use, can't use unusual ammo. Fires a suped-up Krak Missile (may or may not have Blast (1)?)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vRXvdGPaM47DhXa9"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Double Tap",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Two-Weapon Wielder\nAptitudes: Finesse, Offence",
+    "effect": "When making their second ranged attack action from dual wielding in the same turn against the same target as the first attack was made against, the character gains a +20 to the attack if their first attack had at least one successful hit.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>When making their second ranged attack action from dual wielding in the same turn against the same target as the first attack was made against, the character gains a +20 to the attack if their first attack had at least one successful hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BtZHWOPGEHCgN6It"
+}

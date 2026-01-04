@@ -1,0 +1,17 @@
+{
+  "name": "Paranoia",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; None\nAptitudes: Perception, Fieldcraft, Tzeentch",
+    "effect": "Gains +2 to Initiative Rolls. GM can secretly test the character's Perception to notice hidden threats. They gain a twitchy disposition and have trouble relaxing.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Gains +2 to Initiative Rolls. GM can secretly test the character's Perception to notice hidden threats. They gain a twitchy disposition and have trouble relaxing.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MXViwrGcKNBtNZjx"
+}

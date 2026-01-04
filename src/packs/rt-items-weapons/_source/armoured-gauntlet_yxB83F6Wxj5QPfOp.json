@@ -1,0 +1,28 @@
+{
+  "name": "Armoured Gauntlet",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (6)",
+    "weight": "1kg",
+    "availability": "Average",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Potentially gauntlet part of hard metal armours, like power armour, could use this profile if attacking unarmed.",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (6)</p><p><b>Note:</b> Potentially gauntlet part of hard metal armours, like power armour, could use this profile if attacking unarmed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yxB83F6Wxj5QPfOp"
+}

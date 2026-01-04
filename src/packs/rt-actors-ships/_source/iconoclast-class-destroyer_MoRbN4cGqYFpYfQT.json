@@ -1,0 +1,28 @@
+{
+  "name": "Iconoclast-Class Destroyer",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Raider",
+    "size": "1.3km long, 0.4km wide",
+    "crew": 16500,
+    "speed": 10,
+    "manoeuvrability": 25,
+    "detection": 10,
+    "hull": 28,
+    "armour": 14,
+    "turrets": 1,
+    "space": 32,
+    "shipPoints": 29,
+    "weaponCapacity": "2 Dorsal",
+    "notes": "When engaging in \"Long Term Repairs\", repair additional +2 Hull Integrity if repairs succeed.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>When engaging in \"Long Term Repairs\", repair additional +2 Hull Integrity if repairs succeed.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MoRbN4cGqYFpYfQT"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Lucky",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Threshold 6\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Character can re-roll any one roll made, be it a damage roll, a test, etc, before the end of their next turn (~5-10 seconds of narrative time)",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gx3uNOYWQhpAerqK"
+}

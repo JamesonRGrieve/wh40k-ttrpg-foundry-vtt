@@ -1,0 +1,21 @@
+{
+  "name": "Combat Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": "-",
+    "effect": "Where characters command the ship. As long as this component is undamaged, gain +10 to Tech-use Tests to repair the ship.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where characters command the ship. As long as this component is undamaged, gain +10 to Tech-use Tests to repair the ship.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RUsLczmwhviVdYlV"
+}

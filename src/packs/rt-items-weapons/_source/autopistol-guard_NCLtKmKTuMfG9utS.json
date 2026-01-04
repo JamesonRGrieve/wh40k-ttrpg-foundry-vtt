@@ -1,0 +1,28 @@
+{
+  "name": "Autopistol (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/-/6",
+    "damage": "1d10+2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 18,
+    "reload": "Full",
+    "special": null,
+    "weight": "1.5kg",
+    "availability": "Average",
+    "cost": "75 T",
+    "source": "Only War: Core",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NCLtKmKTuMfG9utS"
+}

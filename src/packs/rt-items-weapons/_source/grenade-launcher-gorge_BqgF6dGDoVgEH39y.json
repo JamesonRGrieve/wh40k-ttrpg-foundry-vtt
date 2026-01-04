@@ -1,0 +1,28 @@
+{
+  "name": "Grenade Launcher (Gorge)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Launcher",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Reliable",
+    "weight": "8kg",
+    "availability": "Average",
+    "cost": "300 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BqgF6dGDoVgEH39y"
+}

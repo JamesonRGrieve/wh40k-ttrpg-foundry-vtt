@@ -1,0 +1,22 @@
+{
+  "name": "The Lost Halo",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field Relic Astartes",
+    "locations": "All",
+    "ap": 0.55,
+    "maxAg": "-",
+    "weight": "3kg",
+    "availability": "Hero",
+    "cost": "60 R",
+    "notes": "Master Crafted Relic Astartes Iron Halo of the Howling Griffons Chapter. Overload 01. Attacks not stopped by the Force Field halve their Penetration.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Iron Halo of the Howling Griffons Chapter. Overload 01. Attacks not stopped by the Force Field halve their Penetration.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wn1M3wmvVXTIPfgp"
+}

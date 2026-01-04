@@ -1,0 +1,22 @@
+{
+  "name": "Call Item",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "Unlimited",
+    "range": "Threshold 5\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "At a time prior, prepare an object small and light enough to be carred in one hand with one hour of deep meditation and infusing it with a psychic imprint, glyphs, and runes, can only have one such object prepared at a time.\nAt any time afterwards, this power may be used to summon the object to the character's hand, regardless of distance.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yLgK9QBO42uE04p8"
+}

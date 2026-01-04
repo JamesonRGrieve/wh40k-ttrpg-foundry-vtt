@@ -1,0 +1,20 @@
+{
+  "name": "High-Grade Promethium",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Flame Weapons",
+    "damageOrEffect": "Add +20m to Range",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Add +20m to Range</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XSZCOqXwQnzo3Hos"
+}

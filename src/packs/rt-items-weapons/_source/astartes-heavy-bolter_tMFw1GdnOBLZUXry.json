@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Heavy Bolter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Bolt",
+    "range": "150m",
+    "rof": "-/-/10",
+    "damage": "2d10+10",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 60,
+    "reload": "Full",
+    "special": "SM Wep, Tearing",
+    "weight": "68kg",
+    "availability": "Initiated",
+    "cost": "20 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tMFw1GdnOBLZUXry"
+}

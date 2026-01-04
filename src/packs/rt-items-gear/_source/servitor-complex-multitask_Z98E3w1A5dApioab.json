@@ -1,0 +1,20 @@
+{
+  "name": "Servitor (Complex Multitask)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Lobotomised, Augmented Human that performs advanced tasks (see Rogue Trader: Core, Page 374)",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Z98E3w1A5dApioab"
+}

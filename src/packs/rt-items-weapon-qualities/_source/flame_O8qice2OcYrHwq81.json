@@ -1,0 +1,14 @@
+{
+  "name": "Flame*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 40,
+    "description": {
+      "value": "<p>40</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O8qice2OcYrHwq81"
+}

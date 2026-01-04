@@ -1,0 +1,20 @@
+{
+  "name": "Cogitator Systems (Emplaced)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "100kg+",
+    "availability": "Massive Sets of Databanks used for processing large datasets. Most are capable of automatically writing and printing information to data-scrolls, large screens, or holo-projectors to display their data. They provide +20 to relvent tests of their usage. Typically Literacy, Logic, and Lore Tests.",
+    "cost": "Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).",
+    "effects": "Average",
+    "notes": "4000+T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 4000+T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ppeoH4dYROMLBpGd"
+}

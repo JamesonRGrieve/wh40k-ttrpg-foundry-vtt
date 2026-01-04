@@ -1,0 +1,22 @@
+{
+  "name": "Telekine Dome",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Free Action\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker chooses a point within range and line of sight, and creates an invisible dome of radius Psy Rating/2. The Psyker and any allies within the Dome gain Psy Rating AP to all locations against any attack that originated from outside the dome, which they retain for as long as the power is sustained and they remain within the Dome. Enemies may pass through the dome unimpeded.",
+    "effect": "300xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X79Zz993TAHCiyDX"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Wall of Fire",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "60m",
+    "range": "Threshold 17",
+    "opposed": "Yes",
+    "sustained": "Create a three metre high, one metre thick wall of fire that can be up to 10m x Willpower Bonus metres long. The wall can be placed anywhere within range, and even on top of foes who get a +20 Agility Test to move out of the way. Those that cross or fail the agility test to avoid the wall take 1d10+5 Energy Damage with Flame Quality that ignores Armour.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5c3upTy620frdvvH"
+}

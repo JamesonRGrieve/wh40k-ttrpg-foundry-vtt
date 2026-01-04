@@ -1,0 +1,17 @@
+{
+  "name": "Attend the Machine Spirit",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": ".Mechanicus Related, Common Lore (Mechanicus), Tech-Use +10. Apt: Intelligence, Tech",
+    "descriptionText": "Character can use Order when attempting to make a Tech-Use Test to fix or operate something. Comrade in Cohesion then assists them in the task, granting a +10 Bonus. Can be used with Servitor Comrades in addition to normal ones.\nNote: Mechanicus Related = Any Tech-Priest or Regiment Sworn to the Mechanicus",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can use Order when attempting to make a Tech-Use Test to fix or operate something. Comrade in Cohesion then assists them in the task, granting a +10 Bonus. Can be used with Servitor Comrades in addition to normal ones.\nNote: Mechanicus Related = Any Tech-Priest or Regiment Sworn to the Mechanicus</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3KCQjqXK4Xdt4c1v"
+}

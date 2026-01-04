@@ -1,0 +1,22 @@
+{
+  "name": "Withering Radiance",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Void Dreamer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Void Dreamer makes Focus Power Test. On Success, calls forth a Psychic Weapon that ravages those it harms:\nBrilliant Withering Spear (Melee; 1d10 + Psy Rating E; Pen Psy Rating; Balanced) or (Thrown; Psy Rating x 10m; 1d10 + Psy Rating E; Pen Psy Rating; Accurate)\nIf target suffers damage after reductions from Armour and Toughness from this weapon, they make -10 Toughness Test. If successful, gain 1 Fatigue, if fail gain 1 Fatigue and 1d10 Damage to random Characteristic that is permenant while Void Dreamer that inflicted it draws breath. Only the Psyker may wield weapon, it dissapears if they stop sustaining power or after it strikes/misses when thrown.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dFloiqa1gCLTEC1i"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Fallen Magos Power Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+4",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unbalanced",
+    "weight": "9kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Two Handed Weapon. Can corrupt Imperial Technology using this by making a -30 Tech-Use Test, if successful, interfaced technology is unusable by anyone that is not the user or a fellow Heretek. Has an inbuilt Combi-Tool.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Two Handed Weapon. Can corrupt Imperial Technology using this by making a -30 Tech-Use Test, if successful, interfaced technology is unusable by anyone that is not the user or a fellow Heretek. Has an inbuilt Combi-Tool.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QUjDwxdVrlDPeucd"
+}

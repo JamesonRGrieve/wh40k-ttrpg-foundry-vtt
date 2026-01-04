@@ -1,0 +1,17 @@
+{
+  "name": "Made Fer Fightin'",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Ork (Innate)",
+    "effect": "Gain Furious Assault and Xenos Weapon Training (Ork) Talents\nFurious Assault: On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nXenos Weapon Training (Ork): Can use Shootas, Sluggas, Big Choppas, and All Primitive Melee Weapons without Penalty.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Gain Furious Assault and Xenos Weapon Training (Ork) Talents\nFurious Assault: On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nXenos Weapon Training (Ork): Can use Shootas, Sluggas, Big Choppas, and All Primitive Melee Weapons without Penalty.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LaxoWFKkyFs7isvK"
+}

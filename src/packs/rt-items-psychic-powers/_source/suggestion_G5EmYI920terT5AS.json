@@ -1,0 +1,22 @@
+{
+  "name": "Suggestion",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Deceive Skill",
+    "focusPower": "Full Action\nConcentration",
+    "action": "1m x Psy Rating",
+    "range": "-10 Opposed Willpower Test",
+    "opposed": "No",
+    "sustained": "Character convinces target of a small but potentially important lie, target opposes with +0 Willpower Test which may be modified by GM based on the credibility and scope of the lie. In the case of clearly impossible lies, target may auto-pass test.\nFor example, convincing a guard they have already checked the characte'rs ID would be fine, but it would not be far harder convince them that the character is actually the Lord Commander Guilliman in Disguise.",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "G5EmYI920terT5AS"
+}

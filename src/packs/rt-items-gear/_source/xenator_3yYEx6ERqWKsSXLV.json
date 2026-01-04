@@ -1,0 +1,20 @@
+{
+  "name": "Xenator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Source for acquiring alien creatures of varying levels of legality. Can vary from exotic game hunters to slavers. Act as a way to acquite alien Flora and Fauna, as well as serving as Guides on Deathworlds and in the wilderness, and providing information on certain xenos. Vary Requisiton Test based on rarity and deadliness of creatures sought.",
+    "cost": "Individuals that deal with Xenos Flora and Fauna, from semi legal traders and trainers of wild animals to dangerous forbidden collectors and alien slavers.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3yYEx6ERqWKsSXLV"
+}

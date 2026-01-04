@@ -1,0 +1,25 @@
+{
+  "name": "Sunhammer Lance Battery",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Lance",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 13,
+    "spaceUsage": 6,
+    "spCost": 2,
+    "damage": "1d10+3",
+    "strength": 2,
+    "critRating": 3,
+    "range": 9,
+    "availability": "Rare",
+    "notes": "Lance Weapons Ignore Armour.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> Lance Weapons Ignore Armour.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xg3R3sl86bUurYJF"
+}

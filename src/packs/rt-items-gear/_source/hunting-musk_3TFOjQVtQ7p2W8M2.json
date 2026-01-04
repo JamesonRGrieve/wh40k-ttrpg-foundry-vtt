@@ -1,0 +1,20 @@
+{
+  "name": "Hunting Musk",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.2kg",
+    "availability": "Used to disguise one's scent when rubbed over oneself. Imposes -20 to perception tests made with smell. Lasts 1d10 hours.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "20 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 20 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3TFOjQVtQ7p2W8M2"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Open the Mind's Eye",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Full Action",
+    "action": "2m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Psyker targets single living creature within range that has an Intelligence Characteristic of 15 or more and makes Opposed Willpower Test vs Target. If Psyker wins, target suffers 1d5 Impact Damage to the Head that ignores Armour and Toughness, +1d5 per 2 Degrees of Success. If target suffers critical damage as a result of this, they must make +0 Willpower Test or their head explodes, killing them instantly. Any that take damage from this power and survive gain Insanity Points equal to the damage dealt by the power minus their Willpower Bonus",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Baj8FZFRimjJBs6g"
+}

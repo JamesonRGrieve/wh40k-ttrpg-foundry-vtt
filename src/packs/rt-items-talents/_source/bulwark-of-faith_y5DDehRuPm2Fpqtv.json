@@ -1,0 +1,17 @@
+{
+  "name": "Bulwark of Faith",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Willpower 45, Iron Faith\nAptitudes: Defence, Willpower",
+    "effect": "Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success on the Daemon",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success on the Daemon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "y5DDehRuPm2Fpqtv"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Twitch-mask",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance. Good versions also change pigments and voice, granting +20 to Disguise Tests.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HVK4IxOzo6dK0Y2a"
+}

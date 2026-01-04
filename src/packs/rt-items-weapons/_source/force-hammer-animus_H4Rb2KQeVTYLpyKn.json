@@ -1,0 +1,28 @@
+{
+  "name": "Force Hammer (Animus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemonbane, Force, Power Field, Unwieldy",
+    "weight": "8kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H4Rb2KQeVTYLpyKn"
+}

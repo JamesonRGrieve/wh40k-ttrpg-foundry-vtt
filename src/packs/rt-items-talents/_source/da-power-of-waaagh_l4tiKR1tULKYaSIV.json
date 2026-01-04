@@ -1,0 +1,17 @@
+{
+  "name": "Da Power of Waaagh!",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork Weirdboy (Innate), Psy Rating",
+    "effect": "Ork Weirdboyz use different rules for Psychic Powers than normal Psykers. They do not have Fettered or Push Strength. Their Psy Rating increases by 1 per Ork within 10 Metres, up to a maximum of 10. If Rolling Doubles on Focus Power Tests, instead of Rolling on Psychic Phenomena and Perils of the Warp, they roll on Weird Fings and 'Eadbang Tables (See Psychic Powers). When Rolling on such tables, add +5 per point of Psy Rating above 3. Weirdboyz also struggle to suppress Waaagh! Energies for long periods of time without unleashing it.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>Ork Weirdboyz use different rules for Psychic Powers than normal Psykers. They do not have Fettered or Push Strength. Their Psy Rating increases by 1 per Ork within 10 Metres, up to a maximum of 10. If Rolling Doubles on Focus Power Tests, instead of Rolling on Psychic Phenomena and Perils of the Warp, they roll on Weird Fings and 'Eadbang Tables (See Psychic Powers). When Rolling on such tables, add +5 per point of Psy Rating above 3. Weirdboyz also struggle to suppress Waaagh! Energies for long periods of time without unleashing it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l4tiKR1tULKYaSIV"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Life Leech",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Enfeeble, Toughness 40+",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Opposed Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Psyker makes Opposed -10 Willpower vs Target Individual's Toughness. If target fails they suffer 1d10+Psy Rating Nonpermenant damage to their Toughness Characteristic. \nPsyker gains Unnatural Toughness (+1), +1 per 5 full points of Toughness Damage inflicted. This Unnatural Toughness persists as long as power is sustained.\nNote: Use Only War Unnatural Characteristics Trait",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5sKmr31O9Tfat0GQ"
+}

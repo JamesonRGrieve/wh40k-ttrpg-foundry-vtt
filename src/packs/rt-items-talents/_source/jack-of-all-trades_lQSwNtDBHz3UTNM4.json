@@ -1,0 +1,17 @@
+{
+  "name": "Jack of all Trades",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Inq) (T2)",
+    "requirements": "Tier 2: Inquisitor E.Adv, Intelligence 45\nAptitudes: Knowledge",
+    "effect": "Gain all unknown Non-Specialist skills at Rank 1 (known, +0).",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Gain all unknown Non-Specialist skills at Rank 1 (known, +0).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lQSwNtDBHz3UTNM4"
+}

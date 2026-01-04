@@ -1,0 +1,20 @@
+{
+  "name": "Styger Milk",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.3kg",
+    "availability": "A viscious milk that coats the throat against toxins. Provides +20 to tests to resist ingested poisons for 1d5 hours. After drinking make Toughness Test or suffer 1 Permenant Toughness Damage. Can also degrade the user's sense of taste.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "75 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 75 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rzx0wc2GNWd4qhtx"
+}

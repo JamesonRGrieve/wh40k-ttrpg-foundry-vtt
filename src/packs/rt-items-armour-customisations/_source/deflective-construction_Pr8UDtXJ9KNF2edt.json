@@ -1,0 +1,18 @@
+{
+  "name": "Deflective Construction",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Non-Primitive Armour",
+    "effect": "Gives +2 AP vs Explosive or Rending damage",
+    "weight": "+1kg",
+    "availability": "Scarce",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Gives +2 AP vs Explosive or Rending damage</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Pr8UDtXJ9KNF2edt"
+}

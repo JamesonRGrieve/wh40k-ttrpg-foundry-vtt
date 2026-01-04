@@ -1,0 +1,28 @@
+{
+  "name": "Demolisher Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "SP",
+    "range": "50m",
+    "rof": "S/-/-",
+    "damage": "4d10+20",
+    "damageType": "Explosive",
+    "penetration": 10,
+    "clip": 2,
+    "reload": "Full",
+    "special": "Blast (10), Concussive (3)",
+    "weight": "400kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10), Concussive (3)</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NR0k4yRBtAGrML27"
+}

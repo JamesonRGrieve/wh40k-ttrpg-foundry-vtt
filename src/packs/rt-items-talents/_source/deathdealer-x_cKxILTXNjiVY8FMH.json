@@ -1,0 +1,17 @@
+{
+  "name": "Deathdealer (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Ballistic Skill 45 or Weapon Skill 45\nAptitudes: Perception, Finesse",
+    "effect": "Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cKxILTXNjiVY8FMH"
+}

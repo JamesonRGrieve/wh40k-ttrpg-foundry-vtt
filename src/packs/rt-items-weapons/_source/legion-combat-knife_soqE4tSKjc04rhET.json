@@ -1,0 +1,28 @@
+{
+  "name": "Legion Combat Knife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": " SM Wep",
+    "weight": "2kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "description": {
+      "value": "<p><b>Special:</b>  SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "soqE4tSKjc04rhET"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Duelling Laspistol (Khayer-Addin)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Las",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 1,
+    "reload": "Full",
+    "special": "Accurate, Tearing",
+    "weight": "1.5kg",
+    "availability": "Very Rare",
+    "cost": "220 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Uses special Single Shot charge cells instead of power packs (Rare, 20 Thrones Each). Weapon cannot be further overcharged or use hotshot cells.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Tearing</p><p><b>Note:</b> Uses special Single Shot charge cells instead of power packs (Rare, 20 Thrones Each). Weapon cannot be further overcharged or use hotshot cells.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "61LJbFW6AnvFNbOf"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Terrorfex",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - DEldar",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Full",
+    "special": "Blast (5)",
+    "weight": "2kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Z0MaUGBkO60jfIpz"
+}

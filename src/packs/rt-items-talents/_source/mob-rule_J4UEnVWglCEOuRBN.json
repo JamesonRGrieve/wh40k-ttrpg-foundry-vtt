@@ -1,0 +1,17 @@
+{
+  "name": "Mob Rule",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Ork (Innate)",
+    "effect": "For every Ork within 10 metres, gain +10 to resist effects of Fear and Pinning.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>For every Ork within 10 metres, gain +10 to resist effects of Fear and Pinning.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J4UEnVWglCEOuRBN"
+}

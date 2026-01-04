@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Mortar",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Vehicle",
+    "type": "Launcher",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 1,
+    "reload": "Half",
+    "special": "Indirect (3), Reliable",
+    "weight": "400kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "OW: Shield of Humanity",
+    "note": "Can fire a variety of Mortar Rounds (See Unusual Ammunition), is designed for the Siege Shell. If Firing an Anti-Plant, Smoke, or Starflare Rounds, add +2 to Blast or Smoke Radius Size, or an extra minute of illumination for starflares.",
+    "description": {
+      "value": "<p><b>Special:</b> Indirect (3), Reliable</p><p><b>Note:</b> Can fire a variety of Mortar Rounds (See Unusual Ammunition), is designed for the Siege Shell. If Firing an Anti-Plant, Smoke, or Starflare Rounds, add +2 to Blast or Smoke Radius Size, or an extra minute of illumination for starflares.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Vye45LVyvC8jTwQP"
+}

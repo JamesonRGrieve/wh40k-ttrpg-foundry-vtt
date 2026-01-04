@@ -1,0 +1,20 @@
+{
+  "name": "Record of Oblivion",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "2kg",
+    "availability": "Master Crafted Relic Data-Tome of the Guardians of the Covenant Chapter. Whilst bearing this relic the character can re-roll any failed Willpower Test.",
+    "cost": null,
+    "effects": "Distinguished",
+    "notes": "15 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mARH9IcHDRI28tsa"
+}

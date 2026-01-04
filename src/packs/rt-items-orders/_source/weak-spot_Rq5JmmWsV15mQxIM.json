@@ -1,0 +1,17 @@
+{
+  "name": "Weak Spot",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Longshooter Spec\n400xp",
+    "descriptionText": "Comrade in Comms Range allows Character's next Ranged Called Shot Action made this turn to gain +X Penetration, with X being equal to the Degrees of Success they gain on the Ballistic Skill Test for the Called Shot Ranged Attack.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Comrade in Comms Range allows Character's next Ranged Called Shot Action made this turn to gain +X Penetration, with X being equal to the Degrees of Success they gain on the Ballistic Skill Test for the Called Shot Ranged Attack.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rq5JmmWsV15mQxIM"
+}

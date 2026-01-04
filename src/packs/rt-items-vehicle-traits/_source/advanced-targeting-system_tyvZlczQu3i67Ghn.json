@@ -1,0 +1,14 @@
+{
+  "name": "Advanced Targeting System",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Allows the wearer to make a Called Shot Action as a Half Action",
+    "description": {
+      "value": "<p>Allows the wearer to make a Called Shot Action as a Half Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tyvZlczQu3i67Ghn"
+}

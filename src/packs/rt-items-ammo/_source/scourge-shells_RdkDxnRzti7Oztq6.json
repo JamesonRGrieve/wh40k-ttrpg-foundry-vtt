@@ -1,0 +1,20 @@
+{
+  "name": "Scourge Shells",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Shotguns (Assault/Legion) ",
+    "damageOrEffect": "Lose Scatter Quality. +2 Penetration and gain Razor Sharp Quality. Scourge Shells can be loaded with a disease or toxin as a Full Action by making +20 Medicae Test (Chem-Use), if successful targets that suffer damage also suffer disease/toxin effect. Heretical.",
+    "qualities": null,
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": null,
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Lose Scatter Quality. +2 Penetration and gain Razor Sharp Quality. Scourge Shells can be loaded with a disease or toxin as a Full Action by making +20 Medicae Test (Chem-Use), if successful targets that suffer damage also suffer disease/toxin effect. Heretical.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RdkDxnRzti7Oztq6"
+}

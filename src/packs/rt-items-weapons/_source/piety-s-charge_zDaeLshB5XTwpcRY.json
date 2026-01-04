@@ -1,0 +1,28 @@
+{
+  "name": "Piety's Charge",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unwieldy",
+    "weight": "20kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Relic Weapon, Cannot be acquired, only earned. +10 to Interactions Test with Ecclesiarchy, Sisters of Battle, or other Pious Individuals while it is visible on your person and +20 to Interaction Tests with weapon's keepers (provided the weapon wasn't stolen), Anyone hit by the weapon must make +0 Strength Test or be knocked prone.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Relic Weapon, Cannot be acquired, only earned. +10 to Interactions Test with Ecclesiarchy, Sisters of Battle, or other Pious Individuals while it is visible on your person and +20 to Interaction Tests with weapon's keepers (provided the weapon wasn't stolen), Anyone hit by the weapon must make +0 Strength Test or be knocked prone.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zDaeLshB5XTwpcRY"
+}

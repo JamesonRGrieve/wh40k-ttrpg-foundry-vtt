@@ -1,0 +1,20 @@
+{
+  "name": "Eye of Chaos",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Profane)",
+    "weight": "?",
+    "availability": "An Icon of the Dark Gods, an eight-sided arrangement of spiked metal with a flesh, closed eye at its centre. The eye is claimed to open once proper sacrifices and profane rituals are performed, and in so dong reveal a spark of the Warp itself, those that draw upon it may achieve absolute power. Must first perform the correct rituals (-30 Forbidden Lore (Daemonology), gaining 2 Corruption per Degree of Success, or two Insanity per Degree of Failiure. Once the eye opens, the Warp Rushes through the user for 1d10 rounds, any psychic powers manifested during this time count as having twice the effective psy rating and always generate Psychic Phenomena with 2x Psy Rating added to the rolls.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MKY6NwRUov6ZwUzr"
+}

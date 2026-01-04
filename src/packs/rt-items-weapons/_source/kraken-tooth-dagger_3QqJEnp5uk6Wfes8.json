@@ -1,0 +1,28 @@
+{
+  "name": "Kraken Tooth Dagger",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "5m",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Rending",
+    "penetration": 1,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8)",
+    "weight": "0.4kg",
+    "availability": "Extremely Rare",
+    "cost": "200 T",
+    "source": "Rogue Trader: Core",
+    "note": "Can be Thrown",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Can be Thrown</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3QqJEnp5uk6Wfes8"
+}

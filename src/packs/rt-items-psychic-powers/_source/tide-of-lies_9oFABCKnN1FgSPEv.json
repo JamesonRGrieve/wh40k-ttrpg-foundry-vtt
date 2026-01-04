@@ -1,0 +1,22 @@
+{
+  "name": "Tide of Lies",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers",
+    "prerequisites": "Warp Secrets\nOW: Psy Rating 6",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Make Opposed Willpower Test vs Psy Rating number of targets within range. If winning test vs individual, can make them believe a non-ludicrous lie for Psy Rating Minutes, or alternative attack a random target within weapon/movement range.\nExample of appropriate lies would be: Convincing a target they are someone else, that a target should report to their superiors immediately, etc. However a lie such as convincing the target they are falling when they are on solid group would be too much. ",
+    "effect": "500xp",
+    "source": "RT: Edge of the Abyss",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9oFABCKnN1FgSPEv"
+}

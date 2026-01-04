@@ -1,0 +1,28 @@
+{
+  "name": "Ghibelline Shrieking Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 12,
+    "reload": "Full",
+    "special": "Concussive (0), Overcharge",
+    "weight": "8kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "BC: Tome of Excess",
+    "note": "Sonic Weapon, uses a backpack ammo supply included in weapon weight.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (0), Overcharge</p><p><b>Note:</b> Sonic Weapon, uses a backpack ammo supply included in weapon weight.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tyTsSZ6i8Umwu3kY"
+}

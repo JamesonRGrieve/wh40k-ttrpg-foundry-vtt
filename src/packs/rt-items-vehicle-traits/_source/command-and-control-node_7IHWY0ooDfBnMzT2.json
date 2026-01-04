@@ -1,0 +1,14 @@
+{
+  "name": "Command and Control Node",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "A Wearer with this System can make a +0 Tech-Use Test as a Half Action. If Successful, they can choose a number of targets up to their Perception Bonus. They and all their Allies within 20 metres can re-roll failed Ballistic Skill Tests against those Targets until the beginning of the Explorer's next Turn.",
+    "description": {
+      "value": "<p>A Wearer with this System can make a +0 Tech-Use Test as a Half Action. If Successful, they can choose a number of targets up to their Perception Bonus. They and all their Allies within 20 metres can re-roll failed Ballistic Skill Tests against those Targets until the beginning of the Explorer's next Turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7IHWY0ooDfBnMzT2"
+}

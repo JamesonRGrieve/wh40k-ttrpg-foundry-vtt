@@ -1,0 +1,22 @@
+{
+  "name": "Personal Augury",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "Touch",
+    "range": "Threshold 14",
+    "opposed": "No",
+    "sustained": "Target willing individual, clasping their hands and asking them what they wish divined. This can be as detailed or vague as they like. The more precise, the more specific the reading however. The psyker then spends 30 minutes and whatever divinining method they perform to eventually make  Psyniscience Test to reveal the future of the target. More information with more degrees of success: 0 DoS: Doom - receive vague, symbolic warning of the greatest peril or obstacle the target will face relating to their question. 1 DoS: Malign Influences - gain intuition on the target's \"Doom\" result, and two further negative influences they will face. 2 DoS: Benign Factors - gain an impression as to what the target's greatest advantage they have in their possession. 3+ DoS: Fate - all previous effects plus a single sentence of mystical advice.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HrPGtOEVYt4RVuye"
+}

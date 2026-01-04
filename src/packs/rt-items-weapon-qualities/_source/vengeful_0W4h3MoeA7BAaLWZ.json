@@ -1,0 +1,14 @@
+{
+  "name": "Vengeful",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 3,
+    "description": {
+      "value": "<p>3</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0W4h3MoeA7BAaLWZ"
+}

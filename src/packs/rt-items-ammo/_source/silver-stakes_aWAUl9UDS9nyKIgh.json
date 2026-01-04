@@ -1,0 +1,20 @@
+{
+  "name": "Silver Stakes",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Crossbows",
+    "damageOrEffect": "Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.",
+    "qualities": "Sanctified",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.</p><p><b>Qualities:</b> Sanctified</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aWAUl9UDS9nyKIgh"
+}

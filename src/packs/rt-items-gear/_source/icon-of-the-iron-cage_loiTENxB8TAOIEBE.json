@@ -1,0 +1,20 @@
+{
+  "name": "Icon of the Iron Cage",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Once per game session, wearer can increase Strength, Toughness, and Willpower by 10 for one turn.",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Imperial Fists",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "loiTENxB8TAOIEBE"
+}

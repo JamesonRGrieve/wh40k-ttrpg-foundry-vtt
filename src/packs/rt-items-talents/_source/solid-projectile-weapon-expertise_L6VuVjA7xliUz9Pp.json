@@ -1,0 +1,17 @@
+{
+  "name": "Solid Projectile Weapon Expertise",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; BS 35, Weapon Training (SP)\nAptitudes: Ballistic Skill, Finesse",
+    "effect": "When Character clears a Jam from a Solid Projectile Weapon, they may also reload it as a Free Action as part of the Action to unjam it.\nAdditionally, clearing a Jam only loses one round from the weapon's current clip, instead of the entire clip.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When Character clears a Jam from a Solid Projectile Weapon, they may also reload it as a Free Action as part of the Action to unjam it.\nAdditionally, clearing a Jam only loses one round from the weapon's current clip, instead of the entire clip.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L6VuVjA7xliUz9Pp"
+}

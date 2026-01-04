@@ -1,0 +1,22 @@
+{
+  "name": "Ork Mega Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Ork",
+    "locations": "All (H/B/A/L)",
+    "ap": "5/14/9/9",
+    "maxAg": null,
+    "weight": "200kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "For Orks Very Rare. Can't be worn by humans. Gives +30 to Strength Characteristics but -20 to Agility Tests and can't Run",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p>For Orks Very Rare. Can't be worn by humans. Gives +30 to Strength Characteristics but -20 to Agility Tests and can't Run</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QcTMewcByBqXqHNU"
+}

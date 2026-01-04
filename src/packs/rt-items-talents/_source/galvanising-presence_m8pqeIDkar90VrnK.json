@@ -1,0 +1,17 @@
+{
+  "name": "Galvanising Presence",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Commissar Specialty\n250xp",
+    "effect": "When using the Terrify Special use of the Command Skill, its effects apply to all members of the squad, including Player characters. Character has Fear(2) for purpose of Terrify Tests. ",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When using the Terrify Special use of the Command Skill, its effects apply to all members of the squad, including Player characters. Character has Fear(2) for purpose of Terrify Tests. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m8pqeIDkar90VrnK"
+}

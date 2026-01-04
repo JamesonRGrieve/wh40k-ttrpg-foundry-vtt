@@ -1,0 +1,28 @@
+{
+  "name": "Rad-Cleanser",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": 20,
+    "reload": "-",
+    "special": "Blast (2), Recharge, Toxic",
+    "weight": "26kg",
+    "availability": "Very Rare",
+    "cost": "7000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "\"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Recharge, Toxic</p><p><b>Note:</b> \"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AkGNR8tBXD8N8mrP"
+}

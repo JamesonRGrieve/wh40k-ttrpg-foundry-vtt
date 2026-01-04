@@ -1,0 +1,25 @@
+{
+  "name": "Calixis-Pattern Fury Interceptor",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Spacecraft",
+    "size": "30m/ 20AU's",
+    "tacticalSpeed": "2,500kph / 10VU's",
+    "cruisingSpeed": "+5",
+    "maneuverability": "35",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 36\nSide 36\nRear 30",
+    "rearArmour": "Pilot, Co-Pilot, Gunner, Crew Chief, Enginseer",
+    "structuralIntegrity": "None",
+    "crew": "Pilot: Front 2x Lascannon Banks (600m/6AU, Heavy, S/-/5, 5d10+10 E, Pen 10, Clip 250, Reload -, Inaccurate).  Gunner: 1 Twin-Linked Lascannon Front/Left/Right, 600m/6AU, Heavy S/-/-, 5d10+10 E, Clip 250, Reload -, Twin-Linked). Co-Pilot: 12x Void Missiles (Front, 75km/750 AU's, Heavy, S/-/-, 3d10+20 X, Pen 15, Clip 1, Reload -. ",
+    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. All Pilot Weapons can be fired as one shooting weapons, at targets no more than 1 AU Apart. Roll for Hits and Damage Seperately. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Has Craft Rating of +10 and squadron size of 20 for Attack Craft Purposes. -1 to Squadron Losses, or +5 to Upkeep Tests.",
+    "cargo": "Extremely Rare",
+    "availability": "RT: Into the Storm",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Uy9kFoez4SJQnU8a"
+}

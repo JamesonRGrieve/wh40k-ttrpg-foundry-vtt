@@ -1,0 +1,28 @@
+{
+  "name": "Stryxis Aether Lance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Stryxis",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d5",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Unwieldy",
+    "weight": "5kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Edge of the Abyss",
+    "note": "Extremely Rare when sold by Stryxis.D oesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. -10 to Parry.",
+    "description": {
+      "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Extremely Rare when sold by Stryxis.D oesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. -10 to Parry.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KdSE7HcxaAXrwyy3"
+}

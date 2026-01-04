@@ -1,0 +1,20 @@
+{
+  "name": "Honorifica Imperialis",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to all Fear Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull Flanked by Laurel Leaves",
+    "cost": "Distinguished Service Medal: Awarded for Outstanding Heroism in battle.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FcgKBYFeFpMzxW6U"
+}

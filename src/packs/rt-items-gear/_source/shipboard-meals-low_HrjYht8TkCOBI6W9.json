@@ -1,0 +1,20 @@
+{
+  "name": "Shipboard Meals: Low",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The Meals provided whilst aboard a Void Craft. Fungus Bread, Condensation Water, Void Sweat. Unpleasent, but better than starving.",
+    "cost": "Cost is per day",
+    "effects": "Plentiful",
+    "notes": "1 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 1 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HrjYht8TkCOBI6W9"
+}

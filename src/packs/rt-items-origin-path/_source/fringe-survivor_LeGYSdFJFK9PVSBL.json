@@ -1,0 +1,25 @@
+{
+  "name": "Fringe Survivor",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Birthright",
+    "descriptionText": "1. Survivalist (300xp): +3 Toughness or +3 Perception, gain Survival as Trained Basic Skill, gain 1 Additional Fate Point and 1d5+1 Insanity.\n2. Heretek (100xp): Gain +3 Intelligence and two untrained basic skills from noted list. Gain 1d5 Corruption and hatred of the Mechanicus. \n3. Pit-Fighter (200xp): +3 Toughness or +3 Strength, +3 Weapon Skill. Gain Rival (Underworld) and 1 Corruption",
+    "effects": "1. Survivalist (300xp): +3 Toughness or +3 Perception, gain Survival as Trained Basic Skill, gain 1 Additional Fate Point and 1d5+1 Insanity.\n2. Heretek (100xp): Gain +3 Intelligence and two untrained basic skills from noted list. Gain 1d5 Corruption and hatred of the Mechanicus. \n3. Pit-Fighter (200xp): +3 Toughness or +3 Strength, +3 Weapon Skill. Gain Rival (Underworld) and 1 Corruption",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Survivalist (300xp): +3 Toughness or +3 Perception, gain Survival as Trained Basic Skill, gain 1 Additional Fate Point and 1d5+1 Insanity.<br>2. Heretek (100xp): Gain +3 Intelligence and two untrained basic skills from noted list. Gain 1d5 Corruption and hatred of the Mechanicus. <br>3. Pit-Fighter (200xp): +3 Toughness or +3 Strength, +3 Weapon Skill. Gain Rival (Underworld) and 1 Corruption</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.birthright",
+      "step": "Birthright",
+      "stepIndex": 2,
+      "number": "1 and 5"
+    }
+  },
+  "_id": "LeGYSdFJFK9PVSBL"
+}

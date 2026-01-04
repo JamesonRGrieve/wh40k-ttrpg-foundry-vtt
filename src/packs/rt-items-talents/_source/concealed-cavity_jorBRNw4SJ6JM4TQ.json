@@ -1,0 +1,17 @@
+{
+  "name": "Concealed Cavity",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Has a hidden storage that can fit one item no larger than a closed fist. Discovery requires a -10 Search Test, or a +10 Search test if using a Medical scanner or Auspex",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Has a hidden storage that can fit one item no larger than a closed fist. Discovery requires a -10 Search Test, or a +10 Search test if using a Medical scanner or Auspex</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jorBRNw4SJ6JM4TQ"
+}

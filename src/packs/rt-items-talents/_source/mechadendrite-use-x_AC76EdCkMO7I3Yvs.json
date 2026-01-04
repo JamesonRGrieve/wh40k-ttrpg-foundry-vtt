@@ -1,0 +1,17 @@
+{
+  "name": "Mechadendrite Use (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Mechanicus Implants\nAptitudes: Intelligence, Tech, Unaligned",
+    "effect": "Character is trained in the use of a particular kind of Mechadendrite in much the same way Weapon Training allows the use of weapons. Groups: \nMechedendrite use (Weapon), used for any mechadendrite equippe with a melee or ranged weapon and have the appropriate strength to be used in combat\nMechadendrite Use (Utility), used for more varied mechadendrites, such as Machine Spirit Interfaces, Manipulators, Medicae, Utility, Optical, and so on.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character is trained in the use of a particular kind of Mechadendrite in much the same way Weapon Training allows the use of weapons. Groups: \nMechedendrite use (Weapon), used for any mechadendrite equippe with a melee or ranged weapon and have the appropriate strength to be used in combat\nMechadendrite Use (Utility), used for more varied mechadendrites, such as Machine Spirit Interfaces, Manipulators, Medicae, Utility, Optical, and so on.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AC76EdCkMO7I3Yvs"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Sanctioned",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Character has the mental fortitude to survive the tests of psychic sanctioning. If they take the Psyker Elite Advance, they do not gain the corruption normally inflicted with that advance, and start at Psy Rating 2.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Character has the mental fortitude to survive the tests of psychic sanctioning. If they take the Psyker Elite Advance, they do not gain the corruption normally inflicted with that advance, and start at Psy Rating 2.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7oK2Bwr4NtaFv4oa"
+}

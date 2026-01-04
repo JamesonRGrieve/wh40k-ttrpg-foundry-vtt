@@ -1,0 +1,20 @@
+{
+  "name": "Concussion Missile (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Astartes Missile Launcher",
+    "damageOrEffect": "6d10 I, Pen 5. Concussive (1), Blast (5).",
+    "qualities": "Concussive (1), Blast (5)",
+    "weight": "1kg",
+    "availability": "Initiated",
+    "cost": "20 R Each",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 6d10 I, Pen 5. Concussive (1), Blast (5).</p><p><b>Qualities:</b> Concussive (1), Blast (5)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ODvIIjruYkXauiqr"
+}

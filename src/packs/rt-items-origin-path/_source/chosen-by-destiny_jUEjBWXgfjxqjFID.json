@@ -1,0 +1,25 @@
+{
+  "name": "Chosen by Destiny",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Lure of the Void",
+    "descriptionText": "1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).\n2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.\n3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.",
+    "effects": "1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).\n2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.\n3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).<br>2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.<br>3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.lure-of-the-void",
+      "step": "Lure of the Void",
+      "stepIndex": 3,
+      "number": "6"
+    }
+  },
+  "_id": "jUEjBWXgfjxqjFID"
+}

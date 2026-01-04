@@ -1,0 +1,18 @@
+{
+  "name": "Subsystem (SM): Nutrient Recycling",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Legion/Astartes Power Armour",
+    "effect": "Allows wearer to survive without food for up to 2 weeks before having to make a -10 Toughness Test. Failing suffers one fatigue which cannot be eliminated until other nourishment is consumed.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Allows wearer to survive without food for up to 2 weeks before having to make a -10 Toughness Test. Failing suffers one fatigue which cannot be eliminated until other nourishment is consumed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GbkjAVNFIm8EpFpV"
+}

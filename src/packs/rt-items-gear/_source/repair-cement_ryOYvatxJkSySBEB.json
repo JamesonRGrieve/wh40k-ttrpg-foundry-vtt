@@ -1,0 +1,20 @@
+{
+  "name": "Repair Cement",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "Spray-Gel that quickly seals damage and small holes. Useful for fixing breaches in power armour.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "1 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 1 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ryOYvatxJkSySBEB"
+}

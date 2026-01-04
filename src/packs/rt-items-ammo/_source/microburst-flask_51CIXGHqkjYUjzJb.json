@@ -1,0 +1,20 @@
+{
+  "name": "Microburst Flask",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Plasma: Plasma Pistols and Plasma Guns",
+    "damageOrEffect": "-2 Damage, +2 Penetration, +10 range. Cannot use \"Maximal\" Setting, but also cannot overheat.",
+    "qualities": "Maximal (lose)",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> -2 Damage, +2 Penetration, +10 range. Cannot use \"Maximal\" Setting, but also cannot overheat.</p><p><b>Qualities:</b> Maximal (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "51CIXGHqkjYUjzJb"
+}

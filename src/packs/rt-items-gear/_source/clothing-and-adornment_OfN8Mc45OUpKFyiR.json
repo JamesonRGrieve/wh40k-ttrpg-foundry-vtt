@@ -1,0 +1,20 @@
+{
+  "name": "Clothing and Adornment",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "-",
+    "availability": "What the Character wears, availability depends on what they want.",
+    "cost": "Baseline: Common Clothes: Abundant; Merchant Clothes: Average; Noble Clothes: Scarce\nOther examples: Rags, Coveralls, Bodygloves, Court Robes, Fine cloths, etc.",
+    "effects": "Special",
+    "notes": "Varies",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> Varies</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OfN8Mc45OUpKFyiR"
+}

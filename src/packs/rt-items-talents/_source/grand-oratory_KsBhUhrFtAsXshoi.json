@@ -1,0 +1,17 @@
+{
+  "name": "Grand Oratory",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Seccessionist Alternative Advance, 1000xp\nCharm +10, Command +10, Master Orator",
+    "effect": "The Character's Fellowship Tests and Fellowship-based Skill Tests affect 100x the normal number of targets.\nThis talent is hit hard by later editions (100x FEL is the default for Command with Air of Authority in OW), as such, let's say it stacks with them, multiplying all other values by 100 (1,000x FEL bonus for Fellowship Tests, 10,000x FEL bonus for Command, Charm, and Intimidate if combined with Master Orator and Air of Authority)",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>The Character's Fellowship Tests and Fellowship-based Skill Tests affect 100x the normal number of targets.\nThis talent is hit hard by later editions (100x FEL is the default for Command with Air of Authority in OW), as such, let's say it stacks with them, multiplying all other values by 100 (1,000x FEL bonus for Fellowship Tests, 10,000x FEL bonus for Command, Charm, and Intimidate if combined with Master Orator and Air of Authority)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KsBhUhrFtAsXshoi"
+}

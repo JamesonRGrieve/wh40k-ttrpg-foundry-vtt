@@ -1,0 +1,17 @@
+{
+  "name": "Hard Bargain",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Whenever profit factor is gained from completing an endeavour, add additional +1 to the group's total",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Whenever profit factor is gained from completing an endeavour, add additional +1 to the group's total</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aP0lrio62VcLb8jX"
+}

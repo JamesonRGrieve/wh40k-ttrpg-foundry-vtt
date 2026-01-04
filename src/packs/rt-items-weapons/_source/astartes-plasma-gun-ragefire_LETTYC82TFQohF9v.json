@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Plasma Gun (Ragefire)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Plasma",
+    "range": "100m",
+    "rof": "S/2/-",
+    "damage": "1d10+9",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 40,
+    "reload": "4 Full",
+    "special": "SM Wep, Volatile, Maximal",
+    "weight": "27kg",
+    "availability": "Respected",
+    "cost": "20 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LETTYC82TFQohF9v"
+}

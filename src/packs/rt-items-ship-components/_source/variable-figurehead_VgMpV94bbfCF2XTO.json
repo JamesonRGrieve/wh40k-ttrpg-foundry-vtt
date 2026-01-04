@@ -1,0 +1,21 @@
+{
+  "name": "Variable Figurehead",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "Imperial Ships are partially identified by the figurehead on their bows, this component allows it to take one of five different designs. Typically variations on the Imperial Eagle. Modifying these patterns requies extensive refitting. Component can't be damaged or destroyed except via a Critical Hit. One per Vessel.",
+    "availability": "Rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Imperial Ships are partially identified by the figurehead on their bows, this component allows it to take one of five different designs. Typically variations on the Imperial Eagle. Modifying these patterns requies extensive refitting. Component can't be damaged or destroyed except via a Critical Hit. One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VgMpV94bbfCF2XTO"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Markov 2 Warp Engine",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Warp Engine",
+    "hullType": "Light Cruisers",
+    "powerUsage": 13,
+    "spaceUsage": 13,
+    "spCost": 1,
+    "effect": "Allows the Vessel to enter and exit the immaterium. Reduce Base Travel time for warp journeys by 1d5 days per full week of travel. If voyage is shorter than 1 week before reduction, has no effect. Can be further modified by results of Navigation (Warp) Tests.",
+    "availability": "Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Allows the Vessel to enter and exit the immaterium. Reduce Base Travel time for warp journeys by 1d5 days per full week of travel. If voyage is shorter than 1 week before reduction, has no effect. Can be further modified by results of Navigation (Warp) Tests.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GIngdwg2ziSxnn7l"
+}

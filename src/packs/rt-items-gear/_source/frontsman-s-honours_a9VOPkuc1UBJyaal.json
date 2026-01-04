@@ -1,0 +1,20 @@
+{
+  "name": "Frontsman's Honours",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.",
+    "cost": "Distinguished Service Medal: Hold a Pass, Fortification, or Entrenchment against an Ork Horde of at least 100 for 24 hours or longer.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a9VOPkuc1UBJyaal"
+}

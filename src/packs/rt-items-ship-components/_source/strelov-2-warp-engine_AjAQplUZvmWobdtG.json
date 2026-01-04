@@ -1,0 +1,21 @@
+{
+  "name": "Strelov 2 Warp Engine",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Warp Engine",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 12,
+    "spaceUsage": 12,
+    "spCost": "-",
+    "effect": "Allows ship to enter and exit immaterium to cross interstellar distances. Consididered the Default Option",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Allows ship to enter and exit immaterium to cross interstellar distances. Consididered the Default Option</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AjAQplUZvmWobdtG"
+}

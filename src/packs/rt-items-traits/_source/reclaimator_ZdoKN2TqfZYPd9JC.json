@@ -1,0 +1,17 @@
+{
+  "name": "Reclaimator",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Scum Career, DH Rank 1+.  Int 30+, originate from a Hive or Forge World, or Void Born.",
+    "descriptionText": "Perhaps the least trusted of any possessing a competence with technology. These individuals are tasked with redeeming raw minerals from old or damaged systems, and scavenging intact parts for use in minor repairs. This ends up with a higher understanding of the functions of technology, at odds with the Dogma of the Mechanicus.",
+    "effects": "Replace new Rank's Advances with that of the Reclaimator",
+    "source": "DH: Inquisitor's Handbook (Page 76)",
+    "description": {
+      "value": "<p>Perhaps the least trusted of any possessing a competence with technology. These individuals are tasked with redeeming raw minerals from old or damaged systems, and scavenging intact parts for use in minor repairs. This ends up with a higher understanding of the functions of technology, at odds with the Dogma of the Mechanicus.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Reclaimator</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZdoKN2TqfZYPd9JC"
+}

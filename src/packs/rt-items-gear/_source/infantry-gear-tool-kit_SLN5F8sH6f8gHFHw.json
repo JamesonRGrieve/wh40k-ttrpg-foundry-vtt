@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Tool Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "1kg",
+    "availability": "A small set of Screwdrivers, wrenches, wire, and other basic maintenance items for routine repairs. May also contain a roll of tape and a small multi-purpose axe.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Common",
+    "notes": "15 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 15 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SLN5F8sH6f8gHFHw"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Emperor's Whisper (Landunder)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+1",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Balanced",
+    "weight": "0.5kg",
+    "availability": "Very Rare",
+    "cost": "150 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Balanced</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LjPU8KAjJY6WpWZo"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Lance",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "Increase penetration by base weapon PEN value with every Degree of Success on BS Test after first.",
+    "description": {
+      "value": "<p>Increase penetration by base weapon PEN value with every Degree of Success on BS Test after first.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jbbHI76mUD822QMX"
+}

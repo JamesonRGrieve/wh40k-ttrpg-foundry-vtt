@@ -1,0 +1,17 @@
+{
+  "name": "Master Orator",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Inspire Wrath\nAptitudes: Fellowship, Leadership",
+    "effect": "When the character uses Charm or Intimidate Skills to affect more than one person, they can affect 100x their Fellowship Bonus people, instead of just 10x Fellowship Bonus.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When the character uses Charm or Intimidate Skills to affect more than one person, they can affect 100x their Fellowship Bonus people, instead of just 10x Fellowship Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PeneCN9GdywxbYJY"
+}

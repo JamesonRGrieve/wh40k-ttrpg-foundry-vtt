@@ -1,0 +1,14 @@
+{
+  "name": "Witch-Edge",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 2,
+    "description": {
+      "value": "<p>2</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l1ZA3bRtGfWL7WEU"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Vengeance Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Bolt Pistols, Bolters, Heavy Bolters",
+    "damageOrEffect": "Gains Unstable and Overheats Qualities as well as +3 Damage and Penetration",
+    "qualities": "Unstable, Overheats",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gains Unstable and Overheats Qualities as well as +3 Damage and Penetration</p><p><b>Qualities:</b> Unstable, Overheats</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9sBZyjySBwIBbJZz"
+}

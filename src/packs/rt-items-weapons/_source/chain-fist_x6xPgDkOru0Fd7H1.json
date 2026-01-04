@@ -1,0 +1,28 @@
+{
+  "name": "Chain Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Rending",
+    "penetration": 12,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unbalanced",
+    "weight": "15kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Imposes -10 on WS Tests to attack with it unless wielder has 5+ Strength of Higher.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Imposes -10 on WS Tests to attack with it unless wielder has 5+ Strength of Higher.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x6xPgDkOru0Fd7H1"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Tau Battlesuit Heavy Rail Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - Tau",
+    "range": "300m",
+    "rof": "S/-/-",
+    "damage": "4d10+8",
+    "damageType": "Impact",
+    "penetration": 12,
+    "clip": 12,
+    "reload": "2 Full",
+    "special": "Felling (4), Proven (3), Tearing",
+    "weight": "60kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Tau Char. Guide",
+    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on XV88 Broadsides",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (3), Tearing</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on XV88 Broadsides</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PBBVFVBnPhrqzzg8"
+}

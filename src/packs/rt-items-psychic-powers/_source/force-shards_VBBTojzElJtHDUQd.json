@@ -1,0 +1,22 @@
+{
+  "name": "Force Shards",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis\n(Telekinetic Force)",
+    "prerequisites": "Precision Telekinesis, Telekinetic Wep\nOW: Psy Rating 6",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Creates a number of Force Shards equal to the Psyker's Psy Rating that hover around the Psyker and act as a barrier to harm. Opponents attacking the Psyker while they have one or more Force Shards orbiting them have -10 to Weapon Skill and Ballistic Skill Tests. The Psyker can choose to launch one or more Force Shards on subsequent turns at a single target or anyone within 2 metres of that target as a ranged attack. The Psyker makes a +0 Willpower Test to hit the target, success hits with one shard, +1 per Degree of Success up to the number of shards the Psyker has. Each Shard does 1d10+2xPsy Rating Rending Damage, with Psy Rating Penetration. This attack can be dodged as with other ranged attacks. ",
+    "effect": "400xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VBBTojzElJtHDUQd"
+}

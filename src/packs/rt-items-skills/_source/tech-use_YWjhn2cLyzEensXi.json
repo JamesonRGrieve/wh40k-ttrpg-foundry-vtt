@@ -1,0 +1,18 @@
+{
+  "name": "Tech-Use",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Crafting, Investigation\nApt: Intelligence, Tech, Unaligned",
+    "characteristic": "Intelligence",
+    "descriptor": "Use and Repair complex machinery, understand technology, etc. No test needed for basic machinery, but test needed for unusual gear, malfunctioning items, and so on. Also used for setting up and dealing with Explosives.",
+    "uses": "Use: Operate Common Equipment such as Voxes or Pict Casters (Doesn't always need test), Repair a Broken Vehicle, Push Tech beyond normal capabilities, Figure out how tech works.\nSpecial Use: Crafting, can make technical clockwork, steamwork, and more advanced weapons and armour provided the materials, workshop, and schematics to do so.\nDemolitions: Test to plant charge with any trigger (trip wire, timer, proximity, etc), Failiure means explosive wont go off, 4+ DoF it goes off prematurely. Defusing is Opposed Tech-Use vs setter's Tech-Use.",
+    "useTime": "1 Minute or more for complex systems.",
+    "description": {
+      "value": "<p>Use and Repair complex machinery, understand technology, etc. No test needed for basic machinery, but test needed for unusual gear, malfunctioning items, and so on. Also used for setting up and dealing with Explosives.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YWjhn2cLyzEensXi"
+}

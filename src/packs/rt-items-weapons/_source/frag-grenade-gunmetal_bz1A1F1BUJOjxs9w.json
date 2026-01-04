@@ -1,0 +1,28 @@
+{
+  "name": "Frag Grenade (Gunmetal)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (5)",
+    "weight": "0.8kg",
+    "availability": "Scarce",
+    "cost": "10 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Considered by some as a \"Trophy  Weapon\" acquired through combat.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Considered by some as a \"Trophy  Weapon\" acquired through combat.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bz1A1F1BUJOjxs9w"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Glassteed",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Walker",
+    "size": "5m",
+    "tacticalSpeed": "30kph",
+    "cruisingSpeed": "+25",
+    "maneuverability": "20",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "Front 8\nSide 8\nRear 8",
+    "rearArmour": "Rider",
+    "structuralIntegrity": "None",
+    "crew": "Melee: Dagger Teeth (1d10+4 R; Pen 1)",
+    "passengers": "Vehicle Traits: Living, Open-Topped, Walker\nCreature Traits: Natural Weapons (Dagger Teeth), Quadruped, Resistance (Poisons, Radiation), Size (6) (Enormous)\nLiving Creature: WS 25, BS -, S 40, T 35, Ag 42, INT 16, PER 36, WP 12, FEL 04.\nStrength included in weapon damage.",
+    "cargo": "Rare",
+    "availability": "Dark Heresy 2E: Core",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "NWpA4m3yPtRzTWwa"
+}

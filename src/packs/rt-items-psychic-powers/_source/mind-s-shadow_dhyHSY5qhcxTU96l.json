@@ -1,0 +1,22 @@
+{
+  "name": "Mind's Shadow",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "Self",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker makes a Focus Power Test, if successful for as long as they sustain the power, they gain a bonus of +3xPsy Rating to their Silent Move and Concealment Skill Tests, and may make a Concealement Test at the end of each of their turns as a free action if they did not run or make some other action that would draw attention to them.",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dhyHSY5qhcxTU96l"
+}

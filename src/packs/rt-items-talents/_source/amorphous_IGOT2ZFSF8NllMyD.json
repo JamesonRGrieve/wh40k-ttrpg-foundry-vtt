@@ -1,0 +1,17 @@
+{
+  "name": "Amorphous",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Creatures can squeeze and expand their body, not possessing a defined shape. They Can change their size by one step up or down, they determine movement rate using half their Agility Bonus.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creatures can squeeze and expand their body, not possessing a defined shape. They Can change their size by one step up or down, they determine movement rate using half their Agility Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IGOT2ZFSF8NllMyD"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Haemorrhage",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 4,\nSmite",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Opposed Willpower Test",
+    "opposed": "No",
+    "sustained": "Psyker makes Opposed -10 Willpower vs Target Individual's Toughness. If target fails they suffer Psy Rating Energy Damage, +1 per Degree of Failiure on Toughness Test. This damage ignores Toughness Bonus and Armour.\nIf this damage kills the target, the psyker can immediately recast the psychic power as a Free Action on any legal target within 5 metres of the original target.",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W1txVhMwD900WCJw"
+}

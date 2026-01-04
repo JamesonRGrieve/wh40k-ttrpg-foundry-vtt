@@ -1,0 +1,22 @@
+{
+  "name": "Molten Beam",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Psy Rating 4,\nFlame Breath",
+    "focusPower": "Half Action\nAttack,",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Target individual within range takes 1d10+5, +3xPsy Rating damage with Pen 2xPsy Rating and Melta Quality. They may attempt to dodge this attack as they would a ranged weapon attack.",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ivvIW1TORKgYTTqb"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Weapon Skill (WS)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Apt: Weapon Skill, Offence, Unaligned",
+    "characteristic": "The Skill a Character possesses with Melee Weapons and Hand-to-Hand Combat\nUsed for making Melee Attacks.",
+    "descriptor": null,
+    "uses": null,
+    "useTime": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3yUFKnjxC7mNPfwh"
+}

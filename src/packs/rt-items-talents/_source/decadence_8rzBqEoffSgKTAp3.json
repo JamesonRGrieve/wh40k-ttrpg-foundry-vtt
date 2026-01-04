@@ -1,0 +1,17 @@
+{
+  "name": "Decadence",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "T 30",
+    "effect": "When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8rzBqEoffSgKTAp3"
+}

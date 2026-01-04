@@ -1,0 +1,17 @@
+{
+  "name": "Psychic Discipline",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Psy Rating",
+    "effect": "Gain access to a new Psychic Discipline, may access a maximum of three. Talent can be taken multiple times.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Gain access to a new Psychic Discipline, may access a maximum of three. Talent can be taken multiple times.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RPg8biVe0XovEZGm"
+}

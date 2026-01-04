@@ -1,0 +1,21 @@
+{
+  "name": "R-50 Auspex Multi-Band",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Augurs",
+    "hullType": "All Ships",
+    "powerUsage": 4,
+    "spaceUsage": 0,
+    "spCost": "-",
+    "effect": "The eyes and ears of the ship. +5 to Manoeuvre Tests to avoid celestial phenomena, but -2 Detection. +50 Achievement Points for Completing Exploration Objectives. Can only be damaged/destroyed by critical hit.",
+    "availability": "Scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>The eyes and ears of the ship. +5 to Manoeuvre Tests to avoid celestial phenomena, but -2 Detection. +50 Achievement Points for Completing Exploration Objectives. Can only be damaged/destroyed by critical hit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ANGQnW19nVrbR5hA"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Dark Cannon",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon (Xenotech)",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 2,
+    "spCost": 3,
+    "damage": "1d10+1",
+    "strength": 3,
+    "critRating": 6,
+    "range": 6,
+    "availability": "Near Unique",
+    "notes": "Impacts cause clouds of fog. Vessels struck by this weapon have -15 to BS Tests for the following Strategic turn. Weapon doesn't seem to use ammo.",
+    "source": null,
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> Impacts cause clouds of fog. Vessels struck by this weapon have -15 to BS Tests for the following Strategic turn. Weapon doesn't seem to use ammo.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MIdq9VDaj93lYWGe"
+}

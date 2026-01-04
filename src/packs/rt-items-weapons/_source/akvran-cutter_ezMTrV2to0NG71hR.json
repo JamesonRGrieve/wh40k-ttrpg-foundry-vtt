@@ -1,0 +1,28 @@
+{
+  "name": "Akvran Cutter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Exotic",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 1,
+    "reload": "-",
+    "special": "Blast (3), Concussive (3), Proven (4)",
+    "weight": "1kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Concussive (3), Proven (4)</p><p><b>Note:</b> Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ezMTrV2to0NG71hR"
+}

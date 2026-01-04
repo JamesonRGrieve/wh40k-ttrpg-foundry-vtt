@@ -1,0 +1,17 @@
+{
+  "name": "Rabbit Punch",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Agility 35, Weapon Skill 35 \nAptitudes: Agility, Finesse",
+    "effect": "Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qw31IcLoNcy8M7hS"
+}

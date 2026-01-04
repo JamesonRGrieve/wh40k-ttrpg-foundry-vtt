@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Lightning Claw",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Tearing",
+    "weight": "30kg",
+    "availability": "Distinguished",
+    "cost": "30 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only, not easily acquirable. replaces one of the Power Armour's Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. Does +1 Damage per Degree of Success on attack roll, or +2 if dual wielded. Can be sheathed/unsheathed as ready action. If acquired as a pair, cost for the second one is halved (EG: 30 for 1, 45 for two).",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. replaces one of the Power Armour's Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. Does +1 Damage per Degree of Success on attack roll, or +2 if dual wielded. Can be sheathed/unsheathed as ready action. If acquired as a pair, cost for the second one is halved (EG: 30 for 1, 45 for two).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "doPta53EzV2wxSZc"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "The Bastion Unwavering",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Force Field Relic Astartes",
+    "locations": "All",
+    "ap": 0.6,
+    "maxAg": "-",
+    "weight": "15kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "notes": "Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qPB2GchlIcATIPy5"
+}

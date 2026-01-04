@@ -1,0 +1,20 @@
+{
+  "name": "Incendiary Missile (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Astartes Missile Launcher",
+    "damageOrEffect": "1d10+3 E, Pen 0, Blast (5).\nArea remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.",
+    "qualities": "Blast(5), Flame",
+    "weight": "2kg",
+    "availability": "Initiated",
+    "cost": "15 R Each",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 1d10+3 E, Pen 0, Blast (5).\nArea remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.</p><p><b>Qualities:</b> Blast(5), Flame</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vVRRVlpsk0riBP4Q"
+}

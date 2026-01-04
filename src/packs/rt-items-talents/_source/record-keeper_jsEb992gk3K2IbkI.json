@@ -1,0 +1,17 @@
+{
+  "name": "Record Keeper",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Rector Erudite Advanced Specialty (300xp)",
+    "effect": "When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jsEb992gk3K2IbkI"
+}

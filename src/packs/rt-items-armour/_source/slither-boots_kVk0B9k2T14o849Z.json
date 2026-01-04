@@ -1,0 +1,22 @@
+{
+  "name": "Slither Boots",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Other",
+    "locations": "Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "500 T",
+    "notes": "Provides +10 to Agility Tests to maintain footing in treacherous or slick conditions. Is 6AP vs corrosive effects.",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Provides +10 to Agility Tests to maintain footing in treacherous or slick conditions. Is 6AP vs corrosive effects.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kVk0B9k2T14o849Z"
+}

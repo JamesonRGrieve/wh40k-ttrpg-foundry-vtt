@@ -1,0 +1,17 @@
+{
+  "name": "Crack Shot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Ballistic Skill 50\nAptitudes: Ballistic Skill, Finesse, Tzeentch",
+    "effect": "Whenever the Character's Ranged Attacks inflict Critical Damage, add +2 to the damage result.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Whenever the Character's Ranged Attacks inflict Critical Damage, add +2 to the damage result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JJCV3nv9G1vRkh2M"
+}

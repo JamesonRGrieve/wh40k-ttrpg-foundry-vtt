@@ -1,0 +1,22 @@
+{
+  "name": "Deff Wave",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Zzap, Warpath",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Fires a cone in front of the Weirdboy like a weapon with Spray Quality that ignores cover and solid objects such as walls (but not Armour Points or Toughness). Each target makes +0 Agility test to evade or -10 Toughness Test to endure or suffer 2d5+Psy Rating Rending Damage with Unstable Quality. Inanimate objects are unaffected, and creatures with Daemonic or Machine trait take half damage (round up).\nSpray: Fires in a 30 degree arc, All targets in range make +0 Agility Test or are hit, Hit location is always body.\nUnstable: On hit, roll 1d10, on a 1 deal half damage, on 2-9 deal normal damage, on a 10 deal double damage",
+    "effect": "400xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Al9Ci3vvCoO9omoG"
+}

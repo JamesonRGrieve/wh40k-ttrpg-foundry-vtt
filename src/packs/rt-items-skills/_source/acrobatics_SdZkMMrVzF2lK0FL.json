@@ -1,0 +1,18 @@
+{
+  "name": "Acrobatics",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Movement\nApt: Agility, General, Slaanesh",
+    "characteristic": "Agility",
+    "descriptor": "The ability to perform precise bodily actions, such as leaping across gaps, perform flips, and contort oneself. More DoS means a more stylish or efficient result.",
+    "uses": "Uses: Leaping across chasms, falling to the ground without harm, summersaults, flips, cartwheels, twisting ones body, slipping past foes, Keeping Balance, Moving over objects whilst keeping momentum.\nSpecial Use: Contortionist: Full Action make +0 Test to free from bonds, can only attempt once per restraint. Can also use to escape Grapples.\nManeouvering: +0  Test as Half Action to perform function of the Disengage Action. Jumping: Can use Acrobatics instead of Agility/Strength for Jumping/Leaping. Test to reduce fall by 1m per DoS",
+    "useTime": "Usually Full Action",
+    "description": {
+      "value": "<p>The ability to perform precise bodily actions, such as leaping across gaps, perform flips, and contort oneself. More DoS means a more stylish or efficient result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SdZkMMrVzF2lK0FL"
+}

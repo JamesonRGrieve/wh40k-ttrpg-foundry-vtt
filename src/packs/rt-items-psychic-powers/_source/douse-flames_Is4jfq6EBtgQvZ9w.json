@@ -1,0 +1,22 @@
+{
+  "name": "Douse Flames",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "-",
+    "focusPower": "Half Action",
+    "action": "5m x Willpower Bonus",
+    "range": "Threshold 16",
+    "opposed": "Yes",
+    "sustained": "Instantly extinguish all flames within range, as well as prevent all Fire-based Weapons such as flamers within range from functioning whilst power is sustained (doesn't prevent the flamer's fuel from being shot, just the flame). Chemically flammable substances that burn once exposed to air, such as prometheum, will immediately relight if it leaves the range of the power or the power stops being sustained.\nFor every 5 points above threshold, range increases by 5m.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Is4jfq6EBtgQvZ9w"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Vox-Tech",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Sergeant Specialty\n250xp",
+    "effect": "Character is accompanied by a Vox-Tech who relays orders to the squad, as long as Character's Comrade is in Cohesion, all of the character's orders affect all comrades within vox range.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character is accompanied by a Vox-Tech who relays orders to the squad, as long as Character's Comrade is in Cohesion, all of the character's orders affect all comrades within vox range.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MoRPLq1iKezJOjx8"
+}

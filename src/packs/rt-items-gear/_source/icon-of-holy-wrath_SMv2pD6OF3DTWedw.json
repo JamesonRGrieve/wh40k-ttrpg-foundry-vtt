@@ -1,0 +1,20 @@
+{
+  "name": "Icon of Holy Wrath",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "10kg",
+    "availability": "A Representation of a time of purification at the hands of the Inquisition is upon those that fall before the banner. The user increases their visibility for the purposes of any talents that benefit from visibility (such as Into the Jaws of Hell Talent), and gives everyone including themselves Fear(1) vs the enemies of the Holy Ordos. Often takes the form of a standard aloft a suspensor field.",
+    "cost": "Can't be acquired, only created by an Inquisitor and sometimes given to their most worthy acolytes for a particular battle.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SMv2pD6OF3DTWedw"
+}

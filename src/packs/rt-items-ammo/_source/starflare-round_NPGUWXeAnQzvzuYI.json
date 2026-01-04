@@ -1,0 +1,20 @@
+{
+  "name": "Starflare Round",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Grenade Launcher or Mortar",
+    "damageOrEffect": "Produces Light",
+    "qualities": null,
+    "weight": "1kg",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Produces Light</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NPGUWXeAnQzvzuYI"
+}

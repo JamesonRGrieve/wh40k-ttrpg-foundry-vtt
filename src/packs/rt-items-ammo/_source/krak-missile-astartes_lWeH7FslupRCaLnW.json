@@ -1,0 +1,20 @@
+{
+  "name": "Krak Missile (Astartes)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Astartes Missile Launcher",
+    "damageOrEffect": "4d10+6 X, Pen 10, Blast (1)\nIncluded with Missile Launcher Requisition. Cost is only for \"Excessive\" Requests",
+    "qualities": "Blast(1)",
+    "weight": "2kg",
+    "availability": "Initiated",
+    "cost": "5 R Each",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> 4d10+6 X, Pen 10, Blast (1)\nIncluded with Missile Launcher Requisition. Cost is only for \"Excessive\" Requests</p><p><b>Qualities:</b> Blast(1)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lWeH7FslupRCaLnW"
+}

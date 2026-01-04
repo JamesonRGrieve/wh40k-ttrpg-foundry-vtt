@@ -1,0 +1,22 @@
+{
+  "name": "Mental Force",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker unleashes a wave of force, on a successful Focus Power Test, it can abruptly move a 50kg x Psy Rating object 10m in any direction. If directed at a target, it automatically hits, dealing 1d10 + Psy Rating Impact damage with Primitive and Unstable Qualities, and moves the target 10 metres. Further degrees of success add +1 to number of metres move in either case, attack can also be dodged.\nPrimitive: Double AP of non-primitive armour target is wearing.\nUnstable: On hit, roll 1d10, on a 1 deal half damage, on 2-9 deal normal damage, on a 10 deal double damage",
+    "effect": "100xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gk4sJ7dg7hKvJ1qQ"
+}

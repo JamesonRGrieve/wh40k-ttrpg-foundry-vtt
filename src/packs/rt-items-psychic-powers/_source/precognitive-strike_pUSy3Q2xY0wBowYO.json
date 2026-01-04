@@ -1,0 +1,22 @@
+{
+  "name": "Precognitive Strike",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": null,
+    "focusPower": "Free Action",
+    "action": "Self",
+    "range": "Threshold 17",
+    "opposed": "No",
+    "sustained": "Until the end of the character's next turn, they gain +20 to all Weapon Skill and Ballistic Skill Tests.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pUSy3Q2xY0wBowYO"
+}

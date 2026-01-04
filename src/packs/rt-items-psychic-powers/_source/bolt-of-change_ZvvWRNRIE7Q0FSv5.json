@@ -1,0 +1,22 @@
+{
+  "name": "Bolt of Change",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Tzeentch)",
+    "prerequisites": "Mark of Tzeentch WP 50+, Psy Rating 5",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Psyker fires a Psychic Bolt which may be dodged as if a ranged attack. If it hits it deals Psy Rating d10 Damage with Penetration 9, with Felling(Psy Rating) Quality. If the target is a living creature, they must immediately make a +0 Toughness Test. Failiure results in the target gaining 1d5 Corruption Points per Degree of Failure. 5+ Degrees of Failiure and target instantly dies, rapidly mutating into a Chaos Spawn which collapses in screeching agony and ichor.",
+    "effect": "500xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZvvWRNRIE7Q0FSv5"
+}

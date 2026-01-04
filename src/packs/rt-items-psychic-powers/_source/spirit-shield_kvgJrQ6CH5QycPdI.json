@@ -1,0 +1,22 @@
+{
+  "name": "Spirit Shield",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Void Dreamer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "As long as Void Dreamer sustains this power, all allies in rage can use their Willpower Characteristic for Opposed Willpower Tests and Tests to resist Fear and Pinning.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kvgJrQ6CH5QycPdI"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Hard Target",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Agility 40\nAptitudes: Agility, Defence, Slaanesh",
+    "effect": "When character performs a Charge or Run Action, opponents suffer -20 penalty to Ballistic Skill Tests to hit the character with a ranged weapon until the start of the character's next turn.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When character performs a Charge or Run Action, opponents suffer -20 penalty to Ballistic Skill Tests to hit the character with a ranged weapon until the start of the character's next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fqzH0FfJAgxs0nbG"
+}

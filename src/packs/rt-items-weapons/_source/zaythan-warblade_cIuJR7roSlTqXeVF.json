@@ -1,0 +1,28 @@
+{
+  "name": "Zaythan Warblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+6",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Tearing, Unbalanced",
+    "weight": "9kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Archeotech. Powerfielded Chainsword. Requires two hands to wield.",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Tearing, Unbalanced</p><p><b>Note:</b> Archeotech. Powerfielded Chainsword. Requires two hands to wield.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cIuJR7roSlTqXeVF"
+}

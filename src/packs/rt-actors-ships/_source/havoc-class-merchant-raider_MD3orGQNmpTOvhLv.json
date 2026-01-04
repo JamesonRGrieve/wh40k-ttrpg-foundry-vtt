@@ -1,0 +1,28 @@
+{
+  "name": "Havoc-class Merchant Raider",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Raider",
+    "size": "1.6km long, 0.4km wide",
+    "crew": 24000,
+    "speed": 9,
+    "manoeuvrability": 25,
+    "detection": 10,
+    "hull": 30,
+    "armour": 16,
+    "turrets": 1,
+    "space": 40,
+    "shipPoints": 35,
+    "weaponCapacity": "1 Dorsal, 1 Prow",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MD3orGQNmpTOvhLv"
+}

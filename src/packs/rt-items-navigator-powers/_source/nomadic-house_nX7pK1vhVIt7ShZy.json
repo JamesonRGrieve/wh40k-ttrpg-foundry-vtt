@@ -1,0 +1,21 @@
+{
+  "name": "Nomadic House",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Lore of the Wander: The Navigator gains Talented(Navigation(Warp)) Talent.\nA Taste for the Warp: The Navigator can spend a Fate Point to automatically suceed in using a Navigator power with 1d5-1 degrees of success.\nScorn of the Dirt Dwellers: Suffer -10 to all Fellowship Tests and skills based on Fellowship when on a planetary body and deal with such locals.\nInitial Mutation: Begin with a single Navigator Mutation, rolled randomly. Additional mutations may be gained when new Powers or Mastery is gained.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": null,
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nX7pK1vhVIt7ShZy"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Elseways Charts",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1kg",
+    "availability": "Ancient Star maps. When used by a Navigator, they may skip locating the Astronomicon if they pass a -10 Forbidden Lore (Warp) Test, also gives +15 to Navigation (Warp) Tests per DoS. Failiure means locating Astronomicon as usual. If astronomicon not located, -20 to Warp Encounter Table.",
+    "cost": "Poor Craftsmanship needs -20 Test, Good needs +0, Best needs +10",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "idDRr3sVv4TRAolf"
+}

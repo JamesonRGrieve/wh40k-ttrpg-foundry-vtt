@@ -1,8 +1,8 @@
 {
   "id": "rogue-trader",
-  "title": "Rogue Trader Mode",
-  "description": "Dark Heresy 2e-derived Rogue Trader mode for Foundry VTT, using the acolyte sheet for player characters.",
-  "version": "1.8.1",
+  "title": "Rogue Trader",
+  "description": "Dark Heresy 2e-derived Rogue Trader for Foundry VT.",
+  "version": "0.0.1",
   "compatibility": {
     "minimum": 13,
     "verified": "13.351",
@@ -10,8 +10,7 @@
   },
   "authors": [
     {
-      "name": "Andru Quiroga",
-      "url": "https://github.com/AndruQuiroga"
+      "name": "Dreski",
     }
   ],
   "languages": [
@@ -30,108 +29,274 @@
   "scripts": [],
   "packs": [
     {
-      "name": "ammo",
-      "system": "rogue-trader",
-      "label": "Ammo",
-      "path": "./packs/ammo.db",
-      "type": "Item",
-      "entity": "Item"
+      "name": "rt-actors-bestiary",
+      "label": "RT Actors: Bestiary",
+      "path": "packs/rt-actors-bestiary",
+      "type": "Actor",
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "aptitudes",
-      "system": "rogue-trader",
-      "label": "Aptitudes",
-      "path": "./packs/aptitudes.db",
-      "type": "Item",
-      "entity": "Item"
+      "name": "rt-actors-ships",
+      "label": "RT Actors: Ships",
+      "path": "packs/rt-actors-ships",
+      "type": "Actor",
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "armour",
-      "system": "rogue-trader",
-      "label": "Armour",
-      "path": "./packs/armour.db",
-      "type": "Item",
-      "entity": "Item"
+      "name": "rt-actors-vehicles",
+      "label": "RT Actors: Vehicles",
+      "path": "packs/rt-actors-vehicles",
+      "type": "Actor",
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "attack-specials",
-      "system": "rogue-trader",
-      "label": "Specials",
-      "path": "./packs/attack-specials.db",
+      "name": "rt-items-actions",
+      "label": "RT Items: Actions",
+      "path": "packs/rt-items-actions",
       "type": "Item",
-      "entity": "Item"
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "consumables",
-      "system": "rogue-trader",
-      "label": "Drugs and Consumables",
-      "path": "./packs/consumables.db",
+      "name": "rt-items-ammo",
+      "label": "RT Items: Ammo",
+      "path": "packs/rt-items-ammo",
       "type": "Item",
-      "entity": "Item"
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "cybernetics",
-      "system": "rogue-trader",
-      "label": "Cybernetics",
-      "path": "./packs/cybernetics.db",
+      "name": "rt-items-armour",
+      "label": "RT Items: Armour",
+      "path": "packs/rt-items-armour",
       "type": "Item",
-      "entity": "Item"
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "psychic-powers",
-      "system": "rogue-trader",
-      "label": "Psychic Powers",
-      "path": "./packs/psychic-powers.db",
+      "name": "rt-items-armour-customisations",
+      "label": "RT Items: Armour Customisations",
+      "path": "packs/rt-items-armour-customisations",
       "type": "Item",
-      "entity": "Item"
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "tables",
-      "system": "rogue-trader",
-      "label": "Tables",
-      "path": "./packs/tables.db",
+      "name": "rt-items-conditions",
+      "label": "RT Items: Conditions",
+      "path": "packs/rt-items-conditions",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-gear",
+      "label": "RT Items: Gear",
+      "path": "packs/rt-items-gear",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-navigator-powers",
+      "label": "RT Items: Navigator Powers",
+      "path": "packs/rt-items-navigator-powers",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-orders",
+      "label": "RT Items: Orders",
+      "path": "packs/rt-items-orders",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-origin-path",
+      "label": "RT Items: Origin Path",
+      "path": "packs/rt-items-origin-path",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-psychic-powers",
+      "label": "RT Items: Psychic Powers",
+      "path": "packs/rt-items-psychic-powers",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-rituals",
+      "label": "RT Items: Rituals",
+      "path": "packs/rt-items-rituals",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-ship-components",
+      "label": "RT Items: Ship Components",
+      "path": "packs/rt-items-ship-components",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-ship-roles",
+      "label": "RT Items: Ship Roles",
+      "path": "packs/rt-items-ship-roles",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-ship-upgrades",
+      "label": "RT Items: Ship Upgrades",
+      "path": "packs/rt-items-ship-upgrades",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-ship-weapons",
+      "label": "RT Items: Ship Weapons",
+      "path": "packs/rt-items-ship-weapons",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-skills",
+      "label": "RT Items: Skills",
+      "path": "packs/rt-items-skills",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-talents",
+      "label": "RT Items: Talents",
+      "path": "packs/rt-items-talents",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-traits",
+      "label": "RT Items: Traits",
+      "path": "packs/rt-items-traits",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-vehicle-traits",
+      "label": "RT Items: Vehicle Traits",
+      "path": "packs/rt-items-vehicle-traits",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-vehicle-upgrades",
+      "label": "RT Items: Vehicle Upgrades",
+      "path": "packs/rt-items-vehicle-upgrades",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-weapon-qualities",
+      "label": "RT Items: Weapon Qualities",
+      "path": "packs/rt-items-weapon-qualities",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-items-weapons",
+      "label": "RT Items: Weapons",
+      "path": "packs/rt-items-weapons",
+      "type": "Item",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-journals-colonies",
+      "label": "RT Journals: Colonies",
+      "path": "packs/rt-journals-colonies",
+      "type": "JournalEntry",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-journals-fear-insanity-corruption",
+      "label": "RT Journals: Fear Insanity Corruption",
+      "path": "packs/rt-journals-fear-insanity-corruption",
+      "type": "JournalEntry",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-journals-ship-vehicle-actions",
+      "label": "RT Journals: Ship Vehicle Actions",
+      "path": "packs/rt-journals-ship-vehicle-actions",
+      "type": "JournalEntry",
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "rt-rolltables-fear-insanity-corruption",
+      "label": "RT RollTables: Fear Insanity Corruption",
+      "path": "packs/rt-rolltables-fear-insanity-corruption",
       "type": "RollTable",
-      "entity": "RollTable"
+      "ownership": {
+        "default": 0
+      }
     },
     {
-      "name": "talents",
-      "system": "rogue-trader",
-      "label": "Talents",
-      "path": "./packs/talents.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "tools",
-      "system": "rogue-trader",
-      "label": "Tools",
-      "path": "./packs/tools.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "traits",
-      "system": "rogue-trader",
-      "label": "Traits",
-      "path": "./packs/traits.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "weapons",
-      "system": "rogue-trader",
-      "label": "Weapons",
-      "path": "./packs/weapons.db",
-      "type": "Item",
-      "entity": "Item"
-    },
-    {
-      "name": "weapon-mods",
-      "system": "rogue-trader",
-      "label": "Weapon Mods",
-      "path": "./packs/weapon-mods.db",
-      "type": "Item",
-      "entity": "Item"
+      "name": "rt-rolltables-psychic",
+      "label": "RT RollTables: Psychic",
+      "path": "packs/rt-rolltables-psychic",
+      "type": "RollTable",
+      "ownership": {
+        "default": 0
+      }
     }
   ],
   "grid": {

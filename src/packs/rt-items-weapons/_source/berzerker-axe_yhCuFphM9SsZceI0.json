@@ -1,0 +1,28 @@
+{
+  "name": "Berzerker Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+4",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing",
+    "weight": "-",
+    "availability": "Special",
+    "cost": "-",
+    "source": "DW: Mark of the Xenos",
+    "note": "Used by Khorne Berzerkers.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Used by Khorne Berzerkers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yhCuFphM9SsZceI0"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Astartes Winged Jump Pack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "-",
+    "availability": "Acts as Astartes Jump Pack (Requires Pilot (Personal), Can Fall from any height, doubles base movement speed whilst ignoring obstacles (must land at the end of the movement). Can engage full power and gain Flyer (12) for 1 minute before requiring 1 minute to cool down). Also gain Fear +1 and +10 to Command Tests. ",
+    "cost": "Blood Angels Sanguinary Guard Only.",
+    "effects": "Distinguished",
+    "notes": "25 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RsUZWoORluaSE1D8"
+}

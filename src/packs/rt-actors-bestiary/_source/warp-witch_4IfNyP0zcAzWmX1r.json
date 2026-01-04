@@ -1,0 +1,64 @@
+{
+  "name": "Warp Witch",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "28",
+      "bs": "28",
+      "s": "30",
+      "t": "40",
+      "ag": "36",
+      "int": "28",
+      "per": "37",
+      "wp": "45",
+      "fel": "23"
+    },
+    "wounds": "13",
+    "armourPoints": "4/7/\n6/6",
+    "move": "3/6/9/18",
+    "size": "Av +0",
+    "weapons": [
+      {
+        "name": "Sacrificial Blade",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d5+4 R",
+        "pen": "0",
+        "clip": "-",
+        "reload": "-",
+        "qualities": "Primitive"
+      },
+      {
+        "name": "Stub Auto",
+        "range": "30m",
+        "rof": "S/3/-",
+        "damage": "1d10+3 I",
+        "pen": "0",
+        "clip": "9",
+        "reload": "Full",
+        "qualities": null
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Armour: Reinforced Void Suit (0/3/2/2), Sealed\nConsumables: \nOther: Respirator (+20 to resist gases, 1 hour of air)\nTattered Clothes, trinkets, and fetishes",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: Intimidate +10 | T: | Ag: | WP: Invocation +10\nInt: Ciphers (Occult), ComLore (Imperium, Koronus), ForbLore (Cults, Daemonology, Warp) +10, Secret Tongue (Cult), Speak (Low Gothic), Trade (Seer)\nPer: Awareness, Psyniscience\nFel: Command, Deceive +10",
+    "training": "Pistol(SP), Melee(Primitive)",
+    "talents_traits": "Descriptions",
+    "description": {
+      "value": "<p><b>Skills:</b> S: Intimidate +10 | T: | Ag: | WP: Invocation +10\nInt: Ciphers (Occult), ComLore (Imperium, Koronus), ForbLore (Cults, Daemonology, Warp) +10, Secret Tongue (Cult), Speak (Low Gothic), Trade (Seer)\nPer: Awareness, Psyniscience\nFel: Command, Deceive +10</p><p><b>Training:</b> Pistol(SP), Melee(Primitive)</p><p><b>Talents/Traits:</b> Descriptions</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "4IfNyP0zcAzWmX1r"
+}

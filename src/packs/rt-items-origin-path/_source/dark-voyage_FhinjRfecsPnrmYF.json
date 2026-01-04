@@ -1,0 +1,25 @@
+{
+  "name": "Dark Voyage",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Trials and Travails",
+    "descriptionText": "Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).\nGain 1d5 Insanity from whatever traumatic even haunts you.",
+    "effects": "Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).\nGain 1d5 Insanity from whatever traumatic even haunts you.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).<br>Gain 1d5 Insanity from whatever traumatic even haunts you.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.trials-and-travails",
+      "step": "Trials and Travails",
+      "stepIndex": 4,
+      "number": "5"
+    }
+  },
+  "_id": "FhinjRfecsPnrmYF"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Ceramite",
+  "type": "armourCustomisation",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Add +3 AP vs Flamer or Melta Weapons.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+    "weight": "+1.5kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Add +3 AP vs Flamer or Melta Weapons.\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lNcVJFxg1QI9bwQD"
+}

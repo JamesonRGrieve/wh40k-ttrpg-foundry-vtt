@@ -1,0 +1,28 @@
+{
+  "name": "Stub Automatic (Dorcas)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 9,
+    "reload": "Half",
+    "special": null,
+    "weight": "1.5kg",
+    "availability": "Rare",
+    "cost": "150 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Often seen as a \"Trophy Weapon\" acquired in combat.",
+    "description": {
+      "value": "<p><b>Note:</b> Often seen as a \"Trophy Weapon\" acquired in combat.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LWl1P9r5CzIwvTLg"
+}

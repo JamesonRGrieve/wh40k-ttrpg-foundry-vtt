@@ -1,0 +1,25 @@
+{
+  "name": "Stubjack",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Birthright",
+    "descriptionText": "+5 Weapon Skill or +5 Ballistic Skill, -5 Fellowship. Gain Quick Draw Talent and Intimidate as Trained Skill. Gain 1d5 Insanity Points.",
+    "effects": "+5 Weapon Skill or +5 Ballistic Skill, -5 Fellowship. Gain Quick Draw Talent and Intimidate as Trained Skill. Gain 1d5 Insanity Points.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>+5 Weapon Skill or +5 Ballistic Skill, -5 Fellowship. Gain Quick Draw Talent and Intimidate as Trained Skill. Gain 1d5 Insanity Points.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.birthright",
+      "step": "Birthright",
+      "stepIndex": 2,
+      "number": "3"
+    }
+  },
+  "_id": "RBpW3W9ZOIQYKgKg"
+}

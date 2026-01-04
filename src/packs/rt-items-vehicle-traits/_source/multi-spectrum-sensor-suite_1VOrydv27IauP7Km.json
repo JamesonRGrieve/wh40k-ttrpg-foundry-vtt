@@ -1,0 +1,14 @@
+{
+  "name": "Multi-Spectrum Sensor Suite",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "Wearer can make +0 Tech-Use Test as a Half Action. If Successful they and all allies in 20 metres ignore a number of AP's of Cover equal to the wearer's Perception Bonus + 1 per Degree of Success on Test until the start of the Wearer's next turn.",
+    "description": {
+      "value": "<p>Wearer can make +0 Tech-Use Test as a Half Action. If Successful they and all allies in 20 metres ignore a number of AP's of Cover equal to the wearer's Perception Bonus + 1 per Degree of Success on Test until the start of the Wearer's next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1VOrydv27IauP7Km"
+}

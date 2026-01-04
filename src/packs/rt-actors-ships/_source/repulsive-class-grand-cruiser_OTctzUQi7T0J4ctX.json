@@ -1,0 +1,28 @@
+{
+  "name": "Repulsive-Class Grand Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Grand Cruiser",
+    "size": "7.4km long, 1.5km wide",
+    "crew": 134000,
+    "speed": 5,
+    "manoeuvrability": 8,
+    "detection": 10,
+    "hull": 85,
+    "armour": 19,
+    "turrets": 3,
+    "space": 90,
+    "shipPoints": 69,
+    "weaponCapacity": "1 Dorsal, 1 Prow, 2 Port, 2 Starboard",
+    "notes": "Can use \"Cruiser Only\" Components, -10 to all tests to Navigate through the warp. Cannot use components that increase Ship armour.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can use \"Cruiser Only\" Components, -10 to all tests to Navigate through the warp. Cannot use components that increase Ship armour.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "OTctzUQi7T0J4ctX"
+}

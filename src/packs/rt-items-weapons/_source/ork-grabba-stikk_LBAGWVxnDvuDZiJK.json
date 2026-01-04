@@ -1,0 +1,28 @@
+{
+  "name": "Ork Grabba Stikk",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Ork",
+    "range": "2m",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Snare",
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "For Orks, Average. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "description": {
+      "value": "<p><b>Special:</b> Snare</p><p><b>Note:</b> For Orks, Average. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LBAGWVxnDvuDZiJK"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Track Guards",
+  "type": "vehicleUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "type": "Standard",
+    "allowedVehicles": "Any Tracked Vehicle",
+    "difficulty": "+0",
+    "descriptionText": "Vehicle Gains +5 Armour to hits that would strike its Motive Systems. Critical Damage, Including that from Righteous Fury, to the Vehicle's Motoive Systems Destroys the Track Guard in that location. Must be Replaced afterwards.",
+    "availability": "Scarce",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Vehicle Gains +5 Armour to hits that would strike its Motive Systems. Critical Damage, Including that from Righteous Fury, to the Vehicle's Motoive Systems Destroys the Track Guard in that location. Must be Replaced afterwards.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gjzEd8FKFlP1DUd9"
+}

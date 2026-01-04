@@ -1,0 +1,28 @@
+{
+  "name": "Axon Razor",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Crippling (5), Razor-Sharp",
+    "weight": "1kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Does no Damage, instead, listed damage counts for the purposes of the weapon's Crippling Quality. A Thin paper-like blade that slices through tissue with little damage, but instead causes agonising nerve damage.",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (5), Razor-Sharp</p><p><b>Note:</b> Does no Damage, instead, listed damage counts for the purposes of the weapon's Crippling Quality. A Thin paper-like blade that slices through tissue with little damage, but instead causes agonising nerve damage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fCzPk8nex4XFoaAs"
+}

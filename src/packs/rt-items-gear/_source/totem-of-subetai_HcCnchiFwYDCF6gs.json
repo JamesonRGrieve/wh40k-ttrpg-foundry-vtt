@@ -1,0 +1,20 @@
+{
+  "name": "Totem of Subetai",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "-",
+    "availability": "Relic Staff of the White Scars. When used by a Stormseer, whenever they suffer Perils of the Warp they may adjust the roll by up to 10 (up or down) after the dice has been rolled.",
+    "cost": "White Scars Stormseers (Librarians) only.",
+    "effects": "Initiated",
+    "notes": "15 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HcCnchiFwYDCF6gs"
+}

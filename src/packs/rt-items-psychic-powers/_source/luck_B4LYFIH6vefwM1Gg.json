@@ -1,0 +1,22 @@
+{
+  "name": "Luck",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Perception 30",
+    "focusPower": "Half Action\nConcentration",
+    "action": "Self",
+    "range": "+0 Awareness",
+    "opposed": "No",
+    "sustained": "Character gains bonus of 5+Psy Rating on next test they attempt this round. If character fails Focus Power test by 2+ DoF the character suffers a penalty to their next test made this round equal to twice their Psy rating .",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "B4LYFIH6vefwM1Gg"
+}

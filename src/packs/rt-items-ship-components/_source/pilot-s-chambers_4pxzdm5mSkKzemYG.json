@@ -1,0 +1,21 @@
+{
+  "name": "Pilot's Chambers",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Provides proper ready rooms and training centres for pilots. Grants +2 to Attack Craft Rating of all squadrons on the ship. One per vessel.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Provides proper ready rooms and training centres for pilots. Grants +2 to Attack Craft Rating of all squadrons on the ship. One per vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4pxzdm5mSkKzemYG"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Daemonic Binding",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "The Binding Strength determines how contained and controllable the Daemonhost is. A More tightly bound daemon is less powerful, yet more easily controllabe. Although even the most tightly bound daemon is a monster to behold and never to be trusted.",
+    "range": null,
+    "test": null,
+    "sustain": null,
+    "novice": "Unbound: The Daemonhost has broken its bindings and cannot be controlled, it has no master and can use its power fully.\nOnce-Bound: The Daemon is barely contained\nTwice-Bound: The Daemon is bound by powerful wards and will generally follow orders, although always plot to escape\nThrice-Bound: The Daemon is strongly bound such that it is somewhat less likely to try to rebel against its controllers.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Unbound: The Daemonhost has broken its bindings and cannot be controlled, it has no master and can use its power fully.\nOnce-Bound: The Daemon is barely contained\nTwice-Bound: The Daemon is bound by powerful wards and will generally follow orders, although always plot to escape\nThrice-Bound: The Daemon is strongly bound such that it is somewhat less likely to try to rebel against its controllers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sy64NmcDETVcfwDB"
+}

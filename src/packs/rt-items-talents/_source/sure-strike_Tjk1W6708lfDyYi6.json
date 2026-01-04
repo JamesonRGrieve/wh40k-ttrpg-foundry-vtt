@@ -1,0 +1,17 @@
+{
+  "name": "Sure Strike",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Weapon Skill 30\nAptitudes: Weapon Skill, Finesse, Slaanesh",
+    "effect": "When character mades a Called Shot Action with a melee attack, they reduce the penalty by 10 (-20 to -10)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When character mades a Called Shot Action with a melee attack, they reduce the penalty by 10 (-20 to -10)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tjk1W6708lfDyYi6"
+}

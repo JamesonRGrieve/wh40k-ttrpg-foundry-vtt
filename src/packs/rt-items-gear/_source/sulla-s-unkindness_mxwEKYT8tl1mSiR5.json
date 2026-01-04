@@ -1,0 +1,20 @@
+{
+  "name": "Sulla's Unkindness",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "5kg",
+    "availability": "Master Crafted Relic Astartes Signum of the Kights of the Raven Chapter. All members of the Kill Team in Squad Mode and support range of the bearer count as having Signum Links. Whenever a Space Marine benefitting from this effect attacks a Horde, they do additional damage equal to the number of members in their Kill Team within Support range who fired on the Horde since their last turn.",
+    "cost": null,
+    "effects": "Hero",
+    "notes": "50 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 50 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mxwEKYT8tl1mSiR5"
+}

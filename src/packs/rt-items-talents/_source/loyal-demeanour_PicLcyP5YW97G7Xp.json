@@ -1,0 +1,17 @@
+{
+  "name": "Loyal Demeanour",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; is an Ogryn \nAptitudes: Fellowship, Leadership",
+    "effect": "Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PicLcyP5YW97G7Xp"
+}

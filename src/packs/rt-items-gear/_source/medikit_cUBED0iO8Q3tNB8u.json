@@ -1,0 +1,20 @@
+{
+  "name": "Medikit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "2kg",
+    "availability": "+20 Medicae Skill when used, user must have Medicae Skill.\nContains 6 Doses of Stimm which must be replaced seperately.",
+    "cost": "GM Dependant as to whether it is actually consumed on use",
+    "effects": "Common",
+    "notes": "150 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 150 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cUBED0iO8Q3tNB8u"
+}

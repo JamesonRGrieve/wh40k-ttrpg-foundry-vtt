@@ -1,0 +1,17 @@
+{
+  "name": "Autosanguine",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "-",
+    "effect": "Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VnK6TaiB6EtMyXtl"
+}

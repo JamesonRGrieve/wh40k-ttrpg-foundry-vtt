@@ -1,0 +1,17 @@
+{
+  "name": "Manhunter",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Any career, RT Rank 1+. Must have murdered or imprisoned another person for personal or financial gain (GM Discretion for taking at Rank 1).",
+    "descriptionText": "A Professional with a proficiency for the calculated, meticulous act of a planned murder or capture of another individual, performed without the burden of mercy or hesitation. Such people work for their own gain, performing bounties in exchange for money, favours, or whatever else they desire.",
+    "effects": "Replace new Rank's Advances with that of the Manhunter\nAllows for the purchasing of the Unique Talents Killer's Eye and Take them Alive, and the Unique Trait: Fearful Reputation ",
+    "source": "RT: Hostile Acquisitions \n(Page 40)",
+    "description": {
+      "value": "<p>A Professional with a proficiency for the calculated, meticulous act of a planned murder or capture of another individual, performed without the burden of mercy or hesitation. Such people work for their own gain, performing bounties in exchange for money, favours, or whatever else they desire.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Manhunter\nAllows for the purchasing of the Unique Talents Killer's Eye and Take them Alive, and the Unique Trait: Fearful Reputation </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R5OuvZfXgmZB2hlZ"
+}

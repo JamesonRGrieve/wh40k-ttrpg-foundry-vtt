@@ -1,0 +1,18 @@
+{
+  "name": "Skills (Only War/Black Crusade)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": null,
+    "characteristic": null,
+    "descriptor": null,
+    "uses": "The Skills of a Character consist of their knowledge and taught abilities. They are tested to perform more advanced actions than that of their base characteristics. \nSkills can be advanced: Unknown (-20 to use) , Known (+0 to use), Trained (+10 to use), Experienced (+20 to use), and Veteran (+30 to use). The cost of improving a skill varies with how many aptitudes the Character shares with the skill.\nTwo Match/True Align: 100/200/300/400xp. One Match/Allied Align: 200/400/600/800xp. Zero Match/Opposed Align: 300/600/900/1,200xp",
+    "useTime": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Am8vnKG7rCDmHkdp"
+}

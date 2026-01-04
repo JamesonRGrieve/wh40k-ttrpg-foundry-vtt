@@ -1,0 +1,20 @@
+{
+  "name": "Thermal Bolts \"Emperor's Light\"",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Primitive: Crossbows",
+    "damageOrEffect": "Lose Primitive and Accurate Qualities if weapon has them. Gain +1d10 Energy Damage and PEN 6, as well as Melta and Innaccurate Qualities. Bolts weigh 2x as much as regular Crossbow bolts.",
+    "qualities": "Primitive (lose), Accurate (lose)\nMelta, Innaccurate.",
+    "weight": "20% wep",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Lose Primitive and Accurate Qualities if weapon has them. Gain +1d10 Energy Damage and PEN 6, as well as Melta and Innaccurate Qualities. Bolts weigh 2x as much as regular Crossbow bolts.</p><p><b>Qualities:</b> Primitive (lose), Accurate (lose)\nMelta, Innaccurate.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "77hNTWytAeybuBTH"
+}

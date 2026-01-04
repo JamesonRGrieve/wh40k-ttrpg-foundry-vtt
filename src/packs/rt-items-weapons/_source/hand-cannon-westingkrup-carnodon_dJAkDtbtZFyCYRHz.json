@@ -1,0 +1,28 @@
+{
+  "name": "Hand Cannon (Westingkrup) \"Carnodon\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "SP",
+    "range": "35m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Impact",
+    "penetration": 2,
+    "clip": 6,
+    "reload": "Full",
+    "special": "Accurate",
+    "weight": "2.5kg",
+    "availability": "Scarce",
+    "cost": "200 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dJAkDtbtZFyCYRHz"
+}

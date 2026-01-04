@@ -1,0 +1,22 @@
+{
+  "name": "Cedron's Twin",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Slaanesh Aligned, Fellowship 40+",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "-10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Psyker produces an illusionary double of themselves. By making a -20 Willpower Test to control their double, they gain +10 per Degree of Success to Deceive Tests to fool onlookers into which is real, or -10 per Degree of Failiure. The double can perform any mundane actions the Psyker could unless that require a non-Interaction Test. The Double therefore cannot attack, manifest powers, adminster first aid, etc. But it can Deceive, Command, Seduce, etc. If the Double would need to perform an Interaction Test, the Psyker does so on their behalf. This power is sustained as long as the double remains within view of the Psyker and they are capable of Concentrating. It Dissapears if it takes any damage or is targeted by a successful attack. If power triggers Psychic Phenomena, modify it inversly by the Bonus/Penalty gained to Deceive Tests (EG: If 3 DoF on -20 Willpower Test, add +30 to Psychic Phenomena)",
+    "effect": "250xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>250xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tcYdH2glgk0GvEWZ"
+}

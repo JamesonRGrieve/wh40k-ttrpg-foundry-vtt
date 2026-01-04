@@ -1,0 +1,17 @@
+{
+  "name": "Favoured by the Warp",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Willpower 35\nAptitudes: Willpower, Psyker, Tzeentch",
+    "effect": "When a Focus Power Test results in a Psychic Phenomena, roll twice and take the more favourable result. Perils of the Warp work as normal.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When a Focus Power Test results in a Psychic Phenomena, roll twice and take the more favourable result. Perils of the Warp work as normal.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HHWEcr9ItMH4aCZM"
+}

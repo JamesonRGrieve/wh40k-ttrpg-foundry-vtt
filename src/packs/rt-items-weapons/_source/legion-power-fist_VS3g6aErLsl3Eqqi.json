@@ -1,0 +1,28 @@
+{
+  "name": "Legion Power Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 9,
+    "clip": "-",
+    "reload": "-",
+    "special": "Power Field, Unwieldy, SM Wep",
+    "weight": "25kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own. Doubles Strength Bonus. Can be used by Terminators",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own. Doubles Strength Bonus. Can be used by Terminators</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VS3g6aErLsl3Eqqi"
+}

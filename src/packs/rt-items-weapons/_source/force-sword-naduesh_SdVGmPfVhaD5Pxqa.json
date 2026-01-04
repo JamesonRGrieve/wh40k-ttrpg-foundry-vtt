@@ -1,0 +1,28 @@
+{
+  "name": "Force Sword (Naduesh)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+1",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Force, Balanced",
+    "weight": "5kg",
+    "availability": "Near Unique",
+    "cost": "3500 T",
+    "source": "RT: Into the Storm",
+    "note": "Acts as Best Craftsmanship Mono Weapon to non-psyker.",
+    "description": {
+      "value": "<p><b>Special:</b> Force, Balanced</p><p><b>Note:</b> Acts as Best Craftsmanship Mono Weapon to non-psyker.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SdVGmPfVhaD5Pxqa"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Musket (Siskan)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 1,
+    "reload": "5 Full",
+    "special": "Primitive (8)",
+    "weight": "8kg",
+    "availability": "Scarce",
+    "cost": "60 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gXaTvJ91jwkUFwIe"
+}

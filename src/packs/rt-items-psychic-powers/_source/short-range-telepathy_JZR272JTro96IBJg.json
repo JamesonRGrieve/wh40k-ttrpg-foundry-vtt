@@ -1,0 +1,22 @@
+{
+  "name": "Short Range Telepathy",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "None",
+    "focusPower": "Half Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Successful Test allows Psyker to establish and Maintain one Telepathic Connection to another character at Unfettered Strength. It does not provoke Psychic Phenomena.",
+    "effect": "100xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JZR272JTro96IBJg"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Bane of the Daemon",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T2)",
+    "requirements": "Tier 2: Untouchable E.Adv, Willpower 40\nAptitudes: Defence, Willpower",
+    "effect": "Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cy6mipUJEVpY3ni1"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Tau Battlesuit Pilot",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Tau, RT Rank 5+, Agility 45+. A Fire Caste Tau who has earned a RT Rank of honour to be proven worthy of piloting a Battlesuit.",
+    "descriptionText": "A Fire Caste member who Pilots a Mighty Battlesuit is one seen as a hero amongst the Tau. These advanced wargear range from the Hulking Stealth Suits to the Truly Massive Riptides whose sheer firepower can tear even super-heavy tanks asunder. ",
+    "effects": "Replace new Rank's Advances with that of the Tau Battlesuit Pilot\nAllows for the purchasing of the Unique Talents Battlesuit Training and Veteran's Reflexes\nThe wearer is assigned the use of a Tau Battlesuit.",
+    "source": "RT: Tau Character Guide (Page 24)",
+    "description": {
+      "value": "<p>A Fire Caste member who Pilots a Mighty Battlesuit is one seen as a hero amongst the Tau. These advanced wargear range from the Hulking Stealth Suits to the Truly Massive Riptides whose sheer firepower can tear even super-heavy tanks asunder. </p><p><b>Effects:</b> Replace new Rank's Advances with that of the Tau Battlesuit Pilot\nAllows for the purchasing of the Unique Talents Battlesuit Training and Veteran's Reflexes\nThe wearer is assigned the use of a Tau Battlesuit.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VtDEgbtZtDF0p5CO"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Righteous Oration",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Ministorum Priest Spec\n300xp",
+    "descriptionText": "All Player Characters within comms range can Re-roll Damage Rolls for the next round. Once per Encounter usage.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>All Player Characters within comms range can Re-roll Damage Rolls for the next round. Once per Encounter usage.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WdDWgD102CsWGjFQ"
+}

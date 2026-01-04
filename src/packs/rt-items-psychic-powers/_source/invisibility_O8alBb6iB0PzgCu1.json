@@ -1,0 +1,22 @@
+{
+  "name": "Invisibility",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Psy Rating 4, Agility 30",
+    "focusPower": "Half Action Concentration",
+    "action": "10m x Psy Rating",
+    "range": "-10 Willpower Test",
+    "opposed": "Yes",
+    "sustained": "Psyker Targets themselves or another individual within range and line of sight. For as long as the power is sustained and the target remains within range, the affected individual is trained in Stealth Skill, and gains a +5*Psy Rating Bonus to all Stealth Tests. Additionally ,all ranged attacks made against them have -5xPsy Rating. ",
+    "effect": "400xp",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O8alBb6iB0PzgCu1"
+}

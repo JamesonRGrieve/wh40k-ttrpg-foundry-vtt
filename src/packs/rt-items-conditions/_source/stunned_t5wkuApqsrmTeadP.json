@@ -1,0 +1,22 @@
+{
+  "name": "Stunned",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "-",
+    "descriptionText": "Attacks against stunned targets: +20",
+    "effects": "",
+    "source": "Character Actions and Rules (sheet)",
+    "description": {
+      "value": "<p>Attacks against stunned targets: +20</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "condition",
+      "appliesTo": "target"
+    }
+  },
+  "_id": "t5wkuApqsrmTeadP"
+}

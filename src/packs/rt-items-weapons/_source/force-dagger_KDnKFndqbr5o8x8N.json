@@ -1,0 +1,28 @@
+{
+  "name": "Force Dagger",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Force",
+    "weight": "1.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Force</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KDnKFndqbr5o8x8N"
+}

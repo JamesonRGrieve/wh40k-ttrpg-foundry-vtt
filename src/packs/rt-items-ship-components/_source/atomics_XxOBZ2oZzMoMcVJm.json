@@ -1,0 +1,21 @@
+{
+  "name": "Atomics",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "A Nuclear Weapon. ~2.5-5km destruction radius. Can be fired from a projectile-firing macrocannon, doing 1d5+4 hits of 1d10+6 damage (always combine damage totals into single hit salvo). Might destroy a ship or station if detonated inside. Poor: 1d5+2 hits, Good: 1d5+5, Best: 10.",
+    "availability": "Near Unique",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>A Nuclear Weapon. ~2.5-5km destruction radius. Can be fired from a projectile-firing macrocannon, doing 1d5+4 hits of 1d10+6 damage (always combine damage totals into single hit salvo). Might destroy a ship or station if detonated inside. Poor: 1d5+2 hits, Good: 1d5+5, Best: 10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XxOBZ2oZzMoMcVJm"
+}

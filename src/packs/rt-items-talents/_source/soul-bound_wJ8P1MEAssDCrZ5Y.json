@@ -1,0 +1,17 @@
+{
+  "name": "Soul-Bound",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Become Bound to a higher power. Soul-Bound Psykers roll one additional d10 when rolling Perils of the Warp, and discard whichever one they choose. On gaining this effect, choose one of the following: Gain 3d10 Insanity, 1d10 loss from one characteristic, permenant loss of sight, or one random mutation. You also indebted to this power in some way, with the duties, expectations, and consequences that come with that.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Become Bound to a higher power. Soul-Bound Psykers roll one additional d10 when rolling Perils of the Warp, and discard whichever one they choose. On gaining this effect, choose one of the following: Gain 3d10 Insanity, 1d10 loss from one characteristic, permenant loss of sight, or one random mutation. You also indebted to this power in some way, with the duties, expectations, and consequences that come with that.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wJ8P1MEAssDCrZ5Y"
+}

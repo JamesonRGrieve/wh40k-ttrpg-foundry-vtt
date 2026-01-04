@@ -1,0 +1,28 @@
+{
+  "name": "Chain Knife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5+3",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing",
+    "weight": "2.5kg",
+    "availability": "Scarce",
+    "cost": "80 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yJsEEUFj06CoDHTI"
+}

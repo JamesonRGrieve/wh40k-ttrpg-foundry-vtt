@@ -1,0 +1,20 @@
+{
+  "name": "Shipboard Emergency Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "6kg",
+    "availability": "Contains Glowstick, Power Cell, 1 Day of Rations, Emergency Vox, 30 mins of Air + Mask, Anti-Radiation Tablets, and Hull Sealent Spray.",
+    "cost": "Glowstick lasts 1d5 hours, power cell powers glowstick/vox for 1d5 hours, or 5 laspistol shots, Vox may have distress signal.",
+    "effects": "Common",
+    "notes": "300 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 300 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "57E98iPMRkV5R7Qf"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Hellgun (Lucius)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "110m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": 30,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Use 10kg power pack (can also use larger backpack power pack)",
+    "description": {
+      "value": "<p><b>Note:</b> Use 10kg power pack (can also use larger backpack power pack)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6tlmBf6yhFyvBQkT"
+}

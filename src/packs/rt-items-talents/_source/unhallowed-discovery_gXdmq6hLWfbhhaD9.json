@@ -1,0 +1,17 @@
+{
+  "name": "Unhallowed Discovery",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Acolyte of Abraxis Alternative Advance, 500xp\nInt 40, Integrated Psychic Xenos Artifact",
+    "effect": "The Character Integrates a Psychically Charged Xenos Artifact into their form They gain Psy Rating 1 (or increase their Psy Rating by 1 if they already have Psy Rating) and learn 1 Psychic Technique of their choice that GM approves of. They use Renegade Psyker Rules. If the artifact is removed the psychic power is lost until returned. Each time an artifact is implanted or removed, roll on Perils of the Warp, gain 1d5 Corruption, and suffer 1d5 Energy damage that ignores Armour and Toughness.\nThis Talent can be taken up to three times. These strange Xenos devices may have other longer term effects on the character's mind and body.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>The Character Integrates a Psychically Charged Xenos Artifact into their form They gain Psy Rating 1 (or increase their Psy Rating by 1 if they already have Psy Rating) and learn 1 Psychic Technique of their choice that GM approves of. They use Renegade Psyker Rules. If the artifact is removed the psychic power is lost until returned. Each time an artifact is implanted or removed, roll on Perils of the Warp, gain 1d5 Corruption, and suffer 1d5 Energy damage that ignores Armour and Toughness.\nThis Talent can be taken up to three times. These strange Xenos devices may have other longer term effects on the character's mind and body.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gXdmq6hLWfbhhaD9"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Drivesmaster",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Master and Maintainer of the Plasma Drives.",
+    "careerPreferences": "Only Explorators",
+    "subordinates": "Drive Temple Enginseers, servitors, and plasma maintenance crew.",
+    "importantSkills": "Tech-Use, Forbidden Lore (Archeotech), Pilot (Space Craft)",
+    "effect": "+10 to \"Flank Speed\" Extended Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Master and Maintainer of the Plasma Drives.</p><p><b>Effect:</b> +10 to \"Flank Speed\" Extended Action</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k2IPhGLeFwoFu9xp"
+}

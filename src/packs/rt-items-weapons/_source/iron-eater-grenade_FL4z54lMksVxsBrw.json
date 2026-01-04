@@ -1,0 +1,28 @@
+{
+  "name": "Iron-Eater Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 5,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (2), Corrosive",
+    "weight": "0.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "OW: Hammer of the Emperor",
+    "note": "If the weapon jams, the grenade detonates on a d10 roll of 7, 8, 9, or 10.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Corrosive</p><p><b>Note:</b> If the weapon jams, the grenade detonates on a d10 roll of 7, 8, 9, or 10.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FL4z54lMksVxsBrw"
+}

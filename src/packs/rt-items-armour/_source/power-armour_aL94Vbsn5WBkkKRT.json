@@ -1,0 +1,22 @@
+{
+  "name": "Power Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 8,
+    "maxAg": null,
+    "weight": "65kg",
+    "availability": "Extremely Rare",
+    "cost": "15000 T",
+    "notes": "+20 to Strength, +1 Size (eg. Normal --> Hulking), armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+20 to Strength, +1 Size (eg. Normal --> Hulking), armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aL94Vbsn5WBkkKRT"
+}

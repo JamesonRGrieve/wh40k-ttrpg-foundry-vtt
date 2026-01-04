@@ -1,0 +1,14 @@
+{
+  "name": "Toxic",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 33,
+    "description": {
+      "value": "<p>33</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qkAc7I12yrcjv2UA"
+}

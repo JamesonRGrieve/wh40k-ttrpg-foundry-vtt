@@ -1,0 +1,17 @@
+{
+  "name": "Will of the Inquisitor",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Inq) (T3)",
+    "requirements": "Tier 3: Inquisitor E.Adv, Fated, Intelligence 50, Perception 50, Willpower 55.\nAptitudes: Knowledge, Willpower",
+    "effect": "Before rolling the d100 when making a test. The Inquisitor can spend a Fate Point to count as having rolled a 01 on that roll.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Before rolling the d100 when making a test. The Inquisitor can spend a Fate Point to count as having rolled a 01 on that roll.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "m8utM7xcVimejR0Y"
+}

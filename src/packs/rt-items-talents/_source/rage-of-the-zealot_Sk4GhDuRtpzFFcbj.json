@@ -1,0 +1,17 @@
+{
+  "name": "Rage of the Zealot",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Red Consecrator Alternative Advance, 600xp\nHatred (Any One)",
+    "effect": "When dealing damage to a foe that the Character has the appropriate Hatred Talent for, the Character inflicts Righteous Fury on a 9 or 10 damage roll.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>When dealing damage to a foe that the Character has the appropriate Hatred Talent for, the Character inflicts Righteous Fury on a 9 or 10 damage roll.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Sk4GhDuRtpzFFcbj"
+}

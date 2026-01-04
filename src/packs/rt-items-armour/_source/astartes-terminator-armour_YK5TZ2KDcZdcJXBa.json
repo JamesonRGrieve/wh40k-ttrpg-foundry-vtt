@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Terminator Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "All",
+    "ap": 14,
+    "maxAg": null,
+    "weight": "400kg",
+    "availability": "Famed",
+    "cost": "60 R",
+    "notes": "Possesses all Power Armour Subsystems (See Armour Upgrades) .+30 to Strength Characteristic. Can fire Heavy and Mounted Weapons one handed. Gain Auto-Stabilised Trait. \nAutosenses also act as an Auspex, Has Prot 35 Force Field with no Overload. Wearer Cannot Run or Dodge, suffers -20 to Agility. Takes a long time to Don/Doff, weapons are often affixed to it, coming from following list: Combi-Weapons, Power/Force Weapon, Storm Bolter, Storm Shield, Heavy Flamer, Assault Cannon, Cyclone Missile Launcher. Must spend at least 40 Requisition Points to arm. Roll once for Power Armour History.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Possesses all Power Armour Subsystems (See Armour Upgrades) .+30 to Strength Characteristic. Can fire Heavy and Mounted Weapons one handed. Gain Auto-Stabilised Trait. \nAutosenses also act as an Auspex, Has Prot 35 Force Field with no Overload. Wearer Cannot Run or Dodge, suffers -20 to Agility. Takes a long time to Don/Doff, weapons are often affixed to it, coming from following list: Combi-Weapons, Power/Force Weapon, Storm Bolter, Storm Shield, Heavy Flamer, Assault Cannon, Cyclone Missile Launcher. Must spend at least 40 Requisition Points to arm. Roll once for Power Armour History.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YK5TZ2KDcZdcJXBa"
+}

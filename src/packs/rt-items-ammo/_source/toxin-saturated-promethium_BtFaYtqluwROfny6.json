@@ -1,0 +1,20 @@
+{
+  "name": "Toxin-Saturated Promethium",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Flame Weapons",
+    "damageOrEffect": "Gain Toxic Quality",
+    "qualities": "Toxic",
+    "weight": "10% wep",
+    "availability": "Rare",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Gain Toxic Quality</p><p><b>Qualities:</b> Toxic</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BtFaYtqluwROfny6"
+}

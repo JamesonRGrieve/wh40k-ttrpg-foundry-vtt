@@ -1,0 +1,20 @@
+{
+  "name": "Baleful Eye",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Bionic eye that also counts as hellpistol with 10m range, can be used when hands are full and in melee.",
+    "cost": null,
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bfgk7lUkUY7IBLFY"
+}

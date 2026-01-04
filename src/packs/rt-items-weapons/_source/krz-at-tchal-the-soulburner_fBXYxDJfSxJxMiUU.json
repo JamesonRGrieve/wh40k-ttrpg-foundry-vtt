@@ -1,0 +1,28 @@
+{
+  "name": "Krz'at'tchal the Soulburner",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Flame, Reliable, Spray, Warp Weapon, Daemon Wep",
+    "weight": "6kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Reliable, Spray, Warp Weapon, Daemon Wep</p><p><b>Note:</b> Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fBXYxDJfSxJxMiUU"
+}

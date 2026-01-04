@@ -1,0 +1,20 @@
+{
+  "name": "Cursed Carillon",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Daemonic)",
+    "weight": "?",
+    "availability": "A Large structure of bells that appears without warning near towns or cities and always shrouded in clouds of green smog. The bells ring even in still air, their noise building until all are sent into an insanity of despair and madness. Every hour of exposure forces Willpower Test with -10 penalty for each day structure has been present, gaining 1 Insanity per DoF. Mental Disorders gained from this insanity are always Obsessions or Compulsions focused on cataloguing innocuous and unrelated items. Smog extends a 20m radius, increases by 5m per day and causes Suffocation to those inside after 30 minutes of exposure even to those in sealed armour. Rumoured to cause breaches in reality, tainted energies, Gellar Field faults, and so on. ",
+    "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic evacuate all nearby and wait/hope that it goes away after some time.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PJKLHMya5xedy6ZZ"
+}

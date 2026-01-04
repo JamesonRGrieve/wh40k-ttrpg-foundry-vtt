@@ -1,0 +1,17 @@
+{
+  "name": "Total Recall",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Intelligence 30\nAptitudes: Intelligence, Knowledge, Tzeentch",
+    "effect": "Character can automatically remember trivial facts or pieces of information the character may feasibly have picked up on in the past. For more detailed, complex, or obscure facts, such as exact defence layout networks, the GM may require a Successful Intelligence Test to recall the information.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can automatically remember trivial facts or pieces of information the character may feasibly have picked up on in the past. For more detailed, complex, or obscure facts, such as exact defence layout networks, the GM may require a Successful Intelligence Test to recall the information.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5w4MtzbhmNP9VKbQ"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Recovery Chambers",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 1,
+    "spCost": 3,
+    "effect": "Slime filled components rarely found on Alien Derelicts. Is capable of healing Injury. When placed inside, Lightly-Damaged patients automatically pass one Extend care Test per hour, while Heavily/Critically damaged patients auto-pass one every day. After healing, for the next session, when spending a fate point, on a d10 roll of 1 or 2, it has no effect.",
+    "availability": "Near Unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Slime filled components rarely found on Alien Derelicts. Is capable of healing Injury. When placed inside, Lightly-Damaged patients automatically pass one Extend care Test per hour, while Heavily/Critically damaged patients auto-pass one every day. After healing, for the next session, when spending a fate point, on a d10 roll of 1 or 2, it has no effect.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4NmzWo8x2uVJ7K2G"
+}

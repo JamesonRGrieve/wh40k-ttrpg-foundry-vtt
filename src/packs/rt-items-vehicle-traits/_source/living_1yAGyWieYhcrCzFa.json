@@ -1,0 +1,14 @@
+{
+  "name": "Living",
+  "type": "vehicleTrait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "descriptionText": "\"Vehicle\" is in reality a flesh and blood creature. Critical Effects may need translation by GM (such as using character Crit Effects). Repairs may still use Tech-Use if a cybernetic animal but may also need Medicae. Requires Wrangling Special use of Survival Skill in order to control and ride. If animal is Bestial it may run in fear.",
+    "description": {
+      "value": "<p>\"Vehicle\" is in reality a flesh and blood creature. Critical Effects may need translation by GM (such as using character Crit Effects). Repairs may still use Tech-Use if a cybernetic animal but may also need Medicae. Requires Wrangling Special use of Survival Skill in order to control and ride. If animal is Bestial it may run in fear.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1yAGyWieYhcrCzFa"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Walking the Path",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination\n(Emperor's Tarot)",
+    "prerequisites": "Divining the Future",
+    "focusPower": "Free Action",
+    "action": "Self, 1m x Psy Rating",
+    "range": "Psyniscience",
+    "opposed": "Yes",
+    "sustained": "The Psyker gains +10 to Weapon Skill and Ballistic Skill Tests. Ballistic Skill Tests have -20 to hit them for one round, or as long as power is sustained. As a Half Action, can warn allies within 1m x Psy Rating of incoming attacks, all Ballistic Skill Tests made against warned allies have -5 penalty. Power cannot be used at Fettered Strength.\nHB: This power is bad. As an alternative, (Half Action) Psyker gains number of free dodge actions equal to half their Psy Rating (rounded up) for one round, or as long as power is sustained. As a reaction, they may give one free dodge to an ally within range. These free dodges are not regained upon the start of a new round, the power ends automatically when no free dodges are left. Can't dodge same attack multiple times. ",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7uYZ61tEhfQZiepA"
+}

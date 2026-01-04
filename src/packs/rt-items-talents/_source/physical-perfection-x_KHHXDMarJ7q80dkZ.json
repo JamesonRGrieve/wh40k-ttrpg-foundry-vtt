@@ -1,0 +1,17 @@
+{
+  "name": "Physical Perfection (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Augmenticist Alternate Advance, 500xp",
+    "effect": "Character gains one level of the Machine Trait. Character can be healed with the Tech-Use Skill in place of Medicae, however such tests suffer an additional -20.\nTalent can be taken up to three times, gaining one level of the Machine Trait each time.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Character gains one level of the Machine Trait. Character can be healed with the Tech-Use Skill in place of Medicae, however such tests suffer an additional -20.\nTalent can be taken up to three times, gaining one level of the Machine Trait each time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KHHXDMarJ7q80dkZ"
+}

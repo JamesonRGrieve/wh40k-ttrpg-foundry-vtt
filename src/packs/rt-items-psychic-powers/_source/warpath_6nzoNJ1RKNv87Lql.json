@@ -1,0 +1,22 @@
+{
+  "name": "Warpath",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "1m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "On Successful Test, for as long as power is sustained, all allied Orks including the Weirdboy within range add Psy Rating / 2 to Melee Attack Damage (rounded up). Additionally, each allied Ork within range may re-roll one failed Weapon Skill Test per Round.",
+    "effect": "200xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6nzoNJ1RKNv87Lql"
+}

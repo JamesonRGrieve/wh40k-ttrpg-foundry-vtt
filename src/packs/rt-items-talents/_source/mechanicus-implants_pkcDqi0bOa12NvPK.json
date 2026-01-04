@@ -1,0 +1,17 @@
+{
+  "name": "Mechanicus Implants",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "-",
+    "effect": "Innate to Explorators and the Mechanicus, gain the following Cybernetics: Electro-Graft, Electoo Inductors, Respirator Unit, Cyber Mantle, Potential Coil, and Cranial Circuitry. These are not considered equipment as they are fully part of the user, and death would result from attempted removal. Certain cybernetics and talents require a person to have this trait.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Innate to Explorators and the Mechanicus, gain the following Cybernetics: Electro-Graft, Electoo Inductors, Respirator Unit, Cyber Mantle, Potential Coil, and Cranial Circuitry. These are not considered equipment as they are fully part of the user, and death would result from attempted removal. Certain cybernetics and talents require a person to have this trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pkcDqi0bOa12NvPK"
+}

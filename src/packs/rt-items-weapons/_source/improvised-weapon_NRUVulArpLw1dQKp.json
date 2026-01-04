@@ -1,0 +1,28 @@
+{
+  "name": "Improvised Weapon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10-2",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Ogryn-Proof, Primitive (7), Unbalanced",
+    "weight": "-",
+    "availability": "Ubiquitous",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Primitive (7), Unbalanced</p><p><b>Note:</b> Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NRUVulArpLw1dQKp"
+}

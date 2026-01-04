@@ -1,0 +1,17 @@
+{
+  "name": "Rite of Static Overload",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; 1+ Cybernetic Limb, Tech-Use +10 \nAptitudes: Intelligence, Tech",
+    "effect": "Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jlAvSK6UlbpqZGu3"
+}

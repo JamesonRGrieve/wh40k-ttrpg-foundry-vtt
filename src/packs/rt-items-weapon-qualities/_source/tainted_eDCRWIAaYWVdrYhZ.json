@@ -1,0 +1,14 @@
+{
+  "name": "Tainted",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 6,
+    "description": {
+      "value": "<p>6</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eDCRWIAaYWVdrYhZ"
+}

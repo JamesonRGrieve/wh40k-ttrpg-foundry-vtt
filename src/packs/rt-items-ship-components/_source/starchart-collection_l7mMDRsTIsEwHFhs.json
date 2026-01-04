@@ -1,0 +1,21 @@
+{
+  "name": "Starchart Collection",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "effect": "Navigator can reduce warp travel by 1d5 days, min 1. +25 Achievement Points towards Exploration Objectives. Poor: -10 to Warp Travel Encounter Table, Good: Reduce warp travel time by 1d5+5 days (minimum 1), Best: also +50 AchvPoints (instead of 25). One per Vessel.",
+    "availability": "Extremely Rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Navigator can reduce warp travel by 1d5 days, min 1. +25 Achievement Points towards Exploration Objectives. Poor: -10 to Warp Travel Encounter Table, Good: Reduce warp travel time by 1d5+5 days (minimum 1), Best: also +50 AchvPoints (instead of 25). One per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l7mMDRsTIsEwHFhs"
+}

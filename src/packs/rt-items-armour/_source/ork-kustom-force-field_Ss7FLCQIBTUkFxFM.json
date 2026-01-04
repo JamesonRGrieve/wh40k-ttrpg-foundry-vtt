@@ -1,0 +1,22 @@
+{
+  "name": "Ork Kustom Force Field",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Ork",
+    "locations": "All",
+    "ap": 0.5,
+    "maxAg": null,
+    "weight": "40kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "notes": "Very Rare for Orks. Human's should not use this. Overloads on a 15 or lower. When it overloads it ceases functioning for 1d5 rounds and inflicts 1d10+5 Energy Damage with 0 Penetration and Shocking Quality to everyone within 2d10 metres, including wearer",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p>Very Rare for Orks. Human's should not use this. Overloads on a 15 or lower. When it overloads it ceases functioning for 1d5 rounds and inflicts 1d10+5 Energy Damage with 0 Penetration and Shocking Quality to everyone within 2d10 metres, including wearer</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ss7FLCQIBTUkFxFM"
+}

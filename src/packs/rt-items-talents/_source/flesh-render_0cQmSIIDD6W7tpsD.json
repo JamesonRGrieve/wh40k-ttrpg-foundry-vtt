@@ -1,0 +1,17 @@
+{
+  "name": "Flesh Render",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1: Weapon Training (Chain)\nAptitudes: Khorne",
+    "effect": "When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0cQmSIIDD6W7tpsD"
+}

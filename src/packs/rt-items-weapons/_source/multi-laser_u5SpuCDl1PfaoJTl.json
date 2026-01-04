@@ -1,0 +1,28 @@
+{
+  "name": "Multi-Laser",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Las",
+    "range": "250m",
+    "rof": "-/-/10",
+    "damage": "3d10+3",
+    "damageType": "Energy",
+    "penetration": 4,
+    "clip": 60,
+    "reload": "3 Full",
+    "special": null,
+    "weight": "50kg",
+    "availability": "Very Rare",
+    "cost": "2000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u5SpuCDl1PfaoJTl"
+}

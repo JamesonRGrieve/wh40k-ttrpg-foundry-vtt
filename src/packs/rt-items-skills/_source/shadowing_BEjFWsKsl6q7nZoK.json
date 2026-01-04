@@ -1,0 +1,18 @@
+{
+  "name": "Shadowing",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Advanced",
+    "characteristic": "Agility",
+    "descriptor": "Following other people, vehicles, or starships on the move while remaining out of sight, contrasts Concealment due to movement and blending in. ",
+    "uses": "Opposed Skill Test vs Awareness/Scrutiny, follow target for at least 1 minute unseen.",
+    "useTime": "1 Minute",
+    "description": {
+      "value": "<p>Following other people, vehicles, or starships on the move while remaining out of sight, contrasts Concealment due to movement and blending in. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BEjFWsKsl6q7nZoK"
+}

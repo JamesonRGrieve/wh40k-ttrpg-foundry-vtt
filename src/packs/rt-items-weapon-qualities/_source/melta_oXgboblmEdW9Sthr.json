@@ -1,0 +1,14 @@
+{
+  "name": "Melta*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 30,
+    "description": {
+      "value": "<p>30</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oXgboblmEdW9Sthr"
+}

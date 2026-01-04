@@ -1,0 +1,28 @@
+{
+  "name": "Grenade Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Launcher",
+    "range": "60m",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": "-",
+    "clip": 6,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "12kg",
+    "availability": "Average",
+    "cost": "500 T",
+    "source": "Only War: Core",
+    "note": "Traits vary with ammo (Weapon - Grenades)",
+    "description": {
+      "value": "<p><b>Note:</b> Traits vary with ammo (Weapon - Grenades)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p1LPK8kocm79VcF7"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Scattergun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "30m",
+    "rof": "S/2/-",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 2,
+    "clip": 12,
+    "reload": "Full",
+    "special": "Scatter",
+    "weight": "5kg",
+    "availability": "Special",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Found as Treasure via book's Treasure Generator.",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BlvTcTiL7YR2YxpW"
+}

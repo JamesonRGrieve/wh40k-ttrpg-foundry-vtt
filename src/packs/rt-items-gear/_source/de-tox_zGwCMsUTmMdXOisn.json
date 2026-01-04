@@ -1,0 +1,20 @@
+{
+  "name": "De-Tox",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Ends ongoing (positive or negative) effects of drugs/toxins/gases unless stated otherwise. Character is stunned for 1d10-TB (Toughness Bonus) Rounds, a result of 0 means no side-effects",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Rare",
+    "notes": "65 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 65 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zGwCMsUTmMdXOisn"
+}

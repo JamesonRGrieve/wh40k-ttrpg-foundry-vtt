@@ -1,0 +1,28 @@
+{
+  "name": "Pandemic Staff [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "2d10+3",
+    "damageType": "Impact",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Daemon Wep, Corrosive, Recharge, Spray, Toxic (3)",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "BC: Tome of Decay",
+    "note": "Weapon: Staff. Daemon WP 34 (Lesser Nurgle Daemon), Bind Str 2 . Att.: Stream of Corruption. Two-handed, must be dedicated to Nurgle to wield. Can make a [Melee] Attack. ",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Corrosive, Recharge, Spray, Toxic (3)</p><p><b>Note:</b> Weapon: Staff. Daemon WP 34 (Lesser Nurgle Daemon), Bind Str 2 . Att.: Stream of Corruption. Two-handed, must be dedicated to Nurgle to wield. Can make a [Melee] Attack. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u7CoOL8cqMTA1ojI"
+}

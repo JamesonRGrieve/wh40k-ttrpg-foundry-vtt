@@ -1,0 +1,20 @@
+{
+  "name": "High Explosive Rounds",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Autocannons",
+    "damageOrEffect": "Changes damage type to Explosive, grants Blast (1). Reduces Penetration by 2",
+    "qualities": "Blast (1)",
+    "weight": "10% wep",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Changes damage type to Explosive, grants Blast (1). Reduces Penetration by 2</p><p><b>Qualities:</b> Blast (1)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ku2W9mgPCu00gEwe"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Smoke",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 8,
+    "description": {
+      "value": "<p>8</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lvccIrkrapOnkk2L"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Endeavour-Class Light Cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Light Cruiser",
+    "size": "3.8km long, 0.5km wide",
+    "crew": 67500,
+    "speed": 6,
+    "manoeuvrability": 12,
+    "detection": 15,
+    "hull": 60,
+    "armour": 20,
+    "turrets": 2,
+    "space": 58,
+    "shipPoints": 57,
+    "weaponCapacity": "2 Prow, 1 Port, 1 Starboard",
+    "notes": "Has Torpedo Tube (Voss) Component (prow), size already reduced, can't remove, must be able to power.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Has Torpedo Tube (Voss) Component (prow), size already reduced, can't remove, must be able to power.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "adA94bIIOarsixNx"
+}

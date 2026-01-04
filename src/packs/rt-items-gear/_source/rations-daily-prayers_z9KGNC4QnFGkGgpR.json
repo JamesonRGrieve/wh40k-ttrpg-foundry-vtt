@@ -1,0 +1,20 @@
+{
+  "name": "Rations: Daily Prayers",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "A civilian relief item in the form of rolled up parchments containing inspirational messages to maintain spiritual wellbeing, conveniently written on edible paper filled with nutrients for physical wellbeing.",
+    "cost": "One day's worth of food for one person",
+    "effects": "Average",
+    "notes": "1 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 1 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z9KGNC4QnFGkGgpR"
+}

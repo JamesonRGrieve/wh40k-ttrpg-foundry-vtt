@@ -1,0 +1,22 @@
+{
+  "name": "Mind Probe",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy (Communication)",
+    "prerequisites": "None",
+    "focusPower": "Full Action",
+    "action": "1m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "The Psyker digs into the mind of the target. Successful opposed Test vs Target's Willpower, probe mind, going one level deeper per round sustained (1-5). Failiure ends power, Psyker gains Fatigue equal to DoF. Probing without Target's Knowledge suffers -20 Penalty to Opposed Willpower Test and limited to Fettered Strength. Probe Levels:\n(1 - Basic Info, Name, Mood, Insanity level, physical health),  (2 - Surface Thoughts, fears, concerns, concious lies, Corruption Level),  (3 - Memories of the last 12 Hours, basic Secrets), (4 - Detailed info subject thinks is important, relations, beliefs, personal goals, contacts, hidden ciphers, important life moments), (5 - Depths of target's Psyche, identify implanted memories/personalities)",
+    "effect": "200xp",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gM1aqnlBGl5p1x5Z"
+}

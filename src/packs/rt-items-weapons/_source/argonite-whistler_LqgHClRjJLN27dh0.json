@@ -1,0 +1,28 @@
+{
+  "name": "Argonite Whistler",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Energy",
+    "penetration": 6,
+    "clip": 8,
+    "reload": "2 Full",
+    "special": "Recharge",
+    "weight": "2kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.",
+    "description": {
+      "value": "<p><b>Special:</b> Recharge</p><p><b>Note:</b> Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LqgHClRjJLN27dh0"
+}

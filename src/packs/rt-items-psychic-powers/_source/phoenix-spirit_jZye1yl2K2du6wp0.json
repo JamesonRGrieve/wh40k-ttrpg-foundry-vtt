@@ -1,0 +1,22 @@
+{
+  "name": "Phoenix Spirit",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Full Action",
+    "action": "10m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Farseer selects an Eldar Target within range that is recently died and makes Focus Power Test to try ot make them rise up like a Pheonix. If Successful target can immediately stand up as a Free Action and take one full turn, +1 per two Degrees of Success, without any penalties inccured by injury other than those of dismemberment. Targets act on Farseers initiative, and are not actually \"healed\", falling dead again after time is up. Targets cannot be \"revived\" in this way more than once. ",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jZye1yl2K2du6wp0"
+}

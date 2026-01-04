@@ -1,0 +1,28 @@
+{
+  "name": "Anti-Plant Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "3d10",
+    "damageType": "Explosive",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3)",
+    "weight": "0.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Rogue Trader: Core",
+    "note": "Only damages Flora, no effect on people or animals",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Only damages Flora, no effect on people or animals</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "McpZcoCnjOE9yPVW"
+}

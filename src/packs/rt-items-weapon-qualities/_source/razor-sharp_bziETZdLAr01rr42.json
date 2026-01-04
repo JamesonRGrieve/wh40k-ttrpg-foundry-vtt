@@ -1,0 +1,14 @@
+{
+  "name": "Razor-Sharp",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 17,
+    "description": {
+      "value": "<p>17</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bziETZdLAr01rr42"
+}

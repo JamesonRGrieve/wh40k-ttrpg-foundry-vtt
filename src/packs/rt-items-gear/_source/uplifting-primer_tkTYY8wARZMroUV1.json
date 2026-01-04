@@ -1,0 +1,20 @@
+{
+  "name": "Uplifting Primer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "-",
+    "availability": "Details standard Imperial Guard Arms, Attire, apparatus, equipment, policy, organisation, structure, and basic medical instructions. Also provides a guide to common foes of the Imperium. Required reading for all loyal Guardsman.",
+    "cost": "HB: Character can make Common Lore (Imperial Guard, Imperium, or Xenos) Test as Full Action (Concentration), if fail can still pass test but requires +1 Full Action per DoF",
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tkTYY8wARZMroUV1"
+}

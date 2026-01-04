@@ -1,0 +1,28 @@
+{
+  "name": "Knife (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "5m",
+    "rof": "-",
+    "damage": "1d5",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "1kg",
+    "availability": "Plentiful",
+    "cost": "5 T",
+    "source": "Only War: Core",
+    "note": "Can be thrown",
+    "description": {
+      "value": "<p><b>Note:</b> Can be thrown</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mSeYvdQRorc9jPdU"
+}

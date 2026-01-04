@@ -1,0 +1,17 @@
+{
+  "name": "Survival Master",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Torchbearer Alternate Advance, 500xp\nToughness 40+",
+    "effect": "The Character can re-roll all failed Survival, Tracking, and Wrangling Skill Tests, but must keep the new result.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>The Character can re-roll all failed Survival, Tracking, and Wrangling Skill Tests, but must keep the new result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "58b9lAG7IG73fSug"
+}

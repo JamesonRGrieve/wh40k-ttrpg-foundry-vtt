@@ -1,0 +1,14 @@
+{
+  "name": "Common",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 60,
+    "description": {
+      "value": "<p>60</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rG3ukvWtEvv9OZvl"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Brimstone Rhetoric",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Incinerant Priest Advanced Specialty(400xp)",
+    "effect": "Whenever the Character or an Ally in Cohesion with the Character inflicts Righteous Fury on an enemy, and that attack causes damage, roll 1d5 for Critical damage twice and discard the lower result.",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Whenever the Character or an Ally in Cohesion with the Character inflicts Righteous Fury on an enemy, and that attack causes damage, roll 1d5 for Critical damage twice and discard the lower result.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UMv9fkcE1YwAg8lp"
+}

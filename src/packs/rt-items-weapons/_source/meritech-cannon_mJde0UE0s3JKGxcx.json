@@ -1,0 +1,28 @@
+{
+  "name": "Meritech Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "15m",
+    "rof": "S/-/-",
+    "damage": "2d10+4",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 6,
+    "reload": "3 Full",
+    "special": "Blast (1)",
+    "weight": "0.5kg",
+    "availability": "Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Fires Tiny black marble-like devices that explode with the force of a krak missile.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1)</p><p><b>Note:</b> Fires Tiny black marble-like devices that explode with the force of a krak missile.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mJde0UE0s3JKGxcx"
+}

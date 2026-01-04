@@ -1,0 +1,17 @@
+{
+  "name": "Get Them!",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Sweeping Order\nFree Action",
+    "requirements": "Sergeant Spec\n200xp",
+    "descriptionText": "Make +0 Command Test, if successful, all Comrades grant their Player Characters an additional +4 Ranged/Melee Damage if the Ranged volley or Close Quarters Orders are used.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Make +0 Command Test, if successful, all Comrades grant their Player Characters an additional +4 Ranged/Melee Damage if the Ranged volley or Close Quarters Orders are used.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wCV9lyaisEuCkIUW"
+}

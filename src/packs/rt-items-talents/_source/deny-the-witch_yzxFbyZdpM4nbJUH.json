@@ -1,0 +1,17 @@
+{
+  "name": "Deny the Witch",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Willpower 35\nAptitudes: Willpower, Defence",
+    "effect": "Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yzxFbyZdpM4nbJUH"
+}

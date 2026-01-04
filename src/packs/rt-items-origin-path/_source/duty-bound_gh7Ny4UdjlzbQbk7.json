@@ -1,0 +1,25 @@
+{
+  "name": "Duty Bound",
+  "type": "trait",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "requirements": "Origin Path: Lure of the Void",
+    "descriptionText": "1. Duty to the Throne: +3 Willpower. -10 to Interaction Skills when dealing with sources outside of the Imperium. Gain Armour of Contempt Talent if you have 40+ Willpower.\n2. Duty to Humanity: +3 Perception or +3 Intelligence. -1 to starting Profit Factor.\n3. Duty to your Dynasty: -3 Toughness. Gain Rival (Another Rogue Trader Family). +1 to starting Profit Factor.",
+    "effects": "1. Duty to the Throne: +3 Willpower. -10 to Interaction Skills when dealing with sources outside of the Imperium. Gain Armour of Contempt Talent if you have 40+ Willpower.\n2. Duty to Humanity: +3 Perception or +3 Intelligence. -1 to starting Profit Factor.\n3. Duty to your Dynasty: -3 Toughness. Gain Rival (Another Rogue Trader Family). +1 to starting Profit Factor.",
+    "source": "Character Creation (sheet)",
+    "description": {
+      "value": "<p>1. Duty to the Throne: +3 Willpower. -10 to Interaction Skills when dealing with sources outside of the Imperium. Gain Armour of Contempt Talent if you have 40+ Willpower.<br>2. Duty to Humanity: +3 Perception or +3 Intelligence. -1 to starting Profit Factor.<br>3. Duty to your Dynasty: -3 Toughness. Gain Rival (Another Rogue Trader Family). +1 to starting Profit Factor.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "choiceGroup": "origin.lure-of-the-void",
+      "step": "Lure of the Void",
+      "stepIndex": 3,
+      "number": "4"
+    }
+  },
+  "_id": "gh7Ny4UdjlzbQbk7"
+}

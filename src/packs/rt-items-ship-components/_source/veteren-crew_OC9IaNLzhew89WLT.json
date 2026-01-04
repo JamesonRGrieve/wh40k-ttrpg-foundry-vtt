@@ -1,0 +1,21 @@
+{
+  "name": "Veteren Crew",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": 15,
+    "effect": "Crew Rating of 50, much harder to find than Competent Crew (Suggestion: 6 Degrees Harder, Common-->Near Unique)",
+    "availability": "Special",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Crew Rating of 50, much harder to find than Competent Crew (Suggestion: 6 Degrees Harder, Common-->Near Unique)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OC9IaNLzhew89WLT"
+}

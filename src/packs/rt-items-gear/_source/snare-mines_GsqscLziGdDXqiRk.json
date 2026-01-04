@@ -1,0 +1,20 @@
+{
+  "name": "Snare Mines",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "Placing mine requires +20 Tech-Use Test and requires a Grenade or other explosive. Size 3 (Scrawny) or larger creatures within 1,2, or 3 metres of the snare mines cause the grenade to detonate with a delay of 0 to 5 rounds. Detecting a Snare mine before triggering it requires +0 Awareness Test with -10 per Degree of Success on Test to plant it.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GsqscLziGdDXqiRk"
+}

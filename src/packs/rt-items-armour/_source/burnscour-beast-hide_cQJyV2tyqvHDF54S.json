@@ -1,0 +1,22 @@
+{
+  "name": "Burnscour Beast Hide",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Body",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "20kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cQJyV2tyqvHDF54S"
+}

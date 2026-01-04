@@ -1,0 +1,20 @@
+{
+  "name": "Solid Slugs",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "SP: Shotguns",
+    "damageOrEffect": "Loses Scatter Quality, but +1 damage and +2 PEN",
+    "qualities": "Scatter (lose)",
+    "weight": "10% wep",
+    "availability": "Common",
+    "cost": null,
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Loses Scatter Quality, but +1 damage and +2 PEN</p><p><b>Qualities:</b> Scatter (lose)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oChU2xIHhWQw941h"
+}

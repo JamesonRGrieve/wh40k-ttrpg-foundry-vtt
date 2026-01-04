@@ -1,0 +1,25 @@
+{
+  "name": "Devil Dog",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Land Vehicle",
+    "size": "18m",
+    "tacticalSpeed": "70kph",
+    "cruisingSpeed": "+10",
+    "maneuverability": "30",
+    "frontArmour": "Massive (+30)",
+    "sideArmour": "Front 30\nSide 28\nRear 18",
+    "rearArmour": "1 Commander (Main Gun), Driver, 1 Gunner (Hull Weapon)",
+    "structuralIntegrity": "None",
+    "crew": "Turret: Melta Cannon (75m; S/-/-; 2d10+18 E; Pen 12; Clip 20; Rld 2 Full; Blast(6), Melta)\nHull: one of Front-Facing Multi-Melta or Heavy Flamer\nPintle (Optional): Heavy Stubber or Storm Bolter\n---\nMulti-Melta (60m; S/-/-;2d10+16 E; Pen 12; Clip 12; Rld Full; Blast(1), Melta)\nHeavy Flamer (30m; S/–/–; 1d10+5 E; Pen 4; Clip 20; Rld 2 Full; Flame, Spray)\nHeavy Stubber (100m; -/-/8; 1d10+4 I; Pen 3; Clip 80; Rld 2 Full)\nStorm Bolter (90m; S/2/4; 1d10+5 X; Pen 4; Clip 60; Rld Full; Storm, Tearing)",
+    "passengers": "Traits: Enclosed, Enhanced Motive Systems, Reinforced Armour, Tracked Vehicle.",
+    "cargo": "Very Rare",
+    "availability": "OW: No Surrender",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "VD6VH9DylxbYcxj1"
+}

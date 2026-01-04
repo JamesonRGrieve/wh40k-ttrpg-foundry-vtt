@@ -1,0 +1,14 @@
+{
+  "name": "Rune Wep (alt.)",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": "The rare result of a Daemon Weapon surviving its imprisoned Daemon escaping it. It no longer has any Daemon Weapon Traits, instead it gains the Tearing, Tainted, and Vengeful (8) Qualities, is immune to Power Fields, and loses Primitive Quality. Gain 1d5 Corruption on triggering Righteous Fury.",
+    "description": {
+      "value": "<p>The rare result of a Daemon Weapon surviving its imprisoned Daemon escaping it. It no longer has any Daemon Weapon Traits, instead it gains the Tearing, Tainted, and Vengeful (8) Qualities, is immune to Power Fields, and loses Primitive Quality. Gain 1d5 Corruption on triggering Righteous Fury.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fJKAooZihobKzIVZ"
+}

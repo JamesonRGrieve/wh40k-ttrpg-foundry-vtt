@@ -1,0 +1,22 @@
+{
+  "name": "We'z Gotta be Lucky",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Waaagh!\n(WAAAGH!)",
+    "prerequisites": "Smash da Gitz, Up an' at Em!",
+    "focusPower": "Full Action",
+    "action": "5m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "As long as Weirdboy sustains this power, they or any allied Orks in range may re-roll a total number of Characteristic Tests equal to Psy Rating. If however any characteristic test is failed after being re-rolled this way, the power ends automatically and the Weirdboy immediately rolls once on Weird Fings table, losing any unused re-rolls for that round.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DTrnzKe8MA8lNokm"
+}

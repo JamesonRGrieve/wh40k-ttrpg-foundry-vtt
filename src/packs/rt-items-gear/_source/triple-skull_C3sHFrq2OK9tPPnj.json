@@ -1,0 +1,20 @@
+{
+  "name": "Triple Skull",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+5 to all Dodge and Parry Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a row of three skulls",
+    "cost": "Distinguished Service Medal: Awarded to the survivors of a unit who suffered over 2/3rds casualties.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C3sHFrq2OK9tPPnj"
+}

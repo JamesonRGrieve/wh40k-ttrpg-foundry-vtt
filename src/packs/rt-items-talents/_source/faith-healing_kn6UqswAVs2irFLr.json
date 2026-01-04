@@ -1,0 +1,17 @@
+{
+  "name": "Faith Healing",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Adherent of Aleynikov Alternative Advance, 600xp. Medicae +10, Pure Faith",
+    "effect": "Whenever Character removes damage from an ally with the Medicae Skill, the ally gains +5 to the next test they make before the end of an encounter per point of damage removed. (Up to +30).",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Whenever Character removes damage from an ally with the Medicae Skill, the ally gains +5 to the next test they make before the end of an encounter per point of damage removed. (Up to +30).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kn6UqswAVs2irFLr"
+}

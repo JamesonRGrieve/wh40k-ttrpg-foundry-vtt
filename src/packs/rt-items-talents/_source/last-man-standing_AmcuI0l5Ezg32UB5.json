@@ -1,0 +1,17 @@
+{
+  "name": "Last Man Standing",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Nerves of Steel",
+    "effect": "Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AmcuI0l5Ezg32UB5"
+}

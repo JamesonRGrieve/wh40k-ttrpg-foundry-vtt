@@ -1,0 +1,17 @@
+{
+  "name": "Awakened Psyker",
+  "type": "trait",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "requirements": "Any Human, except Astropath or Navigator. RT Rank 3+, Willpower 35+. Does not have \"Untouchable\" Trait.",
+    "descriptionText": "The character suddenly discovers or awakens psychic powers they did not know they had, or reveals those they had managed to keep dormant up until this point. Having not received the proper training they are unsanctioned psykers, despised and feared by many.",
+    "effects": "Replace new Rank's Advances with that of the Awakened Psyker\nAutomatically Gain 1d5 Insanity and Corruption Points, and the Psychic Awakening Unique Talent and Enemy(Ecclesiarchy and Inquisition) Talents ",
+    "source": "RT: The Navis Primer\n(Page 68)",
+    "description": {
+      "value": "<p>The character suddenly discovers or awakens psychic powers they did not know they had, or reveals those they had managed to keep dormant up until this point. Having not received the proper training they are unsanctioned psykers, despised and feared by many.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Awakened Psyker\nAutomatically Gain 1d5 Insanity and Corruption Points, and the Psychic Awakening Unique Talent and Enemy(Ecclesiarchy and Inquisition) Talents </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DxudFwUXTssem8JV"
+}

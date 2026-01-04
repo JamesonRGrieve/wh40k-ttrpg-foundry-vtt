@@ -1,0 +1,28 @@
+{
+  "name": "Assault Device (Cadence)\n\"Spectre\" [Autogun]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "SP",
+    "range": "80m",
+    "rof": "S/3/10",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "20x3",
+    "reload": "Full",
+    "special": null,
+    "weight": "6.5kg",
+    "availability": "Rare",
+    "cost": "375 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "Has Three Autogun Magazines (each containing 20 rounds and requiring a Full Action to Reload) and a Fire Selector to switch between them.\nHas an Undermounted Shotgun (see [Shotgun] Profile). Can only fire as either an [Autogun] or [Shotgun] at once.",
+    "description": {
+      "value": "<p><b>Note:</b> Has Three Autogun Magazines (each containing 20 rounds and requiring a Full Action to Reload) and a Fire Selector to switch between them.\nHas an Undermounted Shotgun (see [Shotgun] Profile). Can only fire as either an [Autogun] or [Shotgun] at once.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C4JsJmxBoDLy2Kdu"
+}

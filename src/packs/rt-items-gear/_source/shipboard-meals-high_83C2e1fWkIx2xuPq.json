@@ -1,0 +1,20 @@
+{
+  "name": "Shipboard Meals: High",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The Meals provided whilst aboard a Void Craft. Fresh Fruit, Jellied Grox Tongue, Amasec. Not quite noble fine dining but still far better than many hive scum will ever taste.",
+    "cost": "Cost is per day",
+    "effects": "Scarce",
+    "notes": "40 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 40 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "83C2e1fWkIx2xuPq"
+}

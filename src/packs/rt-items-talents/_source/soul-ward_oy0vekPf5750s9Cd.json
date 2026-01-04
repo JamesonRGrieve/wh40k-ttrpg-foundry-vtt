@@ -1,0 +1,17 @@
+{
+  "name": "Soul Ward",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Ast) (T2)",
+    "requirements": "Tier 3: Astropath E.Adv, Strong Minded, Willpower 50. Aptitudes: Defence, Willpower",
+    "effect": "Astropath can re-roll Willpower tests they make due to results of Psychic Phenomena, and Perils of the Warp, as well as tests to avoid gaining Mutations, or to resist Daemonic Possession.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Astropath can re-roll Willpower tests they make due to results of Psychic Phenomena, and Perils of the Warp, as well as tests to avoid gaining Mutations, or to resist Daemonic Possession.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oy0vekPf5750s9Cd"
+}

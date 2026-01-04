@@ -1,0 +1,22 @@
+{
+  "name": "Reweave",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Rak 'Gol",
+    "prerequisites": "Resonator Implants",
+    "focusPower": "Full Action",
+    "action": "Touch",
+    "range": "Willpower",
+    "opposed": "No",
+    "sustained": "Select Target Character and target device weighing no more than 2kg x Psy Rating and make Focus Power Test. If successful, permenantly integrate device into target's body, with target's mind gaining intuitive control over it. This process also removes 1d5+Psy Rating + 2 per Degree of Success Damage, but permenantly reduces target's Toughness and Fellowship Characteristics by 1d5. ",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kUoi4b2I40F3Gany"
+}

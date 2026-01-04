@@ -1,0 +1,22 @@
+{
+  "name": "Eldar Shimmershield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Eldar (Force Field)",
+    "locations": "All",
+    "ap": 0.3,
+    "maxAg": "-",
+    "weight": "1kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gaOQCd1VJmtBgmFR"
+}

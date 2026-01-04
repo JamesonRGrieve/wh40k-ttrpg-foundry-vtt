@@ -1,0 +1,21 @@
+{
+  "name": "Preparation may take the form of Arcane Glyphs and Forbidden Runes often applied via branding as to ensure permenance. Sanctified pins then pierce the flesh to later entrap the Daemon. Symbols will vary with the God the Daemon is from, a Star of Chaos is common for all though.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Insect Hive",
+    "sustain": "6",
+    "novice": "Vermin, bugs, and other critters burrow and nest beneath the Daemonhost's skin. They gain 1d10 Wounds.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Vermin, bugs, and other critters burrow and nest beneath the Daemonhost's skin. They gain 1d10 Wounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E3QcdyqBPX50W0Gm"
+}

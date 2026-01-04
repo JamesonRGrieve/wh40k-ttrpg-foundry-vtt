@@ -1,0 +1,28 @@
+{
+  "name": "Chain Greatsword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Chain",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": "-",
+    "reload": "-",
+    "special": "Tearing, Unbalanced",
+    "weight": "16kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Two Handed Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Two Handed Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OUxw4vSJQTe6bLqW"
+}

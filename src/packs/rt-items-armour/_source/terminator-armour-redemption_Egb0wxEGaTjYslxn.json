@@ -1,0 +1,22 @@
+{
+  "name": "Terminator Armour \"Redemption\"",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power",
+    "locations": "All",
+    "ap": 12,
+    "maxAg": null,
+    "weight": "500kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "notes": "Whilst wearing -10 to Agility Characteristic. Blessed by the Sanguinary Guard (may count as a warding effect vs Warp Weapons), provides +10 to Resist Fear Tests when worn.\nCan only be worn by Space Marines.",
+    "source": "ChatGPT",
+    "description": {
+      "value": "<p>Whilst wearing -10 to Agility Characteristic. Blessed by the Sanguinary Guard (may count as a warding effect vs Warp Weapons), provides +10 to Resist Fear Tests when worn.\nCan only be worn by Space Marines.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Egb0wxEGaTjYslxn"
+}

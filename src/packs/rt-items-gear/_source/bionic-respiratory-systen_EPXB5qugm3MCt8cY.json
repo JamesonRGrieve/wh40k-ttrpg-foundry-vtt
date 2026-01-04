@@ -1,0 +1,20 @@
+{
+  "name": "Bionic Respiratory Systen",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Replaces Lungs and Respiratory System, +20 to Toughness to resist airborne toxins and gases. Poor: -20 to Silent Move/Stealth Tests, -10 to any tests involving strenuous physical activity. \nGood: counts as full life support.",
+    "cost": null,
+    "effects": "Rare / Initiated",
+    "notes": "800 T\n10 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 800 T\n10 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EPXB5qugm3MCt8cY"
+}

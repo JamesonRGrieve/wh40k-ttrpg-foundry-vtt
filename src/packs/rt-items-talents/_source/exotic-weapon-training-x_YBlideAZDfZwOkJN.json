@@ -1,0 +1,17 @@
+{
+  "name": "Exotic Weapon Training (X)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; None\nAptitudes:  Intelligence, Finesse, Unaligned",
+    "effect": "Character is trained in the use of a Single Exotic Weapon (EG: Harlequinn's Kiss) or Exotic Weapon Type (EG: Needle/Digital Weapons), and can use it without the -20 Penalty. Talent can be taken multiple times for different weapons.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character is trained in the use of a Single Exotic Weapon (EG: Harlequinn's Kiss) or Exotic Weapon Type (EG: Needle/Digital Weapons), and can use it without the -20 Penalty. Talent can be taken multiple times for different weapons.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YBlideAZDfZwOkJN"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Word of Beasts",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power 2E",
+    "prerequisites": "Fellowship 35",
+    "focusPower": "Half Action\nConcentration",
+    "action": "10m",
+    "range": "-10 Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Character opens a telepathic link with an animal which resist with +0 Willpower Test. If character succeeds they can choose to do one of the following: \nImpression Reading: Psyker receives mental impression of the animal's recent experiences, these are merely vague impressions and unclear images, GM deteriens the level and detail of the information dependant on the intelligence and senses of the animal, as well as the Psy Rating of the character and Focus Power Test Degrees of Success.\nEmpathic Link: Character establishes bond with  animal that persists after the link ends, animal follows and obeys the character's commands to the best of its ability as if trained and tamed with the Wrangling special use of the Survival.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RrSDyADyReYjTpg6"
+}

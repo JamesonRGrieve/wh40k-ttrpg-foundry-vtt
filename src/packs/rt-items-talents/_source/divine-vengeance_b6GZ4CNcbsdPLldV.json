@@ -1,0 +1,17 @@
+{
+  "name": "Divine Vengeance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - SoB) (T2)",
+    "requirements": "Tier 2: Sister of Battle E.Adv, Cleanse with Fire, Ballistic Skill 45. \nAptitudes: Ballistic Skill, Offence",
+    "effect": "The first time in a combat encounter the Sister inflicts Righteous Fury upon the enemy, they regain 1 spent Fate Point.",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>The first time in a combat encounter the Sister inflicts Righteous Fury upon the enemy, they regain 1 spent Fate Point.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b6GZ4CNcbsdPLldV"
+}

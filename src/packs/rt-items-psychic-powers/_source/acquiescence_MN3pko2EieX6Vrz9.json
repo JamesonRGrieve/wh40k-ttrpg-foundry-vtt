@@ -1,0 +1,22 @@
+{
+  "name": "Acquiescence",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Slaanesh)",
+    "prerequisites": "Devoted to Slaanesh WP 50 Psy Rating 4",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "20m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual Opposes Focus Power Test with Willpower. If Psyker wins, every Degree of Success they achieve causes targett be stunned for 1 Turn, if the target loses by 5+ Degrees of Failiure, they are instead rendered unconcious.",
+    "effect": "300xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MN3pko2EieX6Vrz9"
+}

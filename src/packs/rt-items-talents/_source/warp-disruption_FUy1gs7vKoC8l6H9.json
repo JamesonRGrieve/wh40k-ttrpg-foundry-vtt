@@ -1,0 +1,17 @@
+{
+  "name": "Warp Disruption",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Unt) (T2)",
+    "requirements": "Tier 2: Untouchable E.Adv,\nAptitudes: Perception, Willpower",
+    "effect": "Everyone with a Psy Rating within Willpower Bonus metres of the Untouchable reduces their base Psy Rating by 1 whilst within range. If this results in them having Psy Rating 0, they cannot use Psychic Powers.",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Everyone with a Psy Rating within Willpower Bonus metres of the Untouchable reduces their base Psy Rating by 1 whilst within range. If this results in them having Psy Rating 0, they cannot use Psychic Powers.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FUy1gs7vKoC8l6H9"
+}

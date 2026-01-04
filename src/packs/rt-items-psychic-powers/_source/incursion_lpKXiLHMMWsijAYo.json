@@ -1,0 +1,22 @@
+{
+  "name": "Incursion",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Malefic Daemonology",
+    "prerequisites": "Willpower 45,\nCursed Earth",
+    "focusPower": "Full Action\nConcentration",
+    "action": "Self",
+    "range": "- 10 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst power is sustained, character gains +10 x Psy Rating bonus to Daemonic Mastery Tests.\nIf power is Successfully manifested, gain Corruption Points equal to the Psy Rating used to manifest this power after its effects have been resolved.",
+    "effect": "100xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lpKXiLHMMWsijAYo"
+}

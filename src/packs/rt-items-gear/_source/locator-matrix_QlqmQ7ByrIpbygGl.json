@@ -1,0 +1,20 @@
+{
+  "name": "Locator Matrix",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "User is aware of magnetic north, present location, relative velocity, time of day, and altitude. Although may still need a map to best make use of this information.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QlqmQ7ByrIpbygGl"
+}

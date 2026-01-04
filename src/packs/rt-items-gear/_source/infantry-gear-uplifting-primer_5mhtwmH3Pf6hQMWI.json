@@ -1,0 +1,20 @@
+{
+  "name": "Infantry Gear: Uplifting Primer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "0.3kg",
+    "availability": "Filled with useful information for Xenos Recognition, weapon maintenance, basic survival and medical tips, combat formations, and prayer hyms and litanies.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Plentiful",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5mhtwmH3Pf6hQMWI"
+}

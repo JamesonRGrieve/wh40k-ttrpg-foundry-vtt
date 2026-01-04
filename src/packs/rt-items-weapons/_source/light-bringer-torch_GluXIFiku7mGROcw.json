@@ -1,0 +1,28 @@
+{
+  "name": "Light-Bringer Torch",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "6m",
+    "rof": "S/-/-",
+    "damage": "1d10+6",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Flame, Spray",
+    "weight": "6kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Stars of Inequity",
+    "note": "Fueled with Promethium. Acts as a brazier-shaped light source that can last for months. Provides +5 Intimidate when lit and held. ",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Fueled with Promethium. Acts as a brazier-shaped light source that can last for months. Provides +5 Intimidate when lit and held. </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GluXIFiku7mGROcw"
+}

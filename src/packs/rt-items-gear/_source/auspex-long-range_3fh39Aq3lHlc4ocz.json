@@ -1,0 +1,20 @@
+{
+  "name": "Auspex (Long Range)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "175kg",
+    "availability": "Counts as Auspex with 5km range, penetrating walls one metre thick. Good Craftsmanship has 10km range, Best Craftsmanship gives +30 to Awareness Tests instead of +20.",
+    "cost": "Can detect movement, vox signals, seismic disturbances, and other programmed things. Mounted on transportable chassis.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3fh39Aq3lHlc4ocz"
+}

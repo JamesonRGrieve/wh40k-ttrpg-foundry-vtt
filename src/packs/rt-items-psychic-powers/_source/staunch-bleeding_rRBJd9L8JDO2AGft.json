@@ -1,0 +1,22 @@
+{
+  "name": "Staunch Bleeding",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Half Action",
+    "action": "10m",
+    "range": "Threshold 8\n+20 Willpower",
+    "opposed": "No",
+    "sustained": "Target individual within range (which can be the Psyker) halts Blood Loss if they were suffering it. \nFor every 5 points above Threshold / 1 DoS on focus test, can affect one additional target.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rRBJd9L8JDO2AGft"
+}

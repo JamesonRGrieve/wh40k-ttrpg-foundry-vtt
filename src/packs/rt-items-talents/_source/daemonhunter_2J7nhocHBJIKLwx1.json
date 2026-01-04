@@ -1,0 +1,17 @@
+{
+  "name": "Daemonhunter",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2: Forbidden Lore (Daemonology), Willpower 40. Aptitudes: Offence, Willpower",
+    "effect": "Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2J7nhocHBJIKLwx1"
+}

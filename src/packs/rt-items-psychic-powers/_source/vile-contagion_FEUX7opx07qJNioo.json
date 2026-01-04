@@ -1,0 +1,22 @@
+{
+  "name": "Vile Contagion",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Mark of Nurgle, Nurgle's Rot",
+    "focusPower": "Half Action Concentration",
+    "action": "Special",
+    "range": "-10 Corruption",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustaining the Nurgle's Rot Psyhic Power, the Psyker can activate this power, choosing one target who has taken damage from Nurgle's Rot, +1 per two Degrees of Success on Focus power Test. These targets will now manifest Nurgle's Rot, effecting all targets within Psy Rating Metres of them. A Target can only be affected by one area of effect of Nurgle's Rot at a time if multiple were to overlap. This power is sustained for as long as Nurgle's Rot is sustained, and ends when it does. (still counts as sustaining two powers).",
+    "effect": "400xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>400xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FEUX7opx07qJNioo"
+}

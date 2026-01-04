@@ -1,0 +1,22 @@
+{
+  "name": "Regenerate",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "-",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Threshold 23",
+    "opposed": "Yes",
+    "sustained": "Whilst power is sustained, remove 1d5 damage, Critical Damage first, and remove all levels of Fatigue. One all damage is removed begin to regrow lost organs, limbs, and so on. Limbs and Organs replaced by cybernetics do not regrow unless the cybernetic is removed.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IskDMh7MEtF1Kny1"
+}

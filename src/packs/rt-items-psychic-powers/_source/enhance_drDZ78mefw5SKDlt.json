@@ -1,0 +1,22 @@
+{
+  "name": "Enhance",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar \n(Warlock)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "2m x Psy Rating",
+    "range": "Willpower",
+    "opposed": "Yes",
+    "sustained": "Warlock makes Focus Power Test, for as long as they sustain power all allies except the Warlock in 2m x Psy Rating, +1m per Degree of Success can add 10+Psy Rating to their Weapon Skill and Agility characteristics. Multiple instances of this power are not cumulative. The Warlock improves his allies' abilities and swiftness.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "drDZ78mefw5SKDlt"
+}

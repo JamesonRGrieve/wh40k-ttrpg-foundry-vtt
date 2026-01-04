@@ -1,0 +1,28 @@
+{
+  "name": "Larn Cutters",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "4d10+6",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 4,
+    "reload": "3 Full",
+    "special": "Tearing",
+    "weight": "10kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pgOLIx081iUKzBGm"
+}

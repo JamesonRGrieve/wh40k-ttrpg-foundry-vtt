@@ -1,0 +1,22 @@
+{
+  "name": "Doom",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "zNPC - Eldar\n(Farseer)",
+    "prerequisites": "Eldar Psyker",
+    "focusPower": "Half Action",
+    "action": "20m x Psy Rating",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "Farseer selects target and makes Opposed Willpower Test, if successful, for as long as they sustain the power all attacks made against the target hit automatically regardless of Weapon Skill or Ballistic Skill. Target receives -5 to Dodge and Parry, + -5 per Degree of Success Farseer made on Opposed Test. Characters with fate points may spend one to end this effect immediately, and become immune to it for the remainder of the encounter.",
+    "effect": "-",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9FvpmlpQcSZ3HjCs"
+}

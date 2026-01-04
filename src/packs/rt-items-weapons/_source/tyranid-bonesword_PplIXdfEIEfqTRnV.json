@@ -1,0 +1,28 @@
+{
+  "name": "Tyranid Bonesword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Exotic - Tyranid",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Rending",
+    "penetration": 6,
+    "clip": "-",
+    "reload": "-",
+    "special": null,
+    "weight": "-",
+    "availability": "Special",
+    "cost": "-",
+    "source": "Deathwatch: Core",
+    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. If weapon damages target, Target and Wielder make Opposed Willpower Test, for every Degree of Success wielder wins by the target take additional 1d10 damage that ignores Armour and Toughness.",
+    "description": {
+      "value": "<p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. If weapon damages target, Target and Wielder make Opposed Willpower Test, for every Degree of Success wielder wins by the target take additional 1d10 damage that ignores Armour and Toughness.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PplIXdfEIEfqTRnV"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Rendering Apothecarium",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "20kg",
+    "availability": "Allows a human body to be broken down into a variety of useful substances such as Tallow Fat, Oils, Bonemeal, Marrowjuice, and so on. One Corpse can be rendered into materials that grant +20 to Focus Power Tests requiring Sacrifices or Profane Symbols. Best Craftsmanship versions are lighter and about the size of a small footlocker.",
+    "cost": "Not innately heretical but often used by heretics",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nIlPY4XQry57iaYy"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Astartes Diagnoster Helmet",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power (Astartes)",
+    "locations": "Head",
+    "ap": 8,
+    "maxAg": null,
+    "weight": "30kg",
+    "availability": "Initiated",
+    "cost": "15 R",
+    "notes": "Used by Apothacaries, provides +10 to Medicae Tests when working on a patient. Acts as a Preysense Sight.\nHas all normal functions of an Astartes Helmet.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Used by Apothacaries, provides +10 to Medicae Tests when working on a patient. Acts as a Preysense Sight.\nHas all normal functions of an Astartes Helmet.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cGMf8XxDixXXywvN"
+}

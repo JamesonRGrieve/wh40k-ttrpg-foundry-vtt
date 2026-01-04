@@ -1,0 +1,28 @@
+{
+  "name": "Inferno Pistol (Mars)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Melta",
+    "range": "10m",
+    "rof": "S/–/–",
+    "damage": "2d10+8",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": 3,
+    "reload": "Full",
+    "special": null,
+    "weight": "2.5kg",
+    "availability": "Very Rare",
+    "cost": "7500 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b8ofKxSA7Bu05Ifp"
+}

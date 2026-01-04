@@ -1,0 +1,28 @@
+{
+  "name": "Hypo Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic",
+    "range": "20m",
+    "rof": "S/-/-",
+    "damage": "1d5+2",
+    "damageType": "Rending",
+    "penetration": 2,
+    "clip": 3,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "1kg",
+    "availability": "Scarce",
+    "cost": "1000 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": "If this weapon would do damage to an enemy, it only does 1 damage. Those damaged by the weapon must make a -20 Toughness Test or fall comatose for 1d10 x 3 minutes, or 1d5 hours if failed by 3+ DoF. Its Ammo is Scarce, and each dart costs 8 Thrones.",
+    "description": {
+      "value": "<p><b>Note:</b> If this weapon would do damage to an enemy, it only does 1 damage. Those damaged by the weapon must make a -20 Toughness Test or fall comatose for 1d10 x 3 minutes, or 1d5 hours if failed by 3+ DoF. Its Ammo is Scarce, and each dart costs 8 Thrones.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kNLj2MNUBfUEzUFd"
+}

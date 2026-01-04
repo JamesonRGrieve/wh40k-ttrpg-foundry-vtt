@@ -1,0 +1,20 @@
+{
+  "name": "Minefield Missile/Round",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher: Missile Launcher or Mortar",
+    "damageOrEffect": "Creates a cordon of mines doing 2d10 X, Pen 1, Blast (1) damage.",
+    "qualities": "Blast (1)",
+    "weight": "2kg",
+    "availability": "Rare",
+    "cost": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Creates a cordon of mines doing 2d10 X, Pen 1, Blast (1) damage.</p><p><b>Qualities:</b> Blast (1)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E87d2fJlFdX8Iywl"
+}

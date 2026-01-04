@@ -1,0 +1,28 @@
+{
+  "name": "Astartes Bolter (Angelus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "50m",
+    "rof": "S/3/-",
+    "damage": "1d10+9",
+    "damageType": "Explosive",
+    "penetration": 6,
+    "clip": 36,
+    "reload": "2 Full",
+    "special": "SM Wep, Tearing",
+    "weight": "16kg",
+    "availability": "Respected",
+    "cost": "25 R",
+    "source": "DW: First Founding",
+    "note": "Space Marines Only. Blood Angels variant Astartes Bolter. Wrist Mounted, can fire whilst holding something else (although if attacking with this weapon, can't attack with anything else held in the hand of the arm this weapon is attached to). Uses unique Bloodshard bolt rounds.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Blood Angels variant Astartes Bolter. Wrist Mounted, can fire whilst holding something else (although if attacking with this weapon, can't attack with anything else held in the hand of the arm this weapon is attached to). Uses unique Bloodshard bolt rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "um3CWBO6OTZekXUg"
+}

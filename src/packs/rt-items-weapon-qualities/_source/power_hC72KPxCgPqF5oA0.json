@@ -1,0 +1,14 @@
+{
+  "name": "Power*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 80,
+    "description": {
+      "value": "<p>80</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hC72KPxCgPqF5oA0"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Psychic Powers",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": "Unbound: Psy 7, \nOnce-Bound: Psy 6\nTwice-Bound: Psy 5, \nThrice-Bound: Psy 4\nKhorne Daemonhosts do not gain Psychic Powers. Powers should be appropriate for the patron god of the Daemonhost.\n",
+    "range": null,
+    "test": "Unholy Changes",
+    "sustain": null,
+    "novice": "Generate unholy changes based on bound-level. Either rolled for or simply chosen by GM. \nUnbound: Three Changes. Once-Bound: two Changes. Twice-Bound: two Changes. Thrice-Bound: one change.\nThese are examples, the GM is free to apply something else that is fitting.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> Generate unholy changes based on bound-level. Either rolled for or simply chosen by GM. \nUnbound: Three Changes. Once-Bound: two Changes. Twice-Bound: two Changes. Thrice-Bound: one change.\nThese are examples, the GM is free to apply something else that is fitting.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "39jC1hpuRiySd75r"
+}

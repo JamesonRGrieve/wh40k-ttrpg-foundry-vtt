@@ -1,0 +1,22 @@
+{
+  "name": "Spectral Hands",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "30m",
+    "range": "Threshold 10\n+10 Willpower",
+    "opposed": "No",
+    "sustained": "Create an invisible force within range of a Strength characteristic equal to character's Willpower characteristic. This force can perform basic actions such as knocking over objects, pushing buttons, and so on. It cannot perform precise actions such as typing, pulling a pin on a grenade, or pulling a trigger. Power has no effect on living targets.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sQuIQ6yfGIxaYkV9"
+}

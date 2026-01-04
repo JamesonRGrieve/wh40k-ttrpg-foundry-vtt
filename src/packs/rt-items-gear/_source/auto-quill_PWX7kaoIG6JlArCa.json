@@ -1,0 +1,20 @@
+{
+  "name": "Auto Quill",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "55 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PWX7kaoIG6JlArCa"
+}

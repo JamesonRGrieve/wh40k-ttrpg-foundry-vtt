@@ -1,0 +1,17 @@
+{
+  "name": "Counter Attack",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Weapon Skill 40\nAptitudes: Weapon Skill, Defence, Unaligned",
+    "effect": "Once per Turn as a Free Action after Parrying an opponent's Attack, can make a -20 Melee Attack against that Opponent using the weapon used for parrying. \nThis Attack cannot benefit from any ability that allows for more than one hit or attack to be made, such as Lightning Attack or Two-Weapon Fighting. The -20 penalty replaces the +10 of a Standard Attack and doesn;t interact with effects like Defensive Stance.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Turn as a Free Action after Parrying an opponent's Attack, can make a -20 Melee Attack against that Opponent using the weapon used for parrying. \nThis Attack cannot benefit from any ability that allows for more than one hit or attack to be made, such as Lightning Attack or Two-Weapon Fighting. The -20 penalty replaces the +10 of a Standard Attack and doesn;t interact with effects like Defensive Stance.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ij8T0KeCJ8b58s8y"
+}

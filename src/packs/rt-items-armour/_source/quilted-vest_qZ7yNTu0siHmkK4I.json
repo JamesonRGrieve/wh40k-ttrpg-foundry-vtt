@@ -1,0 +1,22 @@
+{
+  "name": "Quilted Vest",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Body",
+    "ap": 2,
+    "maxAg": null,
+    "weight": "2kg",
+    "availability": "Common",
+    "cost": "10 T",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qZ7yNTu0siHmkK4I"
+}

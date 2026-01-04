@@ -1,0 +1,28 @@
+{
+  "name": "Thermal Lance (Mars)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "10m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 12,
+    "clip": 2,
+    "reload": "2 Full",
+    "special": "Accurate",
+    "weight": "40kg",
+    "availability": "Rare",
+    "cost": "3000 T",
+    "source": "Rogue Trader: Core",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "arNuiTrlC486esej"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Shotlas",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Las",
+    "range": "20m",
+    "rof": "S/3/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 1,
+    "clip": 40,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "4kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "+3 damage at Point-Blank Range. Maximum range is only twice that of listed range, rather than four times.",
+    "description": {
+      "value": "<p><b>Note:</b> +3 damage at Point-Blank Range. Maximum range is only twice that of listed range, rather than four times.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gCwpKXGU8ybHgV3L"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Preparing takes 2d10 Hours minus ritual leader's Intelligence bonus, minimum of 1 hour. After this the leader makes a -30 Forbidden Lore (Daemonology) test, modified based on the quality of the preparations and how well they were followed. Every degree of Success provides +5 to bind the Daemon, each Degrees of Failiure imposes -5 to bind the daemon.",
+  "type": "navigatorPower",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "useTime": null,
+    "range": null,
+    "test": "Serpent Nest",
+    "sustain": "7",
+    "novice": "The Daemonhost's body writhes with foul creatures whose toxins ooze over its form. It gains the Toxic (4) Trait.",
+    "adept": null,
+    "master": null,
+    "source": null,
+    "description": {
+      "value": "<p><b>Novice:</b> The Daemonhost's body writhes with foul creatures whose toxins ooze over its form. It gains the Toxic (4) Trait.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XLfRYhYdEuzcCdHd"
+}

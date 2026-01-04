@@ -1,0 +1,28 @@
+{
+  "name": "Boltgun (Solo)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "100m",
+    "rof": "S/-/-",
+    "damage": "1d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 8,
+    "reload": "Full",
+    "special": "Accurate, Tearing, Reliable",
+    "weight": "7kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Tearing, Reliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yW5Gi3OrCeAAb9Ej"
+}

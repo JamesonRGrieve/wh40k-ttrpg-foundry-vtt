@@ -1,0 +1,22 @@
+{
+  "name": "Silkmail",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Primitive",
+    "locations": "Arms, Body, Legs",
+    "ap": 3,
+    "maxAg": null,
+    "weight": "5kg",
+    "availability": "Rare",
+    "cost": "150 T",
+    "notes": "Finely Crafted, comfortable to wear and highly prized.\nHalve primitive armour AP vs non primitive weapons",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Finely Crafted, comfortable to wear and highly prized.\nHalve primitive armour AP vs non primitive weapons</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8jG3xZzknpK4GGLv"
+}

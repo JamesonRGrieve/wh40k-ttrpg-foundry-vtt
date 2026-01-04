@@ -1,0 +1,28 @@
+{
+  "name": "Eldar Splinter Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Eldar",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": 120,
+    "reload": "2 Full",
+    "special": "Toxic (1)",
+    "weight": "1.5kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic (1)</p><p><b>Note:</b> Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gh5ik9xPYpUS3kkH"
+}

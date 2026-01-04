@@ -1,0 +1,28 @@
+{
+  "name": "Dauntless-class light cruiser",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Light Cruiser",
+    "size": "4.5km long, 0.5km wide",
+    "crew": 65000,
+    "speed": 7,
+    "manoeuvrability": 15,
+    "detection": 20,
+    "hull": 60,
+    "armour": 19,
+    "turrets": 1,
+    "space": 60,
+    "shipPoints": 55,
+    "weaponCapacity": "1 Prow, 1 Port, 1 Starboard",
+    "notes": null,
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "DJEreXbBSu4hULI6"
+}

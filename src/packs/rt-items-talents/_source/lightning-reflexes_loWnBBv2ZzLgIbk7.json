@@ -1,0 +1,17 @@
+{
+  "name": "Lightning Reflexes",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Agility, Fieldcraft, Slaanesh",
+    "effect": "When making an Initiative Roll, the Character rolls twice and chooses the higher of the two to add their Agility Bonus to.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When making an Initiative Roll, the Character rolls twice and chooses the higher of the two to add their Agility Bonus to.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "loWnBBv2ZzLgIbk7"
+}

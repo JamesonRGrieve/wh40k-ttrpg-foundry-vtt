@@ -1,0 +1,20 @@
+{
+  "name": "! Default: Charge Pack (pistol/basic)",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Las Weapons (Pistol/Basic)",
+    "damageOrEffect": "Can be recharged with Tech-Use Test and suitable power source which takes a few hours. can charge in a fire which takes 1 day, halves clip size, and imposes Unreliable Quality (or loses Reliable), subsequent fire recharges instead have 30% chance to destroy the pack.",
+    "qualities": "-",
+    "weight": "10% wep",
+    "availability": "Common",
+    "cost": "10T/clip\n15T/clip",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Can be recharged with Tech-Use Test and suitable power source which takes a few hours. can charge in a fire which takes 1 day, halves clip size, and imposes Unreliable Quality (or loses Reliable), subsequent fire recharges instead have 30% chance to destroy the pack.</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZCb6pjj0lGS4vh1n"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Plasma Weapon Mastery",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 50, Plasma Weapon Expertise \nAptitudes: Ballistic Skill, Tech",
+    "effect": "When this character makes a ranged attack with a Plasma Weapon with the Maximal Quality on Maximal Settings, they add an additional +2 to its Damage, Penetration, and Blast Quality. (for a total of +1d10+2 Damage, +4 Penetration, and +4 Blast)",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When this character makes a ranged attack with a Plasma Weapon with the Maximal Quality on Maximal Settings, they add an additional +2 to its Damage, Penetration, and Blast Quality. (for a total of +1d10+2 Damage, +4 Penetration, and +4 Blast)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dO0QKCcWVMqvRsYV"
+}

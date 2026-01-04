@@ -1,0 +1,18 @@
+{
+  "name": "Unaligned",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "None",
+    "characteristic": "None",
+    "descriptor": "Khorne, Tzeentch, Nurgle, and Slaanesh",
+    "uses": null,
+    "useTime": null,
+    "description": {
+      "value": "<p>Khorne, Tzeentch, Nurgle, and Slaanesh</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Iu410B14h2mOj2yE"
+}

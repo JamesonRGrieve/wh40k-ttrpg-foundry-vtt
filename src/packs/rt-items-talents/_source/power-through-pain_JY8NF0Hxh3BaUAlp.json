@@ -1,0 +1,17 @@
+{
+  "name": "Power Through Pain",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Trait",
+    "requirements": "Dark Eldar (Innate)",
+    "effect": "Dark Eldar gain Pain Tokens as a representation of the Suffering that staves of the decay of their souls. Dark Eldar gain one Pain Token when one or more living creatures (not daemons or machines), within Perception Bonus Metres is Killed, Stunned, Suffers non-lethal Critical damage or Blood Loss, Fails a Fear/Pinning Test, or suffers excrutiating pain. They cannot gain more than one Pain Token from any specific action unless stated otherwise, even if the action harms multiple individuals or the same individual multiple times. Should they gain 8 Pain Tokens, they are immediatly spent to gain a Temporary Fate Point that lasts for the rest of the session, and can be spent, but not burned. Not gaining any Pain Tokens has consequencies (explained in malignancy sect.)",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>Dark Eldar gain Pain Tokens as a representation of the Suffering that staves of the decay of their souls. Dark Eldar gain one Pain Token when one or more living creatures (not daemons or machines), within Perception Bonus Metres is Killed, Stunned, Suffers non-lethal Critical damage or Blood Loss, Fails a Fear/Pinning Test, or suffers excrutiating pain. They cannot gain more than one Pain Token from any specific action unless stated otherwise, even if the action harms multiple individuals or the same individual multiple times. Should they gain 8 Pain Tokens, they are immediatly spent to gain a Temporary Fate Point that lasts for the rest of the session, and can be spent, but not burned. Not gaining any Pain Tokens has consequencies (explained in malignancy sect.)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JY8NF0Hxh3BaUAlp"
+}

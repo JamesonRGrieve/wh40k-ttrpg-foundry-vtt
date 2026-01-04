@@ -1,0 +1,28 @@
+{
+  "name": "Victory's Price",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+8",
+    "damageType": "Energy",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Devastating (2), Felling (8), Power Field, Tearing",
+    "weight": "7kg",
+    "availability": "Hero",
+    "cost": "70 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Spear of the Lamenters Chapter. Wielder increases the Critical Damage they suffer (After modifications such as the True Grit Talent) by 2.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Devastating (2), Felling (8), Power Field, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Spear of the Lamenters Chapter. Wielder increases the Critical Damage they suffer (After modifications such as the True Grit Talent) by 2.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k0V00CPiBWhkOn7F"
+}

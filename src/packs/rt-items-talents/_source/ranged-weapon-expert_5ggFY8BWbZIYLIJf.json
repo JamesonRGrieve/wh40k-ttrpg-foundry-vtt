@@ -1,0 +1,17 @@
+{
+  "name": "Ranged Weapon Expert",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 50, Weapon Training (Chosen One) \nAptitudes: Finesse, Ballistic Skill",
+    "effect": "Once per Combat Encounter, character can make an Aim Action as a Free Action for the chosen weapon group.\nFor this Talent, choose one weapon group character has Weapon Training in. Can take this talent multiple times, each time choosing a different group.\nExample Groups: Bolt, Flame, Las, Launcher, Melta, Plasma, Low Tech(Primitive), SP, or Heavy",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Once per Combat Encounter, character can make an Aim Action as a Free Action for the chosen weapon group.\nFor this Talent, choose one weapon group character has Weapon Training in. Can take this talent multiple times, each time choosing a different group.\nExample Groups: Bolt, Flame, Las, Launcher, Melta, Plasma, Low Tech(Primitive), SP, or Heavy</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5ggFY8BWbZIYLIJf"
+}

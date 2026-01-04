@@ -1,0 +1,17 @@
+{
+  "name": "Vessel of the Fleet",
+  "type": "shipUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "spCost": "1 or 2",
+    "shipAvailability": "All Ships",
+    "effects": "Pay 1 ship point, gain Enemy(Imperial Navy). Pay 2 gain Good Reputation (Imperial Navy). Regardless, +10 to command tests aboard vessel. If ship is crippled, make +0 Command Test, on success vessel does not suffer effects of being crippled until next turn.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Pay 1 ship point, gain Enemy(Imperial Navy). Pay 2 gain Good Reputation (Imperial Navy). Regardless, +10 to command tests aboard vessel. If ship is crippled, make +0 Command Test, on success vessel does not suffer effects of being crippled until next turn.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Z614m9nKeyFQkXYa"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Fearful Aura",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "Self",
+    "range": "Threshold 7\n+20 Willpower",
+    "opposed": "Yes",
+    "sustained": "Whilst Sustained Character gains Fear(2). +1 per 3 Degrees of Success",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cPthKPL0dohaU0fe"
+}

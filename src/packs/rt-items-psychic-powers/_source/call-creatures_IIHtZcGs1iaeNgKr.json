@@ -1,0 +1,22 @@
+{
+  "name": "Call Creatures",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "wMinor Power",
+    "prerequisites": "Gain Minor Power Talent",
+    "focusPower": "Full Action",
+    "action": "1km Radius",
+    "range": "Threshold 9\n+10 Willpower",
+    "opposed": "No",
+    "sustained": "Call a number of simple minded creatures to your location. Typically 1d10 creatures that appear after 2d10 minutes. They are not compelled the serve the character, and will act as normal. \nCreature varies with location, may include rats, birds, etc.\nFor every 5 points above Threshold/1 DoS on Focus Test, extend power's range by 1km.",
+    "effect": "-",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p>-</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IIHtZcGs1iaeNgKr"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Street Fighting",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Weapon Skill 30\nAptitudes: Weapon Skill, Offence, Khorne",
+    "effect": "Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lonqn6q9FoodOfsF"
+}

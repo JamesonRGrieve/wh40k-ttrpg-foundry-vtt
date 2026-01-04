@@ -1,0 +1,28 @@
+{
+  "name": "Splinter Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic",
+    "range": "100m",
+    "rof": "S/3/5",
+    "damage": "1d10+2",
+    "damageType": "Rending",
+    "penetration": 3,
+    "clip": 200,
+    "reload": "2 Full",
+    "special": "Toxic (4)",
+    "weight": "2.5kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Likely Eldar Weapon",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic (4)</p><p><b>Note:</b> Likely Eldar Weapon</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j0dCnlXe9DWC3fJc"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Glowy Stick",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent",
+    "requirements": "Ork Weirdboy, Da Power of Waaagh!, WS 45, Willpower 35",
+    "effect": "The character's Staff or any other Melee Weapon they are holding gains the Force Quality. If not holding a weapon, their Unarmed Melee Attacks gain the Force Quality.",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>The character's Staff or any other Melee Weapon they are holding gains the Force Quality. If not holding a weapon, their Unarmed Melee Attacks gain the Force Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LT9KCqdLMcxtkmJO"
+}

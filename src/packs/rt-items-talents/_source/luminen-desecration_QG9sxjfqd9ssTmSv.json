@@ -1,0 +1,17 @@
+{
+  "name": "Luminen Desecration",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Arch-Heretek Alternate Advance, 750xp\nMechanicus Implants",
+    "effect": "Character can make a +0 Ballistic Skill Test make a ranged attack that fires energy at a target within 10 metres. This attack can be dodged but not blocked by force fields or other such protective devices. Electrical devices the target is carrying cease to function for 1d5 Rounds as if drained of power. If target is in a vehicle it immediately suffers a Critical Hit as if Righteous Fury was generated, subtracting one from the Critical Hit result (result of 0 means no critical hit). ",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Character can make a +0 Ballistic Skill Test make a ranged attack that fires energy at a target within 10 metres. This attack can be dodged but not blocked by force fields or other such protective devices. Electrical devices the target is carrying cease to function for 1d5 Rounds as if drained of power. If target is in a vehicle it immediately suffers a Critical Hit as if Righteous Fury was generated, subtracting one from the Critical Hit result (result of 0 means no critical hit). </p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QG9sxjfqd9ssTmSv"
+}

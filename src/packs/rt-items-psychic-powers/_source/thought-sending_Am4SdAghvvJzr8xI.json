@@ -1,0 +1,22 @@
+{
+  "name": "Thought Sending",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "None",
+    "focusPower": "Free Action",
+    "action": "1km x Psy Rating Radius",
+    "range": "+40 Opposed Willpower",
+    "opposed": "No",
+    "sustained": "The Psyker Broadcasts up to once sentence per Psy Rating to either up to two people per Degree of Success on the Focus Power Test, or everyone within range. Those who do not wish to be contacted can resist with their Willpower, gaining +20 to their test if they do not share a language with the Psyker.",
+    "effect": "100xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Am4SdAghvvJzr8xI"
+}

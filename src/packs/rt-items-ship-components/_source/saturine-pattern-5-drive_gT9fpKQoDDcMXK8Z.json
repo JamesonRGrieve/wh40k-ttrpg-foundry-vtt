@@ -1,0 +1,21 @@
+{
+  "name": "Saturine-Pattern 5 Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive",
+    "hullType": "Grand Cruisers",
+    "powerUsage": -95,
+    "spaceUsage": 18,
+    "spCost": "-",
+    "effect": "Generates power rather than using it.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Generates power rather than using it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gT9fpKQoDDcMXK8Z"
+}

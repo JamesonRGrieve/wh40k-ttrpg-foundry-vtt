@@ -1,0 +1,20 @@
+{
+  "name": "Talisman of Burning Blood",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "-",
+    "availability": "When Worn, once per encounter at the start of turn, can make +10 Willpower Test, with -10 per ally they wish to affect. If successful, gain bonuses depending on DoS: 1 Dos: Reroll Melee Damage, gain Zealous Hatred on 9+. 2 DoS: Also add +2 to PEN. 3 DoS: Increase Pen to +4. 4+ DoS: Zealous Hatred occurs on 8+. Effects last for WP Bonus Rounds.",
+    "cost": "Must have Mark of Khorne to use. Affected allies must either be Unaligned or Dedicated to Khorne. Heretical.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "o30ShgL73PysoFlc"
+}

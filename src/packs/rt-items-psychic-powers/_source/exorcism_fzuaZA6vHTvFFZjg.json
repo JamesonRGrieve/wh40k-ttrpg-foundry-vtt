@@ -1,0 +1,22 @@
+{
+  "name": "Exorcism",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Sanctic Daemonology",
+    "prerequisites": "Willpower 40,\nWord of the Emperor",
+    "focusPower": "Full Action\nAttack\nConcentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Opposed Willpower",
+    "opposed": "Yes (Half Action)",
+    "sustained": "Target Individual within range and line of sight with the Daemonic Trait opposes with Willpower Test. If character wins target suffers Willpower damage equal to Character's Psy Rating * Degrees of Success",
+    "effect": "200xp",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>200xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fzuaZA6vHTvFFZjg"
+}

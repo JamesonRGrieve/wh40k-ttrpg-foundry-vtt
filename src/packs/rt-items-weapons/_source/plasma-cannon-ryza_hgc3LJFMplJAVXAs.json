@@ -1,0 +1,28 @@
+{
+  "name": "Plasma Cannon (Ryza)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Plasma",
+    "range": "120m",
+    "rof": "S/-/-",
+    "damage": "2d10+10",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 16,
+    "reload": "5 Full",
+    "special": "Maximal,Overheats, Blast (1), Unreliable",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "8500 T",
+    "source": "Rogue Trader: Core",
+    "note": "Can choose between firing normally or maximally",
+    "description": {
+      "value": "<p><b>Special:</b> Maximal,Overheats, Blast (1), Unreliable</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hgc3LJFMplJAVXAs"
+}

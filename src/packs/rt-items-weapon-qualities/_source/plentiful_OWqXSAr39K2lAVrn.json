@@ -1,0 +1,14 @@
+{
+  "name": "Plentiful",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "effect": 23,
+    "description": {
+      "value": "<p>23</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWqXSAr39K2lAVrn"
+}

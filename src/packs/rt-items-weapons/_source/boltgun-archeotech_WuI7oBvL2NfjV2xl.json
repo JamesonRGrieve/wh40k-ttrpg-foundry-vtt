@@ -1,0 +1,28 @@
+{
+  "name": "Boltgun (Archeotech)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Bolt",
+    "range": "120m",
+    "rof": "S/3/-",
+    "damage": "1d10+9",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": 30,
+    "reload": "Full",
+    "special": "Reliable, Tearing, Sanctified",
+    "weight": "10kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Characters with Malignancies suffer -10 to use this weapon. Requires strength bonus of 6+ or counts as Heavy Weapon. -10 to acquire unusual ammo and may require upkeep tests for any ammo due to rarity.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Tearing, Sanctified</p><p><b>Note:</b> Characters with Malignancies suffer -10 to use this weapon. Requires strength bonus of 6+ or counts as Heavy Weapon. -10 to acquire unusual ammo and may require upkeep tests for any ammo due to rarity.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WuI7oBvL2NfjV2xl"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Melta Weapon Mastery",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; BS 50, Melta Weapon Expertise\nAptitudes: Ballistic Skill, Offence",
+    "effect": "Whenever this character makes a ranged attack with a melta weapon, they increase its Penetration by +2 per Two Degrees of Success scored beyond the first.This Bonus is applied after the benefit of the Melta Quality is applied.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever this character makes a ranged attack with a melta weapon, they increase its Penetration by +2 per Two Degrees of Success scored beyond the first.This Bonus is applied after the benefit of the Melta Quality is applied.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NPzeCqtoxz3lroJh"
+}

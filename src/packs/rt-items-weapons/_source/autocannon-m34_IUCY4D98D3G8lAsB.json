@@ -1,0 +1,28 @@
+{
+  "name": "Autocannon (M34)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "300m",
+    "rof": "S/3/-",
+    "damage": "3d10+8",
+    "damageType": "Impact",
+    "penetration": 6,
+    "clip": 20,
+    "reload": "2 Full",
+    "special": "Reliable, Ogryn-Proof",
+    "weight": "40kg",
+    "availability": "Very Rare",
+    "cost": "1000 T",
+    "source": "RT: Faith and Coin",
+    "note": "Ideally employs a crew of two to move, set up, and assist in reloading. A Second crew member may spend their actions to reload the weapon.",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Ogryn-Proof</p><p><b>Note:</b> Ideally employs a crew of two to move, set up, and assist in reloading. A Second crew member may spend their actions to reload the weapon.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IUCY4D98D3G8lAsB"
+}

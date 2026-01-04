@@ -1,0 +1,28 @@
+{
+  "name": "Breaching Augur",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Power",
+    "range": "-",
+    "rof": "-",
+    "damage": "4d10+3",
+    "damageType": "Rending",
+    "penetration": 7,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Tearing, Unwieldy, Power Field",
+    "weight": "28kg",
+    "availability": "Initiated",
+    "cost": "18 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing, Unwieldy, Power Field</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fsONgdXvcFa269OG"
+}

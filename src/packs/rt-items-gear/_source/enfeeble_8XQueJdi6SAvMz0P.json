@@ -1,0 +1,20 @@
+{
+  "name": "Enfeeble",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Disease",
+    "weight": "-",
+    "availability": "Infected Character suffers nonpermenant Agility Damage whenever taking a Full Action or two Half Actions during one turn, or whenever performing strenous activities. To be cured, must remove all Agility Damage through rest or other means. ",
+    "cost": "Acquired in batch of 5. Any exposed to disease must make +0 Toughness Test or catch it.\nNurgle Dedicated suffer disease as normal, although find it enlightening.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8XQueJdi6SAvMz0P"
+}

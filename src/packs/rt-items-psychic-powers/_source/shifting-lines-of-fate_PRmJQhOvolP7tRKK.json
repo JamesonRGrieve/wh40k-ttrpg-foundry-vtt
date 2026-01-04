@@ -1,0 +1,22 @@
+{
+  "name": "Shifting Lines of Fate",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xRenegade",
+    "prerequisites": "Desperate Transmog-rification\nOW: Psy Rating 5",
+    "focusPower": "Reaction",
+    "action": "Self",
+    "range": "Psyniscience",
+    "opposed": "No",
+    "sustained": "As a Reaction, the Psyker makes a Focus Power Test. If successful they briefly dissapear from existence, appearing somewhere safe from harm at the beginning of their next turn. However they immediately gain       1d10+5 Insanity Points from the experience, and until the end of the session, whenever the Psyker would roll on Psychic Phenomena or Perils of the Warp, the GM may reverse the result of the roll (EG: 37 --> 73)\nNote: For thematic convenience, roll 1d10, 30% chance that the worse result is chosen, increasing by 30% with each subsequent use of power.",
+    "effect": "300xp",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>300xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PRmJQhOvolP7tRKK"
+}

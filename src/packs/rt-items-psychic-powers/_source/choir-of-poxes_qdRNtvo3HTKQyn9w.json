@@ -1,0 +1,22 @@
+{
+  "name": "Choir of Poxes",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned",
+    "focusPower": "Full Action\nAttack, Concentration",
+    "action": "30m",
+    "range": "Opposed -10 Willpower",
+    "opposed": "No",
+    "sustained": "Creatures within Range must oppose Focus Power Test with a Toughness Test, suffering -10 if they have the Heightened Senses (Hearing) Talent. Any that fail suffer 1d10+Psy Rating Damage and are stunned until the start of their next turn. \nToughness Test is considered to be a test to resist poison or disease for the purpose of talents/traits/etc that may aid in resisting it.",
+    "effect": "100xp",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qdRNtvo3HTKQyn9w"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Necron Concussion Beamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Pistol",
+    "type": "Exotic - Necron",
+    "range": "30m",
+    "rof": "S/3/-",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 4,
+    "clip": "-",
+    "reload": "-",
+    "special": "Concussive (1), Reliable",
+    "weight": "4kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "DH 2E: Enemies Without",
+    "note": "Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (1), Reliable</p><p><b>Note:</b> Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bsb2U5LWnxn2yv35"
+}

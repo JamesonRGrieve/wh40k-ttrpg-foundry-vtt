@@ -1,0 +1,28 @@
+{
+  "name": "Hallucinogen Grenade (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Hallucinogenic (2), Blast (6)",
+    "weight": "0.5kg",
+    "availability": "Scarce",
+    "cost": "-",
+    "source": "Only War: Core",
+    "note": "Make -10 Toughness Test or suffer Hallucinations for 1d10 Rounds, rolling on Hallucinations at the start of this time.",
+    "description": {
+      "value": "<p><b>Special:</b> Hallucinogenic (2), Blast (6)</p><p><b>Note:</b> Make -10 Toughness Test or suffer Hallucinations for 1d10 Rounds, rolling on Hallucinations at the start of this time.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jdyGeUufVlcYnzss"
+}

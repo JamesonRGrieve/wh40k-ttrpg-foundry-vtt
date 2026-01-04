@@ -1,0 +1,28 @@
+{
+  "name": "Mining Melta [Focused]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Melta",
+    "range": "5m",
+    "rof": "S/-/-",
+    "damage": "3d10+8",
+    "damageType": "Energy",
+    "penetration": 13,
+    "clip": 6,
+    "reload": "3 Full",
+    "special": "Overheats",
+    "weight": "36kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Faith and Coin",
+    "note": "Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Broad])",
+    "description": {
+      "value": "<p><b>Special:</b> Overheats</p><p><b>Note:</b> Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Broad])</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gihUB53aBIfUNdiF"
+}

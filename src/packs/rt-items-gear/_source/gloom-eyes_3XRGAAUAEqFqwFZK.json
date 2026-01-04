@@ -1,0 +1,20 @@
+{
+  "name": "Gloom Eyes",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "-",
+    "availability": "A Small rounded lump that glows a slowly shifting shade and colour. Counts as a Charm and sheds dim light around the wearer about as bright as a candle. Characters from Hive Volg gain +10 to Tests made to avoid pinning.",
+    "cost": "Scarce on Hive Volg, Very Rare Elsewhere",
+    "effects": "Very Rare",
+    "notes": "300 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 300 T</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3XRGAAUAEqFqwFZK"
+}

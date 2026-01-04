@@ -1,0 +1,20 @@
+{
+  "name": "Skull Totem",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "5kg",
+    "availability": "A Large Icon carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can add their Willpower Bonus to their Charge Moves, and gain an additional +10 to Weapon Skill Tests when making a Charge Action.",
+    "cost": "Bearer must be Dedicated to Khorne for it to function. Heretical.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vveHTjCKVdEpVO9q"
+}

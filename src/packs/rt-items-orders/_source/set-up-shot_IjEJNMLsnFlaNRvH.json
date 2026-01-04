@@ -1,0 +1,17 @@
+{
+  "name": "Set-Up Shot",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nHalf Action",
+    "requirements": "Ratling Spec\n300xp",
+    "descriptionText": "Comrade in Cohesion fires off a shot to distract the enemy, Character's next shot cannot be dodged.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Comrade in Cohesion fires off a shot to distract the enemy, Character's next shot cannot be dodged.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IjEJNMLsnFlaNRvH"
+}

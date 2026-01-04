@@ -1,0 +1,17 @@
+{
+  "name": "Hammering Storm",
+  "type": "order",
+  "img": "icons/svg/compass.svg",
+  "system": {
+    "typeAndAction": "Basic Order\nFull Action",
+    "requirements": "Sentry Spec\n500xp",
+    "descriptionText": "If Comrade is on Cohesion, the next Semi/Full Auto Ranged Attack Character makes before the end of the next turn deals +1 additional penetration per consecutive hit after the first, up to +5 Penetration for the sixth hit, and any thereafter.",
+    "source": "OW: Hammer of The Emperor",
+    "description": {
+      "value": "<p>If Comrade is on Cohesion, the next Semi/Full Auto Ranged Attack Character makes before the end of the next turn deals +1 additional penetration per consecutive hit after the first, up to +5 Penetration for the sixth hit, and any thereafter.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IJaPR11Qrs4TwDy6"
+}

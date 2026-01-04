@@ -1,0 +1,17 @@
+{
+  "name": "Battlefield Tech-Wright",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Any Essential Repair Skill +10, WP 35\nAptitudes: Willpower, Tech",
+    "effect": "The Character no longer suffers penalties to Tech-Use or Repair Tests due to external distractions, and reduces all penalties from Poor Tools or Working Conditions by 10.\n(AKA, a -20 Repair Test to fix a tank in a swamp becomes a -10 Repair Test)\nEssential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>The Character no longer suffers penalties to Tech-Use or Repair Tests due to external distractions, and reduces all penalties from Poor Tools or Working Conditions by 10.\n(AKA, a -20 Repair Test to fix a tank in a swamp becomes a -10 Repair Test)\nEssential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2b5bTM4ilO5tb8GF"
+}

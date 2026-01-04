@@ -1,0 +1,28 @@
+{
+  "name": "Throwing Knife",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Primitive",
+    "range": "SBx2",
+    "rof": "S/2/-",
+    "damage": "1d5+3",
+    "damageType": "Rending",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Accurate",
+    "weight": "0.5kg",
+    "availability": "Common",
+    "cost": "5 T",
+    "source": "OW: Hammer of the Emperor",
+    "note": "Can be used in Melee, but has Unbalanced Quality.",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Can be used in Melee, but has Unbalanced Quality.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GvJzRgbtsdDJlZXD"
+}

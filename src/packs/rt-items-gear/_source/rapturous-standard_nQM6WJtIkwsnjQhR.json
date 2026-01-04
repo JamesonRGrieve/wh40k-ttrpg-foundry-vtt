@@ -1,0 +1,20 @@
+{
+  "name": "Rapturous Standard",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "4kg",
+    "availability": "A large banner or icon that must be carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Slaanesh who can see it can reroll all failed Willpower Tests (accepting rerolled result) and reduce all Damage received by 1 (minimum 1).",
+    "cost": "Must be Dedicated to Slaanesh to use. Heretical.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nQM6WJtIkwsnjQhR"
+}

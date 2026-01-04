@@ -1,0 +1,20 @@
+{
+  "name": "! Default: Exotic Ammo",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Exotic Weapons",
+    "damageOrEffect": "Ammo highly specialised, Exotic weapons can't normally use unusual ammunition.",
+    "qualities": "-",
+    "weight": "10% wep",
+    "availability": "Very Rare",
+    "cost": "20T each",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Ammo highly specialised, Exotic weapons can't normally use unusual ammunition.</p><p><b>Qualities:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ntcKOF8CaPuCzMEi"
+}

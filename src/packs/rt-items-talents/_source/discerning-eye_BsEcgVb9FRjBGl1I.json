@@ -1,0 +1,17 @@
+{
+  "name": "Discerning Eye",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Reliquarist Alternative Advance, 500xp\nIntelligence 40, Evaluate +10",
+    "effect": "The Character can spend a Fate Point to automatically succeed on an Evaluate Test with Intelligence Bonus Degrees of Success as well as gaining some kind of insight into the history of the Evaluated item. This history comes from the character's own broad knowledge, or clues/signs on the item itself, or some other source, at GM discretion.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>The Character can spend a Fate Point to automatically succeed on an Evaluate Test with Intelligence Bonus Degrees of Success as well as gaining some kind of insight into the history of the Evaluated item. This history comes from the character's own broad knowledge, or clues/signs on the item itself, or some other source, at GM discretion.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BsEcgVb9FRjBGl1I"
+}

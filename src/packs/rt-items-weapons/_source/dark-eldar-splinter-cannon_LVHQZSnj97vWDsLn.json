@@ -1,0 +1,28 @@
+{
+  "name": "Dark Eldar Splinter Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "Exotic - DEldar",
+    "range": "110m",
+    "rof": "-/-/10",
+    "damage": "1d10+5",
+    "damageType": "Rending",
+    "penetration": 4,
+    "clip": 300,
+    "reload": "3 Full",
+    "special": "Toxic",
+    "weight": "10kg",
+    "availability": "Near Unique",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Xenotech. Fires crystalline darts. User has Auto-Stablised Trait when wielding this weapon. (always counts as braced, can fire weapon on semi/full auto as Half Action).",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Xenotech. Fires crystalline darts. User has Auto-Stablised Trait when wielding this weapon. (always counts as braced, can fire weapon on semi/full auto as Half Action).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LVHQZSnj97vWDsLn"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Mimic",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; None\nAptitudes: Fellowship, Social, Slaanesh",
+    "effect": "The character can study the voice patterns of a Non-Xenos target for one hour that they can speak the same language as to learn how to mimic their voice. Listeners must make a -10 Scrutiny Test to tell the difference, or +0 Test if the character only mainly used Vox Recordings or Comm-Link Conversations to learn how to mimic the voice. Character's Deception automatically fails if the listeners can see them and identify they are not who they sound like.\nIn a Social Conflict, if the character mimics their foe in order to riducle or disparage them, the foe loses 1d10 rather than 1d5 Willpower if the character wins the opposed test.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The character can study the voice patterns of a Non-Xenos target for one hour that they can speak the same language as to learn how to mimic their voice. Listeners must make a -10 Scrutiny Test to tell the difference, or +0 Test if the character only mainly used Vox Recordings or Comm-Link Conversations to learn how to mimic the voice. Character's Deception automatically fails if the listeners can see them and identify they are not who they sound like.\nIn a Social Conflict, if the character mimics their foe in order to riducle or disparage them, the foe loses 1d10 rather than 1d5 Willpower if the character wins the opposed test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lxAKOMGuZDwXELWm"
+}

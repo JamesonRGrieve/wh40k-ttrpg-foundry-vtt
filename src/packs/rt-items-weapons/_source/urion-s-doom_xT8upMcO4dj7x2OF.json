@@ -1,0 +1,28 @@
+{
+  "name": "Urion's Doom",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Relic - Astartes",
+    "range": "120m",
+    "rof": "S/2/4",
+    "damage": "2d10+5",
+    "damageType": "Explosive",
+    "penetration": 5,
+    "clip": 60,
+    "reload": "2 Full",
+    "special": "SM Wep, Storm, Tearing",
+    "weight": "26kg",
+    "availability": "Famed",
+    "cost": "35 R",
+    "source": "DW: Rites of Battle",
+    "note": "Space Marines Only. Relic Master-Crafted Astartes Storm Bolter of the Ultramarines. +15 Ballistic Skill when shooting at Tyranids.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Storm Bolter of the Ultramarines. +15 Ballistic Skill when shooting at Tyranids.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xT8upMcO4dj7x2OF"
+}

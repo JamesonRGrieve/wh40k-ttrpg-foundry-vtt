@@ -1,0 +1,22 @@
+{
+  "name": "Fury Unrelenting",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Power Relic (Astartes)",
+    "locations": "Arms",
+    "ap": 12,
+    "maxAg": null,
+    "weight": "-",
+    "availability": "Hero",
+    "cost": "30 R",
+    "notes": "Master Crafted Relic Astartes Powered Gauntlets of the Storm Wardens Chapter. Can replace Standard or Artificer Astartes Armour Arms, replacing their AP with that of these. Also increases the Penetration of any melee weapon wielded in these gauntlets by 3. Wearer's unarmed attacks gain Penetration 5 instead.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Powered Gauntlets of the Storm Wardens Chapter. Can replace Standard or Artificer Astartes Armour Arms, replacing their AP with that of these. Also increases the Penetration of any melee weapon wielded in these gauntlets by 3. Wearer's unarmed attacks gain Penetration 5 instead.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EaYlG1hRL7IPWEps"
+}

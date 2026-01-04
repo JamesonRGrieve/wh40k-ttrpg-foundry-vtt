@@ -1,0 +1,28 @@
+{
+  "name": "Firestorm-class Frigate",
+  "type": "ship",
+  "img": "icons/svg/ship.svg",
+  "system": {
+    "shipType": "Frigate",
+    "size": "1.8km long, 0.3km wide",
+    "crew": 25000,
+    "speed": 7,
+    "manoeuvrability": 20,
+    "detection": 15,
+    "hull": 38,
+    "armour": 18,
+    "turrets": 1,
+    "space": 40,
+    "shipPoints": 41,
+    "weaponCapacity": "1 Dorsal, 1 Prow",
+    "notes": "Designed for a Lance weapon on the prow",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Designed for a Lance weapon on the prow</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "IQh9tDIF1qE6xc90"
+}

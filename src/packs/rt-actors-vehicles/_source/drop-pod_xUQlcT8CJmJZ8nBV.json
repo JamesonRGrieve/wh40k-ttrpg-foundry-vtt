@@ -1,0 +1,25 @@
+{
+  "name": "Drop Pod",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "class": "Spacecraft",
+    "size": "100 AU's",
+    "tacticalSpeed": "2500kph",
+    "cruisingSpeed": "+0",
+    "maneuverability": "30",
+    "frontArmour": "Enormous (+20)",
+    "sideArmour": "All 24",
+    "rearArmour": "None",
+    "structuralIntegrity": "10 Individuals in Power Armour or Drop Cocoons",
+    "crew": "Automated: Storm Bolter (Facing All, 90m, Basic, -/-/6, 1d10+5, Pen 4, Clip 120, Reload Full, Storm, Tearing). Can only be used after drop pod lands, targets and fires on its own, controlled by drop pod's machine spirit.",
+    "passengers": "Drop Pods are launched from a starship with Drop Pod bays, travelling downwards to the target. They cannot make Manoeuvres, but if at least 500km above surface can change destination by up to 25km of original destination. All attacks targetting a drop pod have -30 due to its speed. When landing pick destination then scatter 2d10 metres in a random direction and land, after landing Drop Pod cannot move and must be recovered. Those inside who are not in Power Armour or Drop Cocoons are turned into a fine paste on landing.",
+    "cargo": "Extremely Rare",
+    "availability": "RT: Into the Storm",
+    "source": null
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "xUQlcT8CJmJZ8nBV"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Foresight",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T2)",
+    "requirements": "Tier 2; Intelligence 30\nAptitudes: Intelligence, Knowledge, Tzeentch",
+    "effect": "Character can spend 10 minutes studying or analysing a problem to gain +10 to the next Intelligence Test or Intelligence-Based Skill Test they make relating to it.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can spend 10 minutes studying or analysing a problem to gain +10 to the next Intelligence Test or Intelligence-Based Skill Test they make relating to it.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OJFzaZs0NhmI5ySC"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Carapace Chestplate",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "Carapace",
+    "locations": "Body",
+    "ap": 6,
+    "maxAg": null,
+    "weight": "7kg",
+    "availability": "Rare",
+    "cost": "600 T",
+    "notes": "May consist of easily removable plates to help with repair",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>May consist of easily removable plates to help with repair</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PHaMdRSNkXFYJbc3"
+}

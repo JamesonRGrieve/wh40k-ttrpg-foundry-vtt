@@ -1,0 +1,18 @@
+{
+  "name": "Glimpse from Beyond",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "Traumatic encounter that gave at least 5 Insanity/Corruption.",
+    "characteristic": "400xp",
+    "descriptor": "Character has Experienced something horrifyingly traumatic and survived relatively sane and uncorrupted. In so doing, they gain forbidden insight in to that often better left unknown.",
+    "uses": "Immediately gain 2d10 Insanity or Corruption Points (GM's choice). Gain Unholy Insight Trait, and can spend XP on the Glimspe From Beyond Table to gain Forbidden Lore relevent to their experience (See RT: Into the Storm, page 105 for \"Glimpse from Beyond Advances\" List of purchasable advances.",
+    "useTime": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Character has Experienced something horrifyingly traumatic and survived relatively sane and uncorrupted. In so doing, they gain forbidden insight in to that often better left unknown.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fb1IXf9Hnjo8gtEj"
+}

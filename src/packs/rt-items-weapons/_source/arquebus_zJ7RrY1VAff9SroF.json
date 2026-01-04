@@ -1,0 +1,28 @@
+{
+  "name": "Arquebus",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Primitive",
+    "range": "45m",
+    "rof": "S/-/-",
+    "damage": "2d10",
+    "damageType": "Impact",
+    "penetration": 2,
+    "clip": 1,
+    "reload": "2 Full",
+    "special": "Concussive (1), Inaccurate, Unreliable, Smoke (1)",
+    "weight": "8kg",
+    "availability": "Common",
+    "cost": "-",
+    "source": "DH 2E: Enemies Within",
+    "note": "Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (1), Inaccurate, Unreliable, Smoke (1)</p><p><b>Note:</b> Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zJ7RrY1VAff9SroF"
+}

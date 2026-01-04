@@ -1,0 +1,28 @@
+{
+  "name": "Brass Knuckles",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Primitive",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d5-1",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Primitive (8)",
+    "weight": "0.5kg",
+    "availability": "Plentiful",
+    "cost": "5 T",
+    "source": "Dark Heresy: Core",
+    "note": "Easy to Hide",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Easy to Hide</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fbCE6hi1R6FK4cIm"
+}

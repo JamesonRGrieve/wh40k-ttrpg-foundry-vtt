@@ -1,0 +1,19 @@
+{
+  "name": "Anti-Grenade Mesh",
+  "type": "vehicleUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "type": "Standard",
+    "allowedVehicles": "Any",
+    "difficulty": "+10",
+    "descriptionText": "Passive Grenade Defence. Whenever a Vehicle with this is struck by a grenade roll 1d10, on a 7+ Grenade scatters 1d5 metres away before exploding. On a 1, Mesh is damaged and ceases to function until repaired. Also imposes -20 to set up explosives on the vehicle, such as Melta Bombs.",
+    "availability": "Average",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Passive Grenade Defence. Whenever a Vehicle with this is struck by a grenade roll 1d10, on a 7+ Grenade scatters 1d5 metres away before exploding. On a 1, Mesh is damaged and ceases to function until repaired. Also imposes -20 to set up explosives on the vehicle, such as Melta Bombs.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NdyKvErDdtEsqUy8"
+}

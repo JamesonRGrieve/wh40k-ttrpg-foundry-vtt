@@ -1,0 +1,28 @@
+{
+  "name": "Ultimo Meltagun (Voss)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Melta",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "2d10+2",
+    "damageType": "Energy",
+    "penetration": 8,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": null,
+    "weight": "10kg",
+    "availability": "Very Rare",
+    "cost": "2500 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": ""
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zV8xD5RvSXrjyrIz"
+}

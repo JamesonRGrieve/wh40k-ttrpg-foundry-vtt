@@ -1,0 +1,20 @@
+{
+  "name": "Glidewing",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "25kg",
+    "availability": "When extended and activated gives Flyer (12) Trait. Requires Pilot (Personal) Skill to use and wearer must launcher from an elevated position of at least 15 metres. Best Craftsmanship gives +10 to Skill Tests to use.",
+    "cost": "Half a Metre thick and bulky when folded as a backpack, quite wide when extended, may not fit in tight spaces.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bdBXKy2YuisTH9gM"
+}

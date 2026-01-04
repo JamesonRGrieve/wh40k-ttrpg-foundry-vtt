@@ -1,0 +1,22 @@
+{
+  "name": "Brain Fever",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "xChaos Powers\n(Nurgle)",
+    "prerequisites": "Nurgle Aligned",
+    "focusPower": "Half Action\nAttack, Concentration",
+    "action": "5m x Psy Rating",
+    "range": "-10 Willpower",
+    "opposed": "No",
+    "sustained": "Target Individual suffers one Fatigue, for Psy Rating Rounds every time they attempt to perform a Reaction or any Action with the Concentration Subtype they must first make a +0 Willpower Test. If they succeed they perform the action as normal, if they fail the action is wasted and nothing happens.",
+    "effect": "100xp",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p>100xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r7G5bE23VjU1L6Hs"
+}

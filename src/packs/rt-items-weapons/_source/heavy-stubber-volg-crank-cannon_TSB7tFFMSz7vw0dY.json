@@ -1,0 +1,28 @@
+{
+  "name": "Heavy Stubber (Volg) \"Crank Cannon\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Heavy",
+    "type": "SP",
+    "range": "70m",
+    "rof": "-/-/5",
+    "damage": "1d10+5",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 100,
+    "reload": "3 Full",
+    "special": "Unreliable",
+    "weight": "38kg",
+    "availability": "Average",
+    "cost": "500 T",
+    "source": "DH: Inquisitor's Handbook",
+    "note": null,
+    "description": {
+      "value": "<p><b>Special:</b> Unreliable</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TSB7tFFMSz7vw0dY"
+}

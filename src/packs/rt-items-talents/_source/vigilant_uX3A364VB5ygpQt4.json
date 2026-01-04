@@ -1,0 +1,17 @@
+{
+  "name": "Vigilant",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T1)",
+    "requirements": "Tier 1; Perception 35 \nAptitudes: Offence, Perception",
+    "effect": "When using the Overwatch Action, character can use Perception Characteristic instead of Agility Characteristic to determine whether they or their target takes an action first, as well as for any Opposed Agility Tests that Overwatch calls for them to take.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>When using the Overwatch Action, character can use Perception Characteristic instead of Agility Characteristic to determine whether they or their target takes an action first, as well as for any Opposed Agility Tests that Overwatch calls for them to take.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uX3A364VB5ygpQt4"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Cloudmining Facility",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "Transports",
+    "powerUsage": 3,
+    "spaceUsage": 4,
+    "spCost": 1,
+    "effect": "Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.",
+    "availability": "Scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OrswvurqUz5J6Xlb"
+}

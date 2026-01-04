@@ -1,0 +1,28 @@
+{
+  "name": "Ork Grot Blasta",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Exotic - Ork",
+    "range": "30m",
+    "rof": "S/-/-",
+    "damage": "1d10+3",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": 5,
+    "reload": "2 Full",
+    "special": "Inaccurate, Unreliable",
+    "weight": "7kg",
+    "availability": "Common",
+    "cost": "-",
+    "source": "RT: Koronus Bestiary",
+    "note": "For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. Designed for Grots.",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. Designed for Grots.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CFzPWgaSWpNQqPTY"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Red Dawn",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10+10",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Power Field, Tearing, Unbalanced, Volatile",
+    "weight": "10kg",
+    "availability": "Hero",
+    "cost": "60 R",
+    "source": "DW: Honour the Chapter",
+    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Angels Encarmine Chapter. Whenever the wielder scores Righteous Fury on an opponent, in addition to normal effects a Photon Flash Grenade-like effect occurs.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing, Unbalanced, Volatile</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Angels Encarmine Chapter. Whenever the wielder scores Righteous Fury on an opponent, in addition to normal effects a Photon Flash Grenade-like effect occurs.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CYoAc9SEGj6MA0M5"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Second Sight",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Elite - Ast) (T2)",
+    "requirements": "Tier 2: Astropath E.Adv, Perception 35\nAptitudes: Perception, Willpower",
+    "effect": "The Astropath's Unnatural Senses Trait increases to twice their Willpower Characteristic.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>The Astropath's Unnatural Senses Trait increases to twice their Willpower Characteristic.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SegdriuTazY2CHZb"
+}

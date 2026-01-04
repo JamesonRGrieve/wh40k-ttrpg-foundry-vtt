@@ -1,0 +1,28 @@
+{
+  "name": "Flameburst",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Flame",
+    "range": "40m",
+    "rof": "S/-/-",
+    "damage": "1d10+4",
+    "damageType": "Energy",
+    "penetration": 2,
+    "clip": 6,
+    "reload": "2 Full",
+    "special": "Flame, Recharge, Spray",
+    "weight": "7kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Hostile Acquisitions",
+    "note": "Fires a Metre wide jet, as opposed to a normal 30-degree spray.",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Recharge, Spray</p><p><b>Note:</b> Fires a Metre wide jet, as opposed to a normal 30-degree spray.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EFlZ48AVLVW74cPQ"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Smoke Round",
+  "type": "ammo",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "usedWith": "Launcher/Mortar",
+    "damageOrEffect": "Obscures basic eyesight and optical systems, but not more advanced sensors such as heat detection or visual bands outside of visual light",
+    "qualities": "Smoke (9)",
+    "weight": "1kg",
+    "availability": "Scarce",
+    "cost": null,
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Obscures basic eyesight and optical systems, but not more advanced sensors such as heat detection or visual bands outside of visual light</p><p><b>Qualities:</b> Smoke (9)</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BVTO20NsOxVBvpRw"
+}

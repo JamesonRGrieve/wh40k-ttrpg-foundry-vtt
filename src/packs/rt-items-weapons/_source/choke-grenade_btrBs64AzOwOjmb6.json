@@ -1,0 +1,28 @@
+{
+  "name": "Choke Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "-",
+    "damageType": "Special",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (10)",
+    "weight": "0.5kg",
+    "availability": "Rare",
+    "cost": "-",
+    "source": "RT: Into the Storm",
+    "note": "Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "btrBs64AzOwOjmb6"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Monoball Grenade (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Thrown",
+    "type": "Grenade",
+    "range": "SBx3",
+    "rof": "S/-/-",
+    "damage": "4d10+8",
+    "damageType": "Rending",
+    "penetration": 8,
+    "clip": "-",
+    "reload": "-",
+    "special": "Blast (3), Tearing",
+    "weight": "0.5kg",
+    "availability": "Distinguished",
+    "cost": "50 R",
+    "source": "Deathwatch: Errata",
+    "note": "Suspiciously similar to Eldar designed grenades. Contains monofilament wire that shreds those in range.",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Tearing</p><p><b>Note:</b> Suspiciously similar to Eldar designed grenades. Contains monofilament wire that shreds those in range.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8n0eCZJokSJCmLuY"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "The Lion's Mane",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Relic (Astartes)",
+    "weight": "2kg",
+    "availability": "Master Crafted Relic Stasis Casket of the Disciples of Caliban Chapter. The bearer is immune to the effects of fear and gains the Hatred Talent against all their foes whilst possessing this relic.\nThe Stasis Casket contains a few hairs from the head of the Primarch of the Dark Angels, Lion El'Jonson.",
+    "cost": null,
+    "effects": "Hero",
+    "notes": "40 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 40 R</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qt9x0ozhoxHSTZ2r"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "The Levin Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Relic - Astartes",
+    "range": "-",
+    "rof": "-",
+    "damage": "1d10",
+    "damageType": "Impact",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "SM Wep, Defensive",
+    "weight": "10kg",
+    "availability": "Hero",
+    "cost": "50 R",
+    "source": "Deathwatch: Core",
+    "note": "Space Marines Only. Storm Wardens Relic. Innately Master-Crafted. Can make Guarded Attack as Half Action. +4 AP to Arm and Body. Counts as Prot 55 Forcefield with overload 01. Causes 1d10+4 E Damage to all creatures in melee trange of wielder each round that ignores armour. When successfully Parrying attacker makes Toughness Test with -10 per DoS on Parry or is stunned for 1 Round.",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Defensive</p><p><b>Note:</b> Space Marines Only. Storm Wardens Relic. Innately Master-Crafted. Can make Guarded Attack as Half Action. +4 AP to Arm and Body. Counts as Prot 55 Forcefield with overload 01. Causes 1d10+4 E Damage to all creatures in melee trange of wielder each round that ignores armour. When successfully Parrying attacker makes Toughness Test with -10 per DoS on Parry or is stunned for 1 Round.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0LO0SszinjRBqiI2"
+}

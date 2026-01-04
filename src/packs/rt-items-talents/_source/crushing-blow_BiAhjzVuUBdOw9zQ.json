@@ -1,0 +1,17 @@
+{
+  "name": "Crushing Blow",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3; Weapon Skill 40\nAptitudes: Weapon Skill, Offence, Khorne",
+    "effect": "Character adds Half their Weapon Skill Bonus rounded down to Damage inflicted with Melee Attacks.",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character adds Half their Weapon Skill Bonus rounded down to Damage inflicted with Melee Attacks.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BiAhjzVuUBdOw9zQ"
+}

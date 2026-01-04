@@ -1,0 +1,28 @@
+{
+  "name": "Legion Plasma Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Basic",
+    "type": "Plasma",
+    "range": "100m",
+    "rof": "S/2/-",
+    "damage": "1d10+12",
+    "damageType": "Energy",
+    "penetration": 10,
+    "clip": 24,
+    "reload": "5 Full",
+    "special": "Maximal, Overheats, SM Wep",
+    "weight": "18kg",
+    "availability": "Very Rare",
+    "cost": "-",
+    "source": "Black Crusade: Core",
+    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "description": {
+      "value": "<p><b>Special:</b> Maximal, Overheats, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UzaBpkiXMXZnGoYG"
+}

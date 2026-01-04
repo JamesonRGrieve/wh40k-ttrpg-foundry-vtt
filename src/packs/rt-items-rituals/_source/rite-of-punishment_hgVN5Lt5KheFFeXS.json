@@ -1,0 +1,19 @@
+{
+  "name": "Rite of Punishment",
+  "type": "ritual",
+  "img": "icons/svg/scroll.svg",
+  "system": {
+    "test": "-20 Forbidden Lore (Daemonology) or Scholastic Lore (Occult)",
+    "requirements": "Ritual occurs in an area of minimal Warp Presence, or a place dominated by Khorne's power. They prepare an area they wish to protect lined in fresh blood, spacing skulls, or other bones per 8 metres. Preparation takes ~1 hour within a contained area. Psykers may participate in preperation but are advised to leave before it starts, if they can.",
+    "effect": "For One hour, +1 per Degree of Success, all Psykers within the defined area suffer 1 Fatigue per 2 Rounds they spend inside, halve their Psy Rating for purpose of Focus Power Tests, and cannot manifest powers at Push Level. If they cause Perils of the Warp, all dedicated to Khorne within the area are immune. At the start of each round these psykers must all make -30 Opposed Willpower Tests vs the character enacting the ritual as a Full Action with Concentration subtype. If successul they ignore the effects of the ritual from that point onwards",
+    "costs": "Corruption and Infamy gained from encounters and events within the Warded area is halved. As while Khorne despises the Psyker, but believes those that hide behind wards as cowards.",
+    "failure": "All characters involved in the ritual temporarily halve their Strength Characteristic and lose the benefits of Unnatural Strength for 8 hours. They must wait 8 days before being able to use this ritual again.",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> For One hour, +1 per Degree of Success, all Psykers within the defined area suffer 1 Fatigue per 2 Rounds they spend inside, halve their Psy Rating for purpose of Focus Power Tests, and cannot manifest powers at Push Level. If they cause Perils of the Warp, all dedicated to Khorne within the area are immune. At the start of each round these psykers must all make -30 Opposed Willpower Tests vs the character enacting the ritual as a Full Action with Concentration subtype. If successul they ignore the effects of the ritual from that point onwards</p><p><b>Costs:</b> Corruption and Infamy gained from encounters and events within the Warded area is halved. As while Khorne despises the Psyker, but believes those that hide behind wards as cowards.</p><p><b>Failure:</b> All characters involved in the ritual temporarily halve their Strength Characteristic and lose the benefits of Unnatural Strength for 8 hours. They must wait 8 days before being able to use this ritual again.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hgVN5Lt5KheFFeXS"
+}

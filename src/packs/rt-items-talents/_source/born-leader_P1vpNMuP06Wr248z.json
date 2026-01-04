@@ -1,0 +1,17 @@
+{
+  "name": "Born Leader",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (Unique)",
+    "requirements": "Commander Advanced Speciality\n400xp",
+    "effect": "The Character gains one additional Comrade, They can purchase this Talent up to 4 Times for 4 additional Comrades.",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>The Character gains one additional Comrade, They can purchase this Talent up to 4 Times for 4 additional Comrades.</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "P1vpNMuP06Wr248z"
+}

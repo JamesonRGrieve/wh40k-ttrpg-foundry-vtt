@@ -1,0 +1,22 @@
+{
+  "name": "Psychic Maelstrom",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telepathy",
+    "prerequisites": "Mind Scan\nTerrify",
+    "focusPower": "Half Action\nConcentration",
+    "action": "20m Radius",
+    "range": "Opposed Willpower",
+    "opposed": "Yes",
+    "sustained": "All Non-Psykers within range must make Opposed Willpower Test vs Psyker's Focus Power Test, any that fail suffer -10 to all tests until the start of the Psyker's next turn. The Psyker also suffers -10 to all tests whilst sustaining this power. If the Psyker chooses to sustain this power they must make a +0 Focus Power Test at the start of each subsequent turn, succeeding means the power is sustained and those affected last turn continue to be affected, failiure ends the power and the psyker immediately takes 1d5 damage that ignores Armour and Toughness (this damage is not taken if the Psyker did not choose to sustain the power).",
+    "effect": "500xp",
+    "source": "ChatGPT",
+    "description": {
+      "value": "<p>500xp</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VmpIgb9GcRKBJBh4"
+}

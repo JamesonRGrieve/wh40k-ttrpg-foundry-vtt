@@ -1,0 +1,17 @@
+{
+  "name": "Push the Limit",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "Talent (T3)",
+    "requirements": "Tier 3: Survival +10 or Operate (Any), Tech-Use. Aptitudes: Perception, Tech",
+    "effect": "Once per round, character can add +20 to an Operate Test (or Survival Test if riding a living steed), however if they fail the test by 4+ Degrees of Failiure, must immediately roll 1d5 for Motive System Critical Hit effects. If riding a living mount instead roll 1d on Impact Critical Effects (Leg).",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>Once per round, character can add +20 to an Operate Test (or Survival Test if riding a living steed), however if they fail the test by 4+ Degrees of Failiure, must immediately roll 1d5 for Motive System Critical Hit effects. If riding a living mount instead roll 1d on Impact Critical Effects (Leg).</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nmjVhqTarVFg891j"
+}

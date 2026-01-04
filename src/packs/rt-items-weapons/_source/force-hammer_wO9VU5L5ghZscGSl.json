@@ -1,0 +1,28 @@
+{
+  "name": "Force Hammer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "class": "Melee",
+    "type": "Force",
+    "range": "-",
+    "rof": "-",
+    "damage": "2d10",
+    "damageType": "Energy",
+    "penetration": 0,
+    "clip": "-",
+    "reload": "-",
+    "special": "Force, Unbalanced",
+    "weight": "10kg",
+    "availability": "Extremely Rare",
+    "cost": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "note": "Two-Handed unless wielder has Strength Bonus of 5+",
+    "description": {
+      "value": "<p><b>Special:</b> Force, Unbalanced</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wO9VU5L5ghZscGSl"
+}
