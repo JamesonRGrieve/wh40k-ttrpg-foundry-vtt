@@ -1460,7 +1460,7 @@
             "cost": 0,
             "characteristic": "Int"
           },
-          "navigate": {
+          "navigation": {
             "label": "Navigation",
             "characteristics": [
               "Int"

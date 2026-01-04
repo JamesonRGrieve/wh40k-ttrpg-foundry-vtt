@@ -98,7 +98,7 @@ export async function rollSkillMacro(actorId, skillName, speciality) {
     const actor = getTokenActor(actorId);
     if (!actor) return;
 
-    const skill = actor ? actor.skills[skillName] : null;
+    const skill = actor?.getSkillFuzzy ? actor.getSkillFuzzy(skillName) : actor?.skills?.[skillName];
     if (!skill) return ui.notifications.warn(`Your controlled Actor does not have a skill named ${skillName}`);
     await actor.rollSkill(skillName, speciality);
 }
