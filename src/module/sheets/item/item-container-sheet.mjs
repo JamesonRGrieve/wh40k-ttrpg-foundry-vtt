@@ -87,13 +87,13 @@ export class RogueTraderItemContainerSheet extends RogueTraderItemSheet {
             // drop from player characters or another bag.
             if (this.canAdd(item)) {
                 await this.item.createNestedDocuments([item]);
-                if (actor && (actor.type === 'acolyte' || actor.isToken)) await actor.deleteEmbeddedDocuments('Item', [item._id]);
+                if (actor && (actor.type === 'acolyte' || actor.type === 'character' || actor.isToken)) await actor.deleteEmbeddedDocuments('Item', [item._id]);
                 return false;
             }
             // Item is not accepted by this container -- place back onto actor
             else if (this.item.parent) {
                 // this bag is owned by an actor - drop into the inventory instead.
-                if (actor && actor.type === 'acolyte') await actor.deleteEmbeddedDocuments('Item', [item._id]);
+                if (actor && (actor.type === 'acolyte' || actor.type === 'character')) await actor.deleteEmbeddedDocuments('Item', [item._id]);
                 await this.item.parent.createNestedDocuments([item]);
                 ui.notifications.info('Item dropped back into actor.');
                 return false;

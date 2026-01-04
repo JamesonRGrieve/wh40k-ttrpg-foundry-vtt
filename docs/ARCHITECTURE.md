@@ -3,10 +3,10 @@
 ## Current State (Fork + RT MVP Scaffolding)
 
 - Manifest: `src/system.json` (system id `rogue-trader`, ES module entry `module/rogue-trader.mjs`).
-- Actor schema: `src/template.json` (actor types `acolyte`, `npc`, `vehicle`, `character`).
-- Actor documents: `src/module/documents/base-actor.mjs`, `src/module/documents/acolyte.mjs`, `src/module/documents/vehicle.mjs`, `src/module/documents/rogue-trader-character.mjs`.
-- Actor sheets: `src/module/sheets/actor/actor-container-sheet.mjs`, `src/module/sheets/actor/acolyte-sheet.mjs`, `src/module/sheets/actor/npc-sheet.mjs`, `src/module/sheets/actor/vehicle-sheet.mjs`, `src/module/sheets/actor/rogue-trader-character-sheet.mjs`.
-- Actor sheet templates: `src/templates/actor/*` (e.g., `src/templates/actor/actor-acolyte-sheet.hbs`, `src/templates/actor/actor-rogue-trader-character-sheet.hbs`).
+- Actor schema: `src/template.json` (actor types `acolyte`, `character`, `npc`, `vehicle`).
+- Actor documents: `src/module/documents/base-actor.mjs`, `src/module/documents/acolyte.mjs`, `src/module/documents/vehicle.mjs` (acolyte class shared by `acolyte` + `character`).
+- Actor sheets: `src/module/sheets/actor/actor-container-sheet.mjs`, `src/module/sheets/actor/acolyte-sheet.mjs`, `src/module/sheets/actor/npc-sheet.mjs`, `src/module/sheets/actor/vehicle-sheet.mjs` (acolyte sheet shared by player-facing actor types).
+- Actor sheet templates: `src/templates/actor/*` (e.g., `src/templates/actor/actor-acolyte-sheet.hbs`).
 - Item schema and types: `src/template.json` (weapon, armour, talent, gear, etc.).
 - Item sheets: `src/module/sheets/item/*`.
 - Roll flow:
