@@ -128,7 +128,7 @@ export class AcolyteSheet extends ActorContainerSheet {
 
     async _addAcquisition(event) {
         event.preventDefault();
-        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
+        const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
         const acquisitionList = Array.isArray(acquisitions)
             ? acquisitions
             : (acquisitions ? [{ name: '', availability: '', modifier: 0, notes: acquisitions, acquired: false }] : []);
@@ -142,7 +142,7 @@ export class AcolyteSheet extends ActorContainerSheet {
         const index = Number.parseInt(event.currentTarget.dataset.index ?? '-1');
         if (Number.isNaN(index) || index < 0) return;
 
-        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
+        const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
         if (!Array.isArray(acquisitions)) {
             await this.actor.update({ 'system.rogueTrader.acquisitions': [] });
             return;
