@@ -219,555 +219,637 @@
           }
         },
         "skills": {
-          "awareness": {
-            "label": "Awareness",
-            "characteristic": "perception",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
           "acrobatics": {
             "label": "Acrobatics",
-            "characteristic": "agility",
-            "advanced": true,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "awareness": {
+            "label": "Awareness",
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "barter": {
             "label": "Barter",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "blather": {
             "label": "Blather",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "carouse": {
             "label": "Carouse",
-            "characteristic": "toughness",
-            "advanced": false,
+            "characteristic": "T",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "charm": {
             "label": "Charm",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "chemUse": {
             "label": "Chem-Use",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "ciphers": {
             "label": "Ciphers",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "climb": {
             "label": "Climb",
-            "characteristic": "strength",
-            "advanced": false,
+            "characteristic": "S",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "commonLore": {
-            "label": "Common Lore",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "command": {
             "label": "Command",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "commerce": {
             "label": "Commerce",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "concealment": {
             "label": "Concealment",
-            "characteristic": "agility",
-            "advanced": false,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "contortionist": {
             "label": "Contortionist",
-            "characteristic": "agility",
-            "advanced": true,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "deceive": {
             "label": "Deceive",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "demolition": {
             "label": "Demolition",
-            "characteristic": "intelligence",
-            "advanced": true,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "disguise": {
             "label": "Disguise",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "dodge": {
             "label": "Dodge",
-            "characteristic": "agility",
-            "advanced": false,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "drive": {
             "label": "Drive",
-            "characteristic": "agility",
-            "advanced": false,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "evaluate": {
             "label": "Evaluate",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "forbiddenLore": {
-            "label": "Forbidden Lore",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "gamble": {
             "label": "Gamble",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "intimidate": {
-            "label": "Intimidate",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "inquiry": {
             "label": "Inquiry",
-            "characteristic": "fellowship",
-            "advanced": false,
+            "characteristic": "Fel",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "interrogation": {
             "label": "Interrogation",
-            "characteristic": "willpower",
-            "advanced": true,
+            "characteristic": "WP",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "intimidate": {
+            "label": "Intimidate",
+            "characteristic": "S",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "invocation": {
             "label": "Invocation",
-            "characteristic": "willpower",
-            "advanced": true,
+            "characteristic": "WP",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "lipReading": {
+            "label": "Lip Reading",
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "literacy": {
             "label": "Literacy",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "logic": {
             "label": "Logic",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "medicae": {
             "label": "Medicae",
-            "characteristic": "intelligence",
-            "advanced": true,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "navigation": {
             "label": "Navigation",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "parry": {
-            "label": "Parry",
-            "characteristic": "weaponSkill",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "search": {
-            "label": "Search",
-            "characteristic": "perception",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "performer": {
-            "label": "Performer",
-            "characteristic": "fellowship",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "pilot": {
-            "label": "Pilot",
-            "characteristic": "agility",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "psyniscience": {
             "label": "Psyniscience",
-            "characteristic": "perception",
-            "advanced": true,
+            "characteristic": "Per",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "scrutiny": {
             "label": "Scrutiny",
-            "characteristic": "perception",
-            "advanced": false,
+            "characteristic": "Per",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "search": {
+            "label": "Search",
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "security": {
             "label": "Security",
-            "characteristic": "agility",
-            "advanced": true,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "shadowing": {
             "label": "Shadowing",
-            "characteristic": "agility",
-            "advanced": false,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "silentMove": {
             "label": "Silent Move",
-            "characteristic": "agility",
-            "advanced": false,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "sleightOfHand": {
             "label": "Sleight of Hand",
-            "characteristic": "agility",
-            "advanced": true,
+            "characteristic": "Ag",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "speakLanguage": {
-            "label": "Speak Language",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "scholasticLore": {
-            "label": "Scholastic Lore",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "secretTongue": {
-            "label": "Secret Tongue",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "stealth": {
-            "label": "Stealth",
-            "characteristic": "agility",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "survival": {
             "label": "Survival",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "swim": {
             "label": "Swim",
-            "characteristic": "strength",
-            "advanced": false,
+            "characteristic": "S",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "trade": {
-            "label": "Trade",
-            "characteristic": "intelligence",
-            "advanced": true,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
-          },
-          "tracking": {
-            "label": "Tracking",
-            "characteristic": "intelligence",
-            "advanced": false,
-            "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "techUse": {
             "label": "Tech-Use",
-            "characteristic": "intelligence",
-            "advanced": true,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "tracking": {
+            "label": "Tracking",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "wrangling": {
             "label": "Wrangling",
-            "characteristic": "intelligence",
-            "advanced": false,
+            "characteristic": "Int",
+            "basic": false,
             "trained": false,
-            "rank10": false,
-            "rank20": false,
-            "talentBonus": 0,
-            "otherBonus": 0,
-            "target": 0
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "commonLore": {
+            "label": "Common Lore",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "forbiddenLore": {
+            "label": "Forbidden Lore",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "scholasticLore": {
+            "label": "Scholastic Lore",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "speakLanguage": {
+            "label": "Speak Language",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "secretTongue": {
+            "label": "Secret Tongue",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "trade": {
+            "label": "Trade",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "performer": {
+            "label": "Performer",
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "pilot": {
+            "label": "Pilot",
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "athletics": {
+            "label": "Athletics",
+            "characteristic": "S",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": true,
+            "cost": 0
+          },
+          "parry": {
+            "label": "Parry",
+            "characteristic": "WS",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": true,
+            "cost": 0
+          },
+          "stealth": {
+            "label": "Stealth",
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": true,
+            "cost": 0
           }
         },
         "notes": {
@@ -805,1126 +887,635 @@
         "skills": {
           "acrobatics": {
             "label": "Acrobatics",
-            "characteristics": [
-              "Ag",
-              "S"
-            ],
-            "selectedCharacteristic": "",
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
-          },
-          "athletics": {
-            "label": "Athletics",
-            "hidden": true,
-            "characteristics": [
-              "S",
-              "T"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "S"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "awareness": {
             "label": "Awareness",
-            "characteristics": [
-              "Per",
-              "Fel",
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Per"
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "barter": {
             "label": "Barter",
-            "characteristics": [
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "blather": {
             "label": "Blather",
-            "characteristics": [
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "carouse": {
             "label": "Carouse",
-            "characteristics": [
-              "T"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "T"
+            "characteristic": "T",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "charm": {
             "label": "Charm",
-            "characteristics": [
-              "Fel",
-              "Inf"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
-          },
-          "command": {
-            "label": "Command",
-            "characteristics": [
-              "Fel",
-              "Int",
-              "S",
-              "WP"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
-          },
-          "commerce": {
-            "label": "Commerce",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "chemUse": {
             "label": "Chem-Use",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "ciphers": {
             "label": "Ciphers",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "climb": {
             "label": "Climb",
-            "characteristics": [
-              "S"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "S"
+            "characteristic": "S",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
-          "commonLore": {
-            "label": "Common Lore",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {
-              "adeptaSororitas": {
-                "label": "Adepta Sororitas",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "adeptusArbites": {
-                "label": "Adeptus Arbites",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "adeptusAstartes": {
-                "label": "Adeptus Astartes",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "adeptusAstraTelepathica": {
-                "label": "Adeptus Astra Telepathica",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "adeptusMechanicus": {
-                "label": "Adeptus Mechanicus",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "administratum": {
-                "label": "Administratum",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "askellonSector": {
-                "label": "Askellon Sector",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "chartistCaptains": {
-                "label": "Chartist Captains",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "collegiaTitanicu": {
-                "label": "Collegia Titanicu",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "ecclesiarchy": {
-                "label": "Ecclesiarchy",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "imperialCreed": {
-                "label": "Imperial Creed",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "imperialGuard": {
-                "label": "Imperial Guard",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "imperialNavy": {
-                "label": "Imperial Navy",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "imperium": {
-                "label": "Imperium",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "navigators": {
-                "label": "Navigators",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "planetaryDefenceForces": {
-                "label": "Planetary Defence Forces",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "rogueTraders": {
-                "label": "Rogue Traders",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "scholaProgenium": {
-                "label": "Schola Progenium",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "tech": {
-                "label": "Tech",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "underworld": {
-                "label": "Underworld",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "war": {
-                "label": "War",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              }
-            },
-            "characteristic": "Int"
+          "command": {
+            "label": "Command",
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "commerce": {
+            "label": "Commerce",
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "concealment": {
             "label": "Concealment",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "contortionist": {
             "label": "Contortionist",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "deceive": {
             "label": "Deceive",
-            "characteristics": [
-              "Fel",
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "demolition": {
             "label": "Demolition",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "disguise": {
             "label": "Disguise",
-            "characteristics": [
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "dodge": {
             "label": "Dodge",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "drive": {
             "label": "Drive",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "evaluate": {
             "label": "Evaluate",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "gamble": {
             "label": "Gamble",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
-          },
-          "forbiddenLore": {
-            "label": "Forbidden Lore",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {
-              "archaeotech": {
-                "label": "Archaeotech",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "chaosSpaceMarines": {
-                "label": "Chaos Space Marines",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "criminalCartelsAndSmugglers": {
-                "label": "Criminal Cartels and Smugglers",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "daemonology": {
-                "label": "Daemonology",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "heresy": {
-                "label": "Heresy",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "theHorusHeresyAndTheLongWar": {
-                "label": "The Horus Heresy and the Long War",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "inquisition": {
-                "label": "Inquisition",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "mutants": {
-                "label": "Mutants",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "officioAssassinorum": {
-                "label": "Officio Assassinorum",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "pirates": {
-                "label": "Pirates",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "psykers": {
-                "label": "Psykers",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "theWarp": {
-                "label": "The Warp",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "xenos": {
-                "label": "Xenos",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              }
-            },
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "inquiry": {
             "label": "Inquiry",
-            "characteristics": [
-              "Fel",
-              "Int",
-              "Per"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
-          },
-          "invocation": {
-            "label": "Invocation",
-            "characteristics": [
-              "WP"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "WP"
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "interrogation": {
             "label": "Interrogation",
-            "characteristics": [
-              "WP",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "WP"
+            "characteristic": "WP",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "intimidate": {
             "label": "Intimidate",
-            "characteristics": [
-              "S",
-              "WP"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "S"
+            "characteristic": "S",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "invocation": {
+            "label": "Invocation",
+            "characteristic": "WP",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "lipReading": {
             "label": "Lip Reading",
-            "characteristics": [
-              "Per"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Per"
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "literacy": {
             "label": "Literacy",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
-          },
-          "linguistics": {
-            "label": "Linguistics",
-            "hidden": true,
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {
-              "chapterRunes": {
-                "label": "Chapter Runes",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "chaosMarks": {
-                "label": "Chaos Marks",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "eldar": {
-                "label": "Eldar",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "highGothic": {
-                "label": "High Gothic",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "imperialCodes": {
-                "label": "Imperial Codes",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "lowGothic": {
-                "label": "Low Gothic",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "mercenary": {
-                "label": "Mercenary",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "necrontyr": {
-                "label": "Necrontyr",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "ork": {
-                "label": "Ork",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "technaLingua": {
-                "label": "Techna-Lingua",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "tau": {
-                "label": "Tau",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "underworld": {
-                "label": "Underworld",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "xenosMarkings": {
-                "label": "Xenos Markings",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              }
-            },
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "logic": {
             "label": "Logic",
-            "characteristics": [
-              "Int",
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "medicae": {
             "label": "Medicae",
-            "characteristics": [
-              "Int",
-              "Ag",
-              "Per"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "navigation": {
             "label": "Navigation",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "characteristic": "Int"
-          },
-          "operate": {
-            "label": "Operate",
-            "hidden": true,
-            "characteristics": [
-              "Ag",
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {
-              "surface": {
-                "label": "Surface",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "aeronautica": {
-                "label": "Aeronautica",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "voidship": {
-                "label": "Voidship",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              }
-            },
-            "characteristic": "Ag"
-          },
-          "parry": {
-            "label": "Parry",
-            "hidden": true,
-            "characteristics": [
-              "WS"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "WS"
-          },
-          "performer": {
-            "label": "Performer",
-            "characteristics": [
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Fel"
-          },
-          "pilot": {
-            "label": "Pilot",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "psyniscience": {
             "label": "Psyniscience",
-            "characteristics": [
-              "Per",
-              "WP"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Per"
-          },
-          "scholasticLore": {
-            "label": "Scholastic Lore",
-            "characteristics": [
-              "Int",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {
-              "astromancy": {
-                "label": "Astromancy",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "beasts": {
-                "label": "Beasts",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "bureaucracy": {
-                "label": "Bureaucracy",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "chymistry": {
-                "label": "Chymistry",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "cryptology": {
-                "label": "Cryptology",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "heraldry": {
-                "label": "Heraldry",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "imperialWarrants": {
-                "label": "Imperial Warrants",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "judgement": {
-                "label": "Judgement",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "legend": {
-                "label": "Legend",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "numerology": {
-                "label": "Numerology",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "occult": {
-                "label": "Occult",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "philosophy": {
-                "label": "Philosophy",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "tacticaImperialis": {
-                "label": "Tactica Imperialis",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              }
-            },
-            "characteristic": "Int"
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "scrutiny": {
             "label": "Scrutiny",
-            "characteristics": [
-              "Per",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Per"
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "search": {
             "label": "Search",
-            "characteristics": [
-              "Per"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Per"
+            "characteristic": "Per",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "security": {
             "label": "Security",
-            "characteristics": [
-              "Int",
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
-          },
-          "secretTongue": {
-            "label": "Secret Tongue",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
-          },
-          "sleightOfHand": {
-            "label": "Sleight of Hand",
-            "characteristics": [
-              "Ag",
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
-          },
-          "speakLanguage": {
-            "label": "Speak Language",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
-          },
-          "stealth": {
-            "label": "Stealth",
-            "hidden": true,
-            "characteristics": [
-              "Ag",
-              "Per"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "shadowing": {
             "label": "Shadowing",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "silentMove": {
             "label": "Silent Move",
-            "characteristics": [
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Ag"
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "sleightOfHand": {
+            "label": "Sleight of Hand",
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "survival": {
             "label": "Survival",
-            "characteristics": [
-              "Per",
-              "Ag",
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "swim": {
             "label": "Swim",
-            "characteristics": [
-              "S"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "S"
+            "characteristic": "S",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "techUse": {
-            "label": "Tech Use",
-            "characteristics": [
-              "Int",
-              "Ag"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
-          },
-          "trade": {
-            "label": "Trade",
-            "characteristics": [
-              "Int",
-              "Ag",
-              "Fel"
-            ],
-            "advance": 0,
-            "isSpecialist": true,
-            "specialities": {
-              "agri": {
-                "label": "Agri",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "archaeologist": {
-                "label": "Archaeologist",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "armourer": {
-                "label": "Armourer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "astrographer": {
-                "label": "Astrographer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "chymist": {
-                "label": "Chymist",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "cryptographer": {
-                "label": "Cryptographer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "cook": {
-                "label": "Cook",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "explorator": {
-                "label": "Explorator",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "linguist": {
-                "label": "Linguist",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "loremancer": {
-                "label": "Loremancer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "morticator": {
-                "label": "Morticator",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "performancer": {
-                "label": "Performancer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "prospector": {
-                "label": "Prospector",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "scrimshawer": {
-                "label": "Scrimshawer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "sculptor": {
-                "label": "Sculptor",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "shipwright": {
-                "label": "Shipwright",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "soothsayer": {
-                "label": "Soothsayer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "technomat": {
-                "label": "Technomat",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              },
-              "voidfarer": {
-                "label": "Voidfarer",
-                "advance": 0,
-                "cost": 0,
-                "taken": false
-              }
-            },
-            "characteristic": "Int"
+            "label": "Tech-Use",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "tracking": {
             "label": "Tracking",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
-            "cost": 0,
-            "characteristic": "Int"
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
           },
           "wrangling": {
             "label": "Wrangling",
-            "characteristics": [
-              "Int"
-            ],
-            "advance": 0,
-            "isSpecialist": false,
-            "specialities": {},
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0
+          },
+          "commonLore": {
+            "label": "Common Lore",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
             "cost": 0,
-            "characteristic": "Int"
+            "entries": []
+          },
+          "forbiddenLore": {
+            "label": "Forbidden Lore",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "scholasticLore": {
+            "label": "Scholastic Lore",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "speakLanguage": {
+            "label": "Speak Language",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "secretTongue": {
+            "label": "Secret Tongue",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "trade": {
+            "label": "Trade",
+            "characteristic": "Int",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "performer": {
+            "label": "Performer",
+            "characteristic": "Fel",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "pilot": {
+            "label": "Pilot",
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": false,
+            "cost": 0,
+            "entries": []
+          },
+          "athletics": {
+            "label": "Athletics",
+            "characteristic": "S",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": true,
+            "cost": 0
+          },
+          "parry": {
+            "label": "Parry",
+            "characteristic": "WS",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": true,
+            "cost": 0
+          },
+          "stealth": {
+            "label": "Stealth",
+            "characteristic": "Ag",
+            "basic": false,
+            "trained": false,
+            "plus10": false,
+            "plus20": false,
+            "bonus": 0,
+            "notes": "",
+            "hidden": true,
+            "cost": 0
           }
         }
       },
