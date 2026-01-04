@@ -11,14 +11,14 @@ This fork repurposes the Dark Heresy 2e acolyte sheet to track Rogue Trader char
 - **Skills**: Characteristics, skills, and specialties with roll buttons.
 - **Combat**: Weapons, armour, fatigue, and fate.
 - **Rogue Trader**: Profit factor, ship/void info, acquisitions, and other RT-only fields stored under `system.rogueTrader`.
-- **Bio / Notes**: Home world, background, role, and freeform notes.
+- **Bio / Notes**: Home world, birthright, career path, and freeform notes.
 - **Psyker / Powers**: Psy ratings and psychic power management when relevant.
 
 ## Data Structure Overview
 - `system.characteristics.*`: Base, advance, modifier, and unnatural values that derive totals and bonuses.
 - `system.skills.*`: Skill definitions, training ranks, and specialty entries used for roll targets.
 - `system.rogueTrader.*`: Profit factor, acquisitions, ship log, and other RT-only fields surfaced on the Rogue Trader tab.
-- `system.bio.*`: Origin data (home world, background, role) shared across Dark Heresy and Rogue Trader play.
+- `system.bio.*`: Origin data (home world, birthright, career path) following Rogue Trader RPG character creation.
 - `system.fate`, `system.fatigue`, `system.wounds`, `system.armour`, `system.encumbrance`: Core combat readiness values referenced by the sheet and rolls.
 
 ## Notes
