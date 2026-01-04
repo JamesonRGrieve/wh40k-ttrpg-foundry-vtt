@@ -2,6 +2,7 @@
   "Actor": {
     "types": [
       "acolyte",
+      "character",
       "npc",
       "vehicle"
     ],
@@ -1622,8 +1623,36 @@
     },
     "character": {
       "templates": [
-        "rogueTraderCharacter"
-      ]
+        "base",
+        "creature",
+        "rogueTraderExtras"
+      ],
+      "bio": {
+        "homeWorld": "",
+        "background": "",
+        "role": "",
+        "elite": "",
+        "divination": "",
+        "gender": "",
+        "age": "",
+        "build": "",
+        "complexion": "",
+        "hair": "",
+        "quirks": "",
+        "superstition": "",
+        "mementos": "",
+        "notes": ""
+      },
+      "experience": {
+        "used": 0,
+        "total": 0
+      },
+      "insanity": 0,
+      "corruption": 0,
+      "aptitudes": {},
+      "backgroundEffects": {
+        "abilities": []
+      }
     },
     "npc": {
       "templates": [

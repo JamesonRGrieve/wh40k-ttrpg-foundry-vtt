@@ -18,7 +18,7 @@ export class RogueTraderBaseActor extends Actor {
             initData['token.bar1'] = { 'attribute': 'integrity' };
             initData['token.bar2'] = undefined;
         }
-        if (data.type === 'acolyte') {
+        if (data.type === 'acolyte' || data.type === 'character') {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
         }
@@ -75,8 +75,13 @@ export class RogueTraderBaseActor extends Actor {
 
     _computeCharacteristics() {
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
-            characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier;
-            characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
+            const base = Number(characteristic.base ?? characteristic.starting ?? 0);
+            const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
+            const modifier = Number(characteristic.modifier ?? 0);
+            const unnatural = Number(characteristic.unnatural ?? 0);
+
+            characteristic.total = base + advance * 5 + modifier;
+            characteristic.bonus = Math.floor(characteristic.total / 10) + unnatural;
         }
 
         this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
