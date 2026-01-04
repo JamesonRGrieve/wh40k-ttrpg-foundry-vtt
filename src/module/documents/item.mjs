@@ -46,6 +46,10 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         return this.type === 'psychicPower';
     }
 
+    get isNavigatorPower() {
+        return this.type === 'navigatorPower';
+    }
+
     get isPsychicBarrage() {
         return this.type === 'psychicPower' && this.system.attackType === 'Psychic Barrage';
     }
@@ -56,6 +60,58 @@ export class RogueTraderItem extends RogueTraderItemContainer {
 
     get isCriticalInjury() {
         return this.type === 'criticalInjury';
+    }
+
+    get isOriginPath() {
+        return this.type === 'originPath' || (this.type === 'trait' && this.flags?.rt?.kind === 'origin');
+    }
+
+    get isSkill() {
+        return this.type === 'skill';
+    }
+
+    get isOrder() {
+        return this.type === 'order';
+    }
+
+    get isRitual() {
+        return this.type === 'ritual';
+    }
+
+    get isShipComponent() {
+        return this.type === 'shipComponent';
+    }
+
+    get isShipRole() {
+        return this.type === 'shipRole';
+    }
+
+    get isShipUpgrade() {
+        return this.type === 'shipUpgrade';
+    }
+
+    get isShipWeapon() {
+        return this.type === 'shipWeapon';
+    }
+
+    get isVehicleTrait() {
+        return this.type === 'vehicleTrait';
+    }
+
+    get isVehicleUpgrade() {
+        return this.type === 'vehicleUpgrade';
+    }
+
+    get isWeaponQuality() {
+        return this.type === 'weaponQuality';
+    }
+
+    get isCondition() {
+        return this.type === 'trait' && this.flags?.rt?.kind === 'condition';
+    }
+
+    get originPathStep() {
+        return this.flags?.rt?.step || this.system?.step || '';
     }
 
     get isWeapon() {

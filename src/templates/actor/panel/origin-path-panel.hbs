@@ -1,0 +1,51 @@
+<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.OriginPath.Header"}}</h1>
+    <p class="dh-panel__description">{{localize "RT.OriginPath.Description"}}</p>
+    
+    <div class="rt-origin-path-grid">
+        {{#each originPathSteps as |step|}}
+        <div class="rt-origin-path-step" data-step="{{step.key}}">
+            <div class="rt-origin-path-step__header">
+                <span class="rt-origin-path-step__label">{{step.label}}</span>
+            </div>
+            <div class="rt-origin-path-step__value" data-step-key="{{step.key}}">
+                {{#if step.item}}
+                    <div class="rt-origin-path-item" data-item-id="{{step.item._id}}">
+                        <img class="rt-origin-path-item__img" src="{{step.item.img}}" alt="{{step.item.name}}" />
+                        <span class="rt-origin-path-item__name item-name" data-item-id="{{step.item._id}}">{{step.item.name}}</span>
+                        <a class="rt-origin-path-item__remove item-delete" data-item-id="{{step.item._id}}" title="{{localize 'RT.OriginPath.Remove'}}">
+                            <span class="material-icons">delete</span>
+                        </a>
+                    </div>
+                {{else}}
+                    <div class="rt-origin-path-dropzone" data-accept="origin.{{step.key}}">
+                        <span class="rt-origin-path-dropzone__text">{{localize "RT.OriginPath.DropHere"}}</span>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
+    <h1 class="dh-panel__header">{{localize "RT.OriginPath.EffectsHeader"}}</h1>
+    {{#if actor.backgroundEffects.abilities.length}}
+        <div class="dh-table--border">
+            <div class="table-row--head">
+                <div class="table-cell">{{localize "RT.OriginPath.Source"}}</div>
+                <div class="table-cell">{{localize "RT.OriginPath.Name"}}</div>
+                <div class="table-cell--span4">{{localize "RT.OriginPath.Effect"}}</div>
+            </div>
+            {{#each actor.backgroundEffects.abilities as |ability|}}
+                <div class="table-row">
+                    <div class="table-cell">{{ability.source}}</div>
+                    <div class="table-cell">{{ability.name}}</div>
+                    <div class="table-cell--span4 rt-origin-effect-text">{{ability.benefit}}</div>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <p class="rt-origin-path-empty">{{localize "RT.OriginPath.NoEffects"}}</p>
+    {{/if}}
+</div>

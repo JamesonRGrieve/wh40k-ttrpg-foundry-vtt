@@ -1,9 +1,3 @@
-import { homeworlds } from '../rules/homeworlds.mjs';
-import { birthrights } from '../rules/birthrights.mjs';
-import { divinations } from '../rules/divinations.mjs';
-import { careerPaths } from '../rules/career-paths.mjs';
-import { eliteAdvances } from '../rules/elite-advances.mjs';
-import { fieldMatch } from '../rules/config.mjs';
 import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
@@ -74,11 +68,31 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         return this.system.backgroundEffects;
     }
 
+    get originPath() {
+        return this.system.originPath;
+    }
+
+    get originPathItems() {
+        return this.items.filter((item) => item.isOriginPath);
+    }
+
+    get navigatorPowers() {
+        return this.items.filter((item) => item.isNavigatorPower);
+    }
+
+    get shipRoles() {
+        return this.items.filter((item) => item.isShipRole);
+    }
+
+    get conditions() {
+        return this.items.filter((item) => item.isCondition);
+    }
+
     async prepareData() {
         this.system.backgroundEffects = {
             abilities: [],
         };
-        this._computeBackgroundFields();
+        this._computeOriginPathEffects();
         this._computeCharacteristics();
         this._computeSkills();
         this._computeExperience();
@@ -210,46 +224,50 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         }
     }
 
-    _computeBackgroundFields() {
-        if (this.bio?.homeWorld) {
-            this.backgroundEffects.homeworld = homeworlds().find((h) => h.name === this.bio.homeWorld);
-            if (this.backgroundEffects.homeworld) {
-                this.backgroundEffects.abilities.push({
-                    source: 'Homeworld',
-                    ...this.backgroundEffects.homeworld.home_world_bonus,
-                });
+    /**
+     * Computes origin path effects from items on the character.
+     * Origin path items are traits with rt.kind === 'origin' flag.
+     * Each origin path step (Home World, Birthright, etc.) adds abilities to the character.
+     */
+    _computeOriginPathEffects() {
+        // Get all origin path items from the character's items
+        const originItems = this.items.filter((item) => item.isOriginPath);
+        
+        // Group by step for easy reference
+        const stepMap = {
+            'Home World': null,
+            'Birthright': null,
+            'Lure of the Void': null,
+            'Trials and Travails': null,
+            'Motivation': null,
+            'Career': null
+        };
+
+        for (const item of originItems) {
+            const step = item.flags?.rt?.step || item.system?.step || '';
+            if (stepMap.hasOwnProperty(step)) {
+                stepMap[step] = item;
             }
+
+            // Add to background abilities for display
+            this.backgroundEffects.abilities.push({
+                source: step || 'Origin Path',
+                name: item.name,
+                benefit: item.system?.effects || item.system?.descriptionText || item.system?.description?.value || '',
+            });
         }
-        if (this.bio?.birthright) {
-            this.backgroundEffects.birthright = birthrights().find((h) => h.name === this.bio.birthright);
-            if (this.backgroundEffects.birthright) {
-                this.backgroundEffects.abilities.push({
-                    source: 'Birthright',
-                    ...this.backgroundEffects.birthright.birthright_bonus,
-                });
-            }
-        }
-        if (this.bio?.careerPath) {
-            this.backgroundEffects.careerPath = careerPaths().find((h) => h.name === this.bio.careerPath);
-            if (this.backgroundEffects.careerPath) {
-                this.backgroundEffects.abilities.push({
-                    source: 'Career Path',
-                    ...this.backgroundEffects.careerPath.career_bonus,
-                });
-            }
-        }
-        if (this.bio?.divination) {
-            this.backgroundEffects.divination = divinations().find((h) => h.name === this.bio.divination);
-            if (this.backgroundEffects.divination) {
-                this.backgroundEffects.abilities.push({
-                    source: 'Divination',
-                    name: this.backgroundEffects.divination.name,
-                    benefit: this.backgroundEffects.divination.effect,
-                });
-            }
-        }
-        if (this.bio?.elite) {
-            this.backgroundEffects.eliteAdvance = eliteAdvances().find((h) => h.name === this.bio.elite);
+
+        // Store origin path selections for easy access
+        this.backgroundEffects.originPath = stepMap;
+
+        // Update the originPath system data with the names
+        if (this.system.originPath) {
+            this.system.originPath.homeWorld = stepMap['Home World']?.name || '';
+            this.system.originPath.birthright = stepMap['Birthright']?.name || '';
+            this.system.originPath.lureOfTheVoid = stepMap['Lure of the Void']?.name || '';
+            this.system.originPath.trialsAndTravails = stepMap['Trials and Travails']?.name || '';
+            this.system.originPath.motivation = stepMap['Motivation']?.name || '';
+            this.system.originPath.career = stepMap['Career']?.name || '';
         }
     }
 
@@ -257,15 +275,6 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
             characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier;
             characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
-
-            // Homeworld Bonus or Negative
-            if (this.backgroundEffects.homeworld) {
-                if (this.backgroundEffects.homeworld.bonus_characteristics.some((c) => fieldMatch(c, name))) {
-                    characteristic.has_bonus = true;
-                } else if (fieldMatch(this.backgroundEffects.homeworld.negative_characteristic, name)) {
-                    characteristic.has_negative = true;
-                }
-            }
 
             if (this.fatigue.value > characteristic.bonus) {
                 characteristic.total = Math.ceil(characteristic.total / 2);

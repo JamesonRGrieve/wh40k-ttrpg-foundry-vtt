@@ -149,7 +149,7 @@ export class BasicActionManager {
         event.preventDefault();
         const div = $(event.currentTarget);
         console.log(div);
-        const uuid = div.data('uuid');
+        const targetUuid = div.data('uuid');
         const damageType = div.data('type');
         const ignoreArmour = div.data('ignoreArmour');
         const location = div.data('location');
@@ -157,7 +157,7 @@ export class BasicActionManager {
         const penetration = div.data('penetration');
         const fatigue = div.data('fatigue');
 
-        const actor = (await fromUuid(uuid)).actor;
+        const actor = (await fromUuid(targetUuid)).actor;
         if (!actor) {
             ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
