@@ -1,0 +1,23 @@
+{
+  "RT": {
+    "RogueTrader": {
+      "TabLabel": "Rogue Trader",
+      "Header": "Rogue Trader",
+      "CareerPath": "Career Path",
+      "Rank": "Rank",
+      "HomeWorld": "Home World",
+      "Motivation": "Motivation",
+      "ProfitFactorHeader": "Profit Factor",
+      "ProfitFactorStarting": "Starting",
+      "ProfitFactorCurrent": "Current",
+      "ProfitFactorMisfortunes": "Misfortunes",
+      "LiftingHeader": "Lifting & Armour",
+      "LiftingLift": "Lift",
+      "LiftingCarry": "Carry",
+      "LiftingPush": "Push",
+      "ArmourWeight": "Armour Weight",
+      "AcquisitionsHeader": "Acquisitions",
+      "MutationsHeader": "Mutations"
+    }
+  }
+}
