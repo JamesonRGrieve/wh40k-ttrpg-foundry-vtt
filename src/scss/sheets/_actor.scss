@@ -963,3 +963,47 @@
         border: 1px solid rgba(74, 55, 40, 0.2);
     }
 }
+
+// ============================================
+// TWO-COLUMN LAYOUT FOR ABILITIES TAB
+// ============================================
+
+.rt-abilities-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 1rem;
+    padding: 0.5rem;
+    align-items: start;
+}
+
+.rt-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    .dh-panel {
+        width: 100%;
+    }
+}
+
+.rt-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    .dh-panel {
+        width: 100%;
+    }
+}
+
+// Responsive layout for smaller screens
+@media (max-width: 1200px) {
+    .rt-abilities-layout {
+        grid-template-columns: 1fr;
+        
+        .rt-left-column,
+        .rt-right-column {
+            width: 100%;
+        }
+    }
+}
