@@ -21,30 +21,102 @@
                         <span class="rt-header-value">{{system.originPath.homeWorld}}</span>
                     </div>
                 </div>
-                <div class="rt-quick-stats">
-                    <div class="rt-stat-box rt-wounds-box">
-                        <span class="rt-stat-label">Wounds</span>
-                        <div class="rt-stat-values">
-                            <input type="number" class="rt-stat-input" name="system.wounds.value" value="{{system.wounds.value}}" title="Current" />
-                            <span class="rt-stat-separator">/</span>
-                            <input type="number" class="rt-stat-input" name="system.wounds.max" value="{{system.wounds.max}}" title="Max" />
+                {{!-- Gothic Quick Status Display --}}
+                <div class="rt-quick-status-gothic">
+                    {{!-- Wounds Section --}}
+                    <div class="rt-status-panel rt-wounds-panel">
+                        <div class="rt-status-header">
+                            <span class="rt-status-icon">☠</span>
+                            <span class="rt-status-title">WOUNDS</span>
+                        </div>
+                        <div class="rt-status-body">
+                            <div class="rt-wounds-display">
+                                <div class="rt-wounds-current">
+                                    <button type="button" class="rt-arrow-btn rt-arrow-up" data-field="system.wounds.value" data-action="increment" title="Heal">▲</button>
+                                    <input type="number" class="rt-gothic-input" name="system.wounds.value" value="{{system.wounds.value}}" title="Current Wounds" />
+                                    <button type="button" class="rt-arrow-btn rt-arrow-down" data-field="system.wounds.value" data-action="decrement" title="Damage">▼</button>
+                                </div>
+                                <span class="rt-wounds-separator">of</span>
+                                <input type="number" class="rt-gothic-input rt-max-wounds" name="system.wounds.max" value="{{system.wounds.max}}" title="Max Wounds" />
+                            </div>
                         </div>
                     </div>
-                    <div class="rt-stat-box rt-fate-box">
-                        <span class="rt-stat-label">Fate</span>
-                        <div class="rt-stat-values">
-                            <input type="number" class="rt-stat-input" name="system.fate.value" value="{{system.fate.value}}" title="Current" />
-                            <span class="rt-stat-separator">/</span>
-                            <input type="number" class="rt-stat-input" name="system.fate.max" value="{{system.fate.max}}" title="Max" />
+
+                    {{!-- Critical Damage Section --}}
+                    <div class="rt-status-panel rt-crit-panel">
+                        <div class="rt-status-header">
+                            <span class="rt-status-icon">⚔</span>
+                            <span class="rt-status-title">CRITICAL</span>
+                        </div>
+                        <div class="rt-status-body">
+                            <div class="rt-crit-display">
+                                <button type="button" class="rt-arrow-btn rt-arrow-up" data-field="system.wounds.critical" data-action="decrement" data-min="0" title="Heal Critical">▲</button>
+                                <span class="rt-crit-value">{{clampCritical system.wounds.critical}}</span>
+                                <span class="rt-crit-separator">/</span>
+                                <span class="rt-crit-max">10</span>
+                                <button type="button" class="rt-arrow-btn rt-arrow-down" data-field="system.wounds.critical" data-action="increment" data-max="10" title="Add Critical">▼</button>
+                            </div>
+                            <input type="hidden" name="system.wounds.critical" value="{{system.wounds.critical}}" />
                         </div>
                     </div>
-                    <div class="rt-stat-box rt-insanity-box">
-                        <span class="rt-stat-label">Insanity</span>
-                        <input type="number" class="rt-stat-input rt-stat-single" name="system.insanity" value="{{system.insanity}}" />
+
+                    {{!-- Fate Section --}}
+                    <div class="rt-status-panel rt-fate-panel">
+                        <div class="rt-status-header">
+                            <span class="rt-status-icon">★</span>
+                            <span class="rt-status-title">FATE</span>
+                        </div>
+                        <div class="rt-status-body">
+                            <div class="rt-fate-display">
+                                <button type="button" class="rt-arrow-btn rt-arrow-up" data-field="system.fate.value" data-action="increment" title="Restore Fate">▲</button>
+                                <input type="number" class="rt-gothic-input" name="system.fate.value" value="{{system.fate.value}}" title="Current Fate" />
+                                <button type="button" class="rt-arrow-btn rt-arrow-down" data-field="system.fate.value" data-action="decrement" title="Spend Fate">▼</button>
+                                <span class="rt-fate-separator">/</span>
+                                <input type="number" class="rt-gothic-input" name="system.fate.max" value="{{system.fate.max}}" title="Max Fate" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="rt-stat-box rt-corruption-box">
-                        <span class="rt-stat-label">Corruption</span>
-                        <input type="number" class="rt-stat-input rt-stat-single" name="system.corruption" value="{{system.corruption}}" />
+
+                    {{!-- Corruption Section --}}
+                    <div class="rt-status-panel rt-corruption-panel {{corruptionDegreeClass system.corruption}}">
+                        <div class="rt-status-header">
+                            <span class="rt-status-icon">⛧</span>
+                            <span class="rt-status-title">CORRUPTION</span>
+                        </div>
+                        <div class="rt-status-body">
+                            <div class="rt-corruption-display">
+                                <div class="rt-points-row">
+                                    <button type="button" class="rt-arrow-btn rt-arrow-up" data-field="system.corruption" data-action="decrement" data-min="0" title="Decrease Corruption">▲</button>
+                                    <input type="number" class="rt-gothic-input rt-points-input" name="system.corruption" value="{{system.corruption}}" min="0" max="100" title="Corruption Points" />
+                                    <button type="button" class="rt-arrow-btn rt-arrow-down" data-field="system.corruption" data-action="increment" data-max="100" title="Increase Corruption">▼</button>
+                                </div>
+                                <div class="rt-degree-display">
+                                    <span class="rt-degree-label">{{corruptionDegree system.corruption}}</span>
+                                    <span class="rt-degree-modifier">({{corruptionModifier system.corruption}})</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{!-- Insanity Section --}}
+                    <div class="rt-status-panel rt-insanity-panel {{insanityDegreeClass system.insanity}}">
+                        <div class="rt-status-header">
+                            <span class="rt-status-icon">⚙</span>
+                            <span class="rt-status-title">INSANITY</span>
+                        </div>
+                        <div class="rt-status-body">
+                            <div class="rt-insanity-display">
+                                <div class="rt-points-row">
+                                    <button type="button" class="rt-arrow-btn rt-arrow-up" data-field="system.insanity" data-action="decrement" data-min="0" title="Decrease Insanity">▲</button>
+                                    <input type="number" class="rt-gothic-input rt-points-input" name="system.insanity" value="{{system.insanity}}" min="0" max="100" title="Insanity Points" />
+                                    <button type="button" class="rt-arrow-btn rt-arrow-down" data-field="system.insanity" data-action="increment" data-max="100" title="Increase Insanity">▼</button>
+                                </div>
+                                <div class="rt-degree-display">
+                                    <span class="rt-degree-label">{{insanityDegree system.insanity}}</span>
+                                    <span class="rt-degree-modifier">({{insanityModifier system.insanity}})</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
