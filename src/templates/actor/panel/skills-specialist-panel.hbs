@@ -25,7 +25,7 @@
             <div class="rt-specialist-block spec_skills_{{entry.[0]}}" {{hideIfNot (isExpanded (concat 'spec_skills_' entry.[0]))}}>
                 {{#if entry.[1].entries.length}}
                     {{#each entry.[1].entries as |speciality idx|}}
-                        <div class="table-row actor-drag rt-specialist-row" data-item-type="skill" data-item-id="{{../entry.[0]}}" data-speciality="{{idx}}">
+                        <div class="table-row actor-drag rt-specialist-row" data-item-type="skill" data-item-id="{{../entry.[0]}}" data-specialty="{{idx}}">
                             <div class="table-cell rt-skill-name rt-specialist-name">
                                 <input type="text" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.name" value="{{speciality.name}}" class="rt-specialization-input" placeholder="{{localize 'RT.Skills.Specialization'}}..." />
                                 <button class="roll-skill rt-skill-button" data-skill="{{../entry.[0]}}" data-specialty="{{idx}}" type="roll" title="{{localize 'RT.Skills.RollSkillTitle' speciality.name}}">
