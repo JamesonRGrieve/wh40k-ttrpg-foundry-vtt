@@ -1,6 +1,6 @@
 {
   "name": "Customisation: Scavenged Reconstruction",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Legion Power Armour",

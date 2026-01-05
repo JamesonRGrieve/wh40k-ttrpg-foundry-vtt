@@ -1,6 +1,6 @@
 {
   "name": "Man-Stopper Bullets",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Stubbers, Hand cannons, rifles, autopistol, autogun",

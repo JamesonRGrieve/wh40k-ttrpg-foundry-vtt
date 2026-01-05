@@ -1,6 +1,6 @@
 {
   "name": "Dragonfire Bolts",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Bolt Pistols, Bolters, Heavy Bolters",

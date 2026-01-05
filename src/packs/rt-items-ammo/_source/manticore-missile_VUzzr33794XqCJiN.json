@@ -1,6 +1,6 @@
 {
   "name": "Manticore Missile",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Vehicle: Manticore Vehicle",

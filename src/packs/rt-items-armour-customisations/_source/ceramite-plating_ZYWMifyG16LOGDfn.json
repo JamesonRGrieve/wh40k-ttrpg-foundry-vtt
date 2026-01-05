@@ -1,6 +1,6 @@
 {
   "name": "Ceramite Plating",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Carapace or Power Armour",

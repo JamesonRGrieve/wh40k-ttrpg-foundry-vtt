@@ -1,6 +1,6 @@
 {
   "name": "Abyssal Bolts",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Bolt/Primitive: Bolt Weapons and Crossbows",

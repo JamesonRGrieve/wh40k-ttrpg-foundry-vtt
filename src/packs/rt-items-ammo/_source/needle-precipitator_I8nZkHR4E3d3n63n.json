@@ -1,6 +1,6 @@
 {
   "name": "Needle Precipitator",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Exotic: Needle Rifles",

@@ -1,6 +1,6 @@
 {
   "name": "Smoke Round",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Launcher/Mortar",

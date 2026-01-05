@@ -1,6 +1,6 @@
 {
   "name": "Purified Plasma",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Plasma Weapon",

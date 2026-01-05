@@ -1,6 +1,6 @@
 {
   "name": "Acid Shells",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP/Bolt: Shotguns, Shotgun Pistols, shotcannons, bolt pistols, bolters.",

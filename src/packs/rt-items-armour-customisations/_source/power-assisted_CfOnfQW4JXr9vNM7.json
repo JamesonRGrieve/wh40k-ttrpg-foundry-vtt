@@ -1,6 +1,6 @@
 {
   "name": "Power Assisted",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Any non-primitive Armour that covers all locations, except power armour,",

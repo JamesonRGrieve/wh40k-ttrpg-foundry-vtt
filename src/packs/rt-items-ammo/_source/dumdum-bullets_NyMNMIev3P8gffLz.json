@@ -1,6 +1,6 @@
 {
   "name": "Dumdum Bullets",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Stubbers, hand cannons",

@@ -1,6 +1,6 @@
 {
   "name": "! Default: Backpack Ammo/Power Pack",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Any Plasma, Melta, Las, Bolt, SP, Flame. No Heavy except Stubber/Bolter/Flamer",

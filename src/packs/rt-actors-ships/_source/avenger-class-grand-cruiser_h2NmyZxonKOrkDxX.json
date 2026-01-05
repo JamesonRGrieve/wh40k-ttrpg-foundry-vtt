@@ -1,6 +1,6 @@
 {
   "name": "Avenger-Class Grand Cruiser",
-  "type": "ship",
+  "type": "starship",
   "img": "icons/svg/ship.svg",
   "system": {
     "shipType": "Grand Cruiser",

@@ -1,6 +1,6 @@
 {
   "name": "Tzeentchian Inferno Bolts",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Bolt: Legion Bolt Pistols, Bolters, and Combi-Bolters",

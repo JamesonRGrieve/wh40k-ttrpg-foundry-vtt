@@ -1,6 +1,6 @@
 {
   "name": "Krak Missile",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Launcher: Missile Launcher",

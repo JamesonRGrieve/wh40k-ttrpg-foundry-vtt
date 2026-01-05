@@ -1,6 +1,6 @@
 {
   "name": "Longshot: Penetrator Slug",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Longshot",

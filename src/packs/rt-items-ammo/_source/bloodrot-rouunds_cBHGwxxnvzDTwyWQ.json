@@ -1,6 +1,6 @@
 {
   "name": "Bloodrot Rouunds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Bolt: Heavy Bolter/Legion Heavy Bolter",

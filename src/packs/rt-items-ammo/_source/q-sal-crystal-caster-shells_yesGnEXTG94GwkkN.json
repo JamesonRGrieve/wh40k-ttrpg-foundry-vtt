@@ -1,6 +1,6 @@
 {
   "name": "Q'Sal Crystal Caster Shells",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Exotic: Q'Sal Crystal Casters",

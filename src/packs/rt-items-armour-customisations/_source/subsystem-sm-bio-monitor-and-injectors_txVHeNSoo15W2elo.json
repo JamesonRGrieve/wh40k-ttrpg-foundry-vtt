@@ -1,6 +1,6 @@
 {
   "name": "Subsystem (SM): Bio-Monitor and Injectors",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Legion/Astartes Power Armour",

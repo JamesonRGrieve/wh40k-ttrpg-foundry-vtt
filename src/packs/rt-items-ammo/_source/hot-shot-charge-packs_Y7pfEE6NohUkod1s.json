@@ -1,6 +1,6 @@
 {
   "name": "Hot-Shot Charge Packs",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Las: Laspistols, lascarbines, lasguns, long-las",

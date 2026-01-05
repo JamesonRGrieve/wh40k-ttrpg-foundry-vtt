@@ -1,6 +1,6 @@
 {
   "name": "Subsystem: Osmotic Gill Life Sustainer",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Power Armour, Legion/Astartes Power Armour",

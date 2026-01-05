@@ -1,6 +1,6 @@
 {
   "name": "Tracer Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP Weapon",

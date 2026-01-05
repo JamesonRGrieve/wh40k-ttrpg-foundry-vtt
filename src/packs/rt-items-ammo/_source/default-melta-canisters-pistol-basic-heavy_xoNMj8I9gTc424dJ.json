@@ -1,6 +1,6 @@
 {
   "name": "! Default: Melta Canisters (pistol/basic/heavy)",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Melta Weapons",

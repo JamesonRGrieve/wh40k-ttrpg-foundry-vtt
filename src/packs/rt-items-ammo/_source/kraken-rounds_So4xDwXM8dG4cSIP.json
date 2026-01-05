@@ -1,6 +1,6 @@
 {
   "name": "Kraken Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP/Bolt Weapon",

@@ -1,6 +1,6 @@
 {
   "name": "Microburst Flask",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Plasma: Plasma Pistols and Plasma Guns",

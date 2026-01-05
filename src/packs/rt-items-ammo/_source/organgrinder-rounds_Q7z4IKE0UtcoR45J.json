@@ -1,6 +1,6 @@
 {
   "name": "Organgrinder Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP/Bolt: Hand Cannons, Heavy Stubbers, Bolt Weapons",

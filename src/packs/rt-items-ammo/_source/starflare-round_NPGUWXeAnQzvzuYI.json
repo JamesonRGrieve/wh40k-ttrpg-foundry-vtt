@@ -1,6 +1,6 @@
 {
   "name": "Starflare Round",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Launcher: Grenade Launcher or Mortar",

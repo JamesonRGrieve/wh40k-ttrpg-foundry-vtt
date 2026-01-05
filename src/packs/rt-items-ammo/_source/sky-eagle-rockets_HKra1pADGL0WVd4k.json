@@ -1,6 +1,6 @@
 {
   "name": "Sky Eagle Rockets",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Vehicle: Manticore Vehicle",

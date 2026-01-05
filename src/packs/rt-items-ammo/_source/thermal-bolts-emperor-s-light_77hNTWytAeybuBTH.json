@@ -1,6 +1,6 @@
 {
   "name": "Thermal Bolts \"Emperor's Light\"",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Primitive: Crossbows",

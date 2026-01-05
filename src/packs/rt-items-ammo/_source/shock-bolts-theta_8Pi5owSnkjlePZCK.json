@@ -1,6 +1,6 @@
 {
   "name": "Shock Bolts (Theta)",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Primitive: Crossbows",

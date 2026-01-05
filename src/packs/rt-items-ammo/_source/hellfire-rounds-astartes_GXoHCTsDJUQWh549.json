@@ -1,6 +1,6 @@
 {
   "name": "Hellfire Rounds (Astartes)",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Bolt: Any Astartes",

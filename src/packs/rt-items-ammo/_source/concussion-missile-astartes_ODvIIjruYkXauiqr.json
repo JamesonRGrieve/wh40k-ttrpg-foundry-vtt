@@ -1,6 +1,6 @@
 {
   "name": "Concussion Missile (Astartes)",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Launcher: Astartes Missile Launcher",

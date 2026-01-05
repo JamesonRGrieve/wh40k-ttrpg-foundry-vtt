@@ -1,6 +1,6 @@
 {
   "name": "Flachette Shells",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Shotguns",

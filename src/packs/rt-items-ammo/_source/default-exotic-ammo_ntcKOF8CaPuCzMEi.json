@@ -1,6 +1,6 @@
 {
   "name": "! Default: Exotic Ammo",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Exotic Weapons",
