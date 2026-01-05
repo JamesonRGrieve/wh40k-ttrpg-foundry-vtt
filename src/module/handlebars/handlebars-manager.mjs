@@ -10,7 +10,7 @@ export class HandlebarManager {
     }
 
     static preloadHandlebarsTemplates() {
-        return loadTemplates([
+        return foundry.applications.handlebars.loadTemplates([
             // Actor partials.
             'systems/rogue-trader/templates/actor/panel/acquisitions-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs',

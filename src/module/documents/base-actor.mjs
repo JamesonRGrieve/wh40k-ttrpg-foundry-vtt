@@ -92,7 +92,9 @@ export class RogueTraderBaseActor extends Actor {
     }
 
     _computeMovement() {
-        let agility = this.characteristics.agility;
+        let agility = this.characteristics?.agility;
+        // Skip movement calculation if agility is not available (e.g., for starships)
+        if (!agility) return;
         let size = this.size;
         this.system.movement = {
             half: agility.bonus + size - 4,
