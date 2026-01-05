@@ -26,7 +26,17 @@ export class AcolyteSheet extends ActorContainerSheet {
         context.effects = this.actor.getEmbeddedCollection('ActiveEffect').contents;
         const skills = Object.entries(this.actor.skills ?? {});
         const visibleSkills = skills.filter(([, data]) => !data.hidden);
-        visibleSkills.sort((a, b) => a[1].label.localeCompare(b[1].label));
+        const getSkillLabel = (key, data) => {
+            if (data?.label) return String(data.label);
+            if (data?.name) return String(data.name);
+            if (key) return String(key);
+            return '';
+        };
+        visibleSkills.sort((a, b) => {
+            const labelA = getSkillLabel(a[0], a[1]);
+            const labelB = getSkillLabel(b[0], b[1]);
+            return labelA.localeCompare(labelB);
+        });
         const trainingLevel = (skill) => {
             if (skill.plus20) return 'plus20';
             if (skill.plus10) return 'plus10';
