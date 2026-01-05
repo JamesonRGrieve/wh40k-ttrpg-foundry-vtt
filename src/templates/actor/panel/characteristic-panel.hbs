@@ -14,9 +14,15 @@
                     data-characteristic="{{name}}"
                     title="{{this.label}}"
                 >{{this.short}}</button>
-                <div class="rt-char-mod-value">{{this.bonus}}</div>
-                <div class="rt-char-mod-label">Mod</div>
-                <div class="rt-char-total-small">{{this.total}}</div>
+                <div class="rt-char-mod-value" title="Current total">{{this.total}}</div>
+                <input
+                    class="rt-char-total-input"
+                    type="number"
+                    name="system.characteristics.{{name}}.modifier"
+                    data-dtype="Number"
+                    value="{{this.modifier}}"
+                    title="Adjust modifier"
+                />
             </div>
             {{/unless}}
         {{/each}}
@@ -65,7 +71,7 @@
                     <span class="display">{{this.total}}</span>
                 </div>
                 <div class="dh-chartable__cell">
-                    <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select">
+                    <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select" data-dtype="Number">
                         <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>
                         <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
                         <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
