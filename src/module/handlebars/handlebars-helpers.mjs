@@ -278,7 +278,7 @@ export function registerHandlebarsHelpers() {
 
     /**
      * Get insanity degree from insanity points (0-100)
-     * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) 0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
+     * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) +0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
      */
     Handlebars.registerHelper('insanityDegree', function(insanity) {
         const points = Number(insanity) || 0;
