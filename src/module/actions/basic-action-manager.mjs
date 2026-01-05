@@ -13,13 +13,18 @@ export class BasicActionManager {
 
     initializeHooks() {
         // Add show/hide support for chat messages
-        Hooks.on('renderChatMessage', async (message, html, data) => {
-            game.rt.log('renderChatMessage', { message, html, data });
-            html.find('.roll-control__hide-control').click(async (ev) => await this._toggleExpandChatMessage(ev));
-            html.find('.roll-control__refund').click(async (ev) => await this._refundResources(ev));
-            html.find('.roll-control__fate-reroll').click(async (ev) => await this._fateReroll(ev));
-            html.find('.roll-control__assign-damage').click(async (ev) => await this._assignDamage(ev));
-            html.find('.roll-control__apply-damage').click(async (ev) => await this._applyDamage(ev));
+        Hooks.on('renderChatMessageHTML', async (message, html, context) => {
+            game.rt.log('renderChatMessageHTML', { message, html, context });
+            html.querySelectorAll('.roll-control__hide-control').forEach(el => 
+                el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)));
+            html.querySelectorAll('.roll-control__refund').forEach(el => 
+                el.addEventListener('click', async (ev) => await this._refundResources(ev)));
+            html.querySelectorAll('.roll-control__fate-reroll').forEach(el => 
+                el.addEventListener('click', async (ev) => await this._fateReroll(ev)));
+            html.querySelectorAll('.roll-control__assign-damage').forEach(el => 
+                el.addEventListener('click', async (ev) => await this._assignDamage(ev)));
+            html.querySelectorAll('.roll-control__apply-damage').forEach(el => 
+                el.addEventListener('click', async (ev) => await this._applyDamage(ev)));
         });
 
         // Initialize Scene Control Buttons
@@ -42,16 +47,22 @@ export class BasicActionManager {
     async _toggleExpandChatMessage(event) {
         game.rt.log('roll-control-toggle');
         event.preventDefault();
-        const displayToggle = $(event.currentTarget);
-        $('span', displayToggle).toggleClass('active');
-        const target = displayToggle.data('toggle');
-        $('#' + target).toggle();
+        const displayToggle = event.currentTarget;
+        const span = displayToggle.querySelector('span');
+        if (span) {
+            span.classList.toggle('active');
+        }
+        const target = displayToggle.dataset.toggle;
+        const targetEl = document.getElementById(target);
+        if (targetEl) {
+            targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
+        }
     }
 
     async _refundResources(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const rollId = div.data('rollId');
+        const div = event.currentTarget;
+        const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
@@ -73,8 +84,8 @@ export class BasicActionManager {
 
     async _fateReroll(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const rollId = div.data('rollId');
+        const div = event.currentTarget;
+        const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
@@ -109,13 +120,13 @@ export class BasicActionManager {
 
     async _assignDamage(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
+        const div = event.currentTarget;
 
-        const location = div.data('location');
-        const totalDamage = div.data('totalDamage');
-        const totalPenetration = div.data('totalPenetration');
-        const totalFatigue = div.data('totalFatigue');
-        const damageType = div.data('damageType');
+        const location = div.dataset.location;
+        const totalDamage = div.dataset.totalDamage;
+        const totalPenetration = div.dataset.totalPenetration;
+        const totalFatigue = div.dataset.totalFatigue;
+        const damageType = div.dataset.damageType;
 
         const hitData = new Hit();
         hitData.location = location;
@@ -124,7 +135,7 @@ export class BasicActionManager {
         hitData.totalFatigue = totalFatigue;
         hitData.damageType = damageType;
 
-        const targetUuid = div.data('targetUuid');
+        const targetUuid = div.dataset.targetUuid;
 
         let targetActor;
         if (targetUuid) {
@@ -150,15 +161,15 @@ export class BasicActionManager {
 
     async _applyDamage(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
+        const div = event.currentTarget;
         console.log(div);
-        const targetUuid = div.data('uuid');
-        const damageType = div.data('type');
-        const ignoreArmour = div.data('ignoreArmour');
-        const location = div.data('location');
-        const damage = div.data('damage');
-        const penetration = div.data('penetration');
-        const fatigue = div.data('fatigue');
+        const targetUuid = div.dataset.uuid;
+        const damageType = div.dataset.type;
+        const ignoreArmour = div.dataset.ignoreArmour;
+        const location = div.dataset.location;
+        const damage = div.dataset.damage;
+        const penetration = div.dataset.penetration;
+        const fatigue = div.dataset.fatigue;
 
         const actor = (await fromUuid(targetUuid)).actor;
         if (!actor) {
@@ -166,7 +177,7 @@ export class BasicActionManager {
             return;
         }
         for(const field of [damage, penetration, fatigue]) {
-            if(field && !Number.isInteger(field)) {
+            if(field && isNaN(parseInt(field))) {
                 ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
