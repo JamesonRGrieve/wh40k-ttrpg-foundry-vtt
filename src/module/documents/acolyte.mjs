@@ -520,11 +520,18 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             characteristic.itemModifier = itemMod;
             characteristic.totalModifier = originPathMod + itemMod;
             characteristic.total = characteristic.base + characteristic.advance * 5 + characteristic.modifier + originPathMod + itemMod;
-            characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
+            
+            // Calculate base modifier (tens digit of total)
+            const baseModifier = Math.floor(characteristic.total / 10);
+            // Unnatural multiplies only the modifier, not added to it
+            // unnatural value of 0 means no multiplier, 2 means x2, 3 means x3, 4 means x4
+            const unnaturalMultiplier = characteristic.unnatural || 0;
+            characteristic.bonus = unnaturalMultiplier > 0 ? baseModifier * unnaturalMultiplier : baseModifier;
 
             if (this.fatigue.value > characteristic.bonus) {
                 characteristic.total = Math.ceil(characteristic.total / 2);
-                characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
+                const fatigueBaseModifier = Math.floor(characteristic.total / 10);
+                characteristic.bonus = unnaturalMultiplier > 0 ? fatigueBaseModifier * unnaturalMultiplier : fatigueBaseModifier;
             }
         }
 
