@@ -24,15 +24,17 @@ export class BasicActionManager {
 
         // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls) => {
-            const bar = controls.find((c) => c.name === 'token');
-            bar.tools.push({
+            const bar = controls.token;
+            if (!bar) return;
+            bar.tools.assignDamage = {
                 name: 'Assign Damage',
                 title: 'Assign Damage',
                 icon: 'fas fa-shield',
                 visible: true,
                 onClick: async () => DHBasicActionManager.assignDamageTool(),
                 button: true,
-            });
+                order: Object.keys(bar.tools).length,
+            };
         });
     }
 
