@@ -90,10 +90,10 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
                             const selectedValue = dropdownElement[0].value.trim();
                             const customValue = customElement.length > 0 ? customElement[0].value.trim() : '';
                             
-                            // Prioritize custom input if provided, otherwise use selected value
-                            if (customValue) {
+                            // Prioritize custom input if provided, otherwise use selected value (if not empty)
+                            if (customValue !== '') {
                                 speciality = customValue;
-                            } else if (selectedValue) {
+                            } else if (selectedValue !== '') {
                                 speciality = selectedValue;
                             }
                         } else {
@@ -101,7 +101,7 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
                             speciality = dropdownElement[0].value.trim();
                         }
                         
-                        if (!speciality) {
+                        if (!speciality || speciality === '') {
                             ui.notifications.warn('Please enter or select a specialization name');
                             return;
                         }
