@@ -3,6 +3,8 @@
     <h1 class="dh-panel__header">Characteristics</h1>
     <div class="rt-char-row-container">
         {{#each actor.characteristics as |characteristic name|}}
+            {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}
+            {{#unless (eq name "influence")}}
             <div class="rt-char-box {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
                 <button
                     class="rt-char-name roll-characteristic actor-drag"
@@ -12,26 +14,28 @@
                     data-characteristic="{{name}}"
                     title="{{this.label}}"
                 >{{this.short}}</button>
-                <div class="rt-char-value">{{this.total}}</div>
-                <div class="rt-char-bonus-label">Bonus</div>
-                <div class="rt-char-bonus-value">{{this.bonus}}</div>
+                <div class="rt-char-mod-value">{{this.bonus}}</div>
+                <div class="rt-char-mod-label">Mod</div>
+                <div class="rt-char-total-small">{{this.total}}</div>
             </div>
+            {{/unless}}
         {{/each}}
     </div>
     
     {{!-- Advanced Details (Collapsible) --}}
     <details class="rt-char-details">
         <summary class="rt-char-details-toggle">Advanced Characteristics</summary>
-        <div class="dh-chartable">
+        <div class="dh-chartable rt-chartable-advanced">
             <div class="dh-chartable__cell--noborder">&nbsp;</div>
-            <div class="dh-chartable__cell--left">Initial</div>
+            <div class="dh-chartable__cell--left">Base</div>
             <div class="dh-chartable__cell--left">Advances</div>
-            <div class="dh-chartable__cell--left">Modifier</div>
             <div class="dh-chartable__cell--left">Origin</div>
             <div class="dh-chartable__cell--left">Current</div>
             <div class="dh-chartable__cell--left">Unnatural</div>
-            <div class="dh-chartable__cell--left">Bonus</div>
+            <div class="dh-chartable__cell--left">Mod</div>
             {{#each actor.characteristics as |characteristic name|}}
+                {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}
+                {{#unless (eq name "influence")}}
                 <div class="dh-chartable__cell--head {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
                     <button
                         class="roll-characteristic actor-drag"
@@ -54,9 +58,6 @@
                         {{option "5" this.advance "Expert"}}
                     </select>
                 </div>
-                <div class="dh-chartable__cell">
-                    <input class="dh-field__input" name="system.characteristics.{{name}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}" />
-                </div>
                 <div class="dh-chartable__cell {{#if (gt this.originPathModifier 0)}}rt-origin-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-origin-penalty{{/if}}" title="From Origin Path">
                     <span class="display">{{#if (gt this.originPathModifier 0)}}+{{/if}}{{this.originPathModifier}}</span>
                 </div>
@@ -64,11 +65,17 @@
                     <span class="display">{{this.total}}</span>
                 </div>
                 <div class="dh-chartable__cell">
-                    <input class="dh-field__input" name="system.characteristics.{{name}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}" />
+                    <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select">
+                        <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>
+                        <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
+                        <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
+                        <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
+                    </select>
                 </div>
-                <div class="dh-chartable__cell">
+                <div class="dh-chartable__cell dh-chartable__cell--mod">
                     <span class="display">{{this.bonus}}</span>
                 </div>
+                {{/unless}}
             {{/each}}
         </div>
     </details>

@@ -82,7 +82,6 @@
         <section class="dh-body rt-body">
             {{!-- OVERVIEW TAB --}}
             <div class="tab rt-tab rt-dashboard" data-group="primary" data-tab="overview">
-                {{> systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/movement-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs}}
                 {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
@@ -101,14 +100,18 @@
 
             {{!-- ABILITIES TAB --}}
             <div class="tab rt-tab rt-abilities-layout" data-group="primary" data-tab="abilities">
-                <div class="rt-left-column">
+                <div class="rt-abilities-top">
                     {{> systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs}}
-                    {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
-                    {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
                 </div>
-                <div class="rt-right-column">
-                    {{> systems/rogue-trader/templates/actor/panel/skills-panel.hbs}}
-                    {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+                <div class="rt-abilities-bottom">
+                    <div class="rt-abilities-left">
+                        {{> systems/rogue-trader/templates/actor/panel/skills-panel.hbs}}
+                        {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+                    </div>
+                    <div class="rt-abilities-right">
+                        {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
+                        {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+                    </div>
                 </div>
             </div>
 
