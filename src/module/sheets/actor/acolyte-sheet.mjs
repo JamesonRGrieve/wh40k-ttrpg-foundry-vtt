@@ -113,6 +113,19 @@ export class AcolyteSheet extends ActorContainerSheet {
     activateListeners(html) {
         super.activateListeners(html);
 
+        const charDetails = html.find('.rt-char-details');
+        if (charDetails.length) {
+            if (this._charDetailsOpen) {
+                charDetails.prop('open', true);
+            }
+            const persistCharDetailsState = () => {
+                this._charDetailsOpen = charDetails.prop('open');
+            };
+            charDetails.on('toggle', persistCharDetailsState);
+            const charInputs = charDetails.find('input[name^="system.characteristics"], select[name^="system.characteristics"]');
+            charInputs.on('change', persistCharDetailsState);
+        }
+
         html.find('.roll-characteristic').click(async (ev) => await this._prepareRollCharacteristic(ev));
         html.find('.roll-skill').click(async (ev) => await this._prepareRollSkill(ev));
         html.find('.rt-skill-training-select').change(async (ev) => await this._onSkillTrainingChange(ev));
