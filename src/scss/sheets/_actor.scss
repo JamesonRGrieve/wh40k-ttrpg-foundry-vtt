@@ -38,14 +38,25 @@
     
     .dh-header__info {
         display: grid;
-        grid-template-columns: auto minmax(260px, 1fr) minmax(320px, 1fr);
-        gap: 16px;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+        gap: 12px;
         align-items: stretch;
     }
 }
 
 .rt-portrait-container {
-    grid-row: span 2;
+    grid-row: span 1;
+}
+
+.rt-header-info {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.rt-quick-status-gothic {
+    grid-column: 1 / -1;
+    grid-row: 2;
 }
 
 .rt-portrait {
@@ -90,6 +101,334 @@
     padding: 2px 5px;
     min-width: 200px;
 }
+
+// ============================================
+// GOTHIC QUICK STATUS DISPLAY
+// ============================================
+
+.rt-quick-status-gothic {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(20, 15, 10, 0.95), rgba(35, 25, 18, 0.9));
+    border: 2px solid #4a3728;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rt-status-panel {
+    flex: 1;
+    min-width: 100px;
+    background: linear-gradient(180deg, rgba(50, 40, 30, 0.9), rgba(30, 22, 15, 0.95));
+    border: 1px solid rgba(139, 90, 43, 0.6);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    }
+}
+
+.rt-status-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: linear-gradient(180deg, rgba(74, 55, 40, 0.8), rgba(50, 35, 25, 0.9));
+    border-bottom: 1px solid rgba(139, 90, 43, 0.5);
+}
+
+.rt-status-icon {
+    font-size: 12px;
+    color: #DAA520;
+    text-shadow: 0 0 4px rgba(218, 165, 32, 0.5);
+}
+
+.rt-status-title {
+    font-size: 0.65em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #d4c4a8;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.rt-status-body {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.rt-gothic-input {
+    width: 36px;
+    height: 28px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(139, 90, 43, 0.6);
+    border-radius: 4px;
+    color: #f5e6c8;
+    font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    
+    &:focus {
+        outline: none;
+        border-color: #DAA520;
+        box-shadow: 0 0 6px rgba(218, 165, 32, 0.4);
+    }
+    
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    -moz-appearance: textfield;
+}
+
+.rt-arrow-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 14px;
+    background: linear-gradient(180deg, rgba(74, 55, 40, 0.8), rgba(50, 35, 25, 0.9));
+    border: 1px solid rgba(139, 90, 43, 0.5);
+    border-radius: 3px;
+    color: #DAA520;
+    font-size: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+    line-height: 1;
+    
+    &:hover {
+        background: linear-gradient(180deg, rgba(139, 90, 43, 0.8), rgba(74, 55, 40, 0.9));
+        color: #FFD700;
+        box-shadow: 0 0 6px rgba(218, 165, 32, 0.4);
+    }
+    
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.rt-arrow-up {
+    color: #4CAF50;
+    &:hover { color: #81C784; }
+}
+
+.rt-arrow-down {
+    color: #E57373;
+    &:hover { color: #EF5350; }
+}
+
+// Wounds Display
+.rt-wounds-panel {
+    .rt-status-header { border-left: 3px solid #8B0000; }
+}
+
+.rt-wounds-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rt-wounds-current {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.rt-wounds-separator {
+    color: #a89070;
+    font-size: 0.8em;
+    text-transform: lowercase;
+}
+
+.rt-max-wounds {
+    width: 32px;
+    opacity: 0.8;
+}
+
+// Critical Damage Display
+.rt-crit-panel {
+    .rt-status-header { border-left: 3px solid #FF4444; }
+}
+
+.rt-crit-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rt-crit-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+    min-width: 20px;
+    text-align: center;
+}
+
+.rt-crit-separator {
+    color: #a89070;
+    font-size: 0.9em;
+}
+
+.rt-crit-max {
+    color: #888;
+    font-size: 0.9em;
+}
+
+// Fate Display
+.rt-fate-panel {
+    .rt-status-header { border-left: 3px solid #DAA520; }
+}
+
+.rt-fate-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    
+    .rt-gothic-input {
+        width: 28px;
+    }
+}
+
+.rt-fate-separator {
+    color: #a89070;
+    font-size: 0.9em;
+}
+
+// Corruption Display
+.rt-corruption-panel {
+    .rt-status-header { border-left: 3px solid #2F4F4F; }
+}
+
+.rt-corruption-display,
+.rt-insanity-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.rt-points-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rt-points-input {
+    width: 40px;
+}
+
+.rt-degree-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.rt-degree-label {
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #d4c4a8;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.rt-degree-modifier {
+    font-size: 0.65em;
+    color: #a89070;
+}
+
+// Insanity Display
+.rt-insanity-panel {
+    .rt-status-header { border-left: 3px solid #4B0082; }
+}
+
+// Corruption Degree Classes
+.degree-pure {
+    .rt-degree-label { color: #90EE90; }
+}
+
+.degree-tainted {
+    .rt-degree-label { color: #98FB98; }
+}
+
+.degree-soiled {
+    .rt-degree-label { color: #FFFF00; }
+    .rt-degree-modifier { color: #FFD700; }
+}
+
+.degree-debased {
+    .rt-degree-label { color: #FFA500; }
+    .rt-degree-modifier { color: #FF8C00; }
+}
+
+.degree-profane {
+    .rt-degree-label { color: #FF6347; }
+    .rt-degree-modifier { color: #FF4500; }
+}
+
+.degree-damned {
+    .rt-degree-label { color: #8B0000; text-shadow: 0 0 8px rgba(139, 0, 0, 0.8); }
+    .rt-degree-modifier { color: #DC143C; }
+    
+    &.rt-status-panel,
+    &.rt-degree-field {
+        background: linear-gradient(180deg, rgba(60, 20, 20, 0.9), rgba(40, 10, 10, 0.95));
+    }
+}
+
+// Insanity Degree Classes
+.degree-stable {
+    .rt-degree-label { color: #87CEEB; }
+}
+
+.degree-unsettled {
+    .rt-degree-label { color: #90EE90; }
+    .rt-degree-modifier { color: #98FB98; }
+}
+
+.degree-disturbed {
+    .rt-degree-label { color: #FFFF00; }
+}
+
+.degree-unhinged {
+    .rt-degree-label { color: #FFA500; }
+    .rt-degree-modifier { color: #FF8C00; }
+}
+
+.degree-deranged {
+    .rt-degree-label { color: #FF6347; }
+    .rt-degree-modifier { color: #FF4500; }
+}
+
+.degree-terminally-insane {
+    .rt-degree-label { color: #9400D3; text-shadow: 0 0 8px rgba(148, 0, 211, 0.8); }
+    .rt-degree-modifier { color: #BA55D3; }
+    
+    &.rt-status-panel,
+    &.rt-degree-field {
+        background: linear-gradient(180deg, rgba(40, 20, 60, 0.9), rgba(25, 10, 40, 0.95));
+    }
+}
+
+// ============================================
+// END GOTHIC QUICK STATUS DISPLAY
+// ============================================
 
 .rt-quick-stats {
     display: grid;
@@ -1020,5 +1359,212 @@
         .rt-abilities-right {
             width: 100%;
         }
+    }
+}
+
+// ============================================
+// TRACKER PANEL STYLES (Wounds, Corruption, Insanity, Fatigue)
+// ============================================
+
+.rt-wounds-tracker,
+.rt-corruption-tracker,
+.rt-insanity-tracker,
+.rt-fatigue-tracker {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    border: 1px solid rgba(74, 55, 40, 0.15);
+}
+
+.rt-tracker-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.rt-tracker-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rt-tracker-input-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rt-tracker-input {
+    flex: 1;
+    text-align: center;
+    max-width: 60px;
+}
+
+.rt-tracker-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(180deg, rgba(74, 55, 40, 0.1), rgba(74, 55, 40, 0.2));
+    border: 1px solid rgba(74, 55, 40, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #4a3728;
+    transition: all 0.15s ease;
+    
+    &:hover {
+        background: linear-gradient(180deg, rgba(74, 55, 40, 0.2), rgba(74, 55, 40, 0.3));
+        border-color: rgba(74, 55, 40, 0.5);
+    }
+    
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.rt-tracker-up {
+    color: #4CAF50;
+    &:hover { background: rgba(76, 175, 80, 0.2); }
+}
+
+.rt-tracker-down {
+    color: #f44336;
+    &:hover { background: rgba(244, 67, 54, 0.2); }
+}
+
+// Degree Field Styling
+.rt-degree-field {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.rt-degree-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.rt-degree-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.rt-degree-mod {
+    font-size: 0.85em;
+    color: #666;
+}
+
+// Critical Damage Bar
+.rt-crit-tracker {
+    grid-column: span 2;
+}
+
+.rt-crit-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.rt-crit-pip {
+    flex: 1;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(139, 0, 0, 0.3);
+    border-radius: 2px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    
+    &:hover {
+        background: rgba(139, 0, 0, 0.3);
+    }
+}
+
+.rt-crit-pip--filled {
+    background: linear-gradient(180deg, #8B0000, #5a0000);
+    border-color: #8B0000;
+    box-shadow: 0 0 4px rgba(139, 0, 0, 0.5);
+}
+
+.rt-crit-input {
+    max-width: 50px;
+}
+
+// ============================================
+// FATIGUE STYLES
+// ============================================
+
+.rt-fatigue-max {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4a3728;
+}
+
+.rt-fatigue-warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.2));
+    border: 1px solid rgba(255, 152, 0, 0.5);
+    border-radius: 6px;
+    border-left: 4px solid #FF9800;
+}
+
+.rt-fatigue-critical {
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(183, 28, 28, 0.2));
+    border-color: rgba(183, 28, 28, 0.5);
+    border-left-color: #B71C1C;
+}
+
+.rt-warning-icon {
+    font-size: 1.2em;
+}
+
+.rt-warning-text {
+    font-weight: 600;
+    color: #5d4037;
+}
+
+.rt-fatigue-critical .rt-warning-text {
+    color: #B71C1C;
+}
+
+.rt-fatigue-info {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.rt-info-header {
+    font-weight: 600;
+    color: #4a3728;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.rt-fatigue-effects-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.85em;
+    color: #666;
+    
+    li {
+        margin-bottom: 3px;
     }
 }

@@ -127,6 +127,15 @@ export function registerHandlebarsHelpers() {
         return Number.parseInt(value) + 1;
     });
 
+    /**
+     * Create an array of numbers for iteration
+     * Usage: {{#each (array 1 2 3 4 5)}}
+     */
+    Handlebars.registerHelper('array', function(...args) {
+        // Remove the options object that Handlebars adds
+        return args.slice(0, -1);
+    });
+
     Handlebars.registerHelper('colorCode', function(positive, negative) {
         // Positive Precedence
         if (positive) {
@@ -238,5 +247,92 @@ export function registerHandlebarsHelpers() {
             default:
                 return game.i18n.localize('DAMAGE_TYPE.IMPACT');
         }
+    });
+
+    /**
+     * Get corruption degree from corruption points (0-100)
+     * PURE (0), TAINTED (1-30) +0, SOILED (31-60) -10, DEBASED (61-90) -20, PROFANE (91-99) -30, DAMNED (100)
+     */
+    Handlebars.registerHelper('corruptionDegree', function(corruption) {
+        const points = Number(corruption) || 0;
+        if (points === 0) return 'PURE';
+        if (points <= 30) return 'TAINTED';
+        if (points <= 60) return 'SOILED';
+        if (points <= 90) return 'DEBASED';
+        if (points <= 99) return 'PROFANE';
+        return 'DAMNED';
+    });
+
+    /**
+     * Get corruption modifier for checks
+     */
+    Handlebars.registerHelper('corruptionModifier', function(corruption) {
+        const points = Number(corruption) || 0;
+        if (points === 0) return '+0';
+        if (points <= 30) return '+0';
+        if (points <= 60) return '-10';
+        if (points <= 90) return '-20';
+        if (points <= 99) return '-30';
+        return 'DEAD';
+    });
+
+    /**
+     * Get insanity degree from insanity points (0-100)
+     * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) +0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
+     */
+    Handlebars.registerHelper('insanityDegree', function(insanity) {
+        const points = Number(insanity) || 0;
+        if (points <= 9) return 'STABLE';
+        if (points <= 39) return 'UNSETTLED';
+        if (points <= 59) return 'DISTURBED';
+        if (points <= 79) return 'UNHINGED';
+        if (points <= 99) return 'DERANGED';
+        return 'TERMINALLY INSANE';
+    });
+
+    /**
+     * Get insanity modifier for checks
+     */
+    Handlebars.registerHelper('insanityModifier', function(insanity) {
+        const points = Number(insanity) || 0;
+        if (points <= 9) return '+0';
+        if (points <= 39) return '+10';
+        if (points <= 59) return '+0';
+        if (points <= 79) return '-10';
+        if (points <= 99) return '-20';
+        return 'DEAD';
+    });
+
+    /**
+     * Clamp critical damage to max 10
+     */
+    Handlebars.registerHelper('clampCritical', function(value) {
+        return Math.min(Math.max(Number(value) || 0, 0), 10);
+    });
+
+    /**
+     * Get CSS class for corruption degree
+     */
+    Handlebars.registerHelper('corruptionDegreeClass', function(corruption) {
+        const points = Number(corruption) || 0;
+        if (points === 0) return 'degree-pure';
+        if (points <= 30) return 'degree-tainted';
+        if (points <= 60) return 'degree-soiled';
+        if (points <= 90) return 'degree-debased';
+        if (points <= 99) return 'degree-profane';
+        return 'degree-damned';
+    });
+
+    /**
+     * Get CSS class for insanity degree
+     */
+    Handlebars.registerHelper('insanityDegreeClass', function(insanity) {
+        const points = Number(insanity) || 0;
+        if (points <= 9) return 'degree-stable';
+        if (points <= 39) return 'degree-unsettled';
+        if (points <= 59) return 'degree-disturbed';
+        if (points <= 79) return 'degree-unhinged';
+        if (points <= 99) return 'degree-deranged';
+        return 'degree-terminally-insane';
     });
 }
