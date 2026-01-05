@@ -1,0 +1,116 @@
+/* Compendium Item Styles */
+.compendium-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  gap: 8px;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .item-image {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  
+  .item-details {
+    flex: 1;
+    min-width: 0;
+    
+    .item-name {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #4a0000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .item-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 11px;
+      color: #666;
+      
+      .stat {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 1px 4px;
+        border-radius: 2px;
+        
+        &.damage {
+          color: #8b0000;
+        }
+        
+        &.pen {
+          color: #4a0000;
+        }
+        
+        &.discipline {
+          color: #4b0082;
+        }
+        
+        &.cost {
+          color: #006400;
+        }
+      }
+    }
+    
+    .item-source {
+      display: block;
+      font-size: 10px;
+      color: #888;
+      font-style: italic;
+    }
+    
+    .item-requirements {
+      display: block;
+      font-size: 10px;
+      color: #555;
+    }
+  }
+  
+  .item-type,
+  .item-availability,
+  .item-action {
+    flex: 0 0 auto;
+    
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 10px;
+      border-radius: 3px;
+      background: #4a0000;
+      color: white;
+      text-transform: uppercase;
+      
+      &.availability {
+        background: #2f4f4f;
+      }
+      
+      &.action {
+        background: #4b0082;
+      }
+    }
+  }
+}
+
+/* Compendium list improvements */
+.compendium .directory-list {
+  .compendium-item {
+    cursor: pointer;
+  }
+}
+
+/* Pack folder colors in sidebar */
+.compendium-sidebar .directory-list .folder {
+  .folder-header {
+    border-left: 3px solid var(--folder-color, #8b0000);
+  }
+}

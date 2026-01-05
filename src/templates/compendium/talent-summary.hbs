@@ -1,0 +1,20 @@
+<li class="compendium-item talent flexrow" data-document-id="{{item._id}}" draggable="true">
+    <img class="item-image" src="{{item.img}}" alt="{{item.name}}" />
+    <div class="item-details">
+        <h4 class="item-name">{{item.name}}</h4>
+        <div class="item-stats">
+            {{#if item.system.category}}
+            <span class="stat category">{{item.system.category}}</span>
+            {{/if}}
+            {{#if item.system.tier}}
+            <span class="stat tier">Tier {{item.system.tier}}</span>
+            {{/if}}
+        </div>
+        {{#if item.system.requirements}}
+        <span class="item-requirements">{{item.system.requirements}}</span>
+        {{/if}}
+        {{#if item.system.source}}
+        <span class="item-source">{{item.system.source}}</span>
+        {{/if}}
+    </div>
+</li>

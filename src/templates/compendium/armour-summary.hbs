@@ -1,0 +1,29 @@
+<li class="compendium-item armour flexrow" data-document-id="{{item._id}}" draggable="true">
+    <img class="item-image" src="{{item.img}}" alt="{{item.name}}" />
+    <div class="item-details">
+        <h4 class="item-name">{{item.name}}</h4>
+        <div class="item-stats">
+            {{#if item.system.type}}
+            <span class="stat type">{{item.system.type}}</span>
+            {{/if}}
+            <span class="stat ap">
+                {{#if item.system.armourPoints}}
+                AP: {{#if item.system.armourPoints.head}}H:{{item.system.armourPoints.head}}{{/if}}
+                {{#if item.system.armourPoints.body}}B:{{item.system.armourPoints.body}}{{/if}}
+                {{#if item.system.armourPoints.leftArm}}LA:{{item.system.armourPoints.leftArm}}{{/if}}
+                {{#if item.system.armourPoints.rightArm}}RA:{{item.system.armourPoints.rightArm}}{{/if}}
+                {{#if item.system.armourPoints.leftLeg}}LL:{{item.system.armourPoints.leftLeg}}{{/if}}
+                {{#if item.system.armourPoints.rightLeg}}RL:{{item.system.armourPoints.rightLeg}}{{/if}}
+                {{/if}}
+            </span>
+        </div>
+        {{#if item.system.source}}
+        <span class="item-source">{{item.system.source}}</span>
+        {{/if}}
+    </div>
+    <div class="item-availability">
+        {{#if item.system.availability}}
+        <span class="tag availability">{{item.system.availability}}</span>
+        {{/if}}
+    </div>
+</li>

@@ -1,0 +1,12 @@
+<li class="compendium-item item flexrow" data-document-id="{{item._id}}" draggable="true">
+    <img class="item-image" src="{{item.img}}" alt="{{item.name}}" />
+    <div class="item-details">
+        <h4 class="item-name">{{item.name}}</h4>
+        {{#if item.system.source}}
+        <span class="item-source">{{item.system.source}}</span>
+        {{/if}}
+    </div>
+    <div class="item-type">
+        <span class="tag">{{localize (concat "TYPES.Item." item.type)}}</span>
+    </div>
+</li>
