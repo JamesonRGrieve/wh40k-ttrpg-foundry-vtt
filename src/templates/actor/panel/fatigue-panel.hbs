@@ -1,11 +1,44 @@
 <div class="dh-panel spacer dh-grid-col-2 dh-grid-row-1">
     <h1 class="dh-panel__header">Fatigue</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Max</span>
-        <span class="dh-field__span">{{system.fatigue.max}}</span>
+    
+    {{!-- Fatigue Tracker Section --}}
+    <div class="rt-fatigue-tracker">
+        <div class="rt-tracker-row">
+            <div class="rt-tracker-field">
+                <span class="dh-field__header">Fatigue Threshold</span>
+                <span class="dh-field__span rt-fatigue-max">{{system.fatigue.max}}</span>
+            </div>
+            <div class="rt-tracker-field">
+                <span class="dh-field__header">Current Fatigue</span>
+                <div class="rt-tracker-input-row">
+                    <button type="button" class="rt-tracker-btn rt-tracker-down" data-field="system.fatigue.value" data-action="decrement" data-min="0">−</button>
+                    <input type="number" data-dtype="Number" class="dh-field__input rt-tracker-input" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" />
+                    <button type="button" class="rt-tracker-btn rt-tracker-up" data-field="system.fatigue.value" data-action="increment">+</button>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Fatigue Warning --}}
+        {{#if (gt system.fatigue.value 0)}}
+        <div class="rt-fatigue-warning {{#if (gte system.fatigue.value system.fatigue.max)}}rt-fatigue-critical{{/if}}">
+            {{#if (gte system.fatigue.value system.fatigue.max)}}
+                <span class="rt-warning-icon">⚠</span>
+                <span class="rt-warning-text">EXHAUSTED! All characteristics halved!</span>
+            {{else}}
+                <span class="rt-warning-icon">⚡</span>
+                <span class="rt-warning-text">Fatigue Level: {{system.fatigue.value}}/{{system.fatigue.max}}</span>
+            {{/if}}
+        </div>
+        {{/if}}
     </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Value</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.fatigue.value" value="{{system.fatigue.value}}" />
+    
+    {{!-- Fatigue Effects Info --}}
+    <div class="rt-fatigue-info">
+        <div class="rt-info-header">Fatigue Effects</div>
+        <ul class="rt-fatigue-effects-list">
+            <li>When Fatigue ≥ Threshold (TB+WPB), all characteristics are halved</li>
+            <li>Each point of Fatigue represents exhaustion, strain, or weariness</li>
+            <li>Fatigue is typically recovered through rest</li>
+        </ul>
     </div>
 </div>

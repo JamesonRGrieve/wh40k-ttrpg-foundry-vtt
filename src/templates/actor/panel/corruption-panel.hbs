@@ -1,10 +1,27 @@
 <div class="dh-panel dh-grid-col-2 dh-grid-row-1">
     <h1 class="dh-panel__header">Corruption</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Corruption Points</span>
-        <input class="dh-field__input" data-dtype="Number" type="number" name="system.corruption"
-               value="{{actor.corruption}}" />
+    
+    {{!-- Corruption Points and Degree Display --}}
+    <div class="rt-corruption-tracker">
+        <div class="rt-tracker-row">
+            <div class="rt-tracker-field">
+                <span class="dh-field__header">Corruption Points</span>
+                <div class="rt-tracker-input-row">
+                    <button type="button" class="rt-tracker-btn rt-tracker-down" data-field="system.corruption" data-action="decrement" data-min="0">−</button>
+                    <input class="dh-field__input rt-tracker-input" data-dtype="Number" type="number" name="system.corruption" value="{{actor.corruption}}" min="0" max="100" />
+                    <button type="button" class="rt-tracker-btn rt-tracker-up" data-field="system.corruption" data-action="increment" data-max="100">+</button>
+                </div>
+            </div>
+            <div class="rt-tracker-field rt-degree-field {{corruptionDegreeClass system.corruption}}">
+                <span class="dh-field__header">Degree</span>
+                <div class="rt-degree-info">
+                    <span class="rt-degree-name">{{corruptionDegree system.corruption}}</span>
+                    <span class="rt-degree-mod">({{corruptionModifier system.corruption}} to checks)</span>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div class="dh-table--border dh-corruptiontable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Malignancies</div>

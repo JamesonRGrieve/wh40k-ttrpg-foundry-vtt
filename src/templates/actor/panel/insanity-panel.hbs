@@ -1,10 +1,27 @@
 <div class='dh-panel dh-grid-col-2 dh-grid-row-1'>
     <h1 class="dh-panel__header">Insanity</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Insanity Points</span>
-        <input class="dh-field__input" data-dtype="Number" type="number" name="system.insanity"
-               value="{{actor.insanity}}" />
+    
+    {{!-- Insanity Points and Degree Display --}}
+    <div class="rt-insanity-tracker">
+        <div class="rt-tracker-row">
+            <div class="rt-tracker-field">
+                <span class="dh-field__header">Insanity Points</span>
+                <div class="rt-tracker-input-row">
+                    <button type="button" class="rt-tracker-btn rt-tracker-down" data-field="system.insanity" data-action="decrement" data-min="0">−</button>
+                    <input class="dh-field__input rt-tracker-input" data-dtype="Number" type="number" name="system.insanity" value="{{actor.insanity}}" min="0" max="100" />
+                    <button type="button" class="rt-tracker-btn rt-tracker-up" data-field="system.insanity" data-action="increment" data-max="100">+</button>
+                </div>
+            </div>
+            <div class="rt-tracker-field rt-degree-field {{insanityDegreeClass system.insanity}}">
+                <span class="dh-field__header">Degree</span>
+                <div class="rt-degree-info">
+                    <span class="rt-degree-name">{{insanityDegree system.insanity}}</span>
+                    <span class="rt-degree-mod">({{insanityModifier system.insanity}} to checks)</span>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div class="dh-table--border dh-insanitytable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Mental Disorders</div>
