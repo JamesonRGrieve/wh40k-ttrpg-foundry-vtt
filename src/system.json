@@ -2,7 +2,7 @@
   "id": "rogue-trader",
   "title": "Rogue Trader",
   "description": "Dark Heresy 2e-derived Rogue Trader for Foundry VT.",
-  "version": "0.0.1",
+  "version": "1.8.1",
   "compatibility": {
     "minimum": 13,
     "verified": "13.351",
