@@ -15,7 +15,12 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Personal",
+      "Flyers",
+      "Space Craft"
+    ]
   },
   "effects": [],
   "flags": {},

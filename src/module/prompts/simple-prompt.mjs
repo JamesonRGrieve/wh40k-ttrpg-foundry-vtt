@@ -41,6 +41,29 @@ export async function prepareSimpleRoll(simpleSkillData) {
 }
 
 export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
+    // Try to get the skill from the compendium to get suggested specializations
+    const skillsCompendium = game.packs.get('rogue-trader.rt-items-skills');
+    let specializations = [];
+    
+    if (skillsCompendium) {
+        // Find the skill in the compendium by matching the label
+        const index = await skillsCompendium.getIndex();
+        const skillEntry = index.find(entry => 
+            entry.name.toLowerCase().includes(simpleSkillData.skill.label.toLowerCase()) ||
+            entry.name.toLowerCase().includes('(x)')
+        );
+        
+        if (skillEntry) {
+            const skillDoc = await skillsCompendium.getDocument(skillEntry._id);
+            if (skillDoc && skillDoc.system.specializations) {
+                specializations = skillDoc.system.specializations;
+            }
+        }
+    }
+    
+    // Add specializations to the data
+    simpleSkillData.specializations = specializations;
+    
     const html = await renderTemplate('systems/rogue-trader/templates/prompt/add-speciality-prompt.hbs', simpleSkillData);
     let dialog = new Dialog(
         {
@@ -51,7 +74,27 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
                     icon: "<i class='dh-material'>add</i>",
                     label: 'Add',
                     callback: async (dialogHtml) => {
-                        const speciality = dialogHtml.find('#speciality-name')[0].value;
+                        // Try to get from dropdown first (if specializations exist), otherwise from text input
+                        let speciality;
+                        const dropdownElement = dialogHtml.find('#speciality-name');
+                        const customElement = dialogHtml.find('#custom-speciality-name');
+                        
+                        if (dropdownElement.length > 0 && dropdownElement[0].tagName === 'SELECT') {
+                            // We have a dropdown with specializations
+                            const selectedValue = dropdownElement[0].value;
+                            const customValue = customElement.length > 0 ? customElement[0].value.trim() : '';
+                            
+                            // Use custom if provided, otherwise use selected
+                            speciality = customValue || selectedValue;
+                        } else {
+                            // Just a text input
+                            speciality = dropdownElement[0].value.trim();
+                        }
+                        
+                        if (!speciality || speciality === '') {
+                            ui.notifications.warn('Please enter or select a specialization name');
+                            return;
+                        }
                         await simpleSkillData.actor.addSpecialitySkill(simpleSkillData.skillName, speciality);
                     },
                 },
@@ -65,7 +108,7 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
             close: () => {},
         },
         {
-            width: 300,
+            width: 400,
         },
     );
     dialog.render(true);

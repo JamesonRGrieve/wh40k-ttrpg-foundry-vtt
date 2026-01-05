@@ -15,7 +15,13 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Surface",
+      "Stellar",
+      "Warp",
+      "Webway"
+    ]
   },
   "effects": [],
   "flags": {},

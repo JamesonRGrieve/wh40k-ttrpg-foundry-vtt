@@ -15,7 +15,12 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Surface",
+      "Aeronautica",
+      "Voidship"
+    ]
   },
   "effects": [],
   "flags": {},

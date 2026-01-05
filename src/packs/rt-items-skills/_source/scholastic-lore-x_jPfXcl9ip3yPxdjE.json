@@ -15,7 +15,25 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Archaic",
+      "Astromancy",
+      "Beasts",
+      "Bureaucracy",
+      "Chymistry",
+      "Cryptology",
+      "Heraldry",
+      "Imperial Warrants",
+      "Imperial Creed",
+      "Judgement",
+      "Legend",
+      "Navis Nobilite",
+      "Numerology",
+      "Occult",
+      "Philosophy",
+      "Tactica Imperialis"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -15,7 +15,27 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Mechanicus",
+      "Astartes",
+      "Codex Astartes",
+      "Archeotech",
+      "Black Library",
+      "Cults",
+      "Daemonology",
+      "Heresy",
+      "The Horus Heresy and Long War",
+      "Inquisition",
+      "Inquisitorial Ordos",
+      "Mutants",
+      "Navigators",
+      "Pirates",
+      "Psykers",
+      "The Warp",
+      "Webway",
+      "Xenos"
+    ]
   },
   "effects": [],
   "flags": {},

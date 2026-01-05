@@ -15,7 +15,14 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Rogue Trader",
+      "Mercenary Cant",
+      "Nobilite Encoding",
+      "Astropath",
+      "Underworld"
+    ]
   },
   "effects": [],
   "flags": {},

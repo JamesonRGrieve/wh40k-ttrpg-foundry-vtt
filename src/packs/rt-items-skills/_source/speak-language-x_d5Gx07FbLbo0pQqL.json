@@ -15,7 +15,15 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Eldar",
+      "Explorator Binary",
+      "High Gothic",
+      "Low Gothic",
+      "Techna-Lingua",
+      "Trader's Cant"
+    ]
   },
   "effects": [],
   "flags": {},
