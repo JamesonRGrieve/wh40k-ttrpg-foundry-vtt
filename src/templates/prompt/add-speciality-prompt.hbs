@@ -23,7 +23,7 @@
                     <span class="dh-field__span">Specialisation</span>
                     {{#if this.specializations}}
                         <select class="dh-field__input" id="speciality-name" style="width: 100%;">
-                            <option value="">-- Choose from list --</option>
+                            <option value="" disabled selected>-- Choose from list --</option>
                             {{#each this.specializations}}
                                 <option value="{{this}}">{{this}}</option>
                             {{/each}}
