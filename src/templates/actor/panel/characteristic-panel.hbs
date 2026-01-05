@@ -1,88 +1,54 @@
-{{!-- Simplified Characteristics Panel - Horizontal Layout --}}
-<div class="dh-panel rt-char-simplified">
+{{!-- Compact Characteristics Panel - Expandable Rows --}}
+<div class="dh-panel rt-char-panel">
     <h1 class="dh-panel__header">Characteristics</h1>
-    <div class="rt-char-row-container">
+    <div class="rt-char-list">
         {{#each actor.characteristics as |characteristic name|}}
             {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}
             {{#unless (eq name "influence")}}
-            <div class="rt-char-box {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
-                <button
-                    class="rt-char-name roll-characteristic actor-drag"
-                    type="roll"
-                    data-item-type="characteristic"
-                    data-item-id="{{name}}"
-                    data-characteristic="{{name}}"
-                    title="{{this.label}}"
-                >{{this.short}}</button>
-                <div class="rt-char-mod-value" title="Current total">{{this.total}}</div>
-                <input
-                    class="rt-char-total-input"
-                    type="number"
-                    name="system.characteristics.{{name}}.modifier"
-                    data-dtype="Number"
-                    value="{{this.modifier}}"
-                    title="Adjust modifier"
-                />
-            </div>
-            {{/unless}}
-        {{/each}}
-    </div>
-    
-    {{!-- Advanced Details (Collapsible) --}}
-    <details class="rt-char-details">
-        <summary class="rt-char-details-toggle">Advanced Characteristics</summary>
-        <div class="dh-chartable rt-chartable-advanced">
-            <div class="dh-chartable__cell--noborder">&nbsp;</div>
-            <div class="dh-chartable__cell--left">Base</div>
-            <div class="dh-chartable__cell--left">Advances</div>
-            <div class="dh-chartable__cell--left">Origin</div>
-            <div class="dh-chartable__cell--left">Current</div>
-            <div class="dh-chartable__cell--left">Unnatural</div>
-            <div class="dh-chartable__cell--left">Mod</div>
-            {{#each actor.characteristics as |characteristic name|}}
-                {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}
-                {{#unless (eq name "influence")}}
-                <div class="dh-chartable__cell--head {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
-                    <button
-                        class="roll-characteristic actor-drag"
-                        type="roll"
+            <details class="rt-char-item">
+                <summary class="rt-char-summary {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
+                    <span
+                        class="rt-char-name roll-characteristic actor-drag"
                         data-item-type="characteristic"
                         data-item-id="{{name}}"
                         data-characteristic="{{name}}"
-                    >{{this.short}}</button>
+                        title="{{this.label}}"
+                    >{{this.short}}</span>
+                    <span class="rt-char-total" title="Current total">{{this.total}}</span>
+                </summary>
+                <div class="rt-char-controls">
+                    <label class="rt-char-field">
+                        <span class="rt-char-field-label">Advances</span>
+                        <select name="system.characteristics.{{name}}.advance">
+                            {{option "0" this.advance "None"}}
+                            {{option "1" this.advance "Simple"}}
+                            {{option "2" this.advance "Intermediate"}}
+                            {{option "3" this.advance "Trained"}}
+                            {{option "4" this.advance "Proficient"}}
+                            {{option "5" this.advance "Expert"}}
+                        </select>
+                    </label>
+                    <label class="rt-char-field">
+                        <span class="rt-char-field-label">Unnatural</span>
+                        <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select" data-dtype="Number">
+                            <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>
+                            <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
+                            <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
+                            <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
+                        </select>
+                    </label>
+                    <label class="rt-char-field">
+                        <span class="rt-char-field-label">Modifier</span>
+                        <input
+                            type="number"
+                            name="system.characteristics.{{name}}.modifier"
+                            data-dtype="Number"
+                            value="{{this.modifier}}"
+                        />
+                    </label>
                 </div>
-                <div class="dh-chartable__cell">
-                    <input name="system.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}" />
-                </div>
-                <div class="dh-chartable__cell">
-                    <select name="system.characteristics.{{name}}.advance">
-                        {{option "0" this.advance "None"}}
-                        {{option "1" this.advance "Simple"}}
-                        {{option "2" this.advance "Intermediate"}}
-                        {{option "3" this.advance "Trained"}}
-                        {{option "4" this.advance "Proficient"}}
-                        {{option "5" this.advance "Expert"}}
-                    </select>
-                </div>
-                <div class="dh-chartable__cell {{#if (gt this.originPathModifier 0)}}rt-origin-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-origin-penalty{{/if}}" title="From Origin Path">
-                    <span class="display">{{#if (gt this.originPathModifier 0)}}+{{/if}}{{this.originPathModifier}}</span>
-                </div>
-                <div class="dh-chartable__cell dh-chartable__cell--highlight">
-                    <span class="display">{{this.total}}</span>
-                </div>
-                <div class="dh-chartable__cell">
-                    <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select" data-dtype="Number">
-                        <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>
-                        <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
-                        <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
-                        <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
-                    </select>
-                </div>
-                <div class="dh-chartable__cell dh-chartable__cell--mod">
-                    <span class="display">{{this.bonus}}</span>
-                </div>
-                {{/unless}}
-            {{/each}}
-        </div>
-    </details>
+            </details>
+            {{/unless}}
+        {{/each}}
+    </div>
 </div>
