@@ -385,7 +385,11 @@
 .degree-damned {
     .rt-degree-label { color: #8B0000; text-shadow: 0 0 8px rgba(139, 0, 0, 0.8); }
     .rt-degree-modifier { color: #DC143C; }
-    background: linear-gradient(180deg, rgba(60, 20, 20, 0.9), rgba(40, 10, 10, 0.95)) !important;
+    
+    &.rt-status-panel,
+    &.rt-degree-field {
+        background: linear-gradient(180deg, rgba(60, 20, 20, 0.9), rgba(40, 10, 10, 0.95));
+    }
 }
 
 // Insanity Degree Classes
@@ -415,7 +419,11 @@
 .degree-terminally-insane {
     .rt-degree-label { color: #9400D3; text-shadow: 0 0 8px rgba(148, 0, 211, 0.8); }
     .rt-degree-modifier { color: #BA55D3; }
-    background: linear-gradient(180deg, rgba(40, 20, 60, 0.9), rgba(25, 10, 40, 0.95)) !important;
+    
+    &.rt-status-panel,
+    &.rt-degree-field {
+        background: linear-gradient(180deg, rgba(40, 20, 60, 0.9), rgba(25, 10, 40, 0.95));
+    }
 }
 
 // ============================================
