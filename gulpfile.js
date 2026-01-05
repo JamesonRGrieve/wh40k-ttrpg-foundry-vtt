@@ -82,7 +82,7 @@ async function compilePacks() {
           
           // Use the document's _id as the key, prefixed with "!" for Foundry format
           if (doc._id) {
-            const key = `!${folder}.${doc._id}`;
+            const key = `!${doc._id}`;
             await db.put(key, doc);
           }
         } catch (parseErr) {
