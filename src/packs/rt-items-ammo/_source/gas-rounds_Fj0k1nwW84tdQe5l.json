@@ -1,6 +1,6 @@
 {
   "name": "Gas Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Shotguns",

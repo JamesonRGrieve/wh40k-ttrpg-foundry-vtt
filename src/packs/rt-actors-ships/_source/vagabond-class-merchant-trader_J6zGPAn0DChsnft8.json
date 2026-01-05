@@ -1,6 +1,6 @@
 {
   "name": "Vagabond-class Merchant Trader",
-  "type": "ship",
+  "type": "starship",
   "img": "icons/svg/ship.svg",
   "system": {
     "shipType": "Transport",

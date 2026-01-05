@@ -1,6 +1,6 @@
 {
   "name": "Micro-blast Needles",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Exotic: Dartcaster, Needle Pistol/Rifle",

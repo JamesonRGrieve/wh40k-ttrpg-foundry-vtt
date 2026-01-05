@@ -1,6 +1,6 @@
 {
   "name": "Sanctified Ammunition",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP/Flame/Primitive: Any SP, Flame, or Bows/Crossbows",

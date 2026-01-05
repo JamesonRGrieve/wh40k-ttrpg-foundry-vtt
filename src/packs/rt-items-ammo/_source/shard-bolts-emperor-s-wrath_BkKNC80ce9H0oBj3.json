@@ -1,6 +1,6 @@
 {
   "name": "Shard Bolts \"Emperor's Wrath\"",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Primitive: Crossbows",

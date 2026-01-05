@@ -1,6 +1,6 @@
 {
   "name": "Blessed Ammunition",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Any Weapon with Ammo (may limt to Bolt/Flamer/SP)",

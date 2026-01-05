@@ -1,6 +1,6 @@
 {
   "name": "Tempest-class Strike Frigate",
-  "type": "ship",
+  "type": "starship",
   "img": "icons/svg/ship.svg",
   "system": {
     "shipType": "Frigate",

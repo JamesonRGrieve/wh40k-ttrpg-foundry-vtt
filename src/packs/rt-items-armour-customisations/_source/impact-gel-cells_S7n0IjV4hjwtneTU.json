@@ -1,6 +1,6 @@
 {
   "name": "Impact Gel Cells",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Any Non-Primitive Armour",

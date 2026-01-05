@@ -1,6 +1,6 @@
 {
   "name": "Ablative",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Flak, Mesh, Carapace, or Power",

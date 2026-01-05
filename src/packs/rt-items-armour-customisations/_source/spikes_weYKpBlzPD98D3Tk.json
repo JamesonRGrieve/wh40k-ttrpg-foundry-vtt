@@ -1,6 +1,6 @@
 {
   "name": "Spikes",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Flak, Carapace, or Power",

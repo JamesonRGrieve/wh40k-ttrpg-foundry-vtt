@@ -1,6 +1,6 @@
 {
   "name": "Psycannon Bolts",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Bolt: Any",

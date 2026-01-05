@@ -1,6 +1,6 @@
 {
   "name": "Purgatus Stakes",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Exotic: Purgatus Crossbow",

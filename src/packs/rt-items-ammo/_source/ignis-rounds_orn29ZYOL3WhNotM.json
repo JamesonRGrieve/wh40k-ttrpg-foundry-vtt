@@ -1,6 +1,6 @@
 {
   "name": "Ignis Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Autoguns, Autopistols, Shotguns",

@@ -1,6 +1,6 @@
 {
   "name": "Customisation: Remnants of Mutation",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Power Armour",

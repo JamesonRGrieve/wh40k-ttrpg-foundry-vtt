@@ -1,6 +1,6 @@
 {
   "name": "Mars-Class Battlecruiser",
-  "type": "ship",
+  "type": "starship",
   "img": "icons/svg/ship.svg",
   "system": {
     "shipType": "Battlecruiser",

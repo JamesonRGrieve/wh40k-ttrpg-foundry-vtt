@@ -1,6 +1,6 @@
 {
   "name": "Capacitor Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP/Bolt: Shotguns, Bolt Pistols, Bolters",

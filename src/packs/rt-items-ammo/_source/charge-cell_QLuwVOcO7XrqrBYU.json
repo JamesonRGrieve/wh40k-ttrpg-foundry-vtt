@@ -1,6 +1,6 @@
 {
   "name": "Charge Cell",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Las: Laslocks",

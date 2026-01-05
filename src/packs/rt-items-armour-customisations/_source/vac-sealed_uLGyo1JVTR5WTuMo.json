@@ -1,6 +1,6 @@
 {
   "name": "Vac-Sealed",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Mesh, Carapace, or Power Armour that covers all locations and not sealed.",

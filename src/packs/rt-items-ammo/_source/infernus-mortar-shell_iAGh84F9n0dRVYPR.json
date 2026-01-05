@@ -1,6 +1,6 @@
 {
   "name": "Infernus Mortar Shell",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Launcher: Heavy Mortar",

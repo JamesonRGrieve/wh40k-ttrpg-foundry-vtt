@@ -1,6 +1,6 @@
 {
   "name": "! Default: Charge Pack (Heavy)",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Las Weapons (Heavy)",

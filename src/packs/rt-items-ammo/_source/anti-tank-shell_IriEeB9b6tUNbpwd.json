@@ -1,6 +1,6 @@
 {
   "name": "Anti-Tank Shell",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Vehicle: Artillery/Battle Cannons",

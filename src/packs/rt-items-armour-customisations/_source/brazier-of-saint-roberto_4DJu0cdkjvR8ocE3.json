@@ -1,6 +1,6 @@
 {
   "name": "Brazier of Saint Roberto",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Any Armour, Helmet, or Backpack",

@@ -1,6 +1,6 @@
 {
   "name": "Amputator Shells",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Stubbers, shotguns, hand cannons, autopistols, autoguns",

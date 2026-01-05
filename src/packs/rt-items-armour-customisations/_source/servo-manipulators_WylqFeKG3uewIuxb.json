@@ -1,6 +1,6 @@
 {
   "name": "Servo-Manipulators",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Any armour that imposes penalties to agility tests or fine manipulation tests.",

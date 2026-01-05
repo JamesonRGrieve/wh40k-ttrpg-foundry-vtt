@@ -1,6 +1,6 @@
 {
   "name": "Airtorch Canister",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Melta: Inferno Pistols and Meltaguns",

@@ -1,6 +1,6 @@
 {
   "name": "Ungents of Warding",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Any Armour",

@@ -1,6 +1,6 @@
 {
   "name": "Hyper Density Penetrators",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP/Bolt: Hand Cannons, Hunting Rifles, Shotguns, Bolt Pistols, Bolters",

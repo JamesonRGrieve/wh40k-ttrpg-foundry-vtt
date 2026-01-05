@@ -1,6 +1,6 @@
 {
   "name": "Nightshroud Layer",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Any armour that covers all locations, except power armour,",

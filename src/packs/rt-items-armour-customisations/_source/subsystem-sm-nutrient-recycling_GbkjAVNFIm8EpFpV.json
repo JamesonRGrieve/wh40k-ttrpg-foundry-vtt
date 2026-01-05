@@ -1,6 +1,6 @@
 {
   "name": "Subsystem (SM): Nutrient Recycling",
-  "type": "armourCustomisation",
+  "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
     "armourTypes": "Legion/Astartes Power Armour",

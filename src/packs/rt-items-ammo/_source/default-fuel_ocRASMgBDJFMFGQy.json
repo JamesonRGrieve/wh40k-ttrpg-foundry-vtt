@@ -1,6 +1,6 @@
 {
   "name": "! Default: Fuel",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Flame Weapons",

@@ -1,6 +1,6 @@
 {
   "name": "Psyflame",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Flame: Any",

@@ -1,6 +1,6 @@
 {
   "name": "! Default: Arrows/Quarrels",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Primitive: Bows, Crossbows, Hand bows",

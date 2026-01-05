@@ -1,6 +1,6 @@
 {
   "name": "Envenomed Ammo",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Primitive Ranged Weapon",

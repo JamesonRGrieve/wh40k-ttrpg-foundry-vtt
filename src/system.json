@@ -339,6 +339,88 @@
       }
     }
   ],
+  "packFolders": [
+    {
+      "name": "Actors",
+      "color": "#8B0000",
+      "sorting": "a",
+      "packs": [
+        "rt-actors-bestiary",
+        "rt-actors-ships",
+        "rt-actors-vehicles"
+      ]
+    },
+    {
+      "name": "Equipment",
+      "color": "#8B4513",
+      "sorting": "a",
+      "packs": [
+        "rt-items-ammo",
+        "rt-items-armour",
+        "rt-items-armour-customisations",
+        "rt-items-gear",
+        "rt-items-weapons",
+        "rt-items-weapon-qualities"
+      ]
+    },
+    {
+      "name": "Character Features",
+      "color": "#2F4F4F",
+      "sorting": "a",
+      "packs": [
+        "rt-items-skills",
+        "rt-items-talents",
+        "rt-items-traits",
+        "rt-items-origin-path",
+        "rt-items-conditions"
+      ]
+    },
+    {
+      "name": "Powers & Abilities",
+      "color": "#4B0082",
+      "sorting": "a",
+      "packs": [
+        "rt-items-psychic-powers",
+        "rt-items-navigator-powers",
+        "rt-items-rituals"
+      ]
+    },
+    {
+      "name": "Ships & Vehicles",
+      "color": "#191970",
+      "sorting": "a",
+      "packs": [
+        "rt-items-ship-components",
+        "rt-items-ship-roles",
+        "rt-items-ship-upgrades",
+        "rt-items-ship-weapons",
+        "rt-items-vehicle-traits",
+        "rt-items-vehicle-upgrades",
+        "rt-items-orders"
+      ]
+    },
+    {
+      "name": "Journals & Rules",
+      "color": "#556B2F",
+      "sorting": "a",
+      "packs": [
+        "rt-journals-character-actions",
+        "rt-journals-character-creation",
+        "rt-journals-colonies",
+        "rt-journals-fear-insanity-corruption",
+        "rt-journals-ship-vehicle-actions"
+      ]
+    },
+    {
+      "name": "Roll Tables",
+      "color": "#800080",
+      "sorting": "a",
+      "packs": [
+        "rt-rolltables-fear-insanity-corruption",
+        "rt-rolltables-psychic"
+      ]
+    }
+  ],
   "grid": {
     "distance": 1,
     "units": "m"

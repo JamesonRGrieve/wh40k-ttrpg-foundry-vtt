@@ -1,6 +1,6 @@
 {
   "name": "Fyceline-tipped Rounds",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "SP: Stubbers, Hand cannons, rifles, autopistol, autogun, Naval Pistols",

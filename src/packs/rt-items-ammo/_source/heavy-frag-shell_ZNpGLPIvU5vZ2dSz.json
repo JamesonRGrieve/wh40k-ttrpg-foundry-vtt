@@ -1,6 +1,6 @@
 {
   "name": "Heavy Frag Shell",
-  "type": "ammo",
+  "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
     "usedWith": "Launcher: Heavy Mortar",
