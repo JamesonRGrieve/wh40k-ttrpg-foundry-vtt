@@ -122,6 +122,80 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('.combat-control').click(async (ev) => await this._combatControls(ev));
         html.find('.acquisition-add').click(async (ev) => await this._addAcquisition(ev));
         html.find('.acquisition-remove').click(async (ev) => await this._removeAcquisition(ev));
+
+        // Arrow button handlers for quick stat adjustments
+        html.find('.rt-arrow-btn').click(async (ev) => await this._onArrowButtonClick(ev));
+        html.find('.rt-tracker-btn').click(async (ev) => await this._onTrackerButtonClick(ev));
+        
+        // Critical pip clicks
+        html.find('.rt-crit-pip').click(async (ev) => await this._onCritPipClick(ev));
+    }
+
+    /**
+     * Handle arrow button clicks for increment/decrement of stat values
+     */
+    async _onArrowButtonClick(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const field = button.dataset.field;
+        const action = button.dataset.action;
+        const min = button.dataset.min !== undefined ? parseInt(button.dataset.min) : null;
+        const max = button.dataset.max !== undefined ? parseInt(button.dataset.max) : null;
+        
+        await this._adjustStatValue(field, action, min, max);
+    }
+
+    /**
+     * Handle tracker button clicks for increment/decrement
+     */
+    async _onTrackerButtonClick(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const field = button.dataset.field;
+        const action = button.dataset.action;
+        const min = button.dataset.min !== undefined ? parseInt(button.dataset.min) : null;
+        const max = button.dataset.max !== undefined ? parseInt(button.dataset.max) : null;
+        
+        await this._adjustStatValue(field, action, min, max);
+    }
+
+    /**
+     * Handle clicking on a critical damage pip
+     */
+    async _onCritPipClick(event) {
+        event.preventDefault();
+        const pip = event.currentTarget;
+        const level = parseInt(pip.dataset.critLevel);
+        const currentCrit = this.actor.system.wounds?.critical || 0;
+        
+        // If clicking on a filled pip at the current level, reduce by 1
+        // Otherwise set to the clicked level
+        const newValue = (level === currentCrit) ? level - 1 : level;
+        const clampedValue = Math.min(Math.max(newValue, 0), 10);
+        
+        await this.actor.update({ 'system.wounds.critical': clampedValue });
+    }
+
+    /**
+     * Adjust a stat value by incrementing or decrementing
+     */
+    async _adjustStatValue(field, action, min, max) {
+        // Get current value using foundry's getProperty
+        const currentValue = foundry.utils.getProperty(this.actor, field) || 0;
+        let newValue = currentValue;
+        
+        if (action === 'increment') {
+            newValue = currentValue + 1;
+            if (max !== null && newValue > max) newValue = max;
+        } else if (action === 'decrement') {
+            newValue = currentValue - 1;
+            if (min !== null && newValue < min) newValue = min;
+        }
+        
+        // Only update if value changed
+        if (newValue !== currentValue) {
+            await this.actor.update({ [field]: newValue });
+        }
     }
 
     async _combatControls(event) {

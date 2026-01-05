@@ -1,17 +1,39 @@
 <div class="dh-panel spacer dh-grid-col-2 dh-grid-row-1">
     <h1 class="dh-panel__header">Wounds</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Max</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.max" value="{{system.wounds.max}}" />
+    
+    {{!-- Wounds Tracker Section --}}
+    <div class="rt-wounds-tracker">
+        <div class="rt-tracker-row">
+            <div class="rt-tracker-field">
+                <span class="dh-field__header">Max Wounds</span>
+                <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.max" value="{{system.wounds.max}}" />
+            </div>
+            <div class="rt-tracker-field">
+                <span class="dh-field__header">Current Wounds</span>
+                <div class="rt-tracker-input-row">
+                    <button type="button" class="rt-tracker-btn rt-tracker-down" data-field="system.wounds.value" data-action="decrement" data-min="0">−</button>
+                    <input type="number" data-dtype="Number" class="dh-field__input rt-tracker-input" name="system.wounds.value" value="{{system.wounds.value}}" />
+                    <button type="button" class="rt-tracker-btn rt-tracker-up" data-field="system.wounds.value" data-action="increment">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="rt-tracker-row">
+            <div class="rt-tracker-field rt-crit-tracker">
+                <span class="dh-field__header">Critical Damage (Max 10)</span>
+                <div class="rt-crit-bar">
+                    {{#each (array 1 2 3 4 5 6 7 8 9 10)}}
+                        <div class="rt-crit-pip {{#if (lte this ../system.wounds.critical)}}rt-crit-pip--filled{{/if}}" data-crit-level="{{this}}"></div>
+                    {{/each}}
+                </div>
+                <div class="rt-tracker-input-row">
+                    <button type="button" class="rt-tracker-btn rt-tracker-down" data-field="system.wounds.critical" data-action="decrement" data-min="0">−</button>
+                    <input type="number" data-dtype="Number" class="dh-field__input rt-tracker-input rt-crit-input" name="system.wounds.critical" value="{{clampCritical system.wounds.critical}}" min="0" max="10" />
+                    <button type="button" class="rt-tracker-btn rt-tracker-up" data-field="system.wounds.critical" data-action="increment" data-max="10">+</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Value</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.value" value="{{system.wounds.value}}" />
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Critical</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.wounds.critical" value="{{system.wounds.critical}}" />
-    </div>
+
     <div class="dh-table--border dh-criticalinjurytable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Critical Injuries</div>
