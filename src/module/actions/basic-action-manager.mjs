@@ -26,6 +26,7 @@ export class BasicActionManager {
         Hooks.on('getSceneControlButtons', (controls) => {
             const bar = controls.token;
             if (!bar) return;
+            const toolOrder = Object.keys(bar.tools).length;
             bar.tools.assignDamage = {
                 name: 'Assign Damage',
                 title: 'Assign Damage',
@@ -33,7 +34,7 @@ export class BasicActionManager {
                 visible: true,
                 onClick: async () => DHBasicActionManager.assignDamageTool(),
                 button: true,
-                order: Object.keys(bar.tools).length,
+                order: toolOrder,
             };
         });
     }

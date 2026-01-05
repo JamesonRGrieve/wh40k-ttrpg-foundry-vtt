@@ -13,6 +13,7 @@ export class TargetedActionManager {
             if (!bar) return;
             try {
                 if (!game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
+                    const toolOrder = Object.keys(bar.tools).length;
                     bar.tools.attack = {
                         name: 'Attack',
                         title: 'Attack',
@@ -20,7 +21,7 @@ export class TargetedActionManager {
                         visible: true,
                         onClick: async () => DHTargetedActionManager.performWeaponAttack(),
                         button: true,
-                        order: Object.keys(bar.tools).length,
+                        order: toolOrder,
                     };
                 }
             } catch (error) {
