@@ -23,11 +23,10 @@
                     <span class="dh-field__span">Specialisation</span>
                     {{#if this.specializations}}
                         <select class="dh-field__input" id="speciality-name" style="width: 100%;">
-                            <option value="">-- Choose or type below --</option>
+                            <option value="">-- Choose from list --</option>
                             {{#each this.specializations}}
                                 <option value="{{this}}">{{this}}</option>
                             {{/each}}
-                            <option value="">-- Custom (type below) --</option>
                         </select>
                         <input class="dh-field__input" type="text" id="custom-speciality-name" placeholder="Or enter custom specialization..." style="margin-top: 5px;" />
                     {{else}}
