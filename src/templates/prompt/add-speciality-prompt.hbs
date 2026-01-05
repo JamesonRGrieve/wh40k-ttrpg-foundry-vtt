@@ -21,8 +21,23 @@
                 </div>
                 <div class="dh-field__wrapper">
                     <span class="dh-field__span">Specialisation</span>
-                    <input class="dh-field__input" type="text" id="speciality-name" />
+                    {{#if this.specializations}}
+                        <select class="dh-field__input" id="speciality-name" style="width: 100%;">
+                            <option value="" disabled selected>-- Choose from list --</option>
+                            {{#each this.specializations}}
+                                <option value="{{this}}">{{this}}</option>
+                            {{/each}}
+                        </select>
+                        <input class="dh-field__input" type="text" id="custom-speciality-name" placeholder="Or enter custom specialization..." style="margin-top: 5px;" />
+                    {{else}}
+                        <input class="dh-field__input" type="text" id="speciality-name" placeholder="Enter specialization name..." />
+                    {{/if}}
                 </div>
+                {{#if this.specializations}}
+                    <div class="dh-field__wrapper" style="margin-top: 10px;">
+                        <small style="color: #888; font-style: italic;">Common specializations are listed above. You can select one or enter a custom name in the text field.</small>
+                    </div>
+                {{/if}}
             </div>
         </div>
     </form>

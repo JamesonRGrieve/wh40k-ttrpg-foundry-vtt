@@ -15,7 +15,22 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Chapter Runes",
+      "Chaos Marks",
+      "Eldar",
+      "High Gothic",
+      "Imperial Codes",
+      "Kroot",
+      "Low Gothic",
+      "Mercenary Cant",
+      "Ork",
+      "Techna-Lingua",
+      "Tau",
+      "Underworld",
+      "Xenos Markings"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -15,7 +15,28 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Adeptus Arbites",
+      "Adeptus Astra Telepathica",
+      "Adeptus Mechanicus",
+      "Adeptus Administratum",
+      "Ecclesiarchy",
+      "Imperial Creed",
+      "Imperial Guard",
+      "Imperial Navy",
+      "Imperium",
+      "Navis Nobilite",
+      "Rogue Traders",
+      "Tech",
+      "Underworld",
+      "War",
+      "Calixis Sector",
+      "Jericho Reach",
+      "Koronus Expanse",
+      "Screaming Vortex",
+      "Spinward Front"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -15,7 +15,13 @@
       "characteristic": "Fellowship",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Dancer",
+      "Musician",
+      "Singer",
+      "Storyteller"
+    ]
   },
   "effects": [],
   "flags": {},

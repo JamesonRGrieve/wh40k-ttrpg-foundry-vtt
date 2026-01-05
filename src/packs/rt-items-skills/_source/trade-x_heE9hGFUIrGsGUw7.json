@@ -15,7 +15,23 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "specializations": [
+      "Archeologist",
+      "Armourer",
+      "Astrographer",
+      "Chymist",
+      "Cryptographer",
+      "Cook",
+      "Explorator",
+      "Linguist",
+      "Remembrancer",
+      "Scrimshawer",
+      "Shipwright",
+      "Soothsayer",
+      "Technomat",
+      "Voidfarer"
+    ]
   },
   "effects": [],
   "flags": {},
