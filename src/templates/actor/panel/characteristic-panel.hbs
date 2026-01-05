@@ -1,52 +1,75 @@
-<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
+{{!-- Simplified Characteristics Panel - Horizontal Layout --}}
+<div class="dh-panel rt-char-simplified">
     <h1 class="dh-panel__header">Characteristics</h1>
-    <div class="dh-chartable">
-        <div class="dh-chartable__cell--noborder">&nbsp;</div>
-        <div class="dh-chartable__cell--left">Initial</div>
-        <div class="dh-chartable__cell--left">Advances</div>
-        <div class="dh-chartable__cell--left">Modifier</div>
-        <div class="dh-chartable__cell--left">Origin</div>
-        <div class="dh-chartable__cell--left">Current</div>
-        <div class="dh-chartable__cell--left">Unnatural</div>
-        <div class="dh-chartable__cell--left">Bonus</div>
+    <div class="rt-char-row-container">
         {{#each actor.characteristics as |characteristic name|}}
-            <div class="dh-chartable__cell--head {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
+            <div class="rt-char-box {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
                 <button
-                    class="roll-characteristic actor-drag"
+                    class="rt-char-name roll-characteristic actor-drag"
                     type="roll"
                     data-item-type="characteristic"
                     data-item-id="{{name}}"
                     data-characteristic="{{name}}"
+                    title="{{this.label}}"
                 >{{this.short}}</button>
-            </div>
-            <div class="dh-chartable__cell">
-                <input name="system.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}" />
-            </div>
-            <div class="dh-chartable__cell">
-                <select name="system.characteristics.{{name}}.advance">
-                    {{option "0" this.advance "None"}}
-                    {{option "1" this.advance "Simple"}}
-                    {{option "2" this.advance "Intermediate"}}
-                    {{option "3" this.advance "Trained"}}
-                    {{option "4" this.advance "Proficient"}}
-                    {{option "5" this.advance "Expert"}}
-                </select>
-            </div>
-            <div class="dh-chartable__cell">
-                <input class="dh-field__input" name="system.characteristics.{{name}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}" />
-            </div>
-            <div class="dh-chartable__cell {{#if (gt this.originPathModifier 0)}}rt-origin-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-origin-penalty{{/if}}" title="From Origin Path">
-                <span class="display">{{#if (gt this.originPathModifier 0)}}+{{/if}}{{this.originPathModifier}}</span>
-            </div>
-            <div class="dh-chartable__cell dh-chartable__cell--highlight">
-                <span class="display">{{this.total}}</span>
-            </div>
-            <div class="dh-chartable__cell">
-                <input class="dh-field__input" name="system.characteristics.{{name}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}" />
-            </div>
-            <div class="dh-chartable__cell">
-                <span class="display">{{this.bonus}}</span>
+                <div class="rt-char-value">{{this.total}}</div>
+                <div class="rt-char-bonus-label">Bonus</div>
+                <div class="rt-char-bonus-value">{{this.bonus}}</div>
             </div>
         {{/each}}
     </div>
+    
+    {{!-- Advanced Details (Collapsible) --}}
+    <details class="rt-char-details">
+        <summary class="rt-char-details-toggle">Advanced Characteristics</summary>
+        <div class="dh-chartable">
+            <div class="dh-chartable__cell--noborder">&nbsp;</div>
+            <div class="dh-chartable__cell--left">Initial</div>
+            <div class="dh-chartable__cell--left">Advances</div>
+            <div class="dh-chartable__cell--left">Modifier</div>
+            <div class="dh-chartable__cell--left">Origin</div>
+            <div class="dh-chartable__cell--left">Current</div>
+            <div class="dh-chartable__cell--left">Unnatural</div>
+            <div class="dh-chartable__cell--left">Bonus</div>
+            {{#each actor.characteristics as |characteristic name|}}
+                <div class="dh-chartable__cell--head {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
+                    <button
+                        class="roll-characteristic actor-drag"
+                        type="roll"
+                        data-item-type="characteristic"
+                        data-item-id="{{name}}"
+                        data-characteristic="{{name}}"
+                    >{{this.short}}</button>
+                </div>
+                <div class="dh-chartable__cell">
+                    <input name="system.characteristics.{{name}}.base" data-dtype="Number" type="number" value="{{this.base}}" />
+                </div>
+                <div class="dh-chartable__cell">
+                    <select name="system.characteristics.{{name}}.advance">
+                        {{option "0" this.advance "None"}}
+                        {{option "1" this.advance "Simple"}}
+                        {{option "2" this.advance "Intermediate"}}
+                        {{option "3" this.advance "Trained"}}
+                        {{option "4" this.advance "Proficient"}}
+                        {{option "5" this.advance "Expert"}}
+                    </select>
+                </div>
+                <div class="dh-chartable__cell">
+                    <input class="dh-field__input" name="system.characteristics.{{name}}.modifier" data-dtype="Number" type="number" value="{{this.modifier}}" />
+                </div>
+                <div class="dh-chartable__cell {{#if (gt this.originPathModifier 0)}}rt-origin-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-origin-penalty{{/if}}" title="From Origin Path">
+                    <span class="display">{{#if (gt this.originPathModifier 0)}}+{{/if}}{{this.originPathModifier}}</span>
+                </div>
+                <div class="dh-chartable__cell dh-chartable__cell--highlight">
+                    <span class="display">{{this.total}}</span>
+                </div>
+                <div class="dh-chartable__cell">
+                    <input class="dh-field__input" name="system.characteristics.{{name}}.unnatural" data-dtype="Number" type="number" value="{{this.unnatural}}" />
+                </div>
+                <div class="dh-chartable__cell">
+                    <span class="display">{{this.bonus}}</span>
+                </div>
+            {{/each}}
+        </div>
+    </details>
 </div>

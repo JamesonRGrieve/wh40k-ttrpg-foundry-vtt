@@ -95,3 +95,167 @@
         }
     }
 }
+
+// ============================================
+// SIMPLIFIED CHARACTERISTICS LAYOUT
+// ============================================
+
+.rt-char-simplified {
+    .dh-panel__header {
+        font-size: 1.2em;
+        padding: 0.75rem;
+        text-align: center;
+        background: rgba(36, 107, 131, 0.2);
+        border-bottom: 2px solid rgba(36, 107, 131, 0.4);
+        margin-bottom: 0.5rem;
+    }
+}
+
+.rt-char-row-container {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.rt-char-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    background: linear-gradient(135deg, rgba(36, 107, 131, 0.1), rgba(36, 107, 131, 0.05));
+    border: 2px solid rgba(36, 107, 131, 0.3);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        border-color: rgba(36, 107, 131, 0.5);
+    }
+    
+    &.rt-char-bonus {
+        border-color: rgba(34, 139, 34, 0.5);
+        background: linear-gradient(135deg, rgba(34, 139, 34, 0.15), rgba(34, 139, 34, 0.08));
+    }
+    
+    &.rt-char-penalty {
+        border-color: rgba(178, 34, 34, 0.5);
+        background: linear-gradient(135deg, rgba(178, 34, 34, 0.15), rgba(178, 34, 34, 0.08));
+    }
+}
+
+.rt-char-name {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #1a4f61;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    &:hover {
+        color: #0d3a4a;
+        transform: scale(1.05);
+    }
+}
+
+.rt-char-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #1a4f61;
+    margin: 0.25rem 0;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    min-width: 3rem;
+    text-align: center;
+}
+
+.rt-char-bonus-label {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #5a7883;
+    margin-top: 0.5rem;
+    margin-bottom: 0.15rem;
+}
+
+.rt-char-bonus-value {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #246b83;
+    background: rgba(36, 107, 131, 0.15);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+// Advanced details collapsible section
+.rt-char-details {
+    margin-top: 1rem;
+    border: 1px solid rgba(36, 107, 131, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    
+    summary.rt-char-details-toggle {
+        cursor: pointer;
+        padding: 0.75rem 1rem;
+        background: rgba(36, 107, 131, 0.1);
+        font-weight: 600;
+        font-size: 0.95em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #1a4f61;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            background: rgba(36, 107, 131, 0.15);
+        }
+        
+        &::marker {
+            color: #246b83;
+        }
+    }
+    
+    &[open] summary {
+        border-radius: 6px 6px 0 0;
+        border-bottom: 2px solid rgba(36, 107, 131, 0.3);
+    }
+    
+    .dh-chartable {
+        margin: 0;
+        border-radius: 0 0 6px 6px;
+    }
+}
+
+// Responsive adjustment for smaller screens
+@media (max-width: 1400px) {
+    .rt-char-row-container {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .rt-char-box {
+        padding: 0.6rem 0.4rem;
+    }
+    
+    .rt-char-value {
+        font-size: 1.6em;
+    }
+}
+
+@media (max-width: 1000px) {
+    .rt-char-row-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
