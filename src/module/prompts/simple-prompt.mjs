@@ -46,12 +46,18 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
     let specializations = [];
     
     if (skillsCompendium) {
-        // Find the skill in the compendium by matching the label
+        // Find the skill in the compendium by matching the label more precisely
         const index = await skillsCompendium.getIndex();
-        const skillEntry = index.find(entry => 
-            entry.name.toLowerCase().includes(simpleSkillData.skill.label.toLowerCase()) ||
-            entry.name.toLowerCase().includes('(x)')
-        );
+        // Look for skills with (X) in the name, which indicates specialist skills
+        const skillEntries = index.filter(entry => entry.name.includes('(X)'));
+        
+        // Try to find exact match first by comparing the base skill name
+        const skillLabel = simpleSkillData.skill.label;
+        const skillEntry = skillEntries.find(entry => {
+            // Extract the base name without (X)
+            const baseName = entry.name.replace(/\s*\(X\)\s*$/i, '').trim();
+            return baseName.toLowerCase() === skillLabel.toLowerCase();
+        });
         
         if (skillEntry) {
             const skillDoc = await skillsCompendium.getDocument(skillEntry._id);
@@ -75,23 +81,27 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
                     label: 'Add',
                     callback: async (dialogHtml) => {
                         // Try to get from dropdown first (if specializations exist), otherwise from text input
-                        let speciality;
+                        let speciality = '';
                         const dropdownElement = dialogHtml.find('#speciality-name');
                         const customElement = dialogHtml.find('#custom-speciality-name');
                         
                         if (dropdownElement.length > 0 && dropdownElement[0].tagName === 'SELECT') {
                             // We have a dropdown with specializations
-                            const selectedValue = dropdownElement[0].value;
+                            const selectedValue = dropdownElement[0].value.trim();
                             const customValue = customElement.length > 0 ? customElement[0].value.trim() : '';
                             
-                            // Use custom if provided, otherwise use selected
-                            speciality = customValue || selectedValue;
+                            // Prioritize custom input if provided, otherwise use selected value
+                            if (customValue) {
+                                speciality = customValue;
+                            } else if (selectedValue) {
+                                speciality = selectedValue;
+                            }
                         } else {
                             // Just a text input
                             speciality = dropdownElement[0].value.trim();
                         }
                         
-                        if (!speciality || speciality === '') {
+                        if (!speciality) {
                             ui.notifications.warn('Please enter or select a specialization name');
                             return;
                         }
