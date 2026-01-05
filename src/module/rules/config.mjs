@@ -70,8 +70,7 @@ RogueTrader.combat = {
         'intelligence': 'Int',
         'perception': 'Per',
         'willpower': 'WP',
-        'fellowship': 'Fel',
-        'influence': 'Inf'
+        'fellowship': 'Fel'
     }
 };
 

@@ -965,18 +965,33 @@
 }
 
 // ============================================
-// TWO-COLUMN LAYOUT FOR ABILITIES TAB
+// ABILITIES TAB LAYOUT
+// Characteristics at top, skills/talents/traits below
 // ============================================
 
 .rt-abilities-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
     padding: 0.5rem;
+}
+
+.rt-abilities-top {
+    width: 100%;
+    
+    .dh-panel {
+        width: 100%;
+    }
+}
+
+.rt-abilities-bottom {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1rem;
     align-items: start;
 }
 
-.rt-left-column {
+.rt-abilities-left {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -986,7 +1001,7 @@
     }
 }
 
-.rt-right-column {
+.rt-abilities-right {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -998,11 +1013,11 @@
 
 // Responsive layout for smaller screens
 @media (max-width: 1200px) {
-    .rt-abilities-layout {
+    .rt-abilities-bottom {
         grid-template-columns: 1fr;
         
-        .rt-left-column,
-        .rt-right-column {
+        .rt-abilities-left,
+        .rt-abilities-right {
             width: 100%;
         }
     }

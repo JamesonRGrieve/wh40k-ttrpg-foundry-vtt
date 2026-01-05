@@ -1,13 +1,18 @@
 .dh {
     &-chartable {
         display: grid;
-        grid-template-columns: 0.85fr repeat(7, 0.6fr);
+        grid-template-columns: 0.85fr repeat(6, 0.6fr);
         grid-auto-rows: minmax(32px, auto);
         grid-auto-flow: row;
         gap: 0;
         padding: 8px;
         background: rgba(255, 255, 255, 0.4);
         border-radius: 0 0 6px 6px;
+
+        // Advanced characteristics table with 7 columns (removed Modifier)
+        &.rt-chartable-advanced {
+            grid-template-columns: 0.85fr repeat(6, 0.7fr);
+        }
 
         select,
         input[type='number'],
@@ -92,6 +97,17 @@
                     font-size: 1.1em;
                 }
             }
+            
+            &--mod {
+                font-weight: bold;
+                background: rgba(36, 107, 131, 0.2);
+                color: #1a4f61;
+                
+                .display {
+                    font-size: 1.2em;
+                    font-weight: 700;
+                }
+            }
         }
     }
 }
@@ -156,7 +172,7 @@
     font-size: 1.1em;
     color: #1a4f61;
     padding: 0.25rem 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -167,6 +183,42 @@
     }
 }
 
+// MOD is now the big number (multiplier/bonus)
+.rt-char-mod-value {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #1a4f61;
+    margin: 0.15rem 0;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    min-width: 3rem;
+    text-align: center;
+    border: 2px solid rgba(36, 107, 131, 0.3);
+}
+
+.rt-char-mod-label {
+    font-size: 0.65em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5a7883;
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+}
+
+// Total is now the smaller number
+.rt-char-total-small {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #246b83;
+    background: rgba(36, 107, 131, 0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    min-width: 2rem;
+    text-align: center;
+}
+
+// Keep old classes for backwards compatibility
 .rt-char-value {
     font-size: 2em;
     font-weight: bold;
@@ -197,6 +249,19 @@
     border-radius: 4px;
     min-width: 2.5rem;
     text-align: center;
+}
+
+// Unnatural dropdown styling
+.rt-unnatural-select {
+    background: linear-gradient(135deg, rgba(75, 0, 130, 0.15), rgba(75, 0, 130, 0.1));
+    border: 1px solid rgba(75, 0, 130, 0.3);
+    color: #4B0082;
+    font-weight: 600;
+    
+    &:focus {
+        border-color: rgba(75, 0, 130, 0.6);
+        box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.15);
+    }
 }
 
 // Advanced details collapsible section
