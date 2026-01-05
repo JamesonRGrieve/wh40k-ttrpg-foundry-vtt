@@ -74,6 +74,8 @@ export class RogueTraderBaseActor extends Actor {
     }
 
     _computeCharacteristics() {
+        if (!this.characteristics) return;
+        
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
             const base = Number(characteristic.base ?? characteristic.starting ?? 0);
             const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
@@ -84,7 +86,9 @@ export class RogueTraderBaseActor extends Actor {
             characteristic.bonus = Math.floor(characteristic.total / 10) + unnatural;
         }
 
-        this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
+        if (this.initiative && this.initiative.characteristic && this.characteristics[this.initiative.characteristic]) {
+            this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
+        }
     }
 
     _computeMovement() {
