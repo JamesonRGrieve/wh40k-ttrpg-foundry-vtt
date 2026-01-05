@@ -101,7 +101,7 @@ export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
                             speciality = dropdownElement[0].value.trim();
                         }
                         
-                        if (!speciality || speciality === '') {
+                        if (!speciality) {
                             ui.notifications.warn('Please enter or select a specialization name');
                             return;
                         }
