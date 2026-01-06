@@ -31,6 +31,7 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/experience-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/fate-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/fatigue-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/fatigue-panel-v2.hbs',
             'systems/rogue-trader/templates/actor/panel/force-field-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/gear-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/initiative-panel.hbs',
@@ -55,6 +56,7 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/trait-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/weapon-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/wounds-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/wounds-panel-v2.hbs',
 
             'systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs',
