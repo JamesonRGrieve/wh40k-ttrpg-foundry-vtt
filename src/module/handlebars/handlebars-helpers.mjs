@@ -163,8 +163,8 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('isExpanded', function(field, actor) {
         // Try to get from actor flags first (new system)
-        if (actor && actor.flags?.rt?.ui?.expanded) {
-            return actor.flags.rt.ui.expanded.includes(field);
+        if (actor && actor.flags?.['rogue-trader']?.ui?.expanded) {
+            return actor.flags['rogue-trader'].ui.expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
         return CONFIG.rt.ui.expanded ? CONFIG.rt.ui.expanded.includes(field) : false;

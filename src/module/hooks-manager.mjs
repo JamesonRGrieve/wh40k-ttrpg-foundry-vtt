@@ -102,9 +102,6 @@ Enable Debug with: game.rt.debug = true
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
-        // Register flag scope for the system
-        DocumentSheetConfig.registerScope('rt', 'Rogue Trader');
-
         // Define custom Document classes
         CONFIG.Actor.documentClass = RogueTraderActorProxy;
         CONFIG.Actor.documentClasses = {
