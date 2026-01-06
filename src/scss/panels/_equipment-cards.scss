@@ -1,0 +1,380 @@
+// ============================================
+// MODERN EQUIPMENT CARDS
+// ============================================
+// Card-based design for equipment items (Armour, Gear, etc.)
+
+// Item Count Badge in Header
+.rt-item-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  background: rgba(196, 135, 29, 0.15);
+  border: 1px solid rgba(196, 135, 29, 0.3);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #c4871d;
+  flex-shrink: 0;
+}
+
+// Equipment List Container
+.rt-equipment-list {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  margin-bottom: $rt-space-sm;
+}
+
+// Equipment Card
+.rt-equipment-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(120, 46, 34, 0.25);
+  border-radius: 8px;
+  padding: $rt-space-sm;
+  transition: all 0.2s ease;
+  cursor: grab;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(120, 46, 34, 0.4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// Card States
+.rt-card-equipped {
+  border-left: 4px solid #4a8f5c;
+  background: rgba(74, 143, 92, 0.08);
+  
+  &:hover {
+    background: rgba(74, 143, 92, 0.12);
+  }
+}
+
+.rt-card-active {
+  border-left: 4px solid #3c8cd0;
+  background: rgba(60, 140, 208, 0.08);
+  
+  &:hover {
+    background: rgba(60, 140, 208, 0.12);
+  }
+  
+  .rt-card-icon {
+    box-shadow: 0 0 8px rgba(60, 140, 208, 0.5);
+  }
+}
+
+.rt-card-overloaded {
+  border-left: 4px solid #b63a2b;
+  background: rgba(182, 58, 43, 0.08);
+  opacity: 0.7;
+  
+  &:hover {
+    background: rgba(182, 58, 43, 0.12);
+  }
+}
+
+.rt-card-stowed {
+  opacity: 0.7;
+  border-left: 4px solid #8b7355;
+  
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+// Card Header (Icon, Name, Action Button)
+.rt-card-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  margin-bottom: $rt-space-xs;
+}
+
+.rt-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid rgba(120, 46, 34, 0.2);
+  flex-shrink: 0;
+}
+
+.rt-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rt-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2a1a0a;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  &:hover {
+    color: #c4871d;
+  }
+}
+
+.rt-card-meta {
+  font-size: 0.7rem;
+  color: #6a5a43;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  i {
+    font-size: 0.85em;
+  }
+}
+
+// Card Action Button (Equip/Activate)
+.rt-card-action {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(120, 46, 34, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #6a5a43;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(120, 46, 34, 0.5);
+    transform: scale(1.05);
+  }
+  
+  &.rt-action-equip {
+    .fa-check-circle {
+      color: #4a8f5c;
+    }
+  }
+  
+  &.rt-action-activate {
+    .fa-bolt {
+      color: #3c8cd0;
+    }
+  }
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Status Badges
+.rt-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(106, 90, 67, 0.15);
+  color: #6a5a43;
+  
+  i {
+    font-size: 0.9em;
+  }
+}
+
+.rt-status-active {
+  background: rgba(60, 140, 208, 0.15);
+  color: #3c8cd0;
+}
+
+.rt-status-overloaded {
+  background: rgba(182, 58, 43, 0.15);
+  color: #b63a2b;
+}
+
+// Card Description
+.rt-card-description {
+  font-size: 0.75rem;
+  color: #4a3728;
+  line-height: 1.4;
+  margin-bottom: $rt-space-xs;
+  padding: $rt-space-xs;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  font-style: italic;
+}
+
+// Card Stats (Badges for AP, Weight, etc.)
+.rt-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: $rt-space-xs;
+}
+
+.rt-stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(120, 46, 34, 0.2);
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+
+.rt-stat-label {
+  color: #6a5a43;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.rt-stat-value {
+  color: #2a1a0a;
+  font-weight: 700;
+}
+
+// Special stat badges
+.rt-badge-ap {
+  border-color: rgba(182, 58, 43, 0.3);
+  background: rgba(182, 58, 43, 0.08);
+  
+  .rt-stat-value {
+    color: #b63a2b;
+  }
+}
+
+.rt-badge-rating {
+  border-color: rgba(60, 140, 208, 0.3);
+  background: rgba(60, 140, 208, 0.08);
+  
+  .rt-stat-value {
+    color: #3c8cd0;
+  }
+}
+
+// Card Actions Row
+.rt-card-actions {
+  display: flex;
+  gap: 4px;
+  padding-top: $rt-space-xs;
+  border-top: 1px solid rgba(120, 46, 34, 0.15);
+}
+
+.rt-card-btn {
+  flex: 1;
+  height: 28px;
+  padding: 0 $rt-space-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(120, 46, 34, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #4a3728;
+  font-size: 0.85rem;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(120, 46, 34, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  i {
+    font-size: 0.9em;
+  }
+}
+
+.rt-btn-danger {
+  color: #b63a2b;
+  
+  &:hover {
+    background: rgba(182, 58, 43, 0.1);
+    border-color: rgba(182, 58, 43, 0.4);
+  }
+}
+
+// Add Item Button
+.rt-add-item-btn {
+  width: 100%;
+  padding: $rt-space-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed rgba(120, 46, 34, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6a5a43;
+  font-size: 0.85rem;
+  font-weight: 600;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(120, 46, 34, 0.4);
+    color: #4a3728;
+    transform: translateY(-1px);
+  }
+  
+  i {
+    font-size: 1.1em;
+    color: #4a8f5c;
+  }
+}
+
+// ============================================
+// Drag & Drop States
+// ============================================
+
+.rt-equipment-card.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.rt-equipment-list.drag-over {
+  background: rgba(196, 135, 29, 0.08);
+  border-radius: 8px;
+}
+
+// ============================================
+// Responsive Adjustments
+// ============================================
+
+@media (max-width: 768px) {
+  .rt-card-stats {
+    .rt-stat-badge {
+      flex: 1 1 45%;
+    }
+  }
+  
+  .rt-card-actions {
+    flex-wrap: wrap;
+    
+    .rt-card-btn {
+      flex: 1 1 30%;
+    }
+  }
+}

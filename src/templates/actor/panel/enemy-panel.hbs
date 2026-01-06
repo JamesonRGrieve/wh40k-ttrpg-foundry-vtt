@@ -1,12 +1,12 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
-    <h1 class="dh-panel__header">Enemies</h1>
-    <div class="dh-table--border dh-peerenemytable--border">
+<div class="rt-panel rt-grid-col-2 rt-grid-row-1">
+    <h1 class="rt-panel-header">Enemies</h1>
+    <div class="rt-table--border rt-peerenemytable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Name</div>
             <div class="table-cell">Modifier</div>
             <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="enemy">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                <label class="rt-control-button item-create" data-type="enemy">
+                    <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
                 </label>
             </div>
         </div>
@@ -14,8 +14,8 @@
             {{#if item.isEnemy}}
                 <div class="table-row">
                     <div class="table-cell--settingstoggle">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
                         </label>
                     </div>
                     <div class="table-cell--left">
@@ -25,8 +25,8 @@
                         <span class="display">{{item.system.modifier}}</span>
                     </div>
                     <div class="table-cell--last">
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
                         </label>
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot

@@ -1,0 +1,144 @@
+// ============================================
+// Form Fields
+// ============================================
+
+.rt-field {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-xs;
+  
+  &__label {
+    font-size: $rt-font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $rt-color-steel-light;
+  }
+  
+  &__input,
+  &__select,
+  &__textarea {
+    background: $rt-bg-input;
+    border: 1px solid $rt-color-steel-dark;
+    border-radius: $rt-radius-sm;
+    padding: $rt-space-xs $rt-space-sm;
+    color: $rt-color-parchment;
+    font-family: $rt-font-body;
+    font-size: $rt-font-size-base;
+    transition: all $rt-transition-fast;
+    
+    &:focus {
+      outline: none;
+      border-color: $rt-color-gold;
+      background: $rt-bg-input-focus;
+      box-shadow: $rt-shadow-glow-gold;
+    }
+    
+    &::placeholder {
+      color: $rt-color-steel;
+    }
+  }
+  
+  &__select {
+    cursor: pointer;
+    
+    option {
+      background: $rt-color-void;
+      color: $rt-color-parchment;
+    }
+  }
+  
+  &__textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    cursor: pointer;
+    
+    input[type="checkbox"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid $rt-color-steel-dark;
+      border-radius: $rt-radius-sm;
+      background: $rt-bg-input;
+      cursor: pointer;
+      position: relative;
+      transition: all $rt-transition-fast;
+      
+      &:checked {
+        background: $rt-color-gold;
+        border-color: $rt-color-gold;
+        
+        &::after {
+          content: '✓';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: $rt-color-void;
+          font-size: 12px;
+          font-weight: bold;
+        }
+      }
+      
+      &:hover {
+        border-color: $rt-color-gold;
+      }
+    }
+  }
+}
+
+// Field Grid Layouts
+.rt-field-grid {
+  display: grid;
+  gap: $rt-space-md;
+  
+  &--2 { grid-template-columns: repeat(2, 1fr); }
+  &--3 { grid-template-columns: repeat(3, 1fr); }
+  &--4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+// ============================================
+// Description / Rich Text
+// ============================================
+
+.rt-description {
+  background: rgba($rt-color-parchment, 0.05);
+  border: 1px solid rgba($rt-color-parchment, 0.1);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+  
+  .editor-content {
+    color: $rt-color-parchment-dark;
+    line-height: 1.6;
+    
+    h1, h2, h3, h4 {
+      font-family: $rt-font-heading;
+      color: $rt-color-gold;
+      margin-top: $rt-space-md;
+      margin-bottom: $rt-space-sm;
+    }
+    
+    p {
+      margin-bottom: $rt-space-sm;
+    }
+    
+    strong, b {
+      color: $rt-color-parchment;
+    }
+    
+    ul, ol {
+      padding-left: $rt-space-lg;
+      margin-bottom: $rt-space-sm;
+    }
+    
+    li {
+      margin-bottom: $rt-space-xs;
+    }
+  }
+}
+

@@ -1,0 +1,105 @@
+// ============================================
+// Damage Display
+// ============================================
+
+.rt-damage-display {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  background: linear-gradient(135deg, rgba($rt-color-crimson, 0.1) 0%, transparent 100%);
+  border: 1px solid $rt-color-crimson-dark;
+  border-radius: $rt-radius-md;
+  
+  &__dice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: $rt-color-crimson-dark;
+    border-radius: $rt-radius-md;
+    font-family: $rt-font-display;
+    font-size: $rt-font-size-lg;
+    color: $rt-color-parchment;
+    box-shadow: $rt-shadow-md;
+  }
+  
+  &__info {
+    flex: 1;
+  }
+  
+  &__formula {
+    font-family: $rt-font-display;
+    font-size: $rt-font-size-xl;
+    color: $rt-color-crimson-light;
+  }
+  
+  &__type {
+    font-size: $rt-font-size-sm;
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+  }
+  
+  &__pen {
+    padding: $rt-space-xs $rt-space-sm;
+    background: $rt-color-steel-dark;
+    border-radius: $rt-radius-sm;
+    font-size: $rt-font-size-sm;
+    
+    span {
+      color: $rt-color-gold;
+      font-weight: 600;
+    }
+  }
+}
+
+// ============================================
+// Weapon Qualities / Tags
+// ============================================
+
+.rt-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $rt-space-xs;
+}
+
+.rt-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: 2px $rt-space-sm;
+  background: rgba($rt-color-steel, 0.2);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: 12px;
+  font-size: $rt-font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-color-steel-light;
+  transition: all $rt-transition-fast;
+  cursor: default;
+  
+  &:hover {
+    background: rgba($rt-color-steel, 0.3);
+    border-color: $rt-color-steel;
+  }
+  
+  &--positive {
+    background: rgba($rt-color-success, 0.2);
+    border-color: $rt-color-success;
+    color: lighten($rt-color-success, 30%);
+  }
+  
+  &--negative {
+    background: rgba($rt-color-failure, 0.2);
+    border-color: $rt-color-failure;
+    color: lighten($rt-color-failure, 30%);
+  }
+  
+  &--special {
+    background: rgba($rt-color-gold, 0.2);
+    border-color: $rt-color-gold-dark;
+    color: $rt-color-gold-light;
+  }
+}
+

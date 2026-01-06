@@ -1,41 +1,54 @@
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        <div class="dh-roll">
-            <h1>{{this.actor.name}}</h1>
-            {{#if hasDamage}}<h2>{{this.hit.location}} Hit</h2>{{/if}}
-            <div class="dh-roll__divider"></div>
-
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Wounds</div>
-                <div class="dh-roll__value">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</div>
+{{!-- Rogue Trader Assign Damage Card - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            <div class="rt-roll-card__actor">{{this.actor.name}}</div>
+            {{#if hasDamage}}<h2 class="rt-roll-card__title">{{this.hit.location}} Hit</h2>{{else}}<h2 class="rt-roll-card__title">Damage Applied</h2>{{/if}}
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
+            {{!-- Current Status --}}
+            <div class="rt-roll-card__row">
+                <span class="rt-roll-card__label">Wounds</span>
+                <span class="rt-roll-card__value">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</span>
             </div>
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Fatigue</div>
-                <div class="dh-roll__value">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</div>
+            <div class="rt-roll-card__row">
+                <span class="rt-roll-card__label">Fatigue</span>
+                <span class="rt-roll-card__value">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</span>
             </div>
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Critical Wounds</div>
-                <div class="dh-roll__value">{{this.actor.system.wounds.critical}}</div>
+            <div class="rt-roll-card__row">
+                <span class="rt-roll-card__label">Critical Wounds</span>
+                <span class="rt-roll-card__value">{{this.actor.system.wounds.critical}}</span>
             </div>
-
+            
+            <div class="rt-roll-card__divider"></div>
+            
+            {{!-- Damage Taken --}}
             {{#if this.hasDamage}}
-                <div class="dh-roll__fail">
-                    <span>{{this.damageTaken}}</span>
-                    <span>{{this.hit.damageType}} Damage</span>
+                <div class="rt-roll-card__damage">
+                    <div class="rt-roll-card__damage-header">
+                        <span class="rt-roll-card__damage-title">Wounds Taken</span>
+                        <span class="rt-roll-card__damage-location">{{this.hit.location}}</span>
+                    </div>
+                    <div class="rt-roll-card__damage-value">{{this.damageTaken}}</div>
+                    <div class="rt-roll-card__damage-type">{{this.hit.damageType}}</div>
                 </div>
             {{/if}}
+            
             {{#if this.hasFatigueDamage}}
-                <div class="dh-roll__fail">
-                    <span>{{this.fatigueTaken}}</span>
-                    <span>Fatigue</span>
+                <div class="rt-roll-card__notice">
+                    <span class="rt-roll-card__notice-label">Fatigue</span>
+                    <span class="rt-roll-card__notice-value">+{{this.fatigueTaken}}</span>
                 </div>
             {{/if}}
+            
             {{#if this.hasCriticalDamage}}
-                <div class="dh-roll__fail">
-                    <span>{{this.criticalDamageTaken}}</span>
-                    <span>Critical Damage</span>
+                <div class="rt-roll-card__fury">
+                    <div class="rt-roll-card__fury-title">⚠ Critical Damage: {{this.criticalDamageTaken}} ⚠</div>
+                    <div class="rt-roll-card__fury-effect">{{this.criticalEffect}}</div>
                 </div>
-                <div class="dh-roll__label">{{this.criticalEffect}}</div>
             {{/if}}
         </div>
     </div>

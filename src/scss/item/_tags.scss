@@ -1,0 +1,111 @@
+// ============================================
+// Empty State Message
+// ============================================
+
+.rt-empty-state {
+  text-align: center;
+  padding: $rt-space-xl;
+  color: $rt-color-steel;
+  font-style: italic;
+  background: rgba($rt-color-void-light, 0.3);
+  border: 1px dashed $rt-color-void-lighter;
+  border-radius: $rt-radius-md;
+}
+
+// ============================================
+// Tag Variants
+// ============================================
+
+.rt-tag {
+  &--success {
+    background: rgba($rt-color-success, 0.3);
+    border-color: $rt-color-success;
+    color: lighten($rt-color-success, 35%);
+  }
+  
+  &--muted {
+    background: rgba($rt-color-steel-dark, 0.3);
+    border-color: $rt-color-steel-dark;
+    color: $rt-color-steel;
+  }
+  
+  &--psychic {
+    background: rgba(#6a0dad, 0.3);
+    border-color: #8b00ff;
+    color: #d8a8ff;
+  }
+}
+
+// ============================================
+// Stat Badge Variants
+// ============================================
+
+.rt-stat-badge {
+  &--primary {
+    background: linear-gradient(135deg, $rt-color-gold-dark 0%, rgba($rt-color-gold, 0.3) 100%);
+    border-color: $rt-color-gold;
+    
+    .rt-stat-badge__value {
+      color: $rt-color-gold-light;
+    }
+  }
+  
+  &--gold {
+    background: linear-gradient(135deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
+    border-color: $rt-color-gold-light;
+    
+    .rt-stat-badge__value {
+      color: $rt-color-void;
+      font-weight: 700;
+    }
+  }
+  
+  &--psychic {
+    background: linear-gradient(135deg, rgba(#6a0dad, 0.4) 0%, rgba(#8b00ff, 0.2) 100%);
+    border-color: #8b00ff;
+    
+    .rt-stat-badge__value {
+      color: #d8a8ff;
+    }
+  }
+  
+  &--wide {
+    flex: 2;
+  }
+  
+  &__value--small {
+    font-size: $rt-font-size-xs !important;
+    font-weight: 500;
+  }
+}
+
+// ============================================
+// Textarea (for Talent benefit, etc.)
+// ============================================
+
+.rt-field__textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: $rt-space-md;
+  background: $rt-bg-input;
+  border: 1px solid $rt-color-void-lighter;
+  border-radius: $rt-radius-md;
+  color: $rt-color-parchment;
+  font-family: $rt-font-body;
+  font-size: $rt-font-size-base;
+  line-height: 1.6;
+  resize: vertical;
+  transition: all $rt-transition-fast;
+  
+  &:focus {
+    outline: none;
+    background: $rt-bg-input-focus;
+    border-color: $rt-color-gold;
+    box-shadow: $rt-shadow-glow-gold;
+  }
+  
+  &::placeholder {
+    color: $rt-color-steel;
+  }
+}
+

@@ -162,7 +162,6 @@ export class BasicActionManager {
     async _applyDamage(event) {
         event.preventDefault();
         const div = event.currentTarget;
-        console.log(div);
         const targetUuid = div.dataset.uuid;
         const damageType = div.dataset.type;
         const ignoreArmour = div.dataset.ignoreArmour;

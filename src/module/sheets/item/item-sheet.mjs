@@ -3,14 +3,15 @@ import { toggleUIExpanded } from '../../rules/config.mjs';
 export class RogueTraderItemSheet extends ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            width: 650,
+            classes: ['rogue-trader', 'sheet', 'item', 'rt-item-sheet'],
+            width: 550,
             height: 500,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'description' }],
+            tabs: [{ navSelector: '.rt-tabs', contentSelector: '.rt-tab-content', initial: 'description' }],
         });
     }
 
     get template() {
-        return `systems/rogue-trader/templates/item/item-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-sheet-modern.hbs`;
     }
 
     getData() {

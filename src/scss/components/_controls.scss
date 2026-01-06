@@ -1,20 +1,5 @@
-.dh {
-    &-material {
-        font-family: 'Material Icons';
-        font-weight: normal;
-        font-style: normal;
-        font-size: 12px;
-        line-height: 1;
-        letter-spacing: normal;
-        text-transform: none;
-        display: inline-grid;
-        white-space: nowrap;
-        word-wrap: normal;
-        direction: ltr;
-        -webkit-font-feature-settings: 'liga';
-        -webkit-font-smoothing: antialiased;
-    }
-
+// Shared control button styles mixin
+@mixin control-button-styles {
     // Settings Cog
     &-control-button {
         cursor: pointer;
@@ -66,6 +51,35 @@
             text-align: left;
         }
     }
+}
+
+.dh {
+    &-material {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 12px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-grid;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+    }
+
+    @include control-button-styles;
+}
+
+// RT prefix aliases (allows gradual migration)
+.rt {
+    &-material {
+        @extend .dh-material;
+    }
+
+    @include control-button-styles;
 }
 
 button[type='roll'] {

@@ -5,7 +5,7 @@ export class RogueTraderStorageLocationSheet extends RogueTraderItemContainerShe
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 800,
             height: 400,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'items' }],
+            tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'items' }],
         });
     }
 

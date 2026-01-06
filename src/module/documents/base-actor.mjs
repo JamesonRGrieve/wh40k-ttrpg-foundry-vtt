@@ -45,10 +45,16 @@ export class RogueTraderBaseActor extends Actor {
         return this.system.movement;
     }
 
-    async prepareData() {
-        await super.prepareData();
-        this._computeCharacteristics();
-        this._computeMovement();
+    prepareData() {
+        super.prepareData();
+
+        // Skip legacy calculations if a DataModel is handling data preparation
+        // DataModels have their own prepareDerivedData that already ran
+        const hasDataModel = typeof this.system?.prepareDerivedData === 'function';
+        if (!hasDataModel) {
+            this._computeCharacteristics();
+            this._computeMovement();
+        }
     }
 
     async rollCharacteristic(characteristicName, override) {
@@ -73,9 +79,14 @@ export class RogueTraderBaseActor extends Actor {
         }
     }
 
+    /**
+     * Compute characteristic totals and bonuses.
+     * Used for actor types that don't have a DataModel (NPC, Vehicle, Starship).
+     * @protected
+     */
     _computeCharacteristics() {
         if (!this.characteristics) return;
-        
+
         for (const [name, characteristic] of Object.entries(this.characteristics)) {
             const base = Number(characteristic.base ?? characteristic.starting ?? 0);
             const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
@@ -83,10 +94,14 @@ export class RogueTraderBaseActor extends Actor {
             const unnatural = Number(characteristic.unnatural ?? 0);
 
             characteristic.total = base + advance * 5 + modifier;
-            characteristic.bonus = Math.floor(characteristic.total / 10) + unnatural;
+
+            // Calculate bonus: base modifier is tens digit
+            const baseModifier = Math.floor(characteristic.total / 10);
+            // Unnatural multiplies the modifier (0 = no effect, 2+ = multiplier)
+            characteristic.bonus = unnatural >= 2 ? baseModifier * unnatural : baseModifier;
         }
 
-        if (this.initiative && this.initiative.characteristic && this.characteristics[this.initiative.characteristic]) {
+        if (this.initiative?.characteristic && this.characteristics[this.initiative.characteristic]) {
             this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
         }
     }

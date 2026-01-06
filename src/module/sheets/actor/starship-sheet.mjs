@@ -6,7 +6,7 @@ export class StarshipSheet extends ActorContainerSheet {
             width: 900,
             height: 700,
             resizable: true,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'stats' }],
+            tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'stats' }],
         });
     }
 
@@ -70,6 +70,12 @@ export class StarshipSheet extends ActorContainerSheet {
             if (item) {
                 await this._fireShipWeapon(item);
             }
+        });
+
+        // Ship initiative roll button
+        html.find('[data-action="rollInitiative"]').click(async (ev) => {
+            ev.preventDefault();
+            await this.actor.rollInitiative();
         });
     }
 

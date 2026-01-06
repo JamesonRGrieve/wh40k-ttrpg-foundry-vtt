@@ -1,0 +1,157 @@
+// ============================================
+// Tab-Specific Accent Colors
+// ============================================
+
+.rt-tab[data-tab="overview"],
+.rt-tab-overview {
+  // Override the base .rt-tab grid display  
+  &.active {
+    display: block !important;
+  }
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.12) 0%, transparent 100%);
+  }
+}
+
+.rt-tab[data-tab="combat"],
+.rt-tab-combat {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+  }
+  
+  .rt-panel-title i {
+    color: $rt-accent-combat;
+  }
+}
+
+.rt-tab[data-tab="abilities"] {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  padding: $rt-space-md;
+  
+  .dh-panel__header {
+    background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
+  }
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
+  }
+  
+  .rt-panel-title i {
+    color: $rt-accent-skills;
+  }
+}
+
+.rt-tab-abilities {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  padding: $rt-space-md;
+}
+
+// Characteristics Panel in Skills Tab
+.rt-chars-panel {
+  margin-bottom: $rt-space-md;
+}
+
+.rt-tab[data-tab="specialties"] {
+  // Note: specialties uses rt-specialties-layout which has its own grid styling
+  .rt-panel-header,
+  .rt-specialist-header {
+    background: linear-gradient(180deg, rgba($rt-accent-talents, 0.12) 0%, transparent 100%);
+  }
+}
+
+.rt-tab[data-tab="equipment"] {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  
+  .dh-panel__header {
+    background: linear-gradient(180deg, rgba($rt-accent-equipment, 0.12) 0%, transparent 100%);
+  }
+}
+
+.rt-tab[data-tab="powers"] {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  
+  .dh-panel__header {
+    background: linear-gradient(180deg, rgba($rt-accent-powers, 0.12) 0%, transparent 100%);
+  }
+}
+
+.rt-tab[data-tab="dynasty"] {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  
+  .rt-panel-header,
+  .dh-panel__header {
+    background: linear-gradient(180deg, rgba($rt-accent-dynasty, 0.12) 0%, transparent 100%);
+  }
+}
+
+.rt-tab[data-tab="bio"] {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  
+  .rt-panel-header,
+  .dh-panel__header {
+    background: linear-gradient(180deg, rgba($rt-accent-bio, 0.08) 0%, transparent 100%);
+  }
+}
+
+// ============================================
+// Layout Helpers
+// ============================================
+
+.rt-specialties-layout {
+  // This class already overridden in _actor.scss with specific grid
+  // Just add padding and flex for children
+  padding: $rt-space-md;
+  
+  .rt-specialties-left,
+  .rt-specialties-right {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.rt-abilities-layout {
+  padding: $rt-space-md;
+  
+  .rt-abilities-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+  }
+}
+
+// Reset grid spans for panels within modern layout
+.rt-tab .dh-panel {
+  &.dh-grid-col-2,
+  &.dh-grid-col-3,
+  &.dh-grid-col-4,
+  &.dh-grid-col-5,
+  &.dh-grid-col-6 {
+    grid-column: auto;
+  }
+}
+
+// ============================================

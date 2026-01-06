@@ -1,25 +1,27 @@
-<form class="dh-wrapper">
-    <div class="dh-panel spacer">
-        <h1 class="dh-panel__header">{{name}} Damage Roll</h1>
+{{!-- Rogue Trader Damage Roll Prompt - Modern Design --}}
+<form class="rt-prompt rt-prompt--damage" autocomplete="off">
+    <div class="rt-prompt__panel">
+        <h3 class="rt-prompt__section-title">{{name}} Damage</h3>
+        
         {{#if psychicPower}}
-            <div class="dh-field__wrapper">
-                <span class="dh-field__span">Psychic Rating</span>
-                <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Psychic Rating</span>
+                <input class="rt-prompt__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
             </div>
         {{/if}}
-        <div class="dh-field__wrapper">
-            <span class="dh-field__span">Damage</span>
-            <input class="dh-field__input" type="text" id="damage" name="damage" value="{{damage}}" />
+        <div class="rt-prompt__field">
+            <span class="rt-prompt__label">Damage Formula</span>
+            <input class="rt-prompt__input" type="text" id="damage" name="damage" value="{{damage}}" />
         </div>
-        <div class="dh-field__wrapper">
-            <span class="dh-field__span">Type</span>
-            <select class="dh-field__input" id="damageType" name="damageType">
+        <div class="rt-prompt__field">
+            <span class="rt-prompt__label">Damage Type</span>
+            <select class="rt-prompt__select" id="damageType" name="damageType">
                 {{selectOptions (arrayToObject dh.combat.damage_types) selected=damageType}}
             </select>
         </div>
-        <div class="dh-field__wrapper">
-            <span class="dh-field__span">Penetration</span>
-            <input class="dh-field__input" type="text" id="penetration" name="penetration" value="{{penetration}}" />
+        <div class="rt-prompt__field">
+            <span class="rt-prompt__label">Penetration</span>
+            <input class="rt-prompt__input" type="text" id="penetration" name="penetration" value="{{penetration}}" />
         </div>
     </div>
 </form>

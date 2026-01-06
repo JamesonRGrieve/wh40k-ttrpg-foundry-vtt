@@ -1,37 +1,30 @@
-<div class="dh-panel dh-grid-col-2">
-    <h1 class="dh-panel__header">Active Effects</h1>
-    <div class="dh-table--border dh-activeeffectstable--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">Name</div>
-            <div class="table-cell--last">
-                <label class="dh-control-button effect-create">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
-                </label>
-            </div>
-        </div>
+<div class="rt-panel rt-effects-panel rt-grid-col-2">
+    <div class="rt-effects-header">
+        <h3 class="rt-effects-title"><i class="fas fa-bolt"></i> Active Effects</h3>
+        <button type="button" class="rt-effects-add effect-create" title="Add Effect">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+    <div class="rt-effects-list">
         {{#each effects as |effect|}}
-            <div class="table-row">
-                <div class="table-cell--settingstoggle">
-                    <label class="dh-control-button effect-edit" data-effect-id="{{effect.id}}">
-                        <span class="dh-control-button__span material-icons">settings</span>
-                    </label>
-                </div>
-                <div class="table-cell">
-                    <span class="table-cell--description">{{effect.label}}</span>
-                </div>
-                <div class="table-cell">
-                    {{#if disabled}}
-                        <label class="dh-control-button effect-enable" data-effect-id="{{effect.id}}">
-                            <span class="dh-control-button__span material-icons">flash_on</span>
-                        </label>
+            <div class="rt-effect-row {{#if effect.disabled}}rt-effect-disabled{{/if}}">
+                <button type="button" class="rt-effect-edit effect-edit" data-effect-id="{{effect.id}}" title="Edit">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <span class="rt-effect-name">{{effect.label}}</span>
+                <div class="rt-effect-actions">
+                    {{#if effect.disabled}}
+                        <button type="button" class="rt-effect-btn effect-enable" data-effect-id="{{effect.id}}" title="Enable">
+                            <i class="fas fa-bolt"></i>
+                        </button>
                     {{else}}
-                        <label class="dh-control-button effect-disable" data-effect-id="{{effect.id}}">
-                            <span class="dh-control-button__span material-icons">flash_off</span>
-                        </label>
+                        <button type="button" class="rt-effect-btn effect-disable" data-effect-id="{{effect.id}}" title="Disable">
+                            <i class="fas fa-bolt-slash"></i>
+                        </button>
                     {{/if}}
-                    <label class="dh-control-button effect-delete" data-effect-id="{{effect.id}}">
-                        <span class="dh-control-button__span material-icons">delete</span>
-                    </label>
+                    <button type="button" class="rt-effect-btn effect-delete" data-effect-id="{{effect.id}}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
         {{/each}}

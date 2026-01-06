@@ -1,11 +1,11 @@
 {{!-- Rogue Trader Vehicle Sheet --}}
-<div class="dh-wrapper">
-    <form class="dh-actor rt-sheet rt-vehicle-sheet" autocomplete="off">
+<div class="rt-wrapper">
+    <form class="rt-actor rt-sheet rt-vehicle-sheet" autocomplete="off">
         {{!-- Vehicle Header --}}
-        <div class="dh-header dh-grid-col-6 dh-panel rt-vehicle-header">
-            <div class="dh-header__info">
-                <div class="dh-header__logo rt-portrait-container">
-                    <img class="dh-header__logo-image rt-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+        <div class="rt-header rt-grid-col-6 rt-panel rt-vehicle-header">
+            <div class="rt-header__info">
+                <div class="rt-header__logo rt-portrait-container">
+                    <img class="rt-header__logo-image rt-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
                 <div class="rt-header-info">
                     <div class="rt-header-row rt-name-row">
@@ -41,20 +41,20 @@
         </div>
 
         {{!-- Navigation Tabs --}}
-        <div class="dh-navigation rt-navigation" data-group="primary">
-            <label class="dh-navigation__item rt-nav-item">
+        <div class="rt-navigation" data-group="primary">
+            <label class="rt-navigation__item rt-nav-item">
                 <a class="item" data-tab="stats" data-group="primary">
                     <span class="material-icons">speed</span>
                     {{localize "RT.Vehicle.Tabs.Stats"}}
                 </a>
             </label>
-            <label class="dh-navigation__item rt-nav-item">
+            <label class="rt-navigation__item rt-nav-item">
                 <a class="item" data-tab="weapons" data-group="primary">
                     <span class="material-icons">gps_fixed</span>
                     {{localize "RT.Vehicle.Tabs.Weapons"}}
                 </a>
             </label>
-            <label class="dh-navigation__item rt-nav-item">
+            <label class="rt-navigation__item rt-nav-item">
                 <a class="item" data-tab="traits" data-group="primary">
                     <span class="material-icons">stars</span>
                     {{localize "RT.Vehicle.Tabs.Traits"}}
@@ -63,7 +63,7 @@
         </div>
 
         {{!-- Tab Content --}}
-        <section class="dh-body rt-body">
+        <section class="rt-body">
             {{!-- STATS TAB --}}
             <div class="tab rt-tab" data-group="primary" data-tab="stats">
                 {{> systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs}}

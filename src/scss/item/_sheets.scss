@@ -1,0 +1,828 @@
+// ============================================
+// Rogue Trader Item Sheets - Modern Design System
+// ============================================
+// Clean, functional item sheets for editing
+
+// ============================================
+// Base Item Sheet Container
+// ============================================
+
+.rt-item-sheet {
+  --rt-sheet-bg: linear-gradient(135deg, #f8f5ed 0%, #ebe7db 100%);
+  --rt-sheet-border: #4a3728;
+  --rt-sheet-text: #2a1a0a;
+  --rt-sheet-muted: #6a5a4a;
+  --rt-sheet-accent: #c9a227;
+  --rt-sheet-input-bg: rgba(255, 255, 255, 0.9);
+  --rt-sheet-input-border: rgba(74, 55, 40, 0.3);
+  --rt-sheet-input-focus: #c9a227;
+  
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  font-family: 'Roboto', sans-serif;
+  color: var(--rt-sheet-text);
+  background: var(--rt-sheet-bg);
+  border: 12px solid transparent;
+  border-image: linear-gradient(135deg, #4a3728, #2a1710, #4a3728) 1;
+  min-height: 100%;
+  
+  * {
+    box-sizing: border-box;
+  }
+}
+
+// ============================================
+// Sheet Header
+// ============================================
+
+.rt-item-sheet__header {
+  grid-column: span 6;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(74, 55, 40, 0.08) 0%, transparent 100%);
+  border-bottom: 2px solid rgba(74, 55, 40, 0.2);
+}
+
+.rt-item-sheet__image-wrapper {
+  position: relative;
+}
+
+.rt-item-sheet__image {
+  width: 80px;
+  height: 80px;
+  border: 3px solid var(--rt-sheet-border);
+  border-radius: 6px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.rt-item-sheet__title-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rt-item-sheet__name-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-item-sheet__name-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--rt-sheet-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.rt-item-sheet__name-input {
+  padding: 8px 12px;
+  background: var(--rt-sheet-input-bg);
+  border: 2px solid var(--rt-sheet-input-border);
+  border-radius: 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--rt-sheet-border);
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-sheet-input-focus);
+    box-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
+  }
+}
+
+.rt-item-sheet__meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+// ============================================
+// Sheet Panel
+// ============================================
+
+.rt-item-sheet__panel {
+  grid-column: span 6;
+  padding: 16px;
+  
+  &--half {
+    grid-column: span 3;
+  }
+  
+  &--third {
+    grid-column: span 2;
+  }
+}
+
+.rt-item-sheet__panel-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--rt-sheet-border);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(74, 55, 40, 0.2);
+  
+  &::before {
+    content: '◆';
+    margin-right: 8px;
+    color: var(--rt-sheet-accent);
+    font-size: 0.8em;
+  }
+}
+
+// ============================================
+// Form Fields
+// ============================================
+
+.rt-item-sheet__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.rt-item-sheet__field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+  
+  &--3col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  &--4col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.rt-item-sheet__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--rt-sheet-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rt-item-sheet__input {
+  padding: 8px 12px;
+  background: var(--rt-sheet-input-bg);
+  border: 1px solid var(--rt-sheet-input-border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--rt-sheet-text);
+  font-family: inherit;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-sheet-input-focus);
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.2);
+  }
+  
+  &[type="number"] {
+    text-align: center;
+  }
+  
+  &[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--rt-sheet-accent);
+    cursor: pointer;
+  }
+}
+
+.rt-item-sheet__select {
+  padding: 8px 12px;
+  background: var(--rt-sheet-input-bg);
+  border: 1px solid var(--rt-sheet-input-border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--rt-sheet-text);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-sheet-input-focus);
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.2);
+  }
+}
+
+.rt-item-sheet__textarea {
+  padding: 10px 12px;
+  background: var(--rt-sheet-input-bg);
+  border: 1px solid var(--rt-sheet-input-border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--rt-sheet-text);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-sheet-input-focus);
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.2);
+  }
+}
+
+// ============================================
+// Checkbox Field (inline)
+// ============================================
+
+.rt-item-sheet__checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  
+  .rt-item-sheet__label {
+    margin: 0;
+    cursor: pointer;
+  }
+}
+
+// ============================================
+// Inline Field (label + input on same line)
+// ============================================
+
+.rt-item-sheet__inline-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  
+  .rt-item-sheet__label {
+    flex-shrink: 0;
+    min-width: 100px;
+  }
+  
+  .rt-item-sheet__input,
+  .rt-item-sheet__select {
+    flex: 1;
+  }
+}
+
+// ============================================
+// Stats Grid
+// ============================================
+
+.rt-item-sheet__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  border: 1px solid rgba(74, 55, 40, 0.1);
+}
+
+.rt-item-sheet__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  
+  .rt-item-sheet__label {
+    font-size: 0.7rem;
+    text-align: center;
+  }
+  
+  .rt-item-sheet__input {
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+  }
+}
+
+// ============================================
+// Description Area
+// ============================================
+
+.rt-item-sheet__description {
+  grid-column: span 6;
+  padding: 16px;
+  
+  .rt-item-sheet__textarea {
+    width: 100%;
+    min-height: 120px;
+  }
+}
+
+// ============================================
+// Divider
+// ============================================
+
+.rt-item-sheet__divider {
+  grid-column: span 6;
+  height: 1px;
+  margin: 8px 16px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(74, 55, 40, 0.3) 20%,
+    rgba(74, 55, 40, 0.3) 80%,
+    transparent 100%
+  );
+}
+
+// ============================================
+// Tabs (for complex items)
+// ============================================
+
+.rt-item-sheet__tabs {
+  grid-column: span 6;
+  display: flex;
+  gap: 2px;
+  padding: 0 16px;
+  border-bottom: 2px solid rgba(74, 55, 40, 0.2);
+}
+
+.rt-item-sheet__tab {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rt-sheet-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  
+  &:hover {
+    color: var(--rt-sheet-border);
+  }
+  
+  &--active {
+    color: var(--rt-sheet-accent);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--rt-sheet-accent);
+    }
+  }
+}
+
+.rt-item-sheet__tab-content {
+  grid-column: span 6;
+  display: none;
+  
+  &--active {
+    display: block;
+  }
+}
+
+// ============================================
+// Action Bar (for buttons at bottom)
+// ============================================
+
+.rt-item-sheet__actions {
+  grid-column: span 6;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid rgba(74, 55, 40, 0.15);
+}
+
+.rt-item-sheet__btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #f5f3ed 0%, #e0dcd0 100%);
+  border: 1px solid var(--rt-sheet-border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rt-sheet-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  .material-icons {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, #e0dcd0 0%, #d0ccc0 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  &--primary {
+    background: linear-gradient(135deg, #c9a227 0%, #8b7015 100%);
+    border-color: #6b5010;
+    color: #fff;
+    
+    &:hover {
+      background: linear-gradient(135deg, #d4ad32 0%, #967820 100%);
+    }
+  }
+  
+  &--danger {
+    background: linear-gradient(135deg, #8b0000 0%, #660000 100%);
+    border-color: #4a0000;
+    color: #fff;
+    
+    &:hover {
+      background: linear-gradient(135deg, #a00000 0%, #800000 100%);
+    }
+  }
+}
+
+// ============================================
+// Active Effects Panel
+// ============================================
+
+.rt-item-sheet__effects {
+  grid-column: span 6;
+  padding: 16px;
+}
+
+.rt-item-sheet__effect-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-item-sheet__effect-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(74, 55, 40, 0.15);
+  border-radius: 4px;
+  
+  .rt-item-sheet__effect-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid var(--rt-sheet-input-border);
+  }
+  
+  .rt-item-sheet__effect-name {
+    flex: 1;
+    font-weight: 500;
+  }
+  
+  .rt-item-sheet__effect-controls {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .rt-item-sheet__effect-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(74, 55, 40, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    .material-icons {
+      font-size: 14px;
+      color: var(--rt-sheet-muted);
+    }
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+      
+      .material-icons {
+        color: var(--rt-sheet-border);
+      }
+    }
+    
+    &--delete:hover {
+      background: rgba(139, 0, 0, 0.1);
+      
+      .material-icons {
+        color: #8b0000;
+      }
+    }
+  }
+}
+
+// ============================================
+// Tab Body (for tabbed item sheets)
+// ============================================
+
+.rt-item-sheet__body {
+  grid-column: span 6;
+  padding: 0;
+}
+
+// ============================================
+// Storage Location Styles
+// ============================================
+
+.rt-item-sheet__storage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-item-sheet__storage-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(74, 55, 40, 0.2);
+  border-radius: 4px;
+  cursor: grab;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: var(--rt-sheet-accent);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.rt-item-sheet__storage-edit,
+.rt-item-sheet__storage-delete {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(74, 55, 40, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  .material-icons {
+    font-size: 16px;
+    color: var(--rt-sheet-muted);
+  }
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    
+    .material-icons {
+      color: var(--rt-sheet-border);
+    }
+  }
+}
+
+.rt-item-sheet__storage-delete:hover {
+  background: rgba(139, 0, 0, 0.1);
+  
+  .material-icons {
+    color: #8b0000;
+  }
+}
+
+.rt-item-sheet__storage-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rt-item-sheet__storage-name {
+  font-weight: 600;
+  color: var(--rt-sheet-text);
+}
+
+.rt-item-sheet__storage-type {
+  font-size: 0.75rem;
+  color: var(--rt-sheet-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// ============================================
+// Panel Count Badge
+// ============================================
+
+.rt-item-sheet__panel-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  margin-left: 8px;
+  background: var(--rt-sheet-accent);
+  border-radius: 11px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rt-item-sheet__panel-action {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rt-sheet-accent);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  .material-icons {
+    font-size: 18px;
+    color: #fff;
+  }
+  
+  &:hover {
+    background: #d4ad32;
+    transform: scale(1.1);
+  }
+}
+
+// ============================================
+// Empty State
+// ============================================
+
+.rt-item-sheet__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--rt-sheet-muted);
+  
+  .material-icons {
+    font-size: 48px;
+    opacity: 0.4;
+    margin-bottom: 12px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    max-width: 240px;
+  }
+  
+  &--small {
+    padding: 20px 16px;
+    
+    .material-icons {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// ============================================
+// Effects List (alternate panel style)
+// ============================================
+
+.rt-item-sheet__effects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-item-sheet__effect {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(74, 55, 40, 0.15);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+  }
+  
+  &--disabled {
+    opacity: 0.5;
+    
+    .rt-item-sheet__effect-name {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.rt-item-sheet__effect-btn {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(74, 55, 40, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  .material-icons {
+    font-size: 16px;
+    color: var(--rt-sheet-muted);
+  }
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    
+    .material-icons {
+      color: var(--rt-sheet-border);
+    }
+  }
+  
+  &--danger:hover {
+    background: rgba(139, 0, 0, 0.1);
+    
+    .material-icons {
+      color: #8b0000;
+    }
+  }
+}
+
+.rt-item-sheet__effect-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--rt-sheet-text);
+}
+
+.rt-item-sheet__effect-controls {
+  display: flex;
+  gap: 4px;
+}
+
+// ============================================
+// Tabs with Icons (for Foundry-style tab navigation)
+// ============================================
+
+.rt-item-sheet__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  
+  .material-icons {
+    font-size: 16px;
+  }
+  
+  &.active {
+    color: var(--rt-sheet-accent);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--rt-sheet-accent);
+    }
+  }
+}
+
+// ============================================
+// Large Textarea Variant
+// ============================================
+
+.rt-item-sheet__textarea--large {
+  min-height: 200px;
+}

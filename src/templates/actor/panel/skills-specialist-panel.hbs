@@ -1,66 +1,69 @@
-<div class="dh-panel rt-specialist-skills-panel">
-    <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">{{localize "RT.Skills.SpecialistHeader"}}</h1>
-        <div class="table-row--head rt-skills-header">
-            <div class="table-cell rt-skill-name">{{localize "RT.Skills.Specialization"}}</div>
-            <div class="table-cell rt-skill-char">{{localize "RT.Skills.Characteristic"}}</div>
-            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Training"}}</div>
-            <div class="table-cell rt-skill-bonus">{{localize "RT.Skills.Bonus"}}</div>
-            <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
+<div class="rt-specialist-panel">
+    {{#each skillLists.specialist as |entry|}}
+    <div class="rt-specialist-group" data-skill="{{entry.[0]}}">
+        <!-- Group Header -->
+        <div class="rt-specialist-header">
+            <span class="rt-specialist-name">{{entry.[1].label}}</span>
+            <span class="rt-specialist-char">{{entry.[1].characteristic}}</span>
+            <button type="button" class="rt-specialist-add add-skill" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
+                <i class="fas fa-plus"></i>
+            </button>
         </div>
-        {{#each skillLists.specialist as |entry|}}
-            <div class="table-row--grouped rt-specialist-group spec_skills_{{entry.[0]}}" data-skill="{{entry.[0]}}">
-                <div class="table-cell--settingstoggle">
-                    {{> systems/rogue-trader/templates/actor/partial/display-toggle.hbs toggle=(concat 'spec_skills_' entry.[0])}}
-                </div>
-                <div class="table-cell--grouped rt-specialist-group-name">
-                    <span class="rt-group-label">{{entry.[1].label}}</span>
-                </div>
-                <div class="table-cell--last rt-specialist-add">
-                    <button class="dh-settings__label--add add-skill rt-add-specialization" data-skill="{{entry.[0]}}" title="{{localize 'RT.Skills.AddSpecializationTitle' entry.[1].label}}">
-                        <span class="material-icons">add_box</span> {{localize "RT.Skills.AddSpecialization"}}
-                    </button>
-                </div>
-            </div>
-            <div class="rt-specialist-block spec_skills_{{entry.[0]}}" {{hideIfNot (isExpanded (concat 'spec_skills_' entry.[0]))}}>
-                {{#if entry.[1].entries.length}}
-                    {{#each entry.[1].entries as |speciality idx|}}
-                        <div class="table-row actor-drag rt-specialist-row" data-item-type="skill" data-item-id="{{../entry.[0]}}" data-specialty="{{idx}}">
-                            <div class="table-cell rt-skill-name rt-specialist-name">
-                                <input type="text" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.name" value="{{speciality.name}}" class="rt-specialization-input" placeholder="{{localize 'RT.Skills.Specialization'}}..." />
-                                <button class="roll-skill rt-skill-button" data-skill="{{../entry.[0]}}" data-specialty="{{idx}}" type="roll" title="{{localize 'RT.Skills.RollSkillTitle' speciality.name}}">
-                                    <span class="material-icons">casino</span>
-                                </button>
-                            </div>
-                            <div class="table-cell rt-skill-char">
-                                <select name="system.skills.{{../entry.[0]}}.entries.{{idx}}.characteristic" class="rt-char-select">
-                                    {{selectOptions ../../skillCharacteristicOptions selected=speciality.characteristic}}
-                                </select>
-                            </div>
-                            <div class="table-cell rt-skill-training">
-                                <div class="rt-training-select">
-                                    <select class="rt-skill-training-select" data-skill="{{../entry.[0]}}" data-specialty="{{idx}}">
-                                        {{selectOptions ../../skillTrainingOptions selected=speciality.trainingLevel}}
-                                    </select>
-                                    <span class="rt-training-caret"></span>
-                                </div>
-                            </div>
-                            <div class="table-cell rt-skill-bonus">
-                                <input type="number" data-dtype="Number" name="system.skills.{{../entry.[0]}}.entries.{{idx}}.bonus" value="{{speciality.bonus}}" class="rt-bonus-input" />
-                            </div>
-                            <div class="table-cell--last table-cell--highlight rt-skill-total">
-                                <span class="display rt-total-value">{{speciality.current}}</span>
-                            </div>
-                        </div>
-                    {{/each}}
-                {{else}}
-                    <div class="table-row rt-no-specializations">
-                        <div class="table-cell--grouped rt-empty-message">
-                            <span class="material-icons">info</span> {{localize "RT.Skills.NoSpecializations" entry.[1].label}}
-                        </div>
+        
+        <!-- Entries -->
+        <div class="rt-specialist-entries">
+            {{#if entry.[1].entries.length}}
+                {{#each entry.[1].entries as |spec idx|}}
+                <div class="rt-specialist-entry" data-skill="{{../entry.[0]}}" data-index="{{idx}}">
+                    <div class="rt-spec-name">
+                        <input type="text" 
+                               name="system.skills.{{../entry.[0]}}.entries.{{idx}}.name" 
+                               value="{{spec.name}}" 
+                               placeholder="Specialization..." />
                     </div>
-                {{/if}}
-            </div>
-        {{/each}}
+                    <div class="rt-spec-training">
+                        <button type="button" class="rt-train-btn {{#if spec.trained}}active{{/if}}" 
+                                data-field="system.skills.{{../entry.[0]}}.entries.{{idx}}.trained"
+                                data-value="{{spec.trained}}"
+                                title="Trained (+10)">T</button>
+                        <button type="button" class="rt-train-btn {{#if spec.plus10}}active{{/if}}"
+                                data-field="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus10"
+                                data-value="{{spec.plus10}}"
+                                title="+10 (+20)">+10</button>
+                        <button type="button" class="rt-train-btn {{#if spec.plus20}}active{{/if}}"
+                                data-field="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus20"
+                                data-value="{{spec.plus20}}"
+                                title="+20 (+30)">+20</button>
+                    </div>
+                    <div class="rt-spec-bonus">
+                        <input type="number" 
+                               name="system.skills.{{../entry.[0]}}.entries.{{idx}}.bonus" 
+                               value="{{spec.bonus}}" 
+                               data-dtype="Number" />
+                    </div>
+                    <div class="rt-spec-total">{{spec.current}}</div>
+                    <div class="rt-spec-actions">
+                        <button type="button" class="rt-spec-roll roll-skill" 
+                                data-skill="{{../entry.[0]}}" 
+                                data-specialty="{{idx}}" 
+                                title="Roll {{spec.name}}">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        <button type="button" class="rt-spec-delete delete-specialization" 
+                                data-skill="{{../entry.[0]}}" 
+                                data-index="{{idx}}" 
+                                title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {{/each}}
+            {{else}}
+                <div class="rt-specialist-empty">
+                    <span>No specializations yet</span>
+                </div>
+            {{/if}}
+        </div>
     </div>
+    {{/each}}
 </div>

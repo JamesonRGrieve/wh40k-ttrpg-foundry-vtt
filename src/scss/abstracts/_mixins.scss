@@ -1,0 +1,228 @@
+// ============================================
+// Rogue Trader Design System Mixins
+// ============================================
+// Reusable patterns to reduce duplication
+
+// ============================================
+// Icon Buttons
+// ============================================
+
+@mixin rt-icon-button($size: 24px, $hover-color: $rt-accent-gold, $icon-size: 0.7rem) {
+  width: $size;
+  height: $size;
+  padding: 0;
+  background: transparent;
+  border: 1px solid $rt-border-medium;
+  border-radius: $rt-radius-md;
+  color: $rt-text-secondary;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $rt-transition-fast;
+
+  &:hover {
+    background: $rt-bg-subtle;
+    color: $hover-color;
+    border-color: $hover-color;
+  }
+
+  i {
+    font-size: $icon-size;
+  }
+}
+
+// ============================================
+// Panel Headers
+// ============================================
+
+@mixin rt-panel-header-base($accent-color: $rt-accent-gold) {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(180deg, rgba($accent-color, 0.12) 0%, transparent 100%);
+  border-bottom: 1px solid $rt-border-light;
+}
+
+@mixin rt-panel-title {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $rt-text-primary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  i {
+    margin-right: $rt-space-xs;
+    color: inherit;
+  }
+}
+
+// ============================================
+// Progress Bars
+// ============================================
+
+@mixin rt-progress-gradient($gradient) {
+  &::-webkit-progress-value {
+    border-radius: 999px;
+    background: $gradient;
+  }
+  &::-moz-progress-bar {
+    border-radius: 999px;
+    background: $gradient;
+  }
+}
+
+@mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
+  .rt-vitals-progress {
+    @include rt-progress-gradient($progress-gradient);
+  }
+  .rt-vitals-title {
+    color: $title-color;
+    i { color: $icon-color; }
+  }
+}
+
+// ============================================
+// Form Inputs
+// ============================================
+
+@mixin rt-input-base {
+  padding: 6px 8px;
+  border: 1px solid $rt-border-medium;
+  border-radius: $rt-radius-md;
+  background: $rt-bg-input;
+  color: $rt-text-primary;
+  font-family: $rt-font-alt;
+  transition: border-color $rt-transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $rt-accent-gold;
+  }
+}
+
+@mixin rt-input-number($width: 50px) {
+  @include rt-input-base;
+  width: $width;
+  text-align: center;
+  font-weight: 600;
+}
+
+// ============================================
+// Degree Badges
+// ============================================
+
+@mixin rt-degree-badge-style($color, $darken-amount: 15%) {
+  background: rgba($color, 0.15);
+  border: 2px solid $color;
+  @if $darken-amount > 0 {
+    color: darken($color, $darken-amount);
+  } @else {
+    color: $color;
+  }
+}
+
+// ============================================
+// Training Buttons (T/+10/+20)
+// ============================================
+
+@mixin rt-train-button($active-color: $rt-accent-skills) {
+  width: 28px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid $rt-border-medium;
+  border-radius: $rt-radius-sm;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: $rt-text-muted;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba($active-color, 0.1);
+    border-color: $active-color;
+    color: $active-color;
+  }
+
+  &.active {
+    background: linear-gradient(180deg, rgba($active-color, 0.2) 0%, rgba($active-color, 0.3) 100%);
+    border-color: $active-color;
+    color: darken($active-color, 10%);
+  }
+}
+
+// ============================================
+// Row Hover Effects
+// ============================================
+
+@mixin rt-row-hover($accent-color: $rt-accent-gold) {
+  transition: background $rt-transition-fast;
+
+  &:hover {
+    background: rgba($accent-color, 0.06);
+  }
+}
+
+// ============================================
+// Flex Utilities
+// ============================================
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// ============================================
+// Panel Card Base
+// ============================================
+
+@mixin rt-panel-card {
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: $rt-radius-lg;
+  overflow: hidden;
+}
+
+// ============================================
+// Tab Grid Layouts
+// ============================================
+
+@mixin rt-tab-grid($columns: 2, $gap: $rt-space-md) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+  width: 100%;
+}
+
+@mixin rt-tab-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  .rt-panel,
+  .dh-panel {
+    margin-bottom: $rt-space-md;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -45,3 +45,263 @@
         }
     }
 }
+
+// ============================================
+// Hit Location Roll Bands & Modern Armour Panel
+// ============================================
+
+.rt-armour-panel {
+  .rt-panel-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    
+    .rt-panel-title {
+      flex: 1;
+      white-space: nowrap;
+    }
+  }
+  
+  .rt-panel-body {
+    padding: 8px;
+  }
+}
+
+.rt-hit-location-roll {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: linear-gradient(180deg, rgba(74, 55, 40, 0.15), rgba(74, 55, 40, 0.25));
+  border: 1px solid rgba(74, 55, 40, 0.35);
+  border-radius: 4px;
+  color: #4a3728;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba(74, 55, 40, 0.25), rgba(74, 55, 40, 0.35));
+    border-color: rgba(74, 55, 40, 0.5);
+    transform: scale(1.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  i {
+    font-size: 0.65rem;
+  }
+}
+
+.rt-armour-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.rt-armour-row {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.rt-armour-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(250, 248, 245, 0.9) 50%,
+    rgba(245, 243, 238, 0.85) 100%);
+  border: 2px solid rgba(74, 55, 40, 0.15);
+  border-radius: 6px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  
+  &:hover {
+    background: linear-gradient(145deg, 
+      rgba(255, 255, 255, 1) 0%, 
+      rgba(255, 250, 240, 0.95) 50%,
+      rgba(250, 245, 235, 0.9) 100%);
+    border-color: rgba(212, 165, 32, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(212, 165, 32, 0.15);
+    
+    .rt-armour-value {
+      transform: scale(1.05);
+      border-color: rgba(212, 165, 32, 0.5);
+      background: rgba(255, 250, 240, 0.95);
+    }
+    
+    .rt-armour-roll-band {
+      background: rgba(212, 165, 32, 0.85);
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.rt-armour-label {
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(74, 55, 40, 0.6);
+  line-height: 1;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+.rt-armour-value {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2a1a0a;
+  line-height: 1;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(245, 240, 230, 0.8) 100%);
+  border: 2px solid rgba(74, 55, 40, 0.2);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+  margin: 4px 0;
+}
+
+.rt-armour-roll-band {
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: rgba(74, 55, 40, 0.7);
+  background: rgba(74, 55, 40, 0.12);
+  padding: 2px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  font-family: 'Courier New', monospace;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+// Head - centered, smaller and shorter
+.rt-armour-head {
+  min-width: 65px;
+  min-height: 60px;
+  flex: 0 0 auto;
+}
+
+// Arms - narrow stick figure arms
+.rt-armour-left-arm,
+.rt-armour-right-arm {
+  min-width: 60px;
+  min-height: 90px;
+  flex: 0 0 auto;
+}
+
+// Body - widest part of stick figure, taller
+.rt-armour-body {
+  min-width: 90px;
+  min-height: 100px;
+  flex: 0 0 auto;
+}
+
+// Legs - same width as arms, longer height
+.rt-armour-left-leg,
+.rt-armour-right-leg {
+  min-width: 60px;
+  min-height: 95px;
+  flex: 0 0 auto;
+}
+
+// Hit location highlight animation
+.rt-hit-location-highlight {
+  animation: hitLocationPulse 0.4s ease-in-out 5;
+  
+  @keyframes hitLocationPulse {
+    0%, 100% {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(245, 240, 230, 0.5));
+      border-color: rgba(74, 55, 40, 0.25);
+      box-shadow: none;
+    }
+    50% {
+      background: linear-gradient(180deg, rgba(255, 200, 100, 0.7), rgba(255, 180, 80, 0.5));
+      border-color: rgba(212, 165, 32, 0.6);
+      box-shadow: 0 0 12px rgba(212, 165, 32, 0.4);
+    }
+  }
+}
+
+// Hit location roll result chat message
+.rt-hit-location-result {
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(74, 55, 40, 0.08), rgba(74, 55, 40, 0.15));
+  border-radius: 6px;
+  text-align: center;
+  
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #4a3728;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+}
+
+.rt-hit-roll {
+  margin-bottom: 8px;
+}
+
+.rt-roll-result {
+  display: inline-block;
+  font-family: 'Modesto Condensed', serif;
+  font-size: 2.2em;
+  font-weight: 700;
+  color: #2a1a0a;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(245, 240, 230, 0.6));
+  border: 2px solid rgba(74, 55, 40, 0.3);
+  border-radius: 8px;
+  padding: 4px 16px;
+  min-width: 60px;
+}
+
+.rt-hit-location {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rt-location-name {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #4a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rt-location-armour {
+  font-size: 0.85em;
+  color: #6a5a43;
+}

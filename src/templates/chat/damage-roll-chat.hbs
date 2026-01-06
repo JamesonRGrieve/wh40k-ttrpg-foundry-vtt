@@ -1,41 +1,47 @@
-<div class="dh-wrapper">
+{{!-- Rogue Trader Damage Roll Card - Modern Design --}}
+<div class="rt-chat">
     {{#with rollData}}
-    <div class="dh-chat">
-        <h3>Damage Roll</h3>
-        <div class="dh-roll">
-            <h1>{{name}}</h1>
-            <div class="dh-roll__divider"></div>
-
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Formula</div>
-                <div class="dh-roll__value">{{roll.formula}}</div>
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            <div class="rt-roll-card__actor">Damage Roll</div>
+            <h2 class="rt-roll-card__title">{{name}}</h2>
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
+            <div class="rt-roll-card__row">
+                <span class="rt-roll-card__label">Formula</span>
+                <span class="rt-roll-card__value">{{roll.formula}}</span>
             </div>
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Damage Type</div>
-                <div class="dh-roll__value">{{damageType}}</div>
+            
+            {{!-- Damage Display --}}
+            <div class="rt-roll-card__damage">
+                <div class="rt-roll-card__damage-header">
+                    <span class="rt-roll-card__damage-title">Damage</span>
+                </div>
+                <div class="rt-roll-card__damage-value">{{roll.total}}</div>
+                <div class="rt-roll-card__damage-type">{{damageType}}</div>
             </div>
-
-            <div class="dh-roll__notice">
-                <span>Damage</span>
-                <span>{{roll.total}}</span>
+            
+            {{!-- Penetration --}}
+            <div class="rt-roll-card__notice">
+                <span class="rt-roll-card__notice-label">Penetration</span>
+                <span class="rt-roll-card__notice-value">{{penetration}}</span>
             </div>
-
-            <div class="dh-roll__notice">
-                <span>Penetration</span>
-                <span>{{penetration}}</span>
-            </div>
-
+            
+            {{!-- Assign Damage Button --}}
             {{#if targetActor}}
-                <div class='dh-roll__controls-1'>
-                    <div class="dh-control-button roll-control__assign-damage"
+                <div class="rt-roll-card__controls">
+                    <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__assign-damage"
                             data-location="Body"
                             data-total-damage="{{roll.total}}"
                             data-total-penetration="{{penetration}}"
                             data-target-uuid="{{targetActor.uuid}}"
                             data-damage-type="{{damageType}}">
-                        <span class="dh-control-button__span material-icons">api</span>
-                        <span class="dh-control-button__label">Assign Damage</span>
-                    </div>
+                        <span class="material-icons">api</span>
+                        <span>Assign Damage</span>
+                    </button>
                 </div>
             {{/if}}
         </div>

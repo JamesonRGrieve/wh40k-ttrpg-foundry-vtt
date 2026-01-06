@@ -1,0 +1,91 @@
+<form class="rt-compendium-browser">
+    <header class="browser-header">
+        <h1><i class="fas fa-search"></i> Rogue Trader Compendium Browser</h1>
+        <p>Browse, filter, and search through all Rogue Trader compendia</p>
+    </header>
+
+    <div class="browser-body">
+        <aside class="browser-sidebar">
+            <div class="filter-section">
+                <h3><i class="fas fa-filter"></i> Filters</h3>
+                
+                <div class="filter-group">
+                    <label for="search-input">Search</label>
+                    <input type="text" class="search-input" placeholder="Search by name..." value="{{filters.search}}">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-source">Source</label>
+                    <select class="filter-source">
+                        <option value="all">All Sources</option>
+                        {{#each sources}}
+                        <option value="{{this}}" {{#if (eq ../filters.source this)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-category">Category</label>
+                    <select class="filter-category">
+                        <option value="all">All Categories</option>
+                        {{#each categories}}
+                        <option value="{{this}}" {{#if (eq ../filters.category this)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-group-by">Group By</label>
+                    <select class="filter-group-by">
+                        {{#each groupByOptions}}
+                        <option value="{{value}}" {{#if (eq ../filters.groupBy value)}}selected{{/if}}>{{label}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <button type="button" class="clear-filters">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+        </aside>
+
+        <main class="browser-results">
+            <div class="results-header">
+                <h3>Results ({{results.length}} items)</h3>
+            </div>
+            
+            <div class="results-list">
+                {{#if results.length}}
+                    {{#each groupedResults}}
+                    <div class="results-group">
+                        <div class="results-group-header">
+                            <span class="results-group-title">{{label}}</span>
+                            <span class="results-group-count">{{items.length}}</span>
+                        </div>
+                        {{#each items}}
+                        <div class="compendium-item" data-uuid="{{uuid}}" draggable="true">
+                            <img src="{{img}}" alt="{{name}}" class="item-image" />
+                            <div class="item-details">
+                                <h4 class="item-name">{{name}}</h4>
+                                <div class="item-meta">
+                                    <span class="item-type">{{type}}</span>
+                                {{#if sourceLabel}}
+                                <span class="item-source">{{sourceLabel}}</span>
+                                {{/if}}
+                                    <span class="item-pack">{{pack}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                {{else}}
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No items match your filters</p>
+                    </div>
+                {{/if}}
+            </div>
+        </main>
+    </div>
+</form>

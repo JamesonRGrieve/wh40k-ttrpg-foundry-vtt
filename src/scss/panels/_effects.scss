@@ -1,0 +1,129 @@
+// ============================================
+// Active Effects Panel
+// ============================================
+
+.rt-effects-panel {
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: 10px;
+  overflow: visible;
+}
+
+.rt-effects-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+  border-bottom: 1px solid $rt-border-light;
+}
+
+.rt-effects-title {
+  margin: 0;
+  flex: 1;
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $rt-text-primary;
+  white-space: nowrap;
+  
+  i {
+    margin-right: $rt-space-xs;
+    color: $rt-accent-combat;
+  }
+}
+
+.rt-effects-add {
+  @include rt-icon-button(24px, $rt-accent-combat, 0.7rem);
+}
+
+.rt-effects-list {
+  padding: $rt-space-sm;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $rt-border-medium;
+    border-radius: 3px;
+  }
+}
+
+.rt-effect-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-xs $rt-space-sm;
+  background: $rt-bg-input;
+  border: 1px solid $rt-border-light;
+  border-left: 3px solid $rt-accent-combat;
+  border-radius: 6px;
+  
+  &:hover {
+    background: $rt-bg-paper;
+    border-color: $rt-border-medium;
+    border-left-color: $rt-accent-combat;
+  }
+}
+
+.rt-effect-disabled {
+  opacity: 0.65;
+}
+
+.rt-effect-edit {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid $rt-border-light;
+  background: transparent;
+  color: $rt-text-muted;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $rt-text-primary;
+    border-color: $rt-border-medium;
+    background: $rt-bg-subtle;
+  }
+}
+
+.rt-effect-name {
+  font-size: 0.92rem;
+  color: $rt-text-primary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-effect-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.rt-effect-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: $rt-text-muted;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $rt-text-primary;
+    background: $rt-bg-subtle;
+    border-color: $rt-border-light;
+  }
+}
+

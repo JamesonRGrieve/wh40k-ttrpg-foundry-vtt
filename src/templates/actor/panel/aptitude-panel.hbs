@@ -1,11 +1,11 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-2">
-    <h1 class="dh-panel__header">Aptitudes</h1>
-    <div class="dh-table--border dh-aptitudetable--border">
+<div class="rt-panel rt-grid-col-2 rt-grid-row-2">
+    <h1 class="rt-panel-header">Aptitudes</h1>
+    <div class="rt-table--border rt-aptitudetable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Name</div>
             <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="aptitude">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
+                <label class="rt-control-button item-create" data-type="aptitude">
+                    <span class="rt-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
                 </label>
             </div>
         </div>
@@ -13,16 +13,16 @@
             {{#if item.isAptitude}}
                 <div class="table-row">
                     <div class="table-cell--settingstoggle">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon "settings"}}</span>
+                        <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon "settings"}}</span>
                         </label>
                     </div>
                     <div class="table-cell">
                         <span class="table-cell--description">{{item.name}}</span>
                     </div>
                     <div class="table-cell">
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon "delete"}}</span>
+                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon "delete"}}</span>
                         </label>
                     </div>
                 </div>

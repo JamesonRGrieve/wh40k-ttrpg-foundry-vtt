@@ -9,7 +9,6 @@ export class RogueTraderItemContainer extends Item {
     }
 
     async update(data={}, options={}) {
-        console.log('RogueTraderItemContainer: ' + this.name + ' update', data);
         data._id = this.id;
         if (this.isNestedItem()) {
             await this.parent.updateNestedDocuments(data);

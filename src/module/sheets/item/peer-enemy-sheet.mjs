@@ -5,7 +5,7 @@ export class RogueTraderPeerEnemySheet extends RogueTraderItemSheet {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 800,
             height: 340,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'stats' }],
+            tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'stats' }],
         });
     }
 

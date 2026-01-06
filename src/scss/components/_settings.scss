@@ -310,3 +310,28 @@
         }
     }
 }
+
+// RT prefix aliases
+.rt-settings {
+    @extend .dh-settings;
+}
+
+.rt-settings--border {
+    @extend .dh-settings--border;
+}
+
+.rt-settings__row {
+    @extend .dh-settings__row;
+}
+
+.rt-settings__row--invert {
+    @extend .dh-settings__row--invert;
+}
+
+.rt-settings__row--span {
+    @extend .dh-settings__row--span;
+}
+
+.rt-settings__label {
+    @extend .dh-settings__label;
+}

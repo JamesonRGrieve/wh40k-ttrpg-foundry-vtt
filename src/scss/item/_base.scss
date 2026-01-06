@@ -1,0 +1,39 @@
+// ============================================
+// Modern Item Sheet Styles
+// ============================================
+// Variables and mixins imported via abstracts in main file
+
+// ============================================
+// Base Item Sheet Container
+// ============================================
+
+.rogue-trader.sheet.item .window-content {
+  background: transparent;
+  padding: 0;
+}
+
+.rt-item-sheet {
+  background: linear-gradient(135deg, $rt-bg-primary 0%, $rt-bg-secondary 100%);
+  color: $rt-color-parchment;
+  font-family: $rt-font-body;
+  font-size: $rt-font-size-base;
+  
+  // Modern scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $rt-color-void;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $rt-color-steel-dark;
+    border-radius: $rt-radius-md;
+    
+    &:hover {
+      background: $rt-color-steel;
+    }
+  }
+}
+

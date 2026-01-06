@@ -1,0 +1,219 @@
+/* ================================== */
+/*  Journal Entry Styling             */
+/* ================================== */
+
+/* Rogue Trader themed journal styles for compendium journals */
+/* Based on dnd5e V13 pattern - styles defined in system CSS, not inline */
+
+.journal-entry-page .editor-content,
+.journal-entry-content {
+  font-family: 'Crimson Text', Georgia, serif;
+  line-height: 1.6;
+  color: #2c2c2c;
+}
+
+/* Styled Headers */
+.journal-entry-page .rt-header,
+.journal-entry-content .rt-header {
+  background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
+  color: #d4af37;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 2px solid #d4af37;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.journal-entry-page .rt-header h1,
+.journal-entry-content .rt-header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-family: 'Cinzel', serif;
+}
+
+.journal-entry-page .rt-header p,
+.journal-entry-content .rt-header p {
+  margin: 10px 0 0 0;
+  font-style: italic;
+  color: #f4e4c1;
+}
+
+/* Content Sections */
+.journal-entry-page .rt-section,
+.journal-entry-content .rt-section {
+  background: #f9f7f4;
+  border-left: 4px solid #8b0000;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.journal-entry-page .rt-section h2,
+.journal-entry-content .rt-section h2 {
+  color: #8b0000;
+  margin-top: 0;
+  font-family: 'Cinzel', serif;
+  border-bottom: 2px solid #d4af37;
+  padding-bottom: 8px;
+}
+
+/* Styled Tables */
+.journal-entry-page .rt-table,
+.journal-entry-content .rt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.journal-entry-page .rt-table th,
+.journal-entry-content .rt-table th {
+  background: linear-gradient(180deg, #8b0000 0%, #6a0000 100%);
+  color: #d4af37;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid #4a0000;
+}
+
+.journal-entry-page .rt-table td,
+.journal-entry-content .rt-table td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.journal-entry-page .rt-table tr:nth-child(even),
+.journal-entry-content .rt-table tr:nth-child(even) {
+  background: #f5f5f5;
+}
+
+.journal-entry-page .rt-table tr:hover,
+.journal-entry-content .rt-table tr:hover {
+  background: #fff8dc;
+}
+
+/* Callout Boxes */
+.journal-entry-page .rt-callout,
+.journal-entry-content .rt-callout {
+  background: #fff8dc;
+  border: 2px solid #d4af37;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.journal-entry-page .rt-callout.warning,
+.journal-entry-content .rt-callout.warning {
+  background: #ffe4e1;
+  border-color: #8b0000;
+}
+
+.journal-entry-page .rt-callout h3,
+.journal-entry-content .rt-callout h3 {
+  margin-top: 0;
+  color: #8b0000;
+}
+
+/* Stat Blocks */
+.journal-entry-page .rt-stat-block,
+.journal-entry-content .rt-stat-block {
+  background: #2c2c2c;
+  color: #d4af37;
+  padding: 15px;
+  border-radius: 6px;
+  font-family: monospace;
+  margin: 15px 0;
+}
+
+/* Dice Notation */
+.journal-entry-page .rt-dice-roll,
+.journal-entry-content .rt-dice-roll {
+  display: inline-block;
+  background: #8b0000;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+/* Characteristic Badges */
+.journal-entry-page .rt-characteristic,
+.journal-entry-content .rt-characteristic {
+  display: inline-block;
+  background: #4a0000;
+  color: #d4af37;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: bold;
+  margin: 0 2px;
+}
+
+/* Skills and Talents */
+.journal-entry-page .rt-skill,
+.journal-entry-content .rt-skill {
+  color: #006400;
+  font-weight: bold;
+}
+
+.journal-entry-page .rt-talent,
+.journal-entry-content .rt-talent {
+  color: #00008b;
+  font-style: italic;
+}
+
+/* GM Secret Sections */
+.journal-entry-page .rt-gm-secret,
+.journal-entry-content .rt-gm-secret {
+  background: #f0f0f0;
+  border-left: 4px solid #666;
+  padding: 10px;
+  margin: 10px 0;
+  font-style: italic;
+}
+
+/* Lists */
+.journal-entry-page ul.rt-list,
+.journal-entry-page ol.rt-list,
+.journal-entry-content ul.rt-list,
+.journal-entry-content ol.rt-list {
+  margin-left: 20px;
+}
+
+.journal-entry-page ul.rt-list li,
+.journal-entry-page ol.rt-list li,
+.journal-entry-content ul.rt-list li,
+.journal-entry-content ol.rt-list li {
+  margin: 8px 0;
+}
+
+/* Example Boxes */
+.journal-entry-page .rt-example,
+.journal-entry-content .rt-example {
+  background: #e8f4f8;
+  border-left: 4px solid #4682b4;
+  padding: 12px;
+  margin: 15px 0;
+  font-style: italic;
+}
+
+/* Quick Reference Cards */
+.journal-entry-page .rt-quick-ref,
+.journal-entry-content .rt-quick-ref {
+  background: #f0fff0;
+  border: 2px dashed #228b22;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 6px;
+}
+
+.journal-entry-page .rt-quick-ref h4,
+.journal-entry-content .rt-quick-ref h4 {
+  margin-top: 0;
+  color: #228b22;
+}

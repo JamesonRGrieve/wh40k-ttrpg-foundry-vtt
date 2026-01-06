@@ -27,7 +27,7 @@ const STATIC_FILES = [
   "src/*.json"
 ];
 const PACK_SRC = "src/packs";
-const BUILD_DIR = "build/rogue-trader";
+const BUILD_DIR = "/mnt/c/Users/Dreski-PC/AppData/Local/FoundryVTT/Data/systems/rogue-trader";
 
 /* ----------------------------------------- */
 /*  Compile Packs (V13 LevelDB Format)
@@ -69,7 +69,46 @@ async function compilePacks() {
     // Create the LevelDB database
     const db = new ClassicLevel(dbPath, { valueEncoding: 'json' });
     
+    // Determine the document collection type from the folder name
+    let collectionType = 'items'; // default
+    if (folder.startsWith('rt-actors-')) {
+      collectionType = 'actors';
+    } else if (folder.startsWith('rt-items-')) {
+      collectionType = 'items';
+    } else if (folder.startsWith('rt-journals-')) {
+      collectionType = 'journal';
+    } else if (folder.startsWith('rt-rolltables-')) {
+      collectionType = 'tables';
+    }
+    
     try {
+      // Special handling for origin-path pack - create folders for each step
+      const originPathFolders = {};
+      if (folder === 'rt-items-origin-path') {
+        // Foundry V13 requires exactly 16 alphanumeric characters for IDs
+        const steps = [
+          { id: 'ORGNfolder000001', name: '1. Home World', sort: 100000 },
+          { id: 'ORGNfolder000002', name: '2. Birthright', sort: 200000 },
+          { id: 'ORGNfolder000003', name: '3. Lure of the Void', sort: 300000 },
+          { id: 'ORGNfolder000004', name: '4. Trials and Travails', sort: 400000 },
+          { id: 'ORGNfolder000005', name: '5. Motivation', sort: 500000 },
+          { id: 'ORGNfolder000006', name: '6. Career', sort: 600000 }
+        ];
+        
+        for (const step of steps) {
+          originPathFolders[step.sort / 100000] = step.id;
+          const folderDoc = {
+            _id: step.id,
+            name: step.name,
+            type: 'Item',
+            sort: step.sort,
+            color: null,
+            flags: {}
+          };
+          await db.put(`!folders!${step.id}`, folderDoc);
+        }
+      }
+      
       // Read all JSON files from _source directory
       const files = fs.readdirSync(sourceDir).filter(f => f.endsWith('.json'));
       
@@ -80,9 +119,17 @@ async function compilePacks() {
         try {
           const doc = JSON.parse(content);
           
-          // Use the document's _id as the key, prefixed with "!" for Foundry format
+          // For origin-path items, assign to appropriate folder based on stepIndex
+          if (folder === 'rt-items-origin-path' && doc.flags?.rt?.stepIndex) {
+            const stepIndex = doc.flags.rt.stepIndex;
+            if (originPathFolders[stepIndex]) {
+              doc.folder = originPathFolders[stepIndex];
+            }
+          }
+          
+          // Use the Foundry V13 key format: !{collectionType}!{id}
           if (doc._id) {
-            const key = `!${doc._id}`;
+            const key = `!${collectionType}!${doc._id}`;
             await db.put(key, doc);
           }
         } catch (parseErr) {
@@ -90,7 +137,8 @@ async function compilePacks() {
         }
       }
       
-      console.log(`Compiled pack: ${folder} (${files.length} documents)`);
+      const folderCount = folder === 'rt-items-origin-path' ? ' + 6 folders' : '';
+      console.log(`Compiled pack: ${folder} (${files.length} documents${folderCount})`);
     } finally {
       await db.close();
     }

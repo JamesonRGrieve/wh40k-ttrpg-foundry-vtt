@@ -1,72 +1,57 @@
-{{dhlog this}}
+{{!-- Rogue Trader Force Field Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="dh-wrapper" autocomplete="off">
-        <div class="dh-attack">
-            <!-- Header -->
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__prompt dh-header__logo">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <img class="dh-header__logo-image-small" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                            <span class="dh-header__title">Force Field</span>
-                        </div>
-                    </div>
+    <form class="rt-prompt" autocomplete="off">
+        {{!-- Character & Field Info --}}
+        <div class="rt-prompt__panel">
+            <div class="rt-prompt__header">
+                <img class="rt-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                <div class="rt-prompt__title-group">
+                    <h2 class="rt-prompt__title">Force Field</h2>
+                    <div class="rt-prompt__subtitle">{{this.forceField.name}}</div>
                 </div>
             </div>
-
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Character</span>
-                    <span class="dh-field__span">{{this.actor.name}}</span>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Force Field</span>
-                    <span class="dh-field__span">{{this.forceField.name}}</span>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Quality</span>
-                    <span class="dh-field__span">{{this.forceField.system.protectionRating}}</span>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Activated</span>
-                    <span class="dh-field__span">{{this.forceField.system.activated}}</span>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Overloaded</span>
-                    <span class="dh-field__span">{{this.forceField.system.overloaded}}</span>
-                </div>
+            
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Character</span>
+                <span class="rt-prompt__value">{{this.actor.name}}</span>
             </div>
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Quality</span>
+                <span class="rt-prompt__value">{{this.forceField.system.protectionRating}}</span>
+            </div>
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Activated</span>
+                <span class="rt-prompt__value">{{this.forceField.system.activated}}</span>
+            </div>
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Overloaded</span>
+                <span class="rt-prompt__value">{{this.forceField.system.overloaded}}</span>
+            </div>
+        </div>
 
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <span class="dh-header__subtitle">Protection</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Rating</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Overload</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
-                </div>
+        {{!-- Protection Settings --}}
+        <div class="rt-prompt__panel">
+            <h3 class="rt-prompt__section-title">Protection</h3>
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Rating</span>
+                <input class="rt-prompt__input" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
+            </div>
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Overload</span>
+                <input class="rt-prompt__input" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
             </div>
         </div>
     </form>
 </div>
 
-<!-- Buttons -->
+{{!-- Dialog Buttons --}}
 <div class="dialog-buttons">
     <button class="dialog-button roll default" data-button="roll" id="roll-force-field">
-        <i class="dh-material">casino</i>
+        <span class="material-icons">casino</span>
         Roll
     </button>
     <button class="dialog-button cancel" data-button="cancel" id="cancel-prompt">
-        <i class="dh-material">close</i>
+        <span class="material-icons">close</span>
         Cancel
     </button>
 </div>

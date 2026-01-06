@@ -27,315 +27,765 @@
     "css/rogue-trader.css"
   ],
   "scripts": [],
+  "documentTypes": {
+    "Actor": {
+      "acolyte": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      },
+      "character": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      },
+      "npc": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      },
+      "vehicle": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      },
+      "starship": {
+        "htmlFields": [
+          "details.biography"
+        ]
+      }
+    },
+    "Item": {
+      "ammunition": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "aptitude": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "armour": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "armourModification": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "attackSpecial": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "backpack": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "consumable": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "criticalInjury": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "cybernetic": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "drug": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "enemy": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "forceField": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "gear": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "journalEntry": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "malignancy": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "mentalDisorder": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "mutation": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "navigatorPower": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "order": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "originPath": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "peer": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "psychicPower": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "ritual": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "shipComponent": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "shipRole": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "shipUpgrade": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "shipWeapon": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "skill": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "specialAbility": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "storageLocation": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "talent": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "tool": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "trait": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "vehicleTrait": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "vehicleUpgrade": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "weapon": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "weaponModification": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
+      "weaponQuality": {
+        "htmlFields": [
+          "description.value"
+        ]
+      }
+    },
+    "JournalEntryPage": {}
+  },
   "packs": [
     {
       "name": "rt-actors-bestiary",
-      "label": "RT Actors: Bestiary",
+      "label": "Bestiary",
       "path": "packs/rt-actors-bestiary",
       "system": "rogue-trader",
       "type": "Actor",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "npc"
+          ]
+        }
       }
     },
     {
       "name": "rt-actors-ships",
-      "label": "RT Actors: Ships",
+      "label": "Starships",
       "path": "packs/rt-actors-ships",
       "system": "rogue-trader",
       "type": "Actor",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "starship"
+          ]
+        }
       }
     },
     {
       "name": "rt-actors-vehicles",
-      "label": "RT Actors: Vehicles",
+      "label": "Vehicles",
       "path": "packs/rt-actors-vehicles",
       "system": "rogue-trader",
       "type": "Actor",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "vehicle"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-ammo",
-      "label": "RT Items: Ammo",
+      "label": "Ammunition",
       "path": "packs/rt-items-ammo",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "ammunition"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-armour",
-      "label": "RT Items: Armour",
+      "label": "Armour",
       "path": "packs/rt-items-armour",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "armour"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-armour-customisations",
-      "label": "RT Items: Armour Customisations",
+      "label": "Armour Customisations",
       "path": "packs/rt-items-armour-customisations",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "armourModification"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-conditions",
-      "label": "RT Items: Conditions",
+      "label": "Conditions",
       "path": "packs/rt-items-conditions",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "trait"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-gear",
-      "label": "RT Items: Gear",
+      "label": "Gear",
       "path": "packs/rt-items-gear",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "gear",
+            "tool",
+            "consumable",
+            "backpack"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-navigator-powers",
-      "label": "RT Items: Navigator Powers",
+      "label": "Navigator Powers",
       "path": "packs/rt-items-navigator-powers",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "navigatorPower"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-orders",
-      "label": "RT Items: Orders",
+      "label": "Ship Orders",
       "path": "packs/rt-items-orders",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "order"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-origin-path",
-      "label": "RT Items: Origin Path",
+      "label": "Origin Path",
       "path": "packs/rt-items-origin-path",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "originPath",
+            "trait"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-psychic-powers",
-      "label": "RT Items: Psychic Powers",
+      "label": "Psychic Powers",
       "path": "packs/rt-items-psychic-powers",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "psychicPower"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-rituals",
-      "label": "RT Items: Rituals",
+      "label": "Rituals",
       "path": "packs/rt-items-rituals",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "ritual"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-ship-components",
-      "label": "RT Items: Ship Components",
+      "label": "Ship Components",
       "path": "packs/rt-items-ship-components",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "shipComponent"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-ship-roles",
-      "label": "RT Items: Ship Roles",
+      "label": "Ship Roles",
       "path": "packs/rt-items-ship-roles",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "shipRole"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-ship-upgrades",
-      "label": "RT Items: Ship Upgrades",
+      "label": "Ship Upgrades",
       "path": "packs/rt-items-ship-upgrades",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "shipUpgrade"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-ship-weapons",
-      "label": "RT Items: Ship Weapons",
+      "label": "Ship Weapons",
       "path": "packs/rt-items-ship-weapons",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "shipWeapon"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-skills",
-      "label": "RT Items: Skills",
+      "label": "Skills",
       "path": "packs/rt-items-skills",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "skill"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-talents",
-      "label": "RT Items: Talents",
+      "label": "Talents",
       "path": "packs/rt-items-talents",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "talent"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-traits",
-      "label": "RT Items: Traits",
+      "label": "Traits",
       "path": "packs/rt-items-traits",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "trait"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-vehicle-traits",
-      "label": "RT Items: Vehicle Traits",
+      "label": "Vehicle Traits",
       "path": "packs/rt-items-vehicle-traits",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "vehicleTrait"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-vehicle-upgrades",
-      "label": "RT Items: Vehicle Upgrades",
+      "label": "Vehicle Upgrades",
       "path": "packs/rt-items-vehicle-upgrades",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "vehicleUpgrade"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-weapon-qualities",
-      "label": "RT Items: Weapon Qualities",
+      "label": "Weapon Qualities",
       "path": "packs/rt-items-weapon-qualities",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "weaponQuality"
+          ]
+        }
       }
     },
     {
       "name": "rt-items-weapons",
-      "label": "RT Items: Weapons",
+      "label": "Weapons",
       "path": "packs/rt-items-weapons",
       "system": "rogue-trader",
       "type": "Item",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "weapon"
+          ]
+        }
       }
     },
     {
       "name": "rt-journals-character-actions",
-      "label": "RT Journals: Character Actions",
+      "label": "Character Actions",
       "path": "packs/rt-journals-character-actions",
       "system": "rogue-trader",
       "type": "JournalEntry",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "display": "table-of-contents"
+        }
       }
     },
     {
       "name": "rt-journals-character-creation",
-      "label": "RT Journals: Character Creation",
+      "label": "Character Creation",
       "path": "packs/rt-journals-character-creation",
       "system": "rogue-trader",
       "type": "JournalEntry",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "display": "table-of-contents"
+        }
       }
     },
     {
       "name": "rt-journals-colonies",
-      "label": "RT Journals: Colonies",
+      "label": "Colonies",
       "path": "packs/rt-journals-colonies",
       "system": "rogue-trader",
       "type": "JournalEntry",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "display": "table-of-contents"
+        }
       }
     },
     {
       "name": "rt-journals-fear-insanity-corruption",
-      "label": "RT Journals: Fear Insanity Corruption",
+      "label": "Fear, Insanity & Corruption",
       "path": "packs/rt-journals-fear-insanity-corruption",
       "system": "rogue-trader",
       "type": "JournalEntry",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "display": "table-of-contents"
+        }
       }
     },
     {
       "name": "rt-journals-ship-vehicle-actions",
-      "label": "RT Journals: Ship Vehicle Actions",
+      "label": "Ship & Vehicle Actions",
       "path": "packs/rt-journals-ship-vehicle-actions",
       "system": "rogue-trader",
       "type": "JournalEntry",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "display": "table-of-contents"
+        }
       }
     },
     {
       "name": "rt-rolltables-fear-insanity-corruption",
-      "label": "RT RollTables: Fear Insanity Corruption",
+      "label": "Fear & Corruption Tables",
       "path": "packs/rt-rolltables-fear-insanity-corruption",
       "system": "rogue-trader",
       "type": "RollTable",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
       }
     },
     {
       "name": "rt-rolltables-psychic",
-      "label": "RT RollTables: Psychic",
+      "label": "Psychic Phenomena Tables",
       "path": "packs/rt-rolltables-psychic",
       "system": "rogue-trader",
       "type": "RollTable",
       "ownership": {
-        "default": 0
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
       }
     }
   ],
@@ -431,5 +881,17 @@
   "manifest": "https://github.com/AndruQuiroga/RogueTraderVTT/releases/latest/download/system.json",
   "download": "https://github.com/AndruQuiroga/RogueTraderVTT/releases/latest/download/rogue-trader-1.8.1.zip",
   "license": "LICENSE.txt",
-  "bugs": "https://github.com/AndruQuiroga/RogueTraderVTT/issues"
+  "bugs": "https://github.com/AndruQuiroga/RogueTraderVTT/issues",
+  "relationships": {
+    "requires": [
+      {
+        "id": "game-icons-net",
+        "type": "module",
+        "manifest": "https://github.com/fitzthum/game-icons-net/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "1.4.0"
+        }
+      }
+    ]
+  }
 }

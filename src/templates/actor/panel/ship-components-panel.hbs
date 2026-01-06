@@ -1,6 +1,6 @@
-<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-2">
-    <h1 class="dh-panel__header">{{localize "RT.Starship.Components.Header"}}</h1>
-    <div class="dh-table--border">
+<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-2">
+    <h1 class="rt-panel-header">{{localize "RT.Starship.Components.Header"}}</h1>
+    <div class="rt-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "RT.Starship.Components.Name"}}</div>
             <div class="table-cell">{{localize "RT.Starship.Components.Type"}}</div>
@@ -8,8 +8,8 @@
             <div class="table-cell">{{localize "RT.Starship.Components.Space"}}</div>
             <div class="table-cell">{{localize "RT.Starship.Components.SP"}}</div>
             <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="shipComponent">
-                    <span class="dh-control-button__span material-icons">add_circle</span>
+                <label class="rt-control-button item-create" data-type="shipComponent">
+                    <span class="rt-control-button__span material-icons">add_circle</span>
                 </label>
             </div>
         </div>
@@ -18,7 +18,7 @@
                 <div class="table-row">
                     <div class="table-cell--span2">
                         <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
-                            <img class="dh-item-img" src="{{item.img}}" alt="{{item.name}}" />
+                            <img class="rt-item-img" src="{{item.img}}" alt="{{item.name}}" />
                             {{item.name}}
                         </button>
                     </div>
@@ -29,11 +29,11 @@
                     <div class="table-cell">{{item.system.spaceUsage}}</div>
                     <div class="table-cell">{{item.system.spCost}}</div>
                     <div class="table-cell--last">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">settings</span>
+                        <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">settings</span>
                         </label>
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">delete</span>
+                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">delete</span>
                         </label>
                     </div>
                 </div>

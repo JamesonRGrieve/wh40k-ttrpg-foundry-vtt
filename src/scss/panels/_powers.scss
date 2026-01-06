@@ -1,0 +1,128 @@
+// Powers Tab Layout
+// ============================================
+
+.rt-tab-powers {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  padding: $rt-space-md;
+}
+
+// ============================================
+// Equipment Tab Layout
+// ============================================
+
+.rt-tab-equipment {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  padding: $rt-space-md;
+}
+
+.rt-equipment-layout {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+}
+
+.rt-equipment-hero {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
+  gap: $rt-space-md;
+  align-items: start;
+}
+
+.rt-equipment-hero-left,
+.rt-equipment-hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+}
+
+.rt-equipment-hero-right {
+  position: relative;
+  align-items: stretch;
+}
+
+.rt-equipment-hero-right .rt-armour-panel {
+  height: 100%;
+}
+
+.rt-equipment-hero-right::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 1px;
+  height: 16px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba($rt-accent-equipment, 0.45),
+    rgba($rt-accent-equipment, 0.45) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+  opacity: 0.35;
+}
+
+.rt-equipment-legend {
+  display: grid;
+  gap: 4px;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(135deg, rgba($rt-accent-equipment, 0.12), rgba(255, 255, 255, 0.6));
+  border: 1px solid rgba($rt-accent-equipment, 0.25);
+  border-radius: 8px;
+  color: $rt-text-secondary;
+}
+
+.rt-equipment-legend-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: $rt-text-primary;
+}
+
+.rt-equipment-legend-sub {
+  font-size: 0.75rem;
+  color: $rt-text-muted;
+}
+
+.rt-equipment-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-md;
+  position: relative;
+}
+
+.rt-equipment-row::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba($rt-accent-equipment, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 0.6;
+}
+
+@media (max-width: 1100px) {
+  .rt-equipment-hero,
+  .rt-equipment-row {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-equipment-hero-right::after,
+  .rt-equipment-row::before {
+    display: none;
+  }
+}
+
+// ============================================

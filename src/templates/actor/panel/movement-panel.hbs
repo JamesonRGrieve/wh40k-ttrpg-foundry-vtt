@@ -1,25 +1,73 @@
-<div class="dh-panel spacer dh-grid-col-2">
-    <h1 class="dh-panel__header">Movement</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Size</span>
-        <select class="dh-field__input" name="system.size">
-            {{selectOptions dh.bio.size selected=actor.size}}
-        </select>
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Half</span>
-        <span class="dh-field__span">{{actor.movement.half}}m</span>
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Full</span>
-        <span class="dh-field__span">{{actor.movement.full}}m</span>
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Charge</span>
-        <span class="dh-field__span">{{actor.movement.charge}}m</span>
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Run</span>
-        <span class="dh-field__span">{{actor.movement.run}}m</span>
+<div class="rt-panel rt-movement-panel rt-grid-col-2">
+    <h1 class="rt-panel-header"><i class="fas fa-running"></i> Movement</h1>
+    <div class="rt-movement-grid">
+        {{!-- Size Selector --}}
+        <div class="rt-field__wrapper rt-movement-size">
+            <span class="rt-field__header">Size</span>
+            <select class="rt-field__input" name="system.size">
+                {{selectOptions dh.bio.size selected=actor.size}}
+            </select>
+        </div>
+        
+        {{!-- Movement Rates (AB-based) --}}
+        <div class="rt-movement-section">
+            <div class="rt-movement-header">Standard Movement</div>
+            <div class="rt-movement-rates">
+                <div class="rt-movement-item">
+                    <span class="rt-movement-label">Half</span>
+                    <span class="rt-movement-value">{{actor.movement.half}}m</span>
+                </div>
+                <div class="rt-movement-item">
+                    <span class="rt-movement-label">Full</span>
+                    <span class="rt-movement-value">{{actor.movement.full}}m</span>
+                </div>
+                <div class="rt-movement-item">
+                    <span class="rt-movement-label">Charge</span>
+                    <span class="rt-movement-value">{{actor.movement.charge}}m</span>
+                </div>
+                <div class="rt-movement-item">
+                    <span class="rt-movement-label">Run</span>
+                    <span class="rt-movement-value">{{actor.movement.run}}m</span>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Leap & Jump (SB-based) --}}
+        <div class="rt-movement-section">
+            <div class="rt-movement-header">Leap &amp; Jump (SB)</div>
+            <div class="rt-movement-rates">
+                <div class="rt-movement-item" title="Standing vertical leap height">
+                    <span class="rt-movement-label">Leap (V)</span>
+                    <span class="rt-movement-value">{{actor.movement.leapVertical}}m</span>
+                </div>
+                <div class="rt-movement-item" title="Running horizontal leap distance">
+                    <span class="rt-movement-label">Leap (H)</span>
+                    <span class="rt-movement-value">{{actor.movement.leapHorizontal}}m</span>
+                </div>
+                <div class="rt-movement-item" title="Vertical jump height in centimeters">
+                    <span class="rt-movement-label">Jump</span>
+                    <span class="rt-movement-value">{{actor.movement.jump}}cm</span>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Lifting Capacity (SB-based) --}}
+        <div class="rt-movement-section">
+            <div class="rt-movement-header">Lifting Capacity (SB)</div>
+            <div class="rt-movement-rates">
+                <div class="rt-movement-item" title="Sustained carrying capacity">
+                    <span class="rt-movement-label">Carry</span>
+                    <span class="rt-movement-value">{{actor.lifting.carry}}kg</span>
+                </div>
+                <div class="rt-movement-item" title="Brief lifting over head">
+                    <span class="rt-movement-label">Lift</span>
+                    <span class="rt-movement-value">{{actor.lifting.lift}}kg</span>
+                </div>
+                <div class="rt-movement-item" title="Pushing/dragging capacity">
+                    <span class="rt-movement-label">Push</span>
+                    <span class="rt-movement-value">{{actor.lifting.push}}kg</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

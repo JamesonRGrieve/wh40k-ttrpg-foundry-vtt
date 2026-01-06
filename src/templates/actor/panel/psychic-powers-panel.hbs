@@ -1,55 +1,52 @@
-<div class="dh-panel dh-grid-col-4 dh-grid-row-2">
-    <h1 class="dh-panel__header">Psychic Powers</h1>
-    <div class="dh-table--border dh-psychictable--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">Name</div>
-            <div class="table-cell">Discipline</div>
-            <div class="table-cell">Sustained</div>
-            <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="psychicPower">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-                </label>
-            </div>
-        </div>
+<div class="rt-panel rt-psychic-powers-panel rt-grid-col-4 rt-grid-row-2">
+    <div class="rt-panel-header-flex">
+        <h1 class="rt-panel-header">Psychic Powers</h1>
+        <button type="button" class="rt-add-item-btn item-create" data-type="psychicPower">
+            <i class="fas fa-plus"></i> Add Power
+        </button>
+    </div>
+    <div class="rt-powers-list">
         {{#each actor.items as | item |}}
             {{#if item.isPsychicPower}}
-                <div class="table-row item-drag" data-item-id="{{item.id}}" data-item-type="psychicPower">
-                    <div class="table-cell--settingstoggle">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--left">
-                        {{> systems/rogue-trader/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.discipline}}</span>
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.sustained}}</span>
-                    </div>
-                    <div class="table-cell--last">
-                        <label class="dh-control-button item-roll" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'casino'}}</span>
-                        </label>
-                        {{#if (isPsychicAttack item)}}
-                            <label class="dh-control-button item-damage" data-item-id="{{item.id}}">
-                                <span class="dh-control-button__span material-icons">{{defaultVal icon 'bolt'}}</span>
-                            </label>
-                        {{else}}
-                            <label class="dh-control-button item-vocalize" data-item-id="{{item.id}}">
-                                <span class="dh-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
-                            </label>
+            <div class="rt-power-card item-drag" data-item-id="{{item.id}}" data-item-type="psychicPower">
+                <div class="rt-power-header">
+                    <button type="button" class="rt-power-name" data-toggle="description_{{item.id}}">
+                        <i class="fas fa-brain"></i>
+                        {{item.name}}
+                    </button>
+                    <div class="rt-power-badges">
+                        {{#if item.system.discipline}}
+                        <span class="rt-power-badge rt-badge-discipline">{{item.system.discipline}}</span>
                         {{/if}}
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
-                        (isExpanded (concat 'description_' item.id ))}}>
-                        <span class="display">{{item.system.description}}</span>
+                        {{#if item.system.sustained}}
+                        <span class="rt-power-badge rt-badge-sustained">{{item.system.sustained}}</span>
+                        {{/if}}
                     </div>
                 </div>
+                <div class="rt-power-actions">
+                    <button type="button" class="rt-power-btn rt-power-roll item-roll" data-item-id="{{item.id}}" title="Roll Power">
+                        <i class="fas fa-dice-d20"></i>
+                    </button>
+                    {{#if (isPsychicAttack item)}}
+                    <button type="button" class="rt-power-btn rt-power-damage item-damage" data-item-id="{{item.id}}" title="Roll Damage">
+                        <i class="fas fa-bolt"></i>
+                    </button>
+                    {{else}}
+                    <button type="button" class="rt-power-btn item-vocalize" data-item-id="{{item.id}}" title="Post to Chat">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                    {{/if}}
+                    <button type="button" class="rt-power-btn item-edit" data-item-id="{{item.id}}" title="Edit">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button type="button" class="rt-power-btn rt-power-delete item-delete" data-item-id="{{item.id}}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="rt-power-description description_{{item.id}}" {{hideIfNot (isExpanded (concat 'description_' item.id ))}}>
+                    {{item.system.description}}
+                </div>
+            </div>
             {{/if}}
         {{/each}}
     </div>

@@ -1,0 +1,134 @@
+// Dynasty Tab Layout
+// ============================================
+
+.rt-tab-dynasty {
+  // Override the base .rt-tab grid display
+  &.active {
+    display: block !important;
+  }
+  padding: $rt-space-md;
+}
+
+// Profit Factor Panel
+.rt-panel-profit {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-dynasty, 0.15) 0%, transparent 100%);
+  }
+}
+
+.rt-profit-main-display {
+  display: flex;
+  gap: $rt-space-lg;
+  align-items: flex-end;
+  margin-bottom: $rt-space-md;
+}
+
+.rt-profit-current {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rt-profit-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $rt-text-muted;
+  margin-bottom: $rt-space-xs;
+}
+
+.rt-profit-value-input {
+  width: 80px;
+  padding: $rt-space-sm;
+  border: 2px solid $rt-accent-dynasty;
+  border-radius: 6px;
+  background: rgba($rt-accent-dynasty, 0.08);
+  font-family: 'Modesto Condensed', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: $rt-accent-dynasty;
+  
+  &:focus {
+    outline: none;
+    background: rgba($rt-accent-dynasty, 0.15);
+  }
+}
+
+.rt-profit-starting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .rt-vital-input {
+    width: 60px;
+  }
+}
+
+.rt-misfortunes {
+  margin-top: $rt-space-sm;
+}
+
+// XP Display
+.rt-xp-display {
+  display: flex;
+  gap: $rt-space-md;
+}
+
+.rt-xp-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  
+  .rt-vital-input {
+    width: 70px;
+  }
+}
+
+.rt-xp-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $rt-text-muted;
+  margin-bottom: $rt-space-xs;
+}
+
+.rt-xp-available {
+  background: rgba($rt-accent-gold, 0.1);
+  border-color: rgba($rt-accent-gold, 0.3);
+  
+  .rt-xp-value {
+    font-family: 'Modesto Condensed', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $rt-accent-gold;
+  }
+}
+
+// Endeavour Tracker
+.rt-endeavour-fields {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+}
+
+.rt-ap-tracker {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  
+  .rt-vital-input {
+    width: 50px;
+  }
+  
+  span {
+    color: $rt-text-muted;
+  }
+}
+
+// ============================================

@@ -569,4 +569,120 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             roll: roll
         });
     }
+
+    /**
+     * Apply origin path modifiers to an actor
+     * Automatically applies characteristic bonuses, skills, and talents from origin paths
+     */
+    async applyOriginToActor(actor) {
+        if (!this.isOriginPath) {
+            ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
+            return;
+        }
+
+        const updates = {};
+        const itemsToAdd = [];
+        const modifiers = this.system.modifiers || {};
+
+        // Apply characteristic modifiers
+        if (modifiers.characteristics) {
+            const characteristics = {};
+            for (const [key, value] of Object.entries(modifiers.characteristics)) {
+                if (value !== 0) {
+                    const currentBonus = actor.system.characteristics?.[key]?.advance || 0;
+                    characteristics[`system.characteristics.${key}.advance`] = currentBonus + value;
+                }
+            }
+            Object.assign(updates, characteristics);
+        }
+
+        // Apply wounds modifier
+        if (modifiers.wounds && modifiers.wounds !== 0) {
+            const currentWounds = actor.system.wounds?.max || 0;
+            updates['system.wounds.max'] = currentWounds + modifiers.wounds;
+        }
+
+        // Apply fate modifier
+        if (modifiers.fate && modifiers.fate !== 0) {
+            const currentFate = actor.system.fate?.total || 0;
+            updates['system.fate.total'] = currentFate + modifiers.fate;
+        }
+
+        // Collect skills to add
+        if (modifiers.skills && Array.isArray(modifiers.skills)) {
+            for (const skillName of modifiers.skills) {
+                const skillPack = game.packs.get('rogue-trader.rt-items-skills');
+                if (skillPack) {
+                    const index = await skillPack.getIndex({ fields: ['name'] });
+                    const skillEntry = index.find(s => s.name.toLowerCase() === skillName.toLowerCase());
+                    if (skillEntry) {
+                        const skill = await skillPack.getDocument(skillEntry._id);
+                        if (skill) itemsToAdd.push(skill.toObject());
+                    }
+                }
+            }
+        }
+
+        // Collect talents to add
+        if (modifiers.talents && Array.isArray(modifiers.talents)) {
+            for (const talentName of modifiers.talents) {
+                const talentPack = game.packs.get('rogue-trader.rt-items-talents');
+                if (talentPack) {
+                    const index = await talentPack.getIndex({ fields: ['name'] });
+                    const talentEntry = index.find(t => t.name.toLowerCase() === talentName.toLowerCase());
+                    if (talentEntry) {
+                        const talent = await talentPack.getDocument(talentEntry._id);
+                        if (talent) itemsToAdd.push(talent.toObject());
+                    }
+                }
+            }
+        }
+
+        // Apply updates
+        if (Object.keys(updates).length > 0) {
+            await actor.update(updates);
+        }
+
+        // Add items
+        if (itemsToAdd.length > 0) {
+            await actor.createEmbeddedDocuments('Item', itemsToAdd);
+        }
+
+        // Add the origin path itself
+        await actor.createEmbeddedDocuments('Item', [this.toObject()]);
+
+        ui.notifications.info(`Applied ${this.name} to ${actor.name}`);
+    }
+
+    /**
+     * Get a preview of what this origin path will grant
+     */
+    getOriginPreview() {
+        if (!this.isOriginPath) return null;
+
+        const modifiers = this.system.modifiers || {};
+        const preview = {
+            characteristics: [],
+            wounds: modifiers.wounds || 0,
+            fate: modifiers.fate || 0,
+            skills: modifiers.skills || [],
+            talents: modifiers.talents || [],
+            traits: modifiers.traits || []
+        };
+
+        // Build characteristic preview
+        if (modifiers.characteristics) {
+            for (const [key, value] of Object.entries(modifiers.characteristics)) {
+                if (value !== 0) {
+                    const charName = key.charAt(0).toUpperCase() + key.slice(1);
+                    preview.characteristics.push({
+                        name: charName,
+                        value: value > 0 ? `+${value}` : value
+                    });
+                }
+            }
+        }
+
+        return preview;
+    }
 }

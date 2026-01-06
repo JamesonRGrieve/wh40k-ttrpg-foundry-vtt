@@ -1,12 +1,19 @@
-{{dhlog this}}
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        <h3>{{actor}} Vocalizes</h3>
-        <div class="dh-roll">
-            <h1>{{name}}</h1>
-            <h2>{{type}}</h2>
-            <div class="dh-roll__divider"></div>
-            <div class="dh-roll__label">{{{description}}}</div>
+{{!-- Rogue Trader Item Vocalize Card - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-item-card">
+        {{!-- Header --}}
+        <div class="rt-item-card__header">
+            <div class="rt-item-card__title-group">
+                <h2 class="rt-item-card__name">{{name}}</h2>
+                <span class="rt-item-card__type">{{actor}} • {{type}}</span>
+            </div>
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-item-card__body">
+            <div class="rt-item-card__section">
+                <div class="rt-item-card__description">{{{description}}}</div>
+            </div>
         </div>
     </div>
 </div>

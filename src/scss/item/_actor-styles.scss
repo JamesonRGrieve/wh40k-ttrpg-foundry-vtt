@@ -1,0 +1,230 @@
+// ============================================
+// Modern Actor Sheet
+// ============================================
+
+.rt-actor-sheet-modern {
+  background: linear-gradient(135deg, $rt-bg-primary 0%, $rt-bg-secondary 100%);
+  color: $rt-color-parchment;
+  font-family: $rt-font-body;
+}
+
+.rt-actor-header {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: $rt-space-md;
+  padding: $rt-space-lg;
+  background: linear-gradient(180deg, rgba($rt-color-gold-dark, 0.2) 0%, transparent 100%);
+  border-bottom: 2px solid $rt-color-gold-dark;
+}
+
+.rt-actor-portrait {
+  width: 120px;
+  height: 120px;
+  border: 3px solid $rt-color-gold;
+  border-radius: $rt-radius-md;
+  overflow: hidden;
+  cursor: pointer;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.rt-actor-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rt-actor-name {
+  font-family: $rt-font-display;
+  font-size: $rt-font-size-xxl;
+  color: $rt-color-gold;
+  background: transparent;
+  border: none;
+  padding: $rt-space-xs;
+  margin-bottom: $rt-space-sm;
+  
+  &:focus {
+    outline: none;
+    background: $rt-bg-input-focus;
+    border-radius: $rt-radius-sm;
+  }
+}
+
+.rt-actor-quickstats {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-xs;
+}
+
+.rt-quickstat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $rt-space-xs $rt-space-sm;
+  background: rgba($rt-color-void-lighter, 0.5);
+  border-radius: $rt-radius-sm;
+  min-width: 140px;
+  
+  &__label {
+    font-size: $rt-font-size-xs;
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+  }
+  
+  &__value {
+    font-weight: 700;
+    color: $rt-color-parchment;
+  }
+  
+  &--wounds {
+    border-left: 3px solid $rt-color-crimson;
+  }
+  
+  &--fate {
+    border-left: 3px solid $rt-color-gold;
+  }
+}
+
+.rt-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+}
+
+.rt-char-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: $rt-space-sm;
+}
+
+.rt-char-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.rt-char-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $rt-space-sm;
+  background: linear-gradient(135deg, $rt-bg-tertiary 0%, $rt-bg-secondary 100%);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-md;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  
+  &:hover {
+    background: linear-gradient(135deg, $rt-bg-secondary 0%, $rt-bg-primary 100%);
+    border-color: $rt-color-gold;
+    transform: translateY(-2px);
+    box-shadow: $rt-shadow-glow-gold;
+  }
+}
+
+.rt-char-abbr {
+  font-family: $rt-font-display;
+  font-size: $rt-font-size-lg;
+  color: $rt-color-gold;
+  font-weight: 700;
+}
+
+.rt-char-value {
+  font-size: $rt-font-size-xxl;
+  color: $rt-color-parchment;
+  font-weight: 700;
+  margin: $rt-space-xs 0;
+}
+
+.rt-char-label {
+  font-size: $rt-font-size-xs;
+  color: $rt-color-steel-light;
+  text-transform: uppercase;
+}
+
+.rt-panel__content--scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.rt-item-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-xs;
+  border-bottom: 1px solid rgba($rt-color-void-lighter, 0.3);
+  
+  &:hover {
+    background: rgba($rt-color-gold, 0.05);
+  }
+  
+  &--trait {
+    opacity: 0.8;
+  }
+}
+
+.rt-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: $rt-radius-sm;
+  border: 1px solid $rt-color-steel-dark;
+}
+
+.rt-item-name {
+  flex: 1;
+  color: $rt-color-parchment-dark;
+}
+
+.rt-item-weight {
+  font-size: $rt-font-size-xs;
+  color: $rt-color-steel;
+}
+
+.rt-weapon-row {
+  display: flex;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm;
+  background: rgba($rt-color-void-lighter, 0.3);
+  border-radius: $rt-radius-md;
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-weapon-info {
+  flex: 1;
+}
+
+.rt-weapon-name {
+  font-weight: 600;
+  color: $rt-color-parchment;
+  margin-bottom: $rt-space-xs;
+}
+
+.rt-weapon-stats {
+  font-size: $rt-font-size-sm;
+  color: $rt-color-steel-light;
+}
+
+.rt-armour-display {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+}
+
+.rt-armour-item {
+  padding: $rt-space-sm;
+  background: rgba($rt-color-void-lighter, 0.3);
+  border-radius: $rt-radius-md;
+}
+
+.rt-armour-points {
+  display: flex;
+  gap: $rt-space-md;
+  margin-top: $rt-space-xs;
+  font-size: $rt-font-size-sm;
+  color: $rt-color-steel-light;
+}
+

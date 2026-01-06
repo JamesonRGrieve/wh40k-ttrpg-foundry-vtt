@@ -119,7 +119,6 @@ export class RollData {
             try {
                 const value = Number.parseInt(this.modifiers[m]);
                 if (value !== 0) {
-                    console.log(`Modifier ${m.toUpperCase()} value ${value}`, value !== 0);
                     modifiers[m.toUpperCase()] = value;
                 }
             } catch (err) {

@@ -1,0 +1,178 @@
+// ============================================
+// COMBAT CONTROLS + INITIATIVE
+// ============================================
+
+.rt-combat-controls .rt-panel-body {
+    padding: 12px;
+}
+
+.rt-control-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.rt-control-btn {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(74, 55, 40, 0.3);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(245, 240, 232, 0.8));
+    color: #3a2820;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.rt-control-btn i {
+    color: #7a3a2f;
+    font-size: 0.9em;
+}
+
+.rt-control-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(74, 55, 40, 0.5);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.rt-initiative-panel .rt-panel-body {
+    padding: 12px;
+}
+
+.rt-initiative-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.rt-initiative-field {
+    display: grid;
+    gap: 6px;
+}
+
+.rt-initiative-label {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6a5a43;
+    font-weight: 600;
+}
+
+.rt-initiative-input {
+    border-radius: 6px;
+    border: 1px solid rgba(74, 55, 40, 0.3);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px 8px;
+}
+
+// ============================================
+// ABILITIES TAB STYLES
+// ============================================
+
+.rt-tab[data-tab="abilities"] {
+    .rt-panel {
+        background: linear-gradient(135deg, rgba(36, 107, 131, 0.22), rgba(24, 80, 96, 0.14));
+        border-top-color: rgba(36, 107, 131, 0.5);
+        border-bottom-color: rgba(24, 80, 96, 0.5);
+    }
+
+    // Improve characteristics table
+    .dh-chartable {
+        padding: 8px;
+        
+        &__cell--head {
+            background: rgba(36, 107, 131, 0.15);
+            border-radius: 4px;
+            padding: 4px;
+            
+            button {
+                font-weight: 700;
+                color: #1a4f61;
+            }
+        }
+        
+        &__cell--highlight {
+            background: rgba(36, 107, 131, 0.1);
+            font-weight: bold;
+        }
+        
+        select, input[type='number'] {
+            border: 1px solid rgba(36, 107, 131, 0.2);
+            border-radius: 3px;
+            padding: 2px 4px;
+            
+            &:focus {
+                outline: none;
+                border-color: rgba(36, 107, 131, 0.5);
+            }
+        }
+    }
+}
+
+// Talents and Traits panels - positioned and styled better
+.dh-talenttable--border,
+.dh-traittable--border {
+    .table-row {
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid rgba(74, 55, 40, 0.1);
+        
+        &:hover {
+            background: rgba(218, 165, 32, 0.08);
+        }
+    }
+    
+    .table-row--head {
+        background: linear-gradient(135deg, rgba(218, 165, 32, 0.18), rgba(218, 165, 32, 0.1));
+        font-weight: 600;
+        border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+    }
+    
+    .table-cell--description {
+        background: rgba(255, 250, 240, 0.5);
+        padding: 8px 12px;
+        border-left: 3px solid rgba(218, 165, 32, 0.4);
+    }
+}
+
+// ============================================
+// POWERS TAB STYLES
+// ============================================
+
+.rt-tab[data-tab="powers"] {
+    .rt-panel {
+        background: linear-gradient(135deg, rgba(75, 0, 130, 0.18), rgba(45, 0, 90, 0.12));
+        border-top-color: rgba(75, 0, 130, 0.5);
+        border-bottom-color: rgba(45, 0, 90, 0.5);
+    }
+
+    .dh-field__wrapper {
+        padding: 6px 8px;
+        margin: 2px 4px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 4px;
+    }
+    
+    .table-row--head {
+        background: rgba(75, 0, 130, 0.1);
+    }
+    
+    .table-row {
+        transition: background-color 0.2s ease;
+        
+        &:hover {
+            background: rgba(75, 0, 130, 0.05);
+        }
+    }
+    
+    .dh-psychictable--border {
+        .table-cell--description {
+            background: rgba(248, 245, 255, 0.6);
+            border-left: 3px solid rgba(75, 0, 130, 0.3);
+        }
+    }
+}
+

@@ -1,179 +1,183 @@
-{{!-- Rogue Trader Item Card Chat Template --}}
-<div class="dh-wrapper">
-    <div class="dh-chat rt-item-card">
-        <div class="rt-item-card-header">
-            <img class="rt-item-card-img" src="{{item.img}}" alt="{{item.name}}" />
-            <div class="rt-item-card-title">
-                <h1 class="rt-item-card-name">{{item.name}}</h1>
-                <span class="rt-item-card-type">{{itemTypeLabel}}</span>
+{{!-- Rogue Trader Item Card Chat Template - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-item-card {{#if isWeapon}}rt-item-card--weapon{{/if}}{{#if isArmour}}rt-item-card--armour{{/if}}{{#if isTalent}}rt-item-card--talent{{/if}}{{#if isPsychicPower}}rt-item-card--power{{/if}}{{#if isShipComponent}}rt-item-card--component{{/if}}">
+        {{!-- Header --}}
+        <div class="rt-item-card__header">
+            <img class="rt-item-card__image" src="{{item.img}}" alt="{{item.name}}" />
+            <div class="rt-item-card__title-group">
+                <h2 class="rt-item-card__name">{{item.name}}</h2>
+                <span class="rt-item-card__type">{{itemTypeLabel}}</span>
             </div>
         </div>
         
-        <div class="dh-roll__divider"></div>
-        
-        {{#if item.system.category}}
-            <div class="rt-item-card-field">
-                <span class="rt-item-card-label">Category:</span>
-                <span class="rt-item-card-value">{{item.system.category}}</span>
-            </div>
-        {{/if}}
-
-        {{#if item.system.requirements}}
-            <div class="rt-item-card-field">
-                <span class="rt-item-card-label">Requirements:</span>
-                <span class="rt-item-card-value">{{item.system.requirements}}</span>
-            </div>
-        {{/if}}
-
-        {{#if item.system.effect}}
-            <div class="rt-item-card-section">
-                <h3 class="rt-item-card-section-title">Effect</h3>
-                <div class="rt-item-card-description">{{{item.system.effect}}}</div>
-            </div>
-        {{/if}}
-
-        {{#if item.system.benefit}}
-            <div class="rt-item-card-section">
-                <h3 class="rt-item-card-section-title">Benefit</h3>
-                <div class="rt-item-card-description">{{{item.system.benefit}}}</div>
-            </div>
-        {{/if}}
-
-        {{!-- Weapon Stats --}}
-        {{#if isWeapon}}
-            <div class="rt-item-card-stats">
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Class:</span>
-                    <span class="rt-stat-value">{{item.system.class}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Type:</span>
-                    <span class="rt-stat-value">{{item.system.type}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Damage:</span>
-                    <span class="rt-stat-value">{{item.system.damage}} {{item.system.damageType}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Penetration:</span>
-                    <span class="rt-stat-value">{{item.system.penetration}}</span>
-                </div>
-                {{#if item.system.range}}
-                    <div class="rt-stat-row">
-                        <span class="rt-stat-name">Range:</span>
-                        <span class="rt-stat-value">{{item.system.range}}</span>
-                    </div>
-                {{/if}}
-                {{#if item.system.rof}}
-                    <div class="rt-stat-row">
-                        <span class="rt-stat-name">Rate of Fire:</span>
-                        <span class="rt-stat-value">{{item.system.rof}}</span>
-                    </div>
-                {{/if}}
-                {{#if item.system.special}}
-                    <div class="rt-stat-row rt-stat-row--full">
-                        <span class="rt-stat-name">Special:</span>
-                        <span class="rt-stat-value">{{item.system.special}}</span>
-                    </div>
-                {{/if}}
-            </div>
-        {{/if}}
-
-        {{!-- Navigator Power Stats --}}
-        {{#if isNavigatorPower}}
-            <div class="rt-item-card-stats">
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Use Time:</span>
-                    <span class="rt-stat-value">{{item.system.useTime}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Range:</span>
-                    <span class="rt-stat-value">{{item.system.range}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Test:</span>
-                    <span class="rt-stat-value">{{item.system.test}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Sustain:</span>
-                    <span class="rt-stat-value">{{item.system.sustain}}</span>
-                </div>
-            </div>
-            {{#if item.system.novice}}
-                <div class="rt-item-card-section">
-                    <h3 class="rt-item-card-section-title">Novice</h3>
-                    <div class="rt-item-card-description">{{item.system.novice}}</div>
+        {{!-- Body --}}
+        <div class="rt-item-card__body">
+            <div class="rt-item-card__divider"></div>
+            
+            {{#if item.system.category}}
+                <div class="rt-item-card__field">
+                    <span class="rt-item-card__label">Category</span>
+                    <span class="rt-item-card__value">{{item.system.category}}</span>
                 </div>
             {{/if}}
-            {{#if item.system.adept}}
-                <div class="rt-item-card-section">
-                    <h3 class="rt-item-card-section-title">Adept</h3>
-                    <div class="rt-item-card-description">{{item.system.adept}}</div>
+
+            {{#if item.system.requirements}}
+                <div class="rt-item-card__field">
+                    <span class="rt-item-card__label">Requirements</span>
+                    <span class="rt-item-card__value">{{item.system.requirements}}</span>
                 </div>
             {{/if}}
-            {{#if item.system.master}}
-                <div class="rt-item-card-section">
-                    <h3 class="rt-item-card-section-title">Master</h3>
-                    <div class="rt-item-card-description">{{item.system.master}}</div>
+
+            {{#if item.system.effect}}
+                <div class="rt-item-card__section">
+                    <h3 class="rt-item-card__section-title">Effect</h3>
+                    <div class="rt-item-card__description">{{{item.system.effect}}}</div>
                 </div>
             {{/if}}
-        {{/if}}
 
-        {{!-- Ship Component Stats --}}
-        {{#if isShipComponent}}
-            <div class="rt-item-card-stats">
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Type:</span>
-                    <span class="rt-stat-value">{{item.system.componentType}}</span>
+            {{#if item.system.benefit}}
+                <div class="rt-item-card__section">
+                    <h3 class="rt-item-card__section-title">Benefit</h3>
+                    <div class="rt-item-card__description">{{{item.system.benefit}}}</div>
                 </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Hull Type:</span>
-                    <span class="rt-stat-value">{{item.system.hullType}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Power:</span>
-                    <span class="rt-stat-value">{{item.system.powerUsage}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">Space:</span>
-                    <span class="rt-stat-value">{{item.system.spaceUsage}}</span>
-                </div>
-                <div class="rt-stat-row">
-                    <span class="rt-stat-name">SP Cost:</span>
-                    <span class="rt-stat-value">{{item.system.spCost}}</span>
-                </div>
-            </div>
-        {{/if}}
+            {{/if}}
 
-        {{!-- Generic Description --}}
-        {{#if item.system.description.value}}
-            <div class="rt-item-card-section">
-                <div class="rt-item-card-description">{{{item.system.description.value}}}</div>
-            </div>
-        {{/if}}
+            {{!-- Weapon Stats --}}
+            {{#if isWeapon}}
+                <div class="rt-item-card__stats">
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Class</span>
+                        <span class="rt-item-card__stat-value">{{item.system.class}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Type</span>
+                        <span class="rt-item-card__stat-value">{{item.system.type}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Damage</span>
+                        <span class="rt-item-card__stat-value">{{item.system.damage}} {{item.system.damageType}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Pen</span>
+                        <span class="rt-item-card__stat-value">{{item.system.penetration}}</span>
+                    </div>
+                    {{#if item.system.range}}
+                        <div class="rt-item-card__stat">
+                            <span class="rt-item-card__stat-name">Range</span>
+                            <span class="rt-item-card__stat-value">{{item.system.range}}</span>
+                        </div>
+                    {{/if}}
+                    {{#if item.system.rof}}
+                        <div class="rt-item-card__stat">
+                            <span class="rt-item-card__stat-name">RoF</span>
+                            <span class="rt-item-card__stat-value">{{item.system.rof}}</span>
+                        </div>
+                    {{/if}}
+                    {{#if item.system.special}}
+                        <div class="rt-item-card__stat rt-item-card__stat--full">
+                            <span class="rt-item-card__stat-name">Special</span>
+                            <span class="rt-item-card__stat-value">{{item.system.special}}</span>
+                        </div>
+                    {{/if}}
+                </div>
+            {{/if}}
 
-        {{!-- Source --}}
+            {{!-- Navigator Power Stats --}}
+            {{#if isNavigatorPower}}
+                <div class="rt-item-card__stats">
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Use Time</span>
+                        <span class="rt-item-card__stat-value">{{item.system.useTime}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Range</span>
+                        <span class="rt-item-card__stat-value">{{item.system.range}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Test</span>
+                        <span class="rt-item-card__stat-value">{{item.system.test}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Sustain</span>
+                        <span class="rt-item-card__stat-value">{{item.system.sustain}}</span>
+                    </div>
+                </div>
+                {{#if item.system.novice}}
+                    <div class="rt-item-card__section">
+                        <h3 class="rt-item-card__section-title">Novice</h3>
+                        <div class="rt-item-card__description">{{item.system.novice}}</div>
+                    </div>
+                {{/if}}
+                {{#if item.system.adept}}
+                    <div class="rt-item-card__section">
+                        <h3 class="rt-item-card__section-title">Adept</h3>
+                        <div class="rt-item-card__description">{{item.system.adept}}</div>
+                    </div>
+                {{/if}}
+                {{#if item.system.master}}
+                    <div class="rt-item-card__section">
+                        <h3 class="rt-item-card__section-title">Master</h3>
+                        <div class="rt-item-card__description">{{item.system.master}}</div>
+                    </div>
+                {{/if}}
+            {{/if}}
+
+            {{!-- Ship Component Stats --}}
+            {{#if isShipComponent}}
+                <div class="rt-item-card__stats">
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Type</span>
+                        <span class="rt-item-card__stat-value">{{item.system.componentType}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Hull</span>
+                        <span class="rt-item-card__stat-value">{{item.system.hullType}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Power</span>
+                        <span class="rt-item-card__stat-value">{{item.system.powerUsage}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">Space</span>
+                        <span class="rt-item-card__stat-value">{{item.system.spaceUsage}}</span>
+                    </div>
+                    <div class="rt-item-card__stat">
+                        <span class="rt-item-card__stat-name">SP Cost</span>
+                        <span class="rt-item-card__stat-value">{{item.system.spCost}}</span>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Generic Description --}}
+            {{#if item.system.description.value}}
+                <div class="rt-item-card__section">
+                    <div class="rt-item-card__description">{{{item.system.description.value}}}</div>
+                </div>
+            {{/if}}
+        </div>
+
+        {{!-- Footer --}}
         {{#if item.system.source}}
-            <div class="rt-item-card-footer">
-                <span class="rt-item-card-source">{{item.system.source}}</span>
+            <div class="rt-item-card__footer">
+                <span class="rt-item-card__source">{{item.system.source}}</span>
             </div>
         {{/if}}
 
         {{!-- Action Buttons --}}
         {{#if hasActions}}
-            <div class="rt-item-card-actions">
+            <div class="rt-item-card__actions">
                 {{#if isRollable}}
-                    <button class="rt-action-button rt-action-roll" data-item-id="{{item._id}}" data-action="roll">
+                    <button class="rt-item-card__btn rt-item-card__btn--roll" data-item-id="{{item._id}}" data-action="roll">
                         <span class="material-icons">casino</span>
                         Roll
                     </button>
                 {{/if}}
                 {{#if isWeapon}}
-                    <button class="rt-action-button rt-action-attack" data-item-id="{{item._id}}" data-action="attack">
+                    <button class="rt-item-card__btn rt-item-card__btn--attack" data-item-id="{{item._id}}" data-action="attack">
                         <span class="material-icons">gps_fixed</span>
                         Attack
                     </button>
-                    <button class="rt-action-button rt-action-damage" data-item-id="{{item._id}}" data-action="damage">
+                    <button class="rt-item-card__btn rt-item-card__btn--damage" data-item-id="{{item._id}}" data-action="damage">
                         <span class="material-icons">whatshot</span>
                         Damage
                     </button>

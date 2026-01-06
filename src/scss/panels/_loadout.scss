@@ -1,0 +1,424 @@
+// ============================================
+// LOADOUT MANAGER - Equipment Tab
+// Simplified styling using existing conventions
+// ============================================
+
+.rt-equipment-loadout {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  
+  // Ensure all panel headers in equipment tab are horizontal
+  .rt-panel-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: $rt-space-sm;
+    
+    .rt-panel-title {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: $rt-space-sm;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Equipment Header with Encumbrance
+.rt-panel-equipment-header {
+  .rt-equipment-title-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+.rt-encumbrance-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+}
+
+.rt-enc-label {
+  font-size: $rt-font-size-sm;
+  font-weight: 600;
+  color: $rt-text-secondary;
+}
+
+.rt-encumbrance-bar-container {
+  width: 150px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid $rt-border-medium;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.rt-encumbrance-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, $rt-color-success, lighten($rt-color-success, 15%));
+  border-radius: 7px;
+  transition: width 0.4s ease, background 0.3s ease;
+  
+  &.rt-enc-warning {
+    background: linear-gradient(90deg, $rt-color-warning, lighten($rt-color-warning, 10%));
+  }
+  
+  &.rt-enc-over {
+    background: linear-gradient(90deg, $rt-accent-combat, lighten($rt-accent-combat, 10%));
+    animation: pulse-enc 1.5s infinite;
+  }
+}
+
+@keyframes pulse-enc {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.rt-enc-text {
+  font-size: $rt-font-size-sm;
+  font-weight: 600;
+  color: $rt-text-primary;
+  white-space: nowrap;
+}
+
+.rt-enc-alert {
+  color: $rt-accent-combat;
+  animation: pulse-enc 1.5s infinite;
+}
+
+// ============================================
+// EQUIPMENT GRID LAYOUT
+// ============================================
+
+.rt-equipment-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 350px) 1fr;
+  gap: $rt-space-md;
+  min-height: 0;
+}
+
+.rt-equipment-col {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  min-width: 0;
+}
+
+// ============================================
+// LIFTING CAPACITY PANEL
+// ============================================
+
+.rt-lifting-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $rt-space-sm;
+}
+
+.rt-lift-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper-light;
+  border-radius: $rt-radius-sm;
+}
+
+.rt-lift-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: $rt-text-secondary;
+}
+
+.rt-lift-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $rt-text-primary;
+}
+
+// ============================================
+// BACKPACK PANEL
+// ============================================
+
+.rt-backpack-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+}
+
+.rt-backpack-bar-container {
+  flex: 1;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.rt-backpack-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, $rt-accent-equipment, lighten($rt-accent-equipment, 10%));
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.rt-backpack-text {
+  font-size: $rt-font-size-sm;
+  font-weight: 600;
+  color: $rt-text-secondary;
+  white-space: nowrap;
+}
+
+// ============================================
+// ITEM TABLE ROW STATES
+// ============================================
+
+.rt-row-equipped {
+  background: rgba($rt-color-success, 0.08);
+}
+
+.rt-row-active {
+  background: rgba($rt-accent-powers, 0.08);
+}
+
+.rt-row-overloaded {
+  background: rgba($rt-accent-combat, 0.12);
+  
+  .rt-ff-overloaded-text {
+    color: $rt-accent-combat;
+    font-weight: 700;
+    font-size: $rt-font-size-xs;
+    text-transform: uppercase;
+  }
+}
+
+.rt-row-stowed {
+  opacity: 0.7;
+  background: rgba($rt-accent-equipment, 0.05);
+}
+
+.rt-equipped-icon {
+  color: $rt-color-success;
+}
+
+.rt-active-icon {
+  color: $rt-accent-gold;
+}
+
+// ============================================
+// PANEL HEADER ICONS
+// ============================================
+
+.rt-panel-armour-diagram .rt-panel-header i,
+.rt-panel-armour-list .rt-panel-header i {
+  color: $rt-accent-equipment;
+}
+
+.rt-panel-lifting .rt-panel-header i {
+  color: $rt-accent-talents;
+}
+
+.rt-panel-backpack .rt-panel-header i {
+  color: $rt-accent-equipment;
+}
+
+.rt-panel-forcefields .rt-panel-header i {
+  color: $rt-accent-powers;
+}
+
+.rt-panel-cybernetics .rt-panel-header i {
+  color: $rt-accent-skills;
+}
+
+.rt-panel-gear .rt-panel-header i {
+  color: $rt-accent-talents;
+}
+
+// ============================================
+// DROP ZONES
+// ============================================
+
+.rt-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-lg;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba($rt-accent-gold, 0.03),
+    rgba($rt-accent-gold, 0.03) 10px,
+    rgba($rt-accent-gold, 0.08) 10px,
+    rgba($rt-accent-gold, 0.08) 20px
+  );
+  border: 2px dashed rgba($rt-accent-gold, 0.3);
+  border-radius: $rt-radius-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 80px;
+  
+  &:hover {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba($rt-accent-gold, 0.08),
+      rgba($rt-accent-gold, 0.08) 10px,
+      rgba($rt-accent-gold, 0.15) 10px,
+      rgba($rt-accent-gold, 0.15) 20px
+    );
+    border-color: rgba($rt-accent-gold, 0.5);
+  }
+}
+
+.rt-dropzone-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-xs $rt-space-sm;
+  margin-top: $rt-space-sm;
+  background: rgba($rt-accent-gold, 0.05);
+  border: 1px dashed rgba($rt-accent-gold, 0.25);
+  border-radius: $rt-radius-sm;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  color: $rt-text-muted;
+  
+  i {
+    font-size: 0.85rem;
+    color: rgba($rt-accent-gold, 0.6);
+  }
+  
+  &:hover {
+    background: rgba($rt-accent-gold, 0.1);
+    border-color: rgba($rt-accent-gold, 0.4);
+    color: $rt-text-secondary;
+    
+    i {
+      color: $rt-accent-gold;
+    }
+  }
+}
+
+.rt-dropzone-icon {
+  font-size: 2rem;
+  color: rgba($rt-accent-gold, 0.5);
+  transition: all 0.3s ease;
+  
+  .rt-dropzone:hover & {
+    color: $rt-accent-gold;
+    transform: scale(1.1);
+  }
+}
+
+.rt-dropzone-text {
+  font-size: $rt-font-size-sm;
+  font-weight: 500;
+  color: $rt-text-secondary;
+  text-align: center;
+  
+  .rt-dropzone:hover & {
+    color: $rt-text-primary;
+  }
+}
+
+// ============================================
+// ALL ITEMS INVENTORY PANEL
+// ============================================
+
+.rt-panel-all-inventory {
+  margin-bottom: $rt-space-md;
+  
+  .rt-panel-body {
+    max-height: 180px;
+    overflow-y: auto;
+  }
+}
+
+.rt-all-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: $rt-space-xs;
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-inventory-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-xs;
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: $rt-radius-sm;
+  transition: all 0.2s ease;
+  cursor: grab;
+  min-width: 0;
+  
+  &:hover {
+    background: rgba($rt-accent-gold, 0.08);
+    border-color: rgba($rt-accent-gold, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.rt-inv-card-img {
+  width: 28px;
+  height: 28px;
+  border-radius: $rt-radius-sm;
+  border: 1px solid $rt-border-medium;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rt-inv-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.rt-inv-card-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $rt-text-primary;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  &:hover {
+    color: $rt-accent-gold;
+  }
+}
+
+.rt-inv-card-type {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: $rt-text-muted;
+}
+
+.rt-inv-equipped {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  color: $rt-color-success;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}

@@ -5,7 +5,7 @@ export class RogueTraderAmmoSheet extends RogueTraderItemContainerSheet {
         return foundry.utils.mergeObject(super.defaultOptions, {
             width: 820,
             height: 575,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'stats' }],
+            tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'stats' }],
         });
     }
 

@@ -1,8 +1,8 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-3 {{isError actor.encumbrance.backpack_encumbered}}">
-    <h1 class="dh-panel__header">
-        <label class="dh-trait-toggle sheet-control__hide-control" data-toggle="backpack_settings">
-            <i class="dh-material material-icons">{{defaultVal icon "settings"}}</i>
-            <span class="dh-trait-toggle__span">
+<div class="rt-panel rt-grid-col-2 rt-grid-row-3 {{isError actor.encumbrance.backpack_encumbered}}">
+    <h1 class="rt-panel-header">
+        <label class="rt-trait-toggle sheet-control__hide-control" data-toggle="backpack_settings">
+            <i class="rt-material material-icons">{{defaultVal icon "settings"}}</i>
+            <span class="rt-trait-toggle__span">
                 {{#if actor.encumbrance.backpack_encumbered}}
                     {{actor.backpack.name}}
                     (overweight)
@@ -12,38 +12,38 @@
             </span>
         </label>
     </h1>
-    <div class="dh-settings--border clean backpack_settings" {{hideIfNot (isExpanded "backpack_settings")}}>
-        <div class="dh-settings__row--invert">
-            <div class="dh-settings__label">Backpack Equipped</div>
+    <div class="rt-settings--border clean backpack_settings" {{hideIfNot (isExpanded "backpack_settings")}}>
+        <div class="rt-settings__row--invert">
+            <div class="rt-settings__label">Backpack Equipped</div>
             <input
-                class="dh-settings__checkbox"
+                class="rt-settings__checkbox"
                 {{checked actor.backpack.hasBackpack}}
                 data-dtype="Boolean"
                 type="checkbox"
                 name="system.backpack.hasBackpack"
             />
         </div>
-        <div class="dh-settings__row--invert">
-            <div class="dh-settings__label">Is Combat Vest</div>
+        <div class="rt-settings__row--invert">
+            <div class="rt-settings__label">Is Combat Vest</div>
             <input
-                class="dh-settings__checkbox"
+                class="rt-settings__checkbox"
                 {{checked actor.backpack.isCombatVest}}
                 data-dtype="Boolean"
                 type="checkbox"
                 name="system.backpack.isCombatVest"
             />
         </div>
-        <div class="dh-settings__row--span">
-            <div class="dh-settings__label">Name</div>
-            <input class="dh-settings__input" type="text" name="system.backpack.name" value="{{actor.backpack.name}}" />
+        <div class="rt-settings__row--span">
+            <div class="rt-settings__label">Name</div>
+            <input class="rt-settings__input" type="text" name="system.backpack.name" value="{{actor.backpack.name}}" />
         </div>
-        <div class="dh-settings__row--span">
-            <div class="dh-settings__label">Max Weight</div>
-            <input class="dh-settings__input" data-dtype="Number" type="number" name="system.backpack.weight.max" value="{{actor.backpack.weight.max}}" />
+        <div class="rt-settings__row--span">
+            <div class="rt-settings__label">Max Weight</div>
+            <input class="rt-settings__input" data-dtype="Number" type="number" name="system.backpack.weight.max" value="{{actor.backpack.weight.max}}" />
         </div>
     </div>
     {{#if actor.backpack.hasBackpack}}
-        <div class="dh-table--border dh-backpacktable--border">
+        <div class="rt-table--border rt-backpacktable--border">
             <div class="table-row--head">
                 <div class="table-cell">Name</div>
                 <div class="table-cell--last">Weight</div>

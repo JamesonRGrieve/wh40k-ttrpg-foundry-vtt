@@ -20,8 +20,6 @@ export class ForceFieldData {
         this.overloadRating = this.craftsmanshipToOverload(this.forceField.system.craftsmanship);
     }
 
-    update() {}
-
     craftsmanshipToOverload(craftsmanship) {
         switch(craftsmanship) {
             case 'Poor':

@@ -38,6 +38,79 @@ export class ActorContainerSheet extends ActorSheet {
         html.find('.effect-disable').click(async (ev) => await this._effectDisable(ev));
 
         html.find('.add-skill').click(async (ev) => await this._addSpecialistSkill(ev));
+        html.find('.delete-specialization').click(async (ev) => await this._deleteSpecialization(ev));
+        html.find('.rt-train-btn').click(async (ev) => await this._toggleTraining(ev));
+    }
+
+    /**
+     * Handle skill training button clicks.
+     * Supports two patterns:
+     * 1. data-field/data-value: Simple toggle of a boolean field
+     * 2. data-skill/data-level: Level-based training (T/+10/+20)
+     */
+    async _toggleTraining(event) {
+        event.preventDefault();
+        const btn = event.currentTarget;
+        const field = btn.dataset.field;
+        const skillKey = btn.dataset.skill;
+        const level = btn.dataset.level ? parseInt(btn.dataset.level) : null;
+        const specialty = btn.dataset.specialty ?? btn.dataset.index;
+
+        // Pattern 1: Simple field toggle (used by specialist skills panel)
+        if (field) {
+            const currentValue = btn.dataset.value === 'true';
+            await this.actor.update({ [field]: !currentValue });
+            return;
+        }
+
+        // Pattern 2: Level-based training (used by standard skills panel)
+        if (skillKey && level !== null) {
+            const basePath = specialty != null
+                ? `system.skills.${skillKey}.entries.${specialty}`
+                : `system.skills.${skillKey}`;
+            
+            // Get current training level
+            const skill = specialty != null
+                ? this.actor.system.skills?.[skillKey]?.entries?.[specialty]
+                : this.actor.system.skills?.[skillKey];
+            
+            const currentLevel = skill?.plus20 ? 3 : skill?.plus10 ? 2 : skill?.trained ? 1 : 0;
+            
+            // Toggle logic: if clicking the current level, reduce by 1; otherwise set to clicked level
+            const newLevel = (level === currentLevel) ? level - 1 : level;
+            
+            const updateData = {
+                [`${basePath}.trained`]: newLevel >= 1,
+                [`${basePath}.plus10`]: newLevel >= 2,
+                [`${basePath}.plus20`]: newLevel >= 3,
+            };
+            
+            await this.actor.update(updateData);
+        }
+    }
+
+    async _deleteSpecialization(event) {
+        event.preventDefault();
+        const btn = event.currentTarget;
+        const skillName = btn.dataset.skill;
+        const index = parseInt(btn.dataset.index);
+        
+        const skill = this.actor.system.skills[skillName];
+        if (!skill || !Array.isArray(skill.entries)) return;
+        
+        const entries = [...skill.entries];
+        const deletedName = entries[index]?.name || 'this specialization';
+        
+        Dialog.confirm({
+            title: 'Delete Specialization',
+            content: `<p>Delete "${deletedName}"?</p>`,
+            yes: async () => {
+                entries.splice(index, 1);
+                await this.actor.update({ [`system.skills.${skillName}.entries`]: entries });
+            },
+            no: () => {},
+            defaultYes: false
+        });
     }
 
     _onDrop(event) {
@@ -65,8 +138,8 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _addSpecialistSkill(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const specialistSkill = div.data('skill');
+        const element = event.currentTarget;
+        const specialistSkill = element.dataset.skill;
         const skill = this.actor.system.skills[specialistSkill];
         if(!skill) {
             ui.notifications.warn(`Skill not specified -- unexpected error.`);
@@ -81,42 +154,44 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onItemDamage(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        await this.actor.damageItem(div.data('itemId'));
+        const element = event.currentTarget;
+        await this.actor.damageItem(element.dataset.itemId);
     }
 
     async _onItemRoll(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        await this.actor.rollItem(div.data('itemId'));
+        const element = event.currentTarget;
+        await this.actor.rollItem(element.dataset.itemId);
     }
 
     async _onItemCreate(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
+        const element = event.currentTarget;
+        const itemType = element.dataset.type;
         let data = {
-            name: `New ${div.data('type').capitalize()}`,
-            type: div.data('type'),
+            name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
+            type: itemType,
         };
         await this.actor.createEmbeddedDocuments('Item', [data], { renderSheet: true });
     }
 
     _onItemEdit(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        let item = this.actor.items.get(div.data('itemId'));
+        const element = event.currentTarget;
+        let item = this.actor.items.get(element.dataset.itemId);
         item.sheet.render(true);
     }
 
     _onItemDelete(event) {
         event.preventDefault();
+        const element = event.currentTarget;
+        const itemId = element.dataset.itemId;
         Dialog.confirm({
             title: 'Confirm Delete',
             content: '<p>Are you sure you would like to delete this?</p>',
             yes: () => {
-                const div = $(event.currentTarget);
-                this.actor.deleteEmbeddedDocuments('Item', [div.data('itemId')]);
-                div.slideUp(200, () => this.render(false));
+                this.actor.deleteEmbeddedDocuments('Item', [itemId]);
+                this.render(false);
             },
             no: () => {},
             defaultYes: false,
@@ -125,26 +200,14 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _onItemVocalize(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        let item = this.actor.items.get(div.data('itemId'));
+        const element = event.currentTarget;
+        let item = this.actor.items.get(element.dataset.itemId);
         await DHBasicActionManager.sendItemVocalizeChat({
             actor: this.actor.name,
             name: item.name,
             type: item.type?.toUpperCase(),
             description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description, {rollData: {actor: this.actor, item: this, pr: this.actor.psy.rating}}),
         });
-    }
-
-    /**
-     * Generic Sheet Hide/Show option for all embedded fields
-     */
-    async _sheetControlHideToggle(event) {
-        event.preventDefault();
-        const displayToggle = $(event.currentTarget);
-        $('span', displayToggle).first().toggleClass('active');
-        const target = displayToggle.data('toggle');
-        $('.' + target).toggle();
-        toggleUIExpanded(target);
     }
 
     async _onItemDragStart(event) {
@@ -243,29 +306,29 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _effectDisable(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const effect = this.actor.effects.get(div.data('effectId'));
+        const element = event.currentTarget;
+        const effect = this.actor.effects.get(element.dataset.effectId);
         effect.update({disabled: true});
     }
 
     async _effectEnable(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const effect = this.actor.effects.get(div.data('effectId'));
+        const element = event.currentTarget;
+        const effect = this.actor.effects.get(element.dataset.effectId);
         effect.update({disabled: false});
     }
 
     async _effectDelete(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const effect = this.actor.effects.get(div.data('effectId'));
+        const element = event.currentTarget;
+        const effect = this.actor.effects.get(element.dataset.effectId);
         effect.delete();
     }
 
     async _effectEdit(event) {
         event.preventDefault();
-        const div = $(event.currentTarget);
-        const effect = this.actor.effects.get(div.data('effectId'));
+        const element = event.currentTarget;
+        const effect = this.actor.effects.get(element.dataset.effectId);
         effect.sheet.render(true);
     }
 

@@ -1,0 +1,133 @@
+// ============================================
+
+.rt-tab {
+    .dh-table--border {
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(74, 55, 40, 0.15);
+    }
+    
+    .table-row--head {
+        padding: 6px 4px;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .table-cell,
+    .table-cell--last {
+        padding: 6px 4px;
+    }
+    
+    .dh-control-button {
+        opacity: 0.7;
+        transition: opacity 0.2s ease, transform 0.15s ease;
+        
+        &:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    }
+}
+
+// ============================================
+// ITEM NAME BUTTONS
+// ============================================
+
+.item-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    color: inherit;
+    
+    &:hover {
+        background: rgba(74, 55, 40, 0.08);
+    }
+    
+    .dh-item-img {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        border: 1px solid rgba(74, 55, 40, 0.2);
+    }
+}
+
+// ============================================
+// ABILITIES TAB LAYOUT
+// ============================================
+
+.rt-abilities-layout {
+    display: block;
+    padding: 0.5rem;
+}
+
+.rt-abilities-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    .dh-panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .rt-abilities-layout {
+        display: block;
+    }
+}
+
+// ============================================
+// SPECIALTIES TAB LAYOUT
+// ============================================
+
+.rt-specialties-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1rem;
+    padding: 0.5rem;
+    align-items: start;
+    width: 100%;
+    min-width: 0;
+}
+
+.rt-specialties-left,
+.rt-specialties-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+    width: 100%;
+    
+    .dh-panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .rt-specialties-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+// ============================================
+// TRACKER PANEL STYLES (Wounds, Corruption, Insanity, Fatigue)
+// ============================================
+
+.rt-wounds-tracker,
+.rt-corruption-tracker,
+.rt-insanity-tracker,
+.rt-fatigue-tracker {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    border: 1px solid rgba(74, 55, 40, 0.15);
+}
+
