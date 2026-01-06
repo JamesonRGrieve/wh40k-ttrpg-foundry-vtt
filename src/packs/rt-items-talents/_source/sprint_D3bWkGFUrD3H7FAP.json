@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When taking a Full Move Action, can move an additional Agility Bonus Metres. When taking the Run Action, can double their movement for one Round. Character gains one Fatigue if they use this Talent's benefits for two turns in a row.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

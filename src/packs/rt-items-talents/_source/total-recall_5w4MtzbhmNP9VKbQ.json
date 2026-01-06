@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can automatically remember trivial facts or pieces of information the character may feasibly have picked up on in the past. For more detailed, complex, or obscure facts, such as exact defence layout networks, the GM may require a Successful Intelligence Test to recall the information.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

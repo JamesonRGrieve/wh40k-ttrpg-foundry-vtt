@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Kroot prefer light armour. If they wear armour that provides more than 3 AP, they lose the benefit of Unnatural Perception (if they have it) and Fieldcraft Traits.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

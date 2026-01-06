@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

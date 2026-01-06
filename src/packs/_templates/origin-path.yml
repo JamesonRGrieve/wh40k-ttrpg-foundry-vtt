@@ -1,0 +1,123 @@
+# Origin Path Template
+# Use this as a reference for creating origin path items
+
+_id: &id origin-path-template-000001
+name: Void Born
+type: originPath
+img: systems/rogue-trader/icons/origins/void-born.webp
+
+system:
+  identifier: void-born
+  
+  # Origin Path Step
+  step: homeWorld  # homeWorld, birthright, lureOfTheVoid, trialsAndTravails, motivation, career
+  stepIndex: 0     # 0-5 for the step order
+  
+  # Requirements
+  requirements:
+    text: ""
+    previousSteps: []    # Required previous selections
+    excludedSteps: []    # Incompatible selections
+  
+  # What this origin grants
+  grants:
+    # Wound modifier
+    wounds: -1
+    
+    # Fate threshold
+    fateThreshold: 3
+    
+    # Blessed by Emperor
+    blessedByEmperor: false
+    
+    # Skills granted
+    skills:
+      - name: "Pilot"
+        specialization: "Spacecraft"
+        level: trained  # trained, plus10, plus20
+      - name: "Navigation"
+        specialization: "Stellar"
+        level: trained
+    
+    # Talents granted
+    talents:
+      - name: "Void Accustomed"
+        specialization: ""
+        uuid: ""  # Optional compendium link
+    
+    # Traits granted
+    traits:
+      - name: "Charmed"
+        level: null
+        uuid: ""
+    
+    # Aptitudes granted
+    aptitudes: []
+    
+    # Starting equipment
+    equipment:
+      - name: "Void Suit"
+        quantity: 1
+        uuid: ""
+    
+    # Special abilities (text descriptions)
+    specialAbilities:
+      - name: "Ill-Omened"
+        description: |
+          <p>Void born are viewed with suspicion by many, suffering 
+          a -5 penalty to Fellowship Tests when dealing with those 
+          who know of their origin.</p>
+    
+    # Player choices
+    choices:
+      - type: skill        # skill, talent, characteristic, equipment
+        label: "Choose one Common Lore specialization"
+        options:
+          - "Common Lore (Imperium)"
+          - "Common Lore (Tech)"
+          - "Common Lore (War)"
+        count: 1
+  
+  # Stat Modifiers
+  modifiers:
+    characteristics:
+      willpower: 5
+      fellowship: -5
+    skills: {}
+    combat: {}
+    resources:
+      wounds: 0
+      fate: 0
+      insanity: 0
+      corruption: 0
+    other: []
+  
+  # Effect/flavor text
+  effectText: |
+    <p>Born in the depths of a voidship or orbital station, 
+    you are accustomed to the endless dark between the stars.</p>
+  
+  # Description
+  description:
+    value: |
+      <p>The Void Born are those who have lived their entire lives 
+      in the artificial environments of spacecraft and void stations. 
+      They are pale, somewhat ethereal in appearance, and often 
+      regarded with superstition by planet-dwellers.</p>
+    chat: ""
+    summary: "Born in the void between stars"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "18"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

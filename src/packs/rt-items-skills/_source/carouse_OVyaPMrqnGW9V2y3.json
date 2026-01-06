@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Basic",
-    "characteristic": "Toughness",
+    "type": "",
+    "characteristic": "toughness",
     "descriptor": "Resisting the effects of Alcohol and Narcotics. Failiure results in gaining Fatigue or some other side effect. ",
     "uses": "Skill Test taken on Imbibing or suffering effects of Alcohol/Narcotics, Success resists effects, Failiure Succumbs to them. Repeated failiure made lead to Loss of Conciousness for 1d10-Toughness Bonus hours (minimum 1)",
     "useTime": "Free Action",
@@ -15,7 +15,10 @@
       "characteristic": "Toughness",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

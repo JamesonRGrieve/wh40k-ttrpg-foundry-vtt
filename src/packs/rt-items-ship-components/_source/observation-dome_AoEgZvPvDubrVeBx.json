@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "A dome that looks out into the void. +50 Achievement Points towards Exloraton Objectives, and +1 Morale. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>A dome that looks out into the void. +50 Achievement Points towards Exloraton Objectives, and +1 Morale. Only one per vessel.</p>"

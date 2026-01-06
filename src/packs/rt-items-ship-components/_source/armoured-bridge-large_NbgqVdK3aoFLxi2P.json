@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 0,
     "effect": "Where characters command the ship. If this component takes a critical hit or becomes damaged/unpowered, roll 1d10, on 4 or higher is unharmed.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Where characters command the ship. If this component takes a critical hit or becomes damaged/unpowered, roll 1d10, on 4 or higher is unharmed.</p>"

@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Whenever suffering Blood Loss, only test to avoid death every five rounds, instead of every round. Additionally, can reroll any Toguhness Test to avoid instantly dying due to Critical Damage.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

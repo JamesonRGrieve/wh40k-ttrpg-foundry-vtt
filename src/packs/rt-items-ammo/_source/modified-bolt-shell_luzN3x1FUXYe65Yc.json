@@ -7,7 +7,7 @@
     "damageOrEffect": "Does 1d10+5 X, Pen 4, Tearing Damage, +30 Metres. However Shotgun Gains Unreliable quality (or loses reliable), and loses Scatter.",
     "qualities": "Tearing, Unreliable, Scatter (lose)",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "RT: Hostile Acquisitions",
     "description": {

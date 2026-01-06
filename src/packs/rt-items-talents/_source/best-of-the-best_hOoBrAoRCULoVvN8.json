@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Whenever making Opposed Pilot Tests or Opposed Interaction Skill Tests with the Imperial Navy, if both the Character and their Opponent gain the same number of Degrees of Success, the Character wins the tie.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

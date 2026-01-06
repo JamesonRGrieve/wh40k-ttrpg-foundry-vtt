@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 1,
     "effect": "Where characters command the ship. As long as this component is undamaged, gain +5 to Command Tests made by the Captain, as well as BS Tests to fire ship weapons. If damaged roll 1d10, becomes unpowered on 3 or higher.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Where characters command the ship. As long as this component is undamaged, gain +5 to Command Tests made by the Captain, as well as BS Tests to fire ship weapons. If damaged roll 1d10, becomes unpowered on 3 or higher.</p>"

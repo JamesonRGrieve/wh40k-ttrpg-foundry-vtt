@@ -1,0 +1,96 @@
+# Weapon Template
+# Use this as a reference for creating weapon items
+# All fields are optional except name and type
+
+_id: &id weapon-template-000001
+name: Bolt Pistol
+type: weapon
+img: systems/rogue-trader/icons/weapons/bolt-pistol.webp
+
+system:
+  identifier: bolt-pistol
+  
+  # Weapon Classification
+  class: pistol  # melee, pistol, basic, heavy, thrown, exotic
+  type: bolt     # primitive, las, solid-projectile, bolt, melta, plasma, flame, etc.
+  
+  # Attack Configuration
+  attack:
+    type: ranged          # melee, ranged, thrown, psychic
+    characteristic: ballisticSkill  # weaponSkill, ballisticSkill, willpower
+    modifier: 0
+    range:
+      value: 30
+      units: m
+      special: ""
+    rateOfFire:
+      single: true
+      semi: 2
+      full: 0
+  
+  # Damage Configuration
+  damage:
+    formula: "1d10"
+    type: explosive    # impact, rending, explosive, energy, fire, shock, cold, toxic
+    bonus: 5
+    penetration: 4
+  
+  # Special Qualities (array of quality names)
+  special:
+    - tearing
+  
+  # Ammunition
+  clip:
+    max: 8
+    value: 8
+    type: bolt
+  reload: full  # -, free, half, full, 2-full, 3-full
+  
+  # Properties
+  twoHanded: false
+  melee: false
+  proficiency: "Pistol Weapons Training"
+  qualities:
+    - tearing
+  modifications: []
+  
+  # Physical Properties
+  weight: 3.5
+  availability: scarce
+  craftsmanship: common
+  quantity: 1
+  cost:
+    value: 250
+    currency: throne
+  
+  # Equipment State
+  equipped: false
+  inBackpack: false
+  container: ""
+  
+  # Description
+  description:
+    value: |
+      <p>The bolt pistol is a compact version of the venerable boltgun, 
+      firing the same deadly mass-reactive shells. Though it lacks the 
+      range and rate of fire of its larger cousin, it remains a devastating 
+      weapon in close quarters combat.</p>
+    chat: ""
+    summary: "Compact mass-reactive pistol"
+  
+  # Source Reference
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "121"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+# Metadata
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

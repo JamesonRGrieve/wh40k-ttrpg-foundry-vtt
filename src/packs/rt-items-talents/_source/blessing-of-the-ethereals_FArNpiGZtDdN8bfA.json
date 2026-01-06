@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The Tau was at some point blessed by the Ethererals for a worthy feat. When suffering Critical Damage, they are immune to Fear and Pinning, but must make a +0 Willpower Test to disengage or back down from combat unless receiving a direct order from a superior to do so.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

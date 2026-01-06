@@ -15,38 +15,13 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
         this.updateSource(initData)
     }
 
-    async prepareData() {
-        await super.prepareData();
-        this._computeShipStats();
-    }
-
-    _computeShipStats() {
-        // Calculate total power and space usage from components
-        let powerGenerated = 0;
-        let powerUsed = 0;
-        let spaceUsed = 0;
-
-        for (const item of this.items) {
-            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
-                const power = item.system.powerUsage || 0;
-                if (power > 0) {
-                    powerGenerated += power;
-                } else {
-                    powerUsed += Math.abs(power);
-                }
-                spaceUsed += item.system.spaceUsage || 0;
-            }
+    /** @override */
+    prepareData() {
+        super.prepareData();
+        // Call DataModel's embedded data preparation for component calculations
+        if (typeof this.system.prepareEmbeddedData === 'function') {
+            this.system.prepareEmbeddedData();
         }
-
-        // Store calculated values
-        this.system.power = this.system.power || {};
-        this.system.power.generated = powerGenerated;
-        this.system.power.consumed = powerUsed;
-        this.system.power.available = powerGenerated - powerUsed;
-
-        this.system.space = this.system.space || {};
-        this.system.space.used = spaceUsed;
-        this.system.space.available = (this.system.space.total || 0) - spaceUsed;
     }
 
     get hullType() {
@@ -71,6 +46,10 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
 
     get detection() {
         return this.system.detection;
+    }
+
+    get detectionBonus() {
+        return this.system.detectionBonus || Math.floor(this.detection / 10);
     }
 
     get armour() {
@@ -102,6 +81,22 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
     }
 
     /**
+     * Is the ship crippled (below half hull)?
+     * @type {boolean}
+     */
+    get isCrippled() {
+        return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
+    }
+
+    /**
+     * Is the ship destroyed?
+     * @type {boolean}
+     */
+    get isDestroyed() {
+        return this.hullIntegrity.value <= 0;
+    }
+
+    /**
      * Get all ship components
      */
     get shipComponents() {
@@ -123,6 +118,24 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
     }
 
     /**
+     * Get ship weapons grouped by location
+     */
+    get weaponsByLocation() {
+        const grouped = {
+            prow: [],
+            dorsal: [],
+            port: [],
+            starboard: [],
+            keel: []
+        };
+        for (const weapon of this.shipWeapons) {
+            const loc = weapon.system.location || 'dorsal';
+            if (grouped[loc]) grouped[loc].push(weapon);
+        }
+        return grouped;
+    }
+
+    /**
      * Fire a ship weapon
      * @param {string} weaponId - The ID of the weapon to fire
      */
@@ -137,7 +150,8 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
         const cardData = {
             actor: this,
             weapon: weapon,
-            crewRating: this.system.crew?.crewRating || 30
+            crewRating: this.system.crew?.crewRating || 30,
+            detectionBonus: this.detectionBonus
         };
 
         const html = await renderTemplate('systems/rogue-trader/templates/chat/ship-weapon-chat.hbs', cardData);
@@ -148,5 +162,29 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
             content: html,
             type: CONST.CHAT_MESSAGE_STYLES.OTHER
         });
+    }
+
+    /**
+     * Roll ship initiative (1d10 + Detection Bonus)
+     */
+    async rollInitiative() {
+        const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
+        
+        const content = `
+            <div class="rt-ship-initiative-roll">
+                <h3><i class="fas fa-satellite-dish"></i> Ship Initiative</h3>
+                <div class="rt-roll-formula">1d10 + Detection Bonus (${this.detectionBonus})</div>
+                <div class="rt-roll-result">${roll.total}</div>
+            </div>
+        `;
+
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this }),
+            content: content,
+            rolls: [roll],
+            type: CONST.CHAT_MESSAGE_STYLES.ROLL
+        });
+
+        return roll;
     }
 }

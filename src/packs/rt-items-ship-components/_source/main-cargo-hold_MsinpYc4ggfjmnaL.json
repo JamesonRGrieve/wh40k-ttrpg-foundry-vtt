@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 1,
     "effect": "+125 Achievement Points towards Trade Objectives. Stores Massive amounts of Cargo and Cargo Shuttles. Transports tend to have some built-in.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+125 Achievement Points towards Trade Objectives. Stores Massive amounts of Cargo and Cargo Shuttles. Transports tend to have some built-in.</p>"

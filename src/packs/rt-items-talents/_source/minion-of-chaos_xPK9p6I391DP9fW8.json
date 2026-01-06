@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character acquires a Minion of Chaos, such as a wyrd sorcerer, trained traitor Guardsman, or alien Mercenary. Talent can be taken more than once, each time adding another Minion.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

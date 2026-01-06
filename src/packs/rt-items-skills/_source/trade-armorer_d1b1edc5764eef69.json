@@ -1,0 +1,46 @@
+{
+  "name": "Trade (Armorer)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "intelligence",
+    "descriptor": "The Creation of things from contracts to weapons to starships, as well as the recalling of knowledge related to the Trade. A Trade may earn additional Profit Factor when able to ply it.",
+    "uses": "Uses: Recall Knowledge (Free Action), Examine an Item (Full Action). Plenty of other uses depending on the Trade, up to the character's Imagination and the GM's Discretion.\nSkill Groups: Archeologist, Armourer, Astrographer, Chymist, Cryptographer, Cook, Explorator, Linguist, Remembrancer, Scrimshawer, Shipwright, Soothsayer, Technomat, Voidfarer",
+    "useTime": "Varies",
+    "description": {
+      "value": "<p>The Creation of things from contracts to weapons to starships, as well as the recalling of knowledge related to the Trade. A Trade may earn additional Profit Factor when able to ply it.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Archeologist",
+      "Armourer",
+      "Astrographer",
+      "Chymist",
+      "Cryptographer",
+      "Cook",
+      "Explorator",
+      "Linguist",
+      "Remembrancer",
+      "Scrimshawer",
+      "Shipwright",
+      "Soothsayer",
+      "Technomat",
+      "Voidfarer"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [
+      "Intelligence",
+      "General",
+      "Unaligned"
+    ],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "d1b1edc5764eef69"
+}

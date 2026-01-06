@@ -9,7 +9,10 @@
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>Can use Psychic Powers whilst Frenzied</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

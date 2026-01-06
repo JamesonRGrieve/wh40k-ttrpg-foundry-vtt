@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "When Performing Astro-Telepathy inside this component, Astropaths gain +10 to Focus Power Tests and Astropath Psychic powers increase their range to 5 VU's. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>When Performing Astro-Telepathy inside this component, Astropaths gain +10 to Focus Power Tests and Astropath Psychic powers increase their range to 5 VU's. Only one per vessel.</p>"

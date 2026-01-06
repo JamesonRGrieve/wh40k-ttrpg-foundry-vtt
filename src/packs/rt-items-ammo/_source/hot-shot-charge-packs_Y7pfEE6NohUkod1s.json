@@ -7,7 +7,7 @@
     "damageOrEffect": "+1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.",
     "qualities": "Tearing, Reliable (lose)",
     "weight": "10% wep",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "15T each",
     "source": "Rogue Trader Core",
     "description": {

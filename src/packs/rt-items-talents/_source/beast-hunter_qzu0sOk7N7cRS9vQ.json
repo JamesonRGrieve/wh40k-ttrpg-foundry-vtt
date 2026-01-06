@@ -9,7 +9,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Whenever scoring a Critical Effect against a Creature of Hulking Size or Larger, add +3 Damage. Does not apply to servitors, Daemons, or entities with the From Beyond Trait.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

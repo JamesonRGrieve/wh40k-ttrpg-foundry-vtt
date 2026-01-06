@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Whenever profit factor is gained from completing an endeavour, add additional +1 to the group's total</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

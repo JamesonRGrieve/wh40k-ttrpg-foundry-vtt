@@ -9,7 +9,7 @@
     "spaceUsage": 5,
     "spCost": 1,
     "effect": "Where the regular crew live. Once per game session, Ship's Captain can reduce one source of Crew Population loss to zero by drawing on cryo-frozen reserves.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Where the regular crew live. Once per game session, Ship's Captain can reduce one source of Crew Population loss to zero by drawing on cryo-frozen reserves.</p>"

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 9,
     "maxAg": null,
     "weight": "90kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Human sized power armour, has Power Armour Systems; Osmatic Gill Life Sustainer, Vox Link, Sustainable Power Source, and Recoil Suppression.\nGrants user Resistance(Heat) Talent whilst worn.",
     "source": "BC: Tome of Fate",
@@ -16,7 +16,20 @@
       "value": "<p>Human sized power armour, has Power Armour Systems; Osmatic Gill Life Sustainer, Vox Link, Sustainable Power Source, and Recoil Suppression.\nGrants user Resistance(Heat) Talent whilst worn.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 9,
+      "body": 9,
+      "leftArm": 9,
+      "rightArm": 9,
+      "leftLeg": 9,
+      "rightLeg": 9
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

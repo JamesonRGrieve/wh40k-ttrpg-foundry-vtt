@@ -1,0 +1,31 @@
+{
+  "name": "Drive (Chariot)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "agility",
+    "descriptor": "Drive Group Vehicle of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to drive under normal conditions without test.",
+    "uses": "Skill Test: Success controls vehicle during maneouver, failiure doesn't, more DoF cause worse result.\nSkill Groups: Ground Vehicle, Skimmer/Hover, Walker.  ",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Drive Group Vehicle of Relevent Type. Test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to drive under normal conditions without test.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Agility",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Ground Vehicle",
+      "Skimmer/Hover",
+      "Walker"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4d8331482800be68"
+}

@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "Once per turn if Bridge is undamaged, any character can take an Extended Action to make a -10 Tech-Use Test to extinguish one component that is on fire. If successful, fire is extinguished.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Once per turn if Bridge is undamaged, any character can take an Extended Action to make a -10 Tech-Use Test to extinguish one component that is on fire. If successful, fire is extinguished.</p>"

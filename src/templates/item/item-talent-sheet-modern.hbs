@@ -1,0 +1,63 @@
+<div class="rt-item-sheet rt-compact">
+    <form autocomplete="off">
+        <!-- Compact Header -->
+        <header class="rt-item-header rt-item-header--compact">
+            <div class="rt-item-image rt-item-image--sm" data-edit="img">
+                <img src="{{item.img}}" alt="{{item.name}}" />
+            </div>
+            <div class="rt-item-title">
+                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Talent Name" />
+                <div class="rt-item-meta">
+                    <span class="rt-meta-badge rt-meta-badge--type"><i class="fas fa-star"></i> Talent</span>
+                    <input type="text" class="rt-meta-text rt-meta-text--tiny" name="system.tier" value="{{item.system.tier}}" placeholder="T1" />
+                    <div class="rt-meta-input">
+                        <input type="number" name="system.cost" value="{{item.system.cost}}" min="0" placeholder="XP" />
+                        <span>xp</span>
+                    </div>
+                    <label class="rt-meta-check"><input type="checkbox" name="system.stackable" {{checked item.system.stackable}} /> Multi</label>
+                    <label class="rt-meta-check"><input type="checkbox" name="system.isPassive" {{checked item.system.isPassive}} /> Passive</label>
+                </div>
+            </div>
+        </header>
+
+        <!-- Compact Body -->
+        <div class="rt-item-body rt-item-body--compact">
+            <!-- Prerequisites -->
+            <div class="rt-inline-field">
+                <label><i class="fas fa-lock"></i> Prerequisites</label>
+                <input type="text" name="system.requirements" value="{{item.system.requirements}}" placeholder="None" />
+            </div>
+
+            <!-- Aptitudes -->
+            <div class="rt-inline-field">
+                <label>Aptitudes</label>
+                <input type="text" name="system.aptitudes" value="{{join item.system.aptitudes ", "}}" placeholder="N/A" />
+            </div>
+
+            <!-- Specialization (conditional) -->
+            {{#if item.system.stackable}}
+            <div class="rt-inline-row">
+                <div class="rt-inline-field">
+                    <label>Specialization</label>
+                    <input type="text" name="system.specialization" value="{{item.system.specialization}}" placeholder="Las, Bolt, Plasma" />
+                </div>
+                <div class="rt-inline-field rt-inline-field--short">
+                    <label>Rank</label>
+                    <input type="number" name="system.rank" value="{{item.system.rank}}" min="1" />
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Effect -->
+            <div class="rt-prose-field">
+                <label>Effect</label>
+                <div class="rt-prose" data-edit="system.effect">{{{item.system.effect}}}{{{item.system.benefit}}}</div>
+            </div>
+
+            <!-- Footer -->
+            <div class="rt-item-footer">
+                <input type="text" class="rt-source-input" name="system.source" value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}" placeholder="Core Rulebook" />
+            </div>
+        </div>
+    </form>
+</div>

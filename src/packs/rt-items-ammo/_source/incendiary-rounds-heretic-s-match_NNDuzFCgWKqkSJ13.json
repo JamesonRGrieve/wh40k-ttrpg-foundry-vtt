@@ -7,7 +7,7 @@
     "damageOrEffect": "Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.",
     "qualities": "Blast (lose), Flame, Unreliable",
     "weight": "10% wep",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "-",
     "source": "DH 2E: Enemies Within",
     "description": {

@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any Career, RT Rank 3+, Fellowship 35+, captured and looted another ship, performed memorably chivalrous act detrimental to their own interest (such as sparing a well-fought foe).",
-    "descriptionText": "A Pirate is anyone willing to take goods without paying for them. To be Successful is to have reliable information networks, planning skills, contacts, and a trustworthy crew. To do all of this with bravado, style, and a dashing smile? That's a Swashbuckler.",
-    "effects": "Replace new Rank's Advances with that of the Swashbuckler\nAutomatically Gain Enemy (Imperial Navy) Talent\nAllows for the purchasing of the Unique Talent Combat Flair",
+    "descriptionText": "",
+    "effects": "",
     "source": "RT: Hostile Acquisitions \n(Page 44)",
     "description": {
       "value": "<p>A Pirate is anyone willing to take goods without paying for them. To be Successful is to have reliable information networks, planning skills, contacts, and a trustworthy crew. To do all of this with bravado, style, and a dashing smile? That's a Swashbuckler.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Swashbuckler\nAutomatically Gain Enemy (Imperial Navy) Talent\nAllows for the purchasing of the Unique Talent Combat Flair</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace new Rank's Advances with that of the Swashbuckler\nAutomatically Gain Enemy (Imperial Navy) Talent\nAllows for the purchasing of the Unique Talent Combat Flair",
+    "level": null
   },
   "effects": [],
   "flags": {},

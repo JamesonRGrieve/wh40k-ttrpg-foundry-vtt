@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Double Agility Bonus when determining movement speed (after modifiers from other traits, such as size).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

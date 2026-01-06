@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": "65%",
     "maxAg": "-",
     "weight": "0.5kg",
-    "availability": "Unique",
+    "availability": "unique",
     "cost": "-",
     "notes": "Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. ",
     "source": "RT: Faith and Coin",
@@ -16,7 +16,20 @@
       "value": "<p>Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. </p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

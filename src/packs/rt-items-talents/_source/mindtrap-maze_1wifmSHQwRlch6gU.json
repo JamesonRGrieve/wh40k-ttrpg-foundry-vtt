@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>The Character can add twice their Intelligence Bonus to any Opposed Willpower Tests that make to resist another character's Psychic Powers. If they win this Opposed Test the attacking Psyker gains one level of Fatigue,</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

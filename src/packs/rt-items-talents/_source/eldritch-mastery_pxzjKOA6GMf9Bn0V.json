@@ -9,7 +9,10 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>When using psychic powers at Fettered Strength, automatically succeed Focus Power Tests with a number of Degrees of Success equal to Psy Rating minus 1d5 (min 0). When using powers at Unfettered Strength roll on Psychic Phenomena table if rolling doubles on or failing Focus Power Test,. When using powers at Push Strength, can do so up to +4 Psy Rating, don't roll Psychic Phenomena automatically, instead if rolling doubles or failing Focus Power Test, immediately roll Perils of the Warp, with +15 per Psy Rating added through pushing (+4 Psy --> +60).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

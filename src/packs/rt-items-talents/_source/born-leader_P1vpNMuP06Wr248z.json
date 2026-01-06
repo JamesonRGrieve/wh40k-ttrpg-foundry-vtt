@@ -9,7 +9,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>The Character gains one additional Comrade, They can purchase this Talent up to 4 Times for 4 additional Comrades.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

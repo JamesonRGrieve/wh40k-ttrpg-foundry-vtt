@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>As a Half Action, or when making a Charge Action, the character can declare they are making a Takedown Action against an opponent in melee. They roll to hit using any normal modifiers for weapons and Talents (including +20 for charging). If character hits, and would have done at least 1 Point of Damage after Armour/Toughness Reduction with their attack, they instead do no damage, and target makes +0 Toughness Test or is stunned for 1 Round and Knocked Prone.\nAdditionally, character does not suffer -20 penalty to Weapon Skill when performing the Stun Action.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

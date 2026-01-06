@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Character gains either one of the following Traits: Regeneration, Sonar Sense, or Sturdy, or one of the following mutations: Brute, Clawed/Fanged, Feels No Pain, Nightstrider, Tough Hide, or Venomous.\nThese Mutations come about through deliberate genetic manipulation, so are not Warp-Caused Mutations that some would have issue with.\nThis Talent can be taken multiple times, choosing a different Mutation/Trait each time.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

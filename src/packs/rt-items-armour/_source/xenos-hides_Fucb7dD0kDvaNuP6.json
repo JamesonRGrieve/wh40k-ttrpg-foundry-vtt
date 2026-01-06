@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Primitive",
+    "type": "primitive",
     "locations": "Arms, Body",
     "ap": 6,
     "maxAg": null,
     "weight": "9.5kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "-",
     "notes": "Hides of exotic and strange animals who provide more protection than one would expect.",
     "source": "Black Crusade: Core",
@@ -16,7 +16,22 @@
       "value": "<p>Hides of exotic and strange animals who provide more protection than one would expect.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

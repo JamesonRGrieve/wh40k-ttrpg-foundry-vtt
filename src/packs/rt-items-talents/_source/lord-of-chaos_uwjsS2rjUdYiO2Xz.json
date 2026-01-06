@@ -9,7 +9,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character can have a number of minions equal to one and a half times their Fellowship Bonus, rounded down. Instead of their Fellowship Bonus.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

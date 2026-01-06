@@ -1,0 +1,45 @@
+//noinspection CssUnknownTarget
+// ============================================
+// Mixins
+// ============================================
+
+@mixin rt-progress-gradient($gradient) {
+  &::-webkit-progress-value {
+    border-radius: 999px;
+    background: $gradient;
+  }
+  &::-moz-progress-bar {
+    border-radius: 999px;
+    background: $gradient;
+  }
+}
+
+@mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
+  .rt-vitals-progress {
+    @include rt-progress-gradient($progress-gradient);
+  }
+  .rt-vitals-title {
+    color: $title-color;
+    i { color: $icon-color; }
+  }
+}
+
+@mixin rt-panel-tint($color, $border-opacity: 0.75, $header-opacity: 0.12) {
+  border-left: 3px solid rgba($color, $border-opacity);
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($color, $header-opacity), transparent);
+  }
+}
+
+.dh-actor {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border: 20px solid transparent;
+    border-image: url('../images/border-floral.png') 95 / 20px / 0 round;
+    grid-gap: 0;
+
+    > * {
+        min-width: 100px;
+    }
+}

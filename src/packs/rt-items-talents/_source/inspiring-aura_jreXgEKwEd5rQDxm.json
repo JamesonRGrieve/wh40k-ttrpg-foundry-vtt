@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character can affect allies of any kind, not just subordinates, with the Terrfy Special Use of the Command Skill. This doesn't need to represent threats and intimidation (but it can) but instead inspiring words, encouragement, or steadfastness in the face of foes.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Leadership",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,192 @@
+// ============================================
+// Rogue Trader Design System Variables
+// ============================================
+// Single source of truth for all design tokens
+
+// ============================================
+// Color Palette - Imperial Gothic Theme
+// ============================================
+
+// Gold / Brass / Bronze
+$rt-color-gold: #c9a227;
+$rt-color-gold-dark: #8b7015;
+$rt-color-gold-light: #e6c84a;
+$rt-color-brass: #b5a642;
+$rt-color-bronze: #cd7f32;
+
+// Crimson
+$rt-color-crimson: #8b0000;
+$rt-color-crimson-dark: #5c0000;
+$rt-color-crimson-light: #b22222;
+
+// Parchment
+$rt-color-parchment: #f4e4bc;
+$rt-color-parchment-dark: #d4c49c;
+$rt-color-parchment-light: #faf5e6;
+
+// Void (dark backgrounds)
+$rt-color-void: #0a0a12;
+$rt-color-void-light: #1a1a2e;
+$rt-color-void-lighter: #2a2a3e;
+
+// Steel
+$rt-color-steel: #71797E;
+$rt-color-steel-dark: #4a4a52;
+$rt-color-steel-light: #9a9aa2;
+
+// Status colors
+$rt-color-success: #2d5016;
+$rt-color-failure: #6b1010;
+$rt-color-warning: #8b6914;
+$rt-color-info: #1a4a6b;
+
+// ============================================
+// Semantic Backgrounds
+// ============================================
+
+$rt-bg-primary: rgba(10, 10, 18, 0.95);
+$rt-bg-secondary: rgba(26, 26, 46, 0.9);
+$rt-bg-tertiary: rgba(42, 42, 62, 0.85);
+
+// Light theme backgrounds (panels-modern)
+$rt-bg-paper: rgba(255, 255, 255, 0.75);
+$rt-bg-paper-light: rgba(255, 255, 255, 0.5);
+$rt-bg-subtle: rgba(244, 228, 188, 0.3);
+$rt-bg-input: rgba(255, 255, 255, 0.9);
+$rt-bg-translucent: rgba(250, 248, 240, 0.6);
+
+// Dark theme inputs - changed from blue to neutral/brown tones
+$rt-bg-input-dark: rgba(0, 0, 0, 0.2);
+$rt-bg-input-focus: rgba(192, 128, 32, 0.15);
+
+// ============================================
+// Borders
+// ============================================
+
+$rt-border-gold: 1px solid $rt-color-gold;
+$rt-border-dark: 1px solid rgba(0, 0, 0, 0.5);
+$rt-border-light: rgba(74, 55, 40, 0.2);
+$rt-border-medium: rgba(74, 55, 40, 0.35);
+$rt-border-heavy: rgba(74, 55, 40, 0.5);
+
+// Legacy border vars
+$border-color: black;
+$border-color-recessed: dimgrey;
+$grid-border: 1px solid $border-color;
+$grid-border-description: 1px dotted $border-color-recessed;
+$grid-border-settings: 2px dashed #404040;
+
+// ============================================
+// Text Colors
+// ============================================
+
+$rt-text-primary: #2a1a0a;
+$rt-text-secondary: #5a4a3a;
+$rt-text-muted: #7a6a5a;
+
+// Legacy form colors - changed from blue to neutral
+$form-input-disabled: black;
+$form-input-foreground: #000;
+$form-input-background: rgba(0, 0, 0, 0.15);
+$form-input-border: 1px solid rgba(74, 55, 40, 0.3);
+$form-active: rgba(192, 128, 32, 0.15);
+$form-button-background: rgba(74, 55, 40, 0.5);
+
+// ============================================
+// Accent Colors (for panels/tabs)
+// ============================================
+
+$rt-accent-gold: #d4a520;
+$rt-accent-combat: #a82020;
+$rt-accent-skills: #2a7a9a;
+$rt-accent-talents: #a07818;
+$rt-accent-equipment: #3a5f5f;
+$rt-accent-powers: #6a2090;
+$rt-accent-dynasty: #d4a520;
+$rt-accent-bio: #6a5a4a;
+
+// ============================================
+// Degree Colors (corruption/insanity)
+// ============================================
+
+$rt-degree-pure: #22c55e;
+$rt-degree-tainted: #eab308;
+$rt-degree-soiled: #f97316;
+$rt-degree-debased: #ef4444;
+$rt-degree-profane: #dc2626;
+$rt-degree-damned: #7f1d1d;
+$rt-degree-stable: #22c55e;
+$rt-degree-unsettled: #eab308;
+$rt-degree-disturbed: #f97316;
+$rt-degree-unhinged: #ef4444;
+$rt-degree-deranged: #dc2626;
+$rt-degree-terminally: #7f1d1d;
+
+// ============================================
+// Typography
+// ============================================
+
+$rt-font-display: 'Cinzel', serif;
+$rt-font-heading: 'IM Fell DW Pica', serif;
+$rt-font-body: 'Lusitana', serif;
+$rt-font-ui: 'Roboto', sans-serif;
+$rt-font-alt: 'Modesto Condensed', 'Palatino Linotype', serif;
+
+$rt-font-size-xs: 0.7rem;
+$rt-font-size-sm: 0.8rem;
+$rt-font-size-base: 0.9rem;
+$rt-font-size-md: 1rem;
+$rt-font-size-lg: 1.2rem;
+$rt-font-size-xl: 1.5rem;
+$rt-font-size-xxl: 2rem;
+
+// ============================================
+// Spacing
+// ============================================
+
+$rt-space-xs: 4px;
+$rt-space-sm: 8px;
+$rt-space-md: 12px;
+$rt-space-lg: 16px;
+$rt-space-xl: 24px;
+
+// Legacy spacing
+$margin-small: 0.25rem;
+$margin-general: 0.5rem;
+$margin-large: 1rem;
+
+// ============================================
+// Shadows
+// ============================================
+
+$rt-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+$rt-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+$rt-shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+$rt-shadow-glow-gold: 0 0 10px rgba($rt-color-gold, 0.5);
+$rt-shadow-glow-crimson: 0 0 10px rgba($rt-color-crimson, 0.5);
+$rt-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+
+// ============================================
+// Transitions
+// ============================================
+
+$rt-transition-fast: 150ms ease;
+$rt-transition-base: 250ms ease;
+$rt-transition-slow: 450ms ease;
+
+// ============================================
+// Border Radius
+// ============================================
+
+$rt-radius-sm: 2px;
+$rt-radius-md: 4px;
+$rt-radius-lg: 8px;
+
+// ============================================
+// Z-Index Scale
+// ============================================
+
+$rt-z-dropdown: 100;
+$rt-z-sticky: 200;
+$rt-z-modal: 300;
+$rt-z-tooltip: 400;

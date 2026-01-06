@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Reaction to make Tech-Use Test, on success make +10 to WS and BS Skill until the start of next turn</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

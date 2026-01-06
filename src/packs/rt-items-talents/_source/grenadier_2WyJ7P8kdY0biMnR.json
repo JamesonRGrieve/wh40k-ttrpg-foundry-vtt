@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

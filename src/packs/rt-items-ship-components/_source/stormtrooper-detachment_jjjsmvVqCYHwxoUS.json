@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Must have contacts/good reputation with Imperial Guard to acquire this. Hit and Run Attacks Double Hull Damage dealt. Winning opposed command tests defending against boarding adds 1d5 Crew Damage. No Poor, Good/Best add +5 and +10 to Command Tests. One per Vessel.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Must have contacts/good reputation with Imperial Guard to acquire this. Hit and Run Attacks Double Hull Damage dealt. Winning opposed command tests defending against boarding adds 1d5 Crew Damage. No Poor, Good/Best add +5 and +10 to Command Tests. One per Vessel.</p>"

@@ -9,7 +9,7 @@
     "spaceUsage": 14,
     "spCost": 4,
     "effect": "While Stationary, allows up to 4 vessels to dock to this one. This vessel acts as a space station for purposes of making Full Repairs or replenshing Morale. +10 to Acquisition Tests when making full repairs and +100 Achievement Points towards Trade Objectives. Ships with this component cannot use \"Broadside\" Weapons. Only one per vessel.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>While Stationary, allows up to 4 vessels to dock to this one. This vessel acts as a space station for purposes of making Full Repairs or replenshing Morale. +10 to Acquisition Tests when making full repairs and +100 Achievement Points towards Trade Objectives. Ships with this component cannot use \"Broadside\" Weapons. Only one per vessel.</p>"

@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When wielding two melee weapons, can attack with both as Full Action, make one WS Test, on success, target's Ap coutns as normal, but toughness only counts once against the combined damage roll. A successful Dodge/Parry avoids attack.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

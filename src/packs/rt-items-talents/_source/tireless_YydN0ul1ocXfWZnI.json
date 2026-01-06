@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character ignores -10 Penalty to all Tests as a result of Fatigue, they still suffer any other effects from Fatigue as Normal.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

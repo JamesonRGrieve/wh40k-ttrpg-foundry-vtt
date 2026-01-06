@@ -7,7 +7,7 @@
     "damageOrEffect": "Halves RoF of weapon (round up). Gain Toxic Quality, but if Toughness Test failed, does 3d10 Explosive Damage instead.",
     "qualities": "Toxic",
     "weight": "10% wep",
-    "availability": "Unique",
+    "availability": "unique",
     "cost": null,
     "source": "RT: Hostile Acquisitions",
     "description": {

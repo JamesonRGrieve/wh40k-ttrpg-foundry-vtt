@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 0,
     "effect": "Appears as any normal bridge, but contains advanced sensors, hidden compartments, and secret vox commincators to converse with crime syndicates. +50 Achievement Points towards Criminal Objectives.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Appears as any normal bridge, but contains advanced sensors, hidden compartments, and secret vox commincators to converse with crime syndicates. +50 Achievement Points towards Criminal Objectives.</p>"

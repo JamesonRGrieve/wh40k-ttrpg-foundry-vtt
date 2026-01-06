@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>The inevitable decay of the Dark Eldar's soul from She Who Thirsts, and the knowledge that they will eventually be little more than husks bound in eternal agony leaves little room for any mortal threats, fears, or dangers.\nAll Dark Eldar gain the effects of the Jaded and Dark Soul Talents.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

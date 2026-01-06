@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.65,
     "maxAg": "-",
     "weight": "20kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Projects field outwards 2 Metres, covering user and anything close by (such as a bike or person). Whilst Active it provices Resistance(Heat) and immunity to intense flashes such as from Photon Flash Grenades. Can be used for 10 hours before requiring 5 hour recharge. Uses a backpack power supply.",
     "source": "BC: Tome of Blood",
@@ -16,7 +16,20 @@
       "value": "<p>Projects field outwards 2 Metres, covering user and anything close by (such as a bike or person). Whilst Active it provices Resistance(Heat) and immunity to intense flashes such as from Photon Flash Grenades. Can be used for 10 hours before requiring 5 hour recharge. Uses a backpack power supply.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.65,
+      "body": 0.65,
+      "leftArm": 0.65,
+      "rightArm": 0.65,
+      "leftLeg": 0.65,
+      "rightLeg": 0.65
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

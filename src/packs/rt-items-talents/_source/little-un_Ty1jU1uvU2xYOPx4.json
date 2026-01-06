@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character scores +2 Degrees of Success whenever suceeding on a Fellowship-Based Test directed at an Ogryn.\nOgryn Allies may reroll any failed Tests to resist Coercion or other inducement to betray or turn against the Character.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "General"
+    ]
   },
   "effects": [],
   "flags": {},

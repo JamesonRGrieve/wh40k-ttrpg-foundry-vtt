@@ -37,3 +37,20 @@
         }
     }
 }
+
+// RT prefix aliases
+.rt-char-roller__wrapper {
+    @extend .dh-char-roller__wrapper;
+}
+
+.rt-char-roller__row {
+    @extend .dh-char-roller__row;
+}
+
+.rt-char-roller__block {
+    @extend .dh-char-roller__block;
+}
+
+.rt-char-roller__display {
+    @extend .dh-char-roller__display;
+}

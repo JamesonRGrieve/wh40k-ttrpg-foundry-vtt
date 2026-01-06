@@ -7,7 +7,7 @@
     "damageOrEffect": "Reduce damage to 1d10, but gain Hallucinogenic(2) Quality, or Hallucinogenic(4) against Psykers",
     "qualities": "Hallucinogenic(2)",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "BC: Tome of Excess",
     "description": {

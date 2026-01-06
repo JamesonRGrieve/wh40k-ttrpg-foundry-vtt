@@ -18,7 +18,13 @@
     },
     "tier": 1,
     "isPassive": false,
-    "isRollable": false
+    "isRollable": false,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

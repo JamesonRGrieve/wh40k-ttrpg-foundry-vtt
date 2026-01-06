@@ -1,8 +1,8 @@
-.dh-body .tab {
+.dh-body .tab, .rt-body .tab {
     display: none;
 }
 
-.dh-body .tab.active {
+.dh-body .tab.active, .rt-body .tab.active {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 0;
@@ -49,4 +49,17 @@
             }
         }
     }
+}
+
+// RT aliases
+.rt-body {
+    @extend .dh-body;
+}
+
+.rt-navigation {
+    @extend .dh-navigation;
+}
+
+.rt-navigation__item {
+    @extend .dh-navigation__item;
 }

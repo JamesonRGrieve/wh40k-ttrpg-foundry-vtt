@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Gain +20 to Toughness Tests to resist Heat, Cold, Vacuum, Suffocation, Disease, Poision, and any other Adverse Environmental Conditions that would require a Toughness Test.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

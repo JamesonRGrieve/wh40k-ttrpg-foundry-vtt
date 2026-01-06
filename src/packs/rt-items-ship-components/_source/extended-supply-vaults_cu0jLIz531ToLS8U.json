@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 2,
     "effect": "Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.</p>"

@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When this character attacks with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced)</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

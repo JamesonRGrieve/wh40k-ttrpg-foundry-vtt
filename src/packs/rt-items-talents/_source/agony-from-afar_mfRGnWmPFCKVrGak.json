@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>The Character gains a Pain Token whenever a Ranged Attack that originated from within Perception Bonus Metres of them inflicts Critical Damage upon, Stuns, kills, or causes the failing of a Fear/Pinning Test of a living creature. This is Cumulative with Pain Tokens gained from the Cruel Demise Vile Pleasure if both conditions are eligible.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

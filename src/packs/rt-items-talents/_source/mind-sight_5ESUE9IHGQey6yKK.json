@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>The Character can spend a Fate Point to automatically succeed on a Psyniscience Test with Perception Bonus Degrees of Success.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 2,
     "effect": "Increases ship's ramming damage by 1d10. Component can't be damaged or destroyed except via a Critical Hit.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Increases ship's ramming damage by 1d10. Component can't be damaged or destroyed except via a Critical Hit.</p>"

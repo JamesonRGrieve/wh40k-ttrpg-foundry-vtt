@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When armed with two single-handed weapons (such as pistols or one-handed melee weapons), they ignore the -20 penalty for Two-Weapon Fighting</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Finesse",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

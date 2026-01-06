@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Can see normally in the dark, and takes no penalty from dim or no light.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

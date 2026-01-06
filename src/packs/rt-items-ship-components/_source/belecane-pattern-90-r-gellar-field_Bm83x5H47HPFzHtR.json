@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Protects the ship during warp travel. +10 to Navigation Tests to pilot the ship through the warp. But -20 to results of rolls made on Warp Travel Encounter Table. Gellar field is known to flicker during prolonged use.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Protects the ship during warp travel. +10 to Navigation Tests to pilot the ship through the warp. But -20 to results of rolls made on Warp Travel Encounter Table. Gellar field is known to flicker during prolonged use.</p>"

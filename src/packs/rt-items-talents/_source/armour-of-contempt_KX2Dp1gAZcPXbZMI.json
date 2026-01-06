@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Any time corruption points are gained, reduce value by 1 (min 0). May make a Free Action to ignore accumulated effects of corruption points for 1 Round.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

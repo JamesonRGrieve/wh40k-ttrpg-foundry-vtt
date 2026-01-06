@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Inquisitor can spend a Fate Point to increase or decrease their group's subtlety by 1d10 + Willpower Bonus at any time.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

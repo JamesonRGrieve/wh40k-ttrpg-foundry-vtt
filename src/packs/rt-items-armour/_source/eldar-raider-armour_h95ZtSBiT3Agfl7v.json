@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Eldar",
+    "type": "xenos",
     "locations": "All",
     "ap": 5,
     "maxAg": null,
     "weight": "4kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Spikey armour means always counts as having Mono-knife in melee combat.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>Spikey armour means always counts as having Mono-knife in melee combat.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 5,
+      "leftArm": 5,
+      "rightArm": 5,
+      "leftLeg": 5,
+      "rightLeg": 5
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Other",
+    "type": "flak",
     "locations": "Body",
     "ap": 5,
     "maxAg": null,
     "weight": "3kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Heretical and incredibly rare armour composed of Tyranid Chitin. May attract unwanted attention from the Inquisition, Arbites, Ecclesiarchy, etc. ",
     "source": "RT: Hostile Acquisitions",
@@ -16,7 +16,20 @@
       "value": "<p>Heretical and incredibly rare armour composed of Tyranid Chitin. May attract unwanted attention from the Inquisition, Arbites, Ecclesiarchy, etc. </p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "body"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 5,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

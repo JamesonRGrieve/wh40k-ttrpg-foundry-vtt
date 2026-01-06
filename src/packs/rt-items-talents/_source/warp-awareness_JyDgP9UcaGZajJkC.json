@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Astropath can use Psyniscience Skill in place of Awareness skill for Awareness Tests.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Psyker"
+    ]
   },
   "effects": [],
   "flags": {},

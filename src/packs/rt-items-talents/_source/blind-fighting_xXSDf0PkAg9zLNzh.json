@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Halves all Penalties (rounded up) for fighting with Melee Weapons without the benefit of sight due to some obscuring effect such as Fog, Smoke or Darkness.\nDH 2E: Ignore all penalties instead of half them.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Fieldcraft",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

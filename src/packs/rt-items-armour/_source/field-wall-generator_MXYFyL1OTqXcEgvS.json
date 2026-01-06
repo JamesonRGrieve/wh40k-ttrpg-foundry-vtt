@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.65,
     "maxAg": "-",
     "weight": "18kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Requires two or more generators, activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between them that acts as cover. If a Wall Section Overloads, only the section between two generators shuts down, the rest are unaffected.",
     "source": "DH 2E: Enemies Within",
@@ -16,7 +16,20 @@
       "value": "<p>Requires two or more generators, activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between them that acts as cover. If a Wall Section Overloads, only the section between two generators shuts down, the rest are unaffected.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.65,
+      "body": 0.65,
+      "leftArm": 0.65,
+      "rightArm": 0.65,
+      "leftLeg": 0.65,
+      "rightLeg": 0.65
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

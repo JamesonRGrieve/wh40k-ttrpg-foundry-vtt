@@ -1,0 +1,79 @@
+// ============================================
+// Quick Stats Bar
+// ============================================
+
+.rt-quick-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $rt-space-sm;
+  padding: $rt-space-md $rt-space-lg;
+  background: $rt-bg-tertiary;
+  border-bottom: 1px solid rgba($rt-color-gold, 0.3);
+}
+
+.rt-stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-xs $rt-space-sm;
+  background: $rt-bg-primary;
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-md;
+  font-size: $rt-font-size-sm;
+  transition: all $rt-transition-fast;
+  
+  &__icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $rt-color-gold;
+    
+    i, .material-icons {
+      font-size: 14px;
+    }
+  }
+  
+  &__label {
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+    font-size: $rt-font-size-xs;
+    letter-spacing: 0.05em;
+  }
+  
+  &__value {
+    color: $rt-color-parchment;
+    font-weight: 600;
+  }
+  
+  &:hover {
+    border-color: $rt-color-gold;
+    box-shadow: $rt-shadow-glow-gold;
+  }
+  
+  // Variants
+  &--damage {
+    border-color: $rt-color-crimson-dark;
+    
+    .rt-stat-badge__icon {
+      color: $rt-color-crimson;
+    }
+    
+    &:hover {
+      border-color: $rt-color-crimson;
+      box-shadow: $rt-shadow-glow-crimson;
+    }
+  }
+  
+  &--equipped {
+    background: rgba($rt-color-success, 0.3);
+    border-color: $rt-color-success;
+  }
+  
+  &--rare {
+    border-color: $rt-color-gold;
+    background: linear-gradient(135deg, rgba($rt-color-gold, 0.1) 0%, transparent 100%);
+  }
+}
+

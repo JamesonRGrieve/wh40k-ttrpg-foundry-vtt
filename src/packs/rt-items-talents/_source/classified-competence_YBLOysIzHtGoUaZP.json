@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Gain the chosen Classified Competence from Adept Machinist, Dauntless Bulwark, Exemplar of Unity, Finder of Ways, Precise Hunter, and Windstrider</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

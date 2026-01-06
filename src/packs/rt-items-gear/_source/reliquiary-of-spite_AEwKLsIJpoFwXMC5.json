@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "7kg",
     "availability": "Master Crafted Relic Reliquary of the Sons of Medusa Chapter. Bearer adds twice their Willpower Bonus to all Toughness Tests. Can also spend a Fate Point to ignore Stunning, Fatigue, and Critical Effects (excluding limb loss and death) for 1d5 Rounds.",
     "cost": null,

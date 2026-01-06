@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>All Squad Members, including the character, add +1 to Initiative Rolls.\nAny Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Leadership",
+      "Fieldcraft",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

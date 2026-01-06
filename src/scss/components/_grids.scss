@@ -31,7 +31,8 @@ $grid-tables: (
     attackprompt: 2rem 1fr 3rem,
 );
 
-.dh {
+// Shared grid styles for both dh-* (legacy) and rt-* (new) prefixes
+@mixin grid-field-styles {
     &-field,
     &-textarea {
         @extend %grid-row;
@@ -73,6 +74,10 @@ $grid-tables: (
             grid-row: span $span;
         }
     }
+}
+
+.dh {
+    @include grid-field-styles;
 
     &-grid-col-1-offset {
         grid-column: 1 / -1;
@@ -270,6 +275,91 @@ $grid-tables: (
                     margin: 8px;
                 }
             }
+        }
+    }
+
+    &-controls {
+        grid-column: span 2;
+
+        &__wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: $margin-small;
+            margin: $margin-small;
+        }
+    }
+
+    &-settingswrapper {
+        grid-column: span 2;
+        display: flex;
+        flex-direction: column;
+
+        > * {
+            flex-grow: 1;
+        }
+    }
+}
+
+// RT prefix aliases for grid classes (allows gradual migration)
+.rt {
+    @include grid-field-styles;
+
+    &-grid-col-1-offset {
+        grid-column: 1 / -1;
+    }
+
+    // Generate rt-*table classes matching dh-*table
+    @each $table, $layout in $grid-tables {
+        &-#{$table}table {
+            &--no-border {
+                .table-row {
+                    grid-template-columns: $layout;
+
+                    &--head {
+                        grid-template-columns: $layout;
+                    }
+
+                    &--highlight {
+                        grid-template-columns: $layout;
+                    }
+                }
+            }
+
+            &--border {
+                .table-row {
+                    grid-template-columns: $layout;
+
+                    &--head {
+                        grid-template-columns: $layout;
+                    }
+
+                    &--unknown {
+                        grid-template-columns: $layout;
+                    }
+                }
+            }
+        }
+    }
+
+    &-table {
+        h1 {
+            grid-column: 1 / -1;
+        }
+
+        .table-roll {
+            text-align: left !important;
+
+            span {
+                text-align: left;
+            }
+        }
+
+        &--no-border {
+            @extend .dh-table--no-border;
+        }
+
+        &--border {
+            @extend .dh-table--border;
         }
     }
 

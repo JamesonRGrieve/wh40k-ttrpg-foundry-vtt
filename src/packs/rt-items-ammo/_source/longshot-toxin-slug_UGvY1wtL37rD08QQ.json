@@ -7,7 +7,7 @@
     "damageOrEffect": "Comes in pack of 5. 1d10+1 Damage, 2 Penetration. Blast (1), Corrosive, Toxic (2).\nHalve Range and No Accurate Quality when firing this.",
     "qualities": "Blast (1), Corrosive, Toxic (2)",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

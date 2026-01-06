@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Ork can now use Might Makes Right Trait (Can use Intimidate to perform all functions of Command) on Non Orks as well as Orks, and can affect a number of creatures with Might Makes Right equal to 10x Strength Bonus.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

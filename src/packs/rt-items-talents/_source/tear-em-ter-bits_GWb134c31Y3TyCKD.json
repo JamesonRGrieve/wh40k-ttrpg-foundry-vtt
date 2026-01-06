@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Once per Encounter, when this character inflicts Critical Damage on an enemy by dealing damage in excess of the enemy's Wounds, they can Spend a Fate Point to instantly kill them in a gruesome manner.\nThe Character gains Fear(2) against all foes who witness this until the end of the encounter.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Strength",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -12,7 +12,7 @@
     "strength": 3,
     "critRating": 6,
     "range": 6,
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "notes": "Impacts cause clouds of fog. Vessels struck by this weapon have -15 to BS Tests for the following Strategic turn. Weapon doesn't seem to use ammo.",
     "source": null,
     "description": {

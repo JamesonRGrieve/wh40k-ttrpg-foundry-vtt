@@ -1,0 +1,198 @@
+// ============================================
+// Affliction Lists (Malignancies, Mutations, Disorders)
+// ============================================
+
+.rt-affliction-section {
+  margin-top: $rt-space-sm;
+  padding-top: $rt-space-sm;
+  border-top: 1px solid $rt-border-light;
+}
+
+.rt-affliction-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $rt-space-xs;
+  
+  span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $rt-text-secondary;
+    text-transform: uppercase;
+  }
+}
+
+.rt-add-btn {
+  @include rt-icon-button(20px, $rt-accent-gold, 0.65rem);
+}
+
+.rt-affliction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 24px;
+}
+
+.rt-affliction-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: 4px 8px;
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: 4px;
+  
+  &:hover {
+    background: $rt-bg-paper;
+    border-color: $rt-border-medium;
+  }
+}
+
+.rt-affliction-name {
+  flex: 1;
+  font-size: 0.85rem;
+  color: $rt-text-primary;
+  cursor: pointer;
+  
+  &:hover {
+    color: $rt-accent-gold;
+  }
+}
+
+.rt-affliction-del {
+  background: transparent;
+  border: none;
+  color: $rt-text-muted;
+  cursor: pointer;
+  padding: 2px;
+  
+  &:hover {
+    color: $rt-accent-combat;
+  }
+}
+
+// ============================================
+// Movement Panel - Modern Design
+// ============================================
+
+.rt-movement-panel {
+  .rt-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.rt-movement-grid {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  padding: $rt-space-sm;
+}
+
+.rt-movement-size {
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-movement-section {
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  padding: $rt-space-sm;
+}
+
+.rt-movement-header {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $rt-text-muted;
+  margin-bottom: $rt-space-xs;
+  border-bottom: 1px solid $rt-border-light;
+  padding-bottom: $rt-space-xs;
+}
+
+.rt-movement-rates {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $rt-space-xs;
+}
+
+.rt-movement-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $rt-space-xs;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  transition: background 0.15s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.rt-movement-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $rt-text-muted;
+  letter-spacing: 0.05em;
+}
+
+.rt-movement-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $rt-text-primary;
+}
+
+// Legacy movement grid (fallback)
+.rt-move-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $rt-space-xs;
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: 4px;
+}
+
+.rt-move-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $rt-text-muted;
+}
+
+.rt-move-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: $rt-text-primary;
+}
+
+.rt-capacity-row {
+  display: flex;
+  gap: $rt-space-md;
+  padding-top: $rt-space-xs;
+  border-top: 1px solid $rt-border-light;
+}
+
+.rt-capacity-item {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+}
+
+.rt-capacity-label {
+  font-size: 0.7rem;
+  color: $rt-text-muted;
+}
+
+.rt-capacity-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $rt-text-primary;
+}
+

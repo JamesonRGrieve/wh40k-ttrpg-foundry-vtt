@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

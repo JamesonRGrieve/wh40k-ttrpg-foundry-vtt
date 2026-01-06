@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.5,
     "maxAg": "-",
     "weight": "0.6kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.",
     "source": "DH 2E: Enemies Within",
@@ -16,7 +16,20 @@
       "value": "<p>Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.5,
+      "body": 0.5,
+      "leftArm": 0.5,
+      "rightArm": 0.5,
+      "leftLeg": 0.5,
+      "rightLeg": 0.5
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

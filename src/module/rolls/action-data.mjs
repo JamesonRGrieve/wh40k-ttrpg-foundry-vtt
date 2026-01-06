@@ -35,7 +35,6 @@ export class ActionData {
     }
 
     async checkForOpposed() {
-        console.log('check for opposed');
         if(this.rollData.isOpposed && this.rollData.targetActor) {
             const rollCheck = await this.rollData.targetActor.rollCheck(this.rollData.opposedTarget);
             this.rollData.opposedRoll = rollCheck.roll;
@@ -257,8 +256,6 @@ export class ActionData {
             }
         }
     }
-
-    async descriptionText() {}
 
     async useResources() {
         // Expend Ammo

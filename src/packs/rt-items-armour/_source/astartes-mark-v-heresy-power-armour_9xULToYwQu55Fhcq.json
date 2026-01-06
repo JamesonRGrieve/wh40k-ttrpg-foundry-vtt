@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power (Astartes)",
+    "type": "power",
     "locations": "All",
     "ap": "8/9/8/8",
     "maxAg": null,
@@ -16,7 +16,20 @@
       "value": "<p>The Armour cobbled together during the opening of the Horus Heresy, still commonly used by Traitors. +10 Fellowship with Space Marines, but -10 with the Inquisition. +20 Strength. Subsystems: Autosenses (+5), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History 2 Times. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 8,
+      "body": 9,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

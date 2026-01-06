@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Advanced",
-    "characteristic": "Willpower",
+    "type": "",
+    "characteristic": "willpower",
     "descriptor": "The User's ability to clear their mind and better channel the warp through the use of Mantras, psychic foci, meditation, etc.",
     "uses": "Skill Test: On Success, user adds +1 to Final Psy Rating of any Fettered Power Test. Failiure instead suffers -1 Penalty to a Fettered Power Test, if this reduces Psy Rating to 0, the power automatically fails.\nNote: Obviously, this skill requires the user to be able to use Psychic powers.",
     "useTime": "Full Action",
@@ -15,7 +15,10 @@
       "characteristic": "Willpower",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "advanced",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

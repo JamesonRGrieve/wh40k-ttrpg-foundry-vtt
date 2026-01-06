@@ -1,6 +1,6 @@
-<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
-    <h1 class="dh-panel__header">{{localize "RT.Acquisitions.Header"}}</h1>
-    <div class="dh-table--border">
+<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
+    <h1 class="rt-panel-header">{{localize "RT.Acquisitions.Header"}}</h1>
+    <div class="rt-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "RT.Acquisitions.Name"}}</div>
             <div class="table-cell">{{localize "RT.Acquisitions.Availability"}}</div>
@@ -8,31 +8,31 @@
             <div class="table-cell">{{localize "RT.Acquisitions.Acquired"}}</div>
             <div class="table-cell--span2">{{localize "RT.Acquisitions.Notes"}}</div>
             <div class="table-cell--last">
-                <label class="dh-control-button acquisition-add">
-                    <span class="dh-control-button__span material-icons">add_circle</span>
+                <label class="rt-control-button acquisition-add">
+                    <span class="rt-control-button__span material-icons">add_circle</span>
                 </label>
             </div>
         </div>
         {{#each system.rogueTrader.acquisitions as | acquisition index |}}
             <div class="table-row">
                 <div class="table-cell--span2">
-                    <input class="dh-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
+                    <input class="rt-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
                 </div>
                 <div class="table-cell">
-                    <input class="dh-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.availability" value="{{acquisition.availability}}" />
+                    <input class="rt-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.availability" value="{{acquisition.availability}}" />
                 </div>
                 <div class="table-cell">
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="system.rogueTrader.acquisitions.{{index}}.modifier" value="{{acquisition.modifier}}" />
+                    <input class="rt-field__input" type="number" data-dtype="Number" name="system.rogueTrader.acquisitions.{{index}}.modifier" value="{{acquisition.modifier}}" />
                 </div>
                 <div class="table-cell rt-checkbox-cell">
                     <input type="checkbox" data-dtype="Boolean" name="system.rogueTrader.acquisitions.{{index}}.acquired" {{checked acquisition.acquired}} />
                 </div>
                 <div class="table-cell--span2">
-                    <input class="dh-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.notes" value="{{acquisition.notes}}" />
+                    <input class="rt-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.notes" value="{{acquisition.notes}}" />
                 </div>
                 <div class="table-cell--last">
-                    <label class="dh-control-button acquisition-remove" data-index="{{index}}">
-                        <span class="dh-control-button__span material-icons">delete</span>
+                    <label class="rt-control-button acquisition-remove" data-index="{{index}}">
+                        <span class="rt-control-button__span material-icons">delete</span>
                     </label>
                 </div>
             </div>

@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "2kg",
     "availability": "Variant of the Wolf Pelt Chapter Trapping (Adds +2 to Intimidate Tests). Also provides 2d10 Requisition Points and reduces Renown restrictions of all weapons, armour, and gear (not relics or chapter specific items) by 10.",
     "cost": "Space Wolves Chapter Only.",

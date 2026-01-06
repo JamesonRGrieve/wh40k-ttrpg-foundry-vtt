@@ -9,7 +9,12 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

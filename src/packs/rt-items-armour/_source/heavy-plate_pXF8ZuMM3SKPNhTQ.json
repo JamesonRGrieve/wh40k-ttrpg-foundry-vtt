@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Primitive",
+    "type": "primitive",
     "locations": "Head, Arms, Body, Legs",
     "ap": 6,
     "maxAg": null,
     "weight": "28kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "300 T",
     "notes": "Often worn by Fuedal Nobles\nHalve primitive armour AP vs non primitive weapons",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,25 @@
       "value": "<p>Often worn by Fuedal Nobles\nHalve primitive armour AP vs non primitive weapons</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "head",
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

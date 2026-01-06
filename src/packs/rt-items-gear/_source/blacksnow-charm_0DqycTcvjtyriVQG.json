@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "0.1kg",
     "availability": "Master-Crafted Relic Charm of the Space Wolves. Contains crystals of blackened ice as a reminder of a great victory against Orks. +5 Strength when fighting Orks.",
     "cost": null,

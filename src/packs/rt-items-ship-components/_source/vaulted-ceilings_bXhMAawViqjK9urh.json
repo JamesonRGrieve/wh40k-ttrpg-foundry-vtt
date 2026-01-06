@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Fancy Ceilings for a morale boost. +5 Morale, but -X Space (Raiders, -1), (Frigates/Transports, -2), (Light Cruisers, -3), (Cruisers, -4). Poor: additional -1 space, Good: +7 Morale instead of +5, Best: +10 Morale instead of +5. Only Once per Vessel",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Fancy Ceilings for a morale boost. +5 Morale, but -X Space (Raiders, -1), (Frigates/Transports, -2), (Light Cruisers, -3), (Cruisers, -4). Poor: additional -1 space, Good: +7 Morale instead of +5, Best: +10 Morale instead of +5. Only Once per Vessel</p>"

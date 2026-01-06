@@ -9,7 +9,7 @@
     "spaceUsage": 12,
     "spCost": 1,
     "effect": "Generates power rather than using it.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Generates power rather than using it.</p>"

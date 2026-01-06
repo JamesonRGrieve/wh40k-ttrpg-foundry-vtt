@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Primitive",
+    "type": "primitive",
     "locations": "Arms",
     "ap": 1,
     "maxAg": null,
     "weight": "0.5kg",
-    "availability": "Plentiful",
+    "availability": "plentiful",
     "cost": "10 T",
     "notes": "Can be useful for hiding or disguising more advanced items such as forcefields or comms devices.\nHalve primitive armour AP vs non primitive weapons",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,21 @@
       "value": "<p>Can be useful for hiding or disguising more advanced items such as forcefields or comms devices.\nHalve primitive armour AP vs non primitive weapons</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 1,
+      "rightArm": 1,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

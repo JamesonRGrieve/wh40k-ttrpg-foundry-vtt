@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whenever Character succeeds on a Dodge or Parry Test to avoid an attack made from an enemy within 20m, their allies gain +20 to Weapon Skill and Ballistic Skill tests made against that foe until the beginning of the character's next turn.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

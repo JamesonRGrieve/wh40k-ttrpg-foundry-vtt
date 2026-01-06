@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character gains +10 to all Interrogation Tests, and an additional +5 for each other character participating in the Interrogation who also has this talent. This also counts as test assistance (an additional +10 if assiting character is trained in the skill and adjacent and in communication, and max of 2 assistants).</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

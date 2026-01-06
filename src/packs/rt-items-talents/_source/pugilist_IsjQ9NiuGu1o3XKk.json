@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character can make a Fient Action as a Free Action when also making an Unarmed All-Out Attack or Standard Attack Action.\nAdditionally, they make Unarmed Called Shot Actions as Half Actions.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Strength"
+    ]
   },
   "effects": [],
   "flags": {},

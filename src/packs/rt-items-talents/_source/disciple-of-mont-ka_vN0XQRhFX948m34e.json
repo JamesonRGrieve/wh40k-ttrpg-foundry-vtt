@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

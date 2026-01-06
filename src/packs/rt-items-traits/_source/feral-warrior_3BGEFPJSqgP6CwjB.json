@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Guardsman Career, DH Rank 3+. Originate from a Feral World.",
-    "descriptionText": "Savage fighters all, these brutal close combat savages emplkoy shock and awe to asssault the enemy in close combat. Those that survive these brutal engagements quickly become veterans hardened to the worst of battle.",
-    "effects": "Replace new Rank's Advances with that of the Feral Warrior\nAllows for the purchasing of the Unique Talent Beast Hunter",
+    "descriptionText": "",
+    "effects": "",
     "source": "DH: Inquisitor's Handbook (Page 62)",
     "description": {
       "value": "<p>Savage fighters all, these brutal close combat savages emplkoy shock and awe to asssault the enemy in close combat. Those that survive these brutal engagements quickly become veterans hardened to the worst of battle.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Feral Warrior\nAllows for the purchasing of the Unique Talent Beast Hunter</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "origin",
+    "effect": "Replace new Rank's Advances with that of the Feral Warrior\nAllows for the purchasing of the Unique Talent Beast Hunter",
+    "level": null
   },
   "effects": [],
   "flags": {},

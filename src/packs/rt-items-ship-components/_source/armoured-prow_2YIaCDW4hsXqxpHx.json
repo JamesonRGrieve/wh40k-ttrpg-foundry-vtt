@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 2,
     "effect": "20 Metre Thick ship bow, +4 Armour on fore arc, and +1d10 damage when ramming. Cannot have Prow Macrobatteries or Lances. Only one per vessel.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>20 Metre Thick ship bow, +4 Armour on fore arc, and +1d10 damage when ramming. Cannot have Prow Macrobatteries or Lances. Only one per vessel.</p>"

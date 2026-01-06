@@ -1,0 +1,145 @@
+// ============================================
+// Talents & Traits Panels
+// ============================================
+
+.rt-ability-panel {
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: $rt-space-md;
+}
+
+.rt-ability-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(180deg, rgba($rt-accent-talents, 0.12) 0%, transparent 100%);
+  border-bottom: 1px solid $rt-border-light;
+}
+
+.rt-ability-title {
+  margin: 0;
+  flex: 1;
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $rt-text-primary;
+  
+  i {
+    margin-right: $rt-space-xs;
+    color: $rt-accent-talents;
+  }
+}
+
+.rt-ability-add {
+  @include rt-icon-button(24px, $rt-accent-gold, 0.7rem);
+}
+
+.rt-ability-list {
+  max-height: 350px;
+  overflow-y: auto;
+  padding: $rt-space-sm;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $rt-border-medium;
+    border-radius: 3px;
+  }
+}
+
+.rt-ability-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-xs $rt-space-sm;
+  background: $rt-bg-input;
+  border: 1px solid $rt-border-light;
+  border-left: 3px solid $rt-accent-talents;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  
+  &:hover {
+    background: $rt-bg-paper;
+    border-color: $rt-border-medium;
+    border-left-color: $rt-accent-talents;
+    
+    .rt-ability-actions {
+      opacity: 1;
+    }
+  }
+}
+
+.rt-ability-thumb {
+  width: 28px;
+  height: 28px;
+  border: 2px solid $rt-border-light;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rt-ability-name {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font-size: 0.95rem;
+  color: $rt-text-primary;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  &:hover {
+    color: $rt-accent-talents;
+  }
+}
+
+.rt-ability-pill {
+  padding: 3px 8px;
+  background: rgba($rt-accent-gold, 0.15);
+  border: 2px solid rgba($rt-accent-gold, 0.4);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: $rt-accent-gold;
+  flex-shrink: 0;
+}
+
+.rt-ability-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.rt-ability-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: $rt-text-muted;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  
+  &:hover {
+    color: $rt-text-primary;
+    background: $rt-bg-subtle;
+    border-color: $rt-border-light;
+  }
+}
+
+.rt-traits-panel {
+  .rt-ability-row {
+    border-left-color: $rt-accent-equipment;
+  }
+  
+  .rt-ability-name:hover {
+    color: $rt-accent-equipment;
+  }
+}
+

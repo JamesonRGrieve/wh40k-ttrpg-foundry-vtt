@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Defence",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

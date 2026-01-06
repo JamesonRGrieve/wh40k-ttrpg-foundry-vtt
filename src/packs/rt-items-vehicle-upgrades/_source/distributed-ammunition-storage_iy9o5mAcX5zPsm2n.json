@@ -7,7 +7,7 @@
     "allowedVehicles": "Any Enclosed Vehicle",
     "difficulty": "-30",
     "descriptionText": "Whenever this Vehicle suffers Critical Damage to the Weapon Systems or Turret, reduce Damage the crew would suffer by 10.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever this Vehicle suffers Critical Damage to the Weapon Systems or Turret, reduce Damage the crew would suffer by 10.</p>"

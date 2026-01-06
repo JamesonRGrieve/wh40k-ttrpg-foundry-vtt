@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use Psyniscience as a Free Action instead of a Half Action. Additionally, the character can passively detect psychic effects and entities as opposed to actively.\nEffectively, whenever they would be able to detect a warp signature, the GM may allow them to make a Psyniscience Skill Test to detect it, in the same way they might use Awareness.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Psyker",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

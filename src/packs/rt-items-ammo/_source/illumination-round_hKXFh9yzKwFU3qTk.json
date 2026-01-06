@@ -7,7 +7,7 @@
     "damageOrEffect": "Fully Illuminates region below it (Roughly 1 Square Kilometre). Fired Indirectly, stays in the air for a while with a parachute.",
     "qualities": null,
     "weight": null,
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "Only War Core",
     "description": {

@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Basic, Movement",
-    "characteristic": "Strength",
+    "type": "",
+    "characteristic": "strength",
     "descriptor": "Swimming through various liquids, Test only needed in unusual circumstances, difficult waters, or long distances.",
     "uses": "Skill Test: Remain swimming in dangerous water or for a long distance",
     "useTime": "Full Action",
@@ -15,7 +15,10 @@
       "characteristic": "Strength",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The kroot can use the Group's Profit Factor in place of their Willpower to attempt to resist Fear and Pinning. All Kroot start with this Talent.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

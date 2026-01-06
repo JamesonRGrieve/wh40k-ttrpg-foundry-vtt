@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "6kg",
     "availability": "Master Crafted Relic Astartes Narthecium of the Red Scorpions Chapter. Grants +30 to Medicae Tests to treat Space Marines and Humans. User can re-roll failed Medicae Tests and heal one additional wound with each use of First Aid. Also grants regular Astartes Narthecium benefits.",
     "cost": null,

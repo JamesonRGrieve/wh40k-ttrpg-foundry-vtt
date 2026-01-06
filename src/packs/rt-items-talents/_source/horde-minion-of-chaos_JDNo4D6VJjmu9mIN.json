@@ -9,7 +9,10 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character gains a Horde Minion. They are created in thet same way as a Lesser Minion, however act as a Horde.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

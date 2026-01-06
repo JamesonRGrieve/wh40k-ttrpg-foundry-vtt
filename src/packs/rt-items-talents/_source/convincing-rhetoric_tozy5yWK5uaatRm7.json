@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>The Character can use their Intelligence Characteristic in place of their Fellowship Characteristics for Charm, Command, Blather, and Performer(Storyteller) Tests</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

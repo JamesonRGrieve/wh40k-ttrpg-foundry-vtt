@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "Provides proper ready rooms and training centres for pilots. Grants +2 to Attack Craft Rating of all squadrons on the ship. One per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Provides proper ready rooms and training centres for pilots. Grants +2 to Attack Craft Rating of all squadrons on the ship. One per vessel.</p>"

@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Poison (Eldar)",
+    "type": "xenos",
     "weight": "0.1kg",
     "availability": "Rare Availability if acquired from Dark Eldar Settlement. Failing Toughness Test target begins suffocating (Counting Toughness Bonus as half for how long they can breath for) unless they prepare for it by breathing in beforehand. Lasts 1d10+15 minutes or until victum is treated (such as with De-tox).",
     "cost": "Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.",

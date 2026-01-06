@@ -1,6 +1,6 @@
 {{!-- Origin Path Panel - Rogue Trader Character Creation --}}
-<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-1">
-    <h1 class="dh-panel__header">{{localize "RT.OriginPath.Header"}}</h1>
+<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
+    <h1 class="rt-panel-header">{{localize "RT.OriginPath.Header"}}</h1>
     <p class="rt-origin-description">{{localize "RT.OriginPath.Description"}}</p>
     
     <div class="rt-origin-path-container">
@@ -34,8 +34,8 @@
 </div>
 
 {{!-- Origin Path Effects Summary --}}
-<div class="dh-panel spacer dh-grid-col-6 dh-grid-row-2">
-    <h1 class="dh-panel__header">{{localize "RT.OriginPath.EffectsHeader"}}</h1>
+<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-2">
+    <h1 class="rt-panel-header">{{localize "RT.OriginPath.EffectsHeader"}}</h1>
     {{#if actor.backgroundEffects.abilities.length}}
         <div class="rt-effects-list">
             {{#each actor.backgroundEffects.abilities as |ability|}}

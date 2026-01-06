@@ -1,0 +1,32 @@
+{
+  "name": "Performer (Poet)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "fellowship",
+    "descriptor": "Entertain or Enthrall groups of Spectators, takes an amount of time dependant on Performance.",
+    "uses": "Use: Charming Performance. -10 Performer (Storyteller/Singer) Test instead of Charm, improving disposition of audience by one level, or +5 to Crew Morale ( +10 per DoS) for duration of combat. \nUse: Enthralling Performance, -10 Performer(Musician/Singer) Test instead of Blather, distracting audience, doesn't mean completley unaware in the face of obvious danger or harm against them.\nSkill Groups: Dancer, Musician, Singer, Storyteller",
+    "useTime": "Varies, Normally Minutes to Hours.",
+    "description": {
+      "value": "<p>Entertain or Enthrall groups of Spectators, takes an amount of time dependant on Performance.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Fellowship",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Dancer",
+      "Musician",
+      "Singer",
+      "Storyteller"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c4bd44af6a781efc"
+}

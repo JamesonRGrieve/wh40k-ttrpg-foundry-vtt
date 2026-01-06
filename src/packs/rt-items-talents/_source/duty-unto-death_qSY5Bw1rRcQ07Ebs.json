@@ -9,7 +9,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

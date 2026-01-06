@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Flak",
+    "type": "flak",
     "locations": "Head",
     "ap": 2,
     "maxAg": "-",
     "weight": "2kg",
-    "availability": "Average",
+    "availability": "average",
     "cost": "25 T",
     "notes": "+1 AP against Blast Weapons if not at centre of blast.",
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 2,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

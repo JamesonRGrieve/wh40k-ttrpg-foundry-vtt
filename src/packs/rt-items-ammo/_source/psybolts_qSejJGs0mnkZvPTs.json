@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Daemonbane and Sanctified Qualities. Ignore Protective Benefits from Psychic Powers. +1 Damage per Psy Rating of Target.",
     "qualities": "Daemonbane, Sanctified",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "source": "DH 2E: Enemies Beyond",
     "description": {

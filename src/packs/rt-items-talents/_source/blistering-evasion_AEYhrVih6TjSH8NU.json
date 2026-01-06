@@ -9,7 +9,13 @@
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character successfully Evades three consecutive attacks without being struck whilst on a mission.\nWhen Character makes a successful Evasion Test against an attack, they impose -10 to Ballistic and Weapon Skill Attacks to hit them until the start of their next turn.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Finesse\nVeteran Talent Requirement Fulfilled"
+    ]
   },
   "effects": [],
   "flags": {},

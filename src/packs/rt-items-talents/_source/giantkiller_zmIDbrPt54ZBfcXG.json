@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When firing at a target with a Size Trait larger than the character's own, character adds the difference in Size Trait to their Damage.\nEG: A Ratling (Size 3, Scrawny) does +2 damage vs an Ork Nob (Size 5, Hulking)</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

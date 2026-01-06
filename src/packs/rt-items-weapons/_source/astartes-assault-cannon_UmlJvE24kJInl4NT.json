@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Mounted",
-    "type": "SP",
+    "class": "mounted",
+    "type": "solid-projectile",
     "range": "150m",
     "rof": "-/-/10",
     "damage": "3d10+6",

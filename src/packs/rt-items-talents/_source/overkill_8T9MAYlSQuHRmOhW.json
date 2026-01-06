@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

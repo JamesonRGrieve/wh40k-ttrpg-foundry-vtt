@@ -9,7 +9,12 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>The effects of the Psychic Null Talent apply to everyone within Willpower Bonus metres of the Untouchable.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

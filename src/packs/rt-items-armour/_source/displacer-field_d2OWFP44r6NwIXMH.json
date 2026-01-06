@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": "55%",
     "maxAg": "-",
     "weight": "2kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

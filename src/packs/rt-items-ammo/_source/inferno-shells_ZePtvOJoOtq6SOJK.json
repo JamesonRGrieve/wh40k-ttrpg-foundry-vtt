@@ -7,7 +7,7 @@
     "damageOrEffect": "When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)",
     "qualities": "Flame",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "18T each",
     "source": "Rogue Trader Core",
     "description": {

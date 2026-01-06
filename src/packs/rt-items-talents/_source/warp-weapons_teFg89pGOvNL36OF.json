@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>This Creature's Natural Weapons ignore AP from Armour or Cover. Forcefields and Warded/Holy armour work as intended.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

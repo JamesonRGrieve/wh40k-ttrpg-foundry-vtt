@@ -1,0 +1,675 @@
+// ============================================
+// COMBAT TAB - Clean Combat Interface
+// ============================================
+
+.rt-combat-tab {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+}
+
+// ============================================
+// COMBAT GRID LAYOUT
+// ============================================
+
+.rt-combat-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: $rt-space-md;
+  min-height: 0;
+}
+
+.rt-combat-col {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+}
+
+// ============================================
+// SMALL HEADER BUTTONS
+// ============================================
+
+.rt-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: rgba($rt-accent-gold, 0.2);
+  border: 1px solid rgba($rt-accent-gold, 0.4);
+  border-radius: $rt-radius-sm;
+  color: $rt-accent-gold;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: rgba($rt-accent-gold, 0.3);
+    border-color: $rt-accent-gold;
+    transform: scale(1.1);
+  }
+  
+  i {
+    font-size: 0.65rem;
+  }
+}
+
+// Override for panel headers to ensure inline layout
+.rt-panel-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: $rt-space-sm;
+  
+  .rt-panel-title {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+  }
+}
+
+// ============================================
+// VITALS PANELS
+// ============================================
+
+.rt-vital-display {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-xs;
+}
+
+.rt-vital-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+}
+
+.rt-vital-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-medium;
+  border-radius: $rt-radius-sm;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  
+  &:hover {
+    background: $rt-bg-paper-light;
+    border-color: $rt-accent-gold;
+  }
+  
+  &.rt-btn-minus { color: $rt-accent-combat; }
+  &.rt-btn-plus { color: $rt-color-success; }
+}
+
+.rt-vital-current {
+  font-size: $rt-font-size-xl;
+  font-weight: 700;
+  color: $rt-text-primary;
+  min-width: 28px;
+  text-align: center;
+}
+
+.rt-vital-sep {
+  font-size: $rt-font-size-lg;
+  color: $rt-text-muted;
+}
+
+.rt-vital-max {
+  font-size: $rt-font-size-base;
+  color: $rt-text-secondary;
+  min-width: 24px;
+}
+
+.rt-vital-bar {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rt-vital-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.rt-wounds-fill {
+  background: linear-gradient(90deg, $rt-accent-combat, lighten($rt-accent-combat, 10%));
+}
+
+.rt-fatigue-fill {
+  background: linear-gradient(90deg, #c08020, #d09030);
+}
+
+.rt-fate-value {
+  color: $rt-accent-gold !important;
+}
+
+.rt-critical-warning,
+.rt-exhausted-warning {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: 4px $rt-space-sm;
+  font-size: $rt-font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: $rt-radius-sm;
+  
+  i { font-size: 0.8em; }
+}
+
+.rt-critical-warning {
+  background: rgba($rt-accent-combat, 0.15);
+  color: $rt-accent-combat;
+}
+
+.rt-exhausted-warning {
+  background: rgba(180, 80, 20, 0.2);
+  color: #8b4000;
+}
+
+.rt-exhausted {
+  border-color: rgba(180, 80, 20, 0.4);
+}
+
+// Panel icon colors
+.rt-panel-wounds .rt-panel-header i { color: $rt-accent-combat; }
+.rt-panel-fatigue .rt-panel-header i { color: #c08020; }
+.rt-panel-fate .rt-panel-header i { color: $rt-accent-gold; }
+.rt-panel-reactions .rt-panel-header i { color: $rt-accent-skills; }
+.rt-panel-initiative .rt-panel-header i { color: $rt-accent-gold; }
+.rt-panel-injuries .rt-panel-header i { color: $rt-accent-combat; }
+.rt-panel-movement .rt-panel-header i { color: $rt-accent-equipment; }
+.rt-panel-quick-actions .rt-panel-header i { color: $rt-accent-combat; }
+.rt-panel-arsenal .rt-panel-header i { color: $rt-accent-talents; }
+.rt-panel-forcefield .rt-panel-header i { color: $rt-accent-powers; }
+
+// ============================================
+// REACTIONS PANEL
+// ============================================
+
+.rt-reactions-row {
+  display: flex;
+  gap: $rt-space-sm;
+}
+
+.rt-reaction-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-medium;
+  border-radius: $rt-radius-md;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  
+  i {
+    font-size: 1rem;
+    color: $rt-accent-skills;
+  }
+  
+  &:hover {
+    border-color: $rt-accent-skills;
+    transform: translateY(-1px);
+  }
+}
+
+.rt-reaction-label {
+  font-size: $rt-font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $rt-text-secondary;
+}
+
+.rt-reaction-target {
+  font-size: $rt-font-size-base;
+  font-weight: 700;
+  color: $rt-accent-skills;
+}
+
+// ============================================
+// INITIATIVE PANEL
+// ============================================
+
+.rt-initiative-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-md;
+}
+
+.rt-init-value {
+  font-size: $rt-font-size-xxl;
+  font-weight: 700;
+  color: $rt-accent-gold;
+}
+
+.rt-init-roll-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(180deg, $rt-accent-gold 0%, darken($rt-accent-gold, 10%) 100%);
+  border: none;
+  border-radius: $rt-radius-md;
+  color: #fff;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: $rt-shadow-md;
+  }
+  
+  i { font-size: 1rem; }
+}
+
+// ============================================
+// QUICK ACTIONS
+// ============================================
+
+.rt-panel-quick-actions {
+  .rt-panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+  }
+}
+
+.rt-initiative-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $rt-space-sm;
+  background: rgba($rt-accent-gold, 0.08);
+  border-radius: $rt-radius-md;
+  border: 1px solid rgba($rt-accent-gold, 0.2);
+}
+
+.rt-initiative-label {
+  font-size: $rt-font-size-sm;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-text-secondary;
+}
+
+.rt-quick-actions-row {
+  display: flex;
+  gap: $rt-space-sm;
+}
+
+.rt-quick-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-sm;
+  background: linear-gradient(180deg, $rt-accent-combat 0%, darken($rt-accent-combat, 10%) 100%);
+  border: none;
+  border-radius: $rt-radius-md;
+  color: #fff;
+  font-size: $rt-font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $rt-shadow-md;
+  }
+  
+  i { font-size: 0.9em; }
+}
+
+// ============================================
+// INJURIES PANEL
+// ============================================
+
+.rt-panel-injuries {
+  .rt-panel-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    
+    .rt-panel-title {
+      flex: 1;
+      white-space: nowrap;
+    }
+  }
+}
+
+.rt-injuries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-injury-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: 4px $rt-space-sm;
+  background: rgba($rt-accent-combat, 0.08);
+  border-left: 2px solid $rt-accent-combat;
+  border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+}
+
+.rt-injury-name {
+  flex: 1;
+  font-size: $rt-font-size-sm;
+  cursor: pointer;
+  
+  &:hover { text-decoration: underline; }
+}
+
+.rt-injury-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: $rt-text-muted;
+  cursor: pointer;
+  flex-shrink: 0;
+  
+  &:hover { color: $rt-accent-combat; }
+  
+  i { font-size: 0.7rem; }
+}
+
+.rt-injuries-empty {
+  padding: $rt-space-sm;
+  font-size: $rt-font-size-sm;
+  font-style: italic;
+  color: $rt-text-muted;
+  text-align: center;
+}
+
+// ============================================
+// MOVEMENT PANEL
+// ============================================
+
+.rt-movement-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.rt-move-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  min-height: 50px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(245, 243, 238, 0.7) 100%);
+  border: 2px solid rgba(74, 55, 40, 0.15);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: $rt-accent-combat;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 1) 0%, 
+      rgba(250, 245, 235, 0.9) 100%);
+    border-color: rgba(168, 32, 32, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    .rt-move-icon {
+      transform: scale(1.15);
+      color: $rt-accent-combat;
+    }
+    
+    .rt-move-value {
+      color: $rt-accent-combat;
+    }
+  }
+}
+
+.rt-move-icon {
+  font-size: 1.2rem;
+  color: rgba(168, 32, 32, 0.6);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.rt-move-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rt-move-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: $rt-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-move-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: $rt-text-primary;
+  line-height: 1;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+// Specific movement type styling
+.rt-move-half .rt-move-icon { color: rgba(168, 32, 32, 0.5); }
+.rt-move-full .rt-move-icon { color: rgba(168, 32, 32, 0.6); }
+.rt-move-charge .rt-move-icon { color: rgba(168, 32, 32, 0.75); }
+.rt-move-run .rt-move-icon { color: rgba(168, 32, 32, 0.9); }
+
+// ============================================
+// FORCE FIELD
+// ============================================
+
+.rt-panel-forcefield {
+  margin-top: $rt-space-xs;
+}
+
+.rt-forcefield-bar {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  
+  &.rt-ff-active .rt-ff-status { color: $rt-color-success; }
+  &.rt-ff-overloaded .rt-ff-status { color: $rt-accent-combat; }
+}
+
+.rt-ff-name {
+  font-weight: 600;
+}
+
+.rt-ff-rating {
+  color: $rt-text-secondary;
+  font-size: $rt-font-size-sm;
+}
+
+.rt-ff-status {
+  margin-left: auto;
+  font-size: $rt-font-size-xs;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: $rt-text-muted;
+}
+
+// ============================================
+// ARSENAL/WEAPONS TABLE
+// ============================================
+
+.rt-panel-arsenal {
+  margin-top: $rt-space-lg;
+  padding-top: $rt-space-md;
+  border-top: 2px solid rgba($rt-accent-talents, 0.15);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, rgba($rt-accent-talents, 0.3), transparent);
+    border-radius: 2px;
+  }
+}
+
+.rt-row-equipped {
+  background: rgba($rt-color-success, 0.08);
+}
+
+.rt-equipped-icon {
+  color: $rt-color-success;
+  margin-right: $rt-space-xs;
+  font-size: 0.8em;
+}
+
+.rt-weapon-name-cell {
+  display: flex;
+  align-items: center;
+}
+
+// ============================================
+// DROP ZONES
+// ============================================
+
+.rt-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-lg;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba($rt-accent-gold, 0.03),
+    rgba($rt-accent-gold, 0.03) 10px,
+    rgba($rt-accent-gold, 0.08) 10px,
+    rgba($rt-accent-gold, 0.08) 20px
+  );
+  border: 2px dashed rgba($rt-accent-gold, 0.3);
+  border-radius: $rt-radius-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 80px;
+  
+  &:hover {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba($rt-accent-gold, 0.08),
+      rgba($rt-accent-gold, 0.08) 10px,
+      rgba($rt-accent-gold, 0.15) 10px,
+      rgba($rt-accent-gold, 0.15) 20px
+    );
+    border-color: rgba($rt-accent-gold, 0.5);
+  }
+}
+
+.rt-dropzone-compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-sm;
+  margin-top: $rt-space-sm;
+  background: rgba($rt-accent-gold, 0.05);
+  border: 1px dashed rgba($rt-accent-gold, 0.25);
+  border-radius: $rt-radius-sm;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: $rt-font-size-sm;
+  color: $rt-text-secondary;
+  
+  i {
+    font-size: 0.9rem;
+    color: rgba($rt-accent-gold, 0.6);
+  }
+  
+  &:hover {
+    background: rgba($rt-accent-gold, 0.1);
+    border-color: rgba($rt-accent-gold, 0.4);
+    color: $rt-text-primary;
+    
+    i {
+      color: $rt-accent-gold;
+    }
+  }
+}
+
+.rt-dropzone-icon {
+  font-size: 2rem;
+  color: rgba($rt-accent-gold, 0.5);
+  transition: all 0.3s ease;
+  
+  .rt-dropzone:hover & {
+    color: $rt-accent-gold;
+    transform: scale(1.1);
+  }
+}
+
+.rt-dropzone-text {
+  font-size: $rt-font-size-sm;
+  font-weight: 500;
+  color: $rt-text-secondary;
+  text-align: center;
+  
+  .rt-dropzone:hover & {
+    color: $rt-text-primary;
+  }
+}

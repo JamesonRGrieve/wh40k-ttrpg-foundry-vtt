@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 2,
     "effect": "Has secret \"Mirror Hold\" that is screened against Auspex. +50 Achievement Points towards Trade Objectives, +75 Achievement Points towards Criminal Objectives. Locating Bays while their systems are engaged requires -40 Scrutiny Test.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Has secret \"Mirror Hold\" that is screened against Auspex. +50 Achievement Points towards Trade Objectives, +75 Achievement Points towards Criminal Objectives. Locating Bays while their systems are engaged requires -40 Scrutiny Test.</p>"

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Gain +10 to all Medicae Skill Tests. If character fails a Medicae Skill Test whilst performing Extended Care, the can reduce the amount of damage suffered by their Patients by their Intelligence Bonus.\nIf their Patients are in danger of losing a Limb from a Critical Hit, the character provides their patient +20 to the Toughness Bonus to avoid losing the limb.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Fieldcraft",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

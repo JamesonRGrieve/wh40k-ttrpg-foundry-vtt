@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Finesse",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can Fire Relevent Heavy weapon group without -20 penalty to WS/BS. Such as: Bolt, Flame, Las, Launcher, Melta, Plasma, Primitive, and SP.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

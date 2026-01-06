@@ -9,7 +9,10 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Creature or thing is implanted with some kind of control mechanism which restricts how it can behave. Whilst useful for maintaining consistency should a creature be presented with a situation outside of its programming, and no recognised master to provide orders, it must pass a +20 Intelligence Test or be Stunned for 1 Round. Due to the mindlessness of the creature, it is immune to all Opposed Social Tests.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

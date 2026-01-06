@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When a Focus Power Test results in a Psychic Phenomena, roll twice and take the more favourable result. Perils of the Warp work as normal.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Psyker",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

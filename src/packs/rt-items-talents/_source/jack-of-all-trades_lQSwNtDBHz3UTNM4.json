@@ -9,7 +9,12 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Gain all unknown Non-Specialist skills at Rank 1 (known, +0).</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Kroot",
+    "type": "xenos",
     "locations": "All",
     "ap": 2,
     "maxAg": null,
     "weight": "4kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Rare Availability for Kroot, and much easier to find amongst their Kindreds. Theoretically wearable by humans, Kroot should be able to wear most human armour.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>Rare Availability for Kroot, and much easier to find amongst their Kindreds. Theoretically wearable by humans, Kroot should be able to wear most human armour.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 2,
+      "body": 2,
+      "leftArm": 2,
+      "rightArm": 2,
+      "leftLeg": 2,
+      "rightLeg": 2
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

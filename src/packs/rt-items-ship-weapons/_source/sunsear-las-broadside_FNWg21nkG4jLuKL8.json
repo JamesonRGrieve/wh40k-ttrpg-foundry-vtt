@@ -12,7 +12,7 @@
     "strength": 6,
     "critRating": 4,
     "range": 9,
-    "availability": "Scarce",
+    "availability": "scarce",
     "notes": "Must Occupy Port or Starboard slots.",
     "source": "RT: Into the Storm",
     "description": {

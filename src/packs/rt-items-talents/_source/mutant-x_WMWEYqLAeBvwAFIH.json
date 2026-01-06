@@ -9,7 +9,10 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>The Minion has X Mutations, roll on Gifts on the Gods X number of times when generating this Minion.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

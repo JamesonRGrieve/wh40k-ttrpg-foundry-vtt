@@ -6,7 +6,7 @@
     "armourTypes": "Any armour that imposes penalties to agility tests or fine manipulation tests.",
     "effect": "Removes penalties to fine manipulation caused by armour.",
     "weight": "+1kg",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Removes penalties to fine manipulation caused by armour.</p>"

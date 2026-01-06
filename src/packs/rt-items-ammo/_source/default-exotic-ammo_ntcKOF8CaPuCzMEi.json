@@ -7,7 +7,7 @@
     "damageOrEffect": "Ammo highly specialised, Exotic weapons can't normally use unusual ammunition.",
     "qualities": "-",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "20T each",
     "source": "Rogue Trader Core",
     "description": {

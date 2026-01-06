@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Ministorum Priest",
-    "descriptionText": "Fire is the purifier of all. It is what cleanses the heretic, what annihilates the witch, and what flares in the heart of those whose devotion burns eternally. The Incinerant Priest's Zeal is superheated, their Rhetoric of flaming passion, and their Flamethrower ready to deliver the damned their infernal retribution",
-    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Incinerant Priest. Apt: Agility, Fellowship, Offence, Social, Strength, Weapon Skill, Willpower\nAdd. Equipment: Ecclesiarchy Robes, Good Eviscerator+Exterminator or Good Chainsword+Good Hand Flamer or Pyrophoric Vambrace, Book of Scripture. Gain Talents: Radiant Presence+Sure Strike or Litany of Condemnation. Can Purchase Unique Talent: Brimstone Rhetoric and Basic Order: Blazing Exemplar ",
+    "descriptionText": "",
+    "effects": "",
     "source": "OW: Shield of Humanity (Page 82)",
     "description": {
       "value": "<p>Fire is the purifier of all. It is what cleanses the heretic, what annihilates the witch, and what flares in the heart of those whose devotion burns eternally. The Incinerant Priest's Zeal is superheated, their Rhetoric of flaming passion, and their Flamethrower ready to deliver the damned their infernal retribution</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Incinerant Priest. Apt: Agility, Fellowship, Offence, Social, Strength, Weapon Skill, Willpower\nAdd. Equipment: Ecclesiarchy Robes, Good Eviscerator+Exterminator or Good Chainsword+Good Hand Flamer or Pyrophoric Vambrace, Book of Scripture. Gain Talents: Radiant Presence+Sure Strike or Litany of Condemnation. Can Purchase Unique Talent: Brimstone Rhetoric and Basic Order: Blazing Exemplar </p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Incinerant Priest. Apt: Agility, Fellowship, Offence, Social, Strength, Weapon Skill, Willpower\nAdd. Equipment: Ecclesiarchy Robes, Good Eviscerator+Exterminator or Good Chainsword+Good Hand Flamer or Pyrophoric Vambrace, Book of Scripture. Gain Talents: Radiant Presence+Sure Strike or Litany of Condemnation. Can Purchase Unique Talent: Brimstone Rhetoric and Basic Order: Blazing Exemplar ",
+    "level": null
   },
   "effects": [],
   "flags": {},

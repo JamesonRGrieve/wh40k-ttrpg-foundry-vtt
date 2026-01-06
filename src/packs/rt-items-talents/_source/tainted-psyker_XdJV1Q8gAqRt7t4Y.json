@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When making a Focus Power Test, the character can choose to gain Corruption Points up to their Psy Rating, for each point gained this way, they gain +10 to their Focus Power Test, but +5 to Psychic Phenomena.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Knowledge",
+      "Psyker"
+    ]
   },
   "effects": [],
   "flags": {},

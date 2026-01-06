@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Investigation, Interaction\nApt:Perception, General, Tzeentch",
-    "characteristic": "Perception",
+    "type": "",
+    "characteristic": "perception",
     "descriptor": "Determining Honesty, motives, personality, or temprament of a person. Noticing small details or characteristics that may pass unseen. For auspex returns, determining A Vessel's mass, velocity, etc.",
     "uses": "Used to tell if someone is lying, discerning information and conclusions from a complex report, interpreting Augur or Auspx readings and determining what they mean.",
     "useTime": "Half Action",
@@ -15,7 +15,14 @@
       "characteristic": "Perception",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Perception",
+      "General",
+      "Tzeentch"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

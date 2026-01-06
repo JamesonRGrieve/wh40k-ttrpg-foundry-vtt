@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Other",
+    "type": "flak",
     "locations": "All",
     "ap": 3,
     "maxAg": null,
     "weight": "12kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "-",
     "notes": "Negates Effects of extreme heat and possibly flames. Comes with rebreather to protect against flame and smoke inhalation.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>Negates Effects of extreme heat and possibly flames. Comes with rebreather to protect against flame and smoke inhalation.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 3,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

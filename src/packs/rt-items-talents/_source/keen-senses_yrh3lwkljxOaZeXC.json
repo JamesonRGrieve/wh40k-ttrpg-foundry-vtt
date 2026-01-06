@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>Dark Eldar gain the effects of Heightened Senses (Sight, Hearing) and Paranoia Talents, and Dark Sight Trait. Being Accustomed to experiencing existence with extreme intensity and clarity, and the perpetual gloom of the Dark City.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Finesse."
+    ]
   },
   "effects": [],
   "flags": {},

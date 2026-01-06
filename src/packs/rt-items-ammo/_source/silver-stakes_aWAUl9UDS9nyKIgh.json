@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.",
     "qualities": "Sanctified",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "source": "DH 2E: Enemies Within",
     "description": {

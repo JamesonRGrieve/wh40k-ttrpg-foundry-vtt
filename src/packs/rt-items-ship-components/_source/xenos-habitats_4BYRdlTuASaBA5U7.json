@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "Quarters designed to simulate alien environments. +10 to Charm/Inquiry Tests made towards Xenos aboard the vessel. +50 Achievement Points towards Objectives involving Non-Hostile interactings with Xenos. Permenant -2 Morale due to Crew Suspicion",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Quarters designed to simulate alien environments. +10 to Charm/Inquiry Tests made towards Xenos aboard the vessel. +50 Achievement Points towards Objectives involving Non-Hostile interactings with Xenos. Permenant -2 Morale due to Crew Suspicion</p>"

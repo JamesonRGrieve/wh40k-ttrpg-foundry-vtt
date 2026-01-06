@@ -9,7 +9,7 @@
     "spaceUsage": 10,
     "spCost": 3,
     "effect": "Generates power rather than using it. The Ship's Navigator can make +10 Perception Test on the bridge to modify mimicry to any vessel previously encounted via a bone-like node mounted on the bridge. The ship appears as that vessel to long-range sensors, although the illusion is broken once creacing visual contact.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Generates power rather than using it. The Ship's Navigator can make +10 Perception Test on the bridge to modify mimicry to any vessel previously encounted via a bone-like node mounted on the bridge. The ship appears as that vessel to long-range sensors, although the illusion is broken once creacing visual contact.</p>"

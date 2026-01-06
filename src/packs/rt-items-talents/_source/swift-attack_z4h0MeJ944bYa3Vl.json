@@ -18,7 +18,13 @@
     },
     "tier": 2,
     "isPassive": false,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Finesse",
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

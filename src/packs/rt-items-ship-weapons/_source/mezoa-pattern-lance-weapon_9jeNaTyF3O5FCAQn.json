@@ -12,7 +12,7 @@
     "strength": 1,
     "critRating": 4,
     "range": 4,
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "notes": "If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.",
     "source": "RT: BF Koronus",
     "description": {

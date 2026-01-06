@@ -7,7 +7,7 @@
     "damageOrEffect": "Comes in pack of 5. Deals 2d10 X Damage with Pen 0. Blast (2)",
     "qualities": "Blast (2)",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

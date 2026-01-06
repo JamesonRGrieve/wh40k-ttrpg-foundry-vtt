@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "Add +10 to All Command or Social Skill Tests any character on the bridge makes. +5 Ship Manoeuverability. Can be used as the Ship's Bridge.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Add +10 to All Command or Social Skill Tests any character on the bridge makes. +5 Ship Manoeuverability. Can be used as the Ship's Bridge.</p>"

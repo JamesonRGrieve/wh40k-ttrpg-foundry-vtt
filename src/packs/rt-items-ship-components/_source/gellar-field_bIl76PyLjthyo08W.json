@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Protects the vessel while in the immaterium. Considered the Default Option.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Protects the vessel while in the immaterium. Considered the Default Option.</p>"

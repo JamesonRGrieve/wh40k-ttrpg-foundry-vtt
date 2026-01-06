@@ -7,7 +7,7 @@
     "damageOrEffect": "1d10+1 Impact Damage, Pen 3, Reliable, Toxic (4)",
     "qualities": "Reliable, Toxic (4)",
     "weight": "10% wep",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "-",
     "source": "DH 2E: Enemies Without",
     "description": {

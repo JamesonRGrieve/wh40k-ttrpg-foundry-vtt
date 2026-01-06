@@ -9,7 +9,13 @@
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character suffers 5+ Critical Damage in a Single Battle during a mission and survives.\nIf this character would be rendered unconcious by a Critical Effect or excessive Fatigue, they can make a +0 Willpower Test. If successful they remain conccious, but suffer 1 Damage ignoring Armour and Toughness at the end of each of their turns. At the beginning of each turn they may choose to collapse to end the damaging effect.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower\nVeteran Talent Requirement Fulfilled"
+    ]
   },
   "effects": [],
   "flags": {},

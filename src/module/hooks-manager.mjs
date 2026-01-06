@@ -1,5 +1,9 @@
 import { RogueTraderItem } from './documents/item.mjs';
 import { RogueTrader } from './rules/config.mjs';
+
+// Import data models
+import * as dataModels from './data/_module.mjs';
+
 import { AcolyteSheet } from './sheets/actor/acolyte-sheet.mjs';
 import { RogueTraderItemSheet } from './sheets/item/item-sheet.mjs';
 import { RogueTraderWeaponSheet } from './sheets/item/weapon-sheet.mjs';
@@ -9,6 +13,7 @@ import { RogueTraderJournalEntrySheet } from './sheets/item/journal-entry-sheet.
 import { RogueTraderPeerEnemySheet } from './sheets/item/peer-enemy-sheet.mjs';
 import { RogueTraderAttackSpecialSheet } from './sheets/item/attack-special-sheet.mjs';
 import { RogueTraderWeaponModSheet } from './sheets/item/weapon-mod-sheet.mjs';
+import { RTCompendiumBrowser } from './applications/compendium-browser.mjs';
 import {
     createCharacteristicMacro,
     createItemMacro,
@@ -22,6 +27,7 @@ import { RogueTraderAmmoSheet } from './sheets/item/ammo-sheet.mjs';
 import { RogueTraderPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
 import { RogueTraderStorageLocationSheet } from './sheets/item/storage-location-sheet.mjs';
 import { RogueTraderTraitSheet } from './sheets/item/trait-sheet.mjs';
+import { RogueTraderSkillSheet } from './sheets/item/skill-sheet.mjs';
 import { RogueTraderActorProxy } from './documents/actor-proxy.mjs';
 import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
 import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
@@ -44,11 +50,11 @@ export const SYSTEM_ID = 'rogue-trader';
 
 export class HooksManager {
     static registerHooks() {
-        console.log('Rogue Trader | Registering system hooks');
 
         Hooks.once('init', HooksManager.init);
         Hooks.on('ready', HooksManager.ready);
         Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
+        Hooks.on('renderCompendiumDirectory', HooksManager.renderCompendiumDirectory);
 
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
@@ -85,6 +91,8 @@ Enable Debug with: game.rt.debug = true
             rollMutation: () => RollTableUtils.rollMutation(),
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
+            // Compendium browser
+            openCompendiumBrowser: (options) => RTCompendiumBrowser.open(options),
         };
 
         //CONFIG.debug.hooks = true;
@@ -104,6 +112,65 @@ Enable Debug with: game.rt.debug = true
             starship: documents.RogueTraderStarship,
         };
         CONFIG.Item.documentClass = RogueTraderItem;
+
+        // Register data models for actors
+        // DataModels handle schema validation and data preparation
+        CONFIG.Actor.dataModels = {
+            acolyte: dataModels.CharacterData,
+            character: dataModels.CharacterData,
+            npc: dataModels.NPCData,
+            vehicle: dataModels.VehicleData,
+            starship: dataModels.StarshipData,
+        };
+
+        // Register Item data models
+        // DataModels handle schema validation, migration, and data preparation
+        CONFIG.Item.dataModels = {
+            // Equipment
+            weapon: dataModels.WeaponData,
+            armour: dataModels.ArmourData,
+            ammunition: dataModels.AmmunitionData,
+            gear: dataModels.GearData,
+            consumable: dataModels.GearData,
+            tool: dataModels.GearData,
+            drug: dataModels.GearData,
+            cybernetic: dataModels.CyberneticData,
+            forceField: dataModels.ForceFieldData,
+            backpack: dataModels.BackpackData,
+            storageLocation: dataModels.StorageLocationData,
+            // Character Features
+            talent: dataModels.TalentData,
+            trait: dataModels.TraitData,
+            skill: dataModels.SkillData,
+            originPath: dataModels.OriginPathData,
+            aptitude: dataModels.AptitudeData,
+            peer: dataModels.PeerEnemyData,
+            enemy: dataModels.PeerEnemyData,
+            // Powers
+            psychicPower: dataModels.PsychicPowerData,
+            navigatorPower: dataModels.NavigatorPowerData,
+            ritual: dataModels.RitualData,
+            // Ship & Vehicle
+            shipComponent: dataModels.ShipComponentData,
+            shipWeapon: dataModels.ShipWeaponData,
+            shipUpgrade: dataModels.ShipUpgradeData,
+            shipRole: dataModels.ShipRoleData,
+            order: dataModels.OrderData,
+            vehicleTrait: dataModels.VehicleTraitData,
+            vehicleUpgrade: dataModels.VehicleUpgradeData,
+            // Modifications & Qualities
+            weaponModification: dataModels.WeaponModificationData,
+            armourModification: dataModels.ArmourModificationData,
+            weaponQuality: dataModels.WeaponQualityData,
+            attackSpecial: dataModels.AttackSpecialData,
+            // Misc
+            specialAbility: dataModels.SpecialAbilityData,
+            criticalInjury: dataModels.CriticalInjuryData,
+            mutation: dataModels.MutationData,
+            malignancy: dataModels.MalignancyData,
+            mentalDisorder: dataModels.MentalDisorderData,
+            journalEntry: dataModels.JournalEntryItemData,
+        };
 
         // Register sheet application classes
         const ActorCollection = foundry.documents.collections.Actors;
@@ -132,6 +199,7 @@ Enable Debug with: game.rt.debug = true
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderTalentSheet, { types: ['talent'], makeDefault: true });
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderTraitSheet, {types: ['trait'],makeDefault: true,});
+        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderSkillSheet, {types: ['skill'],makeDefault: true,});
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderWeaponSheet, { types: ['weapon'], makeDefault: true });
 
@@ -140,12 +208,10 @@ Enable Debug with: game.rt.debug = true
     }
 
     static async ready() {
-        console.log(`Rogue Trader Loaded!`);
         await checkAndMigrateWorld();
 
         game.tours.register(SYSTEM_ID, "main-tour", new DHTourMain());
 
-        console.log('Initializing with:', game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.processActiveEffectsDuringCombat));
         if (!game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.processActiveEffectsDuringCombat)) {
             DHCombatActionManager.disableHooks();
         }
@@ -167,5 +233,24 @@ Enable Debug with: game.rt.debug = true
             default:
                 return;
         }
+    }
+
+    static renderCompendiumDirectory(app, html, data) {
+        const $html = html instanceof HTMLElement ? $(html) : html;
+        const header = $html.find('.directory-header');
+        if (!header.length) return;
+
+        if (header.find('.rt-compendium-browser-btn').length) return;
+
+        const browserBtn = $(`
+            <button type="button" class="rt-compendium-browser-btn" title="Open RT Compendium Browser">
+                <i class="fas fa-search"></i> RT Browser
+            </button>
+        `);
+        browserBtn.on('click', (event) => {
+            event.preventDefault();
+            RTCompendiumBrowser.open();
+        });
+        header.find('.header-actions').prepend(browserBtn);
     }
 }

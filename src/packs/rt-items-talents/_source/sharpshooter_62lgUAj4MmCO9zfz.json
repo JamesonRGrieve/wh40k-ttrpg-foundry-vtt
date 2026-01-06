@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When making a Called Shot with a Ranged Weapon, reduce penalty by 10 (-20 to -10, or to +0 when combined with Deadeye Shot)</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

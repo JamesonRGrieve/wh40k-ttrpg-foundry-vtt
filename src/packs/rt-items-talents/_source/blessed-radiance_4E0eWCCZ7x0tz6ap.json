@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When spending a fate point to activate Pure Faith, extend effects to 2x WP Bonus Targets. Can bestow a Fate point as a free action, that returns at the end of the encounter if unspent. When burning a fate point, Explorer and 2xWP Bonus Allies become immune to Daemonic Presence, Fear, and Corruption Tests, gain +10 to Resist Psychic Attack or Manipulation, and take half Damage from psychic and warp sources until the end of the encounter.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

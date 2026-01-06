@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Eldar",
+    "type": "xenos",
     "locations": "All",
     "ap": 4,
     "maxAg": null,
     "weight": "12kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Eldar Armour. Sealed armour with long range Vox, auspex. Gives Dark-Sight Trait. Also Gives Flyer (12) in zero gravity thanks to back-mounted wings. Gives +10 to all pilot (Personal) Tests.",
     "source": "RT: Navis Primer",
@@ -16,7 +16,20 @@
       "value": "<p>Eldar Armour. Sealed armour with long range Vox, auspex. Gives Dark-Sight Trait. Also Gives Flyer (12) in zero gravity thanks to back-mounted wings. Gives +10 to all pilot (Personal) Tests.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 4,
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

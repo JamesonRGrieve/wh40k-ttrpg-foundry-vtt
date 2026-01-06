@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Navigator can reduce warp travel by 1d5 days, min 1. +25 Achievement Points towards Exploration Objectives. Poor: -10 to Warp Travel Encounter Table, Good: Reduce warp travel time by 1d5+5 days (minimum 1), Best: also +50 AchvPoints (instead of 25). One per Vessel.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Navigator can reduce warp travel by 1d5 days, min 1. +25 Achievement Points towards Exploration Objectives. Poor: -10 to Warp Travel Encounter Table, Good: Reduce warp travel time by 1d5+5 days (minimum 1), Best: also +50 AchvPoints (instead of 25). One per Vessel.</p>"

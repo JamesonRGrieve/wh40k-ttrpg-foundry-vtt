@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 1,
     "effect": "Where Characters command the ship. As long as this component is undamaged, +10 to all Command Tests made by the ship's commanding officers on the Bridge and +5 to Piloting and Navigation Tests made by this vessel or any allied vessel in 30 VU's.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Where Characters command the ship. As long as this component is undamaged, +10 to all Command Tests made by the ship's commanding officers on the Bridge and +5 to Piloting and Navigation Tests made by this vessel or any allied vessel in 30 VU's.</p>"

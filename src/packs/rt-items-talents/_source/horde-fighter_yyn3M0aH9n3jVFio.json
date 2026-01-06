@@ -9,7 +9,13 @@
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character kills 4+ enemy troops with a single attack during a mission.\nWhen firing a Weapon with the Blast Qulaity, character can spend a Fate Point as a Free Action to increase its Blast Quality by 1d5 until the end of the turn.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence\nVeteran Talent Requirement Fulfilled"
+    ]
   },
   "effects": [],
   "flags": {},

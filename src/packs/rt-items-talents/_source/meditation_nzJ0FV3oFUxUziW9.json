@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can spend 10 minutes in a meditative state without interruption to make a Willpower Test, on success they remove one level of Fatigue.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Knowledge",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

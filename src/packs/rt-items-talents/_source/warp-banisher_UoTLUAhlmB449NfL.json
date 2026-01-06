@@ -9,7 +9,13 @@
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character succeeds on an Opposed Willpower Test to resist the effects of a Psychic Power by 4+ Degrees of Success whilst on a mission.\nWhen Character succeeds on an Opposed Willpower Test to resist the effects on a Psychic Power, they may spend a Fate Point to cause the enemy who targeted them to be unable to use Psychic Powers until the end of its next turn. If the Enemy has the Daemonic Trait, it also suffers 1d5 Energy Damage with the Sanctified Quality that ignores its Armour and Toughness.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Psyker",
+      "Willpower\nVeteran Talent Requirement Fulfilled"
+    ]
   },
   "effects": [],
   "flags": {},

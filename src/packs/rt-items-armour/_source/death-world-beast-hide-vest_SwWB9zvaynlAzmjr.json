@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Primitive",
+    "type": "primitive",
     "locations": "Body",
     "ap": 6,
     "maxAg": null,
     "weight": "20kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": null,
     "source": "Only War Core",
@@ -16,7 +16,20 @@
       "value": ""
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "body"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 6,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

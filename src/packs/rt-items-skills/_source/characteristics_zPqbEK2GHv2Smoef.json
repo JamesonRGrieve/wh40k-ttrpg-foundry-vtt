@@ -3,9 +3,9 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Characteristics are the core statistics of a character, and determine how well they perform certain tasks. In Only War, Characteristic Upgrades require XP based on the number of Upgrades and Shared Aptitudes.\nZero Apts/Opposed: 500/750/1,000/2,500 xp. One Apt/Allied: 250/500/750/1,000 xp. Two Apts/True Align: 100/250/500/750 xp",
-    "characteristic": null,
-    "descriptor": null,
+    "type": "",
+    "characteristic": "",
+    "descriptor": "",
     "uses": null,
     "useTime": null,
     "description": {
@@ -15,7 +15,10 @@
       "characteristic": null,
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

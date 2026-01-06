@@ -18,7 +18,13 @@
     },
     "tier": 1,
     "isPassive": true,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "FIeldcraft",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

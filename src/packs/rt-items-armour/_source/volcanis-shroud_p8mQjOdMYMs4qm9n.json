@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Other",
+    "type": "flak",
     "locations": "All",
     "ap": 3,
     "maxAg": null,
     "weight": "20kg",
-    "availability": "Average",
+    "availability": "average",
     "cost": "350 T",
     "notes": "AP 6 vs Fire, Acids, and Corrosives. Imposes -10 to Agility Tests when worn.\nHas inbuilt Rebreather and Photovisor",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,20 @@
       "value": "<p>AP 6 vs Fire, Acids, and Corrosives. Imposes -10 to Agility Tests when worn.\nHas inbuilt Rebreather and Photovisor</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 3,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

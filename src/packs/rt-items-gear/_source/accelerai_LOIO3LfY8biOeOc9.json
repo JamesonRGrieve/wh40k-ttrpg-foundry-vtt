@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug (Eldar)",
+    "type": "xenos",
     "weight": "0.1kg",
     "availability": "Scarce Availability if acquired from Dark Eldar Settlement. When consumed, user can make additional attack when making \"Multiple Attacks\" Action. Afterwards gain a level of fatigue and make +0 Toughness Test or suffer -5 to Iniative for 1d5 Days. Lasts 50+2d10 Minutes, causes 1d5 Corruption. Can only use one Eldar Drug at a time.",
     "cost": "Non-Eldar make -20 Toughness Test or are stunned for 1d5 Rounds, if 4+ DoF also take 1d10 Damage (ignore armour+toughness). Eldar make test if taking multiple Eldar drugs.",

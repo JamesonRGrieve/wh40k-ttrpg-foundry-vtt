@@ -9,7 +9,13 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character increases the Squad's Logistics Rating by +5 permenantly, this bonus is not removed even if the character who purchased it dies or moves on.\nIn addition to its base cost, this Talent has an additional XP cost equal to the Squad's Current Logistics Rating x 5.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

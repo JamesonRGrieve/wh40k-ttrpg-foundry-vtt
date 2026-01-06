@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "General",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

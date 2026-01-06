@@ -9,7 +9,10 @@
     "source": "RT: Edge of the Abyss",
     "description": {
       "value": "<p>Sorcerous Powers now have a \"Psy Rating\" of the character's Full Unmodified Intelligence Bonus, as opposed to Half. Still unaffected by Unnatural Intelligence.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

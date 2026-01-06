@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Once per game session, the character can enhance a single piece of technology with a -20 Tech-Use Test. If successful, they permentantly improve the craftsmanship of the item from Poor to Common, Common to Good, or Good to Best. The amount of time this takes varies with item and GM discretion. </p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

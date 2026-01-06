@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

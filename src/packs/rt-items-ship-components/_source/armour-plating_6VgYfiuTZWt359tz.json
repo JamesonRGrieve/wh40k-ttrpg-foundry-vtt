@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "+1 Armour, -2 Manoeuvrability, only one per vessel",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+1 Armour, -2 Manoeuvrability, only one per vessel</p>"

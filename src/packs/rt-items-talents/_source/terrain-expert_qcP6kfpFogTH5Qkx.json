@@ -9,7 +9,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As long as the Character's Comrade is in Cohesion, the Character gains +10 to Stealth and Survival Tests andimposes an additional -20 on anyone attemptint to use the Tracking Special Use of Survival to follow them.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

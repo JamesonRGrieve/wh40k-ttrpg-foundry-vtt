@@ -7,7 +7,7 @@
     "damageOrEffect": "Weapon loses Overheats Quality",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "Black Crusade: Core",
     "description": {

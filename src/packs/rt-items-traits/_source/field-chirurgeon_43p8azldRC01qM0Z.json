@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
-    "descriptionText": "The Field Chirurgeon does not prioritise the saving of lives, but the persistance of them. It is by their actions that the Guardsmen that rely on them keep fighting on in spite of horrific injuries, exhaustion, or illness until their work is done and the Emperor grants them rest.",
-    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Field Chirurgeon. Apt: Ballistic Skill, Defence, Fellowship, Intelligence, Knowledge, Willpower\nAdd. Equipment: Diagnosticator, Injector, Medikit, 4 Field Sutures. Gain Talents: Jaded+Meditation or Swift Suture\nCan Purchase Basic Orders: Rapid Intervention and It's Not as Bad as All That...",
+    "descriptionText": "",
+    "effects": "",
     "source": "OW: Hammer of the Emperor (Page 66)",
     "description": {
       "value": "<p>The Field Chirurgeon does not prioritise the saving of lives, but the persistance of them. It is by their actions that the Guardsmen that rely on them keep fighting on in spite of horrific injuries, exhaustion, or illness until their work is done and the Emperor grants them rest.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Field Chirurgeon. Apt: Ballistic Skill, Defence, Fellowship, Intelligence, Knowledge, Willpower\nAdd. Equipment: Diagnosticator, Injector, Medikit, 4 Field Sutures. Gain Talents: Jaded+Meditation or Swift Suture\nCan Purchase Basic Orders: Rapid Intervention and It's Not as Bad as All That...</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Field Chirurgeon. Apt: Ballistic Skill, Defence, Fellowship, Intelligence, Knowledge, Willpower\nAdd. Equipment: Diagnosticator, Injector, Medikit, 4 Field Sutures. Gain Talents: Jaded+Meditation or Swift Suture\nCan Purchase Basic Orders: Rapid Intervention and It's Not as Bad as All That...",
+    "level": null
   },
   "effects": [],
   "flags": {},

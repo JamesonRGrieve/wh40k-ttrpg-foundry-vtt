@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Shocking Quality. If target fails Toughness Test from Shocking Quality by 3+ DoF, they become Unconcious instead of Stunned for Degree of Failiure number of rounds.",
     "qualities": "Shocking",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "source": "DH 2E: Enemies Within",
     "description": {

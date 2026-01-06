@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Any time an enemy makes a charge Action to engage in melee with an Allied Tau within 20 metres, the character can spend their reaction to make a standard ranged attack with -20 to the ballistic test to attack the enemy. This attack resolves prior to the target completing their charge action.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As a Full Action, character can inflict a suitable punishment on their own body (self mutilation, whipping, etc), suffering 1d5-2 Fatigue (min 1). For 1 Hour, or until the end of the current encounter, they gain +10 to Willpower Tests to Resist Fear, Pinning or Psychic Powers, as well as resisting Corruption. If Character possesses the Frenzy Talent, they can enter the Frenzied State as a Free Action whilst under the effects of this talent.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Toughness"
+    ]
   },
   "effects": [],
   "flags": {},

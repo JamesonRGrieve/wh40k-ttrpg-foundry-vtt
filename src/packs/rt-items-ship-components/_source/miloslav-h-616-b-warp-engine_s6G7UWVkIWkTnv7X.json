@@ -9,7 +9,7 @@
     "spaceUsage": 12,
     "spCost": 0,
     "effect": "Allows for a vessel to enter and exit the immaterium. Halve warp travel time, however roll on Warp Travel Encounter table every 3 days, rather than every 5.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Allows for a vessel to enter and exit the immaterium. Halve warp travel time, however roll on Warp Travel Encounter table every 3 days, rather than every 5.</p>"

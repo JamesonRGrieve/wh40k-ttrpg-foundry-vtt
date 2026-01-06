@@ -9,7 +9,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

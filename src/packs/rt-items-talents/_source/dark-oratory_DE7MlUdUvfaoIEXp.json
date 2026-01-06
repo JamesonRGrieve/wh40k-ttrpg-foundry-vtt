@@ -9,7 +9,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>Double Infamy Reserves when in Social Conflicts with a crowd. \nHB: If not using Social Conflict rules, add 2x Infamy Bonus to Crowd-Based Interaction Tests.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

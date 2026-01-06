@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain +10% Range and +2 PEN. Also gain Toxic Quality",
     "qualities": "Toxic",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "RT: Hostile Acquisitions",
     "description": {

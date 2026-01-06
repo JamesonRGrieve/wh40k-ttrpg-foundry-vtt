@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Heavy",
-    "type": "Exotic - Tyranid",
+    "class": "heavy",
+    "type": "exotic",
     "range": "100m",
     "rof": "S/-/-",
     "damage": "4d10+10",

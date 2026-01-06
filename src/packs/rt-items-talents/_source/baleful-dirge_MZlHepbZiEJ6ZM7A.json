@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>The Character may sing an unnatural droning dirge that brings discomfort to those around them, requiring a Half Action each round to Maintain. All creatures within 30m that can hear them must make a +0 Willpower Test each round or suffer -10 on their next roll. If a creature passes the test, they are immune to the dirge's effects for the remainder of the encounter.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

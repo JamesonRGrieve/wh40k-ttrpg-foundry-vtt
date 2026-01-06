@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 2,
     "effect": "+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.</p>"

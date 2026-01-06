@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

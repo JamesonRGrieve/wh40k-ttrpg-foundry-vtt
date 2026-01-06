@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "Cogitators improve ship operations. +5 to Ship's Crew Rating. Only one per vessel.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Cogitators improve ship operations. +5 to Ship's Crew Rating. Only one per vessel.</p>"

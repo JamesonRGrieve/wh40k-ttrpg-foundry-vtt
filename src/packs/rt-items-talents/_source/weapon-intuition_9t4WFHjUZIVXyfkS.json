@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character reduces penalty for using a weapon without proper training by 10.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

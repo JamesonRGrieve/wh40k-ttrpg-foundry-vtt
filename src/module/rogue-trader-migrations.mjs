@@ -2,7 +2,7 @@ import { RogueTraderSettings } from './rogue-trader-settings.mjs';
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 182;
+    const worldVersion = 183;
 
     const currentVersion = game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion);
     if (worldVersion !== currentVersion && game.user.isGM) {
@@ -42,13 +42,7 @@ export async function checkAndMigrateWorld() {
             // Otherwise, issues will occur when trying to create items from the compendium.
             const compendiums = game.packs.filter((p) => p.metadata.packageName === SYSTEM_ID);
 
-            // Print all Pack details
-            game.packs.forEach((pack) => {
-                console.log('Pack', pack);
-            });
-
             for (let compendium of compendiums) {
-                console.log(`Updating permissions for compendium ${compendium.metadata.id}`);
 
                 await compendium.configure({
                     ownership: {
@@ -68,6 +62,54 @@ export async function checkAndMigrateWorld() {
             const itemCollection = item.flags['itemcollection'];
             if (itemCollection && itemCollection.contentsData) {
                 await item.createNestedDocuments(itemCollection.contentsData);
+            }
+        }
+
+        if (version < 183) {
+            if (item.type === 'talent') {
+                const updateData = {};
+                const system = item.system ?? {};
+                if (system.effect && !system.benefit) {
+                    updateData['system.benefit'] = system.effect;
+                }
+                if (system.requirements && !system.prerequisites?.text) {
+                    updateData['system.prerequisites.text'] = system.requirements;
+                }
+                if (Object.keys(updateData).length) {
+                    await item.update(updateData);
+                }
+            }
+
+            if (item.type === 'trait') {
+                const updateData = {};
+                const system = item.system ?? {};
+                if (system.effects && !system.effect) {
+                    updateData['system.effect'] = system.effects;
+                }
+                if (system.descriptionText && !system.description?.value) {
+                    updateData['system.description.value'] = `<p>${system.descriptionText}</p>`;
+                }
+                if (Object.keys(updateData).length) {
+                    await item.update(updateData);
+                }
+            }
+
+            if (item.type === 'skill') {
+                const updateData = {};
+                const system = item.system ?? {};
+                const rawType = system.type?.toString().toLowerCase() ?? '';
+                if (!system.skillType && rawType) {
+                    if (rawType.includes('specialist')) {
+                        updateData['system.skillType'] = 'specialist';
+                    } else if (rawType.includes('advanced')) {
+                        updateData['system.skillType'] = 'advanced';
+                    } else if (rawType.includes('basic')) {
+                        updateData['system.skillType'] = 'basic';
+                    }
+                }
+                if (Object.keys(updateData).length) {
+                    await item.update(updateData);
+                }
             }
         }
     }
@@ -176,6 +218,15 @@ export async function checkAndMigrateWorld() {
                     notes: [
                         'Updated the Navigate skill to Navigation and migrated existing actors to use the new skill key.',
                         'Adjusted skill roll lookups to respect Navigation aliases.',
+                    ],
+                });
+                break;
+            case 183:
+                await releaseNotes({
+                    version: '1.8.3',
+                    notes: [
+                        'Migrated legacy talent and trait fields into the modern item schema so compendium sheets show full details.',
+                        'Inferred specialist/advanced skill types for legacy compendium skill entries.',
                     ],
                 });
                 break;

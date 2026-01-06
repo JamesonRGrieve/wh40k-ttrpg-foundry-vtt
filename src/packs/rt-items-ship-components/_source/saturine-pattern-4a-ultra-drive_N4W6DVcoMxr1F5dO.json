@@ -9,7 +9,7 @@
     "spaceUsage": 14,
     "spCost": 0,
     "effect": "Generates power rather than using it.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Generates power rather than using it.</p>"

@@ -7,7 +7,7 @@
     "damageOrEffect": "Creates a cordon of mines doing 2d10 X, Pen 1, Blast (1) damage.",
     "qualities": "Blast (1)",
     "weight": "2kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

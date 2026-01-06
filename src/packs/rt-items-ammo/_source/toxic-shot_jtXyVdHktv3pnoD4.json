@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Toxic Quality, on weapon jam, wielder takes 1d5 damage (Ignores AP/Toughness)",
     "qualities": "Toxic",
     "weight": "10% wep",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

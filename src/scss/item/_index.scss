@@ -1,0 +1,19 @@
+// ============================================
+// Modern Item Sheet Styles Index
+// ============================================
+// Split from original _item-modern.scss for maintainability
+
+@import 'base';          // Base container, scrollbars
+@import 'header';        // Item header section
+@import 'stats';         // Quick stats bar
+@import 'tabs';          // Tab navigation
+@import 'forms';         // Form fields, panels
+@import 'content';       // Description, damage display
+@import 'buttons';       // Action buttons
+@import 'tables';        // Tables, animations
+@import 'tags';          // Tier badges, tags, stat badges
+@import 'compact';       // Compact sheet variants
+@import 'actor-styles';  // Modern actor sheet integration
+@import 'talents';       // Talent/trait specific styles
+@import 'misc';          // Prose fields, compendium browser
+@import 'sheets';        // New RT item sheet design system

@@ -1,0 +1,92 @@
+# Cybernetic Template
+# Use this as a reference for creating cybernetic/bionic items
+
+_id: &id cybernetic-template-000001
+name: Bionic Arm
+type: cybernetic
+img: systems/rogue-trader/icons/cybernetics/bionic-arm.webp
+
+system:
+  identifier: bionic-arm
+  
+  # Cybernetic Type
+  type: replacement  # replacement, implant, augmetic, bionic, mechadendrite, integrated-weapon
+  
+  # Body Locations
+  locations:
+    - rightArm  # head, eyes, ears, mouth, brain, leftArm, rightArm, body, organs, leftLeg, rightLeg, spine, internal
+  
+  # Armour Points (if provides protection)
+  hasArmourPoints: true
+  armourPoints:
+    head: 0
+    leftArm: 0
+    rightArm: 2
+    body: 0
+    leftLeg: 0
+    rightLeg: 0
+  
+  # Effect Description
+  effect: |
+    <p>The bionic arm functions as a normal arm but is more 
+    durable. It provides 2 Armour Points to the location and 
+    grants a +10 bonus to Strength Tests made with that arm.</p>
+  
+  # Drawbacks
+  drawbacks: |
+    <p>The arm requires regular maintenance. If not maintained 
+    monthly, there is a 10% chance of malfunction each week.</p>
+  
+  # Installation Requirements
+  installation:
+    surgery: "Major surgery required"
+    difficulty: "-20 to Medicae Test"
+    recoveryTime: "1 week"
+  
+  # Stat Modifiers
+  modifiers:
+    characteristics:
+      strength: 10
+    skills: {}
+    combat: {}
+    resources: {}
+    other: []
+  
+  # Physical Properties
+  weight: 5
+  availability: rare
+  craftsmanship: common
+  quantity: 1
+  cost:
+    value: 2000
+    currency: throne
+  
+  # Equipment State
+  equipped: true  # Cybernetics are usually always equipped
+  inBackpack: false
+  container: ""
+  
+  # Description
+  description:
+    value: |
+      <p>A bionic arm is a mechanical replacement for a lost or 
+      damaged limb. High-quality bionics are indistinguishable 
+      from real limbs in appearance and may even exceed natural 
+      capabilities.</p>
+    chat: ""
+    summary: "Mechanical arm replacement"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "148"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

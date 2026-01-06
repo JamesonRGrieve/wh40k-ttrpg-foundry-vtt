@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can derive basic meaning from languages they do not know, can also make Untrained Linguistics Skill Tests as if it were a non-specialist skill. (They can make the test, but at -20)\nIf Rogue Trader or Earlier, can treat unknown languages as Untrained Basic Skills with -10 instead.\nIn a Social Encounter, gain +20 to Opposed Tests when going against an opponent speaking in a different language.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Social",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

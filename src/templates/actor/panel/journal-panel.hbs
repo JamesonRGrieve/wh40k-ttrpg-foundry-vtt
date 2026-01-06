@@ -1,13 +1,22 @@
-<div class="dh-panel dh-grid-col-4 dh-grid-row-3">
-    <h1 class="dh-panel__header">Journal Entries</h1>
-    <div class="dh-table--border dh-journaltable--border">
+{{#if (eq includePanel false)}}
+<div class="rt-journal-entries">
+    <div class="rt-journal-entries-title">Journal Entries</div>
+    <div class="rt-table--border rt-journaltable--border">
+{{else}}
+<div class="rt-panel rt-grid-col-4 rt-grid-row-3">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title">Journal Entries</span>
+    </div>
+    <div class="rt-panel-body">
+        <div class="rt-table--border rt-journaltable--border">
+{{/if}}
         <div class="table-row--head">
             <div class="table-cell--span2">Name</div>
             <div class="table-cell">Time</div>
             <div class="table-cell">Place</div>
             <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="journalEntry">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                <label class="rt-control-button item-create" data-type="journalEntry">
+                    <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
                 </label>
             </div>
         </div>
@@ -15,8 +24,8 @@
             {{#if item.isJournalEntry}}
                 <div class="table-row">
                     <div class="table-cell--settingstoggle">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
                         </label>
                     </div>
                     <div class="table-cell--left">
@@ -29,8 +38,8 @@
                         <span class="display">{{item.system.place}}</span>
                     </div>
                     <div class="table-cell--last">
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
                         </label>
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot
@@ -41,4 +50,10 @@
             {{/if}}
         {{/each}}
     </div>
+{{#if (eq includePanel false)}}
 </div>
+{{else}}
+        </div>
+    </div>
+</div>
+{{/if}}

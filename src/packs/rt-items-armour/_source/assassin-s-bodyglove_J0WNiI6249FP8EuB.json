@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Other",
+    "type": "flak",
     "locations": "All",
     "ap": 3,
     "maxAg": null,
@@ -16,7 +16,20 @@
       "value": "<p>Found as Treasure via book's Treasure Generator.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 3,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

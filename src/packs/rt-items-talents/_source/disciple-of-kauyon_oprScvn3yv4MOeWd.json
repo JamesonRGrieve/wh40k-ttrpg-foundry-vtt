@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The Tau can perform the following special action. Perfect Lure: Full Action, Movement: Make +0 Fellowship Test, if successful one enemy within 30 metres gains +10 to Weapon Skill and Ballistic Skill tests to hit the character, but suffer -30 to hit any of the explorer's allies. For every degree of success, one additional enemy within range may be affected.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

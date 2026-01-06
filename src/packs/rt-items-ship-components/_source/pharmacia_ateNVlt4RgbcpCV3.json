@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 2,
     "effect": "Component can sythesis drugs in quantity to supply the crew. Requires Scholastic Lore (Chymistry) test, difficulty dependant on compound availability. Also provides +50 Achievement Points to Criminal or Trade Endeavours where Medical help or pharmaceuticals would be useful. GM Discretion on what is synthesisable. One per Vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Component can sythesis drugs in quantity to supply the crew. Requires Scholastic Lore (Chymistry) test, difficulty dependant on compound availability. Also provides +50 Achievement Points to Criminal or Trade Endeavours where Medical help or pharmaceuticals would be useful. GM Discretion on what is synthesisable. One per Vessel.</p>"

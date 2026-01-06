@@ -1,14 +1,17 @@
-<div class="dh-panel dh-grid-col-4">
-    <h1 class="dh-panel__header">Force Fields</h1>
-    <div class="dh-table--border dh-forcefieldtable--border">
+<div class="rt-panel rt-grid-col-4">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title">Force Fields</span>
+    </div>
+    <div class="rt-panel-body">
+        <div class="rt-table--border rt-forcefieldtable--border">
         <div class="table-row--head">
             <div class="table-cell--span2">Name</div>
             <div class="table-cell">Rating</div>
             <div class="table-cell">Activated</div>
             <div class="table-cell">Overloaded</div>
             <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="forceField">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
+                <label class="rt-control-button item-create" data-type="forceField">
+                    <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
                 </label>
             </div>
         </div>
@@ -16,8 +19,8 @@
             {{#if item.isForceField}}
                 <div class="table-row item-drag" data-item-id="{{item.id}}" data-item-type="forceField">
                     <div class="table-cell--settingstoggle">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
+                        <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
                         </label>
                     </div>
                     <div class="table-cell--left">
@@ -33,14 +36,14 @@
                         <span class="display">{{item.system.overloaded}}</span>
                     </div>
                     <div class="table-cell--last">
-                        <label class="dh-control-button item-roll" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'casino'}}</span>
+                        <label class="rt-control-button item-roll" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'casino'}}</span>
                         </label>
-                        <label class="dh-control-button item-vocalize" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
+                        <label class="rt-control-button item-vocalize" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
                         </label>
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
+                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
                         </label>
                     </div>
                     <div class="table-cell--description description_{{item.id}}" {{hideIfNot
@@ -50,5 +53,6 @@
                 </div>
             {{/if}}
         {{/each}}
+        </div>
     </div>
 </div>

@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>After an enemy makes a successful attack against an ally, character can use their Reaction to mvoe up to Half their Move distance to interpose themselves between the attacker and target, the attack resolving against them instead. For Melee Attacks, the character can immediately attempt to make a Parry as part of this Reaction.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

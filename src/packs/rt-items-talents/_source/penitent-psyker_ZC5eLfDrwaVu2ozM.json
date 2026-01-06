@@ -18,7 +18,12 @@
     },
     "tier": 2,
     "isPassive": true,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Psyker",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

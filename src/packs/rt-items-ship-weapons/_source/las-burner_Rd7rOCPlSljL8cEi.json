@@ -12,7 +12,7 @@
     "strength": 2,
     "critRating": 3,
     "range": 3,
-    "availability": "Rare",
+    "availability": "rare",
     "notes": "May be installed in Dorsal or Keel weapon slots on ships of frigate size or smaller, unlike other lances. +5 to Opposed command tests to resolve boarding actions. Lance weapons ignore armour.",
     "source": "RT: BF Koronus",
     "description": {

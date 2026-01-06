@@ -12,7 +12,7 @@
     "strength": 1,
     "critRating": 3,
     "range": 12,
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "notes": "When firing at targets over 20 VU's, damage decreases to 1d10. Lance Weapons ignore armour.",
     "source": "RT: BF Koronus",
     "description": {

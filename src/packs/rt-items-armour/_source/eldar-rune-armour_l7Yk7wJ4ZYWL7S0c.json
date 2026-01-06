@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Eldar",
+    "type": "xenos",
     "locations": "All",
     "ap": 6,
     "maxAg": null,
     "weight": "6kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Eldar Armour. When an attack strikes the wearer, they may make a -30 Focus Power Test (Willpower) as a Free Action. If successful, reduce damage that would be dealt by an amount equal to wearer's psy rating. If focus power test rolls lower than Psy rating, ignore attack enirely.",
     "source": "RT: Navis Primer",
@@ -16,7 +16,20 @@
       "value": "<p>Eldar Armour. When an attack strikes the wearer, they may make a -30 Focus Power Test (Willpower) as a Free Action. If successful, reduce damage that would be dealt by an amount equal to wearer's psy rating. If focus power test rolls lower than Psy rating, ignore attack enirely.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

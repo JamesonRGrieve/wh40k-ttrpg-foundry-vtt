@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Whenever the Character's Ranged Attacks inflict Critical Damage, add +2 to the damage result.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": "75%",
     "maxAg": "-",
     "weight": "0.2kg",
-    "availability": "Unique",
+    "availability": "unique",
     "cost": "-",
     "notes": "Resembles ornate jewels often worn on belt or arm.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>Resembles ornate jewels often worn on belt or arm.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

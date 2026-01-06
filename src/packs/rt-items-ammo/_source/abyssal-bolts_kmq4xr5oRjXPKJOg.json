@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Crippling (2) and Tainted Quality. Lose Reliable and Sanctified Qualities if weapon has them",
     "qualities": "Crippling (2), Tainted, Reliable (lose), Sanctified (lose)",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "source": "DH 2E: Enemies Beyond",
     "description": {

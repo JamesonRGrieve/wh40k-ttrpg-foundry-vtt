@@ -9,7 +9,7 @@
     "spaceUsage": 14,
     "spCost": 2,
     "effect": "Generates power rather than using it. +3 Manoeuvrability, +1 Speed",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Generates power rather than using it. +3 Manoeuvrability, +1 Speed</p>"

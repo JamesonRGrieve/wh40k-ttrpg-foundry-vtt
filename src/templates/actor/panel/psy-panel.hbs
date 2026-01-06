@@ -1,21 +1,30 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
-    <h1 class="dh-panel__header">Psyker</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Psy Rating</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.psy.rating" value="{{actor.psy.rating}}" />
+<div class="rt-panel rt-psy-panel">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-brain"></i> Psyker</span>
     </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Sustained Rating</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.psy.sustained" value="{{actor.psy.sustained}}" />
-    </div>
-    <div class="dh-field__wrapper">
-        <div class="dh-field__header">Has Focus</div>
-        <span class="dh-field__input check">
-            <input {{checked actor.psy.hasFocus}} data-dtype="Boolean" type="checkbox" name="system.psy.hasFocus" />
-        </span>
-    </div>
-    <div class="dh-field__wrapper">
-        <div class="dh-field__header">Class</div>
-        <input class="dh-field__input" type="text" name="system.psy.class" value="{{actor.psy.class}}" />
+    <div class="rt-panel-body">
+        <div class="rt-vital-edit-grid">
+            <label class="rt-vital-edit-field">
+                <span class="rt-edit-label">Psy Rating</span>
+                <input type="number" data-dtype="Number" class="rt-vital-input" name="system.psy.rating" value="{{actor.psy.rating}}" min="0" />
+            </label>
+            <label class="rt-vital-edit-field">
+                <span class="rt-edit-label">Sustained</span>
+                <input type="number" data-dtype="Number" class="rt-vital-input" name="system.psy.sustained" value="{{actor.psy.sustained}}" min="0" />
+            </label>
+        </div>
+        <div class="rt-vital-edit-grid">
+            <label class="rt-vital-edit-field">
+                <span class="rt-edit-label">Psyker Class</span>
+                <input type="text" class="rt-vital-input" name="system.psy.class" value="{{actor.psy.class}}" placeholder="e.g. Biomancer" />
+            </label>
+            <label class="rt-vital-edit-field rt-checkbox-field">
+                <span class="rt-edit-label">Has Psy Focus</span>
+                <div class="rt-checkbox-wrapper">
+                    <input {{checked actor.psy.hasFocus}} data-dtype="Boolean" type="checkbox" name="system.psy.hasFocus" class="rt-checkbox" />
+                    <span class="rt-checkbox-label">{{#if actor.psy.hasFocus}}Yes{{else}}No{{/if}}</span>
+                </div>
+            </label>
+        </div>
     </div>
 </div>

@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success on the Daemon</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

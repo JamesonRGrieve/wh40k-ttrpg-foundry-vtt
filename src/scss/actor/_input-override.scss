@@ -1,0 +1,140 @@
+// ============================================
+// Global Input Field Styling Override
+// ============================================
+// Replaces blue input colors with neutral/warm tones
+
+.rt-sheet,
+.dh-actor {
+  // Base input styling
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e8e6e3;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(192, 128, 32, 0.5);
+      box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // Specific overrides for common classes
+  .dh-field__input,
+  .rt-field__input,
+  .dh-header__input,
+  .rt-header__input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:focus {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(192, 128, 32, 0.5);
+      box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+    }
+  }
+
+  // Settings inputs
+  .rt-settings__input,
+  .dh-settings__input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:focus {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(192, 128, 32, 0.5);
+    }
+  }
+
+  // Table inputs
+  .table-cell input,
+  .rt-table input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:focus {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(192, 128, 32, 0.5);
+    }
+  }
+
+  // Override any remaining blue backgrounds
+  *[style*="rgba(36, 107, 131"],
+  *[style*="rgba(51, 129, 155"] {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+// Characteristics inputs
+.rt-char-hud-field {
+  input,
+  select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e8e6e3;
+
+    &:focus {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(192, 128, 32, 0.5);
+      box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+    }
+  }
+}
+
+// Combat inputs
+.rt-combat-input,
+.rt-stat-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(192, 128, 32, 0.5);
+  }
+}
+
+// Abilities tab inputs
+.rt-ability-input,
+.dh-ability-input {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:focus {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(192, 128, 32, 0.5);
+  }
+}
+
+// Grid inputs
+.dh-grid input,
+.rt-grid input {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:focus {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(192, 128, 32, 0.5);
+  }
+}
+
+// Active state styling (replace blue active states)
+.active-state,
+.form-active {
+  background: rgba(192, 128, 32, 0.15) !important;
+  border-color: rgba(192, 128, 32, 0.3) !important;
+}

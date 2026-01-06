@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Can make an Agility Test when Surprised or Ambushed, if passed, Character is not Surprised and can act normally.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

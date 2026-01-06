@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Pistol",
-    "type": "Flame",
+    "class": "pistol",
+    "type": "flame",
     "range": "10m",
     "rof": "S/-/-",
     "damage": "2d10+2",

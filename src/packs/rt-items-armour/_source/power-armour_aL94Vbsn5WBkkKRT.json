@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 8,
     "maxAg": null,
     "weight": "65kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "15000 T",
     "notes": "+20 to Strength, +1 Size (eg. Normal --> Hulking), armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit",
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": "<p>+20 to Strength, +1 Size (eg. Normal --> Hulking), armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 8,
+      "body": 8,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

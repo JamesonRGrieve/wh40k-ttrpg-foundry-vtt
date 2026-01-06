@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Heavy",
-    "type": "Relic - Astartes",
+    "class": "heavy",
+    "type": "exotic",
     "range": "160m",
     "rof": "-/-/12",
     "damage": "2d10+12",

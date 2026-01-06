@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Thrown",
-    "type": "Primitive",
+    "class": "thrown",
+    "type": "primitive",
     "range": "10m",
     "rof": "S/-/-",
     "damage": "1d10",

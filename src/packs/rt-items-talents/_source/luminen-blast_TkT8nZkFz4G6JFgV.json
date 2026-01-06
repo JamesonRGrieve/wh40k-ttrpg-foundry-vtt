@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Tech",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

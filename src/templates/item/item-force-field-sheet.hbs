@@ -1,74 +1,76 @@
-{{dhlog this}}
-<div class="dh-wrapper">
-    <form class="dh-item" autocomplete="off">
-        <div class="dh-panel dh-grid-col-6">
-            <div class="dh-header">
-                <div class="dh-header__info">
-                    <div class="dh-header__logo dh-header__item-wrapper--span-4">
-                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper--span-4">
-                        <span class="dh-header__title">Name</span>
-                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Weight</span>
-                        <input class="dh-header__input" name="system.weight" type="number" data-dtype="Number"
-                               value="{{item.system.weight}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Equipped</span>
-                        <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.equipped}}/>
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">In Backpack</span>
-                        <input name="system.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.backpack.inBackpack}}/>
-                    </div>
-
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Availability</span>
-                        <select class="dh-header__select" name="system.availability">
-                            {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
-                        </select>
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Craftsmanship</span>
-                        <select class="dh-header__select" name="system.craftsmanship">
-                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
-                        </select>
-                    </div>
-
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Overloaded</span>
-                        <input name="system.overloaded" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.overloaded}}/>
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Activated</span>
-                        <input name="system.activated" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.activated}}/>
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Protection Rating</span>
-                        <input class="dh-header__input" name="system.protectionRating" type="number" data-dtype="Number"
-                               value="{{item.system.protectionRating}}" />
-                    </div>
-
-                    <div class="dh-header__item-wrapper--text-area">
-                        <span class="dh-header__title">Description</span>
-                        <textarea class="dh-header__textarea"
-                                  name="system.description">{{item.system.description}}</textarea>
-                    </div>
-                </div>
+{{!-- Rogue Trader Force Field Sheet - Modern Design --}}
+<form class="rt-item-sheet" autocomplete="off">
+    {{!-- Header --}}
+    <div class="rt-item-sheet__header">
+        <div class="rt-item-sheet__image-wrapper">
+            <img class="rt-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+        </div>
+        <div class="rt-item-sheet__title-area">
+            <div class="rt-item-sheet__name-field">
+                <label class="rt-item-sheet__name-label">Name</label>
+                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
             </div>
         </div>
-    </form>
-</div>
-
-
+    </div>
+    
+    {{!-- Main Fields --}}
+    <div class="rt-item-sheet__panel">
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Source</label>
+                <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Weight</label>
+                <input class="rt-item-sheet__input" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
+            </div>
+        </div>
+        
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Availability</label>
+                <select class="rt-item-sheet__select" name="system.availability">
+                    {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                </select>
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Craftsmanship</label>
+                <select class="rt-item-sheet__select" name="system.craftsmanship">
+                    {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                </select>
+            </div>
+        </div>
+        
+        <div class="rt-item-sheet__field-row--4col">
+            <div class="rt-item-sheet__checkbox-field">
+                <input class="rt-item-sheet__input" name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked item.system.equipped}} />
+                <label class="rt-item-sheet__label">Equipped</label>
+            </div>
+            <div class="rt-item-sheet__checkbox-field">
+                <input class="rt-item-sheet__input" name="system.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked item.system.backpack.inBackpack}} />
+                <label class="rt-item-sheet__label">In Backpack</label>
+            </div>
+            <div class="rt-item-sheet__checkbox-field">
+                <input class="rt-item-sheet__input" name="system.activated" type="checkbox" data-dtype="Boolean" {{checked item.system.activated}} />
+                <label class="rt-item-sheet__label">Activated</label>
+            </div>
+            <div class="rt-item-sheet__checkbox-field">
+                <input class="rt-item-sheet__input" name="system.overloaded" type="checkbox" data-dtype="Boolean" {{checked item.system.overloaded}} />
+                <label class="rt-item-sheet__label">Overloaded</label>
+            </div>
+        </div>
+        
+        <div class="rt-item-sheet__field">
+            <label class="rt-item-sheet__label">Protection Rating</label>
+            <input class="rt-item-sheet__input" name="system.protectionRating" type="number" data-dtype="Number" value="{{item.system.protectionRating}}" />
+        </div>
+    </div>
+    
+    {{!-- Description --}}
+    <div class="rt-item-sheet__description">
+        <div class="rt-item-sheet__field">
+            <label class="rt-item-sheet__label">Description</label>
+            <textarea class="rt-item-sheet__textarea" name="system.description">{{item.system.description}}</textarea>
+        </div>
+    </div>
+</form>

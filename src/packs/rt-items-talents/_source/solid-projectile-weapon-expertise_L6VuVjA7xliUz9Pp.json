@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When Character clears a Jam from a Solid Projectile Weapon, they may also reload it as a Free Action as part of the Action to unjam it.\nAdditionally, clearing a Jam only loses one round from the weapon's current clip, instead of the entire clip.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

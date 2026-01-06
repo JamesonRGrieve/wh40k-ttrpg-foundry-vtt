@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>When selecting talent, character chooses either Ranged or Melee Specialisation (matching Aptitudes and Reqirements as appropriate). When making Called Shots of selected specialisation against targets the character has an appropriate Forbidden Lore (Xenos) Skill for, the character can replace Weapon Skill / Ballistic Skill with their Medicae Skill when making the test.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "BS or WS",
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "1kg",
     "availability": "Master Crafted Relic Auspex of the Mentors Chapter. Functions as a regular Auspex, but with a range of 1km, that cannot be blocked by terrain or other inhibiting materials, and requires no Tech-Use Test to set the Auspex to scan for unusual readings.",
     "cost": null,

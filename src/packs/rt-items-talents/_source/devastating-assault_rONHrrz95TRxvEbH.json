@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Once per turn, after successfully resolving an All Out Attack action against a target, the character can make a second All Out Attack as a Free Action with the same bonuses and penalties as the first.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

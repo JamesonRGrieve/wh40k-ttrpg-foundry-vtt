@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

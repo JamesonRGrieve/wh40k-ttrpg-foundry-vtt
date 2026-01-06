@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character adds a value equal to that of their Size Trait to their Strength and Toughness Bonus for determining the amount they can Lift, Carry, or Push Heavy Objects.\nThey also gain +20 to Toughness Tests to avoid gaining Fatigue from Forced Marching.\nRatlings are Scrawny, Size 3. Humans are Average, Size 4. Ogryns are Hulking, Size 5.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Strength",
+      "General"
+    ]
   },
   "effects": [],
   "flags": {},

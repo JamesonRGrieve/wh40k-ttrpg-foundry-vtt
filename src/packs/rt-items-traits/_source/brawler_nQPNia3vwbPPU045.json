@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
-    "descriptionText": "The Brawler Leads the charge into melee, brandishing Chainsword and knives as extensions of themselves. They are often Giants amongst men, barely feeling that which would fell many others.",
-    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Brawler. Apt: Agility, Finesse, Offence, Strength, Toughness, Weapon Skill\nAdd. Equipment: Best Great Weapon or Good Chainsword or Common Power Maul, Best Mono-Knife. Gain Talents: Ambidextrous+Street Fighting or Pugilist\nCan Purchase Unique Talent Two Against the Odds and Basic Order Watch My Back! ",
+    "descriptionText": "",
+    "effects": "",
     "source": "OW: Hammer of the Emperor (Page 54)",
     "description": {
       "value": "<p>The Brawler Leads the charge into melee, brandishing Chainsword and knives as extensions of themselves. They are often Giants amongst men, barely feeling that which would fell many others.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Brawler. Apt: Agility, Finesse, Offence, Strength, Toughness, Weapon Skill\nAdd. Equipment: Best Great Weapon or Good Chainsword or Common Power Maul, Best Mono-Knife. Gain Talents: Ambidextrous+Street Fighting or Pugilist\nCan Purchase Unique Talent Two Against the Odds and Basic Order Watch My Back! </p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Brawler. Apt: Agility, Finesse, Offence, Strength, Toughness, Weapon Skill\nAdd. Equipment: Best Great Weapon or Good Chainsword or Common Power Maul, Best Mono-Knife. Gain Talents: Ambidextrous+Street Fighting or Pugilist\nCan Purchase Unique Talent Two Against the Odds and Basic Order Watch My Back! ",
+    "level": null
   },
   "effects": [],
   "flags": {},

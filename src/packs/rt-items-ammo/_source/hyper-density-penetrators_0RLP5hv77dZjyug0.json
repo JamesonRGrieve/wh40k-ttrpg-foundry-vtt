@@ -7,7 +7,7 @@
     "damageOrEffect": "Reduce Range by Half, Increase Penetration by 2. Gain Tearing Quality. Average sized target or smaller must make +10 Toughness Test when hit or be knocked prone. If shotgun, lose Scatter Qualiy. If Bolt weapon, change damage type to Impact.",
     "qualities": "Tearing, Scatter (lose)",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "100T Each",
     "source": "DH: Inquisitor's Handbook",
     "description": {

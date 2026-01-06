@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>When the Sister spends a Fate Point to reroll Weapon Skill, Ballistic Skill, or Opposed Willpower Tests against a Psyker, they add +5xWP Bonus to the result of the reroll (up to +30)</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

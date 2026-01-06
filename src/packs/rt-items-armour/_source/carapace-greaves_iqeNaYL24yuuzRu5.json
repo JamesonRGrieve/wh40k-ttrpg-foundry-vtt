@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Carapace",
+    "type": "carapace",
     "locations": "Legs",
     "ap": 5,
     "maxAg": null,
     "weight": "3kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "375 T",
     "notes": null,
     "source": "Dark Heresy: Core",
@@ -16,7 +16,21 @@
       "value": ""
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 5,
+      "rightLeg": 5
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

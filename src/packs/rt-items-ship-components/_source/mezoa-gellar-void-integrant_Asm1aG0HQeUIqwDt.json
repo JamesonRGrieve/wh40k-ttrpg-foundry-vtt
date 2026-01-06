@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Integrates Gellarfield into Void Shields. Suffers +5 to Rolls on Warp Travel Encounter Table. If Vessels Void Shields are damaged by a critical hit, the Gellar fields are also damaged.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Integrates Gellarfield into Void Shields. Suffers +5 to Rolls on Warp Travel Encounter Table. If Vessels Void Shields are damaged by a critical hit, the Gellar fields are also damaged.</p>"

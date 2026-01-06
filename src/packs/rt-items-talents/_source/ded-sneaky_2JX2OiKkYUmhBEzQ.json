@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>During any turn the Ork Character remains unseen by their enemies, they can choose to reveal themselves and attack. During which, they have Fear(+1) Trait.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

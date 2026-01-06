@@ -7,7 +7,7 @@
     "damageOrEffect": "Disperses micro-explosives doing 2d10 X, Pen 0, Blast (4) over a large area.",
     "qualities": "Blast (4)",
     "weight": "2kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any Human except Explorator, Astropath, or Navigator. RT Rank 1+, Weapon skill 35+, Fellowship 35+. Must have had the opportunity to train with the Blood Tears on Loretta, or with a fellow Red Consecrator acolyte.",
-    "descriptionText": "Those of brutal piety, who are honed in their faith by combat and violence. They justify that the Emperor will guide them to the right side of a conflict, lacking any doubt that whoever is at the end of their blades is the enemy. They are not officially sanctioned by the Adeptus Ministorum to do so, but this hardly stops them.",
-    "effects": "Replace new Rank's Advances with that of the Red Consecrator\nAllows for the purchasing of the Unique Talents Rage of the Zealot and Firebrand's Call",
+    "descriptionText": "",
+    "effects": "",
     "source": "RT: Faith and Coin\n(Page 76)",
     "description": {
       "value": "<p>Those of brutal piety, who are honed in their faith by combat and violence. They justify that the Emperor will guide them to the right side of a conflict, lacking any doubt that whoever is at the end of their blades is the enemy. They are not officially sanctioned by the Adeptus Ministorum to do so, but this hardly stops them.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Red Consecrator\nAllows for the purchasing of the Unique Talents Rage of the Zealot and Firebrand's Call</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace new Rank's Advances with that of the Red Consecrator\nAllows for the purchasing of the Unique Talents Rage of the Zealot and Firebrand's Call",
+    "level": null
   },
   "effects": [],
   "flags": {},

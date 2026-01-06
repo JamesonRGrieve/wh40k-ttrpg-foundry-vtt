@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character increases AP of any armour they wear by 1 in all locations that armour covers. Requires one hour per day to clean, repair, and make minor modifications to armour (no test needed). Bonus only applies to armour when worn by character.\nDH 2E: Gain Intelligence Bonus points that can be distributed between Armour pieces (Head, Body, Left/Right Arm, Left/Right Leg), each point increases AP by 1 at that location.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

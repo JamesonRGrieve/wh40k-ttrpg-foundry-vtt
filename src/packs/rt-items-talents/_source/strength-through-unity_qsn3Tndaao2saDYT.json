@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>When in Melee Combat, for each ally with the Bonding Ritual Talent who are engaged with the same target, the Explorer gains +5 to Weapon Skill Tests and +1 Damage on melee attacks.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

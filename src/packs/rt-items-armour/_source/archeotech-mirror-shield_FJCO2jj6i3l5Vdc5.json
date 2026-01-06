@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "Arm, Body",
     "ap": "60%",
     "maxAg": "-",
     "weight": "1.5kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "If it successfully blocks a ranged attack dealing energy damage, can use Reaction to make +0 Agility Test, on success, shot is reflected back at at target of choice within the ranged of the fired weapon, doing full damage to them.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,22 @@
       "value": "<p>If it successfully blocks a ranged attack dealing energy damage, can use Reaction to make +0 Agility Test, on success, shot is reflected back at at target of choice within the ranged of the fired weapon, doing full damage to them.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

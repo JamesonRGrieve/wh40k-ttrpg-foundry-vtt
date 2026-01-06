@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per Session, before the Squad makes a Logicistics Test, the character can make a -10 Charm Test to the supply distributor. If succesful they gain +5 to the Logistics Test per Degree of Success scored on the Charm test, up to +30. \nThe GM may make the test harder depending on outside circumstances, such as if the distributor dislikes the squad.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

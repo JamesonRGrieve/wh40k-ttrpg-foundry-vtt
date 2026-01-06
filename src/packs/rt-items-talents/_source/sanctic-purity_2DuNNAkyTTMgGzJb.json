@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>When character triggers Psychic Phenomena when manifesting a power of the Sanctic Daemonology Disicpline, they can spend a Fate Point to entirely negate the result.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Psyker",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Pistol",
-    "type": "Bolt",
+    "class": "pistol",
+    "type": "bolt",
     "range": "30m",
     "rof": "S/3/-",
     "damage": "2d10+5",

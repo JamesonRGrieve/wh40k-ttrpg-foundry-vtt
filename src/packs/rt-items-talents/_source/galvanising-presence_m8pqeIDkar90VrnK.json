@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When using the Terrify Special use of the Command Skill, its effects apply to all members of the squad, including Player characters. Character has Fear(2) for purpose of Terrify Tests. </p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

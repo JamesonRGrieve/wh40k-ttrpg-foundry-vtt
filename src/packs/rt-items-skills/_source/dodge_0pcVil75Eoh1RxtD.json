@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Movement, Combat\nApt:Agility, Finesse, Slaanesh",
-    "characteristic": "Agility",
+    "type": "",
+    "characteristic": "agility",
     "descriptor": "Nullify one Melee or Ranged attack by avoiding it +1 per Degree of Success, causing it to deal no damage. Not all attacks are dodgable.",
     "uses": "Use: Avoid one Melee or Ranged hit per Degree of Success (or two for Storm Weapons). Also for avoiding hazards such as falling wreckage or leaping from a collapsing building.\nSpecial Use: Dive for Cover: If there is cover within Agility Bonus metres and character is not prone, can make +10 Dodge test to go behind cover and become prone, get hit by attack but gain benefit of cover.\nFor blast or spray weapons, user must be able to physically move out of the dangerous area to avoid harm, they can move up to Agility Bonus Metres.",
     "useTime": "Reaction",
@@ -15,7 +15,14 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Agility",
+      "Finesse",
+      "Slaanesh"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

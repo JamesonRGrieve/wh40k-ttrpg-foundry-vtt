@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "6kg",
     "availability": "Master Crafted Relic Tome of the Genesis Chapter. Consulting this tome prior to a mission grants +20 to all Common Lore (War), Scholastic Lore (Codex Astartes), and Tactis (any) Tests for the duration of the Mission. If consulted in reference to a specific situation, provides +30 instead and adds a degree of success to any successful tests.",
     "cost": null,

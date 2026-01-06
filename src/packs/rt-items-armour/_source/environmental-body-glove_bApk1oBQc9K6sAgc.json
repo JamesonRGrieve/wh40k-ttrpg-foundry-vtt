@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Other",
+    "type": "flak",
     "locations": "All",
     "ap": 1,
     "maxAg": null,
     "weight": "5kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "625 T",
     "notes": "Sustains wearer at a constant temperature in extreme environments, recycles sweat and other fluids, cooling/warming as needed. Waterproof. Grants +10 to Survival Tests.\nUsually equipped with a rebreather, comm-bead, and photo-contacts.",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,20 @@
       "value": "<p>Sustains wearer at a constant temperature in extreme environments, recycles sweat and other fluids, cooling/warming as needed. Waterproof. Grants +10 to Survival Tests.\nUsually equipped with a rebreather, comm-bead, and photo-contacts.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 1,
+      "body": 1,
+      "leftArm": 1,
+      "rightArm": 1,
+      "leftLeg": 1,
+      "rightLeg": 1
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

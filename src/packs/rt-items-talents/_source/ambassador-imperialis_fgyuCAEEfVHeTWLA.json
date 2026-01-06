@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character is experienced in dealing diplomatically with divergent and alien cultures, and avoiding the subtle faux pas that can turn a negotiation into a bloodbath. \nReduce penalty for interaction tests when dealing with Xenos or Non-Imperial NPCs by 20, once per encounter can reroll a failed Interaction Skill Test with such an NPC.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>The Astropath's Unnatural Senses Trait increases to twice their Willpower Characteristic.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

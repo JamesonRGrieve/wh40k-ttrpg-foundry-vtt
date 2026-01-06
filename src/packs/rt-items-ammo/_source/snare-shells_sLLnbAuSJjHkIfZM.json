@@ -7,7 +7,7 @@
     "damageOrEffect": "-2 Damage, gives weapon Snare Quality.",
     "qualities": "Snare",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

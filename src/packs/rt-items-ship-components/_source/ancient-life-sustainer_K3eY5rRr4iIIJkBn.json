@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 2,
     "effect": "Permenantly Increases Morale by 2, reduces Crew Population Loss from non-combat sources by 1. Can be used as the Ship's Life Sustainer.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Permenantly Increases Morale by 2, reduces Crew Population Loss from non-combat sources by 1. Can be used as the Ship's Life Sustainer.</p>"

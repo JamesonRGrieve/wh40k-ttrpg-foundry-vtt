@@ -1,11 +1,11 @@
-<div class="dh-header__item-wrapper--{{cleanFieldName key}}">
-    <span class="dh-header__title">{{capitalize key}}</span>
+<div class="rt-header__item-wrapper--{{cleanFieldName key}}">
+    <span class="rt-header__title">{{capitalize key}}</span>
     {{#if options}}
-        <select class="dh-header__select acolyte-{{key}}" name="system.bio.{{key}}">
+        <select class="rt-header__select acolyte-{{key}}" name="system.bio.{{key}}">
             <option value=""></option>
             {{selectOptions (arrayToObject options) selected=this.value}}
         </select>
     {{else}}
-        <input class="dh-header__input" name="system.bio.{{key}}" type="text" value="{{this.value}}" />
+        <input class="rt-header__input" name="system.bio.{{key}}" type="text" value="{{this.value}}" />
     {{/if}}
 </div>

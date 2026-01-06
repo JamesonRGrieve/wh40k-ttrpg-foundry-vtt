@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 10,
     "maxAg": null,
     "weight": "70kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Legendary Armour of ancient make. +20 to Strength Characteristic, +1 Size. Power lasts 24 hours before needing recharging or replacing. Armour is sealed when helmet attached, has built-in Auspex, Photovisor and Recoil Gloves. Grants wearer the Sturdy Trait.",
     "source": "RT: Faith and Coin",
@@ -16,7 +16,20 @@
       "value": "<p>Legendary Armour of ancient make. +20 to Strength Characteristic, +1 Size. Power lasts 24 hours before needing recharging or replacing. Armour is sealed when helmet attached, has built-in Auspex, Photovisor and Recoil Gloves. Grants wearer the Sturdy Trait.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 10,
+      "body": 10,
+      "leftArm": 10,
+      "rightArm": 10,
+      "leftLeg": 10,
+      "rightLeg": 10
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

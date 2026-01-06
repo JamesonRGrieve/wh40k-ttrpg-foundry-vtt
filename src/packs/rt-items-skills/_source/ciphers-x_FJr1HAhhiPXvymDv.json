@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Advanced",
-    "characteristic": "Intelligence",
+    "type": "",
+    "characteristic": "intelligence",
     "descriptor": "Using and Understanding of short-hand codes to express concepts via hand signs, markings, etc for particular group. Test not required for leaving or reading basic messages, might be required for complicated meanings or obscured/damaged ciphers.",
     "uses": "Test to decipher complicated meaning or read obscured cipher of particular skill group. Skill Groups: Rogue Trader, Mercenary Cant, Nobilite Encoding, Astropath, Underworld.",
     "useTime": "Full Action",
@@ -22,7 +22,10 @@
       "Nobilite Encoding",
       "Astropath",
       "Underworld"
-    ]
+    ],
+    "skillType": "specialist",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

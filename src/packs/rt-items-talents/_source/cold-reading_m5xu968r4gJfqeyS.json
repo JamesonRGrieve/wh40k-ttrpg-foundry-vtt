@@ -9,7 +9,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Prior to making a Commerce, Barter, or Charm Test, the character can make a Blather Test. If successful they hook the target into giving vital information, a +0 Scrutiny Test reveals the importance of the information gathered. If successful in this scheme, they gain +5 * Perception Bonus to their next Commerce, Barter, or Charm Test against the target and has ascertained information about them that will be useful in whatever Pitch, Negotiation, or Diplomacy they are performing.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

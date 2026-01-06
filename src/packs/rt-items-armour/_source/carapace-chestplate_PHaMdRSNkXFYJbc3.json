@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Carapace",
+    "type": "carapace",
     "locations": "Body",
     "ap": 6,
     "maxAg": null,
     "weight": "7kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "600 T",
     "notes": "May consist of easily removable plates to help with repair",
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": "<p>May consist of easily removable plates to help with repair</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "body"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 6,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

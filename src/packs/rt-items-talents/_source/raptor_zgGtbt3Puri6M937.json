@@ -18,7 +18,11 @@
     },
     "tier": 1,
     "isPassive": false,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

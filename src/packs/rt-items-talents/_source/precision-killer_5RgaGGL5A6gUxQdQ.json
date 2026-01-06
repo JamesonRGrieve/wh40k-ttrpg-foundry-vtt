@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill or Weapon Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

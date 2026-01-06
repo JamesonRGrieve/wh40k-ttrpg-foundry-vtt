@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Apt:Intellgience, Fieldcraft, Nurgle",
-    "characteristic": "Intelligence",
+    "type": "",
+    "characteristic": "intelligence",
     "descriptor": "Diagnosing and treating injuries and disease, performing first aid or extended care, as well as long-term treatments. Identifying, Creating, and Applying Chemicals.",
     "uses": "First Aid: +0 Medicae Test, -10 if Patient Heavily Damaged, or -10 per point of Crit Dmg. If Successful, remove Int Bonus Damage, +1 per DoS. Use once per 24 Hours per Target that is not undergoing Extended Care.\nExtended Care: Treat Int Bonus Patients, -10 per Patient Beyond this. Every 24 hours make +10 Medicae Test, if successful, remove 2x damage patient normally would at natural rates, +1 per DoS, +1 per Consecutive Day of Extended Care. If Fail, DoF Patients (starting with most injured) make +0 Toughness Test or suffer 1 Dmaage per DoF that ignores Armour/Toughness. If this causes Crit Damage, patient dies.",
     "useTime": "Full Action or More for complex problems",
@@ -15,7 +15,14 @@
       "characteristic": "Intelligence",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Intellgience",
+      "Fieldcraft",
+      "Nurgle"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

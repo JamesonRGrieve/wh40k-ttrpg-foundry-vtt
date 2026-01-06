@@ -7,7 +7,7 @@
     "damageOrEffect": "2d10X, Pen 1, Blast (1). Represents damage of single mine.\nCreates 1d10 Metre Diameter Minefield at impact location. Can explode 10 times then runs out, or until cleared by minesweeper.",
     "qualities": "Blast (1)",
     "weight": "3kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

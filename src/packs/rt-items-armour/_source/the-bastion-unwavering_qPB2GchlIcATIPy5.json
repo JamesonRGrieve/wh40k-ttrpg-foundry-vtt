@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field Relic Astartes",
+    "type": "void",
     "locations": "All",
     "ap": 0.6,
     "maxAg": "-",
@@ -16,7 +16,20 @@
       "value": "<p>Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.6,
+      "body": 0.6,
+      "leftArm": 0.6,
+      "rightArm": 0.6,
+      "leftLeg": 0.6,
+      "rightLeg": 0.6
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

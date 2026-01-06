@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Xenos)",
+    "type": "exotic",
     "weight": "?",
     "availability": "Strange Crystalline devices, some of which were owned by the forces one \"General Alreen\" who fought during the time of the nascent Imperium. As easy to use as a Vox Caster, a message sent from one crystal arrives at every other crystal instantly regardless of range. Allowing for effortless communication at the risk that other unknown individuals also receive them. Whenever a crystal is used, all crystals will briefly broadcast their location in a small burst of static, if able to harness this, other crystals may be locatable after one is found, or others able to find you.",
     "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",

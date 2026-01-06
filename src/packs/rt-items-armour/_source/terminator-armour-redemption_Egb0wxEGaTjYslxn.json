@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 12,
     "maxAg": null,
     "weight": "500kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Whilst wearing -10 to Agility Characteristic. Blessed by the Sanguinary Guard (may count as a warding effect vs Warp Weapons), provides +10 to Resist Fear Tests when worn.\nCan only be worn by Space Marines.",
     "source": "ChatGPT",
@@ -16,7 +16,20 @@
       "value": "<p>Whilst wearing -10 to Agility Characteristic. Blessed by the Sanguinary Guard (may count as a warding effect vs Warp Weapons), provides +10 to Resist Fear Tests when worn.\nCan only be worn by Space Marines.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 12,
+      "body": 12,
+      "leftArm": 12,
+      "rightArm": 12,
+      "leftLeg": 12,
+      "rightLeg": 12
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Those affected by the Warp Disruption Talent reduce their Psy Rating by 2 rather than 1. This talent can be purchased multiple times, each purchase reduces psy rating by a further 1. \n(EG: Warp Anathema (3) would reduce Psy rating within range by 4)</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

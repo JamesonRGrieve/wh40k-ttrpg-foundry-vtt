@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Profane)",
+    "type": "exotic",
     "weight": "?",
     "availability": "A Mysterious Servo Skull seemingly host to a Daemonic Entity yet seemingly indistinguishable from any other. Any Skull may be it, and the Daemon may yet possess other skulls when its own is destroyed. Grants Owner +30 to Tech-Use Tests but only when the Daemon inside desires it, such as if success would have terrible or perverse consequences. If its nature is known, it can be ordered to apply this bonus with a -20 Willpower Test (Skull has WP 60), if test failed gain 1 Corruption and 1 nonpermenant Intelligence damage per DoF. Thet Skull Enjoys acts of death and destruction.",
     "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",

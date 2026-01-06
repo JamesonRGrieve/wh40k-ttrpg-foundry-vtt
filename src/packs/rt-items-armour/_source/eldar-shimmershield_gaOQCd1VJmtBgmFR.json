@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Eldar (Force Field)",
+    "type": "xenos",
     "locations": "All",
     "ap": 0.3,
     "maxAg": "-",
     "weight": "1kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.",
     "source": "DH 2E: Enemies Without",
@@ -16,7 +16,20 @@
       "value": "<p>Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.3,
+      "body": 0.3,
+      "leftArm": 0.3,
+      "rightArm": 0.3,
+      "leftLeg": 0.3,
+      "rightLeg": 0.3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

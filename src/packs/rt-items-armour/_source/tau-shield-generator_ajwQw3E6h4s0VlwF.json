@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Tau (Force Field)",
+    "type": "xenos",
     "locations": "All",
     "ap": "40%",
     "maxAg": null,
@@ -16,7 +16,20 @@
       "value": "<p>Designed for Tau Drones and Battlesuits as opposed to personal use. Acts like a Refractor Field, projecting energy waves to intercept and disable projectiles.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Each round at the start of its turn, this creature makes a Toughness Test to remove X points of damage. It loses this trait when slain.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

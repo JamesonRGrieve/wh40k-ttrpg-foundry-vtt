@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Tech"
+    ]
   },
   "effects": [],
   "flags": {},

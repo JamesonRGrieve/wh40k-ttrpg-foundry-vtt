@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 1,
     "effect": "+2 Armour the front of the ship, +1d5 damage when ramming. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>+2 Armour the front of the ship, +1d5 damage when ramming. Only one per vessel.</p>"

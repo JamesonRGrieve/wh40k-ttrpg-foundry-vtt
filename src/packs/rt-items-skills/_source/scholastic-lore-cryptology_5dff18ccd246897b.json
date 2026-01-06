@@ -1,0 +1,48 @@
+{
+  "name": "Scholastic Lore (Cryptology)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "intelligence",
+    "descriptor": "In-depth, Academic Knowledge of a group that may be complex or esoteric, providing a depth of knowledge far more than that of Common Lore due to the Experience required to obtain it.",
+    "uses": "Use: Recall relevent academic information for relevent group. Used for detailed knowledge such as recounting past legends, obscure rulings of the Arbites, Complex Legal Relationships, Identifying rare beasts.\nSkill Groups: Archaic, Astromancy, Beasts, Bureaucracy, Chymistry, Cryptology, Heraldry, Imperial Warrants, Imperial Creed, Judgement, Legend, Navis Nobilite, Numerology, Occult, Philosphy, Tactica Imperialis, etc.",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>In-depth, Academic Knowledge of a group that may be complex or esoteric, providing a depth of knowledge far more than that of Common Lore due to the Experience required to obtain it.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Archaic",
+      "Astromancy",
+      "Beasts",
+      "Bureaucracy",
+      "Chymistry",
+      "Cryptology",
+      "Heraldry",
+      "Imperial Warrants",
+      "Imperial Creed",
+      "Judgement",
+      "Legend",
+      "Navis Nobilite",
+      "Numerology",
+      "Occult",
+      "Philosophy",
+      "Tactica Imperialis"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge",
+      "Unaligned"
+    ],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5dff18ccd246897b"
+}

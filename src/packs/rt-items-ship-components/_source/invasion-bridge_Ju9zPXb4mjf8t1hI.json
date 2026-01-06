@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 0,
     "effect": "Where Characters command the ship. +10 to BS Tests against Planetary Based Targets. Ground-Based forces in vox communications with a ship with this component count as having a Multicompass.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Where Characters command the ship. +10 to BS Tests against Planetary Based Targets. Ground-Based forces in vox communications with a ship with this component count as having a Multicompass.</p>"

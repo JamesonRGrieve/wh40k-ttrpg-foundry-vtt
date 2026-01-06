@@ -7,7 +7,7 @@
     "damageOrEffect": "Does no damage, instead creates 10 metre radius smoke that blocks natural, thermal, and electronic visual devices from seeing though for 10 rounds.",
     "qualities": null,
     "weight": null,
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "Only War Core",
     "description": {

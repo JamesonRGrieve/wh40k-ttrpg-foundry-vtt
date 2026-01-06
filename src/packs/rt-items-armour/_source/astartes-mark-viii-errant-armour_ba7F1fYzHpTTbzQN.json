@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power (Astartes)",
+    "type": "power",
     "locations": "All",
     "ap": "8/11/8/8",
     "maxAg": null,
@@ -16,7 +16,20 @@
       "value": "<p>The Only Armour adopted into service since the end of the Horus Heresy up until the opening of the Great Rift. +5 to Command, whenever an attack hits the head, roll 1d10, on an 8+ it hits the body instead. +20 Strength. Subsystems: Autosenses (+10), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (2 Weeks), Recoil Suppression. -10 Manual Dexterity Mod. Roll on Power Armour History once. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 8,
+      "body": 11,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

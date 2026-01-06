@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 2,
     "effect": "When Ship is Crippled, Captain can choose to have either the ship's speed or Weapon Components Unaffected by the usual penalties for a Crippled Ship. Whenever this component is damaged, it has a 25% chance to explode, destroying it and dealing 1d5 hull damage, and setting another component of DM's choice on fire.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>When Ship is Crippled, Captain can choose to have either the ship's speed or Weapon Components Unaffected by the usual penalties for a Crippled Ship. Whenever this component is damaged, it has a 25% chance to explode, destroying it and dealing 1d5 hull damage, and setting another component of DM's choice on fire.</p>"

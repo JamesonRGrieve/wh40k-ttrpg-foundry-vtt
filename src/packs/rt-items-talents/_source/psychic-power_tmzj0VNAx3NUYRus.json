@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character learns an additional Psychic Power. The experience cost of this power is the cost of the psychic power learned.\nThis Talent can be taken multiple times. For Black Crusade, Alignment depends on Psychic Power Chosen.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Psyker",
+      "Varied Alignment"
+    ]
   },
   "effects": [],
   "flags": {},

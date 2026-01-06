@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Half Action in Combat to direct allies, such that none of them suffer penalties for ganging up until your next turn. If defending against a boarding action, Can use a Half Action to give +10 in combat to armsmen.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

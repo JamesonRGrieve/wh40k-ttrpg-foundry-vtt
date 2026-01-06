@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "The eyes and ears of the ship. Adds +5 to Ship's Detection. Can only be damaged/destroyed by a critical hit despite being external.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>The eyes and ears of the ship. Adds +5 to Ship's Detection. Can only be damaged/destroyed by a critical hit despite being external.</p>"

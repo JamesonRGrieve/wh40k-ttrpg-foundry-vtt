@@ -1,153 +1,117 @@
-{{dhlog this}}
+{{!-- Rogue Trader Psychic Power Roll Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="dh-wrapper" autocomplete="off">
-        <div class="dh-attack">
-            <!-- Header -->
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info dh-header__logo">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <img class="dh-header__logo-image-small" alt="{{this.sourceActor.name}}" src="{{this.sourceActor.img}}" />
-                            <span class="dh-header__title">Psychic Power</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Power Select -->
-            {{#if powerSelect}}
-                <div class="dh-panel dh-grid-col-6">
-                    <div class="dh-table--border dh-attackprompttable--border">
-                        <div class="table-row--head">
-                            <div class="table-cell"></div>
-                            <div class="table-cell"></div>
-                            <div class="table-cell--last"></div>
-                        </div>
-                        {{#each psychicPowers as |power|}}
-                            <div class="table-row">
-                                <div class="table-cell--left">
-                                    <input
-                                        class="table-cell--checkbox weapon-select"
-                                        type="checkbox"
-                                        data-dtype="Boolean"
-                                        {{checked power.isSelected}}
-                                        name="{{power.id}}"
-                                    />
-                                </div>
-                                <div class="table-cell">
-                                    <div class="display">{{power.name}}</div>
-                                    {{#if power.items}}
-                                        <div class="table-cell--description">- {{#each power.items as |item|}}{{item.name}} - {{/each}}</div>
-                                    {{/if}}
-                                </div>
-                                <div class="table-cell">
-                                    <img class="dh-field__image" alt="{{power.name}}" src="{{power.img}}" />
-                                </div>
+    <form class="rt-prompt rt-prompt--psychic" autocomplete="off">
+        {{!-- Power Select or Info --}}
+        {{#if powerSelect}}
+            <div class="rt-prompt__panel">
+                <h3 class="rt-prompt__section-title">Select Power</h3>
+                <div class="rt-prompt__weapon-list">
+                    {{#each psychicPowers as |power|}}
+                        <label class="rt-prompt__weapon-item {{#if power.isSelected}}rt-prompt__weapon-item--selected{{/if}}">
+                            <input class="rt-prompt__weapon-check weapon-select"
+                                type="checkbox"
+                                data-dtype="Boolean"
+                                {{checked power.isSelected}}
+                                name="{{power.id}}" />
+                            <img class="rt-prompt__weapon-img" alt="{{power.name}}" src="{{power.img}}" />
+                            <div class="rt-prompt__weapon-info">
+                                <div class="rt-prompt__weapon-name">{{power.name}}</div>
+                                {{#if power.items}}
+                                    <div class="rt-prompt__weapon-details">
+                                        {{#each power.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
+                                    </div>
+                                {{/if}}
                             </div>
-                        {{/each}}
-                    </div>
-                </div>
-            {{else}}
-                <div class="dh-panel dh-grid-col-6">
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Power</span>
-                        <span class="dh-field__span">{{power.name}}</span>
-                    </div>
-                    {{#each power.items as |item|}}
-                        {{#if item.isAttackSpecial}}
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__span">Special</span>
-                                <span class="dh-field__span">{{item.name}}</span>
-                            </div>
-                        {{/if}}
+                        </label>
                     {{/each}}
                 </div>
-            {{/if}}
-
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <span class="dh-header__subtitle">Focus Power</span>
-                        </div>
+            </div>
+        {{else}}
+            {{!-- Power Header --}}
+            <div class="rt-prompt__panel">
+                <div class="rt-prompt__header">
+                    <img class="rt-prompt__icon" alt="{{power.name}}" src="{{power.img}}" />
+                    <div class="rt-prompt__title-group">
+                        <h2 class="rt-prompt__title">{{power.name}}</h2>
+                        <div class="rt-prompt__subtitle">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
-
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Base ({{baseChar}})</span>
-                    <span class="dh-field__span">{{baseTarget}}</span>
+                
+                {{!-- Target Display --}}
+                <div class="rt-prompt__target">
+                    <span class="rt-prompt__target-label">Target ({{baseChar}})</span>
+                    <span class="rt-prompt__target-value">{{baseTarget}}</span>
+                    <span class="rt-prompt__target-percent">%</span>
                 </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Psychic Rating</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
+                
+                {{#each power.items as |item|}}
+                    {{#if item.isAttackSpecial}}
+                        <div class="rt-prompt__field">
+                            <span class="rt-prompt__label">Special</span>
+                            <span class="rt-prompt__value">{{item.name}}</span>
+                        </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+
+            {{!-- Focus Power Section --}}
+            <div class="rt-prompt__panel">
+                <h3 class="rt-prompt__section-title">Focus Power</h3>
+                <div class="rt-prompt__field">
+                    <span class="rt-prompt__label">Psychic Rating</span>
+                    <input class="rt-prompt__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
                 </div>
                 {{#if this.modifiers.bonus}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Rating Bonus</span>
-                        <span class="dh-field__span">{{modifiers.bonus}}</span>
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Rating Bonus</span>
+                        <span class="rt-prompt__value">+{{modifiers.bonus}}</span>
                     </div>
                 {{/if}}
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Has Focus</span>
-                    <span class="dh-field__input check">
-                        <input type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
-                    </span>
+                <div class="rt-prompt__checkbox-field">
+                    <span class="rt-prompt__label">Has Psy Focus</span>
+                    <input class="rt-prompt__input" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
                 </div>
             </div>
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <span class="dh-header__subtitle">Modifiers</span>
-                        </div>
-                    </div>
-                </div>
+
+            {{!-- Modifiers Section --}}
+            <div class="rt-prompt__panel">
+                <h3 class="rt-prompt__section-title">Modifiers</h3>
                 {{#with this.modifiers}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Difficulty</span>
-                        <select class="dh-field__input" name="modifiers.difficulty">
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Difficulty</span>
+                        <select class="rt-prompt__select" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Modifier</span>
-                        <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Additional Modifier</span>
+                        <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
-            </div>
-            <div class="dh-panel spacer dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <span class="dh-header__subtitle">Target</span>
-                        </div>
-                    </div>
+                
+                <div class="rt-prompt__divider"></div>
+                
+                <div class="rt-prompt__field">
+                    <span class="rt-prompt__label">Distance (m)</span>
+                    <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
                 </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Distance</span>
-                    <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Range Type</span>
-                    <span class="dh-field__span">{{rangeName}}</span>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Max Range</span>
-                    <span class="dh-field__span">{{maxRange}}m</span>
+                <div class="rt-prompt__range-info">
+                    <span class="rt-prompt__range-label">{{rangeName}}</span>
+                    <span class="rt-prompt__range-value">Max: {{maxRange}}m</span>
                 </div>
             </div>
-        </div>
+        {{/if}}
     </form>
 </div>
 
-<!-- Buttons -->
+{{!-- Dialog Buttons --}}
 <div class="dialog-buttons">
     <button class="dialog-button roll default" data-button="roll" id="power-roll">
-        <i class="dh-material">casino</i>
+        <span class="material-icons">casino</span>
         Roll
     </button>
     <button class="dialog-button cancel" data-button="cancel" id="power-cancel">
-        <i class="dh-material">close</i>
+        <span class="material-icons">close</span>
         Cancel
     </button>
 </div>

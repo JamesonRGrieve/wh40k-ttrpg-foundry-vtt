@@ -9,7 +9,7 @@
     "spaceUsage": 12,
     "spCost": 0,
     "effect": "Allows ship to enter and exit immaterium to cross interstellar distances. Consididered the Default Option",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Allows ship to enter and exit immaterium to cross interstellar distances. Consididered the Default Option</p>"

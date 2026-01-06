@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Ork",
+    "type": "xenos",
     "locations": "All (H/B/A/L)",
     "ap": "5/14/9/9",
     "maxAg": null,
     "weight": "200kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "For Orks Very Rare. Can't be worn by humans. Gives +30 to Strength Characteristics but -20 to Agility Tests and can't Run",
     "source": "OW: Enemies of the Imperium",
@@ -16,7 +16,20 @@
       "value": "<p>For Orks Very Rare. Can't be worn by humans. Gives +30 to Strength Characteristics but -20 to Agility Tests and can't Run</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 14,
+      "leftArm": 9,
+      "rightArm": 9,
+      "leftLeg": 9,
+      "rightLeg": 9
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

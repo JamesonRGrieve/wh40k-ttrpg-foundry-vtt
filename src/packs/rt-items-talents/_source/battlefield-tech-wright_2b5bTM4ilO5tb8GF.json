@@ -18,7 +18,12 @@
     },
     "tier": 2,
     "isPassive": false,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Tech"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever this character spends a Fate Point to gain a +10 Bonus to a Test before Rolling, they gain +30 Instead.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

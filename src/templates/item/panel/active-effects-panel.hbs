@@ -1,45 +1,47 @@
-<div class="dh-panel dh-grid-col-6">
-    <h1 class="dh-panel__header">Active Effects</h1>
-    <div class="dh-table--border dh-activeeffectstable--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">Name</div>
-            <div class="table-cell--last">
-                {{#unless item.isEmbedded}}
-                    <label class="dh-control-button effect-create">
-                        <span class="dh-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
-                    </label>
-                {{/unless}}
-            </div>
-        </div>
+<section class="rt-item-sheet__panel">
+    <h2 class="rt-item-sheet__panel-title">
+        <span class="material-icons">auto_fix_high</span>
+        Active Effects
+        {{#unless item.isEmbedded}}
+        <button type="button" class="rt-item-sheet__panel-action effect-create" title="Add Effect">
+            <span class="material-icons">add_circle</span>
+        </button>
+        {{/unless}}
+    </h2>
+
+    {{#if effects.length}}
+    <div class="rt-item-sheet__effects-list">
         {{#each effects as |effect|}}
-            <div class="table-row">
-                <div class="table-cell--settingstoggle">
-                {{#unless @root.item.isEmbedded}}
-                    <label class="dh-control-button effect-edit" data-effect-id="{{effect.id}}">
-                        <span class="dh-control-button__span material-icons">settings</span>
-                    </label>
-                {{/unless}}
-                </div>
-                <div class="table-cell">
-                    <span class="table-cell--description">{{effect.label}}</span>
-                </div>
-                <div class="table-cell">
-                {{#unless @root.item.isEmbedded}}
-                    {{#if disabled}}
-                        <label class="dh-control-button effect-enable" data-effect-id="{{effect.id}}">
-                            <span class="dh-control-button__span material-icons">flash_on</span>
-                        </label>
-                    {{else}}
-                        <label class="dh-control-button effect-disable" data-effect-id="{{effect.id}}">
-                            <span class="dh-control-button__span material-icons">flash_off</span>
-                        </label>
-                    {{/if}}
-                    <label class="dh-control-button effect-delete" data-effect-id="{{effect.id}}">
-                        <span class="dh-control-button__span material-icons">delete</span>
-                    </label>
-                {{/unless}}
-                </div>
+        <div class="rt-item-sheet__effect {{#if effect.disabled}}rt-item-sheet__effect--disabled{{/if}}">
+            {{#unless @root.item.isEmbedded}}
+            <button type="button" class="rt-item-sheet__effect-btn effect-edit" data-effect-id="{{effect.id}}" title="Edit Effect">
+                <span class="material-icons">settings</span>
+            </button>
+            {{/unless}}
+            <span class="rt-item-sheet__effect-name">{{effect.label}}</span>
+            {{#unless @root.item.isEmbedded}}
+            <div class="rt-item-sheet__effect-controls">
+                {{#if effect.disabled}}
+                <button type="button" class="rt-item-sheet__effect-btn effect-enable" data-effect-id="{{effect.id}}" title="Enable Effect">
+                    <span class="material-icons">flash_on</span>
+                </button>
+                {{else}}
+                <button type="button" class="rt-item-sheet__effect-btn effect-disable" data-effect-id="{{effect.id}}" title="Disable Effect">
+                    <span class="material-icons">flash_off</span>
+                </button>
+                {{/if}}
+                <button type="button" class="rt-item-sheet__effect-btn rt-item-sheet__effect-btn--danger effect-delete" data-effect-id="{{effect.id}}" title="Delete Effect">
+                    <span class="material-icons">delete</span>
+                </button>
             </div>
+            {{/unless}}
+        </div>
         {{/each}}
     </div>
-</div>
+    {{else}}
+    <div class="rt-item-sheet__empty rt-item-sheet__empty--small">
+        <span class="material-icons">auto_fix_off</span>
+        <p>No active effects</p>
+    </div>
+    {{/if}}
+</section>

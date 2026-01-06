@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When the Character is wielding a Melee Weapon, they can add their Weapon Skill Bonus to their Armour Points on all Locations (even those unarmoured) when calculating damage from ranged weapons with the Primitive Quality, or Thrown Weapons.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Defence",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

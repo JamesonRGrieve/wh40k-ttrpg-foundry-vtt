@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "When Performing the \"Adjust Speed and Bearing\", \"Come to a New Heading\", or \"Evasive Manoeuver\" Manoeuvre Actions, Pilot (Space Craft) + Manoeuvrability Tests are +0. (instead of -20, -10, and -10 Respectively). Only one per vessel.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>When Performing the \"Adjust Speed and Bearing\", \"Come to a New Heading\", or \"Evasive Manoeuver\" Manoeuvre Actions, Pilot (Space Craft) + Manoeuvrability Tests are +0. (instead of -20, -10, and -10 Respectively). Only one per vessel.</p>"

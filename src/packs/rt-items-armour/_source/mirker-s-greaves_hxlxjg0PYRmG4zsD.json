@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Primitive",
+    "type": "primitive",
     "locations": "Legs",
     "ap": 4,
     "maxAg": null,
     "weight": "8kg",
-    "availability": "Average",
+    "availability": "average",
     "cost": "50 T",
     "notes": "Durable and Spiked Legwear to ward off vermin and filth. Allows wearer to kick as if wearing Brass Knuckles (1d5-1, Pen 0, Primitive(8))",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,21 @@
       "value": "<p>Durable and Spiked Legwear to ward off vermin and filth. Allows wearer to kick as if wearing Brass Knuckles (1d5-1, Pen 0, Primitive(8))</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

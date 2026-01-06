@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Character gains some kind of wild beast tamed with the Wrangling Skill or Cyber-Creature bound to their will. It takes its turn immediately after them and can follow basic comands. If this creature is lost, it can be regained after suitable time spent arranging for a replacement. GM has final say over what creatures are allowed, anything extremely cunning, wilful, or insane is off limits (No Genestealers, Chaos Beasts, Giant Monsters, etc).\nThis Talent can be taken multiple times (max 3)</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

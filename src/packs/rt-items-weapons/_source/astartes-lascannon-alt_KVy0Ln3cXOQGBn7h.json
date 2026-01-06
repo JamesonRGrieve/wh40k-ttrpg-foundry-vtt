@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Heavy",
-    "type": "Las",
+    "class": "heavy",
+    "type": "las",
     "range": "300m",
     "rof": "S/-/-",
     "damage": "5d10+10",

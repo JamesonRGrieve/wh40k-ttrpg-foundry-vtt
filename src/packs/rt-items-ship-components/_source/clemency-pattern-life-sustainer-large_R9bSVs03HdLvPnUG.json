@@ -9,7 +9,7 @@
     "spaceUsage": 5,
     "spCost": 0,
     "effect": "Recycles air and water. Reduce Crew Population and Morale loss from Depressurisation by 4, to a minimum of 0. +1 Morale Permenantly.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Recycles air and water. Reduce Crew Population and Morale loss from Depressurisation by 4, to a minimum of 0. +1 Morale Permenantly.</p>"

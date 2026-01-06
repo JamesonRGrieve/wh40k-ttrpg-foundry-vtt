@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
-    "descriptionText": "A Breacher is someone who is an expert with Explosives. As any who were not would not be alive long enough to be called such. Their Skills in bypassing traps and creating entryways where once there were none are invaluable amongst any Regiment.",
-    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Breacher. Apt: Agility, Finesse, Intelligence, Tech, Toughness, Willpower\nAdd. Equipment: 1 Demolition Charge, 2 Frag Grenades, 2 Snare Mines, Combi-Tool, Respirator. Gain Talents: Resistance (Fear)+Technical Knock or Modify Payload\nCan Purchase Unique Talent: Steady Hand and Basic Order: Volatile Suprise. ",
+    "descriptionText": "",
+    "effects": "",
     "source": "OW: Hammer of the Emperor (Page 58)",
     "description": {
       "value": "<p>A Breacher is someone who is an expert with Explosives. As any who were not would not be alive long enough to be called such. Their Skills in bypassing traps and creating entryways where once there were none are invaluable amongst any Regiment.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Breacher. Apt: Agility, Finesse, Intelligence, Tech, Toughness, Willpower\nAdd. Equipment: 1 Demolition Charge, 2 Frag Grenades, 2 Snare Mines, Combi-Tool, Respirator. Gain Talents: Resistance (Fear)+Technical Knock or Modify Payload\nCan Purchase Unique Talent: Steady Hand and Basic Order: Volatile Suprise. </p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Breacher. Apt: Agility, Finesse, Intelligence, Tech, Toughness, Willpower\nAdd. Equipment: 1 Demolition Charge, 2 Frag Grenades, 2 Snare Mines, Combi-Tool, Respirator. Gain Talents: Resistance (Fear)+Technical Knock or Modify Payload\nCan Purchase Unique Talent: Steady Hand and Basic Order: Volatile Suprise. ",
+    "level": null
   },
   "effects": [],
   "flags": {},

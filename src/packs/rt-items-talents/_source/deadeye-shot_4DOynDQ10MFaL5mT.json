@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When making a Called Shot with a Ranged Weapon, reduce penalty by 10 (-20 to -10)</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

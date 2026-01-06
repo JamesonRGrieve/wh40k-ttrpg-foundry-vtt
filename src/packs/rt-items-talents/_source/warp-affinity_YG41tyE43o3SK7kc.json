@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When rolling Psychic Phenomenon, can discard result, take 1d5 Corruption, and roll again with no modifiers.\nMutually exclusive with Rite of Sanctioning Talent, cannot have both. </p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

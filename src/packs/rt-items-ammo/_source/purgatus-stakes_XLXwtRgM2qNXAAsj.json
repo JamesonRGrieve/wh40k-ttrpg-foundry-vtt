@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Sanctified Quality. If a Psyker or Warp entity is hit by this ammo, must make +0 Willpower Test or immediately roll on Psychic Phenomena",
     "qualities": "Sanctified",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "source": "DH 2E: Enemies Within",
     "description": {

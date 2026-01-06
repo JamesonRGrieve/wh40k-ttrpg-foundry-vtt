@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 7,
     "maxAg": 50,
     "weight": "35kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Adepta Sororitas Only. Grants Unnatural Strength (+1), wearer always counts as braced. Armour does not increase Size Trait.",
     "source": "DH 2E: Enemies Within",
@@ -16,7 +16,20 @@
       "value": "<p>Adepta Sororitas Only. Grants Unnatural Strength (+1), wearer always counts as braced. Armour does not increase Size Trait.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 7,
+      "body": 7,
+      "leftArm": 7,
+      "rightArm": 7,
+      "leftLeg": 7,
+      "rightLeg": 7
+    },
+    "modifications": [],
+    "maxAgility": 50
   },
   "effects": [],
   "flags": {},

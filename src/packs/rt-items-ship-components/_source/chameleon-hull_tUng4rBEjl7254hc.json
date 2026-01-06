@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 2,
     "effect": "Can make -10 Tech-Use Test to change hull colours, markings, registry markings, name, and distinctive patterns in order to try and disguise itself. Can't change shape though. Programming in additional patterns requires -20 Tech-Use Test. Component cannot be damaged or destroyed except via a critical hit. One per Vessel.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Can make -10 Tech-Use Test to change hull colours, markings, registry markings, name, and distinctive patterns in order to try and disguise itself. Can't change shape though. Programming in additional patterns requires -20 Tech-Use Test. Component cannot be damaged or destroyed except via a critical hit. One per Vessel.</p>"

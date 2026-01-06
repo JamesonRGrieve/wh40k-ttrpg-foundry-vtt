@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "-",
     "availability": "Relic Mastercrafted Standard of the Deathwatch. Whils the Standard is held aloft, all Battle Brothers that can draw a line of sight to it can enter Squad Mode as a Free Action without a Test, and gain +10 to all Willpower Tests.",
     "cost": null,

@@ -9,7 +9,10 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>The character's Staff or any other Melee Weapon they are holding gains the Force Quality. If not holding a weapon, their Unarmed Melee Attacks gain the Force Quality.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

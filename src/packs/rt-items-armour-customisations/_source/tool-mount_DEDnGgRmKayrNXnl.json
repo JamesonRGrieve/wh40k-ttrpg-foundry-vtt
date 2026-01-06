@@ -6,7 +6,7 @@
     "armourTypes": "Any Armour",
     "effect": "Allows fitting of any small tool or compact/micro ranged weapon to be fitted outside the armour. Tool/Weapon must be acquired seperately.",
     "weight": "+0.1kg",
-    "availability": "Common",
+    "availability": "common",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Allows fitting of any small tool or compact/micro ranged weapon to be fitted outside the armour. Tool/Weapon must be acquired seperately.</p>"

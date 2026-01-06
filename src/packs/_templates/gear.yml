@@ -1,0 +1,69 @@
+# Gear Template
+# Use this as a reference for creating general equipment items
+
+_id: &id gear-template-000001
+name: Auspex
+type: gear
+img: systems/rogue-trader/icons/gear/auspex.webp
+
+system:
+  identifier: auspex
+  
+  # Gear Category
+  category: detection  # general, tools, drugs, consumable, clothing, survival, communications, detection, medical, tech, religious, luxury, contraband
+  
+  # Consumable
+  consumable: false
+  
+  # Uses (for consumables)
+  uses:
+    value: null
+    max: null
+  
+  # Effect when used
+  effect: |
+    <p>An auspex grants a +20 bonus to Awareness Tests and may be 
+    used to detect radiation, heat sources, and life signs within 
+    50 metres. Scanning takes a Half Action.</p>
+  
+  # Duration of effect
+  duration: ""
+  
+  # Physical Properties
+  weight: 0.5
+  availability: scarce
+  craftsmanship: common
+  quantity: 1
+  cost:
+    value: 250
+    currency: throne
+  
+  # Equipment State
+  equipped: false
+  inBackpack: false
+  container: ""
+  
+  # Description
+  description:
+    value: |
+      <p>The auspex is a sophisticated hand-held scanning device 
+      used to detect energy emissions, radiation, and life signs. 
+      It is an invaluable tool for reconnaissance and security 
+      operations.</p>
+    chat: ""
+    summary: "Multi-spectrum scanner device"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "140"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

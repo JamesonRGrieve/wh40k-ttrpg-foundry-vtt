@@ -9,7 +9,7 @@
     "spaceUsage": 5,
     "spCost": 1,
     "effect": "+100 Achievement Points towards Trade objectives. Stores Large amounts of Cargo and Cargo Shuttles.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+100 Achievement Points towards Trade objectives. Stores Large amounts of Cargo and Cargo Shuttles.</p>"

@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. \nAdditionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "General"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Vaguely defined improvements to the crew, be they better uniforms, provisions, training, etc. Poor: +1 Crew Morale, Common: +2 Morale, Good: +3 Morale, Best: +3 Morale and +5 Crew Rating. Only One per Vessel.",
-    "availability": "Average",
+    "availability": "average",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Vaguely defined improvements to the crew, be they better uniforms, provisions, training, etc. Poor: +1 Crew Morale, Common: +2 Morale, Good: +3 Morale, Best: +3 Morale and +5 Crew Rating. Only One per Vessel.</p>"

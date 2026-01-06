@@ -1,0 +1,106 @@
+# Psychic Power Template
+# Use this as a reference for creating psychic power items
+
+_id: &id psychic-power-template-000001
+name: Mind Probe
+type: psychicPower
+img: systems/rogue-trader/icons/powers/mind-probe.webp
+
+system:
+  identifier: mind-probe
+  
+  # Psychic Discipline
+  discipline: telepathy  # telepathy, telekinesis, divination, pyromancy, biomancy, daemonology
+  
+  # Psy Rating Cost
+  prCost: 2
+  
+  # Focus Power Test
+  focusPower:
+    characteristic: willpower
+    modifier: 0
+    threshold: null  # Threshold number if required
+    opposed: true
+    opposedCharacteristic: willpower
+  
+  # Activation
+  activation:
+    type: full-action  # action, half-action, full-action, extended-action, reaction, free-action
+    cost: 1
+    condition: ""
+  
+  # Target
+  target:
+    type: creature  # self, creature, ally, enemy, area, cone, line, sphere
+    value: 1
+    units: m
+    width: null
+    length: null
+  
+  # Duration
+  duration:
+    value: null
+    units: sustained  # instant, round, rounds, minute, sustained, permanent
+    sustained: true
+  
+  # Uses (if limited)
+  uses:
+    value: null
+    max: null
+    per: ""
+    recovery: ""
+  
+  # Damage (if attack power)
+  damage:
+    formula: ""
+    type: energy
+    bonus: 0
+    penetration: 0
+  special: []
+  
+  # Is this an attack power?
+  isAttack: false
+  
+  # Psychic Phenomena
+  phenomenaModifier: 0
+  
+  # Sustained
+  sustained: true
+  
+  # Range scaling
+  rangePerPR: 5  # Range in meters per PR
+  
+  # Effect Description
+  effect: |
+    <p>The psyker forces his way into the mind of a single target, 
+    reading their surface thoughts and memories. The target may 
+    attempt to resist with an Opposed Willpower Test.</p>
+  
+  # Overbleed Effect (pushing the power)
+  overbleed: |
+    <p>For every 10 points by which the psyker exceeds the threshold, 
+    they may probe deeper into the target's memories.</p>
+  
+  # Description
+  description:
+    value: |
+      <p>Mind Probe allows the psyker to delve into the thoughts and 
+      memories of another being, uncovering secrets they wish to 
+      keep hidden.</p>
+    chat: ""
+    summary: "Read target's thoughts and memories"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "157"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

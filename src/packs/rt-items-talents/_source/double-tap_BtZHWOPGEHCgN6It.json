@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When making their second ranged attack action from dual wielding in the same turn against the same target as the first attack was made against, the character gains a +20 to the attack if their first attack had at least one successful hit.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Finesse",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

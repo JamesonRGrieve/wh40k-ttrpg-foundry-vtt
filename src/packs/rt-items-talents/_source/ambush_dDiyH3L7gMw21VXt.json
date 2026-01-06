@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>The Character's attacks against Unaware targets inflict +1 damage per 2 Degrees of Success on the Weapon Skill or Ballistic Skill beyond the first (aka DoS 3, 5, 7, etc)</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Field Craft"
+    ]
   },
   "effects": [],
   "flags": {},

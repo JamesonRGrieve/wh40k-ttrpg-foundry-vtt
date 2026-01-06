@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "2kg",
     "availability": "Master Crafted Relic Death Mask of the Angels Sanguine. Can be integrated into the helmet of any Astartes Armour or worn on its own. Grants wearer 1d5 additional degrees of success on any successful Psyniscience, Scrutiny, or Search Tests. At GM Discretion the Character can instead receive symbolic visions of a fact that could not have otherwise learned.",
     "cost": null,

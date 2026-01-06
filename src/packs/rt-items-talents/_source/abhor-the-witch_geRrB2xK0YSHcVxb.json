@@ -9,7 +9,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Character can spent a Fate Point prior to the mission (during the Oath Taking Phase), and counts as having spent the Fate Point for the duration of the mission. During the mission the character must make a +0 Willpower Test whenever subjected to a Psychic Power, Daemonic Power, or other Warp-based power. If the test is successful the character is unaffected by the power, if failed it affects them as normal. This effect also applies to powers that cause damage indirectly such as blasts, as well as those used by Friendly Talents. Powers resisted in this way are not negated, and may still affect others.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

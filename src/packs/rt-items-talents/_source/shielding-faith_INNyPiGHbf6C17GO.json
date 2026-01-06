@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When using the Deny the Witch talent to make Evasion reactions against Psychic Powers, the Sister can spend a Fate Point to automatically pass the evasion test with Willpower Bonus Degrees of Success, as well as force the attacking psyker to make a Fear test against Fear 1 (+0 Fear Test).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

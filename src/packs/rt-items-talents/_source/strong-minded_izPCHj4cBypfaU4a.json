@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can Reroll failed Willpower Tests to resist Psychic Powers that affect their mind. Psychic powers that have physical effects are unaffected by this talent.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Defence",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

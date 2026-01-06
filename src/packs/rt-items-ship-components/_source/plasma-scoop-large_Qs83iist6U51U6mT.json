@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 3,
     "effect": "A Vessel with this can attempt to mine gas giants for plasma. Make +0 Pilot (Space Craft)+Maneuvrability Test, failiure causes 1d5 damage per DoF, ignoring shields. Success grants a months worth of fuel and +5 Achievement Points towards Endeavours requiring transporting or moving something. One per Vessel. Grand Cruisers cannot use this component.",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>A Vessel with this can attempt to mine gas giants for plasma. Make +0 Pilot (Space Craft)+Maneuvrability Test, failiure causes 1d5 damage per DoF, ignoring shields. Success grants a months worth of fuel and +5 Achievement Points towards Endeavours requiring transporting or moving something. One per Vessel. Grand Cruisers cannot use this component.</p>"

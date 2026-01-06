@@ -7,7 +7,7 @@
     "damageOrEffect": "Reduces range to 15 metres unless range was already lower than that. Change damage type to energy, add Flame, Spray, and Primitive Qualities.",
     "qualities": "Flame, Spray, Primitive",
     "weight": "10% wep",
-    "availability": "Common",
+    "availability": "common",
     "cost": "4T each",
     "source": "DH: Inquisitor's Handbook",
     "description": {

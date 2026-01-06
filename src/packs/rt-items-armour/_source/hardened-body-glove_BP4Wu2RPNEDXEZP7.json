@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Other",
+    "type": "flak",
     "locations": "Arms, Body, Legs",
     "ap": 3,
     "maxAg": null,
     "weight": "5kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "300 T",
     "notes": "Wearable under loose or specifically tailored clothing.\nOptionally can get a version with a sealable hood option with built in stealth features, imposes -20 to those attempting to notice the wearer. 3x cost, or increase rarity by 1.",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,24 @@
       "value": "<p>Wearable under loose or specifically tailored clothing.\nOptionally can get a version with a sealable hood option with built in stealth features, imposes -20 to those attempting to notice the wearer. 3x cost, or increase rarity by 1.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

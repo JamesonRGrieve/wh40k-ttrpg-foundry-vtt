@@ -18,7 +18,12 @@
     },
     "tier": 3,
     "isPassive": false,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

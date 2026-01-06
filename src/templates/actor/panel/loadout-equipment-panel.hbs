@@ -1,0 +1,341 @@
+{{!-- Loadout Manager Equipment Panel --}}
+{{!-- Modern equipment management with organized sections --}}
+
+<div class="rt-equipment-loadout">
+    {{!-- Inventory Panel with All Items --}}
+    <div class="rt-panel rt-panel-equipment-header">
+        <div class="rt-panel-header rt-equipment-title-bar">
+            <span class="rt-panel-title"><i class="fas fa-backpack"></i> Backpack</span>
+            <div class="rt-encumbrance-bar-wrapper">
+                <span class="rt-enc-label">Carry:</span>
+                <div class="rt-encumbrance-bar-container">
+                    <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-over{{else if (gte encumbrancePercent 80)}}rt-enc-warning{{/if}}" style="width: {{encumbrancePercent}}%"></div>
+                </div>
+                <span class="rt-enc-text">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
+                {{#if actor.encumbrance.encumbered}}
+                <i class="fas fa-exclamation-triangle rt-enc-alert" title="Encumbered!"></i>
+                {{/if}}
+            </div>
+        </div>
+        <div class="rt-panel-body">
+            {{#if allItems.length}}
+            <div class="rt-all-items-grid">
+                {{#each allItems as |item|}}
+                <div class="rt-inventory-card item-drag" data-item-id="{{item.id}}" data-item-type="{{item.type}}" title="{{item.name}}">
+                    <img class="rt-inv-card-img" src="{{item.img}}" alt="{{item.name}}" />
+                    <div class="rt-inv-card-info">
+                        <span class="rt-inv-card-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+                        <span class="rt-inv-card-type">{{item.type}}</span>
+                    </div>
+                    {{#if item.system.equipped}}
+                    <i class="fas fa-check-circle rt-inv-equipped" title="Equipped"></i>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+            <div class="rt-dropzone-small item-create" data-type="gear">
+                <i class="fas fa-plus-circle"></i>
+                <span>Drop items here or click to add</span>
+            </div>
+            {{else}}
+            <div class="rt-dropzone item-create" data-type="gear">
+                <i class="fas fa-boxes rt-dropzone-icon"></i>
+                <span class="rt-dropzone-text">Drop items here or click to create</span>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    {{!-- Two Column Layout --}}
+    <div class="rt-equipment-grid">
+        {{!-- LEFT COLUMN: Armour & Protection --}}
+        <div class="rt-equipment-col rt-equipment-protection">
+            {{!-- Armour Body Diagram (already has panel wrapper) --}}
+            {{> systems/rogue-trader/templates/actor/panel/armour-display-panel.hbs}}
+
+            {{!-- Lifting Capacity --}}
+            <div class="rt-panel rt-panel-lifting">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-dumbbell"></i> Lifting Capacity</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-lifting-grid">
+                        <div class="rt-lift-item">
+                            <span class="rt-lift-label">Carry</span>
+                            <span class="rt-lift-value">{{system.lifting.carry}} kg</span>
+                        </div>
+                        <div class="rt-lift-item">
+                            <span class="rt-lift-label">Lift</span>
+                            <span class="rt-lift-value">{{system.lifting.lift}} kg</span>
+                        </div>
+                        <div class="rt-lift-item">
+                            <span class="rt-lift-label">Push</span>
+                            <span class="rt-lift-value">{{system.lifting.push}} kg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Backpack/Container Info --}}
+            {{#if actor.backpack.hasBackpack}}
+            <div class="rt-panel rt-panel-backpack">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-suitcase"></i> Backpack</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-backpack-bar-wrapper">
+                        <div class="rt-backpack-bar-container">
+                            <div class="rt-backpack-bar-fill" style="width: {{backpackPercent}}%"></div>
+                        </div>
+                        <span class="rt-backpack-text">{{actor.encumbrance.backpack_value}} / {{actor.encumbrance.backpack_max}} kg</span>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+
+        {{!-- RIGHT COLUMN: Equipment Lists --}}
+        <div class="rt-equipment-col rt-equipment-items">
+            {{!-- Armour Items --}}
+            <div class="rt-panel rt-panel-armour-list">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-shield-alt"></i> Armour</span>
+                    <span class="rt-item-count">{{armourItems.length}}</span>
+                </div>
+                <div class="rt-panel-body">
+                    {{#if armourItems.length}}
+                    <div class="rt-equipment-list">
+                        {{#each armourItems as |item|}}
+                        <div class="rt-equipment-card item-drag {{#if item.system.equipped}}rt-card-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="armour">
+                            <div class="rt-card-header">
+                                <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
+                                <div class="rt-card-info">
+                                    <span class="rt-card-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="rt-card-meta">{{item.system.type}}</span>
+                                </div>
+                                <button type="button" class="rt-card-action rt-action-equip" data-action="toggleEquip" data-item-id="{{item.id}}" title="{{#if item.system.equipped}}Unequip{{else}}Equip{{/if}}">
+                                    <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+                                </button>
+                            </div>
+                            <div class="rt-card-stats">
+                                <div class="rt-stat-badge rt-badge-ap">
+                                    <span class="rt-stat-label">AP</span>
+                                    <span class="rt-stat-value">{{item.system.ap}}</span>
+                                </div>
+                                {{#if item.system.maxAP}}
+                                <div class="rt-stat-badge">
+                                    <span class="rt-stat-label">Max</span>
+                                    <span class="rt-stat-value">{{item.system.maxAP}}</span>
+                                </div>
+                                {{/if}}
+                                {{#if item.system.weight}}
+                                <div class="rt-stat-badge">
+                                    <span class="rt-stat-label">Weight</span>
+                                    <span class="rt-stat-value">{{item.system.weight}}kg</span>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div class="rt-card-actions">
+                                <button type="button" class="rt-card-btn item-edit" data-item-id="{{item.id}}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn item-vocalize" data-item-id="{{item.id}}" title="Send to Chat">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn rt-btn-danger item-delete" data-item-id="{{item.id}}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <div class="rt-dropzone item-create" data-type="armour">
+                        <i class="fas fa-shield-alt rt-dropzone-icon"></i>
+                        <span class="rt-dropzone-text">Drop Armour or Click to Create</span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Force Fields --}}
+            <div class="rt-panel rt-panel-forcefields">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-circle-notch"></i> Force Fields</span>
+                    <span class="rt-item-count">{{forceFieldItems.length}}</span>
+                </div>
+                <div class="rt-panel-body">
+                    {{#if forceFieldItems.length}}
+                    <div class="rt-equipment-list">
+                        {{#each forceFieldItems as |item|}}
+                        <div class="rt-equipment-card item-drag {{#if item.system.activated}}rt-card-active{{/if}} {{#if item.system.overloaded}}rt-card-overloaded{{/if}}" data-item-id="{{item.id}}" data-item-type="forceField">
+                            <div class="rt-card-header">
+                                <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
+                                <div class="rt-card-info">
+                                    <span class="rt-card-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="rt-card-meta">
+                                        {{#if item.system.overloaded}}
+                                            <span class="rt-status-badge rt-status-overloaded"><i class="fas fa-exclamation-triangle"></i> OVERLOADED</span>
+                                        {{else if item.system.activated}}
+                                            <span class="rt-status-badge rt-status-active"><i class="fas fa-bolt"></i> ACTIVE</span>
+                                        {{else}}
+                                            <span class="rt-status-badge">Offline</span>
+                                        {{/if}}
+                                    </span>
+                                </div>
+                                {{#unless item.system.overloaded}}
+                                <button type="button" class="rt-card-action rt-action-activate" data-action="toggleActivate" data-item-id="{{item.id}}" title="{{#if item.system.activated}}Deactivate{{else}}Activate{{/if}}">
+                                    <i class="fas {{#if item.system.activated}}fa-bolt{{else}}fa-power-off{{/if}}"></i>
+                                </button>
+                                {{/unless}}
+                            </div>
+                            <div class="rt-card-stats">
+                                <div class="rt-stat-badge rt-badge-rating">
+                                    <span class="rt-stat-label">Rating</span>
+                                    <span class="rt-stat-value">{{item.system.protectionRating}}</span>
+                                </div>
+                                <div class="rt-stat-badge">
+                                    <span class="rt-stat-label">Overload</span>
+                                    <span class="rt-stat-value">{{item.system.overloadRoll}}</span>
+                                </div>
+                            </div>
+                            <div class="rt-card-actions">
+                                <button type="button" class="rt-card-btn item-roll" data-item-id="{{item.id}}" title="Roll Protection">
+                                    <i class="fas fa-dice-d20"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn item-edit" data-item-id="{{item.id}}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn rt-btn-danger item-delete" data-item-id="{{item.id}}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <div class="rt-dropzone item-create" data-type="forceField">
+                        <i class="fas fa-circle-notch rt-dropzone-icon"></i>
+                        <span class="rt-dropzone-text">Drop Force Field or Click to Create</span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Cybernetics --}}
+            <div class="rt-panel rt-panel-cybernetics">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-microchip"></i> Cybernetics</span>
+                    <span class="rt-item-count">{{cyberneticItems.length}}</span>
+                </div>
+                <div class="rt-panel-body">
+                    {{#if cyberneticItems.length}}
+                    <div class="rt-equipment-list">
+                        {{#each cyberneticItems as |item|}}
+                        <div class="rt-equipment-card item-drag {{#if item.system.equipped}}rt-card-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="cybernetic">
+                            <div class="rt-card-header">
+                                <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
+                                <div class="rt-card-info">
+                                    <span class="rt-card-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="rt-card-meta">{{item.system.location}}</span>
+                                </div>
+                                <button type="button" class="rt-card-action rt-action-equip" data-action="toggleEquip" data-item-id="{{item.id}}" title="{{#if item.system.equipped}}Uninstall{{else}}Install{{/if}}">
+                                    <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+                                </button>
+                            </div>
+                            {{#if item.system.description}}
+                            <div class="rt-card-description">
+                                {{item.system.description}}
+                            </div>
+                            {{/if}}
+                            <div class="rt-card-actions">
+                                <button type="button" class="rt-card-btn item-edit" data-item-id="{{item.id}}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn item-vocalize" data-item-id="{{item.id}}" title="Send to Chat">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn rt-btn-danger item-delete" data-item-id="{{item.id}}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <div class="rt-dropzone item-create" data-type="cybernetic">
+                        <i class="fas fa-cog rt-dropzone-icon"></i>
+                        <span class="rt-dropzone-text">Drop Cybernetic or Click to Create</span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Gear --}}
+            <div class="rt-panel rt-panel-gear">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-toolbox"></i> Gear</span>
+                    <span class="rt-item-count">{{gearItems.length}}</span>
+                </div>
+                <div class="rt-panel-body">
+                    {{#if gearItems.length}}
+                    <div class="rt-equipment-list">
+                        {{#each gearItems as |item|}}
+                        <div class="rt-equipment-card item-drag {{#if item.system.inBackpack}}rt-card-stowed{{/if}}" data-item-id="{{item.id}}" data-item-type="gear">
+                            <div class="rt-card-header">
+                                <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
+                                <div class="rt-card-info">
+                                    <span class="rt-card-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="rt-card-meta">
+                                        {{#if item.system.inBackpack}}
+                                            <i class="fas fa-suitcase"></i> In Backpack
+                                        {{else}}
+                                            <i class="fas fa-user"></i> On Person
+                                        {{/if}}
+                                    </span>
+                                </div>
+                                {{#if item.system.inBackpack}}
+                                <button type="button" class="rt-card-action" data-action="unstowItem" data-item-id="{{item.id}}" title="Remove from Backpack">
+                                    <i class="fas fa-box-open"></i>
+                                </button>
+                                {{else}}
+                                <button type="button" class="rt-card-action" data-action="stowItem" data-item-id="{{item.id}}" title="Stow in Backpack">
+                                    <i class="fas fa-archive"></i>
+                                </button>
+                                {{/if}}
+                            </div>
+                            <div class="rt-card-stats">
+                                {{#if item.system.weight}}
+                                <div class="rt-stat-badge">
+                                    <span class="rt-stat-label">Weight</span>
+                                    <span class="rt-stat-value">{{item.system.weight}}kg</span>
+                                </div>
+                                {{/if}}
+                                {{#if item.system.availability}}
+                                <div class="rt-stat-badge">
+                                    <span class="rt-stat-label">Availability</span>
+                                    <span class="rt-stat-value">{{item.system.availability}}</span>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div class="rt-card-actions">
+                                <button type="button" class="rt-card-btn item-edit" data-item-id="{{item.id}}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn item-vocalize" data-item-id="{{item.id}}" title="Send to Chat">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                                <button type="button" class="rt-card-btn rt-btn-danger item-delete" data-item-id="{{item.id}}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <div class="rt-dropzone item-create" data-type="gear">
+                        <i class="fas fa-toolbox rt-dropzone-icon"></i>
+                        <span class="rt-dropzone-text">Drop Gear or Click to Create</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

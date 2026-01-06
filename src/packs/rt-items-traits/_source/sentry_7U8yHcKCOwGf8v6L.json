@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
-    "descriptionText": "The Sentry Stands watch across the battlefield, ready and waiting to deliver a hailfire of Lethal Rounds to any that dare to cross their firing line. Their mastery of rapid-fire heavy weaponry ensuring none survive uninjured.",
-    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Sentry. Apt: Ballistic Skill, Finesse, Intelligence, Perception, Offence, Toughness\nAdd. Equipment: Best Autogun, Best Heavy Stubber or Good Heavy Bolter or Common Multilaser. Gain Talents: Combat Sense+Weapon Training(Heavy) or Vigilant\nCan Purchase Unique Talent: Unblinking Watcher and Basic Order: Hammering Storm ",
+    "descriptionText": "",
+    "effects": "",
     "source": "OW: Hammer of the Emperor (Page 78)",
     "description": {
       "value": "<p>The Sentry Stands watch across the battlefield, ready and waiting to deliver a hailfire of Lethal Rounds to any that dare to cross their firing line. Their mastery of rapid-fire heavy weaponry ensuring none survive uninjured.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Sentry. Apt: Ballistic Skill, Finesse, Intelligence, Perception, Offence, Toughness\nAdd. Equipment: Best Autogun, Best Heavy Stubber or Good Heavy Bolter or Common Multilaser. Gain Talents: Combat Sense+Weapon Training(Heavy) or Vigilant\nCan Purchase Unique Talent: Unblinking Watcher and Basic Order: Hammering Storm </p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Sentry. Apt: Ballistic Skill, Finesse, Intelligence, Perception, Offence, Toughness\nAdd. Equipment: Best Autogun, Best Heavy Stubber or Good Heavy Bolter or Common Multilaser. Gain Talents: Combat Sense+Weapon Training(Heavy) or Vigilant\nCan Purchase Unique Talent: Unblinking Watcher and Basic Order: Hammering Storm ",
+    "level": null
   },
   "effects": [],
   "flags": {},

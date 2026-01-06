@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 3,
     "effect": "Contains cogitators, documentation, and so on, Doesn't need of aid of the Mechanicus to operate (although that would be heretical). +20 to Identify, Analyse, and Repair ancient or xenos artifacts, as well as tests to craft single items. Example tests include Scholastic Lore, Forbidden Lore, Tech-Use, and Trade Tests (GM Fiat, may include others). One per vessel.",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Contains cogitators, documentation, and so on, Doesn't need of aid of the Mechanicus to operate (although that would be heretical). +20 to Identify, Analyse, and Repair ancient or xenos artifacts, as well as tests to craft single items. Example tests include Scholastic Lore, Forbidden Lore, Tech-Use, and Trade Tests (GM Fiat, may include others). One per vessel.</p>"

@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When a character within the squad spends XP to remove Insanity Points, they can remove one additional Insanity Point per 100xp Spent. \nThis still doesn't allow a squad member to reduce Insanity Below a Degree of Madness.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ]
   },
   "effects": [],
   "flags": {},

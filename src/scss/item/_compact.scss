@@ -1,0 +1,157 @@
+// ============================================
+// Compact Item Sheet Variants
+// ============================================
+
+.rt-item-sheet--compact {
+  .rt-item-header--compact {
+    padding: $rt-space-md;
+    grid-template-columns: 60px 1fr;
+    gap: $rt-space-sm;
+  }
+  
+  .rt-item-image--small {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .rt-item-title__name {
+    font-size: $rt-font-size-md;
+  }
+  
+  .rt-item-title__type {
+    font-size: $rt-font-size-sm;
+  }
+}
+
+.rt-compact-content {
+  padding: $rt-space-md;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.rt-origin-benefits {
+  margin-bottom: $rt-space-md;
+}
+
+.rt-origin-step {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(135deg, $rt-color-gold-dark 0%, rgba($rt-color-gold, 0.3) 100%);
+  border-radius: $rt-radius-md;
+  margin-bottom: $rt-space-md;
+  color: $rt-color-parchment;
+  font-family: $rt-font-heading;
+  
+  i {
+    color: $rt-color-gold-light;
+  }
+}
+
+.rt-benefit-group {
+  margin-bottom: $rt-space-md;
+  
+  .rt-benefit-label {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    font-size: $rt-font-size-sm;
+    font-weight: 600;
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: $rt-space-xs;
+    
+    i {
+      color: $rt-color-gold;
+    }
+  }
+}
+
+.rt-benefit-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $rt-space-xs;
+}
+
+.rt-benefit-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: 2px $rt-space-sm;
+  background: rgba($rt-color-steel, 0.15);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-sm;
+  font-size: $rt-font-size-xs;
+  font-weight: 600;
+  color: $rt-color-parchment-dark;
+  
+  &--wounds {
+    background: rgba($rt-color-crimson, 0.2);
+    border-color: $rt-color-crimson-dark;
+    color: lighten($rt-color-crimson, 30%);
+  }
+  
+  &--fate {
+    background: rgba($rt-color-gold, 0.2);
+    border-color: $rt-color-gold-dark;
+    color: $rt-color-gold-light;
+  }
+  
+  &--profit {
+    background: rgba($rt-color-brass, 0.2);
+    border-color: darken($rt-color-brass, 15%);
+    color: lighten($rt-color-brass, 20%);
+  }
+  
+  &--skill {
+    background: rgba(36, 107, 131, 0.2);
+    border-color: rgba(36, 107, 131, 0.5);
+    color: lighten(rgb(36, 107, 131), 20%);
+  }
+  
+  &--talent {
+    background: rgba($rt-color-gold, 0.2);
+    border-color: $rt-color-gold-dark;
+    color: $rt-color-gold-light;
+  }
+}
+
+.rt-compact-description {
+  background: rgba($rt-color-parchment, 0.03);
+  border: 1px solid rgba($rt-color-parchment, 0.1);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+}
+
+.rt-requirements {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm;
+  background: rgba($rt-color-warning, 0.15);
+  border-left: 3px solid $rt-color-warning;
+  border-radius: $rt-radius-sm;
+  margin-bottom: $rt-space-md;
+  font-size: $rt-font-size-sm;
+  
+  i {
+    color: $rt-color-warning;
+  }
+}
+
+.rt-description-content {
+  color: $rt-color-parchment-dark;
+  line-height: 1.5;
+  font-size: $rt-font-size-sm;
+  
+  p {
+    margin-bottom: $rt-space-sm;
+  }
+  
+  strong {
+    color: $rt-color-parchment;
+  }
+}
+

@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When stuck in an Investigation, character can spend a Fate Point to reveal a single clue or lead to aid in the progression of his efforts.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

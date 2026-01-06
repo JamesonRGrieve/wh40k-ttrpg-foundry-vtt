@@ -9,7 +9,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Gain one Minor Psychc Power. This power can be used without making a test and without risking Psychic Phenomena. Each session gain 1d10 - Willpower Bonus Random Psychic Powers across several disciplines. These do not require a test to manifest but automatically cause Psychic Phenomena.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

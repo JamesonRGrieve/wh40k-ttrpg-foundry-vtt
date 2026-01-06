@@ -6,7 +6,7 @@
     "armourTypes": "Any Armour",
     "effect": "Temporary Upgrade that takes one hour to apply to armour, and empties one container per hit location treated. As part of application make -20 Scholastic Lore (Occult) or Forbidden Lore (Imperial Creed) test for each location. Failiure means ritual must be retried. For each location treated, wearer grants +5 to tests to resist Fear caused by Daemonic Characters and Resist Psychic Powers. Effects last one month or less if excessive wear and tear).",
     "weight": "0kg",
-    "availability": "Common",
+    "availability": "common",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Temporary Upgrade that takes one hour to apply to armour, and empties one container per hit location treated. As part of application make -20 Scholastic Lore (Occult) or Forbidden Lore (Imperial Creed) test for each location. Failiure means ritual must be retried. For each location treated, wearer grants +5 to tests to resist Fear caused by Daemonic Characters and Resist Psychic Powers. Effects last one month or less if excessive wear and tear).</p>"

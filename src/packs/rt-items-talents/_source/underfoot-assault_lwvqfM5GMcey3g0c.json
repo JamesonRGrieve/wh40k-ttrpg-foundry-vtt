@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When making a Melee Attack against a Foe with a Size Trait greater than the Character's, the character imposes a -10xSize Difference Penalty to any Parry or Dodge Test to avoid their Melee Attacks.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

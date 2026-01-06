@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.\nAt GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Tech",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

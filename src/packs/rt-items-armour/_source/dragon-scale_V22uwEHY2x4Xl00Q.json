@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 8,
     "maxAg": null,
     "weight": "20kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "7500 T",
     "notes": "Only Acquirable by Tech Priests. Draws Power from the Potentia Coil, and so does not run out of energy. Has Inbuilt Photo-Visor and Respirator. Increases Strength Characteristic by +10. User must have Cyber Mantle and Potentia Coil.",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,20 @@
       "value": "<p>Only Acquirable by Tech Priests. Draws Power from the Potentia Coil, and so does not run out of energy. Has Inbuilt Photo-Visor and Respirator. Increases Strength Characteristic by +10. User must have Cyber Mantle and Potentia Coil.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 8,
+      "body": 8,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

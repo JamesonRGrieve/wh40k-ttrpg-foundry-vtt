@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 0,
     "effect": "Provides two void shields, absorbing two attacks from any ship firing on this one. This Vessel does not suffer penalties to Manoevure actions when travelling through Nebulas, Ice Rings, Plasma Clouds, or other celestial phenomena consisting primarily of small particles.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Provides two void shields, absorbing two attacks from any ship firing on this one. This Vessel does not suffer penalties to Manoevure actions when travelling through Nebulas, Ice Rings, Plasma Clouds, or other celestial phenomena consisting primarily of small particles.</p>"

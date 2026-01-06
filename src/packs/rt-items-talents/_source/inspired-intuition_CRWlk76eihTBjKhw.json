@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Player can spend a Fate Point to ask the GM a question about the current situtation that their character is in, the GM should answer as helpfully as possible, granting in the form of exceptional insight to the Inquisitor's current status.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

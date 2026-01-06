@@ -1,0 +1,61 @@
+<div class="rt-item-sheet rt-compact">
+    <form autocomplete="off">
+        <!-- Compact Header -->
+        <header class="rt-item-header rt-item-header--compact">
+            <div class="rt-item-image rt-item-image--sm" data-edit="img">
+                <img src="{{item.img}}" alt="{{item.name}}" />
+            </div>
+            <div class="rt-item-title">
+                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Skill Name" />
+                <div class="rt-item-meta">
+                    <span class="rt-meta-badge rt-meta-badge--type"><i class="fas fa-graduation-cap"></i> Skill</span>
+                    <input type="text" class="rt-meta-text" name="system.skillType" value="{{item.system.skillType}}" placeholder="Basic" />
+                    <input type="text" class="rt-meta-text" name="system.characteristic" value="{{item.system.characteristic}}" placeholder="Ag" />
+                    <label class="rt-meta-check"><input type="checkbox" name="system.isBasic" {{checked item.system.isBasic}} /> Untrained</label>
+                </div>
+            </div>
+        </header>
+
+        <!-- Compact Body -->
+        <div class="rt-item-body rt-item-body--compact">
+            <!-- Inline Fields Row -->
+            <div class="rt-inline-row">
+                <div class="rt-inline-field">
+                    <label>Aptitudes</label>
+                    <input type="text" name="system.aptitudes" value="{{join item.system.aptitudes ", "}}" placeholder="N/A" />
+                </div>
+                <div class="rt-inline-field rt-inline-field--time">
+                    <label>Time</label>
+                    <input type="text" name="system.useTime" value="{{item.system.useTime}}" placeholder="Half Action" />
+                </div>
+            </div>
+
+            <!-- Specializations (conditional) -->
+            {{#if (eq item.system.skillType "specialist")}}
+            <div class="rt-inline-row">
+                <div class="rt-inline-field">
+                    <label>Specializations</label>
+                    <input type="text" name="system.specializations" value="{{join item.system.specializations ", "}}" placeholder="Imperium, Koronus" />
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Description -->
+            <div class="rt-prose-field">
+                <label>Description</label>
+                <div class="rt-prose" data-edit="system.descriptor">{{{item.system.descriptor}}}</div>
+            </div>
+
+            <!-- Uses -->
+            <div class="rt-prose-field">
+                <label>Uses & Rules</label>
+                <div class="rt-prose" data-edit="system.uses">{{{item.system.uses}}}</div>
+            </div>
+
+            <!-- Footer -->
+            <div class="rt-item-footer">
+                <input type="text" class="rt-source-input" name="system.source" value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}" placeholder="Core Rulebook" />
+            </div>
+        </div>
+    </form>
+</div>

@@ -12,7 +12,7 @@
     "strength": "-",
     "critRating": "-",
     "range": 60,
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "notes": "Reroll (2).  Counts as Guided. If damage roll exceeds armour, performs \"Hit and Run\" attack instead of damaging. Refer to Torpedo Rules block.",
     "source": "RT: BF Koronus",
     "description": {

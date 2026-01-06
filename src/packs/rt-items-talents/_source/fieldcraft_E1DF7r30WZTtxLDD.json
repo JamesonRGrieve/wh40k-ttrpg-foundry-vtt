@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Kroot gain +10 to all Concealment, Shadowing, and Silent Move Tests. They may treat Forests, Jungles and other environments as open terrain.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

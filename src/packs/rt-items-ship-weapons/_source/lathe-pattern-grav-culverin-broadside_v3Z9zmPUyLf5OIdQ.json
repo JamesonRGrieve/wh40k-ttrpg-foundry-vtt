@@ -12,7 +12,7 @@
     "strength": 6,
     "critRating": 6,
     "range": 5,
-    "availability": "Scarce",
+    "availability": "scarce",
     "notes": "Must Occupy Port or Starboard slots. Can choose to increase range by 2 VU's, at the cost of decreasing damage to 1d10+1",
     "source": "RT: Into the Storm",
     "description": {

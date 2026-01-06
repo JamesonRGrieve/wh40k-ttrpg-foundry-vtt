@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power Relic (Astartes)",
+    "type": "power",
     "locations": "Arms",
     "ap": 9,
     "maxAg": null,
@@ -16,7 +16,21 @@
       "value": "<p>Space Marines Only. Master-Crafted Relic Gauntlets of the Imperial Fists Chapter. Grants +5 Strength when fighting Unarmed, or +15 Strength when Grappling.\nOnce used to Strangle a Herald of Khorne.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 9,
+      "rightArm": 9,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,807 @@
+// ============================================
+// Rogue Trader Prompts/Dialogs - Modern Design System
+// ============================================
+// Sleek, immersive dialogs for the 41st millennium
+// Inspired by cogitator interfaces and Imperial data-slates
+
+// ============================================
+// Dialog Window Overrides (Foundry container)
+// ============================================
+
+.app.dialog:has(.rt-prompt) {
+  background: linear-gradient(180deg, #0d0d12 0%, #1a1a24 100%);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 8px;
+  box-shadow: 
+    0 0 40px rgba(0, 0, 0, 0.8),
+    0 0 80px rgba(201, 162, 39, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  
+  // Window header styling
+  .window-header {
+    background: linear-gradient(180deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+    padding: 10px 16px;
+    
+    .window-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #c9a227;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .close {
+      color: rgba(255, 255, 255, 0.6);
+      &:hover { color: #c9a227; }
+    }
+  }
+  
+  // Window content - remove scrollbar issues
+  .window-content {
+    background: transparent;
+    padding: 0;
+    overflow: visible;
+  }
+  
+  // Dialog content wrapper
+  .dialog-content {
+    padding: 0;
+    overflow: visible;
+    max-height: none;
+  }
+  
+  // Dialog buttons at bottom
+  .dialog-buttons {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border-top: 1px solid rgba(201, 162, 39, 0.2);
+    margin: 0;
+    
+    button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      .material-icons, i {
+        font-size: 18px;
+      }
+      
+      // Primary/Roll button
+      &.default, &[data-button="roll"] {
+        background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+        color: #0a0a0f;
+        box-shadow: 
+          0 4px 12px rgba(201, 162, 39, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        
+        &:hover {
+          background: linear-gradient(135deg, #d4ad32 0%, #9a7818 100%);
+          box-shadow: 
+            0 6px 20px rgba(201, 162, 39, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.25);
+          transform: translateY(-2px);
+        }
+        
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(201, 162, 39, 0.3);
+        }
+      }
+      
+      // Cancel button
+      &[data-button="cancel"] {
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.9);
+          border-color: rgba(255, 255, 255, 0.25);
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// Base Prompt Container
+// ============================================
+
+.rt-prompt {
+  --rt-bg-primary: #0d0d12;
+  --rt-bg-secondary: #14141c;
+  --rt-bg-elevated: #1a1a24;
+  --rt-accent-gold: #c9a227;
+  --rt-accent-gold-dim: rgba(201, 162, 39, 0.6);
+  --rt-accent-red: #8b2a2a;
+  --rt-accent-green: #2a8b4a;
+  --rt-accent-blue: #2a5a8b;
+  --rt-accent-purple: #6a2a8b;
+  --rt-text-primary: #e8e4d9;
+  --rt-text-secondary: #9a9a8a;
+  --rt-text-muted: #6a6a6a;
+  --rt-border-subtle: rgba(255, 255, 255, 0.08);
+  --rt-border-accent: rgba(201, 162, 39, 0.3);
+  --rt-glow-gold: rgba(201, 162, 39, 0.2);
+  
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  color: var(--rt-text-primary);
+  padding: 20px;
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  // Scanline effect overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+}
+
+// ============================================
+// Prompt Panel - Main content sections
+// ============================================
+
+.rt-prompt__panel {
+  position: relative;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--rt-bg-secondary) 0%, var(--rt-bg-primary) 100%);
+  border: 1px solid var(--rt-border-accent);
+  border-radius: 6px;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  
+  // Accent line on left
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    background: linear-gradient(180deg, var(--rt-accent-gold) 0%, var(--rt-accent-gold-dim) 100%);
+    border-radius: 0 2px 2px 0;
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ============================================
+// Prompt Header - Title area with icon
+// ============================================
+
+.rt-prompt__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rt-border-subtle);
+}
+
+.rt-prompt__icon {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--rt-accent-gold);
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--rt-glow-gold);
+}
+
+.rt-prompt__title-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.rt-prompt__title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--rt-accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-prompt__subtitle {
+  font-size: 0.9rem;
+  color: var(--rt-text-secondary);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ============================================
+// Section Headers - Within panels
+// ============================================
+
+.rt-prompt__section {
+  margin-bottom: 12px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-prompt__section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--rt-accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rt-border-subtle);
+  
+  &::before {
+    content: '◆';
+    font-size: 0.6rem;
+    opacity: 0.6;
+  }
+}
+
+// ============================================
+// Form Fields - Key-value pairs
+// ============================================
+
+.rt-prompt__field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  min-height: 40px;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--rt-border-subtle);
+  }
+}
+
+.rt-prompt__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rt-text-primary);
+  white-space: nowrap;
+}
+
+.rt-prompt__value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--rt-accent-gold);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+// Text & Number Inputs
+.rt-prompt__input {
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--rt-border-subtle);
+  border-radius: 4px;
+  color: var(--rt-text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-accent-gold);
+    box-shadow: 0 0 0 3px var(--rt-glow-gold);
+    background: rgba(0, 0, 0, 0.4);
+  }
+  
+  &[type="number"] {
+    text-align: center;
+    width: 80px;
+    -moz-appearance: textfield;
+    
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  
+  &[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--rt-accent-gold);
+    cursor: pointer;
+    margin: 0;
+  }
+  
+  &[type="text"] {
+    min-width: 120px;
+  }
+}
+
+// Select Dropdowns
+.rt-prompt__select {
+  padding: 10px 32px 10px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a227' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  border: 1px solid var(--rt-border-subtle);
+  border-radius: 4px;
+  color: var(--rt-text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  min-width: 140px;
+  
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-accent-gold);
+    box-shadow: 0 0 0 3px var(--rt-glow-gold);
+  }
+  
+  option {
+    background: var(--rt-bg-primary);
+    color: var(--rt-text-primary);
+    padding: 8px;
+  }
+}
+
+// ============================================
+// Checkbox Field (inline layout)
+// ============================================
+
+.rt-prompt__checkbox-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  min-height: 40px;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--rt-border-subtle);
+  }
+  
+  .rt-prompt__label {
+    flex: 1;
+  }
+  
+  .rt-prompt__input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+// ============================================
+// Weapon/Power Selection List
+// ============================================
+
+.rt-prompt__weapon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.rt-prompt__weapon-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--rt-border-subtle);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.35);
+    border-color: rgba(201, 162, 39, 0.3);
+    transform: translateX(4px);
+  }
+  
+  &--selected {
+    background: rgba(201, 162, 39, 0.08);
+    border-color: var(--rt-accent-gold);
+    box-shadow: 
+      0 0 20px var(--rt-glow-gold),
+      inset 0 0 20px rgba(201, 162, 39, 0.05);
+    
+    &:hover {
+      background: rgba(201, 162, 39, 0.12);
+    }
+    
+    .rt-prompt__weapon-name {
+      color: var(--rt-accent-gold);
+    }
+  }
+}
+
+.rt-prompt__weapon-check {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--rt-accent-gold);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.rt-prompt__weapon-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rt-prompt__weapon-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--rt-text-primary);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-prompt__weapon-details {
+  font-size: 0.8rem;
+  color: var(--rt-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-prompt__weapon-img {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--rt-border-subtle);
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+// ============================================
+// Range/Distance Info Display
+// ============================================
+
+.rt-prompt__range-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin: 8px 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.15) 100%);
+  border-radius: 4px;
+  border-left: 3px solid var(--rt-accent-gold);
+}
+
+.rt-prompt__range-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--rt-text-primary);
+}
+
+.rt-prompt__range-value {
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  
+  &--positive {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+  }
+  
+  &--negative {
+    color: #f87171;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
+  }
+  
+  &--neutral {
+    color: var(--rt-text-secondary);
+  }
+}
+
+// ============================================
+// Prompt Buttons Container (deprecated - use dialog buttons)
+// ============================================
+
+.rt-prompt__buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rt-border-subtle);
+}
+
+.rt-prompt__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  .material-icons {
+    font-size: 18px;
+  }
+  
+  &--primary {
+    background: linear-gradient(135deg, var(--rt-accent-gold) 0%, #8b6914 100%);
+    color: #0a0a0f;
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201, 162, 39, 0.4);
+    }
+  }
+  
+  &--secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--rt-text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  &--danger {
+    background: linear-gradient(135deg, #8b2a2a 0%, #5c1a1a 100%);
+    color: #fff;
+    
+    &:hover {
+      background: linear-gradient(135deg, #a03030 0%, #702020 100%);
+    }
+  }
+}
+
+// ============================================
+// Attack Prompt Variant
+// ============================================
+
+.rt-prompt--attack {
+  .rt-prompt__panel:first-child::before {
+    background: linear-gradient(180deg, var(--rt-accent-red) 0%, rgba(139, 42, 42, 0.6) 100%);
+  }
+}
+
+// ============================================
+// Damage Prompt Variant
+// ============================================
+
+.rt-prompt--damage {
+  .rt-prompt__panel::before {
+    background: linear-gradient(180deg, #daa520 0%, rgba(218, 165, 32, 0.6) 100%);
+  }
+}
+
+// ============================================
+// Psychic Prompt Variant
+// ============================================
+
+.rt-prompt--psychic {
+  .rt-prompt__panel::before {
+    background: linear-gradient(180deg, var(--rt-accent-purple) 0%, rgba(106, 42, 139, 0.6) 100%);
+  }
+}
+
+// ============================================
+// Grid Layouts
+// ============================================
+
+.rt-prompt__grid {
+  display: grid;
+  gap: 12px;
+  
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &--3col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// ============================================
+// Info Box
+// ============================================
+
+.rt-prompt__info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(42, 90, 139, 0.15);
+  border: 1px solid rgba(42, 90, 139, 0.3);
+  border-radius: 6px;
+  margin: 10px 0;
+  
+  .material-icons, i {
+    color: #5dade2;
+    flex-shrink: 0;
+    font-size: 18px;
+    margin-top: 1px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--rt-text-primary);
+    line-height: 1.5;
+  }
+}
+
+// ============================================
+// Warning Box
+// ============================================
+
+.rt-prompt__warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(218, 165, 32, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  border-radius: 6px;
+  margin: 10px 0;
+  
+  .material-icons, i {
+    color: #daa520;
+    flex-shrink: 0;
+    font-size: 18px;
+    margin-top: 1px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--rt-text-primary);
+    line-height: 1.5;
+  }
+}
+
+// ============================================
+// Stat Display (for showing calculated values)
+// ============================================
+
+.rt-prompt__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--rt-border-subtle);
+  border-radius: 6px;
+  text-align: center;
+  
+  &-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--rt-accent-gold);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  &-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+  }
+}
+
+// ============================================
+// Divider
+// ============================================
+
+.rt-prompt__divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--rt-border-accent) 50%, transparent 100%);
+  margin: 16px 0;
+}
+
+// ============================================
+// Target Number Display (prominent)
+// ============================================
+
+.rt-prompt__target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
+  border: 1px solid var(--rt-accent-gold);
+  border-radius: 8px;
+  margin: 12px 0;
+  
+  &-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rt-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  &-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--rt-accent-gold);
+    text-shadow: 0 0 20px var(--rt-glow-gold);
+    font-variant-numeric: tabular-nums;
+  }
+  
+  &-percent {
+    font-size: 1rem;
+    color: var(--rt-text-muted);
+  }
+}

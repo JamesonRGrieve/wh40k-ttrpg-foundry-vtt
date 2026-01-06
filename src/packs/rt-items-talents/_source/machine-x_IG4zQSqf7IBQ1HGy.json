@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Does not need to breath, immune to vaccum effects, extreme cold, and mind-affecting Psychic Powers. They have X AP (between 1 and 5) on each location. these apply against fire damage.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

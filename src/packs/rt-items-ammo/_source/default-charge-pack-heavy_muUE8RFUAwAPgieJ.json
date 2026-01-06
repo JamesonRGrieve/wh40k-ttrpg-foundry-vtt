@@ -7,7 +7,7 @@
     "damageOrEffect": "Can be recharged with Tech-Use Test and suitable power source which takes a few hours. can charge in a fire which takes 1 day, halves clip size, and imposes Unreliable Quality (or loses Reliable), subsequent fire recharges instead have 30% chance to destroy the pack.",
     "qualities": "-",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "30T/clip",
     "source": "Rogue Trader Core",
     "description": {

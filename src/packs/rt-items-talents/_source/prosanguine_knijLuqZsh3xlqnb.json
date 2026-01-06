@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character can spend 10 minutes in meditation and make a Tech-Use Tetst. If successful they heal 1d5 damage immediately, if they roll 96+, they lose the ability to use their Autosanguine and Prosanguine for one week.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Tech",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Carapace",
+    "type": "carapace",
     "locations": "All",
     "ap": "4/4/3/3",
     "maxAg": null,
     "weight": "17kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "2225 T",
     "notes": "Standard armour of Imperial Navy Boarding Teams. Arms and Legs are Flak Armour rather than Carapace (and so get +1 AP vs Explosions that user is not at the centre of)\nHas Inbuilt Respirator and Photo-Visor.",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,20 @@
       "value": "<p>Standard armour of Imperial Navy Boarding Teams. Arms and Legs are Flak Armour rather than Carapace (and so get +1 AP vs Explosions that user is not at the centre of)\nHas Inbuilt Respirator and Photo-Visor.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 4,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

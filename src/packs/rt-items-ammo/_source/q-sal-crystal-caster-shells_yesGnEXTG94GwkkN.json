@@ -7,7 +7,7 @@
     "damageOrEffect": "Default exotic ammo of all Q'Sal Crystal Casters",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "BC: Tome of Fate",
     "description": {

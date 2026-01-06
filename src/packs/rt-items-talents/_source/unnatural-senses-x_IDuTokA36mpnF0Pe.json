@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Can perceive surroundings using senses other than sight and hearing, such as special organs or hairs out to range Xm, usually 15 metres.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

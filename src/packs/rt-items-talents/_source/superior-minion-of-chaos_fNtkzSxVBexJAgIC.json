@@ -9,7 +9,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character gains a Superior Minion. They can be further upgraded by the Minion Improvement</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

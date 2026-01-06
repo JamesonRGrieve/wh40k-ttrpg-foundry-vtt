@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As a Free Action, the Sister can spend a Fate Point to increase the penetration of their weapon by their Insanity Bonus until the end of the next turn.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

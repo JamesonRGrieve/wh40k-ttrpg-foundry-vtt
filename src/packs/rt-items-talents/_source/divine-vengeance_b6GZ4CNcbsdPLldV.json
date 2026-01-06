@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>The first time in a combat encounter the Sister inflicts Righteous Fury upon the enemy, they regain 1 spent Fate Point.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

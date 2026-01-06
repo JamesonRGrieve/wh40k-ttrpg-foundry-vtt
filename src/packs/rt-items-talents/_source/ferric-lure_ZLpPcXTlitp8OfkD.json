@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>As a Full Action, can make a WP Test to try to cause an Unsecured Metal Object you can see within 20 metres to fly into your hand, maximum mass of 1xWP Bonus kilograms.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

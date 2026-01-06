@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever character succeeds on a Test to use First Aid Special Use of the Medicae Skill, they also end the Blood Loss Condition if the Patient is suffering it.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Finesse",
+      "Intelligence"
+    ]
   },
   "effects": [],
   "flags": {},

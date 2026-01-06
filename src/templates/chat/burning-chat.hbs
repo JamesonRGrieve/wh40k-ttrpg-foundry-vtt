@@ -1,45 +1,56 @@
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        <div class="dh-roll">
-            <h1>{{actor.name}}</h1>
-            <h2>On Fire!</h2>
-            <div class="dh-roll__divider"></div>
-
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Energy Damage</div>
-                <div class="dh-roll__value">{{damage}}</div>
+{{!-- Rogue Trader Burning Card - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            <div class="rt-roll-card__actor">{{actor.name}}</div>
+            <h2 class="rt-roll-card__title">On Fire!</h2>
+            <div class="rt-roll-card__subtitle">Critical Condition</div>
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
+            <div class="rt-roll-card__damage">
+                <div class="rt-roll-card__damage-header">
+                    <span class="rt-roll-card__damage-title">Fire Damage</span>
+                </div>
+                <div class="rt-roll-card__damage-value">{{damage}}</div>
+                <div class="rt-roll-card__damage-type">Energy (ignores Armour)</div>
             </div>
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Fatigue</div>
-                <div class="dh-roll__value">1</div>
+            
+            <div class="rt-roll-card__notice">
+                <span class="rt-roll-card__notice-label">Fatigue</span>
+                <span class="rt-roll-card__notice-value">+1</span>
             </div>
-
-            <div class="dh-roll__label">On Fire damage ignores Armour.</div>
-
+            
             {{#if success}}
-                <div class="dh-roll__success">
-                    <span>WP Success</span>
-                    <span>{{roll.total}}</span>
+                <div class="rt-roll-card__result rt-roll-card__result--success">
+                    <div class="rt-roll-card__result-label">WP Success</div>
+                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="dh-roll__label">You make take actions as normal.</div>
+                <div class="rt-roll-card__text">
+                    <p>You may take actions as normal despite the flames.</p>
+                </div>
             {{else}}
-                <div class="dh-roll__fail">
-                    <span>WP Fail</span>
-                    <span>{{roll.total}}</span>
+                <div class="rt-roll-card__result rt-roll-card__result--failure">
+                    <div class="rt-roll-card__result-label">WP Failed</div>
+                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="dh-roll__label">You can only flail in agony and scream.</div>
+                <div class="rt-roll-card__text">
+                    <p>You can only flail in agony and scream!</p>
+                </div>
             {{/if}}
-
-            <div class='dh-roll__controls-1'>
-                <div class="dh-control-button roll-control__apply-damage"
+            
+            <div class="rt-roll-card__controls">
+                <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__apply-damage"
                      data-type="Energy"
                      data-ignore-armour="true"
                      data-uuid="{{actor.uuid}}"
                      data-damage="{{damage}}"
                      data-fatigue="1">
-                    <span class="dh-control-button__span material-icons">api</span>
-                    <span class="dh-control-button__label">Apply Damage</span>
-                </div>
+                    <span class="material-icons">api</span>
+                    <span>Apply Damage</span>
+                </button>
             </div>
         </div>
     </div>

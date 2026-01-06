@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character can spend an Infamy Point to gain insight on a situation or ask the GM a question about an immdiate situation the character faces which they GM should answer helpfully. The question can be anything the character may legimiately know through stories heard or their own experiences. For example: \"Where are the Navigator's Quarters aboard an Imperial Cruiser usually Located?\"</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

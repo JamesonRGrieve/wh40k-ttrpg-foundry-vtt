@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Heavy",
-    "type": "Plasma",
+    "class": "heavy",
+    "type": "plasma",
     "range": "150m",
     "rof": "S/-/-",
     "damage": "2d10+11",

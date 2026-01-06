@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Basic, Movement",
-    "characteristic": "Agility",
+    "type": "",
+    "characteristic": "agility",
     "descriptor": "Remaining Quiet to avoid detection while moving through an area. Difficulty dependent on environment as well as other factors. Harder to stay quiet on a steel cargo floor as opposed to a carpeted quarter.",
     "uses": "Opposed Test vs Awareness/Scrutiny, to remain undetected while moving.",
     "useTime": "Free Action as part of movement.",
@@ -15,7 +15,10 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

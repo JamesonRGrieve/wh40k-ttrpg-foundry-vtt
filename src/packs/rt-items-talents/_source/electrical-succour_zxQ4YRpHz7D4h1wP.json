@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When in contact with powered machine, battery, or power cell, make +10 Tech-Use check, on success reduce one level of fatigue, +1 for each Degree of success. Process takes 1 minute.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

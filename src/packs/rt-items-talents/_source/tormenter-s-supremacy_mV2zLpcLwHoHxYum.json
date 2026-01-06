@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>If the character has gained at least 4 Pain Tokens during an encounter, they may spend a Fate Point to gain the Stuff of Nightmares Trait for the remainder of the encounter.\nStuff of Nightmares: immune to Poison, disease, needing to breathe, most environmental hazards, bleeding, stunning, and any critical effect that would kill you if not dealt through a Psychic Power, Force Weapon, or Holy Attack.\n(Warning, while this does stop you from dying through most conventional means, it doesn't stop you being turned into a pile of broken limbs and meat).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

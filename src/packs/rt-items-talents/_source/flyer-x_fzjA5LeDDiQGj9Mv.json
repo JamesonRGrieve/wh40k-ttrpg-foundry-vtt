@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Can fly with a speed of X, this X value replaces normal Agility-Bonus based speeds for movement actions whilst flying.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

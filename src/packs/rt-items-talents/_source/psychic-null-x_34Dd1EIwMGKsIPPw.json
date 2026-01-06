@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>The Untouchable gains the Deny the Witch Talent. Gains +20 to Evasion Tests against Psychic Attacks and to Opposed Tests to resist Psychic Powers. Stacks with Resistance (Psychic Powers).\nTalent can be purchased multiple times, each additional purchase increases the bonus by +5.\nDeny the Witch: The Untouchable can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

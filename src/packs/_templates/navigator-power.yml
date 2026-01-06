@@ -1,0 +1,97 @@
+# Navigator Power Template
+# Use this as a reference for creating navigator power items
+
+_id: &id navigator-power-template-000001
+name: The Lidless Stare
+type: navigatorPower
+img: systems/rogue-trader/icons/powers/lidless-stare.webp
+
+system:
+  identifier: the-lidless-stare
+  
+  # Power Test Configuration
+  test:
+    characteristic: perception  # perception, willpower
+    modifier: 0
+    opposed: true
+    opposedCharacteristic: willpower
+  
+  # Activation
+  activation:
+    type: half-action
+    cost: 1
+    condition: ""
+  
+  # Target
+  target:
+    type: creature
+    value: 10
+    units: m
+    width: null
+    length: null
+  
+  # Duration
+  duration:
+    value: null
+    units: instant
+    sustained: false
+  
+  # Uses
+  uses:
+    value: null
+    max: null
+    per: ""
+    recovery: ""
+  
+  # Power Levels
+  levels:
+    novice:
+      effect: |
+        <p>The Navigator opens their Warp Eye, forcing a single 
+        target within 10 metres to make a Willpower Test or 
+        suffer 1d5 Insanity Points.</p>
+      prerequisite: ""
+    adept:
+      effect: |
+        <p>As Novice, but the target suffers 1d10 Insanity Points 
+        on a failed test, and the range increases to 15 metres.</p>
+      prerequisite: "Perception 40"
+    master:
+      effect: |
+        <p>As Adept, but the Navigator may affect all targets 
+        within range, and the range increases to 20 metres.</p>
+      prerequisite: "Perception 50, Willpower 40"
+  
+  # Sustain Description
+  sustain: ""
+  
+  # Side Effects
+  sideEffects: |
+    <p>Overuse of the Lidless Stare may attract unwanted attention 
+    from entities of the Warp. Additionally, the Navigator's 
+    mutation may become more pronounced.</p>
+  
+  # Description
+  description:
+    value: |
+      <p>The Lidless Stare is one of the most feared powers of a 
+      Navigator. By opening their Warp Eye and focusing on a 
+      target, they can expose the victim's mind to the raw 
+      horror of the Immaterium.</p>
+    chat: ""
+    summary: "Expose targets to the horror of the Warp"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "181"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Investigation, Interaction\nApt:Fellowship, Social, Slaanesh",
-    "characteristic": "Fellowship",
+    "type": "",
+    "characteristic": "fellowship",
     "descriptor": "Changing the Disposition/Opinion, or the act of convincing someone in an overtly friendly manner.  Target(s) must share common language and be able to see and hear user.",
     "uses": "From Prior Editions: Includers Performer (X) Tests.\nUses: When used to change a person's mood, it is an Opposed Test vs Target's Willpower. Can be used to make someone like the character, distract someone, coax info from locals or strangers.\nCan affect a number of people up to 10x Character's Fellowship Bonus",
     "useTime": "1 Minute",
@@ -15,7 +15,14 @@
       "characteristic": "Fellowship",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Fellowship",
+      "Social",
+      "Slaanesh"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "5kg",
     "availability": "Master-Crafted Relic Tome of the Deathwatch. A Tome of archives, templates, and lore of the Mechanicus. Difficult to navigate and study, but possessing lots of information.\nGrants +10 to Forbidden Lore (Mechanicus), and +2d10 to Tech-Use Tests (roll each  time).",
     "cost": "Can only be Requisitioned by Techmarines",

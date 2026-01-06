@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Assassin, Arbitrator, Guardsman, or Scum Career, DH Rank 5+. No longer in overt Imperial Service, and have gained a charter from the Blood Guild of Malfi",
-    "descriptionText": "Infamous trackers and bounty hunters. These individuals are issued Bloodsworn Charters, tough parchment bearing an authorising seal and a genelock circuit that identifies a victim by having their blood spilt upon it. Most often post mortem.",
-    "effects": "Replace new Rank's Advances with that of the Malfian Bloodsworn\nGain a Bloodsworn Charter.",
+    "descriptionText": "",
+    "effects": "",
     "source": "DH: Inquisitor's Handbook (Page 66)",
     "description": {
       "value": "<p>Infamous trackers and bounty hunters. These individuals are issued Bloodsworn Charters, tough parchment bearing an authorising seal and a genelock circuit that identifies a victim by having their blood spilt upon it. Most often post mortem.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Malfian Bloodsworn\nGain a Bloodsworn Charter.</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace new Rank's Advances with that of the Malfian Bloodsworn\nGain a Bloodsworn Charter.",
+    "level": null
   },
   "effects": [],
   "flags": {},

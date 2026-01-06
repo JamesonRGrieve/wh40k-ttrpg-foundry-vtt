@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Carapace",
+    "type": "carapace",
     "locations": "Head",
     "ap": 4,
     "maxAg": null,
     "weight": "2kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "250 T",
     "notes": null,
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": ""
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

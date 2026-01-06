@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use their Perception Bonus in place of Agility Bonus when Rolling Initiative.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Fieldcraft",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

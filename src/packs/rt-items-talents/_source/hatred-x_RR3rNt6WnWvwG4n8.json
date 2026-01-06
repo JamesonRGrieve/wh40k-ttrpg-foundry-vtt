@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character despises a group or organisation that has wronged them. Gain +10 to all Weapon Skill Tests made against this group. \nThe character finds it difficult to back down from a fight with this foe, and must make a Willpower Test to retreat or surrender to them when fighting, unless Massively outnumbered and outclassed.\nGroups Include: Chaos Space Marines, Daemons, Mutants, Psykers, Xenos (specific), Criminals, Rogue Trader (specific), Pirates, other</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Social",
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

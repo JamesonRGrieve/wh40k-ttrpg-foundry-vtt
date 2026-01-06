@@ -1,53 +1,63 @@
+{{!-- Rogue Trader Roll Card - Modern Design --}}
 {{#with rollData}}
-    <div class="dh-wrapper">
-        <div class="dh-chat">
-            <h3>{{sheetName}}</h3>
-            <div class="dh-roll">
-                <h1>{{name}}</h1>
-                <h2>{{type}}</h2>
-                <h2>{{lookup difficulties difficulty}}</h2>
-                <div class="dh-roll__divider"></div>
-
-                <div class="dh-roll__row dh-roll__row--number">
-                    <div class="dh-roll__label">Base</div>
-                    <div class="dh-roll__value">{{baseTarget}}</div>
-                </div>
-                {{#each activeModifiers}}
-                    <div class="dh-roll__row dh-roll__row--number">
-                        <div class="dh-roll__label">Modifier: {{@key}}</div>
-                        <div class="dh-roll__value">{{this}}</div>
-                    </div>
-                {{/each}}
-                <div class="dh-roll__target">
-                    <div class="dh-roll__label">Target</div>
-                    <div class="dh-roll__value">{{modifiedTarget}}</div>
-                </div>
-
-                {{#if success}}
-                    <div class="dh-roll__success">
-                        <span>Success</span>
-                        <span>{{roll.total}}</span>
-                    </div>
-                    <div class="dh-roll__row dh-roll__row--number">
-                        <div class="dh-roll__label">Degrees of Success</div>
-                        <div class="dh-roll__value">{{dos}}</div>
-                    </div>
-                {{else}}
-                    <div class="dh-roll__fail">
-                        <span>Fail</span>
-                        <span>{{roll.total}}</span>
-                    </div>
-                    <div class="dh-roll__row dh-roll__row--number">
-                        <div class="dh-roll__label">Degrees of Failure</div>
-                        <div class="dh-roll__value">{{dof}}</div>
-                    </div>
-                {{/if}}
+<div class="rt-chat">
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            <div class="rt-roll-card__actor">{{sheetName}}</div>
+            <h2 class="rt-roll-card__title">{{name}}</h2>
+            {{#if type}}<div class="rt-roll-card__subtitle">{{type}} • {{lookup difficulties difficulty}}</div>{{/if}}
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
+            {{!-- Modifiers Breakdown --}}
+            <div class="rt-roll-card__row">
+                <span class="rt-roll-card__label">Base</span>
+                <span class="rt-roll-card__value">{{baseTarget}}</span>
             </div>
-            <div class="dice-rolls" style="display:none">
-                <div class="dice-roll-render">
-                    {{{render}}}
+            
+            {{#each activeModifiers}}
+                <div class="rt-roll-card__row rt-roll-card__row--modifier">
+                    <span class="rt-roll-card__label">{{@key}}</span>
+                    <span class="rt-roll-card__value {{#if (gt this 0)}}rt-roll-card__value--positive{{else if (lt this 0)}}rt-roll-card__value--negative{{/if}}">
+                        {{#if (gt this 0)}}+{{/if}}{{this}}
+                    </span>
                 </div>
+            {{/each}}
+            
+            {{!-- Target Number --}}
+            <div class="rt-roll-card__target">
+                <span class="rt-roll-card__label">Target</span>
+                <span class="rt-roll-card__value">{{modifiedTarget}}</span>
             </div>
+            
+            {{!-- Result Display --}}
+            {{#if success}}
+                <div class="rt-roll-card__result rt-roll-card__result--success">
+                    <div class="rt-roll-card__result-label">Success</div>
+                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                </div>
+                <div class="rt-roll-card__degrees rt-roll-card__degrees--success">
+                    <span class="rt-roll-card__degrees-count">{{dos}}</span>
+                    <span class="rt-roll-card__degrees-label">Degrees of Success</span>
+                </div>
+            {{else}}
+                <div class="rt-roll-card__result rt-roll-card__result--failure">
+                    <div class="rt-roll-card__result-label">Failure</div>
+                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                </div>
+                <div class="rt-roll-card__degrees rt-roll-card__degrees--failure">
+                    <span class="rt-roll-card__degrees-count">{{dof}}</span>
+                    <span class="rt-roll-card__degrees-label">Degrees of Failure</span>
+                </div>
+            {{/if}}
+        </div>
+        
+        {{!-- Hidden dice data for Foundry --}}
+        <div class="rt-roll-card__dice">
+            <div class="dice-roll-render">{{{render}}}</div>
         </div>
     </div>
+</div>
 {{/with}}

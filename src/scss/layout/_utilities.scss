@@ -1,0 +1,105 @@
+// ============================================
+// Layout Utilities
+// ============================================
+// Reusable grid and column patterns
+
+// ============================================
+// Tab Grid Layouts (replaces rt-overview-grid, rt-combat-grid, etc.)
+// ============================================
+
+.rt-tab-grid {
+  @include rt-tab-grid(2, $rt-space-md);
+
+  &--3col {
+    @include rt-tab-grid(3, $rt-space-md);
+  }
+
+  &--gap-sm {
+    gap: $rt-space-sm;
+  }
+
+  &--gap-lg {
+    gap: $rt-space-lg;
+  }
+}
+
+// ============================================
+// Tab Column (replaces rt-overview-col, rt-combat-col, etc.)
+// ============================================
+
+.rt-tab-col {
+  @include rt-tab-column;
+}
+
+// ============================================
+// Full Width Row (for spanning grid)
+// ============================================
+
+.rt-full-width {
+  grid-column: 1 / -1;
+}
+
+// ============================================
+// Flex Utilities
+// ============================================
+
+.rt-flex {
+  display: flex;
+
+  &--center {
+    @include flex-center;
+  }
+
+  &--between {
+    @include flex-between;
+  }
+
+  &--column {
+    @include flex-column;
+  }
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
+
+  &--gap-xs {
+    gap: $rt-space-xs;
+  }
+
+  &--gap-sm {
+    gap: $rt-space-sm;
+  }
+
+  &--gap-md {
+    gap: $rt-space-md;
+  }
+}
+
+// ============================================
+// Spacing Utilities
+// ============================================
+
+.rt-mb-0 { margin-bottom: 0; }
+.rt-mb-sm { margin-bottom: $rt-space-sm; }
+.rt-mb-md { margin-bottom: $rt-space-md; }
+.rt-mb-lg { margin-bottom: $rt-space-lg; }
+
+.rt-mt-0 { margin-top: 0; }
+.rt-mt-sm { margin-top: $rt-space-sm; }
+.rt-mt-md { margin-top: $rt-space-md; }
+
+.rt-p-0 { padding: 0; }
+.rt-p-sm { padding: $rt-space-sm; }
+.rt-p-md { padding: $rt-space-md; }
+
+// ============================================
+// Text Utilities
+// ============================================
+
+.rt-text-center { text-align: center; }
+.rt-text-right { text-align: right; }
+.rt-text-muted { color: $rt-text-muted; }
+.rt-text-sm { font-size: $rt-font-size-sm; }
+.rt-text-xs { font-size: $rt-font-size-xs; }
+.rt-uppercase { text-transform: uppercase; }
+.rt-bold { font-weight: 600; }

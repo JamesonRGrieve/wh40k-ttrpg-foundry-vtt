@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power (Astartes)",
+    "type": "power",
     "locations": "Head",
     "ap": 9,
     "maxAg": null,
@@ -16,7 +16,20 @@
       "value": "<p>Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 9,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

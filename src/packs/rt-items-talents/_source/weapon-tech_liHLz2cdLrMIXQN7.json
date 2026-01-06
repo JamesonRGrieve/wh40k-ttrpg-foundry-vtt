@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Once per Combat, character wielding a Melta, Plasma, Power, or Exotic Weapon can add their Intelligence Bonus to the Dmaage and Penetration values of the weapon for one Round.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Tech",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

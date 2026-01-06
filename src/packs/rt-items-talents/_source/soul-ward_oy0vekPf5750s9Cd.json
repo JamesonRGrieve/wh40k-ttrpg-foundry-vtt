@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Astropath can re-roll Willpower tests they make due to results of Psychic Phenomena, and Perils of the Warp, as well as tests to avoid gaining Mutations, or to resist Daemonic Possession.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

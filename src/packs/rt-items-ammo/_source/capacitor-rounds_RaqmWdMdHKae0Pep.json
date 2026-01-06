@@ -7,7 +7,7 @@
     "damageOrEffect": "Grants weapon the Shocking Quality, but reduce damage by 4",
     "qualities": "Shocking",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "RT: Faith and Coin",
     "description": {

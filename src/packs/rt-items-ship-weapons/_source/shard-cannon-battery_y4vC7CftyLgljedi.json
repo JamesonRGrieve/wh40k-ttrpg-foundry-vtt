@@ -12,7 +12,7 @@
     "strength": 4,
     "critRating": 3,
     "range": 6,
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "notes": "Cannot be unpowered, if destroyed, explodes, dealing 2d5 Hull Damage to ship, no reduction by shields or armour.",
     "source": "Rogue Trader Core",
     "description": {

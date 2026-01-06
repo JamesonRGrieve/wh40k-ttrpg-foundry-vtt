@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

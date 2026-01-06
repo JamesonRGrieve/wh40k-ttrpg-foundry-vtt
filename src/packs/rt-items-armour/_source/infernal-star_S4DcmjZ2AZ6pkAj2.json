@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.5,
     "maxAg": "-",
     "weight": "1kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Chaos Equivilent to a Space Marine's Iron Halo. Good Quality",
     "source": "BC: Tome of Blood",
@@ -16,7 +16,20 @@
       "value": "<p>Chaos Equivilent to a Space Marine's Iron Halo. Good Quality</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.5,
+      "body": 0.5,
+      "leftArm": 0.5,
+      "rightArm": 0.5,
+      "leftLeg": 0.5,
+      "rightLeg": 0.5
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

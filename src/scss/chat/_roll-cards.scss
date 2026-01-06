@@ -1,0 +1,643 @@
+// ============================================
+// Rogue Trader Roll Cards - Modern Design System
+// ============================================
+// Dramatic, immersive chat cards for the grim darkness of the 41st millennium
+
+// ============================================
+// Base Chat Container
+// ============================================
+
+.rt-chat {
+  --rt-card-bg: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+  --rt-card-border: #c9a227;
+  --rt-card-text: #e8e4d9;
+  --rt-card-muted: #9a9a8a;
+  --rt-gold: #c9a227;
+  --rt-gold-dark: #8b7015;
+  --rt-crimson: #8b0000;
+  --rt-crimson-glow: rgba(139, 0, 0, 0.4);
+  --rt-success: #2d8a4e;
+  --rt-success-glow: rgba(45, 138, 78, 0.4);
+  --rt-fail: #a83232;
+  --rt-fail-glow: rgba(168, 50, 50, 0.4);
+  
+  font-family: 'Roboto', sans-serif;
+  color: var(--rt-card-text);
+  
+  * {
+    box-sizing: border-box;
+  }
+}
+
+// ============================================
+// Roll Card - The Main Component
+// ============================================
+
+.rt-roll-card {
+  position: relative;
+  background: var(--rt-card-bg);
+  border: 2px solid var(--rt-card-border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(201, 162, 39, 0.2);
+  
+  // Decorative corner accents
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--rt-gold);
+    pointer-events: none;
+  }
+  
+  &::before {
+    top: 4px;
+    left: 4px;
+    border-right: none;
+    border-bottom: none;
+  }
+  
+  &::after {
+    bottom: 4px;
+    right: 4px;
+    border-left: none;
+    border-top: none;
+  }
+}
+
+// ============================================
+// Card Header
+// ============================================
+
+.rt-roll-card__header {
+  position: relative;
+  padding: 12px 16px;
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.15) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+  
+  .rt-roll-card__actor {
+    font-size: 0.75rem;
+    color: var(--rt-card-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  
+  .rt-roll-card__title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--rt-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .rt-roll-card__subtitle {
+    font-size: 0.85rem;
+    color: var(--rt-card-text);
+    margin-top: 2px;
+    opacity: 0.9;
+  }
+}
+
+// ============================================
+// Card Body
+// ============================================
+
+.rt-roll-card__body {
+  padding: 12px 16px;
+}
+
+// ============================================
+// Divider with Imperial Gothic Styling
+// ============================================
+
+.rt-roll-card__divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--rt-gold) 20%,
+    var(--rt-gold) 80%,
+    transparent 100%
+  );
+  margin: 10px 0;
+  opacity: 0.5;
+  
+  &--ornate {
+    position: relative;
+    height: 12px;
+    background: transparent;
+    
+    &::before {
+      content: '⬥';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--rt-gold);
+      font-size: 10px;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--rt-gold) 30%,
+        transparent 48%,
+        transparent 52%,
+        var(--rt-gold) 70%,
+        transparent 100%
+      );
+    }
+  }
+}
+
+// ============================================
+// Stat Rows
+// ============================================
+
+.rt-roll-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.9rem;
+  
+  &--modifier {
+    padding-left: 12px;
+    border-left: 2px solid rgba(201, 162, 39, 0.3);
+    margin-left: 4px;
+  }
+}
+
+.rt-roll-card__label {
+  color: var(--rt-card-muted);
+  font-weight: 500;
+}
+
+.rt-roll-card__value {
+  font-weight: 600;
+  color: var(--rt-card-text);
+  
+  &--positive {
+    color: #4ade80;
+  }
+  
+  &--negative {
+    color: #f87171;
+  }
+}
+
+// ============================================
+// Target Number Display
+// ============================================
+
+.rt-roll-card__target {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 8px 0;
+  background: rgba(201, 162, 39, 0.1);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 4px;
+  
+  .rt-roll-card__label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .rt-roll-card__value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--rt-gold);
+  }
+}
+
+// ============================================
+// Result Display - The Star of the Show
+// ============================================
+
+.rt-roll-card__result {
+  position: relative;
+  text-align: center;
+  padding: 16px;
+  margin: 12px 0;
+  border-radius: 4px;
+  
+  &--success {
+    background: linear-gradient(135deg, rgba(45, 138, 78, 0.2) 0%, rgba(34, 100, 56, 0.3) 100%);
+    border: 2px solid var(--rt-success);
+    box-shadow: 
+      0 0 20px var(--rt-success-glow),
+      inset 0 0 30px rgba(45, 138, 78, 0.1);
+    
+    .rt-roll-card__result-label {
+      color: #4ade80;
+    }
+  }
+  
+  &--failure {
+    background: linear-gradient(135deg, rgba(168, 50, 50, 0.2) 0%, rgba(120, 30, 30, 0.3) 100%);
+    border: 2px solid var(--rt-fail);
+    box-shadow: 
+      0 0 20px var(--rt-fail-glow),
+      inset 0 0 30px rgba(168, 50, 50, 0.1);
+    
+    .rt-roll-card__result-label {
+      color: #f87171;
+    }
+  }
+  
+  &--critical {
+    animation: critical-pulse 1s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes critical-pulse {
+  from {
+    box-shadow: 
+      0 0 20px var(--rt-success-glow),
+      inset 0 0 30px rgba(45, 138, 78, 0.1);
+  }
+  to {
+    box-shadow: 
+      0 0 40px var(--rt-success-glow),
+      inset 0 0 50px rgba(45, 138, 78, 0.2);
+  }
+}
+
+.rt-roll-card__result-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 4px;
+}
+
+.rt-roll-card__result-roll {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+// ============================================
+// Degrees Display
+// ============================================
+
+.rt-roll-card__degrees {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  
+  .rt-roll-card__degrees-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  .rt-roll-card__degrees-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+  }
+  
+  &--success {
+    .rt-roll-card__degrees-count {
+      color: #4ade80;
+    }
+  }
+  
+  &--failure {
+    .rt-roll-card__degrees-count {
+      color: #f87171;
+    }
+  }
+}
+
+// ============================================
+// Notice/Info Banners
+// ============================================
+
+.rt-roll-card__notice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  margin: 8px 0;
+  background: linear-gradient(90deg, rgba(83, 85, 56, 0.3) 0%, rgba(83, 85, 56, 0.1) 100%);
+  border-left: 3px solid #a0a050;
+  border-radius: 0 4px 4px 0;
+  
+  .rt-roll-card__notice-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #d4d4a0;
+  }
+  
+  .rt-roll-card__notice-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e8e8c0;
+  }
+}
+
+// ============================================
+// Damage Display
+// ============================================
+
+.rt-roll-card__damage {
+  padding: 12px;
+  margin: 8px 0;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.15) 0%, rgba(80, 0, 0, 0.2) 100%);
+  border: 1px solid rgba(139, 0, 0, 0.4);
+  border-radius: 4px;
+  
+  .rt-roll-card__damage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+    
+    .rt-roll-card__damage-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: #ff6b6b;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .rt-roll-card__damage-location {
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 3px;
+      color: var(--rt-card-muted);
+    }
+  }
+  
+  .rt-roll-card__damage-value {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+  }
+  
+  .rt-roll-card__damage-type {
+    text-align: center;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--rt-card-muted);
+    margin-top: 4px;
+  }
+}
+
+// ============================================
+// Hit Display (for multi-hit attacks)
+// ============================================
+
+.rt-roll-card__hit {
+  margin: 12px 0;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 4px;
+  
+  .rt-roll-card__hit-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    
+    .rt-roll-card__hit-number {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--rt-gold);
+      color: #0f0f1a;
+      font-weight: 700;
+      font-size: 0.8rem;
+      border-radius: 50%;
+    }
+    
+    .rt-roll-card__hit-location {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--rt-card-text);
+    }
+  }
+}
+
+// ============================================
+// Righteous Fury
+// ============================================
+
+.rt-roll-card__fury {
+  margin: 8px 0;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 140, 0, 0.15) 100%);
+  border: 2px solid #ffd700;
+  border-radius: 4px;
+  text-align: center;
+  animation: fury-glow 1.5s ease-in-out infinite alternate;
+  
+  .rt-roll-card__fury-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  
+  .rt-roll-card__fury-effect {
+    font-size: 0.85rem;
+    color: var(--rt-card-text);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+}
+
+@keyframes fury-glow {
+  from {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  }
+}
+
+// ============================================
+// Action Controls
+// ============================================
+
+.rt-roll-card__controls {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+.rt-roll-card__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.1) 100%);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 4px;
+  color: var(--rt-gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  .material-icons {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.4) 0%, rgba(201, 162, 39, 0.2) 100%);
+    border-color: var(--rt-gold);
+    box-shadow: 0 0 12px rgba(201, 162, 39, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &--damage {
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.3) 0%, rgba(80, 0, 0, 0.2) 100%);
+    border-color: rgba(139, 0, 0, 0.5);
+    color: #ff6b6b;
+    
+    &:hover {
+      background: linear-gradient(135deg, rgba(139, 0, 0, 0.5) 0%, rgba(80, 0, 0, 0.3) 100%);
+      border-color: #8b0000;
+      box-shadow: 0 0 12px rgba(139, 0, 0, 0.4);
+    }
+  }
+  
+  &--fate {
+    background: linear-gradient(135deg, rgba(106, 32, 144, 0.3) 0%, rgba(60, 20, 80, 0.2) 100%);
+    border-color: rgba(106, 32, 144, 0.5);
+    color: #c084fc;
+    
+    &:hover {
+      background: linear-gradient(135deg, rgba(106, 32, 144, 0.5) 0%, rgba(60, 20, 80, 0.3) 100%);
+      border-color: #6a2090;
+      box-shadow: 0 0 12px rgba(106, 32, 144, 0.4);
+    }
+  }
+  
+  &--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+      background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.1) 100%);
+    }
+  }
+}
+
+// ============================================
+// Text/Effect Display
+// ============================================
+
+.rt-roll-card__text {
+  padding: 8px 12px;
+  margin: 8px 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 2px solid var(--rt-gold);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-height: 150px;
+  overflow-y: auto;
+  
+  p {
+    margin: 0 0 8px 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.rt-roll-card__effect {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  
+  .rt-roll-card__effect-name {
+    font-weight: 600;
+    color: var(--rt-gold);
+    flex-shrink: 0;
+  }
+  
+  .rt-roll-card__effect-desc {
+    color: var(--rt-card-text);
+    opacity: 0.9;
+  }
+}
+
+// ============================================
+// Collapsible Damage Section
+// ============================================
+
+.rt-roll-card__collapse {
+  margin-top: 8px;
+  
+  &[hidden] {
+    display: none;
+  }
+}
+
+// ============================================
+// Dice Roll Visual (hidden by default)
+// ============================================
+
+.rt-roll-card__dice {
+  display: none;
+}

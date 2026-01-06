@@ -12,7 +12,7 @@
     "strength": 3,
     "critRating": 5,
     "range": 5,
-    "availability": "Scarce",
+    "availability": "scarce",
     "notes": "Reduce target vessel's armour by 3 when calculating damage of salvos that include shots from this weapon (effectively, weapon has PEN 3). Armour reduction isn't permenant.",
     "source": "RT: BF Koronus",
     "description": {

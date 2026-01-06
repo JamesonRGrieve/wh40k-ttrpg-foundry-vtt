@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character firing any Bolt Weapon on Semi or Full Auto scores one extra Degree of Success on any successful test as long as they did not take the Move Action that turn.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

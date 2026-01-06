@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Interaction\nApt:Fellowship, Leadership, Khorne",
-    "characteristic": "Fellowship",
+    "type": "",
+    "characteristic": "fellowship",
     "descriptor": "Directing those the user has authority over such that a group may perform more complex actions. Successful tests mean group is directed in timely manner, failure may mean group is confused, misinterpreted, unmotivated, etc.",
     "uses": "Uses: Sending Comrades into dangerous situations, rallying the squad or organising them during a surprise attack. Can affect a number of people up to 10x Character's Fellowship Bonus\nSpecial Uses: Inspire: Full Action, +0 Test. If Successful, Inspired Followers receive +10 to their next Skill or Characteristic Test.\nTerrify: Reaction to counter effects of fear vs Fear causing foe. Opposed Command vs Willpower of Fear-Causing Creature, +10 per level of Fear Trait. Succeed and followers ignore effects of fear from creature.",
     "useTime": "Half Action(Simple)\nFull Action(Involved)",
@@ -15,7 +15,14 @@
       "characteristic": "Fellowship",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership",
+      "Khorne"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

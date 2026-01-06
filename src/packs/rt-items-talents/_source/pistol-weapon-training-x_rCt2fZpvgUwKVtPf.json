@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Pistol Weapons of relevent group without -20 penalty to WS/BS. Such as: Primitive, Universal (Bolt, Las, Launcher, Melta, Plasma, and SP).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

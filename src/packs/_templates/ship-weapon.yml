@@ -1,0 +1,62 @@
+# Ship Weapon Template
+# Use this as a reference for creating ship weapon items
+
+_id: &id ship-weapon-template-000001
+name: Mars Pattern Macrocannon
+type: shipWeapon
+img: systems/rogue-trader/icons/ship/macrocannon.webp
+
+system:
+  identifier: mars-pattern-macrocannon
+  
+  # Weapon Classification
+  weaponType: macrobattery  # macrobattery, lance, nova-cannon, torpedo, bombardment-cannon, landing-bay, attack-craft
+  
+  # Firing Arc/Location
+  location: dorsal  # prow, dorsal, port, starboard, keel
+  
+  # Hull Type Restrictions
+  hullType:
+    - all  # or specific hull types
+  
+  # Resource Requirements
+  power: 4
+  space: 2
+  shipPoints: 3
+  
+  # Weapon Stats
+  strength: 3    # Number of weapon dice
+  damage: "1d10+2"
+  crit: 4        # Crit rating (roll this or higher on damage die)
+  range: 6       # Range in void units
+  
+  # Special Qualities
+  special: []
+  
+  # Availability
+  availability: common
+  
+  # Description
+  description:
+    value: |
+      <p>The Mars Pattern Macrocannon is a reliable and widely-used 
+      weapon system. These massive cannons fire shells the size of 
+      small vehicles, capable of tearing through enemy hulls with 
+      devastating effect.</p>
+    chat: ""
+    summary: "Reliable broadside weapon"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "202"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

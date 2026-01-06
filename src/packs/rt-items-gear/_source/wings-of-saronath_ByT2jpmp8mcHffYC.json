@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "45kg",
     "availability": "Master-Crafted Relic Jump Pack of the Blood Angels. Triples normal movement instead of doubling it. Grants +20 to Command Tests and +20 to Fellowship when dealing with Blood Angels.",
     "cost": "Originally belonged to a Sanguinary Guard Saronath. Their body found a dry husk and armour shattered. If the character finds others in a similar state, they must investigate it.",

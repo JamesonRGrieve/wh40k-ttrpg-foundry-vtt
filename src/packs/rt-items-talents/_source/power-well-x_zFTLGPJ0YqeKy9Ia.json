@@ -9,7 +9,10 @@
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

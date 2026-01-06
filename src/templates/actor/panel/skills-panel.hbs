@@ -1,40 +1,52 @@
-<div class="dh-panel rt-skills-panel">
-    <div class="dh-table--border dh-skilltable--border">
-        <h1 class="dh-panel__header">{{localize "RT.Skills.Header"}}</h1>
-        <div class="table-row--head rt-skills-header">
-            <div class="table-cell rt-skill-name">{{localize "RT.Skills.Skill"}}</div>
-            <div class="table-cell rt-skill-char">{{localize "RT.Skills.Characteristic"}}</div>
-            <div class="table-cell rt-skill-trained">{{localize "RT.Skills.Training"}}</div>
-            <div class="table-cell rt-skill-bonus">{{localize "RT.Skills.Bonus"}}</div>
-            <div class="table-cell--last rt-skill-total">{{localize "RT.Skills.Total"}}</div>
-        </div>
-        {{#each skillLists.standard as |entry|}}
-            <div class="table-row actor-drag rt-skill-row" data-item-type="skill" data-item-id="{{entry.[0]}}">
-                <div class="table-cell rt-skill-name">
-                    <button class="roll-skill rt-skill-button" data-skill="{{entry.[0]}}" type="roll" title="{{localize 'RT.Skills.RollSkillTitle' entry.[1].label}}">
-                        <span class="material-icons">casino</span> {{entry.[1].label}}
+<div class="rt-skills-panel">
+    <div class="rt-skills-columns">
+        <!-- Left Column -->
+        <div class="rt-skills-column">
+            {{#each skillLists.standardColumns.[0] as |entry|}}
+            <div class="rt-skill-row" data-skill="{{entry.[0]}}">
+                <div class="rt-skill-info">
+                    <img class="rt-skill-icon" src="{{skillIcon entry.[0]}}" alt="" loading="lazy">
+                    <button type="button" class="rt-skill-name roll-skill" data-skill="{{entry.[0]}}" title="Roll {{entry.[1].label}}">
+                        <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
                     </button>
                 </div>
-                <div class="table-cell rt-skill-char">
-                    <select name="system.skills.{{entry.[0]}}.characteristic" class="rt-char-select">
-                        {{selectOptions ../skillCharacteristicOptions selected=entry.[1].characteristic}}
-                    </select>
+                <div class="rt-spec-training">
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" 
+                            data-skill="{{entry.[0]}}" data-level="1" title="Trained">T</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" 
+                            data-skill="{{entry.[0]}}" data-level="2" title="+10">+10</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" 
+                            data-skill="{{entry.[0]}}" data-level="3" title="+20">+20</button>
                 </div>
-                <div class="table-cell rt-skill-training">
-                    <div class="rt-training-select">
-                        <select class="rt-skill-training-select" data-skill="{{entry.[0]}}">
-                            {{selectOptions ../skillTrainingOptions selected=entry.[1].trainingLevel}}
-                        </select>
-                        <span class="rt-training-caret"></span>
-                    </div>
-                </div>
-                <div class="table-cell rt-skill-bonus">
-                    <input type="number" data-dtype="Number" name="system.skills.{{entry.[0]}}.bonus" value="{{entry.[1].bonus}}" class="rt-bonus-input" />
-                </div>
-                <div class="table-cell--last table-cell--highlight rt-skill-total">
-                    <span class="display rt-total-value">{{entry.[1].current}}</span>
+                <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
+                    <span>{{entry.[1].current}}</span>
                 </div>
             </div>
-        {{/each}}
+            {{/each}}
+        </div>
+        <!-- Right Column -->
+        <div class="rt-skills-column">
+            {{#each skillLists.standardColumns.[1] as |entry|}}
+            <div class="rt-skill-row" data-skill="{{entry.[0]}}">
+                <div class="rt-skill-info">
+                    <img class="rt-skill-icon" src="{{skillIcon entry.[0]}}" alt="" loading="lazy">
+                    <button type="button" class="rt-skill-name roll-skill" data-skill="{{entry.[0]}}" title="Roll {{entry.[1].label}}">
+                        <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
+                    </button>
+                </div>
+                <div class="rt-spec-training">
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" 
+                            data-skill="{{entry.[0]}}" data-level="1" title="Trained">T</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" 
+                            data-skill="{{entry.[0]}}" data-level="2" title="+10">+10</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" 
+                            data-skill="{{entry.[0]}}" data-level="3" title="+20">+20</button>
+                </div>
+                <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
+                    <span>{{entry.[1].current}}</span>
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
 </div>

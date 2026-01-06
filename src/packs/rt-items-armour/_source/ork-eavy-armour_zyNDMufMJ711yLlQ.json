@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Ork",
+    "type": "xenos",
     "locations": "Body, Legs",
     "ap": 4,
     "maxAg": null,
     "weight": "8kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "For Orks, Scarce. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,22 @@
       "value": "<p>For Orks, Scarce. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 4,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

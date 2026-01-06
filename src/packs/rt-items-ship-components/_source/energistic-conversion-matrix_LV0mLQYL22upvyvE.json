@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "As Free Action, captain can decrease generated power (P) to increase speed (S). Frigate/Raider: (3P-->1S), Light cruiser: (4P-->1S), Cruiser/Transport (5P-->1S). Can divert as much power as you have, included from other components, which depowers them. One per vessel.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>As Free Action, captain can decrease generated power (P) to increase speed (S). Frigate/Raider: (3P-->1S), Light cruiser: (4P-->1S), Cruiser/Transport (5P-->1S). Can divert as much power as you have, included from other components, which depowers them. One per vessel.</p>"

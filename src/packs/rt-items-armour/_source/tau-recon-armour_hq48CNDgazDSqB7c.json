@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Tau",
+    "type": "xenos",
     "locations": "All",
     "ap": 4,
     "maxAg": null,
     "weight": "3kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.",
     "source": "RT: Tau Character Guide",
@@ -16,7 +16,20 @@
       "value": "<p>Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 4,
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

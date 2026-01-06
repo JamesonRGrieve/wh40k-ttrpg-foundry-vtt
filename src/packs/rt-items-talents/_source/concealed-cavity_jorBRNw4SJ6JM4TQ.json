@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Has a hidden storage that can fit one item no larger than a closed fist. Discovery requires a -10 Search Test, or a +10 Search test if using a Medical scanner or Auspex</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

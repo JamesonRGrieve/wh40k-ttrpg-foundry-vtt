@@ -18,7 +18,12 @@
     },
     "tier": 1,
     "isPassive": false,
-    "isRollable": false
+    "isRollable": false,
+    "benefit": "",
+    "aptitudes": [
+      "Leadership",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

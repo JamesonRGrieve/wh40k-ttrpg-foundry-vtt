@@ -3,9 +3,9 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": null,
-    "characteristic": null,
-    "descriptor": null,
+    "type": "",
+    "characteristic": "",
+    "descriptor": "",
     "uses": "Sets of Skills, Talents, and Abilities to diversify one's character. Taken only with GM Permission and if requirements are met, cost XP.",
     "useTime": null,
     "description": {
@@ -15,7 +15,10 @@
       "characteristic": null,
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

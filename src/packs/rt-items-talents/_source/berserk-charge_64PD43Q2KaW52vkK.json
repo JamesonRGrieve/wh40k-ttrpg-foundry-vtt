@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Strength",
+      "Offence",
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

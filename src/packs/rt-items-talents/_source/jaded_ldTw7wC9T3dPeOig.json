@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Mundane Traumatic events, such as horrifically brutal deaths or xenos abominations do not force the character to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect them as normal.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Defence",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

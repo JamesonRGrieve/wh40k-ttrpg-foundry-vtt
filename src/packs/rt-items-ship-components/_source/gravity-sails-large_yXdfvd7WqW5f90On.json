@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 3,
     "effect": "Long, Blade-like fins that aid in Manoeurvering. Gain +1 Speed and +5 Manoeuvrability. Component  Can't be Damaged or Destroyed Except from a Critical Hit.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Long, Blade-like fins that aid in Manoeurvering. Gain +1 Speed and +5 Manoeuvrability. Component  Can't be Damaged or Destroyed Except from a Critical Hit.</p>"

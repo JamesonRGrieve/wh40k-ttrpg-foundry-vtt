@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When attacking with a weapon that has the Flame Quality, the Sister can re-roll any results lower than their Willpower Bonus on damage rolls.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "Allows constructing of basic components. +10 to Extended Repairs Tech-use Checks as well as Acquisition Tests to restore Hull. +10 Achievement Points for Trade Objectives and at GM discrection can manufacture a small number of personal items, generally a few dozen of more common templates, such as basic ammo, weapons, gear, etc. One per Vessel.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Allows constructing of basic components. +10 to Extended Repairs Tech-use Checks as well as Acquisition Tests to restore Hull. +10 Achievement Points for Trade Objectives and at GM discrection can manufacture a small number of personal items, generally a few dozen of more common templates, such as basic ammo, weapons, gear, etc. One per Vessel.</p>"

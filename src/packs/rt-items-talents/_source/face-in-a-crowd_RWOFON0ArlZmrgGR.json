@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When employing the Shadowing special use of the Stealth Skill, Character can use their Fellowship Characteristic instead of Agility.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

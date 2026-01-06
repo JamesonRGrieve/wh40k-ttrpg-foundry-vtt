@@ -7,7 +7,7 @@
     "damageOrEffect": "If target takes any damage, make Toughness test with -10 per point of damage taken. If fail, take additional 2d10 R damage, (ignores AP/T)",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

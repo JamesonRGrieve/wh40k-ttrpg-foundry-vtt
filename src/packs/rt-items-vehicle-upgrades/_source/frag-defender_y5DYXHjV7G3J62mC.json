@@ -7,7 +7,7 @@
     "allowedVehicles": "Any Enclosed Vehicle",
     "difficulty": "-10",
     "descriptionText": "As a Reaction, the vehicle's commander or driver can activate Frag Defenders. Anyone within 5 metres of the Vehicle's Outer Hull suffer 2d10 Explosive Damage with Pen 0. (Characters inside unaffected). Single Use Item, must be replaced afterwards.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>As a Reaction, the vehicle's commander or driver can activate Frag Defenders. Anyone within 5 metres of the Vehicle's Outer Hull suffer 2d10 Explosive Damage with Pen 0. (Characters inside unaffected). Single Use Item, must be replaced afterwards.</p>"

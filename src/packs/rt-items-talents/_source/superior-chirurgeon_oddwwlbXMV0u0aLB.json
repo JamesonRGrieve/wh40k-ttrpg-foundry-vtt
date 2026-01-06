@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Fieldcraft"
+    ]
   },
   "effects": [],
   "flags": {},

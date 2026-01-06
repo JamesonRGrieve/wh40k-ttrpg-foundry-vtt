@@ -1,10 +1,17 @@
-<form class="dh-wrapper">
-    <div class="dh-panel spacer">
-        <h1 class="dh-panel__header">Release Notes: {{version}}</h1>
-        <ul>
-            {{#each notes as |note|}}
-                <li>{{note}}</li>
-            {{/each}}
-        </ul>
+{{!-- Rogue Trader Release Notes Prompt - Modern Design --}}
+<div class="rt-prompt">
+    <div class="rt-prompt__panel">
+        <div class="rt-prompt__header">
+            <h2 class="rt-prompt__title">Release Notes</h2>
+            <div class="rt-prompt__subtitle">Version {{version}}</div>
+        </div>
+        
+        <div class="rt-prompt__section">
+            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                {{#each notes as |note|}}
+                    <li style="margin-bottom: 6px;">{{note}}</li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
-</form>
+</div>

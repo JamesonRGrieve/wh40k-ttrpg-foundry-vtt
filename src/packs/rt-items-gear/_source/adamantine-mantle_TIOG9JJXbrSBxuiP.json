@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "15kg",
     "availability": "Space Marines Only, Deathwatch Relic. Innately Master Crafted. Negates two points of Armour Penetration of any incoming attack. Wearer gains +10 to Opposed Weapon Skill Tests to Feint. When taking the Defensive Stance Action, foes suffer an additional -10 on Weapon Skill Tests to attach the wearer.",
     "cost": null,

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>If the Character fails a Fear or Pinning Test, their comrades/minions only fails if the roll was a double.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

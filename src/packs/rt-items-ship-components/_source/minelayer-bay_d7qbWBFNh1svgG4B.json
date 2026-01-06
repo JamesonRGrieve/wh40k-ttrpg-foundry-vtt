@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 1,
     "effect": "As an Extended Action can make +20 Tech-use check to deploy mines 4x4x4 VU Area behind the ship. Bay has room for 3 deployements before requiring Upkeep Test at suitable spaceport. Minefields can't overlap. If minelayer bay is damaged while mines are in it, 50% chance it is destroyed and vessel takes a Critical hit (roll 1d10 for result).",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>As an Extended Action can make +20 Tech-use check to deploy mines 4x4x4 VU Area behind the ship. Bay has room for 3 deployements before requiring Upkeep Test at suitable spaceport. Minefields can't overlap. If minelayer bay is damaged while mines are in it, 50% chance it is destroyed and vessel takes a Critical hit (roll 1d10 for result).</p>"

@@ -9,7 +9,10 @@
     "source": "RT: Edge of the Abyss",
     "description": {
       "value": "<p>Gain a new psychic power as long as all prerequisites are met.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

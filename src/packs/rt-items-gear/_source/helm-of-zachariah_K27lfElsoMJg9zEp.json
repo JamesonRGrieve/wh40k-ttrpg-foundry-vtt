@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Xenos)",
+    "type": "exotic",
     "weight": "?",
     "availability": "A Xenos helmet clearly not designed for human physiology due to its weight and design. Freatures a series of twisted threatds that extend out and be connected to another individual as a part of an interrogation. Once active, the user gains the Terrify and Telepathic Link Psychic Powers at Psy Rating 4, that can only be used on the connected target. Focus Power tests using these powers cause 1 Insanity per Degree of Success or Failiure, but do not trigger Psychic Phenomena or other warp-based perils.",
     "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",

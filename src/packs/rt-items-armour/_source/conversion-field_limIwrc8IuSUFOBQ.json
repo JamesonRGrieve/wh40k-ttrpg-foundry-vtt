@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": "50%",
     "maxAg": "-",
     "weight": "1kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Contained in Rosarius Devices. Converts impacts into flashes of light, if field blocks 12 or more damage from one attack, releases flash of light that acts as Photon Flash Grenade centered on wearer (who is unaffected by it)",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>Contained in Rosarius Devices. Converts impacts into flashes of light, if field blocks 12 or more damage from one attack, releases flash of light that acts as Photon Flash Grenade centered on wearer (who is unaffected by it)</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

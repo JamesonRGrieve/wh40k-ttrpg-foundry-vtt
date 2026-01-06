@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

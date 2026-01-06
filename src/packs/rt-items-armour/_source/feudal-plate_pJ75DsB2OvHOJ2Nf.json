@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Primitive",
+    "type": "primitive",
     "locations": "All",
     "ap": 5,
     "maxAg": 25,
     "weight": "30kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "120 T",
     "notes": "Halve primitive armour AP vs non primitive weapons",
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 5,
+      "leftArm": 5,
+      "rightArm": 5,
+      "leftLeg": 5,
+      "rightLeg": 5
+    },
+    "modifications": [],
+    "maxAgility": 25
   },
   "effects": [],
   "flags": {},

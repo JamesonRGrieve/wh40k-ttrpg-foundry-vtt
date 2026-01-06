@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Once per Round, may reroll a missed attack with a bladed weapon, (sword, chainaxe, power sword, etc)</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Finesse",
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

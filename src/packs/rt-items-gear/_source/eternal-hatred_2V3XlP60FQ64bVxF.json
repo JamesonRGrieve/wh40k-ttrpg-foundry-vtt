@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug (Eldar)",
+    "type": "xenos",
     "weight": "-",
     "availability": "Lasts 2d5 Rounds, all Melee Attacks gain Vengeful (7)\nIf under affects of another Eldar Drug, must make -20 Toughness Test. If failed drug has no effect and suffer 1d10 Energy Damage ignoring armour and Toughness, and gain 1d5 Corruption.",
     "cost": null,

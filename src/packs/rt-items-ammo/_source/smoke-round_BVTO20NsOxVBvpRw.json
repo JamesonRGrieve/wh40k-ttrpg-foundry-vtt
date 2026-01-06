@@ -7,7 +7,7 @@
     "damageOrEffect": "Obscures basic eyesight and optical systems, but not more advanced sensors such as heat detection or visual bands outside of visual light",
     "qualities": "Smoke (9)",
     "weight": "1kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": null,
     "source": "Only War Core",
     "description": {

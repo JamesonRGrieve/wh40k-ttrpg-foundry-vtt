@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 1,
     "effect": "After any combat event where fighters, assault boats, or bombers are lost, character can make -10 Tech-Use Test, for each degree of success, two craft are recovered. Only one of this component per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>After any combat event where fighters, assault boats, or bombers are lost, character can make -10 Tech-Use Test, for each degree of success, two craft are recovered. Only one of this component per vessel.</p>"

@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Pistol",
-    "type": "Exotic",
+    "class": "pistol",
+    "type": "exotic",
     "range": "-",
     "rof": "-",
     "damage": "2d10",

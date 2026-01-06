@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Investigation, Interaction\nApt: Fellowship, Social, Unaligned",
-    "characteristic": "Fellowship",
+    "type": "",
+    "characteristic": "fellowship",
     "descriptor": "Gaining information through asking questions, perusing data sources, eavesdropping, or picking up on news, recent events, and so on. ",
     "uses": "1-2 Degrees of Success rveals general info, more reveals more specific info or secretive information. Useful for Tracking down significant individuals, learning the attutides of a populace towards their leaders, seeking a specific location such as a shop or tavern.\nIf Inquiring a Crowd, can affect up to 10x Fellowship Bonus People",
     "useTime": "One Hour or more.",
@@ -15,7 +15,14 @@
       "characteristic": "Fellowship",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Fellowship",
+      "Social",
+      "Unaligned"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

@@ -7,7 +7,7 @@
     "damageOrEffect": "+3 Damage against targets with Machine trait, Energy Damage Type, weapon gains Shock Quality.",
     "qualities": "Shock",
     "weight": "10% wep",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "250T each",
     "source": "Rogue Trader Core",
     "description": {

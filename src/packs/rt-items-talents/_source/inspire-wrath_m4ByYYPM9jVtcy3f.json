@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>As a Full Action, character can make a Charm Test to grant the effects of the Hatred Talent of any relevent opposing group for the duration of the encounter to their Squad, and anyone else in the immediate Vicinity who was listening. Listeners can resist the effects of the character's speech by passing an Opposed Willpower Test against the character's Charm Skill Test. Affects 10xFellowship Bonus People, which can be increased with Master Orator Talent. Crowds inspired to mindless hatred can be unpredictable. In a Social Conflict, all allies of the character gain +10 Infamy to their reserves for the duration of the encounter.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

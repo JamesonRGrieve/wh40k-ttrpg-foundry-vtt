@@ -7,7 +7,7 @@
     "damageOrEffect": "2d10+4 E, Pen 2, Blast (8), Flame",
     "qualities": "Blast (8), Flame",
     "weight": "3kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

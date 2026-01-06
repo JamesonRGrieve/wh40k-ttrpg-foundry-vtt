@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Reduce Two-Weapon Fighting Penalty to -10 when wielding two one-handed pistols. If character also has Ambidextrous Talent, reduce penalty to +0.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

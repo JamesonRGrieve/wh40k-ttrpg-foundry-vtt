@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 1,
     "effect": "As a Free Action, a crewmember on the bridge can open the cargo hatches and forcibly eject its contents into the void. +75 Achievement Points towards Trade Objectives. One per Vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>As a Free Action, a crewmember on the bridge can open the cargo hatches and forcibly eject its contents into the void. +75 Achievement Points towards Trade Objectives. One per Vessel.</p>"

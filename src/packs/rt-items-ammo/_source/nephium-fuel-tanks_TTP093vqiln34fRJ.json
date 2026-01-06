@@ -7,7 +7,7 @@
     "damageOrEffect": "-10 to Agilitiy Test to avoid damage, and +2 to base damage.",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

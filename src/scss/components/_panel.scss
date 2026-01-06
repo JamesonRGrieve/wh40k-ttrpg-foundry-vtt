@@ -31,13 +31,13 @@
         h1 {
             border-bottom: $grid-border;
 
-            &.dh-panel__header {
+            &.dh-panel__header, &.rt-panel__header {
                 font-size: $h1-size;
                 font-weight: normal;
                 text-align: center;
                 text-transform: uppercase;
 
-                .dh-trait-toggle__span {
+                .dh-trait-toggle__span, .rt-trait-toggle__span {
                     font-size: $h1-size;
                     font-weight: normal;
                     text-align: center;
@@ -59,4 +59,28 @@
 
         background: url('../images/divider.png') no-repeat center/100% 100%;
     }
+
+    &-item-img {
+        width: 24px;
+        height: 24px;
+        border: none;
+        object-fit: contain;
+    }
+}
+
+// RT prefix aliases
+.rt-controls {
+    @extend .dh-controls;
+}
+
+.rt-panel {
+    @extend .dh-panel;
+}
+
+.rt-divider {
+    @extend .dh-divider;
+}
+
+.rt-item-img {
+    @extend .dh-item-img;
 }

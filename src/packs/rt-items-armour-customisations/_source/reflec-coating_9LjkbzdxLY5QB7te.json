@@ -6,7 +6,7 @@
     "armourTypes": "Any Armour",
     "effect": "Gives +2 AP vs Las Weapons",
     "weight": "+0kg",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Gives +2 AP vs Las Weapons</p>"

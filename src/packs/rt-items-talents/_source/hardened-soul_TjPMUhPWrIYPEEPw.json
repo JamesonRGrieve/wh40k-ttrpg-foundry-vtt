@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Whenever character would gain Corruption, they may halve the amount (rounding up), and gain an equal amount of Insanity.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Heavy",
-    "type": "Exotic - Astartes",
+    "class": "heavy",
+    "type": "exotic",
     "range": "100m",
     "rof": "S/-/-",
     "damage": "6d10+12",

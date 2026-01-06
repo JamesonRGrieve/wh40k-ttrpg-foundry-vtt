@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character is trained in the use of a Single Exotic Weapon (EG: Harlequinn's Kiss) or Exotic Weapon Type (EG: Needle/Digital Weapons), and can use it without the -20 Penalty. Talent can be taken multiple times for different weapons.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Finesse",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

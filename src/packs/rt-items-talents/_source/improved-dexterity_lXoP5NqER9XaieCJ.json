@@ -9,7 +9,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Ogryn can wield Basic and Thrown Ranged Weapons, as well as Melee Weapons that do not have the Ogryn-Proof Trait as if they did not have the Clumsy Trait. Any of these weapons that would require Two Hands do not when wielded by this Ogryn.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -12,7 +12,7 @@
     "strength": 1,
     "critRating": 3,
     "range": 9,
-    "availability": "Rare",
+    "availability": "rare",
     "notes": "If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.",
     "source": "RT: Into the Storm",
     "description": {

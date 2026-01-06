@@ -9,7 +9,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>Base Loyalty of the Character's minions is equal to their Infamy instead of their Fellowship.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned."
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>The Sister adds their Insanity Bonus to the damage they inflict with melee attacks on targets they possess appropriate Hatred talents for.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

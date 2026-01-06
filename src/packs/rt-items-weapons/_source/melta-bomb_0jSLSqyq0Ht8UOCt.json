@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Thrown",
-    "type": "Grenade",
+    "class": "thrown",
+    "type": "explosive",
     "range": "0m",
     "rof": "S/-/-",
     "damage": "6d10+7",

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Mesh",
+    "type": "mesh",
     "locations": "Head",
     "ap": 3,
     "maxAg": null,
     "weight": "0.5kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "100 T",
     "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 3,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

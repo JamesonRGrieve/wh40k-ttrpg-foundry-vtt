@@ -7,7 +7,7 @@
     "damageOrEffect": "Does 2d10 E Pen 0 Damage, if target takes damage suffers effects as if set on fire. Each hit reduces AP by 1 (down to min 0) until repaired.",
     "qualities": "Flame",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

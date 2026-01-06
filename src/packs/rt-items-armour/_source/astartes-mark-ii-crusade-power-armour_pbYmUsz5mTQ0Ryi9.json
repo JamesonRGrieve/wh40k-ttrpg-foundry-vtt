@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power (Astartes)",
+    "type": "power",
     "locations": "All",
     "ap": "7/9/7/7",
     "maxAg": null,
@@ -16,7 +16,20 @@
       "value": "<p>The First true armour of the Space Marines, from the earliest years of the Solar Reclaimation. Additional -10 to Concealment and Silent Move, +10 to prevent Cohesion Damage, +20 Fellowship with Space Marines. +25 Strength. Subsystems: Autosenses (+5), Osmotic Sustainer, Pain Suppressant (6), Vox Link, Magnetised Boots, Nutrient Recycling (1 Week), Recoil Suppression. -20 Manual Dexterity Mod. Note: Magnetised Boots can't be turned off. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet. Increases Size to Hulking.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 7,
+      "body": 9,
+      "leftArm": 7,
+      "rightArm": 7,
+      "leftLeg": 7,
+      "rightLeg": 7
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

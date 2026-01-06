@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "A Section of Ship dedicated to the worship of the Master of Mankind, +3 Morale, and +100 Achievement Points towards Creed Objectives. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>A Section of Ship dedicated to the worship of the Master of Mankind, +3 Morale, and +100 Achievement Points towards Creed Objectives. Only one per vessel.</p>"

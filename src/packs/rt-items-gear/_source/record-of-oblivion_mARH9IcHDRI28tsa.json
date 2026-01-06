@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "2kg",
     "availability": "Master Crafted Relic Data-Tome of the Guardians of the Covenant Chapter. Whilst bearing this relic the character can re-roll any failed Willpower Test.",
     "cost": null,

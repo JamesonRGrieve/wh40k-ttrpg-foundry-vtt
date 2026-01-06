@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>After the character spends a fate point to regain lost wounds, for the rest of the encounter they will regain 1d5 lost wounds every time they gain a Pain Token.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

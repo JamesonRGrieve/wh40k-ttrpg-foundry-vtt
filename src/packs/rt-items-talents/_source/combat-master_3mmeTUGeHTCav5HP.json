@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Opponents Fighting the character in Melee combat gain no bonuses for Ganging up on them.\nThe effects of the Double Team Talent still apply if the attackers have that however.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Defence",
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

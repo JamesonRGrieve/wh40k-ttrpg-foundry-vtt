@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>Eldar are innately quick and capable of exceptional agility. All Dark Eldar gain the effects of Catfall and Sprint Talents, as well as Unnatural Agility (x2) Trait.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

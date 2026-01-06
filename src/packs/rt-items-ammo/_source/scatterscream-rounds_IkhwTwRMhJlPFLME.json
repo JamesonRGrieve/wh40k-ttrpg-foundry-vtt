@@ -7,7 +7,7 @@
     "damageOrEffect": "Lose Scatter Quality, gain Blast(2) and Concussive (2) Quality",
     "qualities": "Blast(2), Concussive (2)",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "BC: Tome of Excess",
     "description": {

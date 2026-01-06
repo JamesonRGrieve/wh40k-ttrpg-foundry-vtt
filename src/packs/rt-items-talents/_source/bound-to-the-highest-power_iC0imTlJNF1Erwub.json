@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Astropath can spend a Fate Point to negate the result of a Psychic Phenomena they rolled, including a result of Perils of the Warp. However, they cannot use the Focus Power action or sustain any Psychic Powers until the start of their next turn.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -12,7 +12,7 @@
     "strength": 1,
     "critRating": 3,
     "range": 6,
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "notes": "Unless ship is Grand Cruiser size or Larger can only mount lance as \"Prow\" Weapon. If in prow slot, can only fire forwards. Lance Weapons Ignore Armour.",
     "source": "RT: BF Koronus",
     "description": {

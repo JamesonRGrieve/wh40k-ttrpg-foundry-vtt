@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "Recycles the heavily wounded into Servitors. Reduce Crew Losses by 3, to a minimum of 1. Increase all Morale Losses by 1. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Recycles the heavily wounded into Servitors. Reduce Crew Losses by 3, to a minimum of 1. Increase all Morale Losses by 1. Only one per vessel.</p>"

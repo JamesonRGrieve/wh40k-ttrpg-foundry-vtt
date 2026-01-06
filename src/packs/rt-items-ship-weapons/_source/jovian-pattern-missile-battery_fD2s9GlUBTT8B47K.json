@@ -12,7 +12,7 @@
     "strength": 5,
     "critRating": 6,
     "range": 6,
-    "availability": "Scarce",
+    "availability": "scarce",
     "notes": "Can only fire every other turn",
     "source": "RT: Into the Storm",
     "description": {

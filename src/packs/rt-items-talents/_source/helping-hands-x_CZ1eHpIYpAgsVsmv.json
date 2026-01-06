@@ -9,7 +9,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Character gains an extra Comrade. This advance can be taken multiple times, up to the character's Fellowship Bonus, indicated by \"X\"</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

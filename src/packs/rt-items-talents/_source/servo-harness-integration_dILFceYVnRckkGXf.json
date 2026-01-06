@@ -9,7 +9,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

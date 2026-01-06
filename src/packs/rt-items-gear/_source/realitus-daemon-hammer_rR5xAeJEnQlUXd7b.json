@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Daemonic)",
+    "type": "exotic",
     "weight": "?",
     "availability": "A once-mighty Force Hammer long since corrupted irrecoverably. Wielder gains Baneful Presence (X), Daemonic (X), and Warp Instability Traits, where X = Willpower Bonus. If wielder already had the Daemonic Trait, they lose the Warp Instability Trait if they had it. Non-Daemonic wielders gain 1d10 Corruption every hour they wield the hammer, and non-daemonic characters within 10m of the hammer must make a -20 Willpower test per hour they remain within radius or also gain 1d10 corruption per Degree of Failiure. Wielder gains Command +30 skill, and Halo of Command Talent. Functions as a Nemesis Daemon Hammer with Tainted replacing Daemonbane Quality.",
     "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic one must slay its wielder and claim the weapon. It draws the attention of the Blood God.",

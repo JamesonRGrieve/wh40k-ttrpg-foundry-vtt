@@ -7,7 +7,7 @@
     "damageOrEffect": "Changes damage type to Explosive, grants Blast (1). Reduces Penetration by 2",
     "qualities": "Blast (1)",
     "weight": "10% wep",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": null,
     "source": "RT: Faith and Coin",
     "description": {

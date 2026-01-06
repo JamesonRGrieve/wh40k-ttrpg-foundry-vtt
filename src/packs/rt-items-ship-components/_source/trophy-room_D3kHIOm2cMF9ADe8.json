@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "A Room dedicated to the Rogue Trader's Successes and collections. +50 Achievement Points Towards Exploration, Trade, or Criminal Objectives. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>A Room dedicated to the Rogue Trader's Successes and collections. +50 Achievement Points Towards Exploration, Trade, or Criminal Objectives. Only one per vessel.</p>"

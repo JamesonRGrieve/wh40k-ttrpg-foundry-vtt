@@ -12,44 +12,53 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     font-size: 1.2em;
     padding: 0.5rem;
     text-align: center;
-    background: rgba(36, 107, 131, 0.15);
-    border-bottom: 2px solid rgba(36, 107, 131, 0.3);
+    width: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(235, 230, 222, 0.9));
+    border-bottom: 2px solid rgba(74, 55, 40, 0.25);
+    box-shadow: inset 0 -1px 0 rgba(74, 55, 40, 0.15);
   }
 }
 
 // Skills table header
 .rt-skills-header {
-  background: rgba(36, 107, 131, 0.2) !important;
-  font-weight: bold;
+  background: linear-gradient(180deg, rgba(250, 248, 244, 0.98), rgba(235, 232, 226, 0.95)) !important;
+  font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.85em;
-  letter-spacing: 0.5px;
+  font-size: 0.75em;
+  letter-spacing: 0.12em;
+  border-bottom: none;
+  position: relative;
   
   .table-cell {
-    padding: 0.5rem 0.25rem;
+    padding: 0.6rem 0.4rem;
     text-align: center;
   }
   
   .rt-skill-name {
-    text-align: left;
-    padding-left: 0.5rem;
+    text-align: center;
+    padding-left: 0;
   }
 }
 
 // Skill row styling
 .rt-skill-row,
 .rt-specialist-row {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease;
+  border-bottom: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
   
   &:hover {
-    background: rgba(36, 107, 131, 0.05);
+    background: rgba(74, 55, 40, 0.04);
   }
   
   .table-cell {
-    padding: 0.35rem 0.25rem;
+    padding: 0.45rem 0.4rem;
     vertical-align: middle;
   }
+}
+
+.rt-skill-row:nth-child(even),
+.rt-specialist-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 // Skill name column
@@ -59,10 +68,10 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   .rt-skill-button {
     background: transparent;
     border: none;
-    color: #246b83;
+    color: #3a2a1d;
     cursor: pointer;
     font-weight: 500;
-    padding: 0.25rem 0.5rem;
+    padding: 0.2rem 0.4rem;
     text-align: left;
     width: 100%;
     transition: all 0.2s ease;
@@ -71,9 +80,9 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     gap: 0.5rem;
     
     &:hover {
-      background: rgba(36, 107, 131, 0.1);
-      color: #1a4f61;
-      border-radius: 3px;
+      background: rgba(74, 55, 40, 0.06);
+      color: #20150b;
+      border-radius: 6px;
     }
     
     .material-icons {
@@ -117,33 +126,33 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   select {
     appearance: none;
     width: 100%;
-    padding: 0.35rem 1.75rem 0.35rem 0.6rem;
-    border: 1px solid rgba(26, 79, 97, 0.35);
+    padding: 0.35rem 1.6rem 0.35rem 0.5rem;
+    border: 1px solid rgba(74, 55, 40, 0.25);
     border-radius: 6px;
-    background: linear-gradient(140deg, rgba(36, 107, 131, 0.95), rgba(23, 63, 78, 0.95));
-    color: #f8f5ee;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2a1a0a;
     font-size: 0.85em;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
 
     &:focus {
       outline: none;
-      border-color: rgba(36, 107, 131, 0.8);
-      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.2);
+      border-color: rgba(74, 55, 40, 0.5);
+      box-shadow: 0 0 0 2px rgba(74, 55, 40, 0.12);
     }
   }
 
   .rt-training-caret {
     position: absolute;
-    right: 0.6rem;
+    right: 0.5rem;
     width: 0;
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 6px solid rgba(248, 245, 238, 0.85);
+    border-top: 6px solid rgba(74, 55, 40, 0.6);
     pointer-events: none;
   }
 }
@@ -174,12 +183,17 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   font-weight: bold;
   
   .rt-total-value {
-    display: inline-block;
-    background: rgba(36, 107, 131, 0.15);
-    padding: 0.35rem 0.75rem;
-    border-radius: 4px;
-    font-size: 1.1em;
-    min-width: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 26px;
+    padding: 0 6px;
+    border: 2px solid rgba(74, 55, 40, 0.45);
+    border-radius: 6px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98), rgba(220, 220, 220, 0.95));
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 2px 6px rgba(0, 0, 0, 0.12);
+    font-size: 1em;
   }
 }
 
@@ -345,45 +359,136 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 // LORE SKILLS SPECIAL STYLING
 // ============================================
 // These styles highlight Common Lore, Forbidden Lore, and Scholastic Lore
-// skills with distinct colors to make them stand out like in the Roll20 version
+// skills with distinct but subtle colors
+
+.rt-specialist-panel .rt-specialist-group {
+  --rt-spec-a: rgba(36, 107, 131, 0.22);
+  --rt-spec-b: rgba(24, 80, 96, 0.14);
+  --rt-spec-top: rgba(36, 107, 131, 0.5);
+  --rt-spec-bottom: rgba(24, 80, 96, 0.5);
+  background: linear-gradient(135deg, var(--rt-spec-a), var(--rt-spec-b));
+  border-top-color: var(--rt-spec-top);
+  border-bottom-color: var(--rt-spec-bottom);
+}
+
+.rt-specialist-panel .rt-specialist-group .rt-specialist-header {
+  background: linear-gradient(180deg, var(--rt-spec-a) 0%, transparent 100%);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(2) {
+  --rt-spec-a: rgba(92, 0, 0, 0.18);
+  --rt-spec-b: rgba(60, 0, 40, 0.12);
+  --rt-spec-top: rgba(92, 0, 0, 0.5);
+  --rt-spec-bottom: rgba(60, 0, 40, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(3) {
+  --rt-spec-a: rgba(25, 25, 112, 0.15);
+  --rt-spec-b: rgba(0, 0, 128, 0.1);
+  --rt-spec-top: rgba(0, 0, 139, 0.5);
+  --rt-spec-bottom: rgba(0, 0, 139, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(4) {
+  --rt-spec-a: rgba(42, 120, 60, 0.18);
+  --rt-spec-b: rgba(28, 80, 44, 0.12);
+  --rt-spec-top: rgba(42, 120, 60, 0.5);
+  --rt-spec-bottom: rgba(28, 80, 44, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(5) {
+  --rt-spec-a: rgba(158, 112, 40, 0.18);
+  --rt-spec-b: rgba(120, 80, 24, 0.12);
+  --rt-spec-top: rgba(158, 112, 40, 0.5);
+  --rt-spec-bottom: rgba(120, 80, 24, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(6) {
+  --rt-spec-a: rgba(84, 72, 140, 0.18);
+  --rt-spec-b: rgba(60, 50, 100, 0.12);
+  --rt-spec-top: rgba(84, 72, 140, 0.5);
+  --rt-spec-bottom: rgba(60, 50, 100, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(7) {
+  --rt-spec-a: rgba(96, 56, 22, 0.18);
+  --rt-spec-b: rgba(74, 38, 18, 0.12);
+  --rt-spec-top: rgba(96, 56, 22, 0.5);
+  --rt-spec-bottom: rgba(74, 38, 18, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(8) {
+  --rt-spec-a: rgba(18, 86, 96, 0.18);
+  --rt-spec-b: rgba(12, 64, 72, 0.12);
+  --rt-spec-top: rgba(18, 86, 96, 0.5);
+  --rt-spec-bottom: rgba(12, 64, 72, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(9) {
+  --rt-spec-a: rgba(120, 90, 18, 0.18);
+  --rt-spec-b: rgba(86, 62, 12, 0.12);
+  --rt-spec-top: rgba(120, 90, 18, 0.5);
+  --rt-spec-bottom: rgba(86, 62, 12, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(10) {
+  --rt-spec-a: rgba(24, 96, 132, 0.18);
+  --rt-spec-b: rgba(16, 70, 98, 0.12);
+  --rt-spec-top: rgba(24, 96, 132, 0.5);
+  --rt-spec-bottom: rgba(16, 70, 98, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(11) {
+  --rt-spec-a: rgba(132, 54, 54, 0.18);
+  --rt-spec-b: rgba(92, 38, 38, 0.12);
+  --rt-spec-top: rgba(132, 54, 54, 0.5);
+  --rt-spec-bottom: rgba(92, 38, 38, 0.5);
+}
+
+.rt-specialist-panel .rt-specialist-group:nth-of-type(12) {
+  --rt-spec-a: rgba(66, 96, 36, 0.18);
+  --rt-spec-b: rgba(50, 72, 26, 0.12);
+  --rt-spec-top: rgba(66, 96, 36, 0.5);
+  --rt-spec-bottom: rgba(50, 72, 26, 0.5);
+}
 
 .rt-specialist-group {
-  // Common Lore - Golden/amber theme (knowledge of common topics)
+  // Common Lore - Subtle bronze/amber theme (knowledge of common topics)
   &[data-skill="commonLore"],
   &.spec_skills_commonLore {
-    background: linear-gradient(135deg, rgba(218, 165, 32, 0.2), rgba(218, 165, 32, 0.1));
-    border-top-color: rgba(218, 165, 32, 0.5);
-    border-bottom-color: rgba(218, 165, 32, 0.5);
+    background: linear-gradient(135deg, rgba(139, 116, 88, 0.15), rgba(139, 116, 88, 0.08));
+    border-top-color: rgba(139, 116, 88, 0.4);
+    border-bottom-color: rgba(139, 116, 88, 0.4);
     
     .rt-specialist-group-name {
-      color: #8B6914;
+      color: #4a3728;
     }
     
     .rt-add-specialization {
-      background: linear-gradient(135deg, #DAA520, #B8860B);
+      background: linear-gradient(135deg, #5d4e42, #4a3728);
       
       &:hover {
-        background: linear-gradient(135deg, #B8860B, #996515);
+        background: linear-gradient(135deg, #6d5e52, #5d4e42);
       }
     }
   }
   
-  // Forbidden Lore - Dark purple/crimson theme (dangerous knowledge)
+  // Forbidden Lore - Dark crimson theme (dangerous knowledge)
   &[data-skill="forbiddenLore"],
   &.spec_skills_forbiddenLore {
-    background: linear-gradient(135deg, rgba(128, 0, 64, 0.2), rgba(75, 0, 130, 0.15));
-    border-top-color: rgba(139, 0, 0, 0.5);
-    border-bottom-color: rgba(75, 0, 130, 0.5);
+    background: linear-gradient(135deg, rgba(92, 0, 0, 0.18), rgba(60, 0, 40, 0.12));
+    border-top-color: rgba(92, 0, 0, 0.5);
+    border-bottom-color: rgba(60, 0, 40, 0.5);
     
     .rt-specialist-group-name {
-      color: #800040;
+      color: #5c0000;
     }
     
     .rt-add-specialization {
-      background: linear-gradient(135deg, #8B0000, #4B0082);
+      background: linear-gradient(135deg, #6b0000, #3c0028);
       
       &:hover {
-        background: linear-gradient(135deg, #660000, #3d0066);
+        background: linear-gradient(135deg, #8b0000, #4b0035);
       }
     }
   }
@@ -413,20 +518,20 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 .rt-specialist-block {
   &.spec_skills_commonLore {
     .rt-specialist-row {
-      border-left: 3px solid rgba(218, 165, 32, 0.4);
+      border-left: 3px solid rgba(139, 116, 88, 0.35);
       
       &:hover {
-        background: rgba(218, 165, 32, 0.08);
+        background: rgba(139, 116, 88, 0.06);
       }
     }
   }
   
   &.spec_skills_forbiddenLore {
     .rt-specialist-row {
-      border-left: 3px solid rgba(139, 0, 0, 0.4);
+      border-left: 3px solid rgba(92, 0, 0, 0.4);
       
       &:hover {
-        background: rgba(139, 0, 0, 0.05);
+        background: rgba(92, 0, 0, 0.05);
       }
     }
   }

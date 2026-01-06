@@ -1,42 +1,27 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-2">
-    <h1 class="dh-panel__header">Traits</h1>
-    <div class="dh-table--border dh-traittable--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">Name</div>
-            <div class="table-cell">Level</div>
-            <div class="table-cell--last">
-                <label class="dh-control-button item-create" data-type="trait">
-                    <span class="dh-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-                </label>
-            </div>
-        </div>
-        {{#each actor.items as | item |}}
+<div class="rt-panel rt-ability-panel rt-traits-panel">
+    <div class="rt-ability-header">
+        <h3 class="rt-ability-title"><i class="fas fa-shield-alt"></i> Traits</h3>
+        <button type="button" class="rt-ability-add item-create" data-type="trait" title="Add Trait">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+    <div class="rt-ability-list">
+        {{#each actor.items as |item|}}
             {{#if item.isTrait}}
-                <div class="table-row">
-                    <div class="table-cell--settingstoggle">
-                        <label class="dh-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell">
-                        {{> systems/rogue-trader/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
-                    </div>
-                    <div class="table-cell">
-                        <span>{{item.system.level}}</span>
-                    </div>
-                    <div class="table-cell">
-                        <label class="dh-control-button item-vocalize" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
-                        </label>
-                        <label class="dh-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="dh-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
-                        (isExpanded (concat 'description_' item.id ))}}>
-                        <span>{{item.system.description}}</span>
-                    </div>
+            <div class="rt-ability-row" data-item-id="{{item.id}}">
+                <img src="{{item.img}}" class="rt-ability-thumb" alt="" />
+                <button type="button" class="rt-ability-name item-edit" data-item-id="{{item.id}}">
+                    {{item.name}}{{#if item.system.level}} ({{item.system.level}}){{/if}}
+                </button>
+                <div class="rt-ability-actions">
+                    <button type="button" class="rt-ability-btn item-vocalize" data-item-id="{{item.id}}" title="Post to Chat">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                    <button type="button" class="rt-ability-btn item-delete" data-item-id="{{item.id}}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
+            </div>
             {{/if}}
         {{/each}}
     </div>

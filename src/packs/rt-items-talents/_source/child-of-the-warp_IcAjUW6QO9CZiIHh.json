@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Gain +1 Psy Rating when Pushing Psychic Powers, however at the start of the game roll 1d10 to determine a persistent Psychic effect that haunts them for the duration of the session. Alternatively with GM Discretion player chooses one result that always affects the character: 1: All Noises echo around the character, 2: The air around smells off, 3: A thin frost coats everything within 10m, 4: Animals within 30m are spooked and agitated, 5: Those that see the character forget something trivial, 6: Food and Drink within 10m go bad. 7: Surrounding Winds cause light objects to be blown about within 10m. 8: Reflective Surfaces within 10m are distorted. 9: Plant Life within 10m withers and dies. 10: Blood weeps from stone and wood within 10m.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

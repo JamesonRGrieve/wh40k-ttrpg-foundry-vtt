@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character can attempt any Forbidden Lore (Xenos) Test in which they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test)</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

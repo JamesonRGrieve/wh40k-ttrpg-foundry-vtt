@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When character mades a Called Shot Action with a melee attack, they reduce the penalty by 10 (-20 to -10)</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Finesse",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

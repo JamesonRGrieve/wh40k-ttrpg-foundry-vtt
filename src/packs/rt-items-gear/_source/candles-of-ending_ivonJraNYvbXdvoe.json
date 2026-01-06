@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Profane)",
+    "type": "exotic",
     "weight": "?",
     "availability": "8 Ivory coloured candles lit only after the wicks have been dipped in fresh blood or other profane rituals performed. They never diminish with use and no wax ever melts from them as their flames dance to invisible winds. Whilst lit, the barrier beween the materium and immaterium weakens. When lit aflame, user gains 1d10 Corruption, and 1d10 more if they were uncorrupted prior. When all 8 are lit, gain +30 to all activities within 9 metres of them that draw upon the warp for power. Creatures within range that have the Warp Instability Trait ignore it. The candles also increase the chances of Psychic Phenomena, and the power of Sanctified weapons weakens in their unholy light.",
     "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",

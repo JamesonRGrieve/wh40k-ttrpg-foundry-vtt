@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

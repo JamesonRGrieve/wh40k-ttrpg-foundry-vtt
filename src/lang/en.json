@@ -1,7 +1,9 @@
 {
   "RT": {
     "Character": {
-      "Name": "Name"
+      "Name": "Name",
+      "Player": "Player",
+      "Rank": "Rank"
     },
     "Tabs": {
       "Overview": "Overview",
@@ -16,6 +18,47 @@
       "Gear": "Gear",
       "Advances": "Advances",
       "Ship": "Ship & Role"
+    },
+    "Equipment": {
+      "LoadoutManager": "Loadout Manager",
+      "ProtectionMatrix": "Protection Matrix",
+      "Containers": "Containers",
+      "OnPerson": "Carried on Person",
+      "Items": "items",
+      "LiftingCapacity": "Lifting Capacity",
+      "Equipped": "Equipped",
+      "Armour": "Armour",
+      "ForceFields": "Force Fields",
+      "Cybernetics": "Cybernetics",
+      "Gear": "Gear",
+      "NoEquippedItems": "No items currently equipped",
+      "Equip": "Equip",
+      "Unequip": "Unequip",
+      "StowInBackpack": "Stow in Backpack",
+      "RemoveFromBackpack": "Remove from Backpack"
+    },
+    "Combat": {
+      "BattleStation": "Battle Station",
+      "Initiative": "Initiative",
+      "RollInitiative": "Roll Initiative",
+      "Wounds": "Wounds",
+      "Fatigue": "Fatigue",
+      "Fate": "Fate",
+      "Reactions": "Reactions",
+      "Dodge": "Dodge",
+      "Parry": "Parry",
+      "TacticalOverlay": "Tactical Overlay",
+      "RollHitLocation": "Roll Hit Location",
+      "QuickActions": "Quick Actions",
+      "Attack": "Attack",
+      "AssignDamage": "Assign Damage",
+      "CriticalInjuries": "Critical Injuries",
+      "NoInjuries": "No critical injuries",
+      "Movement": "Movement",
+      "Arsenal": "Arsenal",
+      "AddWeapon": "Add Weapon",
+      "EmptySlot": "Drag weapon here",
+      "OtherWeapons": "Other Weapons"
     },
     "OriginPath": {
       "Header": "Origin Path",
@@ -203,12 +246,17 @@
         "Speed": "Speed",
         "Manoeuvrability": "Manoeuvrability",
         "Detection": "Detection",
+        "DetectionBonus": "Detection Bonus",
+        "Initiative": "Initiative",
+        "RollInitiative": "Roll Ship Initiative",
         "Armour": "Armour",
         "VoidShields": "Void Shields",
         "TurretRating": "Turret Rating"
       },
       "Resources": {
         "Header": "Ship Resources",
+        "Power": "Power Available",
+        "Space": "Space Available",
         "SpaceTotal": "Space (Total)",
         "SpaceUsed": "Space (Used)",
         "PowerTotal": "Power (Total)",
@@ -274,9 +322,31 @@
       "Name": "Name",
       "Type": "Type",
       "Allegiance": "Allegiance",
+      "Faction": "Faction",
+      "Subfaction": "Subfaction",
+      "ThreatLevel": "Threat Level",
       "Notes": "Notes",
       "Description": "Description",
-      "Tactics": "Tactics"
+      "Tactics": "Tactics",
+      "SpecialAbilities": "Special Abilities"
+    },
+    "NPCType": {
+      "Troop": "Troop",
+      "Elite": "Elite",
+      "Master": "Master",
+      "Horde": "Horde",
+      "Swarm": "Swarm",
+      "Creature": "Creature",
+      "Daemon": "Daemon",
+      "Xenos": "Xenos"
+    },
+    "Threat": {
+      "Trivial": "Trivial",
+      "Low": "Low",
+      "Moderate": "Moderate",
+      "Dangerous": "Dangerous",
+      "Deadly": "Deadly",
+      "Apocalyptic": "Apocalyptic"
     },
     "Vehicle": {
       "Name": "Vehicle Name",

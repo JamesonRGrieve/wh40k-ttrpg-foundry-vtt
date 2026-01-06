@@ -7,7 +7,7 @@
     "damageOrEffect": "+5 to BS Tests to fire weapon on Full Auto, for the rest of the round, +5 to all tests to hit you through smoke/darkness/etc. ",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Average",
+    "availability": "average",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

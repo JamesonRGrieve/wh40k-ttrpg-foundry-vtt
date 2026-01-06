@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select wihtout the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "General",
+      "Finesse",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

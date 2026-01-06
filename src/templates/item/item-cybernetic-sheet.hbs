@@ -1,101 +1,96 @@
-{{dhlog this}}
-<div class="dh-wrapper">
-    <form class="dh-item" autocomplete="off">
-        <div class="dh-panel dh-grid-col-6">
-            <div class="dh-header">
-                <div class="dh-header__info">
-                    <div class="dh-header__logo dh-header__item-wrapper--span-4">
-                        <img class="dh-header__logo-image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper--span-4">
-                        <span class="dh-header__title">Name</span>
-                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Source</span>
-                        <input class="dh-header__input" name="system.source" type="text" value="{{item.system.source}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Weight</span>
-                        <input class="dh-header__input" name="system.weight" type="number" data-dtype="Number"
-                               value="{{item.system.weight}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Equipped</span>
-                        <input name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.equipped}}/>
-                    </div>
-                    <div class="dh-header__item-wrapper">
-                        <span class="dh-header__title">Has Armour</span>
-                        <input name="system.hasArmourPoints" type="checkbox" data-dtype="Boolean" {{checked
-                            item.system.hasArmourPoints}}/>
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Availability</span>
-                        <select class="dh-header__select" name="system.availability">
-                            {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
-                        </select>
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Craftsmanship</span>
-                        <select class="dh-header__select" name="system.craftsmanship">
-                            {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
-                        </select>
-                    </div>
-                    {{#if item.system.hasArmourPoints}}
-                        <div class="dh-header__info dh-grid-col-3">
-                            <div class="dh-header__item-wrapper--text-area">
-                                <span class="dh-header__title">Description</span>
-                                <textarea class="dh-header__textarea"
-                                          name="system.description">{{item.system.description}}</textarea>
-                            </div>
-                        </div>
-                        <div class="dh-wrapper mt-5 dh-grid-col-1">
-                            <h1 class="dh-panel__header">Armour Points</h1>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Head</span>
-                                <input class="dh-field__input" type="text" name="system.armourPoints.head"
-                                       value="{{item.system.armourPoints.head}}" />
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Left Arm</span>
-                                <input class="dh-field__input" type="text" name="system.armourPoints.leftArm"
-                                       value="{{item.system.armourPoints.leftArm}}" />
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Right Arm</span>
-                                <input class="dh-field__input" type="text" name="system.armourPoints.rightArm"
-                                       value="{{item.system.armourPoints.rightArm}}" />
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Body</span>
-                                <input class="dh-field__input" type="text" name="system.armourPoints.body"
-                                       value="{{item.system.armourPoints.body}}" />
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Left Leg</span>
-                                <input class="dh-field__input" type="text" name="system.armourPoints.leftLeg"
-                                       value="{{item.system.armourPoints.leftLeg}}" />
-                            </div>
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__header">Right Leg</span>
-                                <input class="dh-field__input" type="text" name="system.armourPoints.rightLeg"
-                                       value="{{item.system.armourPoints.rightLeg}}" />
-                            </div>
-                        </div>
-                    {{else}}
-                        <div class="dh-header__info dh-grid-col-4">
-                            <div class="dh-header__item-wrapper--text-area">
-                                <span class="dh-header__title">Description</span>
-                                <textarea class="dh-header__textarea"
-                                          name="system.description">{{item.system.description}}</textarea>
-                            </div>
-                        </div>
-                    {{/if}}
+{{!-- Rogue Trader Cybernetic Sheet - Modern Design --}}
+<form class="rt-item-sheet" autocomplete="off">
+    {{!-- Header --}}
+    <div class="rt-item-sheet__header">
+        <div class="rt-item-sheet__image-wrapper">
+            <img class="rt-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+        </div>
+        <div class="rt-item-sheet__title-area">
+            <div class="rt-item-sheet__name-field">
+                <label class="rt-item-sheet__name-label">Name</label>
+                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Main Fields --}}
+    <div class="rt-item-sheet__panel">
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Source</label>
+                <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Weight</label>
+                <input class="rt-item-sheet__input" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
+            </div>
+        </div>
+        
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Availability</label>
+                <select class="rt-item-sheet__select" name="system.availability">
+                    {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                </select>
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Craftsmanship</label>
+                <select class="rt-item-sheet__select" name="system.craftsmanship">
+                    {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                </select>
+            </div>
+        </div>
+        
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__checkbox-field">
+                <input class="rt-item-sheet__input" name="system.equipped" type="checkbox" data-dtype="Boolean" {{checked item.system.equipped}} />
+                <label class="rt-item-sheet__label">Equipped</label>
+            </div>
+            <div class="rt-item-sheet__checkbox-field">
+                <input class="rt-item-sheet__input" name="system.hasArmourPoints" type="checkbox" data-dtype="Boolean" {{checked item.system.hasArmourPoints}} />
+                <label class="rt-item-sheet__label">Has Armour</label>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Armour Points (if applicable) --}}
+    {{#if item.system.hasArmourPoints}}
+        <div class="rt-item-sheet__panel">
+            <h3 class="rt-item-sheet__panel-title">Armour Points</h3>
+            <div class="rt-item-sheet__stats-grid">
+                <div class="rt-item-sheet__stat">
+                    <label class="rt-item-sheet__label">Head</label>
+                    <input class="rt-item-sheet__input" type="text" name="system.armourPoints.head" value="{{item.system.armourPoints.head}}" />
+                </div>
+                <div class="rt-item-sheet__stat">
+                    <label class="rt-item-sheet__label">Body</label>
+                    <input class="rt-item-sheet__input" type="text" name="system.armourPoints.body" value="{{item.system.armourPoints.body}}" />
+                </div>
+                <div class="rt-item-sheet__stat">
+                    <label class="rt-item-sheet__label">Left Arm</label>
+                    <input class="rt-item-sheet__input" type="text" name="system.armourPoints.leftArm" value="{{item.system.armourPoints.leftArm}}" />
+                </div>
+                <div class="rt-item-sheet__stat">
+                    <label class="rt-item-sheet__label">Right Arm</label>
+                    <input class="rt-item-sheet__input" type="text" name="system.armourPoints.rightArm" value="{{item.system.armourPoints.rightArm}}" />
+                </div>
+                <div class="rt-item-sheet__stat">
+                    <label class="rt-item-sheet__label">Left Leg</label>
+                    <input class="rt-item-sheet__input" type="text" name="system.armourPoints.leftLeg" value="{{item.system.armourPoints.leftLeg}}" />
+                </div>
+                <div class="rt-item-sheet__stat">
+                    <label class="rt-item-sheet__label">Right Leg</label>
+                    <input class="rt-item-sheet__input" type="text" name="system.armourPoints.rightLeg" value="{{item.system.armourPoints.rightLeg}}" />
                 </div>
             </div>
         </div>
-    </form>
-</div>
-
-
+    {{/if}}
+    
+    {{!-- Description --}}
+    <div class="rt-item-sheet__description">
+        <div class="rt-item-sheet__field">
+            <label class="rt-item-sheet__label">Description</label>
+            <textarea class="rt-item-sheet__textarea" name="system.description">{{item.system.description}}</textarea>
+        </div>
+    </div>
+</form>

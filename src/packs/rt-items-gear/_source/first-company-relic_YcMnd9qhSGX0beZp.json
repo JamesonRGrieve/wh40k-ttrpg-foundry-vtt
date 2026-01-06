@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "-",
     "availability": "Relic of the First Tyrannic War (Ultramarines). Bearer gains Fearless Talent and +20 to any opposed test made against Tyranids. If the character is a squad leader, they passes these benefits on to any other Ultramarines in their Squad.",
     "cost": "Ultramarines only",

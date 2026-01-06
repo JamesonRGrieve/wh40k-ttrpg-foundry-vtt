@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 0,
     "effect": "Provides 3 Void Shields, absorbing 3 attacks from any attacking vessel each round.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Provides 3 Void Shields, absorbing 3 attacks from any attacking vessel each round.</p>"

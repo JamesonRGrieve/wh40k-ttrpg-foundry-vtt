@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Defence",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>When the Character makes a Called Shot Action and achieves more Degrees of Success than the Target's Agility Bonus, they immediately inflict 1d5 Critical Damage on the location hit.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

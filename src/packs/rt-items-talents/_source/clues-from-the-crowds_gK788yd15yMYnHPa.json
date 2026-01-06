@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Once per day, character can re-roll a test made to gather information from a group of people.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "General",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

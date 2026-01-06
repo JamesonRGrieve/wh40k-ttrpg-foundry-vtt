@@ -9,7 +9,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Character gains +20 to Tech-Use and Security Tests to gain unauthorised access to electronic systems using a Cogitator or Electronic Lock as long as they can connect to it with their implants.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

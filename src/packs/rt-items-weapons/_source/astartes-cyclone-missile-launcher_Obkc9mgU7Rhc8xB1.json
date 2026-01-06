@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Mounted",
-    "type": "Launcher",
+    "class": "mounted",
+    "type": "launcher",
     "range": "300m",
     "rof": "S/2/-",
     "damage": "-",

@@ -1,0 +1,76 @@
+# Armour Template
+# Use this as a reference for creating armour items
+
+_id: &id armour-template-000001
+name: Carapace Armour
+type: armour
+img: systems/rogue-trader/icons/armour/carapace.webp
+
+system:
+  identifier: carapace-armour
+  
+  # Armour Classification
+  type: carapace  # flak, mesh, carapace, power, light-power, primitive, xenos, void
+  
+  # Armour Points per Location
+  armourPoints:
+    head: 6
+    leftArm: 6
+    rightArm: 6
+    body: 6
+    leftLeg: 6
+    rightLeg: 6
+  
+  # Coverage (which locations this protects)
+  coverage:
+    - all  # or specific: head, leftArm, rightArm, body, leftLeg, rightLeg
+  
+  # Movement Restrictions
+  maxAgility: null  # null = no restriction, or number like 35
+  
+  # Special Properties
+  properties: []
+  
+  # Modifications
+  modificationSlots: 2
+  modifications: []
+  
+  # Physical Properties
+  weight: 15
+  availability: rare
+  craftsmanship: common
+  quantity: 1
+  cost:
+    value: 1500
+    currency: throne
+  
+  # Equipment State
+  equipped: false
+  inBackpack: false
+  container: ""
+  
+  # Description
+  description:
+    value: |
+      <p>Carapace armour consists of large rigid plates of 
+      armaplas or ceramite moulded to fit the wearer. It 
+      provides excellent protection against most weapons, 
+      though it is heavier and more restrictive than lighter 
+      armour types.</p>
+    chat: ""
+    summary: "Heavy protective armour"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "136"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

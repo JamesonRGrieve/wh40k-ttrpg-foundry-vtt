@@ -1,0 +1,34 @@
+{
+  "name": "Speak Language (Eldar)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "intelligence",
+    "descriptor": "Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.",
+    "uses": "Skill Test: Comprehend or Communicate intended meaning in specific language despite limitation or difficulty. Test difficulty varies.\nSkill Groups: Eldar, Explorator Binary, High Gothic, Low Gothic, Techna-Lingua, Trader's Cant",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Eldar",
+      "Explorator Binary",
+      "High Gothic",
+      "Low Gothic",
+      "Techna-Lingua",
+      "Trader's Cant"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c8d788a1d5060a8a"
+}

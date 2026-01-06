@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": "Special",
     "maxAg": "-",
     "weight": "1.5kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "20000 T",
     "notes": "Reduces damage from high-velocity impacts by 2d10. If rolling double 1's, attack bypasses shield. If double 0's field overloads and power cell burns out until repaired (but damage is reduced by 20). Ineffective against close range or slow moving attacks such as melee attacks or landmines. Power cells last 1 hour, are non rechargable, Rare, and 1,000 Thrones each",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,20 @@
       "value": "<p>Reduces damage from high-velocity impacts by 2d10. If rolling double 1's, attack bypasses shield. If double 0's field overloads and power cell burns out until repaired (but damage is reduced by 20). Ineffective against close range or slow moving attacks such as melee attacks or landmines. Power cells last 1 hour, are non rechargable, Rare, and 1,000 Thrones each</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -18,7 +18,12 @@
     },
     "tier": 3,
     "isPassive": true,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": [
+      "Social",
+      "Weapon Skill\nVeteran Talent Requirement Fulfilled"
+    ]
   },
   "effects": [],
   "flags": {},

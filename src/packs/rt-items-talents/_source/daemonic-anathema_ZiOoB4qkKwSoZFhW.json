@@ -9,7 +9,12 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>All creatures with the Daemonic Trait within Willpower Bonus metres of the Untouchable do not gain any of the benefits of that trait.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

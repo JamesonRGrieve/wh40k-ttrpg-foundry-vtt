@@ -9,7 +9,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character can make ranged attacks with weapons with the indirect quality targeting locations they cannot see as a Half Action instead of a Full Action. When firing an Indirect Weapon or throwing a grenade, roll twice to determine scatter direction and choose either result.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

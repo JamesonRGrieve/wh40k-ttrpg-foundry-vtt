@@ -9,7 +9,10 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>All characters suffer a -10 penalty to Willpower Tests whilst within X metres of this creature.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

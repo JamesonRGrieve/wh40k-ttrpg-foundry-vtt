@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Creature is a Psyker, by having this Trait they can purchase the Psyniscience Skill and Psy Rating and Psychic Power Talents.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

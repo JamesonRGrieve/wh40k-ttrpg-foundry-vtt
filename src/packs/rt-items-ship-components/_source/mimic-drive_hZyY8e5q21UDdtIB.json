@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "To Activate, bridge crew make opposed +20 Tech-Use Test vs Opponents +0 Detection+Scrutiny Test. To try to pretend to be a larger ship to sensors. Replicating specific ship signature incurs -20 penalty to test. Visual Inspection clearly identifes the vessel. Poor Versions can't replicate specific vessels, Good provides +10 to Test, Best also has two specific vessels programmed in that can be replicated without penalty. Only one per vessel.",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>To Activate, bridge crew make opposed +20 Tech-Use Test vs Opponents +0 Detection+Scrutiny Test. To try to pretend to be a larger ship to sensors. Replicating specific ship signature incurs -20 penalty to test. Visual Inspection clearly identifes the vessel. Poor Versions can't replicate specific vessels, Good provides +10 to Test, Best also has two specific vessels programmed in that can be replicated without penalty. Only one per vessel.</p>"

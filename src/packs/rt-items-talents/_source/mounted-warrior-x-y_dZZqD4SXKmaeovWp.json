@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When taking Talent, select X as either \"Ranged\" or \"Melee\" Specialisation (changing Aptitudes as appropriate). When character an attack of that type from a vehicle or mount, reduce the penalty for that attack by 10*Y (Where Y = number of times Talent has been purchased for this specialisation). Applies to ordinary attacks and vehicle combat actions like Hit and Run. Talent can be purchased multiple times, to either select different specialisations, or to further reduce the attack penalty.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "WS or BS",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

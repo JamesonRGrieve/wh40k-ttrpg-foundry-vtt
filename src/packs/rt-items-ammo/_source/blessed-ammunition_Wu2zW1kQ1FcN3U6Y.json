@@ -7,7 +7,7 @@
     "damageOrEffect": "Weapon gains Sanctified Quality when firing with this ammo",
     "qualities": "Sanctified",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "50T Each",
     "source": "RT: Faith and Coin",
     "description": {

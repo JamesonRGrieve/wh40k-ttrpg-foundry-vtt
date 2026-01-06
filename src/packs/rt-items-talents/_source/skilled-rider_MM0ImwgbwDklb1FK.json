@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>If the character would be thrown from their Mount for any reason, they can make a +10 Survival Test, if successful they either remain on their Mount or fall safely to the ground, landing on their feet.\nAdditionally, they can Mount/Dismount as a Half Action</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft"
+    ]
   },
   "effects": [],
   "flags": {},

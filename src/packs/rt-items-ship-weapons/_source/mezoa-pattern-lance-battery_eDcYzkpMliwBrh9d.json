@@ -12,7 +12,7 @@
     "strength": 2,
     "critRating": 4,
     "range": 4,
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "notes": "Lance Weapons ignore armour.",
     "source": "RT: BF Koronus",
     "description": {

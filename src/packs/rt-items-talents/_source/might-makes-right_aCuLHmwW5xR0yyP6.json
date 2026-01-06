@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Orks may use the Intimidate Skill to perform all functions of the Command Skill when targeting Greenskins (Gretchin, Snotlings, Orks), affecting a number of targets up to their Strength Bonus. Doesn't work with Non-Greenskins.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

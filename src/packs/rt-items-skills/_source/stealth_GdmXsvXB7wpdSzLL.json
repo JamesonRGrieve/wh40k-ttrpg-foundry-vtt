@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Movement\nApt: Agility, Fieldcraft, Unaligned",
-    "characteristic": "Agility",
+    "type": "",
+    "characteristic": "agility",
     "descriptor": "Moving Quietly, concealing themselves or an object from a searcher, Shadowing someone, etc.",
     "uses": "From Prior Editions: Includes Concealment, Silent Move, and Shadowing\nUses: Opposed Test vs a foe's Awareness. Used for: Scouting an Enemy Force without being detected, sneaking up on a foe to kill them, following someone without arousing suspicion.\nSpecial Use: Shadowing: Stealth vs Target's Awareness. Can be anything from following a person whilst hiding in a crowd to following a starship with yours hiding in an asteroid field.",
     "useTime": "Free Action as part of Movement",
@@ -15,7 +15,14 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft",
+      "Unaligned"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

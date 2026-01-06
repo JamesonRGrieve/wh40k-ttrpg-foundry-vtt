@@ -18,7 +18,12 @@
     },
     "tier": 1,
     "isPassive": false,
-    "isRollable": false
+    "isRollable": false,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ]
   },
   "effects": [],
   "flags": {},

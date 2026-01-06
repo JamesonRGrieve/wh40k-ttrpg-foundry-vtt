@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Mesh",
+    "type": "mesh",
     "locations": "Arms",
     "ap": 3,
     "maxAg": null,
     "weight": "0.5kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "120 T",
     "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
     "source": "Dark Heresy: Core",
@@ -16,7 +16,21 @@
       "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

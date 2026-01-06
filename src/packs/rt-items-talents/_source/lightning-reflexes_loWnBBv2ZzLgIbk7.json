@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When making an Initiative Roll, the Character rolls twice and chooses the higher of the two to add their Agility Bonus to.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

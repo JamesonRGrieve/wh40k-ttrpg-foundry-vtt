@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 2,
     "effect": "+3 to Hull Integrity",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+3 to Hull Integrity</p>"

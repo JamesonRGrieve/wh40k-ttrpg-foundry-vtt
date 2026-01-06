@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Defence",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

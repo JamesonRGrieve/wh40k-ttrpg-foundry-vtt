@@ -1,0 +1,18 @@
+// ============================================
+// Actor Sheet Styles Index
+// ============================================
+// Split from original _actor.scss for maintainability
+
+@import 'mixins';          // Progress bars, panel tints, vitals themes
+@import 'sheet-base';      // Base .rt-sheet styles and panel defaults
+@import 'input-override';  // Global input styling override (removes blue)
+@import 'skills';          // Skills tab layout
+@import 'status';          // Gothic quick status display
+@import 'origin-path';     // Origin path styles
+@import 'characteristics'; // Characteristics panel (abilities tab)
+@import 'ship';            // Ship & dynasty styles
+@import 'combat';          // Combat tab styles
+@import 'abilities';       // Abilities tab layout
+@import 'equipment';       // Equipment tab styles
+@import 'tables';          // Table improvements, item buttons
+@import 'vitals';          // Vitals panels (wounds, fatigue, fate)

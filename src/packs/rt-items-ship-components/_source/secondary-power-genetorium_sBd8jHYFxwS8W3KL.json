@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "\"Universe-Class Mass Conveyer\" Unique Component. Generates +10 Power in addition to that provided by the ship's plasma drive. One per vessel, designed only for its listed ship.",
-    "availability": "Unique",
+    "availability": "unique",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>\"Universe-Class Mass Conveyer\" Unique Component. Generates +10 Power in addition to that provided by the ship's plasma drive. One per vessel, designed only for its listed ship.</p>"

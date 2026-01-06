@@ -1,29 +1,43 @@
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        <div class="dh-roll">
-            <h1>{{actor.name}}</h1>
-            <h2>{{forceField.name}}</h2>
-            <div class="dh-roll__divider"></div>
+{{!-- Rogue Trader Force Field Roll Card - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            <div class="rt-roll-card__actor">{{actor.name}}</div>
+            <h2 class="rt-roll-card__title">{{forceField.name}}</h2>
+            <div class="rt-roll-card__subtitle">Force Field Activation</div>
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
             {{#if overload}}
-                <div class="dh-roll__label">The field overloads! It ceases to function until it is recharged or repaired, requiring a successful Very Hard (–30) Tech-Use test.</div>
+                <div class="rt-roll-card__fury">
+                    <div class="rt-roll-card__fury-title">⚠ Field Overload! ⚠</div>
+                    <div class="rt-roll-card__fury-effect">The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).</div>
+                </div>
             {{/if}}
+            
             {{#if success}}
-                <div class="dh-roll__success">
-                    <span>Success</span>
-                    <span>{{roll.total}}</span>
+                <div class="rt-roll-card__result rt-roll-card__result--success">
+                    <div class="rt-roll-card__result-label">Field Activated</div>
+                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="dh-roll__label">The field activates successfully!</div>
+                <div class="rt-roll-card__text">
+                    <p>The field activates successfully! Attack is nullified.</p>
+                </div>
             {{else}}
-                <div class="dh-roll__fail">
-                    <span>Fail</span>
-                    <span>{{roll.total}}</span>
+                <div class="rt-roll-card__result rt-roll-card__result--failure">
+                    <div class="rt-roll-card__result-label">Field Failed</div>
+                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="dh-roll__label">The field fails to protect and the attack proceeds as normal.</div>
+                <div class="rt-roll-card__text">
+                    <p>The field fails to protect and the attack proceeds as normal.</p>
+                </div>
             {{/if}}
 
             {{#if forceField.system.description}}
-                <div class="dh-roll__divider"></div>
-                <div class="dh-roll__label">{{forceField.system.description}}</div>
+                <div class="rt-roll-card__divider"></div>
+                <div class="rt-roll-card__text">{{forceField.system.description}}</div>
             {{/if}}
         </div>
     </div>

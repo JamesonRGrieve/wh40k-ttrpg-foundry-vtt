@@ -7,7 +7,7 @@
     "damageOrEffect": "Loses Tearing, gains Warp Weapon and Blast(2) Qualities. Only functions when used is dedicated to Tzeentch. Can only fire on Single Shot mode. Warp Weapon Quality only applies to Living Targets. Heretical.",
     "qualities": "Warp Weapon, Blast(2)",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "BC: Tome of Fate",
     "description": {

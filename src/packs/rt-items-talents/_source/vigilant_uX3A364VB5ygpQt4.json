@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When using the Overwatch Action, character can use Perception Characteristic instead of Agility Characteristic to determine whether they or their target takes an action first, as well as for any Opposed Agility Tests that Overwatch calls for them to take.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Perception"
+    ]
   },
   "effects": [],
   "flags": {},

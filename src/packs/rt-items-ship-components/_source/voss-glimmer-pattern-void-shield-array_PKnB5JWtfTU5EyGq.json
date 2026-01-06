@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 0,
     "effect": "Provides 1 Void Shield, absorbing 1 attack from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Provides 1 Void Shield, absorbing 1 attack from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.</p>"

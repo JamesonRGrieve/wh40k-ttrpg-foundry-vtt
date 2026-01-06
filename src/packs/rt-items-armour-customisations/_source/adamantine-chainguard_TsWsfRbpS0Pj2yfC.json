@@ -6,7 +6,7 @@
     "armourTypes": "Any Armour",
     "effect": "When hit by a melee weapon, if 1's digit of the attacker's attack roll is a 1 (EG: 21, 31, 41, etc), then weapon is destroyed. Power Fielded, Warp Weapons, Natural Weapons, or other similar Power Field immune weapons are not destroyed. -5 max agility.",
     "weight": "4kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When hit by a melee weapon, if 1's digit of the attacker's attack roll is a 1 (EG: 21, 31, 41, etc), then weapon is destroyed. Power Fielded, Warp Weapons, Natural Weapons, or other similar Power Field immune weapons are not destroyed. -5 max agility.</p>"

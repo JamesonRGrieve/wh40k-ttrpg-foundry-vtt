@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 1,
     "effect": "Gardens to grow food in and relax. Double Time ship can remain in the void without suffering Population or Morale Loss. Increase Crew Population by +2 Permenantly. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Gardens to grow food in and relax. Double Time ship can remain in the void without suffering Population or Morale Loss. Increase Crew Population by +2 Permenantly. Only one per vessel.</p>"

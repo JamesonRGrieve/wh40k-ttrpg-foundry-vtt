@@ -18,7 +18,12 @@
     },
     "tier": 2,
     "isPassive": false,
-    "isRollable": false
+    "isRollable": false,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -1,85 +1,102 @@
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        {{#if label}}<h3>{{label}}</h3>{{/if}}
-        <div class="dh-roll">
+{{!-- Rogue Trader Psychic Action Card - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            {{#if label}}<div class="rt-roll-card__actor">{{label}}</div>{{/if}}
             {{#with rollData}}
-                <div>
-                    <h1>{{name}}</h1>
-                    {{#if action}}<h2>{{action}}</h2>{{/if}}
-                    <h3>{{effectString}}</h3>
-                    <div class="dh-roll__divider"></div>
-
-                    <div class="dh-roll__row dh-roll__row--number">
-                        <div class="dh-roll__label">Base</div>
-                        <div class="dh-roll__value">{{baseTarget}}</div>
+                <h2 class="rt-roll-card__title">{{name}}</h2>
+                {{#if action}}<div class="rt-roll-card__subtitle">{{action}}</div>{{/if}}
+                {{#if effectString}}<div class="rt-roll-card__subtitle">{{effectString}}</div>{{/if}}
+            {{/with}}
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
+            {{#with rollData}}
+                {{!-- Modifiers Breakdown --}}
+                <div class="rt-roll-card__row">
+                    <span class="rt-roll-card__label">Base</span>
+                    <span class="rt-roll-card__value">{{baseTarget}}</span>
+                </div>
+                
+                {{#each activeModifiers}}
+                    <div class="rt-roll-card__row rt-roll-card__row--modifier">
+                        <span class="rt-roll-card__label">{{@key}}</span>
+                        <span class="rt-roll-card__value {{#if (gt this 0)}}rt-roll-card__value--positive{{else if (lt this 0)}}rt-roll-card__value--negative{{/if}}">
+                            {{#if (gt this 0)}}+{{/if}}{{this}}
+                        </span>
                     </div>
-                    {{#each activeModifiers}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Modifier: {{@key}}</div>
-                            <div class="dh-roll__value">{{this}}</div>
-                        </div>
-                    {{/each}}
-                    <div class="dh-roll__target">
-                        <div class="dh-roll__label">Target</div>
-                        <div class="dh-roll__value">{{modifiedTarget}}</div>
+                {{/each}}
+                
+                {{!-- Target Number --}}
+                <div class="rt-roll-card__target">
+                    <span class="rt-roll-card__label">Target</span>
+                    <span class="rt-roll-card__value">{{modifiedTarget}}</span>
+                </div>
+                
+                {{!-- Effects --}}
+                {{#each @root.effectOutput as |effect|}}
+                    <div class="rt-roll-card__effect">
+                        <span class="rt-roll-card__effect-name">{{effect.name}}</span>
+                        <span class="rt-roll-card__effect-desc">{{effect.effect}}</span>
                     </div>
-
-                    {{#each @root.effectOutput as |effect|}}
-                        <div class="dh-roll__row--full">
-                            <span class='dh-roll__label'>{{effect.name}}</span> - {{effect.effect}}
-                        </div>
-                    {{/each}}
-
-                    {{#if isOpposed}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Opposed {{opposedChar}} roll</div>
-                            <div class="dh-roll__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}}){{/if}}</div>
-                        </div>
-                    {{/if}}
-
+                {{/each}}
+                
+                {{!-- Opposed Roll --}}
+                {{#if isOpposed}}
+                    <div class="rt-roll-card__row">
+                        <span class="rt-roll-card__label">Opposed {{opposedChar}}</span>
+                        <span class="rt-roll-card__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
+                    </div>
+                {{/if}}
+                
+                {{!-- Degrees & Result --}}
+                {{#if success}}
+                    <div class="rt-roll-card__degrees rt-roll-card__degrees--success">
+                        <span class="rt-roll-card__degrees-count">{{dos}}</span>
+                        <span class="rt-roll-card__degrees-label">Degrees of Success</span>
+                    </div>
+                    <div class="rt-roll-card__result rt-roll-card__result--success">
+                        <div class="rt-roll-card__result-label">Power Manifested</div>
+                        <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                    </div>
+                {{else}}
+                    <div class="rt-roll-card__degrees rt-roll-card__degrees--failure">
+                        <span class="rt-roll-card__degrees-count">{{dof}}</span>
+                        <span class="rt-roll-card__degrees-label">Degrees of Failure</span>
+                    </div>
+                    <div class="rt-roll-card__result rt-roll-card__result--failure">
+                        <div class="rt-roll-card__result-label">Power Failed</div>
+                        <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                    </div>
+                {{/if}}
+                
+                {{!-- Controls --}}
+                <div class="rt-roll-card__controls">
                     {{#if success}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Degrees of Success</div>
-                            <div class="dh-roll__value">{{dos}}</div>
-                        </div>
-                        <div class="dh-roll__success">
-                            <span>Success</span>
-                            <span>{{roll.total}}</span>
-                        </div>
+                        <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__hide-control" data-toggle="{{@root.id}}">
+                            <span class="material-icons">bolt</span>
+                            <span>Effect</span>
+                        </button>
                     {{else}}
-                        <div class="dh-roll__row dh-roll__row--number">
-                            <div class="dh-roll__label">Degrees of Failure</div>
-                            <div class="dh-roll__value">{{dof}}</div>
-                        </div>
-                        <div class="dh-roll__fail">
-                            <span>Fail</span>
-                            <span>{{roll.total}}</span>
-                        </div>
+                        <button class="rt-roll-card__btn rt-roll-card__btn--disabled">
+                            <span class="material-icons">bolt</span>
+                            <span>Effect</span>
+                        </button>
                     {{/if}}
-
-                    <div class='dh-roll__controls-2'>
-                        {{#if success}}
-                            <button class="dh-control-button roll-control__hide-control" data-toggle="{{@root.id}}">
-                                <span class="dh-control-button__span material-icons">bolt</span>
-                                <span class="dh-control-button__label">Effect</span>
-                            </button>
-                        {{else}}
-                            <button class="dh-control-button__disabled">
-                                <span class="dh-control-button__span material-icons">bolt</span>
-                                <span class="dh-control-button__label">Effect</span>
-                            </button>
-                        {{/if}}
-                        <div class="dh-control-button roll-control__fate-reroll" data-roll-id="{{@root.id}}">
-                            <span class="dh-control-button__span material-icons">casino</span>
-                            <span class="dh-control-button__label">Re-roll</span>
-                        </div>
-                    </div>
+                    <button class="rt-roll-card__btn rt-roll-card__btn--fate roll-control__fate-reroll" data-roll-id="{{@root.id}}">
+                        <span class="material-icons">casino</span>
+                        <span>Re-roll</span>
+                    </button>
                 </div>
             {{/with}}
+            
+            {{!-- Collapsible Effect --}}
             {{#if rollData.success}}
-                <div id="{{@root.id}}" style="display: none">
-                    <div class="dh-roll__divider"></div>
-                    <div class="dh-roll__label">{{{psychicEffect}}}</div>
+                <div id="{{@root.id}}" class="rt-roll-card__collapse" hidden>
+                    <div class="rt-roll-card__divider rt-roll-card__divider--ornate"></div>
+                    <div class="rt-roll-card__text">{{{psychicEffect}}}</div>
                 </div>
             {{/if}}
         </div>

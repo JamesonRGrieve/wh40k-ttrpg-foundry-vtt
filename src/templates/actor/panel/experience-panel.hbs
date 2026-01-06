@@ -1,15 +1,20 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-2">
-    <h1 class="dh-panel__header">Experience</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Total</span>
-        <input class="dh-field__input" data-dtype="Number" type="number" name="system.experience.total" value="{{actor.system.experience.total}}" />
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Spent</span>
-        <input class="dh-field__input" data-dtype="Number" type="number" name="system.experience.used" value="{{actor.system.experience.used}}" />
-    </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Available</span>
-        <span class="dh-field__span">{{actor.system.experience.available}}</span>
+<div class="rt-panel rt-experience-panel rt-grid-col-2 rt-grid-row-2">
+    <h1 class="rt-panel-header">Experience</h1>
+    <div class="rt-xp-tracker">
+        <div class="rt-xp-field">
+            <span class="rt-xp-label">Total XP</span>
+            <input class="rt-xp-input" data-dtype="Number" type="number" name="system.experience.total" value="{{actor.system.experience.total}}" />
+        </div>
+        <div class="rt-xp-field">
+            <span class="rt-xp-label">Spent</span>
+            <input class="rt-xp-input rt-xp-spent" data-dtype="Number" type="number" name="system.experience.used" value="{{actor.system.experience.used}}" />
+        </div>
+        <div class="rt-xp-available">
+            <span class="rt-xp-label">Available</span>
+            <div class="rt-xp-available-value">{{actor.system.experience.available}}</div>
+        </div>
+        <div class="rt-xp-bar">
+            <div class="rt-xp-bar-fill" style="width: {{multiply (divide actor.system.experience.used actor.system.experience.total) 100}}%"></div>
+        </div>
     </div>
 </div>

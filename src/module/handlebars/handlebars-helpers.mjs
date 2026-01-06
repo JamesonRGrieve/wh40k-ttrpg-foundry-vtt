@@ -1,3 +1,5 @@
+import ROGUE_TRADER from '../config.mjs';
+
 export function capitalize(text) {
     if (!text) return '';
     return text[0].toUpperCase() + text.substring(1);
@@ -14,9 +16,110 @@ export function toCamelCase(str) {
         });
 }
 
-export function registerHandlebarsHelpers() {
-    console.log('Registering Handlebars Helpers');
+const ARMOUR_LOCATIONS = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
 
+function getArmourPointsObject(armour) {
+    const raw = armour?.armourPoints;
+    if (!raw || typeof raw !== 'object') return null;
+    if (raw.armourPoints && typeof raw.armourPoints === 'object') {
+        return raw.armourPoints;
+    }
+    return raw;
+}
+
+function parseLegacyLocations(rawLocations) {
+    if (!rawLocations || typeof rawLocations !== 'string') return null;
+    const normalized = rawLocations.toLowerCase();
+    if (normalized.includes('all')) {
+        return new Set(['all']);
+    }
+    const coverage = new Set();
+    const tokens = normalized.split(',').map((token) => token.trim()).filter(Boolean);
+    for (const token of tokens) {
+        if (token.includes('head')) {
+            coverage.add('head');
+        }
+        if (token.includes('body') || token.includes('chest') || token.includes('torso')) {
+            coverage.add('body');
+        }
+        if (token.includes('arm')) {
+            coverage.add('leftArm');
+            coverage.add('rightArm');
+        }
+        if (token.includes('leg')) {
+            coverage.add('leftLeg');
+            coverage.add('rightLeg');
+        }
+    }
+    return coverage.size ? coverage : null;
+}
+
+function parseLegacyAP(rawAp) {
+    if (rawAp === null || rawAp === undefined) return null;
+    if (typeof rawAp === 'number') {
+        return { defaultValue: rawAp };
+    }
+    if (typeof rawAp !== 'string') return null;
+    const values = rawAp.match(/-?\d+(?:\.\d+)?/g);
+    if (!values) return null;
+    const parsed = values.map((value) => Number(value));
+    if (parsed.length === 1) {
+        return { defaultValue: parsed[0] };
+    }
+    if (parsed.length >= 6) {
+        return {
+            pointsByLocation: {
+                head: parsed[0],
+                body: parsed[1],
+                leftArm: parsed[2],
+                rightArm: parsed[3],
+                leftLeg: parsed[4],
+                rightLeg: parsed[5]
+            }
+        };
+    }
+    if (parsed.length === 4) {
+        return {
+            pointsByLocation: {
+                head: parsed[0],
+                body: parsed[1],
+                leftArm: parsed[2],
+                rightArm: parsed[2],
+                leftLeg: parsed[3],
+                rightLeg: parsed[3]
+            }
+        };
+    }
+    return null;
+}
+
+function getArmourAPForLocation(armour, location) {
+    if (!armour) return 0;
+    if (typeof armour.getAPForLocation === 'function') {
+        return armour.getAPForLocation(location);
+    }
+    const armourPoints = getArmourPointsObject(armour);
+    if (armourPoints) {
+        const hasValues = Object.values(armourPoints).some((value) => Number(value) > 0);
+        if (hasValues) {
+            const value = Number(armourPoints?.[location] ?? 0);
+            return Number.isFinite(value) ? value : 0;
+        }
+    }
+
+    const coverage = parseLegacyLocations(armour.locations);
+    if (coverage && !coverage.has('all') && !coverage.has(location)) {
+        return 0;
+    }
+    const legacy = parseLegacyAP(armour.ap);
+    if (!legacy) return 0;
+    if (legacy.pointsByLocation) {
+        return legacy.pointsByLocation[location] ?? 0;
+    }
+    return legacy.defaultValue ?? 0;
+}
+
+export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('isPsychicAttack', function(power) {
         if (power && power.system.subtype) {
             return power.system.subtype.includes('Attack');
@@ -62,6 +165,8 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('removeMarkup', function(text) {
+        if (text == null) return '';
+        if (typeof text !== 'string') text = String(text);
         const markup = /<(.*?)>/gi;
         return text.replace(markup, '');
     });
@@ -84,6 +189,11 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('arrayIncludes', function(field, array) {
         return array.includes(field);
+    });
+
+    Handlebars.registerHelper('any', function(list, prop) {
+        if (!Array.isArray(list) || !prop) return false;
+        return list.some((item) => Boolean(item?.[prop]));
     });
 
     Handlebars.registerHelper('arrayToObject', function(array) {
@@ -134,6 +244,41 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('array', function(...args) {
         // Remove the options object that Handlebars adds
         return args.slice(0, -1);
+    });
+
+    /**
+     * Create a numeric range for iteration
+     * Usage: {{#each (range 1 5)}}
+     */
+    Handlebars.registerHelper('range', function(start, end) {
+        const out = [];
+        const s = Number(start) || 0;
+        const e = Number(end) || 0;
+        if (e < s) return out;
+        for (let i = s; i <= e; i++) out.push(i);
+        return out;
+    });
+
+    /**
+     * Compute a percentage for progress bars
+     * Usage: {{percent value max}}
+     */
+    Handlebars.registerHelper('percent', function(value, max) {
+        const v = Number(value) || 0;
+        const m = Number(max) || 0;
+        if (m <= 0) return 0;
+        return Math.min(100, Math.max(0, (v / m) * 100));
+    });
+
+    /**
+     * Compute an inverse percentage (full at 0, empty at max).
+     * Usage: {{inversePercent value max}}
+     */
+    Handlebars.registerHelper('inversePercent', function(value, max) {
+        const v = Number(value) || 0;
+        const m = Number(max) || 0;
+        if (m <= 0) return 0;
+        return Math.min(100, Math.max(0, 100 - (v / m) * 100));
     });
 
     Handlebars.registerHelper('colorCode', function(positive, negative) {
@@ -195,16 +340,25 @@ export function registerHandlebarsHelpers() {
         return special;
     });
 
+    Handlebars.registerHelper('json', function(value) {
+        try {
+            return JSON.stringify(value ?? {}, null, 2);
+        } catch (error) {
+            return '';
+        }
+    });
+
     Handlebars.registerHelper('armourDisplay', function(armour) {
-        let first = armour.armourPoints.body;
-        const same = Object.keys(armour.armourPoints).every((p) => armour.armourPoints[p] === first);
+        const getValue = (location) => getArmourAPForLocation(armour, location);
+        const first = getValue('body');
+        const same = ARMOUR_LOCATIONS.every((location) => getValue(location) === first);
         if (same) {
             return first + ' ALL';
         }
 
         const locations_array = [];
-        Object.keys(armour.armourPoints).forEach((part) => {
-            if (armour.armourPoints[part] > 0) {
+        ARMOUR_LOCATIONS.forEach((part) => {
+            if (getValue(part) > 0) {
                 locations_array.push(part);
             }
         });
@@ -212,7 +366,7 @@ export function registerHandlebarsHelpers() {
         return locations_array
             .map((item) => {
                 return (
-                    armour.armourPoints[item] +
+                    getValue(item) +
                     ' ' +
                     (item.toLowerCase() === 'head'
                         ? 'H'
@@ -231,6 +385,17 @@ export function registerHandlebarsHelpers() {
             })
             .filter((item) => item !== '')
             .join(', ');
+    });
+
+    Handlebars.registerHelper('armourLocation', function(armour, location) {
+        return getArmourAPForLocation(armour, location);
+    });
+
+    Handlebars.registerHelper('skillIcon', function(skillKey) {
+        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.rt : ROGUE_TRADER;
+        const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
+        if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
+        return icon;
     });
 
     Handlebars.registerHelper('damageTypeLong', function(damageType) {
@@ -311,6 +476,16 @@ export function registerHandlebarsHelpers() {
     });
 
     /**
+     * Return the smaller of two values.
+     */
+    Handlebars.registerHelper('min', function(a, b) {
+        const left = Number(a);
+        const right = Number(b);
+        if (Number.isNaN(left) || Number.isNaN(right)) return '';
+        return Math.min(left, right);
+    });
+
+    /**
      * Get CSS class for corruption degree
      */
     Handlebars.registerHelper('corruptionDegreeClass', function(corruption) {
@@ -334,5 +509,15 @@ export function registerHandlebarsHelpers() {
         if (points <= 79) return 'degree-unhinged';
         if (points <= 99) return 'degree-deranged';
         return 'degree-terminally-insane';
+    });
+
+    /**
+     * Join an array with a separator
+     * Usage: {{join myArray ", "}}
+     */
+    Handlebars.registerHelper('join', function(array, separator) {
+        if (!array) return '';
+        if (!Array.isArray(array)) return String(array);
+        return array.filter(Boolean).join(separator || ', ');
     });
 }

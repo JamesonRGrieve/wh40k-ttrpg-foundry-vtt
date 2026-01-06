@@ -9,7 +9,10 @@
     "source": "BC: Binding Contracts",
     "description": {
       "value": "<p>Tyranids are Immune to Pinning, Mind-Affecting Psychic Powers, Warp-Based Powers that affect the mind, cold, heat, disease, and poisons, and weapons with the Toxic Quality.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

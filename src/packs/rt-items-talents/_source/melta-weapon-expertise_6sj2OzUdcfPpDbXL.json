@@ -18,7 +18,12 @@
     },
     "tier": 2,
     "isPassive": true,
-    "isRollable": false
+    "isRollable": false,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

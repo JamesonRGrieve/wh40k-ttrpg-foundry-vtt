@@ -1,11 +1,23 @@
-<div class="dh-panel spacer dh-grid-col-2 dh-grid-row-1">
-    <h1 class="dh-panel__header">Fate</h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Max</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.fate.max" value="{{system.fate.max}}" />
+<div class="rt-panel spacer rt-grid-col-2 rt-grid-row-1 rt-vitals-panel rt-fate-panel">
+    <div class="rt-vitals-header">
+        <h1 class="rt-vitals-title">Fate</h1>
+        <div class="rt-vitals-meta">Max {{system.fate.max}}</div>
     </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Value</span>
-        <input type="number" data-dtype="Number" class="dh-field__input" name="system.fate.value" value="{{system.fate.value}}" />
+    <div class="rt-vitals-body">
+        <div class="rt-vitals-display">
+            <div class="rt-vitals-value">{{system.fate.value}}</div>
+            <div class="rt-vitals-max">/ {{system.fate.max}}</div>
+        </div>
+        <progress class="rt-vitals-progress" value="{{system.fate.value}}" max="{{system.fate.max}}"></progress>
+        <div class="rt-vitals-edit">
+            <label class="rt-vitals-field">
+                <span class="rt-vitals-label">Max</span>
+                <input type="number" data-dtype="Number" class="rt-field__input" name="system.fate.max" value="{{system.fate.max}}" />
+            </label>
+            <label class="rt-vitals-field">
+                <span class="rt-vitals-label">Current</span>
+                <input type="number" data-dtype="Number" class="rt-field__input" name="system.fate.value" value="{{system.fate.value}}" />
+            </label>
+        </div>
     </div>
 </div>

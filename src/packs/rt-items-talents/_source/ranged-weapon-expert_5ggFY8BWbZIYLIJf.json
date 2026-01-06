@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per Combat Encounter, character can make an Aim Action as a Free Action for the chosen weapon group.\nFor this Talent, choose one weapon group character has Weapon Training in. Can take this talent multiple times, each time choosing a different group.\nExample Groups: Bolt, Flame, Las, Launcher, Melta, Plasma, Low Tech(Primitive), SP, or Heavy</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Finesse",
+      "Ballistic Skill"
+    ]
   },
   "effects": [],
   "flags": {},

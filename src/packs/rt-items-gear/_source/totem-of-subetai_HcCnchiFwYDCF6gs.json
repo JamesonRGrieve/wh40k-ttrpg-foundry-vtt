@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "-",
     "availability": "Relic Staff of the White Scars. When used by a Stormseer, whenever they suffer Perils of the Warp they may adjust the roll by up to 10 (up or down) after the dice has been rolled.",
     "cost": "White Scars Stormseers (Librarians) only.",

@@ -9,7 +9,12 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Before making a Focus Power test to manifest a power of the Telepathy Discipline or provided by the Astropath Elite Advance, the Astropath's can spend a Fate Point to increase their Psy Rating by half their Willpower Bonus (rounded down) for that test.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship"
+    ]
   },
   "effects": [],
   "flags": {},

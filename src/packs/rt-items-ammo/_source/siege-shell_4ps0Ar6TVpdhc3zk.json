@@ -7,7 +7,7 @@
     "damageOrEffect": "2d10+6 X, Pen 10, Concussive (2), Blast(3)\nDoes 4d10+6 Damage at Pen 20 when hitting a Building",
     "qualities": "Concussive (2), Blast(3)",
     "weight": "3kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

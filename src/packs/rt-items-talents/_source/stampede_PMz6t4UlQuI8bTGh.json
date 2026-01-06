@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When the Creature fails a Willpower Test, it automatically Stampedes, charging in a straight line forwards for as far as it can and running through anyone in its path. Anyone that gets caught in the way takes either the creature's Natural Weapon Damage, or 1d5+SB if it doesn't have Natural Weapons. One creature stampeding causes all others with the same trait within sight to also stampedge. Stampede lasts for 1d10 Minutes or until the source of danager is no longer visible.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Advanced",
-    "characteristic": "Intelligence",
+    "type": "",
+    "characteristic": "intelligence",
     "descriptor": "Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.",
     "uses": "Skill Test: Comprehend or Communicate intended meaning in specific language despite limitation or difficulty. Test difficulty varies.\nSkill Groups: Eldar, Explorator Binary, High Gothic, Low Gothic, Techna-Lingua, Trader's Cant",
     "useTime": "Free Action",
@@ -23,7 +23,10 @@
       "Low Gothic",
       "Techna-Lingua",
       "Trader's Cant"
-    ]
+    ],
+    "skillType": "specialist",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

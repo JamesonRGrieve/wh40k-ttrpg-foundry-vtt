@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.5,
     "maxAg": "-",
     "weight": "-",
-    "availability": "Unique",
+    "availability": "unique",
     "cost": "-",
     "notes": "Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality.",
     "source": "BC: Tome of Fate",
@@ -16,7 +16,20 @@
       "value": "<p>Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.5,
+      "body": 0.5,
+      "leftArm": 0.5,
+      "rightArm": 0.5,
+      "leftLeg": 0.5,
+      "rightLeg": 0.5
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

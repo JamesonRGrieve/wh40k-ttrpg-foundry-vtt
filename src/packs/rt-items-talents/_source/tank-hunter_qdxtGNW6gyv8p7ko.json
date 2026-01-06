@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When making a Ranged Attack against a Vehicle, the character adds their Ballistic Skill Bonus to the Penetration value of their weapon.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

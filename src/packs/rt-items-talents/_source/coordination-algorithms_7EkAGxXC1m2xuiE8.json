@@ -9,7 +9,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When two or more servitors, such as the character's Servitor Comrades, assist them in a Tech-Use Test via the Servo-Arm Comrade Advance, they gain an additiional +5 to the test per servitor assisting beyond the first.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

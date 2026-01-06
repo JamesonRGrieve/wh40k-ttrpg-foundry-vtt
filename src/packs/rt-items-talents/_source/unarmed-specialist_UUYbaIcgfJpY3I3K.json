@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character gains Deadly Natural Weapons Trait, and counts as armed even whilst facing a weapon wielding opponent whilst barehanded (or using their own natural weapons). Whilst fihgting barehanded they can re-roll the damage they inflict.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Strength",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

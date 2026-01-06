@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.55,
     "maxAg": "-",
     "weight": "0.5kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Opponents with the Daemonic Trait suffer -10 to attack tests and Focus Power tests against the wearer.\nOnly available to those must trusted by the Ordo Malleus.",
     "source": "DH 2E: Enemies Beyond",
@@ -16,7 +16,20 @@
       "value": "<p>Opponents with the Daemonic Trait suffer -10 to attack tests and Focus Power tests against the wearer.\nOnly available to those must trusted by the Ordo Malleus.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.55,
+      "body": 0.55,
+      "leftArm": 0.55,
+      "rightArm": 0.55,
+      "leftLeg": 0.55,
+      "rightLeg": 0.55
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

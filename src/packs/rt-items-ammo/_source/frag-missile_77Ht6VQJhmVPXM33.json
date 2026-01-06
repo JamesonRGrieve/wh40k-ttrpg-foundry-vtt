@@ -7,7 +7,7 @@
     "damageOrEffect": "2d10+4 X, Pen 4, Blast(6)",
     "qualities": "Blast(6)",
     "weight": "0.5kg",
-    "availability": "Average",
+    "availability": "average",
     "cost": "75T each",
     "source": "DH: Inquisitor's Handbook",
     "description": {

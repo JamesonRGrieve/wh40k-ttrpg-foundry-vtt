@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever this character makes a ranged attack with a melta weapon, they increase its Penetration by +2 per Two Degrees of Success scored beyond the first.This Bonus is applied after the benefit of the Melta Quality is applied.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character gains +10*X to all Fellowship Tests with chosen group, and may be able to call upon favours from that group from time to time. Talemt can be awarded mutliple times for the same or different group,  GM and Player can agree to award this talent when appropriate, although xp cost may still have to be paid. Groups Include: Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Astartes, Adeptus Mechanicus, Adepta Sororitas, Adeptus Titanicus, Administratum, Astropaths, Ecclesiarchy, Chartist Captains, Imperial Guard, Imperial Navy, Inquisition, Navigators, Officio Assassinorum, Planetary Defence Force, Planetary Governors or Warlords, Rogue Trader, Schola Progenium, Scholastica Psykana. Add +20 Temp Infamy for Social Conflicts with Group.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Social",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field Relic Astartes",
+    "type": "void",
     "locations": "All",
     "ap": 0.35,
     "maxAg": "-",
@@ -16,7 +16,20 @@
       "value": "<p>Master Crafted Relic Astartes Combat Shield of the Brazen Claws Chapter. Overload 01. Weapons wielded by the bearer gain +10 to hit against foes who have previously had their attacks stopped by the Force Field.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.35,
+      "body": 0.35,
+      "leftArm": 0.35,
+      "rightArm": 0.35,
+      "leftLeg": 0.35,
+      "rightLeg": 0.35
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,64 @@
+// ============================================
+// RT Modern Panel System - Light Theme
+// ============================================
+// Unified design matching the specialist skills style
+// Variables and mixins imported from abstracts
+// ============================================
+
+// ============================================
+// Shared Grid & Column Classes
+// ============================================
+// These replace the duplicate *-grid and *-col classes
+
+.rt-overview-grid,
+.rt-combat-grid,
+.rt-powers-grid,
+.rt-equipment-grid,
+.rt-dynasty-grid,
+.rt-bio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-md;
+  width: 100%;
+}
+
+.rt-overview-col,
+.rt-combat-col,
+.rt-powers-col,
+.rt-equipment-col,
+.rt-dynasty-col,
+.rt-bio-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: visible;
+  
+  .rt-panel,
+  .dh-panel {
+    margin-bottom: $rt-space-md;
+    overflow: visible;
+  }
+}
+
+// ============================================
+// Header HUD Alignment Fix
+// ============================================
+
+.rt-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: $rt-space-xl;
+  padding-top: $rt-space-md;
+  padding-bottom: $rt-space-md;
+}
+
+.rt-hud-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+// ============================================

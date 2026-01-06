@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 7,
     "maxAg": 40,
     "weight": "40kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Gain +10 to Strength, Has 24 Hour Power Supply, suffer -10 to fine manipulation tasks unless using something designed for power armour.\nChoose 3 subsystems to add to Power Armour functions (see Armour Upgrades)",
     "source": "Black Crusade: Core",
@@ -16,7 +16,20 @@
       "value": "<p>Gain +10 to Strength, Has 24 Hour Power Supply, suffer -10 to fine manipulation tasks unless using something designed for power armour.\nChoose 3 subsystems to add to Power Armour functions (see Armour Upgrades)</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 7,
+      "body": 7,
+      "leftArm": 7,
+      "rightArm": 7,
+      "leftLeg": 7,
+      "rightLeg": 7
+    },
+    "modifications": [],
+    "maxAgility": 40
   },
   "effects": [],
   "flags": {},

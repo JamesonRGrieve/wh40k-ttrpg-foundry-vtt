@@ -18,7 +18,13 @@
     },
     "tier": 2,
     "isPassive": true,
-    "isRollable": false
+    "isRollable": false,
+    "benefit": "",
+    "aptitudes": [
+      "Strength",
+      "Offence",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

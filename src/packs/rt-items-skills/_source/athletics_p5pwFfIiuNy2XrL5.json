@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Movement\nApt: Strength, General, Khorne",
-    "characteristic": "Strength",
+    "type": "",
+    "characteristic": "strength",
     "descriptor": "The ability to properly use one's physical strength and endurance in physically intensive tasks such as climbing, swimming, or lifting heavy objects.",
     "uses": "Uses: Climbing, Swimming, Other athletic tasks.\nSpecial Use: Endurance: -10 Test as Free Action whenever suffering a level of Fatigue as a result of Running, Swimming, or Climbing to ignore effects. If Test failed, must rest for 4 hours before using skill again. \nHeft: +0 Test to increase carrying capacity for a single encounter, +10 Strength per Degree of Success (max 100), can only attempt once per encounter.",
     "useTime": "Usually Full Action",
@@ -15,7 +15,14 @@
       "characteristic": "Strength",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Strength",
+      "General",
+      "Khorne"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

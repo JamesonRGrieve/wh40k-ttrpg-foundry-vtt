@@ -7,7 +7,7 @@
     "damageOrEffect": "Loses Scatter Quality, but +1 damage and +2 PEN",
     "qualities": "Scatter (lose)",
     "weight": "10% wep",
-    "availability": "Common",
+    "availability": "common",
     "cost": null,
     "source": "RT: Hostile Acquisitions",
     "description": {

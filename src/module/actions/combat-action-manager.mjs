@@ -17,8 +17,6 @@ export class CombatActionManager {
     }
 
     async updateCombat(combat, data) {
-        console.log(combat);
-        console.log(data);
         // Only Run on the first GM -- so it will only run once
         if(game.userId === this.getFirstGM()) {
             game.rt.log('updateCombat - this should only be running on first GM');

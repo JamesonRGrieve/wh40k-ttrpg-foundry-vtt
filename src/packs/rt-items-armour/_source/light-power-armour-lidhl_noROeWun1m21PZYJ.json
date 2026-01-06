@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 6,
     "maxAg": 40,
     "weight": "40kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "8000 T",
     "notes": "An ornamental armour worn by some heavily decorated guard regiment officers.",
     "source": "DH: The Inquisitor's Handbook",
@@ -16,7 +16,20 @@
       "value": "<p>An ornamental armour worn by some heavily decorated guard regiment officers.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": 40
   },
   "effects": [],
   "flags": {},

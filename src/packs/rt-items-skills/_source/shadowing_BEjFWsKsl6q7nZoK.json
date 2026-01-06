@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Advanced",
-    "characteristic": "Agility",
+    "type": "",
+    "characteristic": "agility",
     "descriptor": "Following other people, vehicles, or starships on the move while remaining out of sight, contrasts Concealment due to movement and blending in. ",
     "uses": "Opposed Skill Test vs Awareness/Scrutiny, follow target for at least 1 minute unseen.",
     "useTime": "1 Minute",
@@ -15,7 +15,10 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "advanced",
+    "aptitudes": [],
+    "source": ""
   },
   "effects": [],
   "flags": {},

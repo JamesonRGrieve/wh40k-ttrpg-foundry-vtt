@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When a Character, Comrade, or Allied NPC is killed within 50 metres by an enemy, the character adds +3 to all damage dealt with Righteous Fury until the end of the Encounter.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

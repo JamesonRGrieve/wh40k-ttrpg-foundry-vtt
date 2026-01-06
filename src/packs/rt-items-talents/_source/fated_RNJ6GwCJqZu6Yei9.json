@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Inquisitor permenantly increase their Fate Point maximum by 1.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Knowledge",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

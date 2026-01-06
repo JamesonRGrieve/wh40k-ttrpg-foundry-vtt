@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Once per encounter, assuming appropriate fire-support assets are available and the character is equipped with a marker light, they may make a +0 Ballistic Skill Test as a Full Action. If successful, 1d5 Rounds later, -1 round per Degree of Success on Test (min. 1 Round). A Seeker Missile strikes the target, dealing 3d10+5 E Damage with PEN 10.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

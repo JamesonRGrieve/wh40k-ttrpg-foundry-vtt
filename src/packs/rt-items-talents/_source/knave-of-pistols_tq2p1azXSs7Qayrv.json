@@ -9,7 +9,10 @@
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>The Character is notoriously proud of their skill with pistol, and eschew other ranged weapons. With this trait, can no longer acquire new Basic or Heavy Weapon Training Talents, and can only take Exotic Training Talents for pistol weapons. \nSuffer -10 to on Ballistic Tests with ranged weapons that are not pistols.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

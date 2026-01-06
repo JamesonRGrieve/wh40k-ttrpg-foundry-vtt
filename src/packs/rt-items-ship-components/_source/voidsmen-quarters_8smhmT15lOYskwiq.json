@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 0,
     "effect": "Where the regular crew live. Standard living quarters for long-distance traders. Considered the Default Option.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Where the regular crew live. Standard living quarters for long-distance traders. Considered the Default Option.</p>"

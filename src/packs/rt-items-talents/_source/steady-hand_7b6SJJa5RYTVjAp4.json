@@ -9,7 +9,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As long as the Character's Comrade is in Cohesion, the Character reduces Degrees of Failiure on any Failed Tech-Use Test for the Demolitions Special Use by their Agility Bonus, to a minimum of 1.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

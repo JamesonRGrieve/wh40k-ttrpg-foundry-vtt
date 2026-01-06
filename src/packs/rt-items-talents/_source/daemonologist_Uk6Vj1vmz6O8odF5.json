@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>When character makes a Focus Power Test and the target of the psychic power is a Daemon, they gain +10 to the Test. At GM Discretion this can apply to other tests such as Rituals to summon or bind a Daemon.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Psyker",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

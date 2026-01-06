@@ -1,0 +1,691 @@
+// ============================================
+// Modern Dynasty Tab Components
+// ============================================
+// Acquisitions, Experience, Profit Factor modernization
+
+// Biography Panel
+// ============================================
+.rt-biography-panel {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba(123, 90, 166, 0.15) 0%, transparent 100%);
+    color: #9573bd;
+  }
+}
+
+.rt-bio-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.rt-bio-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.rt-bio-field--span-2 {
+    grid-column: span 2;
+  }
+
+  &.rt-bio-field--span-4,
+  &.rt-bio-field--full {
+    grid-column: span 4;
+  }
+
+  .rt-bio-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rt-bio-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #e8e6e3;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(123, 90, 166, 0.4);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .rt-bio-textarea {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    font-family: inherit;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 100px;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(123, 90, 166, 0.4);
+      color: #e8e6e3;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+      font-style: italic;
+    }
+  }
+}
+
+// Acquisitions Card System
+// ============================================
+.rt-acquisitions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.rt-acquisition-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  &.rt-acquisition-acquired {
+    border-color: rgba(74, 143, 92, 0.5);
+    background: linear-gradient(135deg, rgba(74, 143, 92, 0.15) 0%, rgba(74, 143, 92, 0.05) 100%);
+  }
+}
+
+.rt-acquisition-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.rt-acquisition-name {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #e8e6e3;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Modesto Condensed', serif;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.rt-acquisition-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  .rt-check-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  input[type="checkbox"]:checked ~ .rt-check-label {
+    color: #4a8f5c;
+  }
+}
+
+.rt-acquisition-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.rt-acquisition-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .rt-stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rt-stat-value {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: #e8e6e3;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.rt-stat-number {
+      text-align: center;
+      font-family: 'Modesto Condensed', serif;
+      font-weight: 600;
+    }
+  }
+}
+
+.rt-acquisition-notes {
+  .rt-notes-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    font-style: italic;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+  }
+}
+
+.rt-acquisition-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(182, 58, 43, 0.2);
+  border: 1px solid rgba(182, 58, 43, 0.3);
+  border-radius: 4px;
+  color: #d85545;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    background: rgba(182, 58, 43, 0.4);
+    border-color: rgba(182, 58, 43, 0.6);
+    color: #ff6b5a;
+  }
+}
+
+.rt-acquisition-card:hover .rt-acquisition-delete {
+  opacity: 1;
+}
+
+// Experience Panel
+// ============================================
+.rt-experience-panel {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba(192, 128, 32, 0.15) 0%, transparent 100%);
+    color: #d09838;
+  }
+}
+
+.rt-xp-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.rt-xp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .rt-xp-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rt-xp-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #e8e6e3;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Modesto Condensed', serif;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(192, 128, 32, 0.5);
+    }
+
+    &.rt-xp-spent {
+      color: #c08020;
+    }
+  }
+}
+
+.rt-xp-available {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(192, 128, 32, 0.15) 0%, rgba(192, 128, 32, 0.05) 100%);
+  border: 2px solid rgba(192, 128, 32, 0.3);
+  border-radius: 6px;
+
+  .rt-xp-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rt-xp-available-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: 'Modesto Condensed', serif;
+    text-align: center;
+    color: #d09838;
+    text-shadow: 0 0 8px rgba(192, 128, 32, 0.4);
+  }
+}
+
+.rt-xp-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+
+  .rt-xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c08020 0%, #d09838 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 8px rgba(192, 128, 32, 0.4);
+  }
+}
+
+// Profit Factor Panel
+// ============================================
+.rt-profit-panel {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba(60, 140, 208, 0.15) 0%, transparent 100%);
+    color: #3c8cd0;
+  }
+}
+
+.rt-profit-factor-display {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rt-profit-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rt-profit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .rt-profit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rt-profit-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: #e8e6e3;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Modesto Condensed', serif;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(60, 140, 208, 0.5);
+    }
+  }
+
+  &.rt-profit-current-field {
+    .rt-profit-input {
+      background: linear-gradient(135deg, rgba(60, 140, 208, 0.15) 0%, rgba(60, 140, 208, 0.05) 100%);
+      border: 2px solid rgba(60, 140, 208, 0.3);
+      color: #3c8cd0;
+      font-size: 1.6rem;
+
+      &:focus {
+        border-color: rgba(60, 140, 208, 0.6);
+        box-shadow: 0 0 12px rgba(60, 140, 208, 0.3);
+      }
+    }
+  }
+}
+
+.rt-profit-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .rt-profit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .rt-profit-textarea {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(60, 140, 208, 0.3);
+      color: #e8e6e3;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+      font-style: italic;
+    }
+  }
+}
+
+// Psychic Powers Card System
+// ============================================
+.rt-psychic-powers-panel {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba(123, 90, 166, 0.15) 0%, transparent 100%);
+    color: #9573bd;
+  }
+}
+
+.rt-powers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.rt-power-card {
+  background: linear-gradient(135deg, rgba(123, 90, 166, 0.08) 0%, rgba(123, 90, 166, 0.02) 100%);
+  border: 1px solid rgba(123, 90, 166, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.2s ease;
+  cursor: move;
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(123, 90, 166, 0.12) 0%, rgba(123, 90, 166, 0.04) 100%);
+    border-color: rgba(123, 90, 166, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(123, 90, 166, 0.2);
+  }
+}
+
+.rt-power-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  .rt-power-name {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #e8e6e3;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Modesto Condensed', serif;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    i {
+      color: #9573bd;
+      font-size: 0.9rem;
+    }
+
+    &:hover {
+      color: #9573bd;
+    }
+  }
+
+  .rt-power-badges {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .rt-power-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+
+    &.rt-badge-discipline {
+      background: rgba(123, 90, 166, 0.2);
+      border: 1px solid rgba(123, 90, 166, 0.3);
+      color: #9573bd;
+    }
+
+    &.rt-badge-sustained {
+      background: rgba(192, 128, 32, 0.2);
+      border: 1px solid rgba(192, 128, 32, 0.3);
+      color: #d09838;
+    }
+  }
+}
+
+.rt-power-actions {
+  display: flex;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  .rt-power-btn {
+    flex: 1;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 0.9rem;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #e8e6e3;
+    }
+
+    &.rt-power-roll {
+      &:hover {
+        border-color: rgba(123, 90, 166, 0.5);
+        color: #9573bd;
+      }
+    }
+
+    &.rt-power-damage {
+      &:hover {
+        border-color: rgba(192, 128, 32, 0.5);
+        color: #d09838;
+      }
+    }
+
+    &.rt-power-delete {
+      &:hover {
+        background: rgba(182, 58, 43, 0.2);
+        border-color: rgba(182, 58, 43, 0.4);
+        color: #d85545;
+      }
+    }
+  }
+}
+
+.rt-power-description {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+// Panel Header Flex Layout
+// ============================================
+.rt-panel-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  .rt-panel-header {
+    margin-bottom: 0;
+  }
+}
+
+.rt-add-item-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #e8e6e3;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  i {
+    margin-right: 6px;
+    font-size: 0.9rem;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

@@ -1,6 +1,6 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-1">
-    <h1 class="dh-panel__header">Bonuses</h1>
-    <div class="dh-table--border dh-bonusestable--border">
+<div class="rt-panel rt-panel-bonuses rt-grid-col-2 rt-grid-row-1">
+    <h1 class="rt-panel-header">Bonuses</h1>
+    <div class="rt-table--border rt-bonusestable--border">
         <div class="table-row--head">
             <div class="table-cell">Name</div>
             <div class='table-cell'>Source</div>
@@ -15,8 +15,8 @@
                     <span>{{ability.source}}</span>
                 </div>
                 <div class="table-cell--last">
-                    <label class="dh-control-button bonus-vocalize" data-bonus-name="{{ability.name}}">
-                        <span class="dh-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
+                    <label class="rt-control-button bonus-vocalize" data-bonus-name="{{ability.name}}">
+                        <span class="rt-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
                     </label>
                 </div>
                 <div class="table-cell--description description_{{ability.source}}" {{hideIfNot

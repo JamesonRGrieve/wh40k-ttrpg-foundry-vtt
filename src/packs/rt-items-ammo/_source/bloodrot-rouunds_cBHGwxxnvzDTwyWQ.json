@@ -7,7 +7,7 @@
     "damageOrEffect": "Change Heavy Bolter Profile to (Heavy, Range 80m, S/-/-, 3d10 X, Pen 6, Blast(5), Corrosive, Smoke(1), Toxic(3))\nWhen a creature begins their turn within the Smoke of the Smoke Quality, they take 2d10 I Damage with Corrosive and Toxic(3).",
     "qualities": "Razor Sharp",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "BC: Tome of Decay",
     "description": {

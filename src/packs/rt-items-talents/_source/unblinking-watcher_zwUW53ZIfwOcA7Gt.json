@@ -9,7 +9,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As long as the Character's Comrade is in Cohesion, the Character's Overwatch and Suppressing Fire Actions cover a 90 Degree Arc instead of a 45 Degree Arc.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

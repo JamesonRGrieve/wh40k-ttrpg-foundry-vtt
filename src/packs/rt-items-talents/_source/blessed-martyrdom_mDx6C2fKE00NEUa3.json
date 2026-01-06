@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Whenever the Sister burns a Fate Point to survive a mortal bloe, each other friendly character who witnesses it regains 1 spent Fate Point.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Leadership",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Basic",
-    "type": "Melta",
+    "class": "basic",
+    "type": "melta",
     "range": "20m",
     "rof": "S/-/-",
     "damage": "2d10+14",

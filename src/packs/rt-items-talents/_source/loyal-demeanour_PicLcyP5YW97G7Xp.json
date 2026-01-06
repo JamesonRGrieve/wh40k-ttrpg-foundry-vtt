@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ]
   },
   "effects": [],
   "flags": {},

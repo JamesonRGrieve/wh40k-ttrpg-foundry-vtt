@@ -7,7 +7,7 @@
     "damageOrEffect": "Grants weapon Cleansing Fire and Sanctified Quality. If a psyker is shot by this ammo they auto-fail Cleansing Fire Quality Test with 1d5 DoF, and takes 1d10 Damage if trying to use a Psychic Technique while on fire this way (ignores Armour/Toughness).",
     "qualities": "Cleansing Fire, Sanctified",
     "weight": "10% wep",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": null,
     "source": "RT: Faith and Coin",
     "description": {

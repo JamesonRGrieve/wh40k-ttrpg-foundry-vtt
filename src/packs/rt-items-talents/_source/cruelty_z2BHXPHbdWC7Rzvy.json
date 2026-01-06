@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>When making a Melee or Ranged Attack at Point Blank range against a Stunned or Prone enemy, the attack gains the Proven (4) Quality\nProven X: If weapon damage die rolls less than X, treat as if X was rolled.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

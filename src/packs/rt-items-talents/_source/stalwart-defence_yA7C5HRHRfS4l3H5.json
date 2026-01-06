@@ -9,7 +9,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Character can spend a Fate Point to adopt a Stalwart Defence as a Full Action. Whilst in this condition, character cannot move or dodge, however they may make the Parry Reaction against all strikes against them, and they suffer -2 damage. Additionally, enemies gain no bonus from outnumbering the character in close combat. These effects last until the character chooses to end the effect, or is rendered incapable of fighting.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

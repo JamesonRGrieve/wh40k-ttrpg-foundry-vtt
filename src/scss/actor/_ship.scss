@@ -1,0 +1,376 @@
+// ============================================
+// SHIP & DYNASTY STYLES
+// ============================================
+
+.rt-profit-factor-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.rt-profit-current {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.rt-full-width {
+    grid-column: span 2;
+}
+
+.rt-checkbox-cell {
+    text-align: center;
+}
+
+// ============================================
+// ITEM DISPLAY STYLES
+// ============================================
+
+.rt-item-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    text-align: left;
+    
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+    
+    .dh-item-img {
+        width: 20px;
+        height: 20px;
+        border-radius: 2px;
+    }
+}
+
+.rt-action-cell,
+.rt-test-cell {
+    font-size: 0.85em;
+    color: #666;
+}
+
+// Biography Grid
+.rt-bio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+}
+
+// ============================================
+// CHARACTERISTIC MODIFIERS
+// ============================================
+
+.rt-char-bonus {
+    background-color: rgba(0, 128, 0, 0.15) !important;
+}
+
+.rt-char-penalty {
+    background-color: rgba(139, 0, 0, 0.15) !important;
+}
+
+// ============================================
+// CHARACTERISTICS PANEL (ABILITIES TAB)
+// ============================================
+
+.rt-char-panel {
+    .dh-panel__header {
+        font-size: 0.9em;
+    }
+}
+
+.rt-char-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px;
+}
+
+.rt-char-item {
+    border: 1px solid rgba(74, 55, 40, 0.15);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.7);
+    overflow: hidden;
+}
+
+.rt-char-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    color: #4a3728;
+    
+    &::-webkit-details-marker {
+        display: none;
+    }
+    
+    &::marker {
+        content: '';
+    }
+    
+    &::after {
+        content: ">";
+        font-size: 0.8em;
+        color: #666;
+    }
+}
+
+.rt-char-item[open] .rt-char-summary::after {
+    content: "v";
+}
+
+.rt-char-name {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.rt-char-total {
+    font-size: 0.95em;
+    color: #2a1a0a;
+}
+
+.rt-char-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 6px 8px 8px;
+    border-top: 1px solid rgba(74, 55, 40, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.rt-char-field {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #4a3728;
+    
+    select {
+        border: 1px solid rgba(74, 55, 40, 0.2);
+        border-radius: 4px;
+        padding: 4px 6px;
+        background: rgba(255, 255, 255, 0.9);
+        font-size: 0.9em;
+        
+        &:focus {
+            outline: none;
+            border-color: rgba(74, 55, 40, 0.4);
+        }
+    }
+
+    input {
+        border: 1px solid rgba(74, 55, 40, 0.2);
+        border-radius: 4px;
+        padding: 4px 6px;
+        background: rgba(255, 255, 255, 0.9);
+        font-size: 0.9em;
+        text-align: center;
+        
+        &:focus {
+            outline: none;
+            border-color: rgba(74, 55, 40, 0.4);
+        }
+    }
+}
+
+.rt-origin-bonus {
+    color: #006400;
+    font-weight: bold;
+}
+
+.rt-origin-penalty {
+    color: #8B0000;
+    font-weight: bold;
+}
+
+// ============================================
+// SHIP ROLE STYLES
+// ============================================
+
+.rt-ship-role-details {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.rt-ship-role-detail {
+    margin-bottom: 10px;
+
+    h3 {
+        margin: 0 0 5px 0;
+        color: #4a3728;
+    }
+
+    p {
+        margin: 3px 0;
+        font-size: 0.9em;
+    }
+}
+
+// ============================================
+// STARSHIP SHEET ENHANCEMENTS
+// ============================================
+
+// Initiative Box
+.rt-ship-initiative-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, rgba(30, 60, 90, 0.15) 0%, rgba(40, 80, 120, 0.2) 100%);
+    border: 1px solid rgba(30, 60, 90, 0.3);
+    border-radius: 6px;
+}
+
+.rt-initiative-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(180deg, #4a6b8a 0%, #3a5a7a 100%);
+    border: 1px solid #2a4a6a;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .material-icons {
+        font-size: 1.1em;
+    }
+
+    &:hover {
+        background: linear-gradient(180deg, #5a7b9a 0%, #4a6a8a 100%);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.rt-detection-bonus {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #2a4a6a;
+    margin-left: auto;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    border: 1px solid rgba(30, 60, 90, 0.2);
+}
+
+// Resource Status Indicators
+.rt-resource-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, rgba(40, 120, 60, 0.1) 0%, rgba(60, 140, 80, 0.15) 100%);
+    border: 1px solid rgba(40, 120, 60, 0.25);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+
+    &.rt-shortage {
+        background: linear-gradient(135deg, rgba(180, 40, 40, 0.15) 0%, rgba(200, 60, 60, 0.2) 100%);
+        border-color: rgba(180, 40, 40, 0.35);
+        animation: pulse-warning 2s infinite;
+    }
+}
+
+@keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+.rt-resource-icon {
+    font-size: 1.4em;
+    color: #3a7a4a;
+    
+    .rt-shortage & {
+        color: #a03030;
+    }
+}
+
+.rt-resource-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #2a5a3a;
+    
+    .rt-shortage & {
+        color: #802020;
+    }
+}
+
+.rt-resource-value {
+    font-size: 1.3em;
+    font-weight: 700;
+    margin-left: auto;
+    
+    &.rt-positive {
+        color: #2a7a3a;
+    }
+    
+    &.rt-negative {
+        color: #c02020;
+    }
+}
+
+.rt-resource-detail {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.rt-resources-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(74, 55, 40, 0.3) 50%, transparent 100%);
+    margin: 12px 0;
+}
+
+// Ship Initiative Roll Chat Message
+.rt-ship-initiative-roll {
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(30, 60, 90, 0.1) 0%, rgba(40, 80, 120, 0.15) 100%);
+    border: 1px solid rgba(30, 60, 90, 0.2);
+    border-radius: 6px;
+    text-align: center;
+    
+    h3 {
+        margin: 0 0 8px 0;
+        color: #2a4a6a;
+        font-size: 1.1em;
+        
+        i {
+            margin-right: 6px;
+        }
+    }
+    
+    .rt-roll-formula {
+        font-size: 0.85em;
+        color: #666;
+        margin-bottom: 8px;
+    }
+    
+    .rt-roll-result {
+        font-size: 2em;
+        font-weight: 700;
+        color: #1a3a5a;
+    }
+}

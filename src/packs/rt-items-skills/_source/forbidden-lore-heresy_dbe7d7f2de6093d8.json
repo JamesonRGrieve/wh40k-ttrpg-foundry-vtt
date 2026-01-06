@@ -1,0 +1,50 @@
+{
+  "name": "Forbidden Lore (Heresy)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "intelligence",
+    "descriptor": "Knowledge that is deliberately hidden or suppressed about a certain group. Possession of this knowledge may cause difficulties, but reveals meany hidden truths.",
+    "uses": "Use: Recall relevent forbidden information for relevent group. Used for seeking info on a cult, learning the dangers the Inquistion Poses, the nature of a strange set of Monoliths, information on Traitor Legions, etc.\nSkill Groups: Mechanicus, Astartes, Codex Astartes, Archeotech, Black Library, Cults, Daemonology, Heresy, The Horus Heresy and Long War, Inquisition, Inquisitorial Ordos, Mutants, Navigators, Pirates, Psykers, The Warp, Webway, Xenos.",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>Knowledge that is deliberately hidden or suppressed about a certain group. Possession of this knowledge may cause difficulties, but reveals meany hidden truths.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Mechanicus",
+      "Astartes",
+      "Codex Astartes",
+      "Archeotech",
+      "Black Library",
+      "Cults",
+      "Daemonology",
+      "Heresy",
+      "The Horus Heresy and Long War",
+      "Inquisition",
+      "Inquisitorial Ordos",
+      "Mutants",
+      "Navigators",
+      "Pirates",
+      "Psykers",
+      "The Warp",
+      "Webway",
+      "Xenos"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge",
+      "Tzeentch"
+    ],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dbe7d7f2de6093d8"
+}

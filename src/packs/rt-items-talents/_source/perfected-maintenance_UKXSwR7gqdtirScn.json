@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Once per game session, character can make a +0 Tech-Use Test as a Full Action to improve one functioning piece of personal equipment. If successful, the chosen item becomes one Craftsmanship Higher, +1 per three Degrees of Success, until the end of the game session. (max Best Craftsmanship)</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Tech"
+    ]
   },
   "effects": [],
   "flags": {},

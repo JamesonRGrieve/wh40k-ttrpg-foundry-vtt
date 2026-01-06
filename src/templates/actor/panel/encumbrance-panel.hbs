@@ -1,29 +1,33 @@
-<div class="dh-panel dh-grid-col-2 {{isError actor.encumbrance.encumbered}}">
-    <h1 class="dh-panel__header">
-        {{#if actor.encumbrance.encumbered}}
-            Encumbrance (overweight)
-        {{else}}
-            Encumbrance
+<div class="rt-panel rt-grid-col-2 {{isError actor.encumbrance.encumbered}}">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title">
+            {{#if actor.encumbrance.encumbered}}
+                Encumbrance (overweight)
+            {{else}}
+                Encumbrance
+            {{/if}}
+        </span>
+    </div>
+    <div class="rt-panel-body">
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">Current Enc.</span>
+            <span class="rt-field__span">{{actor.encumbrance.value}}</span>
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">Max Enc.</span>
+            <span class="rt-field__span">{{actor.encumbrance.max}}</span>
+        </div>
+        {{#if actor.backpack.hasBackpack}}
+            {{#unless actor.backpack.isCombatVest}}
+                <div class="rt-field__wrapper">
+                    <span class="rt-field__header">Backpack Current Enc.</span>
+                    <span class="rt-field__span">{{actor.encumbrance.backpack_value}}</span>
+                </div>
+                <div class="rt-field__wrapper">
+                    <span class="rt-field__header">Backpack Max Enc.</span>
+                    <span class="rt-field__span">{{actor.encumbrance.backpack_max}}</span>
+                </div>
+            {{/unless}}
         {{/if}}
-    </h1>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Current Enc.</span>
-        <span class="dh-field__span">{{actor.encumbrance.value}}</span>
     </div>
-    <div class="dh-field__wrapper">
-        <span class="dh-field__header">Max Enc.</span>
-        <span class="dh-field__span">{{actor.encumbrance.max}}</span>
-    </div>
-    {{#if actor.backpack.hasBackpack}}
-        {{#unless actor.backpack.isCombatVest}}
-            <div class="dh-field__wrapper">
-                <span class="dh-field__header">Backpack Current Enc.</span>
-                <span class="dh-field__span">{{actor.encumbrance.backpack_value}}</span>
-            </div>
-            <div class="dh-field__wrapper">
-                <span class="dh-field__header">Backpack Max Enc.</span>
-                <span class="dh-field__span">{{actor.encumbrance.backpack_max}}</span>
-            </div>
-        {{/unless}}
-    {{/if}}
 </div>

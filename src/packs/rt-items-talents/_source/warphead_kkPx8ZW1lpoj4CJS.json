@@ -9,7 +9,10 @@
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>Whenever Rolling on the 'Eadbang or Powa Burst Effects, the character can modify the result up or down by an amount up to their Current Insanity Point Total. Additionally, they gain +20 to Interaction Skills when dealing with Ork Madboyz (any ork with 10+ Insanity who has a Mental Disorder). The Character gains a Minor Compulsion around the use of their powers at all opportunities, counting as a Mental Disorder.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

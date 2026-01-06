@@ -6,7 +6,7 @@
     "armourTypes": "Carapace or Power Armour",
     "effect": "Add +3 AP vs weapons with the Flame or Melta Quality.",
     "weight": "2kg",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Add +3 AP vs weapons with the Flame or Melta Quality.</p>"

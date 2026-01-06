@@ -7,7 +7,7 @@
     "allowedVehicles": "Any",
     "difficulty": "-20",
     "descriptionText": "Allows Vehicle Driver to reroll one Failed Operate/Drive Test per Turn when navigating Difficult Terrain. Skimmers with this Upgrade gain +10 Manoeuvrability.",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Allows Vehicle Driver to reroll one Failed Operate/Drive Test per Turn when navigating Difficult Terrain. Skimmers with this Upgrade gain +10 Manoeuvrability.</p>"

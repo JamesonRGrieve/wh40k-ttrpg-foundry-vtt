@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power Relic (Astartes)",
+    "type": "power",
     "locations": "Arms",
     "ap": 12,
     "maxAg": null,
@@ -16,7 +16,21 @@
       "value": "<p>Master Crafted Relic Astartes Powered Gauntlets of the Eagle Warriors Chapter. Can replace Standard or Artificer Astartes Armour Arms, replacing their AP with that of these. Also increases Head AP by +1, and grants +10 to all Weapon Skill Tests whilst wielding a Melee weapon with the Balanced Quality.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 12,
+      "rightArm": 12,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

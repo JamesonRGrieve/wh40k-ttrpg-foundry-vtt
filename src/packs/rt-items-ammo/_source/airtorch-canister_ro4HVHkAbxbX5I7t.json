@@ -7,7 +7,7 @@
     "damageOrEffect": "Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.",
     "qualities": "Scatter, Overheats",
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "RT: Into the Storm",
     "description": {

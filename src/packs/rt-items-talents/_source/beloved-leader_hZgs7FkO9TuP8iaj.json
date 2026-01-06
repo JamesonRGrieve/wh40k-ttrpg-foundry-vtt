@@ -9,7 +9,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character's minions are incredibly devoted to them, increasing their Loyalty by +10.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

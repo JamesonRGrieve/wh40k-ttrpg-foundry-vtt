@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 0,
     "effect": "Grim and squalid living spaces for crew (although the officer's quarters are still luxurious). Permenantly decrease Morale by 5.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Grim and squalid living spaces for crew (although the officer's quarters are still luxurious). Permenantly decrease Morale by 5.</p>"

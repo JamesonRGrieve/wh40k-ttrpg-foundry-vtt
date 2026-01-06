@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

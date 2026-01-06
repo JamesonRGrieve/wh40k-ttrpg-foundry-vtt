@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Immune to Fear and Pinning. Disengaging or backing down from combat requires Willpower Test.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Defence",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

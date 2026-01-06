@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": "70%",
     "maxAg": "-",
     "weight": "0.05kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself. ",
     "source": "RT: Into the Storm",
@@ -16,7 +16,20 @@
       "value": "<p>Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself. </p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

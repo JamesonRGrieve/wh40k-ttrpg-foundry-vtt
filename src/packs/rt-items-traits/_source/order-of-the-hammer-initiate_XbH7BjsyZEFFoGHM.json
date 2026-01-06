@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any Human, RT Rank 1+. Intelligence 35+, Toughness 35+. Must have study one or more of the Ascetics of Foulstone, and made at least one Pilgrammage to the Shrine of the Hammer upon that world.",
-    "descriptionText": "Itinerant Wanderers, applying their wisdom and vast mundane and useful knowledge to try to aid many within the Imperium of Man. Such individuals are hardy and resourceful, and possess the martial capability to defend themselves.",
-    "effects": "Replace new Rank's Advances with that of the Order of the Hammer Initiate\nAllows for the purchasing of the Unique Talent Convincing Rhetoric",
+    "descriptionText": "",
+    "effects": "",
     "source": "RT: Faith and Coin\n(Page 78)",
     "description": {
       "value": "<p>Itinerant Wanderers, applying their wisdom and vast mundane and useful knowledge to try to aid many within the Imperium of Man. Such individuals are hardy and resourceful, and possess the martial capability to defend themselves.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Order of the Hammer Initiate\nAllows for the purchasing of the Unique Talent Convincing Rhetoric</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace new Rank's Advances with that of the Order of the Hammer Initiate\nAllows for the purchasing of the Unique Talent Convincing Rhetoric",
+    "level": null
   },
   "effects": [],
   "flags": {},

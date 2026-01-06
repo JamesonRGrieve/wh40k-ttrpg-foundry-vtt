@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 0,
     "effect": "Where Characters command the ship. As long as this component is undamaged, +5 to Command Tests to deal with Attack Craft, and Auto-pass tests to ready new squadrons. Also +25 to Trade Objectives involving ground-to-orbit or small craft operations.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Where Characters command the ship. As long as this component is undamaged, +5 to Command Tests to deal with Attack Craft, and Auto-pass tests to ready new squadrons. Also +25 to Trade Objectives involving ground-to-orbit or small craft operations.</p>"

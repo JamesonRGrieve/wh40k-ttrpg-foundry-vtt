@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character adds +10 to their Infamy when making Acquisition Tests using Infamy.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

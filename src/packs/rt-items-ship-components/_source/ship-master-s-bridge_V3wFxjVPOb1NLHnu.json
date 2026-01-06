@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 0,
     "effect": "Where characters command the ship. Gives +5 to all piloting and navigation tests by crew on the bridge. As well as +10 to BS Tests to fire shipboard weapons.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Where characters command the ship. Gives +5 to all piloting and navigation tests by crew on the bridge. As well as +10 to BS Tests to fire shipboard weapons.</p>"

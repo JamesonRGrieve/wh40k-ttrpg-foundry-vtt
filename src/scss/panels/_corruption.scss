@@ -1,0 +1,125 @@
+// ============================================
+// Panel Type Variants (Colored Left Borders)
+// ============================================
+
+.rt-panel-vitality {
+  border-left-color: $rt-accent-combat;
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+  }
+  
+  .rt-panel-title i {
+    color: $rt-accent-combat;
+  }
+}
+
+.rt-panel-movement {
+  border-left-color: $rt-accent-skills;
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
+  }
+  
+  .rt-panel-title i {
+    color: $rt-accent-skills;
+  }
+}
+
+// ============================================
+// Corruption/Insanity Panels
+// ============================================
+
+.rt-panel-corruption {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.15) 0%, transparent 100%);
+  }
+  
+  .rt-panel-title i {
+    color: $rt-accent-combat;
+  }
+  
+  &.degree-pure { border-left-color: $rt-degree-pure; }
+  &.degree-tainted { border-left-color: $rt-degree-tainted; }
+  &.degree-soiled { border-left-color: $rt-degree-soiled; }
+  &.degree-debased { border-left-color: $rt-degree-debased; }
+  &.degree-profane { border-left-color: $rt-degree-profane; }
+  &.degree-damned { border-left-color: $rt-degree-damned; }
+}
+
+.rt-panel-insanity {
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-powers, 0.15) 0%, transparent 100%);
+  }
+  
+  .rt-panel-title i {
+    color: $rt-accent-powers;
+  }
+  
+  &.degree-stable { border-left-color: $rt-degree-stable; }
+  &.degree-unsettled { border-left-color: $rt-degree-unsettled; }
+  &.degree-disturbed { border-left-color: $rt-degree-disturbed; }
+  &.degree-unhinged { border-left-color: $rt-degree-unhinged; }
+  &.degree-deranged { border-left-color: $rt-degree-deranged; }
+  &.degree-terminally-insane { border-left-color: $rt-degree-terminally; }
+}
+
+// Degree Badges with proper colors
+.rt-degree-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  
+  // Corruption degrees
+  &.degree-pure { @include rt-degree-badge-style($rt-degree-pure, 15%); }
+  &.degree-tainted { @include rt-degree-badge-style($rt-degree-tainted, 15%); }
+  &.degree-soiled { @include rt-degree-badge-style($rt-degree-soiled, 10%); }
+  &.degree-debased { @include rt-degree-badge-style($rt-degree-debased, 10%); }
+  &.degree-profane { @include rt-degree-badge-style($rt-degree-profane, 0); }
+  &.degree-damned { 
+    background: rgba($rt-degree-damned, 0.2);
+    border: 2px solid $rt-degree-damned;
+    color: $rt-degree-damned;
+  }
+  
+  // Insanity degrees
+  &.degree-stable { @include rt-degree-badge-style($rt-degree-stable, 15%); }
+  &.degree-unsettled { @include rt-degree-badge-style($rt-degree-unsettled, 15%); }
+  &.degree-disturbed { @include rt-degree-badge-style($rt-degree-disturbed, 10%); }
+  &.degree-unhinged { @include rt-degree-badge-style($rt-degree-unhinged, 10%); }
+  &.degree-deranged { @include rt-degree-badge-style($rt-degree-deranged, 0); }
+  &.degree-terminally-insane { 
+    background: rgba($rt-degree-terminally, 0.2);
+    border: 2px solid $rt-degree-terminally;
+    color: $rt-degree-terminally;
+  }
+}
+
+.rt-tracker-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-md;
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-tracker-main {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rt-tracker-effect {
+  font-size: 0.8rem;
+  color: $rt-text-secondary;
+  font-style: italic;
+  white-space: nowrap;
+  text-align: center;
+  display: block;
+  margin-top: 4px;
+}
+

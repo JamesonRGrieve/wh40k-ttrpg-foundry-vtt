@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Once per round as a Half Action, character can speak litanies and invocations to disrupt daemons. Until the beginning of their next turn, Daemonis within Willpower Bonus x 2 metres suffer -10 to Willpower Tests.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

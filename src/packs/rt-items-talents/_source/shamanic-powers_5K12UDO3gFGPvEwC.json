@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The character may purchase Shamanic Ritual Talents that they perform through various chants and powders stored in a fetish pouch. Shamanic Powers are a Full Action.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

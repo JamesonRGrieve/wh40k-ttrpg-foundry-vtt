@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 7,
     "maxAg": 40,
     "weight": "40kg",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "8500 T",
     "notes": "Gives +1 Unnatural Strength and Perception. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)",
     "source": "OW: Shield of Humanity",
@@ -16,7 +16,20 @@
       "value": "<p>Gives +1 Unnatural Strength and Perception. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 7,
+      "body": 7,
+      "leftArm": 7,
+      "rightArm": 7,
+      "leftLeg": 7,
+      "rightLeg": 7
+    },
+    "modifications": [],
+    "maxAgility": 40
   },
   "effects": [],
   "flags": {},

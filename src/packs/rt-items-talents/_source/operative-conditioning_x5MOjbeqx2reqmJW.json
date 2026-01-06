@@ -9,7 +9,10 @@
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

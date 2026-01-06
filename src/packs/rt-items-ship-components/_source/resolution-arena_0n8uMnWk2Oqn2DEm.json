@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Allows crew to settle their disputes in a fighting arena. Poor permenantly increases morale by +2, Common by +3, Good  also provides +10 to Commerce tests with trading partners on the vessel. Best gives same bonus by also permenantly increases morale by +5. Only one per vessel. ",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Allows crew to settle their disputes in a fighting arena. Poor permenantly increases morale by +2, Common by +3, Good  also provides +10 to Commerce tests with trading partners on the vessel. Best gives same bonus by also permenantly increases morale by +5. Only one per vessel. </p>"

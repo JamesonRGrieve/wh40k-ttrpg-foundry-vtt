@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Sanctified Quality. Ignore Protective Benefits from Psychic Powers. Targets suffer - 5 x Their Psy Rating Penalty to Agility Tests to avoid being hit by weapon",
     "qualities": "Sanctified",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "source": "DH 2E: Enemies Beyond",
     "description": {

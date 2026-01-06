@@ -9,7 +9,10 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character is marked by the Plague Father upon their soul and possibly their body. They feel great warmth in the rot and everlasting disease, and wish to share Nurgle's Gifts with all.\nThe Character gains Stuff of Nightmares and Unnatural Toughness (+1) Traits. The Mark itself also may be required for some other abilities.\nLeaving the path of Nurgle will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

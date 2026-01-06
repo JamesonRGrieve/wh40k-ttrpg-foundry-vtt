@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Investigation, Interaction\nApt: Intelligence, General, Unaligned",
-    "characteristic": "Intelligence",
+    "type": "",
+    "characteristic": "intelligence",
     "descriptor": "Recalling general knowledge on procedures, divisions, traditions, important individuals, superstitions, etc, for target group.",
     "uses": "Use: Skill Test to Recall general/relevent knowledge, more DoS = better information.\nSkill Groups: Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Mechanicus, Adeptus Adminstratum, Ecclesiarchy, Imperial Creed, Imperial Guard, Imperial Navy, Imperium, Navis Nobilite, Rogue Traders, Tech, Underworld, War. And more specific ones such as: Calixis Sector,  Jericho Reach, Koronus Expanse, Screaming Vortex, Spinward Front, etc, ",
     "useTime": "Free Action",
@@ -36,7 +36,14 @@
       "Koronus Expanse",
       "Screaming Vortex",
       "Spinward Front"
-    ]
+    ],
+    "skillType": "specialist",
+    "aptitudes": [
+      "Intelligence",
+      "General",
+      "Unaligned"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

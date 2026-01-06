@@ -7,7 +7,7 @@
     "damageOrEffect": "Comes in pack of 5. No Damage, works as Photon Flash Grenade but with Radius 5 Metres.\n(+10 Agility Test or be Blinded for 1+DoF Rounds)",
     "qualities": "Blast (5)",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

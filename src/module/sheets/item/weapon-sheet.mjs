@@ -3,14 +3,15 @@ import { RogueTraderItemContainerSheet } from './item-container-sheet.mjs';
 export class RogueTraderWeaponSheet extends RogueTraderItemContainerSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            width: 820,
-            height: 575,
-            tabs: [{ navSelector: '.dh-navigation', contentSelector: '.dh-body', initial: 'stats' }],
+            classes: ['rogue-trader', 'sheet', 'item', 'rt-item-sheet'],
+            width: 520,
+            height: 560,
+            tabs: [{ navSelector: '.rt-tabs', contentSelector: '.rt-tab-content', initial: 'stats' }],
         });
     }
 
     get template() {
-        return `systems/rogue-trader/templates/item/item-weapon-sheet.hbs`;
+        return `systems/rogue-trader/templates/item/item-weapon-sheet-modern.hbs`;
     }
 
     canAdd(itemData) {

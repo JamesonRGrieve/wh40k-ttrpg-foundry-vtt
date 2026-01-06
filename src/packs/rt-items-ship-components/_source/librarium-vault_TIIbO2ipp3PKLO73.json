@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 1,
     "effect": "A Collection of Ancient Writings, Manuscripts, and Data. +10 to All investigation tests made aboard the ship. Only one per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>A Collection of Ancient Writings, Manuscripts, and Data. +10 to All investigation tests made aboard the ship. Only one per vessel.</p>"

@@ -12,7 +12,7 @@
     "strength": 3,
     "critRating": 4,
     "range": 4,
-    "availability": "Rare",
+    "availability": "rare",
     "notes": "All inflicted Critical Hits are automatically \"Fire!\" Critical Hits",
     "source": "RT: Into the Storm",
     "description": {

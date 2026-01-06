@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Xenos)",
+    "type": "exotic",
     "weight": "?",
     "availability": "Twelve Oddly shaped devices of unknown yet maddening purpose. Attempts to study even a single one bring madness, especially if activated. Effects may include Psychic Phenomena, Warp breaches, Daemonic attention, and so on. The more devices brought together, the worse these effects become as these items meld together into incomprehensible shapes. Should all 12 be brought together, it would bring fourth a power to shatter worlds, like that of Narwil V.",
     "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",

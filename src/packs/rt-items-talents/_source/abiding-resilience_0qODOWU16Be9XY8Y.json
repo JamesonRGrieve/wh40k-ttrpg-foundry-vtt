@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When the character expends a Fate Point to regain wounds, they regain 1d5+Toughness Bonus Wounds and removes 1 Fatigue (instead of just 1d5 Wounds)</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,12 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Advance all skills currently at Rank 1 (Known, +0) to Rank 2 (Trained, +10).</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

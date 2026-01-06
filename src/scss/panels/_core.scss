@@ -1,0 +1,98 @@
+// Core Panel Component (Specialist Style)
+// ============================================
+
+.rt-panel {
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: $rt-space-md;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba($rt-accent-talents, 0.12);
+    border-top: 2px solid rgba($rt-accent-talents, 0.25);
+    border-bottom: 2px solid rgba($rt-accent-talents, 0.25);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.rt-panel-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(180deg, rgba($rt-accent-gold, 0.15) 0%, rgba($rt-accent-gold, 0.05) 100%);
+  border-bottom: 1px solid $rt-border-light;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  
+  .rt-panel-title {
+    flex: 1 1 auto !important;
+    font-family: 'Modesto Condensed', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $rt-text-primary;
+    letter-spacing: 0.02em;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex !important;
+    align-items: center !important;
+    gap: $rt-space-sm;
+    min-width: 0;
+    
+    i {
+      margin-right: 0;
+      color: $rt-accent-gold;
+      flex-shrink: 0;
+    }
+  }
+  
+  // Ensure buttons don't break layout
+  > button,
+  > label,
+  > .dh-control-button,
+  > .rt-header-btn {
+    flex-shrink: 0 !important;
+    margin-left: auto;
+  }
+}
+
+.rt-panel-body {
+  padding: $rt-space-md;
+  background: $rt-bg-translucent;
+}
+
+.rt-panel:hover .rt-panel-header {
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.35), 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes rt-panel-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.rt-tab.active .rt-panel {
+  animation: rt-panel-in 0.3s ease both;
+}
+
+.rt-tab.active .rt-panel:nth-of-type(2) { animation-delay: 0.03s; }
+.rt-tab.active .rt-panel:nth-of-type(3) { animation-delay: 0.06s; }
+.rt-tab.active .rt-panel:nth-of-type(4) { animation-delay: 0.09s; }
+.rt-tab.active .rt-panel:nth-of-type(5) { animation-delay: 0.12s; }
+
+// ============================================

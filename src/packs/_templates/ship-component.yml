@@ -1,0 +1,79 @@
+# Ship Component Template
+# Use this as a reference for creating ship component items
+
+_id: &id ship-component-template-000001
+name: Lathe Pattern Class 2 Drive
+type: shipComponent
+img: systems/rogue-trader/icons/ship/plasma-drive.webp
+
+system:
+  identifier: lathe-pattern-class-2-drive
+  
+  # Component Classification
+  componentType: plasmaDrive  # essential, supplemental, weapons, auger, gellarField, voidShields, warpDrive, plasmaDrive, lifeSupport, quarters, bridge, generatorum, augment, archeotech, xenotech
+  
+  # Hull Type Restrictions
+  hullType:
+    - cruiser
+    - battlecruiser
+    - grand-cruiser
+    # Use "all" for no restrictions
+  
+  # Resource Requirements
+  power:
+    used: 0        # Power consumed
+    generated: 75  # Power generated
+  space: 12        # Space used
+  shipPoints: 8    # Ship Points cost
+  
+  # Availability
+  availability: rare
+  
+  # Stat Modifiers
+  modifiers:
+    speed: 5
+    manoeuvrability: -3
+    detection: 0
+    armour: 0
+    hullIntegrity: 0
+    turretRating: 0
+    voidShields: 0
+    morale: 0
+    crewRating: 0
+  
+  # Effect Description
+  effect: |
+    <p>This massive plasma drive provides substantial power 
+    output for larger vessels. The Lathe Pattern incorporates 
+    advanced cooling systems that allow sustained high-power 
+    operation.</p>
+  
+  # Is this essential (cannot be removed)?
+  essential: true
+  
+  # Current condition
+  condition: functional  # functional, damaged, unpowered, destroyed
+  
+  # Description
+  description:
+    value: |
+      <p>The Lathe Pattern Class 2 Drive is a powerful plasma 
+      drive manufactured by the forge worlds of the Lathe system. 
+      It is known for its reliability and substantial power output.</p>
+    chat: ""
+    summary: "Powerful plasma drive for larger vessels"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "198"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

@@ -9,7 +9,12 @@
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>When winning a Social Conflict Opposed Test, for every extra Degree of Success beyond the first the character succeeds by, the opponent takes an additional 1d5 Willpower Loss for the round.\nThe Character must contain at least one veiled threat within their contribution to the social conflict for this talent to be applied.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character doesn’t suffer penalties due to an unfamiliarity or outsider status on Interaction Tests made with Soldiers of the Imperial Guard, including auxiliaries from the Adeptus Mechanicus, Ministorum, or elsewhere. When commanding a combined force of multiple different elements (such as Guardsman, Ogryns, Crimson Guard, and Sisters of Battle), character gains +20 to Command Tests to maintain order in the ranks.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action. </p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

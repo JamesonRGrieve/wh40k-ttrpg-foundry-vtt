@@ -1,41 +1,38 @@
-{{dhlog this}}
+{{!-- Rogue Trader Add Speciality Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="dh-wrapper" autocomplete="off">
-        <div class="dh-attack">
-            <!-- Header -->
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__prompt dh-header__logo">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <img class="dh-header__logo-image-small" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                            <span class="dh-header__title">Create Specialisation</span>
-                        </div>
-                    </div>
+    <form class="rt-prompt" autocomplete="off">
+        <div class="rt-prompt__panel">
+            <div class="rt-prompt__header">
+                <img class="rt-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                <div class="rt-prompt__title-group">
+                    <h2 class="rt-prompt__title">Create Specialisation</h2>
+                    <div class="rt-prompt__subtitle">{{this.skill.label}}</div>
                 </div>
             </div>
-
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Skill</span>
-                    <span class="dh-field__span">{{this.skill.label}}</span>
+            
+            <div class="rt-prompt__section">
+                <div class="rt-prompt__field">
+                    <span class="rt-prompt__label">Skill</span>
+                    <span class="rt-prompt__value">{{this.skill.label}}</span>
                 </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Specialisation</span>
+                <div class="rt-prompt__field" style="flex-direction: column; align-items: stretch;">
+                    <span class="rt-prompt__label" style="margin-bottom: 6px;">Specialisation</span>
                     {{#if this.specializations}}
-                        <select class="dh-field__input" id="speciality-name" style="width: 100%;">
+                        <select class="rt-prompt__select" id="speciality-name">
                             <option value="" disabled selected>-- Choose from list --</option>
                             {{#each this.specializations}}
                                 <option value="{{this}}">{{this}}</option>
                             {{/each}}
                         </select>
-                        <input class="dh-field__input" type="text" id="custom-speciality-name" placeholder="Or enter custom specialization..." style="margin-top: 5px;" />
+                        <input class="rt-prompt__input" type="text" id="custom-speciality-name" placeholder="Or enter custom..." style="margin-top: 8px;" />
                     {{else}}
-                        <input class="dh-field__input" type="text" id="speciality-name" placeholder="Enter specialization name..." />
+                        <input class="rt-prompt__input" type="text" id="speciality-name" placeholder="Enter specialization name..." />
                     {{/if}}
                 </div>
                 {{#if this.specializations}}
-                    <div class="dh-field__wrapper" style="margin-top: 10px;">
-                        <small style="color: #888; font-style: italic;">Common specializations are listed above. You can select one or enter a custom name in the text field.</small>
+                    <div class="rt-prompt__info">
+                        <span class="material-icons">info</span>
+                        <p>Common specializations are listed above. You can select one or enter a custom name.</p>
                     </div>
                 {{/if}}
             </div>

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When character performs a Charge or Run Action, opponents suffer -20 penalty to Ballistic Skill Tests to hit the character with a ranged weapon until the start of the character's next turn.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Defence",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

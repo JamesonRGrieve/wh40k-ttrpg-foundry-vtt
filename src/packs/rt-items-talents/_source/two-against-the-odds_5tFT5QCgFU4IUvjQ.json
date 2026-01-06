@@ -9,7 +9,10 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As long as the Character's Comrade is in Cohesion, enemies gain no bonus for outnumbering them, and they can aso react to Melee Attacks even if Unaware or Suprised. </p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Mesh",
+    "type": "mesh",
     "locations": "Arms, Body, Legs",
     "ap": 4,
     "maxAg": null,
     "weight": "7kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Metallic Weave that flows with wearer's movement, hard to find in the right size due to rarity. Easy to hide under clothes",
     "source": "RT: Into the Storm",
@@ -16,7 +16,24 @@
       "value": "<p>Metallic Weave that flows with wearer's movement, hard to find in the right size due to rarity. Easy to hide under clothes</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 4,
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

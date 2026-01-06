@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Combat\nApt: Weapon Skill, Defence, Khorne",
-    "characteristic": "Weapon Skill",
+    "type": "",
+    "characteristic": "weaponskill",
     "descriptor": "Using a Melee Weapon to avoid being struck by a Melee Attack.",
     "uses": "Block one Melee strike per Degree of Success on Parry Test.",
     "useTime": "Reaction",
@@ -15,7 +15,14 @@
       "characteristic": "Weapon Skill",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Weapon Skill",
+      "Defence",
+      "Khorne"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Character is Heavily Damaged (Suffered more than 2x Toughness Bonus Wounds), they gain Unnatural Strength (1) and Unnatural Toughness (1) (or increases these traits by 1). When character is suffering Critical Damage, they increase the value of these Traits by an additional +1. Character Still Determines damage threshold based off of original Toughness Bonus before this Trait is applied.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Defence"
+    ]
   },
   "effects": [],
   "flags": {},

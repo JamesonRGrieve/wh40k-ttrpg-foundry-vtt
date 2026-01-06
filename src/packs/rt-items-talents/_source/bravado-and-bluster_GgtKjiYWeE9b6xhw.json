@@ -9,7 +9,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

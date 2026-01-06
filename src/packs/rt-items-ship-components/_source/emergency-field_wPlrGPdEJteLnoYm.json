@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 0,
     "effect": "Protects the vessel whilst in the immaterium. If the ship enters the warp unexpectedly, roll 1d10, on a 3 the Gellar Field activates automatically. Protecting the Vessel from warp intrusions.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Protects the vessel whilst in the immaterium. If the ship enters the warp unexpectedly, roll 1d10, on a 3 the Gellar Field activates automatically. Protecting the Vessel from warp intrusions.</p>"

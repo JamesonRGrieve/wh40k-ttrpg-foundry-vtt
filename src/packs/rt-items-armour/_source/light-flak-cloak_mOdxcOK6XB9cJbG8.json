@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Flak",
+    "type": "flak",
     "locations": "Arms, Body, Legs",
     "ap": 2,
     "maxAg": 55,
     "weight": "4kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "70 T",
     "notes": "+1 AP against Blast Weapons if not at centre of blast.",
     "source": "Only War Core",
@@ -16,7 +16,24 @@
       "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 2,
+      "leftArm": 2,
+      "rightArm": 2,
+      "leftLeg": 2,
+      "rightLeg": 2
+    },
+    "modifications": [],
+    "maxAgility": 55
   },
   "effects": [],
   "flags": {},

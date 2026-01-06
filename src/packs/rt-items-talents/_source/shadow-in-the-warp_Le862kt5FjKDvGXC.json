@@ -9,7 +9,10 @@
     "source": "BC: Binding Contracts",
     "description": {
       "value": "<p>All Non-Tyranid Psykers within Willpower Characteristic Metres Range suffer -20 to all Tests to use Psychic Powers.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Daemonic)",
+    "type": "exotic",
     "weight": "?",
     "availability": "Found at sites of recent Daemonic Incursions or summoning, constantly generates heat and crumbles to ash when touched. Can be used to create a summoning circle of chaos symbol, granting +30 to Daemoni Summoning Rituals. Coating a weapon in it grants it Overheats and Tainted Qualities, and removes Sanctified Quality permenantly. Covering one's skin with it grants Daemonic (X) for X Minutes, where X = Willpower Bonus / 2. Causes 1d5 Corruption per minute of exposure, if this causes mutation/malignancy, test has -20. Can also enhance Malefic Psychic Powers or increase the chance or effects of Psychic Pheonomena",
     "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic must be stored in stasis, its unclean heat destroying any container over time.",

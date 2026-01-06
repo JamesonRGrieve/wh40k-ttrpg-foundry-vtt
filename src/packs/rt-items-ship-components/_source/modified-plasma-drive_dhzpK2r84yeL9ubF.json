@@ -9,7 +9,7 @@
     "spaceUsage": -4,
     "spCost": 3,
     "effect": "Reduces Size of Plasma Drive by 4 (noted in size column), Increases Ship Speed by 1.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Reduces Size of Plasma Drive by 4 (noted in size column), Increases Ship Speed by 1.</p>"

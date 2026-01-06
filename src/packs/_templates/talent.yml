@@ -1,0 +1,93 @@
+# Talent Template
+# Use this as a reference for creating talent items
+
+_id: &id talent-template-000001
+name: Quick Draw
+type: talent
+img: systems/rogue-trader/icons/talents/quick-draw.webp
+
+system:
+  identifier: quick-draw
+  
+  # Classification
+  category: combat  # general, combat, social, investigation, psychic, navigator, tech, leadership, unique, career
+  tier: 1           # 1, 2, or 3
+  
+  # Prerequisites
+  prerequisites:
+    text: ""  # Human-readable text (overrides structured if present)
+    characteristics:
+      agility: 30  # Characteristic requirements
+    skills:
+      - "Awareness"  # Required skills
+    talents: []      # Required talents
+  
+  # Associated Aptitudes (for XP cost calculation)
+  aptitudes:
+    - Agility
+    - Finesse
+  
+  # Experience Cost
+  cost: 200
+  
+  # Effect Description
+  benefit: |
+    <p>The character can draw and ready a weapon as a Free Action 
+    instead of a Half Action.</p>
+  
+  # Is this passive or activated?
+  isPassive: true
+  isRollable: false
+  
+  # Roll Configuration (if rollable)
+  rollConfig:
+    characteristic: ""
+    skill: ""
+    modifier: 0
+    description: ""
+  
+  # Stackable talents (like Weapon Training)
+  stackable: false
+  rank: 1
+  specialization: ""  # e.g., "Bolt" for Weapon Training (Bolt)
+  
+  # Stat Modifiers (applied when talent is active)
+  modifiers:
+    characteristics: {}
+    skills: {}
+    combat:
+      attack: 0
+      damage: 0
+      penetration: 0
+      defense: 0
+      initiative: 0
+      speed: 0
+    resources:
+      wounds: 0
+      fate: 0
+      insanity: 0
+      corruption: 0
+    other: []
+  
+  # Description
+  description:
+    value: |
+      <p>Quick Draw allows for rapid weapon deployment in combat, 
+      essential for those who need to be ready at a moment's notice.</p>
+    chat: ""
+    summary: "Draw weapons as a Free Action"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "98"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

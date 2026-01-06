@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Xenos)",
+    "type": "exotic",
     "weight": "?",
     "availability": "Grub-Like creatures seemingly bio-engineered or grown from an unknown source, once they implant themselves into cranial tissue through digging through the skin or burrowing through the eys, their host fall under their control and become easy to manipulate. Once applied to target's skin, after roughly 5 minutes the leech will make its way to the brain and implant itself. The host then becomes highly suggestable, and will carry out any orders given to them unless they succeed a -60 willpower test, they may also begin acting oddly in other ways, performing actions at the discretion of whatever unknowable force guides them. Removing an implanted leech without damaging the host requires a total of 6 Degrees of Success on -30 Extended Medicae Test, each degree of failiure causes 1d10 Impact Damage to the host's head that cannot be reduced by Armour or Toughness. The Leech can be forcibly removed but will kill the host. Removed leeches, regardless of method, always die within a few seconds of removal and cannot be reused.",
     "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",

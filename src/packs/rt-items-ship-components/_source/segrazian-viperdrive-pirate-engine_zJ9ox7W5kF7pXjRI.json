@@ -9,7 +9,7 @@
     "spaceUsage": 16,
     "spCost": 2,
     "effect": "Increase Ship Speed by +2, and Manoeuvrability by +5. If the \"Engines Crippled\" critical result is rolled on the Critical Hit table, always treat d10 result as 8-10 (engines wrecked).",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Increase Ship Speed by +2, and Manoeuvrability by +5. If the \"Engines Crippled\" critical result is rolled on the Critical Hit table, always treat d10 result as 8-10 (engines wrecked).</p>"

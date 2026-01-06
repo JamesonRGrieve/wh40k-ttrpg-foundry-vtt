@@ -9,7 +9,10 @@
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>Whenever the character deals Critical Damage to an opponent, they can make a +0 Intelligence Test. If they suceed, they can reduce the damage they inflict by up to their Intelligence Bonus and inflict 1 Fatigue on the Target for each degree of success they scored on the Test. They also gain +30 to Medicae Skill Tests to treat wounds that they caused.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

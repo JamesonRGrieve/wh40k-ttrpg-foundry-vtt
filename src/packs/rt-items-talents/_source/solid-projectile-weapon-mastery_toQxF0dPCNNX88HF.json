@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When Character fires a Solid Projectile Weapon, it gains Proven(Ballistic Skill Bonus/2), rounded up.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse"
+    ]
   },
   "effects": [],
   "flags": {},

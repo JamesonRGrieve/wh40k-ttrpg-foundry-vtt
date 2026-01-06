@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "An Eldar Device that aids Navigation. +20 to all Navigation Tests, journeys through the warp are made in half the time when using this component. This Compoent can never become unpowered.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>An Eldar Device that aids Navigation. +20 to all Navigation Tests, journeys through the warp are made in half the time when using this component. This Compoent can never become unpowered.</p>"

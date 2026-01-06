@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "Head",
     "ap": 5,
     "maxAg": null,
     "weight": "2.5kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.",
     "source": "RT: Faith and Coin",
@@ -16,7 +16,20 @@
       "value": "<p>Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

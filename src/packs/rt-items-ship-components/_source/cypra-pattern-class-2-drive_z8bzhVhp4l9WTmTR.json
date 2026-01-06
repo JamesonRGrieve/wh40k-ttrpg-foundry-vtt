@@ -9,7 +9,7 @@
     "spaceUsage": 12,
     "spCost": 2,
     "effect": "Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).</p>"

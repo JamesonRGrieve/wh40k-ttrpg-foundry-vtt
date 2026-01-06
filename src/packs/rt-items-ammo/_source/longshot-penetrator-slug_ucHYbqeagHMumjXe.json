@@ -7,7 +7,7 @@
     "damageOrEffect": "Comes in pack of 5. Deals 1d10+3 I Damage with Pen 4. Proven (4), Razor Sharp",
     "qualities": "Proven (4), Razor Sharp",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

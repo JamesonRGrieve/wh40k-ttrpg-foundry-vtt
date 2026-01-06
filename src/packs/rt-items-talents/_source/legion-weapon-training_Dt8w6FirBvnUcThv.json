@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Gain Weapon Training Talents for all Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, SP, Thrown, and Launcher Weapons. Effectively, become trained in all non-exotic weapons.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

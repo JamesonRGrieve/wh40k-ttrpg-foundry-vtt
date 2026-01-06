@@ -9,7 +9,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>When taken choose a weapon type and class, such as Bolt (Pistols) or Melee (Chain), when using this weapon type, can never suffer a penalty of greater than -30 when using the weapon.\nTalent can be taken multiple times.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

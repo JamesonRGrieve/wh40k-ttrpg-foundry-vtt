@@ -7,7 +7,7 @@
     "allowedVehicles": "Any",
     "difficulty": "+20",
     "descriptionText": "No Test to Install or Remove, can easily be rolled up and stored on the hull when not in use. When in use all Tests to spot the Vehicle have -30. Doesn't hide a vehicle moving and shooting. If Vehicle catches on fire while netting in use, roll 1d10, on 5 or less camo netting catches on fire, and becomes unusable until repaired.",
-    "availability": "Common",
+    "availability": "common",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>No Test to Install or Remove, can easily be rolled up and stored on the hull when not in use. When in use all Tests to spot the Vehicle have -30. Doesn't hide a vehicle moving and shooting. If Vehicle catches on fire while netting in use, roll 1d10, on 5 or less camo netting catches on fire, and becomes unusable until repaired.</p>"

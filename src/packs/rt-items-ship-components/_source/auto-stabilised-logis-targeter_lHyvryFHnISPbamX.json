@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 2,
     "effect": "+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.</p>"

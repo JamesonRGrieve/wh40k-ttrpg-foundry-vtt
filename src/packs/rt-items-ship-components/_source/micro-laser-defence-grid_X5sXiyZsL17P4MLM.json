@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 2,
     "effect": "An extremely upscaled set of thousands of digi-lasers. Increases Turret Rating by 2.  Component Can't be Damaged or Destroyed Except from a Critical Hit.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>An extremely upscaled set of thousands of digi-lasers. Increases Turret Rating by 2.  Component Can't be Damaged or Destroyed Except from a Critical Hit.</p>"

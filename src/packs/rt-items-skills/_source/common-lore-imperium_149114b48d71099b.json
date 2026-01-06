@@ -1,0 +1,51 @@
+{
+  "name": "Common Lore (Imperium)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "type": "",
+    "characteristic": "intelligence",
+    "descriptor": "Recalling general knowledge on procedures, divisions, traditions, important individuals, superstitions, etc, for target group.",
+    "uses": "Use: Skill Test to Recall general/relevent knowledge, more DoS = better information.\nSkill Groups: Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Mechanicus, Adeptus Adminstratum, Ecclesiarchy, Imperial Creed, Imperial Guard, Imperial Navy, Imperium, Navis Nobilite, Rogue Traders, Tech, Underworld, War. And more specific ones such as: Calixis Sector,  Jericho Reach, Koronus Expanse, Screaming Vortex, Spinward Front, etc, ",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>Recalling general knowledge on procedures, divisions, traditions, important individuals, superstitions, etc, for target group.</p>"
+    },
+    "rollConfig": {
+      "characteristic": "Intelligence",
+      "modifier": 0
+    },
+    "isBasic": true,
+    "specializations": [
+      "Adeptus Arbites",
+      "Adeptus Astra Telepathica",
+      "Adeptus Mechanicus",
+      "Adeptus Administratum",
+      "Ecclesiarchy",
+      "Imperial Creed",
+      "Imperial Guard",
+      "Imperial Navy",
+      "Imperium",
+      "Navis Nobilite",
+      "Rogue Traders",
+      "Tech",
+      "Underworld",
+      "War",
+      "Calixis Sector",
+      "Jericho Reach",
+      "Koronus Expanse",
+      "Screaming Vortex",
+      "Spinward Front"
+    ],
+    "skillType": "specialist",
+    "aptitudes": [
+      "Intelligence",
+      "General",
+      "Unaligned"
+    ],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "149114b48d71099b"
+}

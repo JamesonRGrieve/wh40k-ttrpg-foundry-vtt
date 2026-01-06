@@ -3,8 +3,8 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "Apt: Agility, Knowledge, Unaligned",
-    "characteristic": "Agility",
+    "type": "",
+    "characteristic": "agility",
     "descriptor": "Picking Pockets, palming small objects, performing tricks, and other stealthy acts made without the notice of others. ",
     "uses": "Uses: If vs a target is an Opposed Test vs opponent's Awareness or Scruinty. Examples include Attempting to Steal Something from a target's pocket or on their person. Palming evidence from the scene of a crime. Performing an action unseen to a person who knows where you are.",
     "useTime": "Half Action, or Free Action but has -10",
@@ -15,7 +15,14 @@
       "characteristic": "Agility",
       "modifier": 0
     },
-    "isBasic": true
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Agility",
+      "Knowledge",
+      "Unaligned"
+    ],
+    "source": ""
   },
   "effects": [],
   "flags": {},

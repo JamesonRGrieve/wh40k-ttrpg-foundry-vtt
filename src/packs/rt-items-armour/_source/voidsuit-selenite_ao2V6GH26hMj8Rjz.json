@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Void",
+    "type": "void",
     "locations": "All",
     "ap": "4/3/3/3",
     "maxAg": null,
     "weight": "2kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "600 T",
     "notes": "10 hours of air, can replace air tankwithout removing suit. Has Vox, Seal patcher, grapnel + 10m of line, and photo-visor.  -10 Agility when wearing. Breached if taking more than 2xAP damage, can be repaired as Full Action with tape, patches, etc). For 200 Thrones can add an Impellor allowing for Movement of 6 in Zero or heavily reduced Gravity.",
     "source": "Rogue Trader Core",
@@ -16,7 +16,20 @@
       "value": "<p>10 hours of air, can replace air tankwithout removing suit. Has Vox, Seal patcher, grapnel + 10m of line, and photo-visor.  -10 Agility when wearing. Breached if taking more than 2xAP damage, can be repaired as Full Action with tape, patches, etc). For 200 Thrones can add an Impellor allowing for Movement of 6 in Zero or heavily reduced Gravity.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

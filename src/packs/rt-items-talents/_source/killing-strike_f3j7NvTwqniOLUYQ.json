@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character can spend a Fate Point to make All Melee Attacks they make that round unavoidable by Parry or Dodge Skills. Other methods of stopping attacks, such as Shadow or Displacement Fields are unaffected.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence",
+      "Khorne"
+    ]
   },
   "effects": [],
   "flags": {},

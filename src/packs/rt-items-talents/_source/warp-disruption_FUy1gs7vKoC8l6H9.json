@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Everyone with a Psy Rating within Willpower Bonus metres of the Untouchable reduces their base Psy Rating by 1 whilst within range. If this results in them having Psy Rating 0, they cannot use Psychic Powers.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

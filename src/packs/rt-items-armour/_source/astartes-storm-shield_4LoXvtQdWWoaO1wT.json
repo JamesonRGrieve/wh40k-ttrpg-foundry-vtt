@@ -3,7 +3,7 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field (Astartes)",
+    "type": "void",
     "locations": "All",
     "ap": 0.55,
     "maxAg": "-",
@@ -16,7 +16,20 @@
       "value": "<p>Also Provides +4 AP to the Arm and Body. Acts as a Defensive Weapon dealing 1d10 Impact Damage. Reduces Guarded Attack to a Half Action.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.55,
+      "body": 0.55,
+      "leftArm": 0.55,
+      "rightArm": 0.55,
+      "leftLeg": 0.55,
+      "rightLeg": 0.55
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When selecting talent, character chooses one group that they possess a Hatred Talent for. Against those of that group, character's attacks gain Vengeful (9), if character's attacks already possess this quality, decrease its value by 1.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

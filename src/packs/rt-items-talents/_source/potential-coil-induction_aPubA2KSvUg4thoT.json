@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When in the presence of a suitable power source, such as a portable generator or the power plant of a regimental vehicle, the character can make a +0 Toughness Test and recover Degree of Success levels of Fatigue.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Tech"
+    ]
   },
   "effects": [],
   "flags": {},

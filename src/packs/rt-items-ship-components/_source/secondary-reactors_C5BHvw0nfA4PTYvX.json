@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "Can make -10 Tech-Use test to increase speed by 2 for a turn, but reduced by 1 on following turn. Failing test causes -1 speed immediately, 3 DoF or more halves speed until Emergency Repairs are made.  Poor Craftsmanship imposes -10 to Test, Good extends speed for 2 turns, Best also increases speed by 3. Only one per vessel. Space usage is 1 for Raiders/Frigates, 2 for Transports, 3 for Light Cruisers/Cruisers, and 4 for larger.",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Can make -10 Tech-Use test to increase speed by 2 for a turn, but reduced by 1 on following turn. Failing test causes -1 speed immediately, 3 DoF or more halves speed until Emergency Repairs are made.  Poor Craftsmanship imposes -10 to Test, Good extends speed for 2 turns, Best also increases speed by 3. Only one per vessel. Space usage is 1 for Raiders/Frigates, 2 for Transports, 3 for Light Cruisers/Cruisers, and 4 for larger.</p>"

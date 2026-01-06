@@ -12,7 +12,7 @@
     "strength": 5,
     "critRating": 4,
     "range": 11,
-    "availability": "Rare",
+    "availability": "rare",
     "notes": "When this component rolls a 1 or 2 on the Critical Hit Chart, it affects two Components instead of one. Must occupy Port or Starboard slots.",
     "source": "RT: BF Koronus",
     "description": {

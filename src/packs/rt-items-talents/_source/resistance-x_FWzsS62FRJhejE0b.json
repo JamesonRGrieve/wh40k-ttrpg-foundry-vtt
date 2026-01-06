@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Gain +10 to resist effects of this type. GM may wish to approve or have choices justified by character's past or actions. Talent can be taken multiple times.\nTypes: Cold, Fear, Heat, Poisons, Psychic Powers, Radiation, Vacuum, Other.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Defence",
+      "Nurgle"
+    ]
   },
   "effects": [],
   "flags": {},

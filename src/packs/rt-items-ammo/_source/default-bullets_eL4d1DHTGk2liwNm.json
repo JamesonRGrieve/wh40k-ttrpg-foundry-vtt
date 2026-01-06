@@ -7,7 +7,7 @@
     "damageOrEffect": "Bullets of one SP weapon type can only be used with weapons of that type (EG: Stub Revolver ammo could be used in Stub Automatics, but not in Autoguns)",
     "qualities": "-",
     "weight": "10% wep",
-    "availability": "Plentiful",
+    "availability": "plentiful",
     "cost": "1/20 T",
     "source": "Rogue Trader Core",
     "description": {

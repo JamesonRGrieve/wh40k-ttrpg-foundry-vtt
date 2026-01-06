@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 0,
     "effect": "A fully staffed temple of the Imperial Creed within the vessel, can be deployed from the ship to the surface of a planet to directly tend to the needs of its unwashed masses. Permenant +2 to Morale, and +150 Achievement Points towards Creed Objectives. Once deployed, takes several days to decontruct and bring back to the ship via lifters. One per vessel.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>A fully staffed temple of the Imperial Creed within the vessel, can be deployed from the ship to the surface of a planet to directly tend to the needs of its unwashed masses. Permenant +2 to Morale, and +150 Achievement Points towards Creed Objectives. Once deployed, takes several days to decontruct and bring back to the ship via lifters. One per vessel.</p>"

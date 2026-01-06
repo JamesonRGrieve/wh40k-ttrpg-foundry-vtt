@@ -1,0 +1,311 @@
+// ============================================
+// Compact Sheet Styles (Skills, Talents, Traits)
+// ============================================
+
+.rt-compact {
+  .rt-item-header--compact {
+    grid-template-columns: 50px 1fr;
+    padding: $rt-space-md;
+    gap: $rt-space-sm;
+    
+    &::before, &::after {
+      display: none;
+    }
+  }
+  
+  .rt-item-image--sm {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .rt-item-title__name {
+    font-size: $rt-font-size-lg;
+    padding: 2px $rt-space-xs;
+  }
+  
+  .rt-item-body--compact {
+    padding: $rt-space-sm $rt-space-md;
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+  }
+
+  // Override textarea font to use UI font (cleaner look)
+  .rt-text-field textarea,
+  .rt-inline-field input,
+  .rt-prereq-row input {
+    font-family: $rt-font-ui;
+  }
+}
+
+// Inline meta controls in header
+.rt-meta-select {
+  background: rgba($rt-color-void, 0.6);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-sm;
+  color: $rt-color-parchment;
+  font-size: $rt-font-size-xs;
+  padding: 2px 4px;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+  }
+}
+
+.rt-meta-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba($rt-color-void, 0.6);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-sm;
+  padding: 0 4px;
+  
+  input {
+    width: 40px;
+    background: transparent;
+    border: none;
+    color: $rt-color-parchment;
+    font-size: $rt-font-size-xs;
+    text-align: center;
+    
+    &:focus {
+      outline: none;
+    }
+  }
+  
+  span {
+    font-size: $rt-font-size-xs;
+    color: $rt-color-steel-light;
+  }
+}
+
+.rt-meta-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: $rt-font-size-xs;
+  color: $rt-color-steel-light;
+  cursor: pointer;
+  
+  input[type="checkbox"] {
+    margin: 0;
+  }
+}
+
+// Prerequisite row
+.rt-prereq-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-xs $rt-space-sm;
+  background: rgba($rt-color-crimson-dark, 0.15);
+  border: 1px solid rgba($rt-color-crimson, 0.3);
+  border-radius: $rt-radius-sm;
+  
+  i {
+    color: $rt-color-crimson;
+    font-size: $rt-font-size-sm;
+  }
+  
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: $rt-color-parchment;
+    font-size: $rt-font-size-sm;
+    
+    &::placeholder {
+      color: rgba($rt-color-crimson, 0.5);
+    }
+    
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+// Inline field rows
+.rt-inline-row {
+  display: flex;
+  gap: $rt-space-sm;
+}
+
+.rt-inline-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  
+  label {
+    font-size: $rt-font-size-xs;
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  input {
+    background: rgba($rt-color-void, 0.4);
+    border: 1px solid $rt-color-steel-dark;
+    border-radius: $rt-radius-sm;
+    color: $rt-color-parchment;
+    font-size: $rt-font-size-sm;
+    padding: $rt-space-xs $rt-space-sm;
+    
+    &:focus {
+      outline: none;
+      border-color: $rt-color-gold;
+      background: rgba($rt-color-void, 0.6);
+    }
+  }
+  
+  &--short {
+    flex: 0 0 80px;
+  }
+}
+
+// Text fields (description, effect)
+.rt-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  
+  label {
+    font-size: $rt-font-size-xs;
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  textarea {
+    background: rgba($rt-color-void, 0.4);
+    border: 1px solid $rt-color-steel-dark;
+    border-radius: $rt-radius-sm;
+    color: $rt-color-parchment;
+    font-size: $rt-font-size-sm;
+    padding: $rt-space-sm;
+    resize: vertical;
+    min-height: 60px;
+    
+    &:focus {
+      outline: none;
+      border-color: $rt-color-gold;
+      background: rgba($rt-color-void, 0.6);
+    }
+  }
+}
+
+// Footer with source
+.rt-item-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: $rt-space-xs;
+  border-top: 1px solid rgba($rt-color-steel-dark, 0.3);
+}
+
+.rt-source-input {
+  background: transparent;
+  border: none;
+  color: $rt-color-steel;
+  font-size: $rt-font-size-xs;
+  font-style: italic;
+  text-align: right;
+  
+  &::placeholder {
+    color: rgba($rt-color-steel, 0.5);
+  }
+  
+  &:focus {
+    outline: none;
+    color: $rt-color-parchment;
+  }
+}
+
+// Meta text inputs (replaces dropdowns)
+.rt-meta-text {
+  background: rgba($rt-color-void, 0.6);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-sm;
+  color: $rt-color-parchment;
+  font-family: $rt-font-ui;
+  font-size: $rt-font-size-xs;
+  padding: 2px 6px;
+  width: 70px;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+  }
+  
+  &--tiny {
+    width: 30px;
+    text-align: center;
+  }
+}
+
+// Time field wider
+.rt-inline-field--time {
+  flex: 0 0 140px;
+}
+
+// Prose fields (rich text display, click to edit)
+.rt-prose-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  
+  label {
+    font-size: $rt-font-size-xs;
+    color: $rt-color-steel-light;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    i {
+      margin-right: 4px;
+      color: $rt-color-gold;
+    }
+  }
+}
+
+.rt-prose {
+  background: rgba($rt-color-void, 0.3);
+  border: 1px solid $rt-color-steel-dark;
+  border-radius: $rt-radius-sm;
+  color: $rt-color-parchment;
+  font-family: $rt-font-ui;
+  font-size: $rt-font-size-sm;
+  padding: $rt-space-sm;
+  min-height: 40px;
+  max-height: 120px;
+  overflow-y: auto;
+  cursor: pointer;
+  line-height: 1.4;
+  
+  &:hover {
+    border-color: $rt-color-gold;
+    background: rgba($rt-color-void, 0.5);
+  }
+  
+  &:empty::before {
+    content: 'Click to edit...';
+    color: $rt-color-steel;
+    font-style: italic;
+  }
+  
+  p {
+    margin: 0 0 0.5em 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Remove old prereq-row styling, use inline-field instead
+.rt-compact .rt-inline-field label i {
+  margin-right: 4px;
+  color: $rt-color-crimson;
+}
+

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

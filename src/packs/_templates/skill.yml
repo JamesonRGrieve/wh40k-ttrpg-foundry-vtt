@@ -1,0 +1,94 @@
+# Skill Template (Compendium Reference)
+# Use this as a reference for creating skill reference items
+
+_id: &id skill-template-000001
+name: Awareness
+type: skill
+img: systems/rogue-trader/icons/skills/awareness.webp
+
+system:
+  identifier: awareness
+  
+  # Linked Characteristic
+  characteristic: perception  # weaponSkill, ballisticSkill, strength, toughness, agility, intelligence, perception, willpower, fellowship
+  
+  # Skill Classification
+  skillType: basic  # basic, advanced, specialist
+  isBasic: true     # Can be used untrained (at -20)
+  
+  # Associated Aptitudes
+  aptitudes:
+    - Perception
+    - Fieldcraft
+  
+  # Predefined Specializations (for specialist skills)
+  specializations: []
+  
+  # Short Description
+  descriptor: "Notice details and detect hidden things"
+  
+  # Common Uses
+  uses: |
+    <p>Awareness is used to notice details in your environment, 
+    spot hidden enemies, detect ambushes, or find concealed objects.</p>
+    
+    <h4>Example Uses:</h4>
+    <ul>
+      <li>Spotting an ambush</li>
+      <li>Noticing a hidden door</li>
+      <li>Detecting a lie (body language)</li>
+      <li>Hearing approaching enemies</li>
+    </ul>
+  
+  # Special Rules
+  specialRules: |
+    <p>Awareness can be used as a Reaction to notice sudden threats 
+    when appropriate. The GM may apply bonuses or penalties based 
+    on lighting, noise, and other environmental factors.</p>
+  
+  # Example Difficulties
+  exampleDifficulties:
+    - difficulty: "Routine"
+      modifier: 20
+      example: "Notice something obvious but partially hidden"
+    - difficulty: "Challenging"
+      modifier: 0
+      example: "Spot a concealed weapon"
+    - difficulty: "Difficult"
+      modifier: -10
+      example: "Notice a well-hidden enemy"
+    - difficulty: "Hard"
+      modifier: -20
+      example: "Detect an expertly concealed ambush"
+  
+  # Time to Use
+  useTime: "Free Action or as part of another action"
+  
+  # Roll Configuration
+  rollConfig:
+    defaultModifier: 0
+    canBeUsedUntrained: true
+    untrainedPenalty: -20
+  
+  # Description
+  description:
+    value: |
+      <p>Awareness represents a character's ability to perceive 
+      their environment, notice subtle details, and react to 
+      potential threats. It combines all the senses to form a 
+      general alertness to one's surroundings.</p>
+    chat: ""
+    summary: "Perception of environment and threats"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "88"
+    custom: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

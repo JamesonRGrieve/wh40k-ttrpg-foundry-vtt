@@ -4,8 +4,8 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Tech-Priest Enginseer",
-    "descriptionText": "Those Enginseers who become intimately familiar with the Mystical workings of all manner of Vehicles within the Munitorum may become noticed by their Mechanicus Breathren. For the ability to rapidly and effectively maintain fleets of Tanks is a talent of high regard and higher demand.",
-    "effects": "Replace Current Specialty's Aptitudes and Equipment with that of the Architectus Magna.Apt:Agility, Ballistic Skill, Defence, Intelligence, Strength, Tech, Willpower\nAdd. Equipment: Sacred Ungents, Dataslate, Combi-Tool, Cranial Armour, MIU, Respiratory Implant, Ballistc or Utility Mechadendrite (servo arm). Gain Talents: Lightning Reflexes+Resistance(Fear) or Accelerated Repairs. Can Purchase Unique Talent: Rite of Synchronised Steel and Basic Order: Stir, Spirits of Iron!",
+    "descriptionText": "",
+    "effects": "",
     "source": "OW: Shield of Humanity (Page 45)",
     "description": {
       "value": "<p>Those Enginseers who become intimately familiar with the Mystical workings of all manner of Vehicles within the Munitorum may become noticed by their Mechanicus Breathren. For the ability to rapidly and effectively maintain fleets of Tanks is a talent of high regard and higher demand.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Architectus Magna.Apt:Agility, Ballistic Skill, Defence, Intelligence, Strength, Tech, Willpower\nAdd. Equipment: Sacred Ungents, Dataslate, Combi-Tool, Cranial Armour, MIU, Respiratory Implant, Ballistc or Utility Mechadendrite (servo arm). Gain Talents: Lightning Reflexes+Resistance(Fear) or Accelerated Repairs. Can Purchase Unique Talent: Rite of Synchronised Steel and Basic Order: Stir, Spirits of Iron!</p>"
@@ -16,7 +16,10 @@
       "combat": {},
       "other": []
     },
-    "isPassive": true
+    "isPassive": true,
+    "category": "creature",
+    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Architectus Magna.Apt:Agility, Ballistic Skill, Defence, Intelligence, Strength, Tech, Willpower\nAdd. Equipment: Sacred Ungents, Dataslate, Combi-Tool, Cranial Armour, MIU, Respiratory Implant, Ballistc or Utility Mechadendrite (servo arm). Gain Talents: Lightning Reflexes+Resistance(Fear) or Accelerated Repairs. Can Purchase Unique Talent: Rite of Synchronised Steel and Basic Order: Stir, Spirits of Iron!",
+    "level": null
   },
   "effects": [],
   "flags": {},

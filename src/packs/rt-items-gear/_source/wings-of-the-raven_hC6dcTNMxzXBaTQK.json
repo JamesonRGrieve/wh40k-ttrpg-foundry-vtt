@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "-",
     "availability": "Master Crafted Relic Ravenguard Jump Pack. Can fall from any height with a guided fall. Triples base movement speed whilst ignoring obstacles (must land at the end of the movement).  Can engage full power and gain Flyer (18) for 10 minutes before requiring 10 minutes to cool down). ",
     "cost": "Raven Guard Chapter Only.",

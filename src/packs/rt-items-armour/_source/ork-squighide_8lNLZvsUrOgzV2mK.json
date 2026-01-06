@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Ork",
+    "type": "xenos",
     "locations": "Body, Arms, Legs",
     "ap": 3,
     "maxAg": null,
     "weight": "4kg",
-    "availability": "Scarce",
+    "availability": "scarce",
     "cost": "-",
     "notes": "For Orks, Plentiful. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
     "source": "RT: Into the Storm",
@@ -16,7 +16,24 @@
       "value": "<p>For Orks, Plentiful. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "body",
+      "leftArm",
+      "rightArm",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Once per Game Session, character can ignore a Psychic Phenomena result they have rolled, including a roll that would have caused Perils of the Warp. Character however suffers 1d5 Energy Damage that ignores Armour and Toughness in the process, and cannot make any Focus Power Tests or sustain Psychic Powers until the Beginning of their next turn.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Psyker",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

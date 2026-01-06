@@ -7,7 +7,7 @@
     "damageOrEffect": "Increase Penetration by 4, but reduce damage by 1.",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "RT: Faith and Coin",
     "description": {

@@ -1,30 +1,40 @@
-<div class="dh-wrapper">
-    <div class="dh-chat">
-        <div class="dh-roll">
-            <h1>{{actor.name}}</h1>
-            <h2>Bleeding!</h2>
-            <div class="dh-roll__divider"></div>
-
-            <div class="dh-roll__row dh-roll__row--number">
-                <div class="dh-roll__label">Fatigue</div>
-                <div class="dh-roll__value">{{actor.system.fatigue.value}} / {{actor.system.fatigue.max}}</div>
+{{!-- Rogue Trader Bleeding Card - Modern Design --}}
+<div class="rt-chat">
+    <div class="rt-roll-card">
+        {{!-- Header --}}
+        <div class="rt-roll-card__header">
+            <div class="rt-roll-card__actor">{{actor.name}}</div>
+            <h2 class="rt-roll-card__title">Bleeding!</h2>
+            <div class="rt-roll-card__subtitle">Critical Condition</div>
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-roll-card__body">
+            <div class="rt-roll-card__row">
+                <span class="rt-roll-card__label">Fatigue</span>
+                <span class="rt-roll-card__value">{{actor.system.fatigue.value}} / {{actor.system.fatigue.max}}</span>
             </div>
-
-            <div class="dh-roll__label">Once per round as a Free Action, he (or another character who can reach him) can attempt a Difficult (–10) Medicae test to remove this condition.</div>
-
-            <div class="dh-roll__fail">
-                <span>1</span>
-                <span>Fatigue</span>
+            
+            <div class="rt-roll-card__text">
+                <p>Once per round as a Free Action, the character (or another who can reach them) can attempt a <strong>Difficult (–10) Medicae</strong> test to remove this condition.</p>
             </div>
-
-            <div class='dh-roll__controls-1'>
-                <div class="dh-control-button roll-control__apply-damage"
+            
+            <div class="rt-roll-card__damage">
+                <div class="rt-roll-card__damage-header">
+                    <span class="rt-roll-card__damage-title">Fatigue</span>
+                </div>
+                <div class="rt-roll-card__damage-value">+1</div>
+                <div class="rt-roll-card__damage-type">Blood Loss</div>
+            </div>
+            
+            <div class="rt-roll-card__controls">
+                <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__apply-damage"
                      data-uuid="{{actor.uuid}}"
                      data-damage="0"
                      data-fatigue="1">
-                    <span class="dh-control-button__span material-icons">api</span>
-                    <span class="dh-control-button__label">Apply Fatigue</span>
-                </div>
+                    <span class="material-icons">api</span>
+                    <span>Apply Fatigue</span>
+                </button>
             </div>
         </div>
     </div>

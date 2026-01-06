@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "5kg",
     "availability": "Master Crafted Relic Astartes Signum of the Kights of the Raven Chapter. All members of the Kill Team in Squad Mode and support range of the bearer count as having Signum Links. Whenever a Space Marine benefitting from this effect attacks a Horde, they do additional damage equal to the number of members in their Kill Team within Support range who fired on the Horde since their last turn.",
     "cost": null,

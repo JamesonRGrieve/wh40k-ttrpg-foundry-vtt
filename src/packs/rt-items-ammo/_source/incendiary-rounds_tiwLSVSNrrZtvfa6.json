@@ -7,7 +7,7 @@
     "damageOrEffect": "Change damage type to energy, can ignite flammable materials.",
     "qualities": null,
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "RT: Hostile Acquisitions",
     "description": {

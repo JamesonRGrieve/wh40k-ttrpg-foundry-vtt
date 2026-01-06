@@ -7,7 +7,7 @@
     "damageOrEffect": "Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n",
     "qualities": "Reliable (conditional)",
     "weight": "10% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "8 T each",
     "source": "RT: Into the Storm / DH: Inquisitor's HB",
     "description": {

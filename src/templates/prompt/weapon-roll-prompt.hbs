@@ -1,186 +1,151 @@
-{{dhlog this}}
+{{!-- Rogue Trader Weapon Roll Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="dh-wrapper" autocomplete="off">
-        <div class="dh-attack">
-            <!-- Header -->
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__prompt dh-header__logo">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <img class="dh-header__logo-image-small" alt="{{this.sourceActor.name}}" src="{{this.sourceActor.img}}" />
-                            <span class="dh-header__title">Weapon Attack</span>
-                        </div>
-                    </div>
+    <form class="rt-prompt rt-prompt--attack" autocomplete="off">
+        {{!-- Weapon Select or Info --}}
+        {{#if weaponSelect}}
+            <div class="rt-prompt__panel">
+                <h3 class="rt-prompt__section-title">Select Weapons</h3>
+                <div class="rt-prompt__weapon-list">
+                    {{#each weapons as |weapon|}}
+                        <label class="rt-prompt__weapon-item {{#if weapon.isSelected}}rt-prompt__weapon-item--selected{{/if}}">
+                            <input class="rt-prompt__weapon-check weapon-select"
+                                type="checkbox"
+                                data-dtype="Boolean"
+                                {{checked weapon.isSelected}}
+                                name="{{weapon.id}}" />
+                            <img class="rt-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                            <div class="rt-prompt__weapon-info">
+                                <div class="rt-prompt__weapon-name">{{weapon.name}}</div>
+                                {{#if weapon.items}}
+                                    <div class="rt-prompt__weapon-details">
+                                        {{#each weapon.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </label>
+                    {{/each}}
                 </div>
             </div>
-
-            <!-- Weapon Select -->
-            {{#if weaponSelect}}
-                <div class="dh-panel dh-grid-col-6">
-                    <div class="dh-table--border dh-attackprompttable--border">
-                        <div class="table-row--head">
-                            <div class="table-cell"></div>
-                            <div class="table-cell"></div>
-                            <div class="table-cell--last"></div>
-                        </div>
-                        {{#each weapons as |weapon|}}
-                            <div class="table-row">
-                                <div class="table-cell--left">
-                                    <input
-                                        class="table-cell--checkbox weapon-select"
-                                        type="checkbox"
-                                        data-dtype="Boolean"
-                                        {{checked weapon.isSelected}}
-                                        name="{{weapon.id}}"
-                                    />
-                                </div>
-                                <div class="table-cell">
-                                    <div class="display">{{weapon.name}}</div>
-                                    {{#if weapon.items}}
-                                        <div class="table-cell--description">- {{#each weapon.items as |item|}}{{item.name}} - {{/each}}</div>
-                                    {{/if}}
-                                </div>
-                                <div class="table-cell">
-                                    <img class="dh-field__image" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                                </div>
-                            </div>
-                        {{/each}}
+        {{else}}
+            {{!-- Weapon Header Panel --}}
+            <div class="rt-prompt__panel">
+                <div class="rt-prompt__header">
+                    <img class="rt-prompt__icon" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                    <div class="rt-prompt__title-group">
+                        <h2 class="rt-prompt__title">{{weapon.name}}</h2>
+                        <div class="rt-prompt__subtitle">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
-            {{else}}
-                <div class="dh-panel dh-grid-col-6">
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Weapon</span>
-                        <span class="dh-field__span">{{weapon.name}}</span>
+                
+                {{!-- Target Display --}}
+                <div class="rt-prompt__target">
+                    <span class="rt-prompt__target-label">Target ({{baseChar}})</span>
+                    <span class="rt-prompt__target-value">{{baseTarget}}</span>
+                    <span class="rt-prompt__target-percent">%</span>
+                </div>
+                
+                {{#if weapon.usesAmmo}}
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Ammunition</span>
+                        <span class="rt-prompt__value">{{ammoText}}</span>
                     </div>
-                    {{#if weapon.usesAmmo}}
-                        <div class="dh-field__wrapper">
-                            <span class="dh-field__span">Ammunition</span>
-                            <span class="dh-field__span">{{ammoText}}</span>
+                {{/if}}
+                {{#each weapon.items as |item|}}
+                    {{#if item.isAttackSpecial}}
+                        <div class="rt-prompt__field">
+                            <span class="rt-prompt__label">Special</span>
+                            <span class="rt-prompt__value">{{item.name}}</span>
                         </div>
                     {{/if}}
-                    {{#each weapon.items as |item|}}
-                        {{#if item.isAttackSpecial}}
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__span">Special</span>
-                                <span class="dh-field__span">{{item.name}}</span>
-                            </div>
-                        {{/if}}
-                    {{/each}}
-                    {{#each weapon.items as |item|}}
-                        {{#if item.isWeaponModification}}
-                            <div class="dh-field__wrapper">
-                                <span class="dh-field__span">Modification</span>
-                                <span class="dh-field__span">{{item.name}}</span>
-                            </div>
-                        {{/if}}
-                    {{/each}}
-                </div>
-            {{/if}}
+                {{/each}}
+            </div>
 
-            <!-- Other -->
-            <div class="dh-panel dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <span class="dh-header__subtitle">Attack</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Base ({{baseChar}})</span>
-                    <span class="dh-field__span">{{baseTarget}}</span>
-                </div>
-                <div class="dh-field__wrapper">
-                    <span class="dh-field__span">Attack Type{{#if weapon.usesAmmo}}
-                            ({{fireRate}}
-                            hit(s) max){{/if}}</span>
-                    <select class="dh-field__input" name="action" id="action">
+            {{!-- Attack Options Panel --}}
+            <div class="rt-prompt__panel">
+                <h3 class="rt-prompt__section-title">Attack Options</h3>
+                <div class="rt-prompt__field">
+                    <span class="rt-prompt__label">Attack Type{{#if weapon.usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
+                    <select class="rt-prompt__select" name="action" id="action">
                         {{selectOptions actions selected=this.action}}
                     </select>
                 </div>
                 {{#if this.isCalledShot}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Called Shot Location</span>
-                        <select class="dh-field__input" name="calledShotLocation" id="calledShotLocation">
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Called Shot Location</span>
+                        <select class="rt-prompt__select" name="calledShotLocation" id="calledShotLocation">
                             {{selectOptions locations selected=this.calledShotLocation}}
                         </select>
                     </div>
                 {{/if}}
                 {{#if this.isLasWeapon}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Las Firing Mode</span>
-                        <select class="dh-field__input" name="lasMode" id="lasMode">
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Las Firing Mode</span>
+                        <select class="rt-prompt__select" name="lasMode" id="lasMode">
                             {{selectOptions (arrayToObject lasModes) selected=this.lasMode}}
                         </select>
                     </div>
                 {{/if}}
                 {{#if this.hasEyeOfVengeanceAvailable}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Use Eye of Vengeance</span>
-                        <span class="dh-field__input check">
-                            <input data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
-                        </span>
-                    </div>
-                {{/if}}
-                {{#if this.modifiers.attack}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Attack Modifier</span>
-                        <span class="dh-field__span">{{modifiers.attack}}</span>
+                    <div class="rt-prompt__checkbox-field">
+                        <span class="rt-prompt__label">Use Eye of Vengeance</span>
+                        <input class="rt-prompt__input" data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
                     </div>
                 {{/if}}
             </div>
-            <div class="dh-panel spacer dh-grid-col-6">
-                <div class="dh-header">
-                    <div class="dh-header__info">
-                        <div class="dh-header__item-wrapper--span-4 dh-header__borderless">
-                            <span class="dh-header__subtitle">Modifiers</span>
-                        </div>
-                    </div>
-                </div>
+
+            {{!-- Modifiers Panel --}}
+            <div class="rt-prompt__panel">
+                <h3 class="rt-prompt__section-title">Modifiers</h3>
                 {{#with this.modifiers}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Difficulty</span>
-                        <select class="dh-field__input" data-dtype="Number" name="modifiers.difficulty">
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Difficulty</span>
+                        <select class="rt-prompt__select" data-dtype="Number" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
                     {{#if @root.canAim}}
-                        <div class="dh-field__wrapper">
-                            <span class="dh-field__span">Aim</span>
-                            <select class="dh-field__input" data-dtype="Number" name="modifiers.aim">
+                        <div class="rt-prompt__field">
+                            <span class="rt-prompt__label">Aim</span>
+                            <select class="rt-prompt__select" data-dtype="Number" name="modifiers.aim">
                                 {{selectOptions @root.aims selected=aim}}
                             </select>
                         </div>
                     {{/if}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Modifier</span>
-                        <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Additional Modifier</span>
+                        <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
                 {{#if this.weapon.isRanged}}
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">Distance</span>
-                        <input class="dh-field__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                    <div class="rt-prompt__divider"></div>
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Distance (m)</span>
+                        <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
                     </div>
-                    <div class="dh-field__wrapper">
-                        <span class="dh-field__span">{{rangeName}}</span>
-                        <span class="dh-field__span">{{rangeBonus}}</span>
+                    <div class="rt-prompt__range-info">
+                        <span class="rt-prompt__range-label">{{rangeName}}</span>
+                        <span class="rt-prompt__range-value {{#if (gt rangeBonus 0)}}rt-prompt__range-value--positive{{else if (lt rangeBonus 0)}}rt-prompt__range-value--negative{{else}}rt-prompt__range-value--neutral{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
+                    </div>
+                {{/if}}
+                {{#if this.modifiers.attack}}
+                    <div class="rt-prompt__field">
+                        <span class="rt-prompt__label">Weapon Attack Mod</span>
+                        <span class="rt-prompt__value">{{modifiers.attack}}</span>
                     </div>
                 {{/if}}
             </div>
-        </div>
+        {{/if}}
     </form>
 </div>
 
-<!-- Buttons -->
+{{!-- Dialog Buttons --}}
 <div class="dialog-buttons">
     <button class="dialog-button roll default" data-button="roll" id="attack-roll">
-        <i class="dh-material">casino</i>
+        <span class="material-icons">casino</span>
         Roll
     </button>
     <button class="dialog-button cancel" data-button="cancel" id="attack-cancel">
-        <i class="dh-material">close</i>
+        <span class="material-icons">close</span>
         Cancel
     </button>
 </div>

@@ -6,7 +6,7 @@
     "armourTypes": "Any Non-Primitive Armour",
     "effect": "Gives +2 AP vs Impact damage",
     "weight": "+0.5kg",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Gives +2 AP vs Impact damage</p>"

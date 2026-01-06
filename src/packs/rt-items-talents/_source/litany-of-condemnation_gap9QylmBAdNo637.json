@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character scores an additional three Degrees of Success whenever suceeding on a Command Test while using the Terrify Special Use to counteract the presence of Daemons, Mutants, and the Unnatural Effects of the Warp.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -1,64 +1,47 @@
-<div class="dh-panel dh-grid-col-2 dh-grid-row-3">
-    <div class="dh-armour__wrapper">
-        <h1 class="dh-panel__header">Armour Points</h1>
-        <div class="dh-armour__row">
-            <div class="dh-armour__block--head">
-                <div class="dh-armour__roll">
-                    01-10
+<div class="rt-panel rt-armour-panel rt-grid-col-2 rt-grid-row-3">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-shield-alt"></i> Armour Points</span>
+        <button type="button" class="rt-header-btn rt-hit-location-roll" title="Roll Hit Location (1d100)">
+            <i class="fas fa-dice-d20"></i>
+        </button>
+    </div>
+    <div class="rt-panel-body">
+        <div class="rt-armour-grid">
+            <div class="rt-armour-slot rt-armour-head" data-location="head" data-roll-min="1" data-roll-max="10">
+                <div class="rt-armour-label">Head</div>
+                <div class="rt-armour-value">{{actor.armour.head.total}}</div>
+                <div class="rt-armour-roll-band">01-10</div>
+            </div>
+            
+            <div class="rt-armour-row rt-body-row">
+                <div class="rt-armour-slot rt-armour-left-arm" data-location="leftArm" data-roll-min="21" data-roll-max="30">
+                    <div class="rt-armour-label">L Arm</div>
+                    <div class="rt-armour-value">{{actor.armour.leftArm.total}}</div>
+                    <div class="rt-armour-roll-band">21-30</div>
                 </div>
-                <span class="dh-armour__display">{{actor.armour.head.total}}</span>
-                <div class="dh-armour__location">Head</div>
-            </div>
-            <div class="dh-armour__block--leftarm">
-                <div class="dh-armour__roll">
-                    21-30
+                <div class="rt-armour-slot rt-armour-body" data-location="body" data-roll-min="31" data-roll-max="70">
+                    <div class="rt-armour-label">Body</div>
+                    <div class="rt-armour-value">{{actor.armour.body.total}}</div>
+                    <div class="rt-armour-roll-band">31-70</div>
                 </div>
-                <span class="dh-armour__display">{{actor.armour.leftArm.total}}</span>
-                <div class="dh-armour__location">Left Arm</div>
-            </div>
-        </div>
-        <div class="dh-armour__row">
-            <div class="dh-armour__block--rightarm">
-                <div class="dh-armour__roll">
-                    11-20
+                <div class="rt-armour-slot rt-armour-right-arm" data-location="rightArm" data-roll-min="11" data-roll-max="20">
+                    <div class="rt-armour-label">R Arm</div>
+                    <div class="rt-armour-value">{{actor.armour.rightArm.total}}</div>
+                    <div class="rt-armour-roll-band">11-20</div>
                 </div>
-                <span class="dh-armour__display">{{actor.armour.rightArm.total}}</span>
-                <div class="dh-armour__location">Right Arm</div>
             </div>
-            <div class="dh-armour__block--body">
-                <div class="dh-armour__roll">
-                    31-70
+            
+            <div class="rt-armour-row rt-legs-row">
+                <div class="rt-armour-slot rt-armour-left-leg" data-location="leftLeg" data-roll-min="86" data-roll-max="100">
+                    <div class="rt-armour-label">L Leg</div>
+                    <div class="rt-armour-value">{{actor.armour.leftLeg.total}}</div>
+                    <div class="rt-armour-roll-band">86-00</div>
                 </div>
-                <span class="dh-armour__display">{{actor.armour.body.total}}</span>
-                <div class="dh-armour__location">Body</div>
-            </div>
-        </div>
-        <div class="dh-armour__row">
-            <div class="dh-armour__block--rightleg">
-                <div class="dh-armour__roll">
-                    71-85
+                <div class="rt-armour-slot rt-armour-right-leg" data-location="rightLeg" data-roll-min="71" data-roll-max="85">
+                    <div class="rt-armour-label">R Leg</div>
+                    <div class="rt-armour-value">{{actor.armour.rightLeg.total}}</div>
+                    <div class="rt-armour-roll-band">71-85</div>
                 </div>
-                <span class="dh-armour__display">{{actor.armour.rightLeg.total}}</span>
-                <div class="dh-armour__location">Right Leg</div>
-            </div>
-            <div class="dh-armour__block--leftleg">
-                <div class="dh-armour__roll">
-                    86-100
-                </div>
-                <span class="dh-armour__display">{{actor.armour.leftLeg.total}}</span>
-                <div class="dh-armour__location">Left Leg</div>
-            </div>
-        </div>
-        <div class="dh-armour__row">
-            <div class="dh-armour__block--toughness">
-                <div class="dh-armour__roll"></div>
-                <span class="dh-armour__display">{{actor.characteristics.toughness.bonus}}</span>
-                <div class="dh-armour__location">TB</div>
-            </div>
-            <div class="dh-armour__block--trait">
-                <div class="dh-armour__roll"></div>
-                <span class="dh-armour__display">{{actor.armour.head.traitBonus}}</span>
-                <div class="dh-armour__location">Traits</div>
             </div>
         </div>
     </div>

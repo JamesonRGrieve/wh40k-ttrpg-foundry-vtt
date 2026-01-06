@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Kroot gains several benefits: Gain one additional Reaction per Round. When taking a Full Move Action they can move an additional Agility Bonus Metres. When making the Run Action they can double their movement for one Round. \nUsing any of the Benefits of this talent in two consecutive turns gives one level of Fatigue unless a +0 Toughness Test is Passed.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

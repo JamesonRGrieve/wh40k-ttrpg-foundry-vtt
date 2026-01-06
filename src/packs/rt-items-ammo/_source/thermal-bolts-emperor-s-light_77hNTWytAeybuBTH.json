@@ -7,7 +7,7 @@
     "damageOrEffect": "Lose Primitive and Accurate Qualities if weapon has them. Gain +1d10 Energy Damage and PEN 6, as well as Melta and Innaccurate Qualities. Bolts weigh 2x as much as regular Crossbow bolts.",
     "qualities": "Primitive (lose), Accurate (lose)\nMelta, Innaccurate.",
     "weight": "20% wep",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": "-",
     "source": "DH 2E: Enemies Within",
     "description": {

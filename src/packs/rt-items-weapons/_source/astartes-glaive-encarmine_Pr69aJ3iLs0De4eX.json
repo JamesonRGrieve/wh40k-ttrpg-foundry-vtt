@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Melee",
-    "type": "Power",
+    "class": "melee",
+    "type": "power",
     "range": "-",
     "rof": "-",
     "damage": "2d10+2",

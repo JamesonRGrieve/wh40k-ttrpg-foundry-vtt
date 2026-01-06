@@ -9,7 +9,10 @@
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

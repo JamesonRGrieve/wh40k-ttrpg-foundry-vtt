@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>If Ork succesfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

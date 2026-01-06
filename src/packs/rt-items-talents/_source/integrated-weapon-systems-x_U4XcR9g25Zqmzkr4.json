@@ -9,7 +9,10 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character chooses one Basic or Melee Weapon they possess which is then implemented into their body, becoming an Integrated Weapon. It can only be removed via a -20 Tech-Use Test. If the weapon required Ammunition it instead draws power from the character's Potentia Coil and does not need ammunition when reloaded. Instead, when the character reloads the weapon they gain 1 Fatigue.\nThis Trait can be taken multiple times, up to the Character's Toughness Bonus, indicated by \"X\".</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

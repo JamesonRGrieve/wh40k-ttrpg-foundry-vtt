@@ -7,7 +7,7 @@
     "damageOrEffect": "1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.",
     "qualities": "Blast(4), Irradiated(4)",
     "weight": "2kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": null,
     "source": "BC: Tome of Decay",
     "description": {

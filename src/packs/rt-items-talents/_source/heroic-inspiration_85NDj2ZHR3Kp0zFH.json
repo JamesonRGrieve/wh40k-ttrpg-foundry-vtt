@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per Turn, the character can use the Inspire Special Use of the Command Skill as a Half Action instead of as a Full Action.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Leadership",
+      "Social"
+    ]
   },
   "effects": [],
   "flags": {},

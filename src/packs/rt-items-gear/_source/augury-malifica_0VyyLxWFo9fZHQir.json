@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "1kg",
     "availability": "Master-Crafted Relic Auspex of the Deathwatch. Works as regular Auspex but has +30 to Awareness Tests to detect Daemons and only +5 against other adversaries. Can also provide cryptic clues or hints of impending Daemonic Activity. ",
     "cost": "Officially belongs to the Grey Knights, they think it lost, and would be annoyed to find the Deathwatch have it.",

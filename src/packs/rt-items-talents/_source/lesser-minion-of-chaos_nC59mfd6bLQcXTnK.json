@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character acquires a Lesser Minion of Chaos, such as a cultist, servitor, feral xenos hound, etc. talent can be taken more than once, each time adding another Lesser Minion.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

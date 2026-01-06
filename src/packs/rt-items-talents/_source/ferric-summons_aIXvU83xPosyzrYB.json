@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can call an unsecured Metal Object to their hand from up to 40 metres away using Ferric Lure Implants. Object may be up to 2kg*WP Bonus in weight.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Willpower",
+      "Tech",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

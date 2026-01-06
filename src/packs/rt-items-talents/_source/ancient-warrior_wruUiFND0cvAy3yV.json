@@ -9,7 +9,12 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Talent taken at Character Creation. Character is a veteran of The Long War. They gain +10 to Fellowship Tests and Fellowship-Based Skill Tests when dealing with NPC's who would care about The Long War (Heretics, Renegades, Chaos Space Marines, etc). Chaos Space Marine Minions of the character gain +10 Loyalty. Legion Weapons are one step easier to obtain (Rare-->Scarce, etc). Veterans of The Long War are despised by the Imperium and the Astartes.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

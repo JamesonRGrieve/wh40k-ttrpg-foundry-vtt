@@ -1,0 +1,86 @@
+// ============================================
+// Animations
+// ============================================
+
+@keyframes rt-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes rt-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba($rt-color-gold, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($rt-color-gold, 0.8);
+  }
+}
+
+.rt-animate-pulse {
+  animation: rt-pulse 2s infinite ease-in-out;
+}
+
+.rt-animate-glow {
+  animation: rt-glow 2s infinite ease-in-out;
+}
+
+// ============================================
+// Tier Badge (for Talents)
+// ============================================
+
+.rt-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px $rt-space-sm;
+  margin-left: $rt-space-sm;
+  background: linear-gradient(135deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
+  border-radius: $rt-radius-sm;
+  font-family: $rt-font-ui;
+  font-size: $rt-font-size-xs;
+  font-weight: 600;
+  color: $rt-color-void;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// ============================================
+// Modification Row (for Armour/Weapon Mods)
+// ============================================
+
+.rt-mod-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $rt-space-sm $rt-space-md;
+  background: rgba($rt-color-void-light, 0.5);
+  border: 1px solid $rt-color-void-lighter;
+  border-radius: $rt-radius-md;
+  margin-bottom: $rt-space-sm;
+  transition: all $rt-transition-fast;
+  
+  &:hover {
+    background: rgba($rt-color-void-light, 0.8);
+    border-color: $rt-color-gold-dark;
+  }
+  
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    
+    strong {
+      color: $rt-color-parchment;
+    }
+  }
+  
+  &__detail {
+    font-size: $rt-font-size-sm;
+    color: $rt-color-steel;
+    margin-left: $rt-space-sm;
+  }
+}
+

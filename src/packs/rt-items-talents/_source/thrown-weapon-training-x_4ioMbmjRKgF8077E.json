@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Thrown Weapons without a -20 Penalty to WS/BS. Such as: Universal(Primitive, Chain, Shock, and Power). Everyone can throw grenades without penalty by default.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

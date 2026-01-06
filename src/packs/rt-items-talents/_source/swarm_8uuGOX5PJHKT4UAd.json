@@ -9,7 +9,10 @@
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>A Mass of Miniscule or Puny Creatures. Weapons that do not have Blast, Flame, Spray, or Scatter only inflict half damage. Swarms cannot be grappled, knocked down, or pinned. They can pour through small holes and openings.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

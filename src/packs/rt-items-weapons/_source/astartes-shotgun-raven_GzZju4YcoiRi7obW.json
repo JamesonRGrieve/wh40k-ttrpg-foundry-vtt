@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Basic",
-    "type": "SP",
+    "class": "basic",
+    "type": "solid-projectile",
     "range": "30m",
     "rof": "S/-/-",
     "damage": "1d10+6",

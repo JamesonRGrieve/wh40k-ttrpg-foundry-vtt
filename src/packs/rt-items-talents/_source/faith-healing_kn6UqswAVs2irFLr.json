@@ -9,7 +9,10 @@
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Whenever Character removes damage from an ally with the Medicae Skill, the ally gains +5 to the next test they make before the end of an encounter per point of damage removed. (Up to +30).</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

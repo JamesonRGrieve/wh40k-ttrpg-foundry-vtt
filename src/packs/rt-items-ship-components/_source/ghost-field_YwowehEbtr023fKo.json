@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 3,
     "effect": "A Mysterious Eldar Device, creating phantom copies of the ship. Ships firing at this one have -20 to BS Tests, or -30 if a lance weapon. Piloting Tests to Perform Hit and Run attacks have -30. Must choose to use either this or Void Shields at start of combat.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>A Mysterious Eldar Device, creating phantom copies of the ship. Ships firing at this one have -20 to BS Tests, or -30 if a lance weapon. Piloting Tests to Perform Hit and Run attacks have -30. Must choose to use either this or Void Shields at start of combat.</p>"

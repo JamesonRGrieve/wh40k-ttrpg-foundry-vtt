@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.8,
     "maxAg": "-",
     "weight": "500kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Massive emplacements that cover an area. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m of the wall it produces  or melee attacks.",
     "source": "Dark Heresy 2E: Core",
@@ -16,7 +16,20 @@
       "value": "<p>Massive emplacements that cover an area. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m of the wall it produces  or melee attacks.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.8,
+      "body": 0.8,
+      "leftArm": 0.8,
+      "rightArm": 0.8,
+      "leftLeg": 0.8,
+      "rightLeg": 0.8
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

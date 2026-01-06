@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Carapace",
+    "type": "carapace",
     "locations": "All",
     "ap": 6,
     "maxAg": null,
     "weight": "22kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Must be Dedicated to Khorne to Wear. Lets wearer activate Frenzy Talent as a Free Action if they have it. Grants Regeneration(X), where X is equal to 1 per 5 damage they caused last turn, returning to 0 when combat ends of wearer leaves an ongoing melee voluntarily.",
     "source": "BC: Tome of Blood",
@@ -16,7 +16,20 @@
       "value": "<p>Must be Dedicated to Khorne to Wear. Lets wearer activate Frenzy Talent as a Free Action if they have it. Grants Regeneration(X), where X is equal to 1 per 5 damage they caused last turn, returning to 0 when combat ends of wearer leaves an ongoing melee voluntarily.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

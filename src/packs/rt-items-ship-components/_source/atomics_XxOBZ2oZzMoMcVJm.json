@@ -9,7 +9,7 @@
     "spaceUsage": 0,
     "spCost": 0,
     "effect": "A Nuclear Weapon. ~2.5-5km destruction radius. Can be fired from a projectile-firing macrocannon, doing 1d5+4 hits of 1d10+6 damage (always combine damage totals into single hit salvo). Might destroy a ship or station if detonated inside. Poor: 1d5+2 hits, Good: 1d5+5, Best: 10.",
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>A Nuclear Weapon. ~2.5-5km destruction radius. Can be fired from a projectile-firing macrocannon, doing 1d5+4 hits of 1d10+6 damage (always combine damage totals into single hit salvo). Might destroy a ship or station if detonated inside. Poor: 1d5+2 hits, Good: 1d5+5, Best: 10.</p>"

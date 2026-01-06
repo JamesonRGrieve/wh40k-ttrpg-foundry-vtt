@@ -3,8 +3,8 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "Pistol",
-    "type": "Exotic - Astartes",
+    "class": "pistol",
+    "type": "exotic",
     "range": "4m",
     "rof": "S/-/-",
     "damage": "1d10+4",

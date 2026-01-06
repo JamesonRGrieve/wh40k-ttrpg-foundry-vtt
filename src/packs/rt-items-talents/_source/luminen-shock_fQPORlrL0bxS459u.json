@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use their Luminen Capacitors to make a melee attack. Either a Half Action WS Test with no penalty for being unarmed or as an alternative to doing damage during a grapple. Character must then pass a Toughness Test or gain a level of Fatigue,\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Weapon Skill",
+      "Tech",
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Once per Game Session when in the presence of a suitable power source, such as a Portable Generator or Regimental Vehicle Power Plant, they can make a +0 Toughness Tet as a Full Action. If Successful they remove 1d5 Wounds, +1 per Degree of Success. They cannot remove Critical Damage this way. If they Fail the test, they take 1 Damage, +1 per 3 Degress of Failiure, ignoring Armour and Toughness Bonus.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Toughness",
+      "Tech"
+    ]
   },
   "effects": [],
   "flags": {},

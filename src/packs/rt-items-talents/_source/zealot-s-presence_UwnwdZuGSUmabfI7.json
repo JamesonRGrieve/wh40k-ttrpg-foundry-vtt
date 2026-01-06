@@ -9,7 +9,13 @@
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As a Free Action,the Sister can choose one foe and spend a Fate Point to grant themselves and all allies within Willpower Bonus metres to gain the Hatred Talent for that kind of foe until the end of the encounter.\nEG: Targeting an Ork Nob would give Hatred (Orks).</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Offence"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -7,7 +7,7 @@
     "damageOrEffect": "Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.",
     "qualities": "Blast (2)",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "RT: Faith and Coin",
     "description": {

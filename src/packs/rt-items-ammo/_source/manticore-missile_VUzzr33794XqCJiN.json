@@ -7,7 +7,7 @@
     "damageOrEffect": "4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive (5)",
     "qualities": "Blast(15+1d10), Concussive (5)",
     "weight": "4000kg",
-    "availability": "Rare",
+    "availability": "rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

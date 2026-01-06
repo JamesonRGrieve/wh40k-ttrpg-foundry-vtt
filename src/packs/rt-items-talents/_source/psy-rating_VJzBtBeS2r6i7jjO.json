@@ -9,7 +9,12 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Increase Psy Rating by 1, talent can be taken multiple times, ranging from 1 to 10, new psyker characters usually start at 2. If using Minor Psychic Powers, have a number of them equal to Half Willpower Bonus.\nFor Only War: Cost to upgrade is New Psy Rating x 200xp. EG: To upgrade from Psy Rating 3 from 2, pay 600xp (3x200xp)\nFor Black Crusade: Cannot purchase Psy Rating (X) above Character's Willpower Bonus + Corruption Bonus</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Unaligned"
+    ]
   },
   "effects": [],
   "flags": {},

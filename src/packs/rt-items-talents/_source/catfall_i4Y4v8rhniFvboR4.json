@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist. Also add +20 to Acrobatics Skill Tests when using the Jump Special Use for the purpose of reducing Fall Damage.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

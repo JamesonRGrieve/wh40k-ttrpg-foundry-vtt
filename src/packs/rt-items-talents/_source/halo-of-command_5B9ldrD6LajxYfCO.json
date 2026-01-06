@@ -9,7 +9,13 @@
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When targeting friendly NPCs with skills that have either Social or Leadership Aptitudes (such as Charm, Command, and Intimidate), they can affect a number of targets up to 100x their Fellowship Bonus rather than 10x</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ]
   },
   "effects": [],
   "flags": {},

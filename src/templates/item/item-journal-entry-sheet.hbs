@@ -1,27 +1,44 @@
-<div class="dh-wrapper">
-    <form class="dh-item" autocomplete="off">
-        <div class="dh-panel dh-grid-col-6">
-            <div class="dh-header">
-                <div class="dh-header__info">
-                    <div class="dh-header__logo dh-header__item-wrapper--span-4" style="min-height:50px"></div>
-                    <div class="dh-header__item-wrapper--span-4">
-                        <span class="dh-header__title">Name</span>
-                        <input class="dh-header__input" name="name" type="text" value="{{item.name}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Date</span>
-                        <input class="dh-header__input" name="system.time" type="date" value="{{item.system.time}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper--span-2">
-                        <span class="dh-header__title">Place</span>
-                        <input class="dh-header__input" name="system.place" type="text" value="{{item.system.place}}" />
-                    </div>
-                    <div class="dh-header__item-wrapper--text-area">
-                        <span class="dh-header__title">Entry</span>
-                        <textarea class="dh-header__textarea" name="system.description">{{item.system.description}}</textarea>
-                    </div>
-                </div>
+<form class="rt-item-sheet rt-item-sheet--journal" autocomplete="off">
+    {{!-- Header --}}
+    <header class="rt-item-sheet__header">
+        <div class="rt-item-sheet__portrait rt-item-sheet__portrait--small">
+            <span class="material-icons rt-item-sheet__portrait-icon">auto_stories</span>
+        </div>
+        <div class="rt-item-sheet__header-info">
+            <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Journal Entry Title" />
+            <div class="rt-item-sheet__type-badge">
+                <span class="material-icons">menu_book</span>
+                <span>Journal Entry</span>
             </div>
         </div>
-    </form>
-</div>
+    </header>
+
+    {{!-- Entry Details Panel --}}
+    <section class="rt-item-sheet__panel">
+        <h2 class="rt-item-sheet__panel-title">
+            <span class="material-icons">event</span>
+            Entry Details
+        </h2>
+        <div class="rt-item-sheet__grid rt-item-sheet__grid--2col">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Date</label>
+                <input class="rt-item-sheet__input" name="system.time" type="date" value="{{item.system.time}}" />
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Location</label>
+                <input class="rt-item-sheet__input" name="system.place" type="text" value="{{item.system.place}}" placeholder="Where this occurred..." />
+            </div>
+        </div>
+    </section>
+
+    {{!-- Entry Content Panel --}}
+    <section class="rt-item-sheet__panel rt-item-sheet__panel--description">
+        <h2 class="rt-item-sheet__panel-title">
+            <span class="material-icons">edit_note</span>
+            Entry
+        </h2>
+        <div class="rt-item-sheet__field rt-item-sheet__field--full">
+            <textarea class="rt-item-sheet__textarea rt-item-sheet__textarea--large" name="system.description" placeholder="Record your thoughts, discoveries, and observations...">{{item.system.description}}</textarea>
+        </div>
+    </section>
+</form>

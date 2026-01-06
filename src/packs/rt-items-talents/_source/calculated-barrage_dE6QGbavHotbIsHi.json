@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever character or their Comrade fire a weapon with the indirect quality, if at least on hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Knowledge"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 0,
     "effect": "Provides 1 Void Shield, absorbing one attack from any ship firing on this one.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Provides 1 Void Shield, absorbing one attack from any ship firing on this one.</p>"

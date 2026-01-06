@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Eldar (Force Field)",
+    "type": "xenos",
     "locations": "All",
     "ap": 0,
     "maxAg": "-",
     "weight": null,
-    "availability": "Near Unique",
+    "availability": "near-unique",
     "cost": "-",
     "notes": "Wearer doubles their Degrees of Success with all Successful Dodge Tests. Once per Round can re-roll a failed Dodge Test. Gain one extra Reaction that can only be used to perform the Evasion Reaction each turn.",
     "source": "DH 2E: Enemies Without",
@@ -16,7 +16,20 @@
       "value": "<p>Wearer doubles their Degrees of Success with all Successful Dodge Tests. Once per Round can re-roll a failed Dodge Test. Gain one extra Reaction that can only be used to perform the Evasion Reaction each turn.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

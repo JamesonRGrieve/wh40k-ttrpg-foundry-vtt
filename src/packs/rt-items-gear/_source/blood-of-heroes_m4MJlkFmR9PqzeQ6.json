@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "-",
     "availability": "Relic Blood Drop Amulets. Adds 1d5 Cohesion to the group. Once per mission can enter Squad Mode as a Free Action",
     "cost": "Blood Angels Only",

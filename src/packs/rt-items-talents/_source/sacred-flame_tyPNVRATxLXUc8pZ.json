@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character inflicts Righteous Fury on a result of 9 or 10 for Damage Rolls made with weapons with the Flame Quality.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Offence",
+      "Willpower"
+    ]
   },
   "effects": [],
   "flags": {},

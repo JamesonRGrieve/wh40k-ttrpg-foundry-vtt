@@ -1,21 +1,27 @@
+{{!-- Rogue Trader Simple Roll Prompt - Modern Design --}}
 {{#with rollData}}
-    <form class="dh-wrapper">
-        <div class="dh-panel spacer">
-            <h1 class="dh-panel__header">{{name}} Roll</h1>
-            <div class="dh-field__wrapper">
-                <span class="dh-field__span">Base</span>
-                <span class="dh-field__span">{{baseTarget}}</span>
-            </div>
-            <div class="dh-field__wrapper">
-                <span class="dh-field__span">Difficulty</span>
-                <select class="dh-field__input" data-dtype="Number" name="modifiers.difficulty" id='difficulty'>
-                    {{selectOptions difficulties selected=modifiers.difficulty}}
-                </select>
-            </div>
-            <div class="dh-field__wrapper">
-                <span class="dh-field__span">Modifier</span>
-                <input class="dh-field__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
-            </div>
+<form class="rt-prompt" autocomplete="off">
+    <div class="rt-prompt__panel">
+        <h3 class="rt-prompt__section-title">{{name}}</h3>
+        
+        <div class="rt-prompt__target">
+            <span class="rt-prompt__target-label">Target</span>
+            <span class="rt-prompt__target-value">{{baseTarget}}</span>
+            <span class="rt-prompt__target-percent">%</span>
         </div>
-    </form>
+        
+        <div class="rt-prompt__divider"></div>
+        
+        <div class="rt-prompt__field">
+            <span class="rt-prompt__label">Difficulty</span>
+            <select class="rt-prompt__select" data-dtype="Number" name="modifiers.difficulty" id="difficulty">
+                {{selectOptions difficulties selected=modifiers.difficulty}}
+            </select>
+        </div>
+        <div class="rt-prompt__field">
+            <span class="rt-prompt__label">Modifier</span>
+            <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
+        </div>
+    </div>
+</form>
 {{/with}}

@@ -9,7 +9,7 @@
     "spaceUsage": 1,
     "spCost": 2,
     "effect": "Navigators receive +20 to Perception or Navigation(Warp) Tests to steer the vessel through the warp.",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "source": "RT: BF Koronus",
     "description": {
       "value": "<p>Navigators receive +20 to Perception or Navigation(Warp) Tests to steer the vessel through the warp.</p>"

@@ -9,7 +9,10 @@
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The explorer can spend a Fate Point to Automatically suceed on any Tech-Use Test with a number of Degrees of Success equal to their Intelligence Bonus.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

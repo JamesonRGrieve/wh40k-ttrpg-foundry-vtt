@@ -9,7 +9,10 @@
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Gain Furious Assault and Xenos Weapon Training (Ork) Talents\nFurious Assault: On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nXenos Weapon Training (Ork): Can use Shootas, Sluggas, Big Choppas, and All Primitive Melee Weapons without Penalty.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

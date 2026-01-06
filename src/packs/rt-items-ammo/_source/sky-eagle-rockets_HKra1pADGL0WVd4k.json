@@ -7,7 +7,7 @@
     "damageOrEffect": "4d10+12 X Damage, Pen 12, Proven (4)\nCan't Fire Indirectly, suffer -30 if used against Ground Targets, vehicle gains Anti-Air (Advanced), when firing these missiles",
     "qualities": "Proven (4)",
     "weight": "4000kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

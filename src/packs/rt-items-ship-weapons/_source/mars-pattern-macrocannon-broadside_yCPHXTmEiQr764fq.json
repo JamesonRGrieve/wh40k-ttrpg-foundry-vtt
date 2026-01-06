@@ -12,7 +12,7 @@
     "strength": 6,
     "critRating": 5,
     "range": 6,
-    "availability": "Scarce",
+    "availability": "scarce",
     "notes": "Must Occupy Port or Starboard slots.",
     "source": "Rogue Trader Core",
     "description": {

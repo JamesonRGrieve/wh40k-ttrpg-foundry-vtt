@@ -9,7 +9,7 @@
     "spaceUsage": 4,
     "spCost": 1,
     "effect": "Where the regular crew live. All Command Tests to defend against boarding and hit and run attacks gain +5. All Sources of Morale loss are reduced by 1 (minimum 1)",
-    "availability": "Rare",
+    "availability": "rare",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Where the regular crew live. All Command Tests to defend against boarding and hit and run attacks gain +5. All Sources of Morale loss are reduced by 1 (minimum 1)</p>"

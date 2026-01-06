@@ -9,7 +9,13 @@
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character is part of a Squad who collectively succeeds on any combination of 3+ Fear or Maligancy Tests over the course of a mission.\nWhenever a member of the character's squad witin communication range would gain Corruption or Insanity Points, the Character can spend a Fate Point and make a -10 Fellowship Test as a Reaction. If they succeed, the squad member gains 1d5 Less Insanity or Corruption Points, to a minimum of 0.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Fellowship\nVeteran Talent Requirement Fulfilled"
+    ]
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,62 @@
+# Order Template
+# Use this as a reference for creating ship order items
+
+_id: &id order-template-000001
+name: All Hands on Deck
+type: order
+img: systems/rogue-trader/icons/orders/all-hands.webp
+
+system:
+  identifier: all-hands-on-deck
+  
+  # Order Category
+  category: command  # combat, maneuver, command, support, special
+  
+  # Action Type
+  actionType: extended-action  # extended-action, reaction, shooting-action, maneuver-action
+  
+  # Required Test
+  test:
+    skill: "Command"
+    characteristic: ""  # Optional override
+    modifier: 0
+  
+  # Requirements
+  requirements: |
+    <p>Must be on the bridge. Crew morale must be above 20.</p>
+  
+  # Effect on Success
+  effect: |
+    <p>On a successful Command Test, all crew members rally to 
+    their stations. This removes any penalties from low morale 
+    for the duration of the current engagement and grants a 
+    +5 bonus to all crew actions for the rest of the combat.</p>
+  
+  # Failure Consequences
+  failure: |
+    <p>On a failed test, the crew's morale drops by an additional 
+    5 as the call to action falls on deaf ears.</p>
+  
+  # Description
+  description:
+    value: |
+      <p>The commanding officer rallies the crew, calling everyone 
+      to battle stations and inspiring them to give their all in 
+      the coming fight.</p>
+    chat: ""
+    summary: "Rally the crew for battle"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "214"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

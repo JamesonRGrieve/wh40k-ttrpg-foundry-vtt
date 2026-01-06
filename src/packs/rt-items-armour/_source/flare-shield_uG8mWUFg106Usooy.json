@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Force Field",
+    "type": "void",
     "locations": "All",
     "ap": 0.25,
     "maxAg": "-",
     "weight": "3kg",
-    "availability": "Extremely Rare",
+    "availability": "extremely-rare",
     "cost": "-",
     "notes": "Protection Rating doubles against Spray and Blast Weapons. If shield overloads it inflicts 1d10 Energy damage to wearer that ignores Armour and Toughness",
     "source": "DH 2E: Enemies Without",
@@ -16,7 +16,20 @@
       "value": "<p>Protection Rating doubles against Spray and Blast Weapons. If shield overloads it inflicts 1d10 Energy damage to wearer that ignores Armour and Toughness</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0.25,
+      "body": 0.25,
+      "leftArm": 0.25,
+      "rightArm": 0.25,
+      "leftLeg": 0.25,
+      "rightLeg": 0.25
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

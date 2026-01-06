@@ -3,12 +3,12 @@
   "type": "armour",
   "img": "icons/svg/shield.svg",
   "system": {
-    "type": "Power",
+    "type": "power",
     "locations": "All",
     "ap": 6,
     "maxAg": null,
     "weight": "45kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": "-",
     "notes": "Gives +30 to Strength Characteristic and +1 to Size. However Suffers -30 to all Agility Tests and -20 to Perception Tests. Armour is sealed and has 10 hours of air. Shielding provides +20 to Toughness Tests to Extreme Heat and Radiation. Power Cells last 10 hours before needing recharge or replacing.",
     "source": "RT: Faith and Coin",
@@ -16,7 +16,20 @@
       "value": "<p>Gives +30 to Strength Characteristic and +1 to Size. However Suffers -30 to all Agility Tests and -20 to Perception Tests. Armour is sealed and has 10 hours of air. Shielding provides +20 to Toughness Tests to Extreme Heat and Radiation. Power Cells last 10 hours before needing recharge or replacing.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": []
+    "installedMods": [],
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": null
   },
   "effects": [],
   "flags": {},

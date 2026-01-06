@@ -7,7 +7,7 @@
     "damageOrEffect": "6d10 X Damage, Pen 4, Blast(10), Concussive (6)\nAfter initial hit, scatter 1d5 additional hits 2d10 metres from initial hit. Afterwards resolve damage as normal.",
     "qualities": "Blast(10), Concussive (6)",
     "weight": "4500kg",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "OW: Shield of Humanity",
     "description": {

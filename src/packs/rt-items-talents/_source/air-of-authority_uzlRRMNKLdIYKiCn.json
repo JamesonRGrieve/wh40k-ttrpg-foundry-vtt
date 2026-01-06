@@ -18,7 +18,9 @@
     },
     "tier": 1,
     "isPassive": true,
-    "isRollable": true
+    "isRollable": true,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

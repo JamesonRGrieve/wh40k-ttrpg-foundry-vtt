@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Poison (Eldar)",
+    "type": "xenos",
     "weight": "0.1kg",
     "availability": "Extremely Rare Availability if acquired from Dark Eldar Settlement. may not be acquirable elsewhere. Failing Toughness Test, target takes 2d10 Explosive Damage that ignores Armour, but is reduced by Toughness Bonus as normal.",
     "cost": "Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.",

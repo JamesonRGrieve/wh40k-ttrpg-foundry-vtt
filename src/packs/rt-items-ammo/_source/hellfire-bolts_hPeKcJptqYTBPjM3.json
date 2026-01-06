@@ -7,7 +7,7 @@
     "damageOrEffect": "Gain Toxic(3) Quality, inflict Zealous Hatred/Righteous Fury on a 9 or 10 vs Living Targets. If used with a Heavy Bolter, changes RoF to S/-/-, and adds Blast(3) Quality. If used against a Horde, each hit deals +1 Damage.",
     "qualities": "Toxic(3)",
     "weight": "10% wep",
-    "availability": "Very Rare",
+    "availability": "very-rare",
     "cost": null,
     "source": "Black Crusade: Core",
     "description": {

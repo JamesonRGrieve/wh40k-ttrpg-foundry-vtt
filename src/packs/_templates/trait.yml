@@ -1,0 +1,66 @@
+# Trait Template
+# Use this as a reference for creating trait items
+
+_id: &id trait-template-000001
+name: Unnatural Strength
+type: trait
+img: systems/rogue-trader/icons/traits/unnatural-strength.webp
+
+system:
+  identifier: unnatural-strength
+  
+  # Trait Category
+  category: creature  # creature, daemon, machine, xenos, mutation, environment, condition
+  
+  # Level/Rating
+  hasLevel: true
+  level: 2  # null if hasLevel is false
+  
+  # Effect Description
+  effect: |
+    <p>The creature's Strength Bonus is increased by a value equal 
+    to this trait's rating. This increase is in addition to the 
+    bonus the creature gains from its base Strength.</p>
+  
+  # Nature
+  nature: beneficial  # beneficial, detrimental, neutral
+  
+  # Can this be removed?
+  removable: false
+  
+  # Stat Modifiers
+  modifiers:
+    characteristics:
+      strength: 20  # Add 20 to Strength if level 2
+    skills: {}
+    combat: {}
+    resources: {}
+    other:
+      - key: strengthBonus
+        label: "Strength Bonus"
+        value: 2
+        mode: add
+  
+  # Description
+  description:
+    value: |
+      <p>Unnatural Strength represents physical power beyond 
+      normal mortal limits. This might be due to genetic 
+      engineering, daemonic influence, or alien biology.</p>
+    chat: ""
+    summary: "Superhuman physical strength"
+  
+  source:
+    book: "Rogue Trader Core Rulebook"
+    page: "365"
+    custom: ""
+  
+  notes: ""
+
+effects: []
+flags: {}
+
+_stats:
+  systemId: rogue-trader
+  systemVersion: 2.0.0
+  coreVersion: "13.0"

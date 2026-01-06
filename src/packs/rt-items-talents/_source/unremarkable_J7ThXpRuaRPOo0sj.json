@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Attempts to Recall the character's face or spot them in a crowd suffer -20. Character gains +20 when using the Deceive Skill to either convince someone they have never seen or met them or trying to appear harmless and ordinary.\nIn a Social Conflict, character gains +20 to the Deceive Skill if using it in the Opposed Test, however halves their Infamy Reserves at the start of the Conflict.\nTalent doesn't work if the character wears distinctive clothes, armour, or carries unique weaponry or gear.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": [
+      "General",
+      "Social",
+      "Slaanesh"
+    ]
   },
   "effects": [],
   "flags": {},

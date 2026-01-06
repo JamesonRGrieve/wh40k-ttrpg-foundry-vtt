@@ -9,7 +9,13 @@
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character ignores penalties to their Movement Rate due to thick or difficult terrain, although not neccisarily for dangerous environments such as burning buildings.\nAdditionally, once per Session they may reroll one Failed Test for the Tracking Special Use of the Survival Skill.</p>"
-    }
+    },
+    "tier": 2,
+    "benefit": "",
+    "aptitudes": [
+      "Perception",
+      "Fieldcraft"
+    ]
   },
   "effects": [],
   "flags": {},

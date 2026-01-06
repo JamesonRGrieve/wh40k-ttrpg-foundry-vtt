@@ -9,7 +9,13 @@
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When Character succeeds on an Opposed Willpower Test as part of a Psychic Power (either against an opponent or their own), they can spend a Fate Point to gain +Int Bonus Degrees of Success on the Opposed Test.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Defence",
+      "Intelligence"
+    ]
   },
   "effects": [],
   "flags": {},

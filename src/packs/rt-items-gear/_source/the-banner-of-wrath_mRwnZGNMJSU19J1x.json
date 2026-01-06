@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic",
+    "type": "exotic",
     "weight": "12kg",
     "availability": "If allies in 30 metres inflict Righteous Fury they auto-pass second attack test. Once per Combat encounter, wielder may make -10 Command Test as Free action, if succeed, allies in 30 metres can move towards the banner or charge at a foe up to a distance of the Wielder's Agility Bonus as a Free Action.",
     "cost": "An Ancient Battle Standard, takes one hand to carry. Relics are unique, one of a kind items, they must be earned as opposed to acquired. ",

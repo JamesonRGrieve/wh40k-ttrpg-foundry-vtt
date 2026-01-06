@@ -9,7 +9,7 @@
     "spaceUsage": 3,
     "spCost": 0,
     "effect": "Recycles air and water for the ship. Considered the Default Option.",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Recycles air and water for the ship. Considered the Default Option.</p>"

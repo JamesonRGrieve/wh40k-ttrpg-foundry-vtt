@@ -9,7 +9,7 @@
     "spaceUsage": 2,
     "spCost": 1,
     "effect": "+50 Achievement Points towards Trade or Criminal Objectives, -3 to Ship Manoeuvrability. Stores Large amounts of Cargo and Cargo Shuttles (aka Cargo Lighters)",
-    "availability": "Scarce",
+    "availability": "scarce",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+50 Achievement Points towards Trade or Criminal Objectives, -3 to Ship Manoeuvrability. Stores Large amounts of Cargo and Cargo Shuttles (aka Cargo Lighters)</p>"

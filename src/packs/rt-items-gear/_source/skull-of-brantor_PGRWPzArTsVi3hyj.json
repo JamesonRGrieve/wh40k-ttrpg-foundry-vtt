@@ -3,7 +3,7 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Relic (Astartes)",
+    "type": "exotic",
     "weight": "3kg",
     "availability": "Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Signum.",
     "cost": "Servo Skull built from a Space Marine.\nWeight only applies if being carried.",

@@ -9,7 +9,14 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>"
-    }
+    },
+    "tier": 3,
+    "benefit": "",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence",
+      "Tzeentch"
+    ]
   },
   "effects": [],
   "flags": {},

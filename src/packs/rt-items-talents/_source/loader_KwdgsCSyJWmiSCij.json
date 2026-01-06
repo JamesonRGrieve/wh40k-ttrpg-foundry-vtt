@@ -9,7 +9,10 @@
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade in Cohesion assists in reloading the Character's currently equipped weapon. This can be used in combination with the Character's own actions. For example, if a weapon requires 2 Full Actions to reload, both the Character and Comrade can use their Full Action to reload it in 1 Turn.</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},

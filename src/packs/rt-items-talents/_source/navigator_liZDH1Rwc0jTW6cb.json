@@ -9,7 +9,10 @@
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>You Possess the Navigator gene, indicated by the third eye that sees into the warp. (See Chapter 7: Navigator Powers, Rogue Trader Core)</p>"
-    }
+    },
+    "tier": 1,
+    "benefit": "",
+    "aptitudes": []
   },
   "effects": [],
   "flags": {},
