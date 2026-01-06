@@ -205,7 +205,9 @@
 }
 
 .rt-vital-input {
-  width: 100%;
+  width: 100%; // Full width within grid cell
+  min-width: 50px; // Minimum readable size
+  max-width: 150px; // Don't get too wide
   height: 36px;
   padding: 0 $rt-space-sm;
   border: 1px solid rgba(120, 46, 34, 0.3);
@@ -217,7 +219,7 @@
   text-align: center;
   font-family: 'Modesto Condensed', serif;
   transition: all 0.15s ease;
-  
+
   &:focus {
     outline: none;
     border-color: rgba(120, 46, 34, 0.6);

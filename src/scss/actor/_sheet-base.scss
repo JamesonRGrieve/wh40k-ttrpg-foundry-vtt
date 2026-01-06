@@ -94,6 +94,20 @@
     border-top: 1px dashed rgba(120, 46, 34, 0.35);
     display: grid;
     gap: 10px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease, margin 0.3s ease;
+    max-height: 1000px; // Large enough for any expanded content
+    opacity: 1;
+
+    // When hidden via hideIfNot helper
+    &[style*="display:none"] {
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 }
 
 .rt-panel-toggle {

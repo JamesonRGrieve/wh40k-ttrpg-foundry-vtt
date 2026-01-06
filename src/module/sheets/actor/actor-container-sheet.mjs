@@ -243,11 +243,23 @@ export class ActorContainerSheet extends ActorSheet {
 
     async _sheetControlHideToggle(event) {
         event.preventDefault();
-        const displayToggle = $(event.currentTarget);
-        $('span', displayToggle).first().toggleClass('active');
-        const target = displayToggle.data('toggle');
-        $('.' + target).toggle();
-        toggleUIExpanded(target);
+        const target = event.currentTarget.dataset.toggle;
+        if (!target) return;
+
+        // Get current expanded state from actor flags
+        const expanded = this.actor.getFlag('rt', 'ui.expanded') || [];
+        const isCurrentlyExpanded = expanded.includes(target);
+
+        // Toggle the state
+        let newExpanded;
+        if (isCurrentlyExpanded) {
+            newExpanded = expanded.filter(name => name !== target);
+        } else {
+            newExpanded = [...expanded, target];
+        }
+
+        // Update actor flags - this will trigger a re-render
+        await this.actor.setFlag('rt', 'ui.expanded', newExpanded);
     }
 
 

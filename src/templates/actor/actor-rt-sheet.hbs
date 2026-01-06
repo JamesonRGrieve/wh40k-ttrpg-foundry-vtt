@@ -56,7 +56,7 @@
                                     <label class="rt-char-hud-toggle sheet-control__hide-control" data-toggle="charhud_{{name}}" title="Edit {{this.label}}">
                                         <span class="rt-char-hud-toggle-icon">v</span>
                                     </label>
-                                    <div class="rt-char-hud-details charhud_{{name}}" {{hideIfNot (isExpanded (concat 'charhud_' name ))}}>
+                                    <div class="rt-char-hud-details charhud_{{name}}" {{hideIfNot (isExpanded (concat 'charhud_' name ) @root.actor)}}>
                                         <label class="rt-char-hud-field">
                                             <span class="rt-char-hud-field-label">Base</span>
                                             <input type="number" name="system.characteristics.{{name}}.base" data-dtype="Number" value="{{this.base}}" />
@@ -129,124 +129,11 @@
                 <div class="rt-overview-grid">
                     {{!-- Left Column --}}
                     <div class="rt-overview-col">
-                        {{!-- Wounds --}}
-                        <div class="rt-panel rt-vitals-panel rt-wounds-panel">
-                            <div class="rt-panel-header">
-                                <span class="rt-panel-title"><i class="fas fa-heart-broken"></i> Wounds</span>
-                                <button type="button" class="rt-vital-expand-btn sheet-control__hide-control" data-toggle="wounds_details" title="Edit Wounds">
-                                    <i class="fas fa-cog"></i>
-                                </button>
-                            </div>
-                            <div class="rt-panel-body">
-                                <div class="rt-vital-display">
-                                    <div class="rt-vital-tracker">
-                                        <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.wounds.value" data-min="0">−</button>
-                                        <span class="rt-vital-current">{{system.wounds.value}}</span>
-                                        <span class="rt-vital-sep">/</span>
-                                        <span class="rt-vital-max">{{system.wounds.max}}</span>
-                                        <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.wounds.value" data-max="{{system.wounds.max}}">+</button>
-                                    </div>
-                                    <div class="rt-vital-bar">
-                                        <div class="rt-vital-bar-fill rt-wounds-fill" style="width: calc({{system.wounds.value}} / {{system.wounds.max}} * 100%)"></div>
-                                    </div>
-                                    {{#if (gt system.wounds.critical 0)}}
-                                    <div class="rt-vital-warning rt-critical-warning">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <span>Critical Damage: {{system.wounds.critical}}</span>
-                                    </div>
-                                    {{/if}}
-                                </div>
-                                <div class="rt-panel-details wounds_details" {{hideIfNot (isExpanded 'wounds_details')}}>
-                                    <div class="rt-vital-edit-grid">
-                                        <label class="rt-vital-edit-field">
-                                            <span class="rt-edit-label">Max Wounds</span>
-                                            <input type="number" data-dtype="Number" class="rt-vital-input" name="system.wounds.max" value="{{system.wounds.max}}" min="0" />
-                                        </label>
-                                        <label class="rt-vital-edit-field">
-                                            <span class="rt-edit-label">Current</span>
-                                            <input type="number" data-dtype="Number" class="rt-vital-input" name="system.wounds.value" value="{{system.wounds.value}}" min="0" />
-                                        </label>
-                                    </div>
-                                    <div class="rt-vital-subsection">
-                                        <div class="rt-vital-subsection-header">
-                                            <span class="rt-subsection-title">Critical Damage</span>
-                                            <span class="rt-subsection-meta">0-10</span>
-                                        </div>
-                                        <div class="rt-vital-tracker">
-                                            <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.wounds.critical" data-min="0">−</button>
-                                            <span class="rt-vital-current">{{system.wounds.critical}}</span>
-                                            <span class="rt-vital-sep">/</span>
-                                            <span class="rt-vital-max">10</span>
-                                            <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.wounds.critical" data-max="10">+</button>
-                                        </div>
-                                    </div>
-                                    {{#if (any actor.items "isCriticalInjury")}}
-                                    <div class="rt-vital-subsection">
-                                        <div class="rt-vital-subsection-header">
-                                            <span class="rt-subsection-title">Critical Injuries</span>
-                                            <button type="button" class="rt-add-btn item-create" data-type="criticalInjury" title="Add Critical Injury"><i class="fas fa-plus"></i></button>
-                                        </div>
-                                        <div class="rt-affliction-list">
-                                            {{#each actor.items as |item|}}
-                                                {{#if item.isCriticalInjury}}
-                                                <div class="rt-affliction-row">
-                                                    <span class="rt-affliction-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                                    <button type="button" class="rt-affliction-del item-delete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                                                </div>
-                                                {{/if}}
-                                            {{/each}}
-                                        </div>
-                                    </div>
-                                    {{/if}}
-                                </div>
-                            </div>
-                        </div>
+                        {{!-- Wounds Panel V2 - Redesigned with pip system and interactive controls --}}
+                        {{> systems/rogue-trader/templates/actor/panel/wounds-panel-v2.hbs}}
 
-                        {{!-- Fatigue --}}
-                        <div class="rt-panel rt-vitals-panel rt-fatigue-panel {{#if (gte system.fatigue.value system.fatigue.max)}}rt-exhausted{{/if}}">
-                            <div class="rt-panel-header">
-                                <span class="rt-panel-title"><i class="fas fa-bolt"></i> Fatigue</span>
-                                <button type="button" class="rt-vital-expand-btn sheet-control__hide-control" data-toggle="fatigue_details" title="Edit Fatigue">
-                                    <i class="fas fa-cog"></i>
-                                </button>
-                            </div>
-                            <div class="rt-panel-body">
-                                <div class="rt-vital-display">
-                                    <div class="rt-vital-tracker">
-                                        <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0">−</button>
-                                        <span class="rt-vital-current">{{system.fatigue.value}}</span>
-                                        <span class="rt-vital-sep">/</span>
-                                        <span class="rt-vital-max">{{system.fatigue.max}}</span>
-                                        <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.fatigue.value">+</button>
-                                    </div>
-                                    <div class="rt-vital-bar">
-                                        <div class="rt-vital-bar-fill rt-fatigue-fill" style="width: calc({{system.fatigue.value}} / {{system.fatigue.max}} * 100%)"></div>
-                                    </div>
-                                    {{#if (gte system.fatigue.value system.fatigue.max)}}
-                                    <div class="rt-vital-warning rt-exhausted-warning">
-                                        <i class="fas fa-dizzy"></i>
-                                        <span>EXHAUSTED - All Characteristics Halved!</span>
-                                    </div>
-                                    {{/if}}
-                                </div>
-                                <div class="rt-panel-details fatigue_details" {{hideIfNot (isExpanded 'fatigue_details')}}>
-                                    <div class="rt-vital-edit-grid">
-                                        <label class="rt-vital-edit-field">
-                                            <span class="rt-edit-label">Threshold {{#unless system.fatigue.manualMax}}<span class="rt-auto-badge" title="Auto-calculated as TB + WB">AUTO</span>{{/unless}}</span>
-                                            <input type="number" data-dtype="Number" class="rt-vital-input" name="system.fatigue.max" value="{{system.fatigue.max}}" min="0" />
-                                        </label>
-                                        <label class="rt-vital-edit-field">
-                                            <span class="rt-edit-label">Current</span>
-                                            <input type="number" data-dtype="Number" class="rt-vital-input" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" />
-                                        </label>
-                                    </div>
-                                    <div class="rt-vital-info">
-                                        <i class="fas fa-info-circle"></i>
-                                        <span>Threshold auto-calculates as TB + WB. Edit to override.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {{!-- Fatigue Panel V2 - Redesigned with auto-calc transparency and manual override --}}
+                        {{> systems/rogue-trader/templates/actor/panel/fatigue-panel-v2.hbs}}
 
                         {{!-- Corruption --}}
                         <div class="rt-panel rt-panel-corruption {{corruptionDegreeClass system.corruption}}">
@@ -271,7 +158,7 @@
                                     </div>
                                     <div class="rt-vital-modifier">{{corruptionModifier system.corruption}} to checks</div>
                                 </div>
-                                <div class="rt-panel-details corruption_details" {{hideIfNot (isExpanded 'corruption_details')}}>
+                                <div class="rt-panel-details corruption_details" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
                                     {{#if (any actor.items "isMalignancy")}}
                                     <div class="rt-vital-subsection">
                                         <div class="rt-vital-subsection-header">
@@ -323,7 +210,7 @@
                                     </div>
                                     <div class="rt-vital-modifier">{{insanityModifier system.insanity}} to checks</div>
                                 </div>
-                                <div class="rt-panel-details insanity_details" {{hideIfNot (isExpanded 'insanity_details')}}>
+                                <div class="rt-panel-details insanity_details" {{hideIfNot (isExpanded 'insanity_details' actor)}}>
                                     {{#if (any actor.items "isMentalDisorder")}}
                                     <div class="rt-vital-subsection">
                                         <div class="rt-vital-subsection-header">
@@ -373,7 +260,7 @@
                                         <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.fate.value" data-max="{{system.fate.max}}">+</button>
                                     </div>
                                 </div>
-                                <div class="rt-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details')}}>
+                                <div class="rt-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details' actor)}}>
                                     <div class="rt-vital-edit-grid">
                                         <label class="rt-vital-edit-field">
                                             <span class="rt-edit-label">Max Fate</span>

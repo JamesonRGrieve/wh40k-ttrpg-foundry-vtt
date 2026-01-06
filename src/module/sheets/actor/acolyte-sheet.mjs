@@ -311,8 +311,8 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('.acquisition-add').click(async (ev) => await this._addAcquisition(ev));
         html.find('.acquisition-remove').click(async (ev) => await this._removeAcquisition(ev));
 
-        // Stat adjustment buttons (arrow, tracker, vital buttons all use same handler)
-        html.find('.rt-arrow-btn, .rt-tracker-btn, .rt-vital-btn').click(async (ev) => await this._onStatButtonClick(ev));
+        // Stat adjustment buttons (arrow, tracker, vital, wounds, critical, fatigue buttons all use same handler)
+        html.find('.rt-arrow-btn, .rt-tracker-btn, .rt-vital-btn, .rt-wounds-btn, .rt-critical-btn, .rt-fatigue-btn, .rt-fatigue-action-btn').click(async (ev) => await this._onStatButtonClick(ev));
         
         // Critical pip clicks
         html.find('.rt-crit-pip').click(async (ev) => await this._onCritPipClick(ev));
@@ -398,11 +398,17 @@ export class AcolyteSheet extends ActorContainerSheet {
         const action = button.dataset.action;
         const min = button.dataset.min !== undefined ? parseInt(button.dataset.min) : null;
         const max = button.dataset.max !== undefined ? parseInt(button.dataset.max) : null;
-        
+
+        // Handle special actions
+        if (action === 'clear-fatigue') {
+            await this.actor.update({ 'system.fatigue.value': 0 });
+            return;
+        }
+
         // Get current value using foundry's getProperty
         const currentValue = foundry.utils.getProperty(this.actor, field) || 0;
         let newValue = currentValue;
-        
+
         if (action === 'increment') {
             newValue = currentValue + 1;
             if (max !== null && newValue > max) newValue = max;
@@ -410,7 +416,7 @@ export class AcolyteSheet extends ActorContainerSheet {
             newValue = currentValue - 1;
             if (min !== null && newValue < min) newValue = min;
         }
-        
+
         // Only update if value changed
         if (newValue !== currentValue) {
             await this.actor.update({ [field]: newValue });
