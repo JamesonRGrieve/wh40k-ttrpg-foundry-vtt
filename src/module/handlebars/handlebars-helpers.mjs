@@ -156,7 +156,17 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('isExpanded', function(field) {
+    /**
+     * Check if a panel is expanded
+     * Checks actor flags first, falls back to global CONFIG for compatibility
+     * Usage: {{isExpanded 'panel_name' @root.actor}}
+     */
+    Handlebars.registerHelper('isExpanded', function(field, actor) {
+        // Try to get from actor flags first (new system)
+        if (actor && actor.flags?.rt?.ui?.expanded) {
+            return actor.flags.rt.ui.expanded.includes(field);
+        }
+        // Fallback to global CONFIG for compatibility (old system)
         return CONFIG.rt.ui.expanded ? CONFIG.rt.ui.expanded.includes(field) : false;
     });
 

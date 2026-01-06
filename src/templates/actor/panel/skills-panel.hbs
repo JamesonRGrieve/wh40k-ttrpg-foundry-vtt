@@ -11,12 +11,12 @@
                     </button>
                 </div>
                 <div class="rt-spec-training">
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" 
-                            data-skill="{{entry.[0]}}" data-level="1" title="Trained">T</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" 
-                            data-skill="{{entry.[0]}}" data-level="2" title="+10">+10</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" 
-                            data-skill="{{entry.[0]}}" data-level="3" title="+20">+20</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}"
+                            data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}"
+                            data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}"
+                            data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
@@ -35,12 +35,12 @@
                     </button>
                 </div>
                 <div class="rt-spec-training">
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" 
-                            data-skill="{{entry.[0]}}" data-level="1" title="Trained">T</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" 
-                            data-skill="{{entry.[0]}}" data-level="2" title="+10">+10</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" 
-                            data-skill="{{entry.[0]}}" data-level="3" title="+20">+20</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}"
+                            data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}"
+                            data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
+                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}"
+                            data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>

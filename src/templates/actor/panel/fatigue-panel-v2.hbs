@@ -1,0 +1,191 @@
+{{!-- Redesigned Fatigue Panel - Modern, Auto-Calc Transparency, Player-Friendly --}}
+<div class="rt-panel rt-fatigue-panel-v2 {{#if (gte system.fatigue.value system.fatigue.max)}}rt-exhausted{{/if}}">
+
+    {{!-- Panel Header --}}
+    <div class="rt-panel-header">
+        <span class="rt-panel-title">
+            <i class="fas fa-bolt"></i> Fatigue
+        </span>
+        <button type="button" class="rt-vital-expand-btn sheet-control__hide-control"
+                data-toggle="fatigue_details"
+                title="{{#if (isExpanded 'fatigue_details' actor)}}Hide Details{{else}}Edit Fatigue{{/if}}">
+            <i class="fas {{#if (isExpanded 'fatigue_details' actor)}}fa-chevron-up{{else}}fa-cog{{/if}}"></i>
+        </button>
+    </div>
+
+    {{!-- Panel Body --}}
+    <div class="rt-panel-body">
+
+        {{!-- Main Display: Current/Threshold with Quick Controls --}}
+        <div class="rt-fatigue-display">
+            <div class="rt-fatigue-tracker">
+                <button type="button"
+                        class="rt-fatigue-btn rt-fatigue-minus"
+                        data-action="decrement"
+                        data-field="system.fatigue.value"
+                        data-min="0"
+                        title="Reduce Fatigue">
+                    <i class="fas fa-minus"></i>
+                </button>
+
+                <div class="rt-fatigue-value">
+                    <span class="rt-fatigue-current">{{system.fatigue.value}}</span>
+                    <span class="rt-fatigue-sep">/</span>
+                    <span class="rt-fatigue-max">{{system.fatigue.max}}</span>
+                </div>
+
+                <button type="button"
+                        class="rt-fatigue-btn rt-fatigue-plus"
+                        data-action="increment"
+                        data-field="system.fatigue.value"
+                        title="Increase Fatigue">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            {{!-- Auto-Calc Badge (when in auto mode) --}}
+            {{#unless system.fatigue.manualMax}}
+            <div class="rt-fatigue-auto-badge">
+                <i class="fas fa-calculator"></i>
+                <span>AUTO: TB ({{characteristics.toughness.bonus}}) + WB ({{characteristics.willpower.bonus}}) = {{system.fatigue.max}}</span>
+            </div>
+            {{/unless}}
+
+            {{!-- Progress Bar with Blue → Orange Gradient --}}
+            <div class="rt-fatigue-bar-container">
+                <div class="rt-fatigue-bar"
+                     data-percent="{{percent system.fatigue.value system.fatigue.max}}"
+                     style="--fatigue-percent: {{percent system.fatigue.value system.fatigue.max}}%">
+                    <div class="rt-fatigue-bar-fill"></div>
+                </div>
+                <span class="rt-fatigue-percent">{{percent system.fatigue.value system.fatigue.max}}%</span>
+            </div>
+        </div>
+
+        {{!-- Exhausted Warning Banner --}}
+        {{#if (gte system.fatigue.value system.fatigue.max)}}
+        <div class="rt-fatigue-alert rt-alert-exhausted">
+            <i class="fas fa-dizzy"></i>
+            <span>EXHAUSTED - All Characteristics Halved!</span>
+        </div>
+        {{/if}}
+
+        {{!-- Quick Actions --}}
+        <div class="rt-fatigue-actions">
+            <button type="button"
+                    class="rt-fatigue-action-btn rt-rest-btn"
+                    data-action="decrement"
+                    data-field="system.fatigue.value"
+                    data-min="0"
+                    title="Rest to recover 1 fatigue">
+                <i class="fas fa-bed"></i>
+                <span>Rest (-1)</span>
+            </button>
+            {{#if (gt system.fatigue.value 0)}}
+            <button type="button"
+                    class="rt-fatigue-action-btn rt-clear-btn"
+                    data-action="clear-fatigue"
+                    title="Clear all fatigue (full rest)">
+                <i class="fas fa-broom"></i>
+                <span>Clear All</span>
+            </button>
+            {{/if}}
+        </div>
+
+        {{!-- Edit Mode (Expandable) --}}
+        <div class="rt-panel-details fatigue_details" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
+
+            {{!-- Auto/Manual Toggle --}}
+            <div class="rt-fatigue-edit-section">
+                <div class="rt-fatigue-edit-header">
+                    <i class="fas fa-toggle-on"></i> Calculation Mode
+                </div>
+
+                <div class="rt-mode-toggle">
+                    <label class="rt-mode-option {{#unless system.fatigue.manualMax}}rt-mode-active{{/unless}}">
+                        <input type="radio"
+                               name="system.fatigue.manualMax"
+                               value="false"
+                               {{#unless system.fatigue.manualMax}}checked{{/unless}}
+                               class="rt-mode-radio" />
+                        <span class="rt-mode-label">
+                            <i class="fas fa-calculator"></i>
+                            <strong>Auto-Calculate</strong>
+                            <small>TB + WB</small>
+                        </span>
+                    </label>
+
+                    <label class="rt-mode-option {{#if system.fatigue.manualMax}}rt-mode-active{{/if}}">
+                        <input type="radio"
+                               name="system.fatigue.manualMax"
+                               value="true"
+                               {{#if system.fatigue.manualMax}}checked{{/if}}
+                               class="rt-mode-radio" />
+                        <span class="rt-mode-label">
+                            <i class="fas fa-pen"></i>
+                            <strong>Manual Override</strong>
+                            <small>Custom Value</small>
+                        </span>
+                    </label>
+                </div>
+
+                {{#unless system.fatigue.manualMax}}
+                <div class="rt-fatigue-formula">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Threshold automatically calculates as <strong>Toughness Bonus + Willpower Bonus</strong></span>
+                </div>
+                {{/unless}}
+            </div>
+
+            {{!-- Threshold and Current Editor --}}
+            <div class="rt-fatigue-edit-section">
+                <div class="rt-fatigue-edit-header">
+                    <i class="fas fa-cog"></i> Edit Values
+                </div>
+
+                <div class="rt-fatigue-edit-grid">
+                    <label class="rt-edit-field">
+                        <span class="rt-edit-label">
+                            Threshold
+                            {{#unless system.fatigue.manualMax}}
+                            <span class="rt-auto-tag">AUTO</span>
+                            {{/unless}}
+                        </span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="rt-edit-input"
+                               name="system.fatigue.max"
+                               value="{{system.fatigue.max}}"
+                               min="0"
+                               {{#unless system.fatigue.manualMax}}readonly{{/unless}}
+                               placeholder="Threshold" />
+                    </label>
+
+                    <label class="rt-edit-field">
+                        <span class="rt-edit-label">Current Fatigue</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="rt-edit-input"
+                               name="system.fatigue.value"
+                               value="{{system.fatigue.value}}"
+                               min="0"
+                               placeholder="Current" />
+                    </label>
+                </div>
+            </div>
+
+            {{!-- Info Section --}}
+            <div class="rt-fatigue-edit-section">
+                <div class="rt-fatigue-info-box">
+                    <i class="fas fa-book"></i>
+                    <div class="rt-info-content">
+                        <strong>About Fatigue</strong>
+                        <p>When fatigue reaches or exceeds the threshold, you become <strong>Exhausted</strong> and all characteristics are halved.</p>
+                        <p>Rest or recovery can reduce fatigue over time.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

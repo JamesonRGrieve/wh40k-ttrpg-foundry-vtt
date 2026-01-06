@@ -1,0 +1,231 @@
+{{!-- Redesigned Wounds Panel - Modern, Interactive, Player-Friendly --}}
+<div class="rt-panel rt-wounds-panel-v2 {{#if (eq system.wounds.value 0)}}rt-wounds-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}rt-wounds-warning{{/if}}">
+
+    {{!-- Panel Header --}}
+    <div class="rt-panel-header">
+        <span class="rt-panel-title">
+            <i class="fas fa-heart-broken"></i> Wounds
+        </span>
+        <button type="button" class="rt-vital-expand-btn sheet-control__hide-control"
+                data-toggle="wounds_details"
+                title="{{#if (isExpanded 'wounds_details' actor)}}Hide Details{{else}}Edit Wounds{{/if}}">
+            <i class="fas {{#if (isExpanded 'wounds_details' actor)}}fa-chevron-up{{else}}fa-cog{{/if}}"></i>
+        </button>
+    </div>
+
+    {{!-- Panel Body --}}
+    <div class="rt-panel-body">
+
+        {{!-- Main Display: Current/Max with Quick Controls --}}
+        <div class="rt-wounds-display">
+            <div class="rt-wounds-tracker">
+                <button type="button"
+                        class="rt-wounds-btn rt-wounds-minus"
+                        data-action="decrement"
+                        data-field="system.wounds.value"
+                        data-min="0"
+                        title="Reduce Wounds">
+                    <i class="fas fa-minus"></i>
+                </button>
+
+                <div class="rt-wounds-value">
+                    <span class="rt-wounds-current">{{system.wounds.value}}</span>
+                    <span class="rt-wounds-sep">/</span>
+                    <span class="rt-wounds-max">{{system.wounds.max}}</span>
+                </div>
+
+                <button type="button"
+                        class="rt-wounds-btn rt-wounds-plus"
+                        data-action="increment"
+                        data-field="system.wounds.value"
+                        data-max="{{system.wounds.max}}"
+                        title="Increase Wounds">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            {{!-- Progress Bar with Gradient --}}
+            <div class="rt-wounds-bar-container">
+                <div class="rt-wounds-bar"
+                     data-percent="{{percent system.wounds.value system.wounds.max}}"
+                     style="--wounds-percent: {{percent system.wounds.value system.wounds.max}}%">
+                    <div class="rt-wounds-bar-fill"></div>
+                </div>
+                <span class="rt-wounds-percent">{{percent system.wounds.value system.wounds.max}}%</span>
+            </div>
+        </div>
+
+        {{!-- Warning Messages --}}
+        {{#if (eq system.wounds.value 0)}}
+        <div class="rt-wounds-alert rt-alert-critical">
+            <i class="fas fa-skull-crossbones"></i>
+            <span>CRITICALLY WOUNDED - At 0 wounds!</span>
+        </div>
+        {{else if (lt (percent system.wounds.value system.wounds.max) 25)}}
+        <div class="rt-wounds-alert rt-alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Severely Injured - Below 25%</span>
+        </div>
+        {{/if}}
+
+        {{!-- Critical Damage Pip System --}}
+        {{#if (gt system.wounds.critical 0)}}
+        <div class="rt-wounds-critical-section">
+            <div class="rt-critical-header">
+                <span class="rt-critical-title">
+                    <i class="fas fa-skull"></i> Critical Damage
+                </span>
+                <span class="rt-critical-value">{{system.wounds.critical}} / 10</span>
+            </div>
+            <div class="rt-critical-pips">
+                {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
+                    <button type="button"
+                            class="rt-crit-pip {{#if (lte level ../system.wounds.critical)}}rt-crit-pip--filled{{/if}}"
+                            data-crit-level="{{level}}"
+                            title="Critical Level {{level}} - Click to toggle">
+                        <span class="rt-pip-inner"></span>
+                    </button>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{!-- Edit Mode (Expandable) --}}
+        <div class="rt-panel-details wounds_details" {{hideIfNot (isExpanded 'wounds_details' actor)}}>
+
+            {{!-- Max Wounds Editor --}}
+            <div class="rt-wounds-edit-section">
+                <div class="rt-wounds-edit-header">
+                    <i class="fas fa-cog"></i> Edit Wounds
+                </div>
+
+                <div class="rt-wounds-edit-grid">
+                    <label class="rt-edit-field">
+                        <span class="rt-edit-label">Max Wounds</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="rt-edit-input"
+                               name="system.wounds.max"
+                               value="{{system.wounds.max}}"
+                               min="1"
+                               placeholder="Max" />
+                    </label>
+
+                    <label class="rt-edit-field">
+                        <span class="rt-edit-label">Current Wounds</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="rt-edit-input"
+                               name="system.wounds.value"
+                               value="{{system.wounds.value}}"
+                               min="0"
+                               max="{{system.wounds.max}}"
+                               placeholder="Current" />
+                    </label>
+                </div>
+            </div>
+
+            {{!-- Critical Damage Editor --}}
+            <div class="rt-wounds-edit-section">
+                <div class="rt-wounds-edit-header">
+                    <i class="fas fa-skull"></i> Critical Damage
+                </div>
+
+                <div class="rt-critical-controls">
+                    <button type="button"
+                            class="rt-critical-btn rt-btn-minus"
+                            data-action="decrement"
+                            data-field="system.wounds.critical"
+                            data-min="0"
+                            title="Reduce Critical">
+                        <i class="fas fa-minus"></i>
+                    </button>
+
+                    <input type="number"
+                           data-dtype="Number"
+                           class="rt-critical-input"
+                           name="system.wounds.critical"
+                           value="{{system.wounds.critical}}"
+                           min="0"
+                           max="10"
+                           title="Critical Damage (0-10)" />
+
+                    <button type="button"
+                            class="rt-critical-btn rt-btn-plus"
+                            data-action="increment"
+                            data-field="system.wounds.critical"
+                            data-max="10"
+                            title="Increase Critical">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                {{!-- Critical Pips (Edit Mode) --}}
+                <div class="rt-critical-pips rt-critical-pips-edit">
+                    {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
+                        <button type="button"
+                                class="rt-crit-pip {{#if (lte level ../system.wounds.critical)}}rt-crit-pip--filled{{/if}}"
+                                data-crit-level="{{level}}"
+                                title="Set Critical to {{level}}">
+                            <span class="rt-pip-inner">{{level}}</span>
+                        </button>
+                    {{/each}}
+                </div>
+            </div>
+
+            {{!-- Critical Injuries List --}}
+            {{#if (any actor.items "isCriticalInjury")}}
+            <div class="rt-wounds-edit-section">
+                <div class="rt-wounds-edit-header">
+                    <i class="fas fa-notes-medical"></i> Critical Injuries
+                    <button type="button"
+                            class="rt-add-btn-small item-create"
+                            data-type="criticalInjury"
+                            title="Add Critical Injury">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="rt-injury-list">
+                    {{#each actor.items as |item|}}
+                        {{#if item.isCriticalInjury}}
+                        <div class="rt-injury-card">
+                            <button type="button"
+                                    class="rt-injury-name item-edit"
+                                    data-item-id="{{item.id}}"
+                                    title="Edit {{item.name}}">
+                                <i class="fas fa-band-aid"></i>
+                                {{item.name}}
+                            </button>
+                            <button type="button"
+                                    class="rt-injury-delete item-delete"
+                                    data-item-id="{{item.id}}"
+                                    title="Remove {{item.name}}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        {{/if}}
+                    {{/each}}
+                </div>
+            </div>
+            {{else}}
+            <div class="rt-wounds-edit-section">
+                <div class="rt-wounds-edit-header">
+                    <i class="fas fa-notes-medical"></i> Critical Injuries
+                    <button type="button"
+                            class="rt-add-btn-small item-create"
+                            data-type="criticalInjury"
+                            title="Add Critical Injury">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="rt-wounds-empty">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>No critical injuries</span>
+                </div>
+            </div>
+            {{/if}}
+
+        </div>
+    </div>
+</div>
