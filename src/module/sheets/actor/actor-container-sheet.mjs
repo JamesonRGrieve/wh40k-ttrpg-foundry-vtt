@@ -247,7 +247,7 @@ export class ActorContainerSheet extends ActorSheet {
         if (!target) return;
 
         // Get current expanded state from actor flags
-        const expanded = this.actor.getFlag('rt', 'ui.expanded') || [];
+        const expanded = this.actor.getFlag('rogue-trader', 'ui.expanded') || [];
         const isCurrentlyExpanded = expanded.includes(target);
 
         // Toggle the state
@@ -259,7 +259,7 @@ export class ActorContainerSheet extends ActorSheet {
         }
 
         // Update actor flags - this will trigger a re-render
-        await this.actor.setFlag('rt', 'ui.expanded', newExpanded);
+        await this.actor.setFlag('rogue-trader', 'ui.expanded', newExpanded);
     }
 
 
