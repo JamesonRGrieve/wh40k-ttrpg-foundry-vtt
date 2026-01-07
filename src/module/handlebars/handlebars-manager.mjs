@@ -61,6 +61,19 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/wounds-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/wounds-panel-v2.hbs',
 
+            // Acolyte Tab Templates (for ApplicationV2 PARTS)
+            'systems/rogue-trader/templates/actor/acolyte/header.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tabs.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/body.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-talents.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-equipment.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-powers.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-dynasty.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs',
+
             'systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-movement-panel.hbs',
@@ -73,6 +86,7 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/ship-weapons-panel.hbs',
 
             'systems/rogue-trader/templates/actor/partial/character-field.hbs',
+            'systems/rogue-trader/templates/actor/partial/characteristic-hud-v2.hbs',
             'systems/rogue-trader/templates/actor/partial/display-toggle.hbs',
             'systems/rogue-trader/templates/actor/partial/trait-toggle.hbs',
 
