@@ -8,6 +8,7 @@ import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
 import TooltipMixin from "../api/tooltip-mixin.mjs";
 import VisualFeedbackMixin from "../api/visual-feedback-mixin.mjs";
 import CollapsiblePanelMixin from "../api/collapsible-panel-mixin.mjs";
+import ContextMenuMixin from "../api/context-menu-mixin.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -15,9 +16,9 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends CollapsiblePanelMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
+export default class BaseActorSheet extends ContextMenuMixin(CollapsiblePanelMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
     ApplicationV2Mixin(ActorSheetV2)
-)))) {
+))))) {
     constructor(options = {}) {
         super(options);
     }
