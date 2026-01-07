@@ -4,7 +4,13 @@ import { RogueTrader } from './rules/config.mjs';
 // Import data models
 import * as dataModels from './data/_module.mjs';
 
-import { AcolyteSheet } from './sheets/actor/acolyte-sheet.mjs';
+// Import V2 Actor Sheets (ApplicationV2-based)
+import AcolyteSheet from './applications/actor/acolyte-sheet.mjs';
+import NpcSheet from './applications/actor/npc-sheet.mjs';
+import VehicleSheet from './applications/actor/vehicle-sheet.mjs';
+import StarshipSheet from './applications/actor/starship-sheet.mjs';
+
+// Import V1 Item Sheets (will be migrated later)
 import { RogueTraderItemSheet } from './sheets/item/item-sheet.mjs';
 import { RogueTraderWeaponSheet } from './sheets/item/weapon-sheet.mjs';
 import { RogueTraderArmourSheet } from './sheets/item/armour-sheet.mjs';
@@ -29,9 +35,6 @@ import { RogueTraderStorageLocationSheet } from './sheets/item/storage-location-
 import { RogueTraderTraitSheet } from './sheets/item/trait-sheet.mjs';
 import { RogueTraderSkillSheet } from './sheets/item/skill-sheet.mjs';
 import { RogueTraderActorProxy } from './documents/actor-proxy.mjs';
-import { NpcSheet } from './sheets/actor/npc-sheet.mjs';
-import { VehicleSheet } from './sheets/actor/vehicle-sheet.mjs';
-import { StarshipSheet } from './sheets/actor/starship-sheet.mjs';
 import { RogueTraderCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
 import { RogueTraderGearSheet } from './sheets/item/gear-sheet.mjs';
 import { RogueTraderSettings } from './rogue-trader-settings.mjs';
@@ -173,17 +176,35 @@ Enable Debug with: game.rt.debug = true
         };
 
         // Register sheet application classes
-        const ActorCollection = foundry.documents.collections.Actors;
+        // V2 Actor Sheets use DocumentSheetConfig API
+        const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
         const ItemCollection = foundry.documents.collections.Items;
-        const BaseActorSheet = foundry.appv1.sheets.ActorSheet;
         const BaseItemSheet = foundry.appv1.sheets.ItemSheet;
 
-        ActorCollection.unregisterSheet('core', BaseActorSheet);
-        ActorCollection.registerSheet(SYSTEM_ID, AcolyteSheet, {types: ["acolyte", "character"], makeDefault: true });
-        ActorCollection.registerSheet(SYSTEM_ID, NpcSheet, {types: ['npc'], makeDefault: true });
-        ActorCollection.registerSheet(SYSTEM_ID, VehicleSheet, {types: ['vehicle'], makeDefault: true });
-        ActorCollection.registerSheet(SYSTEM_ID, StarshipSheet, {types: ['starship'], makeDefault: true });
+        // Unregister core V1 actor sheet and register V2 actor sheets
+        DocumentSheetConfig.unregisterSheet(Actor, "core", foundry.appv1.sheets.ActorSheet);
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
+            types: ["acolyte", "character"],
+            makeDefault: true,
+            label: "RT.Sheet.Acolyte"
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NpcSheet, {
+            types: ["npc"],
+            makeDefault: true,
+            label: "RT.Sheet.NPC"
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
+            types: ["vehicle"],
+            makeDefault: true,
+            label: "RT.Sheet.Vehicle"
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, StarshipSheet, {
+            types: ["starship"],
+            makeDefault: true,
+            label: "RT.Sheet.Starship"
+        });
 
+        // Item Sheets (still using V1 until migrated)
         ItemCollection.unregisterSheet('core', BaseItemSheet);
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderItemSheet, { makeDefault: true });
         ItemCollection.registerSheet(SYSTEM_ID, RogueTraderAmmoSheet, { types: ['ammunition'], makeDefault: true });
