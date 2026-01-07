@@ -10,3 +10,6 @@ export * from "./actor/_module.mjs";
 
 // Item sheet exports
 export * from "./item/_module.mjs";
+
+// Prompt/Dialog exports
+export * from "./prompts/_module.mjs";
