@@ -224,9 +224,11 @@ Both features follow these principles:
 - [x] Documentation and guides
 - [x] **Integration Complete!** - Enhanced skill roller now used for all skill/characteristic rolls
 - [x] **TooltipMixin Added** - All actor sheets now have tooltip support
-- [x] **Gothic Theme SCSS** - Theme variables file created (not yet imported)
+- [x] **Gothic Theme SCSS** - Theme variables file created and imported
 - [x] **Tooltip Data Preparation** - Characteristics and skills now have tooltipData for templates
 - [x] **Template Integration** - Characteristic and skill panels now have `data-rt-tooltip` attributes
+- [x] **Gothic Theme Styling** - Characteristic and skills panels updated with Gothic 40K theme
+- [x] **Stat Change Animations** - Added animation keyframes and helper methods for visual feedback
 
 ### Available to Build
 From the [APPLICATIONV2_FEATURES_VISION.md](APPLICATIONV2_FEATURES_VISION.md):
