@@ -12,4 +12,5 @@ export { default as ForceFieldDialog, prepareForceFieldRoll } from "./force-fiel
 export { default as AssignDamageDialog, prepareAssignDamageRoll } from "./assign-damage-dialog.mjs";
 export { default as DamageRollDialog, prepareDamageRoll } from "./damage-roll-dialog.mjs";
 export { default as SimpleRollDialog, prepareSimpleRoll } from "./simple-roll-dialog.mjs";
+export { default as EnhancedSkillDialog, prepareEnhancedSkillRoll } from "./enhanced-skill-dialog.mjs";
 export { default as SpecialistSkillDialog, prepareCreateSpecialistSkillPrompt } from "./specialist-skill-dialog.mjs";

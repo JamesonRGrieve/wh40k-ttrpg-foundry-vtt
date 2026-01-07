@@ -1,0 +1,146 @@
+{{!-- Enhanced Skill Test Roll Dialog --}}
+{{!-- Showcase feature demonstrating ApplicationV2 capabilities --}}
+
+<form class="enhanced-skill-roll" autocomplete="off">
+    {{!-- Header with skill name and base target --}}
+    <header class="roll-header">
+        <h3 class="skill-name">{{skillName}}</h3>
+        <div class="base-target">
+            <span class="label">Base Target:</span>
+            <span class="value">{{baseTarget}}</span>
+        </div>
+    </header>
+
+    {{!-- Difficulty Selection --}}
+    <section class="difficulty-section">
+        <h4 class="section-title">Difficulty</h4>
+        <div class="difficulty-grid">
+            {{#each difficulties}}
+            <button
+                type="button"
+                class="difficulty-btn {{cssClass}}"
+                data-action="selectDifficulty"
+                data-modifier="{{modifier}}"
+                data-tooltip="{{description}}"
+                data-tooltip-direction="UP"
+            >
+                <i class="fas {{icon}}"></i>
+                <span class="diff-label">{{label}}</span>
+                <span class="diff-mod">{{#if (gt modifier 0)}}+{{/if}}{{modifier}}</span>
+            </button>
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- Common Modifiers --}}
+    <section class="modifiers-section">
+        <h4 class="section-title">Common Modifiers</h4>
+        <div class="common-modifiers">
+            {{#each commonModifiers}}
+            <label class="modifier-checkbox">
+                <input
+                    type="checkbox"
+                    data-action="toggleModifier"
+                    data-modifier-key="{{key}}"
+                    {{#if checked}}checked{{/if}}
+                />
+                <span class="modifier-label">
+                    {{label}}
+                    <span class="modifier-value">({{#if (gt value 0)}}+{{/if}}{{value}})</span>
+                </span>
+                <span class="modifier-description">{{description}}</span>
+            </label>
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- Custom Modifier --}}
+    <section class="custom-section">
+        <h4 class="section-title">Custom Modifier</h4>
+        <div class="custom-modifier">
+            <input
+                type="number"
+                id="customModifier"
+                name="customModifier"
+                value="{{customModifier}}"
+                data-action="updateCustom"
+                placeholder="0"
+            />
+            <span class="custom-hint">Enter additional bonus/penalty</span>
+        </div>
+    </section>
+
+    {{!-- Final Target Calculation --}}
+    <section class="calculation-section">
+        <div class="calculation-breakdown">
+            <div class="calc-line">
+                <span class="calc-label">Base Target:</span>
+                <span class="calc-value">{{baseTarget}}</span>
+            </div>
+            {{#if (ne difficultyMod 0)}}
+            <div class="calc-line modifier">
+                <span class="calc-label">Difficulty:</span>
+                <span class="calc-value">{{#if (gt difficultyMod 0)}}+{{/if}}{{difficultyMod}}</span>
+            </div>
+            {{/if}}
+            {{#if (ne commonMod 0)}}
+            <div class="calc-line modifier">
+                <span class="calc-label">Common Mods:</span>
+                <span class="calc-value">{{#if (gt commonMod 0)}}+{{/if}}{{commonMod}}</span>
+            </div>
+            {{/if}}
+            {{#if (ne customModifier 0)}}
+            <div class="calc-line modifier">
+                <span class="calc-label">Custom:</span>
+                <span class="calc-value">{{#if (gt customModifier 0)}}+{{/if}}{{customModifier}}</span>
+            </div>
+            {{/if}}
+        </div>
+
+        <div class="final-target">
+            <span class="final-label">Final Target:</span>
+            <span class="final-value {{#if (gt finalTarget baseTarget)}}increased{{else if (lt finalTarget baseTarget)}}decreased{{/if}}">
+                {{finalTarget}}
+            </span>
+        </div>
+    </section>
+
+    {{!-- Recent Rolls (if any) --}}
+    {{#if hasRecentRolls}}
+    <section class="recent-section">
+        <h4 class="section-title">Recent Rolls</h4>
+        <div class="recent-rolls">
+            {{#each recentRolls}}
+            <button
+                type="button"
+                class="recent-btn"
+                data-action="rollRepeat"
+                data-modifier="{{modifier}}"
+                data-tooltip="Roll {{name}} with {{#if (gt modifier 0)}}+{{/if}}{{modifier}} modifier"
+                data-tooltip-direction="UP"
+            >
+                <span class="recent-name">{{name}}</span>
+                <span class="recent-mod">{{#if (gt modifier 0)}}+{{/if}}{{modifier}}</span>
+            </button>
+            {{/each}}
+        </div>
+    </section>
+    {{/if}}
+
+    {{!-- Action Buttons --}}
+    <footer class="roll-footer">
+        <button type="button" class="roll-btn" data-action="roll">
+            <i class="fas fa-dice-d20"></i>
+            Roll Test
+        </button>
+        <button type="button" class="cancel-btn" data-action="cancel">
+            Cancel
+        </button>
+    </footer>
+
+    {{!-- Keyboard Hint --}}
+    <div class="keyboard-hint">
+        <i class="fas fa-keyboard"></i>
+        Press <kbd>Enter</kbd> to roll
+    </div>
+</form>
