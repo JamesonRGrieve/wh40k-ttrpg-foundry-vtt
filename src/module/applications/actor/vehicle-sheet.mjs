@@ -3,6 +3,7 @@
  */
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
+import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 
 /**
  * Actor sheet for Vehicle type actors.
@@ -44,8 +45,14 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /** @inheritDoc */
+    /**
+     * Lazy load Vehicle templates before first render.
+     * @inheritDoc
+     */
     async _prepareContext(options) {
+        // Lazy load Vehicle-specific templates
+        await HandlebarManager.loadActorSheetTemplates("vehicle");
+        
         const context = await super._prepareContext(options);
         context.dh = CONFIG.rt;
         return context;

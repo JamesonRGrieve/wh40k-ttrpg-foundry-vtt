@@ -1,0 +1,83 @@
+{{!-- Active Effects Panel --}}
+{{!-- Displays all active effects on the actor --}}
+<div class="rt-panel rt-panel-effects {{#if collapsible}}rt-collapsible{{/if}}" data-panel-id="effects">
+    <div class="rt-panel-header" {{#if collapsible}}data-action="togglePanel"{{/if}}>
+        <span class="rt-panel-title">
+            <i class="fas fa-magic"></i> Active Effects
+            {{#if effects.length}}
+                <span class="rt-badge">{{effects.length}}</span>
+            {{/if}}
+        </span>
+        {{#if collapsible}}
+            <i class="fas fa-chevron-down rt-collapse-icon"></i>
+        {{/if}}
+    </div>
+    <div class="rt-panel-body">
+        {{#if effects.length}}
+            <div class="rt-effects-list">
+                {{#each effects as |effect|}}
+                    <div class="rt-effect-card {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
+                        <div class="rt-effect-header">
+                            <img src="{{effect.icon}}" alt="{{effect.name}}" class="rt-effect-icon">
+                            <div class="rt-effect-info">
+                                <div class="rt-effect-name">{{effect.name}}</div>
+                                <div class="rt-effect-source">{{effect.document.sourceName}}</div>
+                            </div>
+                            <div class="rt-effect-controls">
+                                {{#if effect.document.isTemporary}}
+                                    <span class="rt-effect-duration {{#if effect.document.isExpiring}}expiring{{/if}}" 
+                                          title="{{effect.document.durationLabel}}">
+                                        <i class="far fa-clock"></i> 
+                                        {{#if effect.document.remainingDuration}}
+                                            {{effect.document.remainingDuration}}
+                                        {{else}}
+                                            ∞
+                                        {{/if}}
+                                    </span>
+                                {{/if}}
+                                <button class="rt-effect-toggle" 
+                                        data-action="toggleEffect" 
+                                        data-effect-id="{{effect.id}}"
+                                        data-tooltip="{{#if effect.document.disabled}}Enable{{else}}Disable{{/if}} Effect">
+                                    <i class="fas {{#if effect.document.disabled}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
+                                </button>
+                                {{#if ../editable}}
+                                    <button class="rt-effect-delete" 
+                                            data-action="deleteEffect" 
+                                            data-effect-id="{{effect.id}}"
+                                            data-tooltip="Delete Effect">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                {{/if}}
+                            </div>
+                        </div>
+                        
+                        {{#if effect.document.changesSummary.length}}
+                            <div class="rt-effect-changes">
+                                {{#each effect.document.changesSummary as |change|}}
+                                    <div class="rt-effect-change">
+                                        <span class="rt-change-label">{{change.label}}</span>
+                                        <span class="rt-change-value">{{change.value}}</span>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{/if}}
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="rt-empty-state">
+                <i class="fas fa-magic"></i>
+                <p>No active effects</p>
+            </div>
+        {{/if}}
+        
+        {{#if editable}}
+            <div class="rt-panel-footer">
+                <button class="rt-btn rt-btn-add" data-action="createEffect">
+                    <i class="fas fa-plus"></i> Add Effect
+                </button>
+            </div>
+        {{/if}}
+    </div>
+</div>

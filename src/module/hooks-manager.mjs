@@ -119,6 +119,7 @@ Enable Debug with: game.rt.debug = true
             starship: documents.RogueTraderStarship,
         };
         CONFIG.Item.documentClass = RogueTraderItem;
+        CONFIG.ActiveEffect.documentClass = documents.RogueTraderActiveEffect;
 
         // Register data models for actors
         // DataModels handle schema validation and data preparation

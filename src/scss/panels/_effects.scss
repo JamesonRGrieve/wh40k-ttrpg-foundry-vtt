@@ -1,112 +1,221 @@
-// ============================================
-// Active Effects Panel
-// ============================================
+/**
+ * Active Effects Panel Styles
+ * Displays active effects with visual indicators for nature (beneficial/harmful/neutral)
+ */
 
-.rt-effects-panel {
-  // Panel styling inherits from rt-panel in _core.scss
-
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
-
-    i {
-      color: $rt-accent-combat;
+.rt-panel-effects {
+    .rt-badge {
+        background: var(--rt-gold);
+        color: var(--rt-black);
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin-left: 6px;
     }
-  }
+
+    .rt-effects-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .rt-effect-card {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding: 8px;
+        transition: all 0.2s ease;
+
+        &.rt-effect-beneficial {
+            border-left: 3px solid var(--rt-green, #4caf50);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        &.rt-effect-harmful {
+            border-left: 3px solid var(--rt-red, #f44336);
+            background: rgba(244, 67, 54, 0.05);
+        }
+
+        &.rt-effect-neutral {
+            border-left: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        &.disabled {
+            opacity: 0.5;
+            filter: grayscale(0.8);
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    .rt-effect-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+
+    .rt-effect-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        flex-shrink: 0;
+    }
+
+    .rt-effect-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .rt-effect-name {
+        font-weight: bold;
+        color: var(--rt-gold);
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .rt-effect-source {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-style: italic;
+    }
+
+    .rt-effect-controls {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    .rt-effect-duration {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+
+        &.expiring {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--rt-red, #f44336);
+            animation: pulse-warning 1s infinite;
+        }
+    }
+
+    .rt-effect-toggle,
+    .rt-effect-delete {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        padding: 4px 8px;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: white;
+        }
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+
+    .rt-effect-delete {
+        &:hover {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: var(--rt-red, #f44336);
+            color: var(--rt-red, #f44336);
+        }
+    }
+
+    .rt-effect-changes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .rt-effect-change {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+        font-size: 0.8rem;
+    }
+
+    .rt-change-label {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .rt-change-value {
+        color: var(--rt-gold);
+        font-weight: bold;
+    }
+
+    .rt-empty-state {
+        text-align: center;
+        padding: 24px 12px;
+        color: rgba(255, 255, 255, 0.4);
+
+        i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
+
+    .rt-panel-footer {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .rt-btn-add {
+        width: 100%;
+        background: rgba(var(--rt-gold-rgb, 196, 135, 29), 0.1);
+        border: 1px solid var(--rt-gold);
+        color: var(--rt-gold);
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+
+        &:hover {
+            background: rgba(var(--rt-gold-rgb, 196, 135, 29), 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(var(--rt-gold-rgb, 196, 135, 29), 0.3);
+        }
+
+        i {
+            margin-right: 6px;
+        }
+    }
 }
 
-.rt-effects-add {
-  @include rt-icon-button(24px, $rt-accent-combat, 0.7rem);
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.rt-effects-list {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: 260px;
-  overflow-y: auto;
-  
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $rt-border-medium;
-    border-radius: 3px;
-  }
-}
-
-.rt-effect-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-xs $rt-space-sm;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
-  border-left: 3px solid $rt-accent-combat;
-  border-radius: 6px;
-  
-  &:hover {
-    background: $rt-bg-paper;
-    border-color: $rt-border-medium;
-    border-left-color: $rt-accent-combat;
-  }
-}
-
-.rt-effect-disabled {
-  opacity: 0.65;
-}
-
-.rt-effect-edit {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  border: 1px solid $rt-border-light;
-  background: transparent;
-  color: $rt-text-muted;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  &:hover {
-    color: var(--color-text-primary);
-    border-color: $rt-border-medium;
-    background: $rt-bg-subtle;
-  }
-}
-
-.rt-effect-name {
-  font-size: 0.92rem;
-  color: var(--color-text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.rt-effect-actions {
-  display: flex;
-  gap: 4px;
-}
-
-.rt-effect-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: $rt-text-muted;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  &:hover {
-    color: var(--color-text-primary);
-    background: $rt-bg-subtle;
-    border-color: $rt-border-light;
-  }
+@keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 

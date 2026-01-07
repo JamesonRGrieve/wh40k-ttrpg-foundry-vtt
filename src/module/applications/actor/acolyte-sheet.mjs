@@ -9,6 +9,7 @@ import { DHTargetedActionManager } from "../../actions/targeted-action-manager.m
 import { Hit } from "../../rolls/damage-data.mjs";
 import { AssignDamageData } from "../../rolls/assign-damage-data.mjs";
 import { prepareAssignDamageRoll } from "../../prompts/assign-damage-prompt.mjs";
+import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 
 /**
  * Actor sheet for Acolyte/Character type actors.
@@ -47,6 +48,11 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
             removeAcquisition: AcolyteSheet.#removeAcquisition,
+            
+            // Active Effect actions
+            createEffect: AcolyteSheet.#createEffect,
+            toggleEffect: AcolyteSheet.#toggleEffect,
+            deleteEffect: AcolyteSheet.#deleteEffect,
             
             // Misc actions
             bonusVocalize: AcolyteSheet.#bonusVocalize
@@ -255,13 +261,19 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Prepare context for a tab content part.
+     * Lazy loads templates for non-overview tabs on first access.
      * @param {string} partId   The part ID (which matches the tab ID).
      * @param {object} context  Context being prepared.
      * @param {object} options  Render options.
-     * @returns {object}
+     * @returns {Promise<object>}
      * @protected
      */
-    _prepareTabPartContext(partId, context, options) {
+    async _prepareTabPartContext(partId, context, options) {
+        // Lazy load templates for non-overview tabs
+        if (partId !== "overview") {
+            await HandlebarManager.loadAcolyteTabTemplates(partId);
+        }
+
         // Find the tab configuration
         const tabConfig = this.constructor.TABS.find(t => t.tab === partId);
         if (tabConfig) {
@@ -618,7 +630,14 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @protected
      */
     async _prepareOverviewContext(context, options) {
-        // Overview tab already has most data from main context
+        // Add Active Effects data
+        context.effects = this.actor.effects.map(effect => ({
+            id: effect.id,
+            name: effect.name,
+            icon: effect.icon,
+            document: effect
+        }));
+        
         return context;
     }
 
@@ -1447,6 +1466,110 @@ export default class AcolyteSheet extends BaseActorSheet {
             searchInput.value = '';
             // Trigger filter update
             this.constructor.#filterSkills.call(this, event, searchInput);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Active Effects             */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle creating a new Active Effect.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #createEffect(event, target) {
+        try {
+            await this.actor.createEmbeddedDocuments("ActiveEffect", [{
+                name: "New Effect",
+                icon: "icons/svg/aura.svg",
+                disabled: false,
+                duration: {},
+                changes: []
+            }]);
+            
+            foundry.applications.api.Toast.info("New effect created", {
+                duration: 2000
+            });
+        } catch (error) {
+            foundry.applications.api.Toast.error(`Failed to create effect: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Create effect error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling an Active Effect's enabled/disabled state.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #toggleEffect(event, target) {
+        try {
+            const effectId = target.dataset.effectId;
+            const effect = this.actor.effects.get(effectId);
+            
+            if (!effect) {
+                foundry.applications.api.Toast.warning("Effect not found", {
+                    duration: 3000
+                });
+                return;
+            }
+            
+            await effect.update({ disabled: !effect.disabled });
+            
+            foundry.applications.api.Toast.info(`Effect ${effect.disabled ? 'disabled' : 'enabled'}`, {
+                duration: 2000
+            });
+        } catch (error) {
+            foundry.applications.api.Toast.error(`Failed to toggle effect: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Toggle effect error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle deleting an Active Effect.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #deleteEffect(event, target) {
+        try {
+            const effectId = target.dataset.effectId;
+            const effect = this.actor.effects.get(effectId);
+            
+            if (!effect) {
+                foundry.applications.api.Toast.warning("Effect not found", {
+                    duration: 3000
+                });
+                return;
+            }
+            
+            const confirmed = await Dialog.confirm({
+                title: "Delete Active Effect",
+                content: `<p>Are you sure you want to delete <strong>${effect.name}</strong>?</p>`,
+                defaultYes: false
+            });
+            
+            if (confirmed) {
+                await effect.delete();
+                foundry.applications.api.Toast.info("Effect deleted", {
+                    duration: 2000
+                });
+            }
+        } catch (error) {
+            foundry.applications.api.Toast.error(`Failed to delete effect: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Delete effect error:", error);
         }
     }
 }
