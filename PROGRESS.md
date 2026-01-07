@@ -168,6 +168,34 @@
 **Total Time**: ~1 hour
 **Build Status**: ✅ All builds passing
 
+- [x] **Item 14**: State Persistence Enhancements ✅
+  - Added instance properties to BaseActorSheet:
+    - `_equipmentFilter` - Stores equipment search/type/status filter state
+    - `_skillsFilter` - Stores skills search/characteristic/training filter state
+    - `_scrollPositions` - Map of scroll positions for scrollable containers
+    - `_stateRestored` - Flag to prevent duplicate restoration
+  - Implemented state save/restore methods:
+    - `_saveSheetState()` - Saves state to actor flags on sheet close
+    - `_restoreSheetState()` - Restores state from actor flags on first render
+    - `_applyRestoredState()` - Applies filter values and triggers DOM updates
+    - `_captureScrollPositions()` - Captures scroll positions of all scrollable containers
+    - `_applyScrollPositions()` - Restores scroll positions after render
+  - State persisted:
+    - Equipment filter (search term, type filter, status filter)
+    - Skills filter (search term, characteristic filter, training filter)
+    - Scroll positions (rt-body, skills columns, items grid, talents grid)
+    - Window size (width/height)
+  - Updated filter handlers in AcolyteSheet to store state:
+    - `#filterEquipment` - Updates `_equipmentFilter` on every filter change
+    - `#filterSkills` - Updates `_skillsFilter` on every filter change
+    - Clear handlers reset filter state objects
+  - Files modified:
+    - `src/module/applications/actor/base-actor-sheet.mjs`
+    - `src/module/applications/actor/acolyte-sheet.mjs`
+
+**Total Time**: ~45 minutes
+**Build Status**: ✅ All builds passing
+
 ---
 
 ## Completed 🎉
@@ -190,9 +218,12 @@ All 6 Priority 1 items completed in this session:
 
 ### Priority 2: Medium Priority
 - ✅ Item 13: Lazy Template Loading
+- ✅ Item 14: State Persistence Enhancements
 - Item 11: Keyboard Shortcuts System (2-3 days)
 - Item 12: Active Effects Foundation (2-3 days)
-- Item 14: State Persistence Enhancements (1-2 days)
+- Item 15: Replace Custom Context Menu with V13 Native (2-3 days)
+- Item 16: Data Caching & Memoization (1-2 days)
+- Item 17: Accessibility Compliance (WCAG AA) (2-3 days)
 - Item 15: Replace Custom Context Menu with V13 Native (2-3 days)
 - Item 16: Data Caching & Memoization (1-2 days)
 - Item 17: Accessibility Compliance (WCAG AA) (2-3 days)

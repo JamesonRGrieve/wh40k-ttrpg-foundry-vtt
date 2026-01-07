@@ -1333,6 +1333,13 @@ export default class AcolyteSheet extends BaseActorSheet {
         const typeValue = typeFilter?.value || '';
         const statusValue = statusFilter?.value || '';
 
+        // Store filter state for persistence
+        this._equipmentFilter = {
+            search: searchInput?.value || '',
+            type: typeValue,
+            status: statusValue
+        };
+
         // Get all item cards
         const itemCards = equipmentPanel.querySelectorAll('.rt-inventory-card');
 
@@ -1387,6 +1394,8 @@ export default class AcolyteSheet extends BaseActorSheet {
         const searchInput = this.element.querySelector('.rt-equipment-search');
         if (searchInput) {
             searchInput.value = '';
+            // Clear stored filter state
+            this._equipmentFilter = { search: '', type: '', status: '' };
             // Trigger filter update
             this.constructor.#filterEquipment.call(this, event, searchInput);
         }
@@ -1413,6 +1422,13 @@ export default class AcolyteSheet extends BaseActorSheet {
         const searchTerm = searchInput?.value.toLowerCase() || '';
         const charValue = charFilter?.value || '';
         const trainingValue = trainingFilter?.value || '';
+
+        // Store filter state for persistence
+        this._skillsFilter = {
+            search: searchInput?.value || '',
+            characteristic: charValue,
+            training: trainingValue
+        };
 
         const skillRows = skillsPanel.querySelectorAll('.rt-skill-row');
         let visibleCount = 0;
@@ -1464,6 +1480,8 @@ export default class AcolyteSheet extends BaseActorSheet {
         const searchInput = this.element.querySelector('.rt-skills-search');
         if (searchInput) {
             searchInput.value = '';
+            // Clear stored filter state
+            this._skillsFilter = { search: '', characteristic: '', training: '' };
             // Trigger filter update
             this.constructor.#filterSkills.call(this, event, searchInput);
         }

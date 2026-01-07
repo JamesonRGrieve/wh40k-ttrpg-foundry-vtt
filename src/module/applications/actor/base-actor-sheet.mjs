@@ -74,6 +74,35 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     static unsupportedItemTypes = new Set();
 
     /* -------------------------------------------- */
+    /*  Instance Properties                         */
+    /* -------------------------------------------- */
+
+    /**
+     * Filter state for equipment panel.
+     * @type {{ search: string, type: string, status: string }}
+     */
+    _equipmentFilter = { search: "", type: "", status: "" };
+
+    /**
+     * Filter state for skills panel.
+     * @type {{ search: string, characteristic: string, training: string }}
+     */
+    _skillsFilter = { search: "", characteristic: "", training: "" };
+
+    /**
+     * Scroll positions for scrollable containers.
+     * @type {Map<string, number>}
+     */
+    _scrollPositions = new Map();
+
+    /**
+     * Whether state has been restored for this sheet instance.
+     * @type {boolean}
+     * @private
+     */
+    _stateRestored = false;
+
+    /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
 
@@ -157,6 +186,9 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
 
     /** @inheritDoc */
     _onClose(options) {
+        // Save state before closing
+        this._saveSheetState();
+        
         super._onClose(options);
         
         // Clean up hook listener
@@ -164,6 +196,184 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             Hooks.off("updateActor", this._updateListener);
             this._updateListener = null;
         }
+    }
+
+    /* -------------------------------------------- */
+    /*  State Persistence                           */
+    /* -------------------------------------------- */
+
+    /**
+     * Save current sheet state to actor flags.
+     * Captures scroll positions, filter states, search terms, and window size.
+     * @protected
+     */
+    _saveSheetState() {
+        // Capture scroll positions before saving
+        this._captureScrollPositions();
+
+        const state = {
+            scrollPositions: Object.fromEntries(this._scrollPositions),
+            equipmentFilter: this._equipmentFilter,
+            skillsFilter: this._skillsFilter,
+            windowSize: {
+                width: this.position?.width,
+                height: this.position?.height
+            }
+        };
+
+        // Use setFlag - this is async but we don't await it on close
+        this.actor.setFlag("rogue-trader", "sheetState", state);
+    }
+
+    /**
+     * Restore sheet state from actor flags.
+     * Called after first render to restore previous state.
+     * @returns {Promise<void>}
+     * @protected
+     */
+    async _restoreSheetState() {
+        if (this._stateRestored) return;
+        this._stateRestored = true;
+
+        const state = this.actor.getFlag("rogue-trader", "sheetState");
+        if (!state) return;
+
+        // Restore filter states
+        if (state.equipmentFilter) {
+            this._equipmentFilter = { ...this._equipmentFilter, ...state.equipmentFilter };
+        }
+        if (state.skillsFilter) {
+            this._skillsFilter = { ...this._skillsFilter, ...state.skillsFilter };
+        }
+
+        // Restore scroll positions
+        if (state.scrollPositions) {
+            this._scrollPositions = new Map(Object.entries(state.scrollPositions));
+        }
+
+        // Restore window size if different from default
+        if (state.windowSize?.width && state.windowSize?.height) {
+            const defaultPos = this.constructor.DEFAULT_OPTIONS.position;
+            if (state.windowSize.width !== defaultPos?.width || 
+                state.windowSize.height !== defaultPos?.height) {
+                this.setPosition({
+                    width: state.windowSize.width,
+                    height: state.windowSize.height
+                });
+            }
+        }
+
+        // Apply filter states to DOM after a brief delay to ensure elements exist
+        setTimeout(() => this._applyRestoredState(), 50);
+    }
+
+    /**
+     * Apply restored state to DOM elements.
+     * @protected
+     */
+    _applyRestoredState() {
+        // Apply equipment filters
+        if (this._equipmentFilter) {
+            const searchInput = this.element?.querySelector(".rt-equipment-search");
+            const typeFilter = this.element?.querySelector(".rt-equipment-type-filter");
+            const statusFilter = this.element?.querySelector(".rt-equipment-status-filter");
+
+            if (searchInput && this._equipmentFilter.search) {
+                searchInput.value = this._equipmentFilter.search;
+            }
+            if (typeFilter && this._equipmentFilter.type) {
+                typeFilter.value = this._equipmentFilter.type;
+            }
+            if (statusFilter && this._equipmentFilter.status) {
+                statusFilter.value = this._equipmentFilter.status;
+            }
+
+            // Trigger filter if any values are set
+            if (this._equipmentFilter.search || this._equipmentFilter.type || this._equipmentFilter.status) {
+                searchInput?.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        }
+
+        // Apply skills filters
+        if (this._skillsFilter) {
+            const searchInput = this.element?.querySelector(".rt-skills-search");
+            const charFilter = this.element?.querySelector(".rt-skills-char-filter");
+            const trainingFilter = this.element?.querySelector(".rt-skills-training-filter");
+
+            if (searchInput && this._skillsFilter.search) {
+                searchInput.value = this._skillsFilter.search;
+            }
+            if (charFilter && this._skillsFilter.characteristic) {
+                charFilter.value = this._skillsFilter.characteristic;
+            }
+            if (trainingFilter && this._skillsFilter.training) {
+                trainingFilter.value = this._skillsFilter.training;
+            }
+
+            // Trigger filter if any values are set
+            if (this._skillsFilter.search || this._skillsFilter.characteristic || this._skillsFilter.training) {
+                searchInput?.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        }
+
+        // Apply scroll positions
+        this._applyScrollPositions();
+    }
+
+    /**
+     * Capture current scroll positions of scrollable containers.
+     * @protected
+     */
+    _captureScrollPositions() {
+        if (!this.element) return;
+
+        // Common scrollable containers
+        const scrollableSelectors = [
+            ".rt-body",
+            ".rt-skills-columns",
+            ".rt-all-items-grid",
+            ".rt-talents-grid",
+            ".scrollable",
+            "[data-scrollable]"
+        ];
+
+        scrollableSelectors.forEach(selector => {
+            const elements = this.element.querySelectorAll(selector);
+            elements.forEach((el, index) => {
+                const key = `${selector}-${index}`;
+                if (el.scrollTop > 0) {
+                    this._scrollPositions.set(key, el.scrollTop);
+                }
+            });
+        });
+    }
+
+    /**
+     * Apply saved scroll positions to scrollable containers.
+     * @protected
+     */
+    _applyScrollPositions() {
+        if (!this.element || this._scrollPositions.size === 0) return;
+
+        const scrollableSelectors = [
+            ".rt-body",
+            ".rt-skills-columns",
+            ".rt-all-items-grid",
+            ".rt-talents-grid",
+            ".scrollable",
+            "[data-scrollable]"
+        ];
+
+        scrollableSelectors.forEach(selector => {
+            const elements = this.element.querySelectorAll(selector);
+            elements.forEach((el, index) => {
+                const key = `${selector}-${index}`;
+                const savedPosition = this._scrollPositions.get(key);
+                if (savedPosition !== undefined) {
+                    el.scrollTop = savedPosition;
+                }
+            });
+        });
     }
 
     /* -------------------------------------------- */
@@ -272,6 +482,11 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     /** @inheritDoc */
     async _onRender(context, options) {
         await super._onRender(context, options);
+
+        // Restore sheet state on first render
+        if (!this._stateRestored) {
+            await this._restoreSheetState();
+        }
 
         // Add rt-sheet class to the form element for CSS styling
         const form = this.element.querySelector("form");
