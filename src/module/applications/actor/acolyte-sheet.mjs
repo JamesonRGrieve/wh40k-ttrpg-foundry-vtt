@@ -144,6 +144,38 @@ export default class AcolyteSheet extends BaseActorSheet {
     };
 
     /* -------------------------------------------- */
+    /*  Utility Methods                             */
+    /* -------------------------------------------- */
+
+    /**
+     * Throttle wrapper to prevent rapid-fire clicks on action buttons.
+     * Ensures a function can only execute once per time window.
+     * @param {string} key          Unique key for this throttled action.
+     * @param {number} wait         Minimum wait time in milliseconds between executions.
+     * @param {Function} func       The function to throttle.
+     * @param {Object} context      The context (this) to apply.
+     * @param {Array} args          Arguments to pass to the function.
+     * @returns {Promise}
+     * @private
+     */
+    static async _throttle(key, wait, func, context, args) {
+        // Initialize throttle tracking map if it doesn't exist
+        if (!this._throttleTimers) this._throttleTimers = new Map();
+
+        const now = Date.now();
+        const lastRun = this._throttleTimers.get(key) || 0;
+
+        // If not enough time has passed, ignore this call
+        if (now - lastRun < wait) {
+            return;
+        }
+
+        // Update last run time and execute
+        this._throttleTimers.set(key, now);
+        return await func.apply(context, args);
+    }
+
+    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
@@ -788,11 +820,22 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle stat adjustment button clicks.
+     * Throttled to prevent spam clicks.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #adjustStat(event, target) {
+        const field = target.dataset.field;
+        const throttleKey = `adjustStat-${field}-${this.actor.id}`;
+        return await this._throttle(throttleKey, 200, this.#adjustStatImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of stat adjustment (used by throttled wrapper).
+     * @private
+     */
+    static async #adjustStatImpl(event, target) {
         const field = target.dataset.field;
         const action = target.dataset.statAction;
         const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
@@ -825,11 +868,21 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle clicking on a critical damage pip.
+     * Throttled to prevent spam clicks.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setCriticalPip(event, target) {
+        const throttleKey = `setCriticalPip-${this.actor.id}`;
+        return await this._throttle(throttleKey, 200, this.#setCriticalPipImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of critical pip setting (used by throttled wrapper).
+     * @private
+     */
+    static async #setCriticalPipImpl(event, target) {
         const level = parseInt(target.dataset.critLevel);
         const currentCrit = this.actor.system.wounds?.critical || 0;
         const newValue = (level === currentCrit) ? level - 1 : level;
@@ -841,11 +894,21 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle clicking on a fate star pip.
+     * Throttled to prevent spam clicks.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setFateStar(event, target) {
+        const throttleKey = `setFateStar-${this.actor.id}`;
+        return await this._throttle(throttleKey, 200, this.#setFateStarImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of fate star setting (used by throttled wrapper).
+     * @private
+     */
+    static async #setFateStarImpl(event, target) {
         const index = parseInt(target.dataset.fateIndex);
         const currentFate = this.actor.system.fate?.value || 0;
         const newValue = (index === currentFate) ? index - 1 : index;
@@ -863,6 +926,15 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setCorruption(event, target) {
+        const throttleKey = `setCorruption-${this.actor.id}`;
+        return await this._throttle(throttleKey, 200, this.#setCorruptionImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of corruption setting (used by throttled wrapper).
+     * @private
+     */
+    static async #setCorruptionImpl(event, target) {
         const targetValue = parseInt(target.dataset.value);
         if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
             ui.notifications.error("Invalid corruption value");
@@ -880,6 +952,15 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setInsanity(event, target) {
+        const throttleKey = `setInsanity-${this.actor.id}`;
+        return await this._throttle(throttleKey, 200, this.#setInsanityImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of insanity setting (used by throttled wrapper).
+     * @private
+     */
+    static async #setInsanityImpl(event, target) {
         const targetValue = parseInt(target.dataset.value);
         if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
             ui.notifications.error("Invalid insanity value");
@@ -897,6 +978,15 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #restoreFate(event, target) {
+        const throttleKey = `restoreFate-${this.actor.id}`;
+        return await this._throttle(throttleKey, 500, this.#restoreFateImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of fate restoration (used by throttled wrapper).
+     * @private
+     */
+    static async #restoreFateImpl(event, target) {
         const maxFate = this.actor.system.fate?.max || 0;
         await this.actor.update({ "system.fate.value": maxFate });
         ui.notifications.info(`Restored all fate points to ${maxFate}`);
@@ -906,11 +996,22 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle fate spending actions.
+     * Throttled to prevent accidental double-spending.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #spendFate(event, target) {
+        const action = target.dataset.fateAction;
+        const throttleKey = `spendFate-${action}-${this.actor.id}`;
+        return await this._throttle(throttleKey, 500, this.#spendFateImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of fate spending (used by throttled wrapper).
+     * @private
+     */
+    static async #spendFateImpl(event, target) {
         const action = target.dataset.fateAction;
         const currentFate = this.actor.system.fate?.value || 0;
 
