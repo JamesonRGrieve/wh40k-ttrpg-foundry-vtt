@@ -61,6 +61,7 @@
     @import 'src/scss/components/compendium';
     @import 'src/scss/components/enhanced-skill-roll';
     @import 'src/scss/components/rt-tooltip';
+    @import 'src/scss/components/stat-animations';
 
     // Actor Sheets (split into modules)
     @import 'src/scss/actor/index';
@@ -303,5 +304,75 @@
         p {
             font-size: 1.1rem;
         }
+    }
+}
+
+// ============================================
+// SCROLL FIX - APPV2 OVERRIDE (High Specificity)
+// ============================================
+// This must come LAST to override all other styles
+
+.rogue-trader.sheet.actor {
+    // Window content should not scroll - children will
+    .window-content {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        height: 100% !important;
+    }
+    
+    // The wrapper takes full height and doesn't scroll
+    .rt-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        height: 100% !important;
+    }
+    
+    // The form fills the wrapper
+    .rt-sheet, .rt-actor {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    // Header should not grow or shrink
+    .rt-character-header, .rt-header {
+        flex: 0 0 auto !important;
+        grid-column: auto !important;
+    }
+    
+    // Main layout is a grid that fills available space
+    .rt-main-layout {
+        display: grid !important;
+        grid-template-columns: 160px minmax(0, 1fr) !important;
+        grid-template-rows: minmax(0, 1fr) !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        grid-column: auto !important;
+    }
+    
+    // The body scrolls
+    .rt-body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: 0 !important;
+        grid-column: auto !important;
+    }
+    
+    // Tabs should be block/flex, not 6-column grid
+    .rt-body .tab {
+        display: none !important;
+    }
+    
+    .rt-body .tab.active {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
     }
 }

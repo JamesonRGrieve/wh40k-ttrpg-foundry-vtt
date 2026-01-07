@@ -6,6 +6,7 @@
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
 import TooltipMixin from "../api/tooltip-mixin.mjs";
+import VisualFeedbackMixin from "../api/visual-feedback-mixin.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -13,9 +14,9 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends TooltipMixin(PrimarySheetMixin(
+export default class BaseActorSheet extends VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
     ApplicationV2Mixin(ActorSheetV2)
-)) {
+))) {
     constructor(options = {}) {
         super(options);
     }
@@ -98,6 +99,37 @@ export default class BaseActorSheet extends TooltipMixin(PrimarySheetMixin(
         await this._prepareItems(context);
 
         return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    _onRender(context, options) {
+        super._onRender(context, options);
+        
+        // Setup document update listener for visual feedback
+        if (!this._updateListener) {
+            this._updateListener = (document, changes, options, userId) => {
+                // Only animate changes from other users or from form submission
+                if (document.id === this.actor.id && userId !== game.userId) {
+                    this.visualizeChanges(changes);
+                }
+            };
+            Hooks.on("updateActor", this._updateListener);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    _onClose(options) {
+        super._onClose(options);
+        
+        // Clean up hook listener
+        if (this._updateListener) {
+            Hooks.off("updateActor", this._updateListener);
+            this._updateListener = null;
+        }
     }
 
     /* -------------------------------------------- */

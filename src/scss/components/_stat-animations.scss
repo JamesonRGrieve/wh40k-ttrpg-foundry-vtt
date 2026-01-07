@@ -1,0 +1,301 @@
+/**
+ * Stat change animations for inline editing feedback
+ * Provides visual feedback when character stats are updated
+ */
+
+/* -------------------------------------------- */
+/*  Animation Keyframes                         */
+/* -------------------------------------------- */
+
+@keyframes stat-increase {
+    0% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+    25% {
+        background-color: rgba(76, 175, 80, 0.4);
+        box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+        transform: scale(1.05);
+    }
+    50% {
+        background-color: rgba(76, 175, 80, 0.3);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+        transform: scale(1);
+    }
+}
+
+@keyframes stat-decrease {
+    0% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+    25% {
+        background-color: rgba(244, 67, 54, 0.4);
+        box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+        transform: scale(1.05);
+    }
+    50% {
+        background-color: rgba(244, 67, 54, 0.3);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse-gold {
+    0%, 100% {
+        color: inherit;
+        text-shadow: none;
+    }
+    50% {
+        color: #d4af37;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: none;
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    }
+}
+
+@keyframes flash-update {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(33, 150, 243, 0.3);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Animation Classes                           */
+/* -------------------------------------------- */
+
+.stat-increase {
+    animation: stat-increase 0.6s ease-out;
+}
+
+.stat-decrease {
+    animation: stat-decrease 0.6s ease-out;
+}
+
+.flash-update {
+    animation: flash-update 0.5s ease-out;
+}
+
+.pulse-gold {
+    animation: pulse-gold 0.8s ease-out;
+}
+
+.pulse-glow {
+    animation: pulse-glow 0.8s ease-out;
+}
+
+/* Characteristic bonus pulse */
+.characteristic-bonus.changed {
+    animation: pulse-gold 0.8s ease-out;
+    transition: transform 0.3s ease-out;
+    transform: scale(1.1);
+}
+
+/* Derived stat pulse */
+.derived-stat-changed {
+    animation: pulse-glow 0.8s ease-out;
+}
+
+/* -------------------------------------------- */
+/*  Smooth Transitions                          */
+/* -------------------------------------------- */
+
+/* Smooth value changes for input fields */
+input[type="number"],
+input[type="text"].stat-value,
+.stat-display {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effects with smooth transitions */
+.rollable {
+    transition: color 0.2s ease, transform 0.1s ease;
+    
+    &:hover {
+        transform: translateY(-1px);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+/* Progress bar animations */
+.progress-bar {
+    transition: width 0.4s ease-out, background-color 0.3s ease;
+}
+
+/* -------------------------------------------- */
+/*  Counter Animations                          */
+/* -------------------------------------------- */
+
+/* For number counter effects */
+.value-counter {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    &.counting-up {
+        animation: count-up 0.5s ease-out;
+    }
+    
+    &.counting-down {
+        animation: count-down 0.5s ease-out;
+    }
+}
+
+@keyframes count-up {
+    0% {
+        transform: translateY(10px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes count-down {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Special Effects                             */
+/* -------------------------------------------- */
+
+/* Level up / advancement effect */
+.stat-advancement {
+    animation: stat-advance 1s ease-out;
+}
+
+@keyframes stat-advance {
+    0% {
+        background: transparent;
+        transform: scale(1);
+    }
+    25% {
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%);
+        transform: scale(1.1);
+    }
+    50% {
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    }
+    100% {
+        background: transparent;
+        transform: scale(1);
+        box-shadow: none;
+    }
+}
+
+/* Critical threshold warnings (wounds at 0, fatigue maxed) */
+.stat-critical-warning {
+    animation: critical-pulse 1.5s infinite;
+}
+
+@keyframes critical-pulse {
+    0%, 100% {
+        background-color: transparent;
+        border-color: inherit;
+    }
+    50% {
+        background-color: rgba(139, 0, 0, 0.2);
+        border-color: #dc143c;
+        box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+    }
+}
+
+/* Healing effect (for wounds restored) */
+.stat-heal {
+    animation: stat-heal 0.8s ease-out;
+}
+
+@keyframes stat-heal {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(76, 175, 80, 0.5);
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+    }
+}
+
+/* Damage taken effect */
+.stat-damage {
+    animation: stat-damage 0.8s ease-out;
+}
+
+@keyframes stat-damage {
+    0% {
+        background-color: transparent;
+    }
+    25% {
+        background-color: rgba(139, 0, 0, 0.6);
+        box-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
+        transform: scale(1.05);
+    }
+    50% {
+        background-color: rgba(139, 0, 0, 0.3);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+        transform: scale(1);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Accessibility & Reduced Motion              */
+/* -------------------------------------------- */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .stat-increase,
+    .stat-decrease,
+    .flash-update,
+    .pulse-gold,
+    .pulse-glow,
+    .stat-advancement,
+    .stat-critical-warning,
+    .stat-heal,
+    .stat-damage,
+    .value-counter,
+    input[type="number"],
+    input[type="text"].stat-value,
+    .stat-display,
+    .rollable,
+    .progress-bar {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+}

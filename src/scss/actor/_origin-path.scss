@@ -88,7 +88,7 @@
 .rt-main-layout {
     display: grid;
     grid-template-columns: 160px minmax(0, 1fr);
-    grid-template-rows: 1fr;
+    grid-template-rows: minmax(0, 1fr); // minmax(0, 1fr) allows shrinking
     gap: 12px;
     align-items: stretch;
     grid-column: 1 / -1;
@@ -114,6 +114,22 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 0 12px 12px 0;
+    grid-column: auto; // Override the span 6 from dh-body
+    align-self: stretch; // Ensure it fills the grid row
+
+    // Override legacy 6-column grid from _navigation.scss
+    // Tabs need to be flex containers to allow scroll chain
+    .tab {
+        display: none;
+    }
+
+    .tab.active {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 0;
+    }
 }
 
 .rt-navigation {
