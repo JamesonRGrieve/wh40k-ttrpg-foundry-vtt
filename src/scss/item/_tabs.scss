@@ -39,6 +39,27 @@
 }
 
 // ============================================
+// Tab Content Container
+// ============================================
+
+.rt-item-sheet .rt-tab-content {
+  grid-column: span 6;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  padding: $rt-space-md;
+  
+  // Tab panels - only show active
+  .tab {
+    display: none;
+    
+    &.active {
+      display: block;
+    }
+  }
+}
+
+// ============================================
 // Content Panels
 // ============================================
 

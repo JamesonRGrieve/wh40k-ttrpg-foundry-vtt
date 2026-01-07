@@ -12,6 +12,9 @@
     background: linear-gradient(135deg, rgba(250, 244, 233, 0.98), rgba(232, 221, 204, 0.96));
     background-color: #efe3cf;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow: hidden;
 
     .rt-panel {

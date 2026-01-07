@@ -220,6 +220,38 @@ export default class BaseActorSheet extends TooltipMixin(PrimarySheetMixin(
                 el.addEventListener("dragstart", this._onDragItem.bind(this), false);
             }
         });
+
+        // Legacy panel toggle handlers for V1 templates
+        // These use .sheet-control__hide-control class with data-toggle attribute
+        this.element.querySelectorAll(".sheet-control__hide-control").forEach(el => {
+            el.addEventListener("click", this._onLegacyPanelToggle.bind(this));
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle legacy panel toggle clicks from V1 templates.
+     * Uses the data-toggle attribute to identify which section to expand/collapse.
+     * @param {Event} event  The click event.
+     * @protected
+     */
+    async _onLegacyPanelToggle(event) {
+        event.preventDefault();
+        const target = event.currentTarget.dataset.toggle;
+        if (!target) return;
+
+        // Get current expanded state from actor flags
+        const expanded = this.actor.getFlag("rogue-trader", "ui.expanded") || [];
+        const isCurrentlyExpanded = expanded.includes(target);
+
+        // Toggle the state
+        const newExpanded = isCurrentlyExpanded
+            ? expanded.filter(name => name !== target)
+            : [...expanded, target];
+
+        // Update actor flags - this will trigger a re-render
+        await this.actor.setFlag("rogue-trader", "ui.expanded", newExpanded);
     }
 
     /* -------------------------------------------- */
