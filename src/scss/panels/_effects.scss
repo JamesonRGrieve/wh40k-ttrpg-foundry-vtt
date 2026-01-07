@@ -3,42 +3,25 @@
 // ============================================
 
 .rt-effects-panel {
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
-  border-radius: 10px;
-  overflow: visible;
-}
+  // Panel styling inherits from rt-panel in _core.scss
 
-.rt-effects-header {
-  display: flex;
-  align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm $rt-space-md;
-  background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
-  border-bottom: 1px solid $rt-border-light;
-}
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
 
-.rt-effects-title {
-  margin: 0;
-  flex: 1;
-  font-family: 'Modesto Condensed', serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: $rt-text-primary;
-  white-space: nowrap;
-  
-  i {
-    margin-right: $rt-space-xs;
-    color: $rt-accent-combat;
+    i {
+      color: $rt-accent-combat;
+    }
   }
 }
 
 .rt-effects-add {
   @include rt-icon-button(24px, $rt-accent-combat, 0.7rem);
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .rt-effects-list {
-  padding: $rt-space-sm;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;

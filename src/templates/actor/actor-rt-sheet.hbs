@@ -135,145 +135,17 @@
                         {{!-- Fatigue Panel V2 - Redesigned with auto-calc transparency and manual override --}}
                         {{> systems/rogue-trader/templates/actor/panel/fatigue-panel-v2.hbs}}
 
-                        {{!-- Corruption --}}
-                        <div class="rt-panel rt-panel-corruption {{corruptionDegreeClass system.corruption}}">
-                            <div class="rt-panel-header">
-                                <span class="rt-panel-title"><i class="fas fa-skull"></i> Corruption</span>
-                                <span class="rt-degree-badge {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
-                                <button type="button" class="rt-vital-expand-btn sheet-control__hide-control" data-toggle="corruption_details" title="Manage Malignancies">
-                                    <i class="fas fa-cog"></i>
-                                </button>
-                            </div>
-                            <div class="rt-panel-body">
-                                <div class="rt-vital-display">
-                                    <div class="rt-vital-tracker">
-                                        <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.corruption" data-min="0">−</button>
-                                        <span class="rt-vital-current">{{system.corruption}}</span>
-                                        <span class="rt-vital-sep">/</span>
-                                        <span class="rt-vital-max">100</span>
-                                        <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.corruption" data-max="100">+</button>
-                                    </div>
-                                    <div class="rt-vital-bar">
-                                        <div class="rt-vital-bar-fill rt-corruption-fill" style="width: {{system.corruption}}%"></div>
-                                    </div>
-                                    <div class="rt-vital-modifier">{{corruptionModifier system.corruption}} to checks</div>
-                                </div>
-                                <div class="rt-panel-details corruption_details" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
-                                    {{#if (any actor.items "isMalignancy")}}
-                                    <div class="rt-vital-subsection">
-                                        <div class="rt-vital-subsection-header">
-                                            <span class="rt-subsection-title">Malignancies</span>
-                                            <button type="button" class="rt-add-btn item-create" data-type="malignancy" title="Add Malignancy"><i class="fas fa-plus"></i></button>
-                                        </div>
-                                        <div class="rt-affliction-list">
-                                            {{#each actor.items as |item|}}
-                                                {{#if item.isMalignancy}}
-                                                <div class="rt-affliction-row">
-                                                    <span class="rt-affliction-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                                    <button type="button" class="rt-affliction-del item-delete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                                                </div>
-                                                {{/if}}
-                                            {{/each}}
-                                        </div>
-                                    </div>
-                                    {{else}}
-                                    <div class="rt-vital-empty">
-                                        <i class="fas fa-check-circle"></i>
-                                        <span>No Malignancies</span>
-                                        <button type="button" class="rt-add-btn item-create" data-type="malignancy" title="Add Malignancy"><i class="fas fa-plus"></i></button>
-                                    </div>
-                                    {{/if}}
-                                </div>
-                            </div>
-                        </div>
+                        {{!-- Corruption Panel V2 - Redesigned with degree badges, threshold warnings, malignancy tracking --}}
+                        {{> systems/rogue-trader/templates/actor/panel/corruption-panel-v2.hbs}}
 
-                        {{!-- Insanity --}}
-                        <div class="rt-panel rt-panel-insanity {{insanityDegreeClass system.insanity}}">
-                            <div class="rt-panel-header">
-                                <span class="rt-panel-title"><i class="fas fa-brain"></i> Insanity</span>
-                                <span class="rt-degree-badge {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
-                                <button type="button" class="rt-vital-expand-btn sheet-control__hide-control" data-toggle="insanity_details" title="Manage Disorders">
-                                    <i class="fas fa-cog"></i>
-                                </button>
-                            </div>
-                            <div class="rt-panel-body">
-                                <div class="rt-vital-display">
-                                    <div class="rt-vital-tracker">
-                                        <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.insanity" data-min="0">−</button>
-                                        <span class="rt-vital-current">{{system.insanity}}</span>
-                                        <span class="rt-vital-sep">/</span>
-                                        <span class="rt-vital-max">100</span>
-                                        <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.insanity" data-max="100">+</button>
-                                    </div>
-                                    <div class="rt-vital-bar">
-                                        <div class="rt-vital-bar-fill rt-insanity-fill" style="width: {{system.insanity}}%"></div>
-                                    </div>
-                                    <div class="rt-vital-modifier">{{insanityModifier system.insanity}} to checks</div>
-                                </div>
-                                <div class="rt-panel-details insanity_details" {{hideIfNot (isExpanded 'insanity_details' actor)}}>
-                                    {{#if (any actor.items "isMentalDisorder")}}
-                                    <div class="rt-vital-subsection">
-                                        <div class="rt-vital-subsection-header">
-                                            <span class="rt-subsection-title">Mental Disorders</span>
-                                            <button type="button" class="rt-add-btn item-create" data-type="mentalDisorder" title="Add Mental Disorder"><i class="fas fa-plus"></i></button>
-                                        </div>
-                                        <div class="rt-affliction-list">
-                                            {{#each actor.items as |item|}}
-                                                {{#if item.isMentalDisorder}}
-                                                <div class="rt-affliction-row">
-                                                    <span class="rt-affliction-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                                    <button type="button" class="rt-affliction-del item-delete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                                                </div>
-                                                {{/if}}
-                                            {{/each}}
-                                        </div>
-                                    </div>
-                                    {{else}}
-                                    <div class="rt-vital-empty">
-                                        <i class="fas fa-check-circle"></i>
-                                        <span>No Mental Disorders</span>
-                                        <button type="button" class="rt-add-btn item-create" data-type="mentalDisorder" title="Add Mental Disorder"><i class="fas fa-plus"></i></button>
-                                    </div>
-                                    {{/if}}
-                                </div>
-                            </div>
-                        </div>
+                        {{!-- Insanity Panel V2 - Redesigned with degree badges, threshold warnings, mental disorder tracking --}}
+                        {{> systems/rogue-trader/templates/actor/panel/insanity-panel-v2.hbs}}
                     </div>
 
                     {{!-- Right Column --}}
                     <div class="rt-overview-col">
-                        {{!-- Fate --}}
-                        <div class="rt-panel rt-vitals-panel rt-fate-panel">
-                            <div class="rt-panel-header">
-                                <span class="rt-panel-title"><i class="fas fa-star"></i> Fate Points</span>
-                                <button type="button" class="rt-vital-expand-btn sheet-control__hide-control" data-toggle="fate_details" title="Edit Fate">
-                                    <i class="fas fa-cog"></i>
-                                </button>
-                            </div>
-                            <div class="rt-panel-body">
-                                <div class="rt-vital-display">
-                                    <div class="rt-vital-tracker">
-                                        <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.fate.value" data-min="0">−</button>
-                                        <span class="rt-vital-current rt-fate-value">{{system.fate.value}}</span>
-                                        <span class="rt-vital-sep">/</span>
-                                        <span class="rt-vital-max">{{system.fate.max}}</span>
-                                        <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.fate.value" data-max="{{system.fate.max}}">+</button>
-                                    </div>
-                                </div>
-                                <div class="rt-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details' actor)}}>
-                                    <div class="rt-vital-edit-grid">
-                                        <label class="rt-vital-edit-field">
-                                            <span class="rt-edit-label">Max Fate</span>
-                                            <input type="number" data-dtype="Number" class="rt-vital-input" name="system.fate.max" value="{{system.fate.max}}" min="0" />
-                                        </label>
-                                        <label class="rt-vital-edit-field">
-                                            <span class="rt-edit-label">Current</span>
-                                            <input type="number" data-dtype="Number" class="rt-vital-input" name="system.fate.value" value="{{system.fate.value}}" min="0" />
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {{!-- Fate Panel V2 - Redesigned with golden star pips and spending menu --}}
+                        {{> systems/rogue-trader/templates/actor/panel/fate-panel-v2.hbs}}
 
                         {{!-- Movement & Capacity --}}
                         <div class="rt-panel rt-panel-movement">

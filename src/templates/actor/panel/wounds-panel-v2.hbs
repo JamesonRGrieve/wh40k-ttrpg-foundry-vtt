@@ -1,16 +1,14 @@
 {{!-- Redesigned Wounds Panel - Modern, Interactive, Player-Friendly --}}
 <div class="rt-panel rt-wounds-panel-v2 {{#if (eq system.wounds.value 0)}}rt-wounds-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}rt-wounds-warning{{/if}}">
 
-    {{!-- Panel Header --}}
-    <div class="rt-panel-header">
+    {{!-- Panel Header - Click to expand/collapse --}}
+    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+         data-toggle="wounds_details"
+         title="Click to {{#if (isExpanded 'wounds_details' actor)}}collapse{{else}}expand{{/if}}">
         <span class="rt-panel-title">
             <i class="fas fa-heart-broken"></i> Wounds
         </span>
-        <button type="button" class="rt-vital-expand-btn sheet-control__hide-control"
-                data-toggle="wounds_details"
-                title="{{#if (isExpanded 'wounds_details' actor)}}Hide Details{{else}}Edit Wounds{{/if}}">
-            <i class="fas {{#if (isExpanded 'wounds_details' actor)}}fa-chevron-up{{else}}fa-cog{{/if}}"></i>
-        </button>
+        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'wounds_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
     </div>
 
     {{!-- Panel Body --}}
@@ -44,12 +42,26 @@
                 </button>
             </div>
 
-            {{!-- Progress Bar with Gradient --}}
+            {{!-- Progress Bar with Gradient and Threshold Markers --}}
             <div class="rt-wounds-bar-container">
                 <div class="rt-wounds-bar"
                      data-percent="{{percent system.wounds.value system.wounds.max}}"
                      style="--wounds-percent: {{percent system.wounds.value system.wounds.max}}%">
                     <div class="rt-wounds-bar-fill"></div>
+
+                    {{!-- Threshold Markers --}}
+                    <div class="rt-threshold-marker" style="left: 25%;" title="Severely Injured (25%)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">25%</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 50%;" title="Half Health (50%)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">50%</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 75%;" title="Good Health (75%)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">75%</span>
+                    </div>
                 </div>
                 <span class="rt-wounds-percent">{{percent system.wounds.value system.wounds.max}}%</span>
             </div>

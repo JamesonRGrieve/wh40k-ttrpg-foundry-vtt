@@ -1,0 +1,214 @@
+{{!-- Redesigned Corruption Panel - Degree Badges, Threshold Warnings, Malignancy Tracking --}}
+<div class="rt-panel rt-corruption-panel-v2 {{corruptionDegreeClass system.corruption}}">
+
+    {{!-- Panel Header - Click to expand/collapse --}}
+    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+         data-toggle="corruption_details"
+         title="Click to {{#if (isExpanded 'corruption_details' actor)}}collapse{{else}}expand{{/if}}">
+        <span class="rt-panel-title">
+            <i class="fas fa-skull"></i> Corruption
+        </span>
+        <span class="rt-corruption-degree-badge {{corruptionDegreeClass system.corruption}}">
+            {{corruptionDegree system.corruption}}
+        </span>
+        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'corruption_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
+    </div>
+
+    {{!-- Panel Body --}}
+    <div class="rt-panel-body">
+
+        {{!-- Main Display --}}
+        <div class="rt-corruption-display">
+
+            {{!-- Current Value & Modifier --}}
+            <div class="rt-corruption-header">
+                <div class="rt-corruption-value">
+                    <button type="button"
+                            class="rt-corruption-btn rt-corruption-minus"
+                            data-action="decrement"
+                            data-field="system.corruption"
+                            data-min="0"
+                            title="Reduce Corruption">
+                        <i class="fas fa-minus"></i>
+                    </button>
+
+                    <div class="rt-corruption-number">
+                        <span class="rt-corruption-current">{{system.corruption}}</span>
+                        <span class="rt-corruption-max">/ 100</span>
+                    </div>
+
+                    <button type="button"
+                            class="rt-corruption-btn rt-corruption-plus"
+                            data-action="increment"
+                            data-field="system.corruption"
+                            data-max="100"
+                            title="Increase Corruption">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="rt-corruption-modifier">
+                    <span class="rt-modifier-label">Modifier:</span>
+                    <span class="rt-modifier-value">{{corruptionModifier system.corruption}}</span>
+                </div>
+            </div>
+
+            {{!-- Progress Bar with Threshold Markers --}}
+            <div class="rt-corruption-bar-container">
+                <div class="rt-corruption-bar">
+                    <div class="rt-corruption-bar-fill" style="width: {{system.corruption}}%"></div>
+
+                    {{!-- Threshold Markers --}}
+                    <div class="rt-threshold-marker" style="left: 30%;" title="TAINTED → SOILED (30)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">30</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 60%;" title="SOILED → DEBASED (60)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">60</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 90%;" title="DEBASED → PROFANE (90)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">90</span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Purity Seal Visual (cracks at high corruption) --}}
+            <div class="rt-purity-seal {{#if (gte system.corruption 60)}}rt-seal-cracked{{/if}} {{#if (gte system.corruption 90)}}rt-seal-burning{{/if}}">
+                <i class="fas fa-certificate"></i>
+                <span class="rt-seal-text">Purity Seal</span>
+            </div>
+
+            {{!-- Warning Messages at Thresholds --}}
+            {{#if (eq system.corruption 100)}}
+            <div class="rt-corruption-alert rt-alert-damned">
+                <i class="fas fa-fire-alt"></i>
+                <span>DAMNED - Soul Lost to Chaos!</span>
+            </div>
+            {{else if (gte system.corruption 90)}}
+            <div class="rt-corruption-alert rt-alert-profane">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>PROFANE - On the Edge of Damnation (-30)</span>
+            </div>
+            {{else if (gte system.corruption 60)}}
+            <div class="rt-corruption-alert rt-alert-debased">
+                <i class="fas fa-skull-crossbones"></i>
+                <span>DEBASED - Deeply Corrupted (-20)</span>
+            </div>
+            {{/if}}
+
+        </div>
+
+        {{!-- Malignancies Section (always visible if any exist) --}}
+        {{#if (any actor.items "isMalignancy")}}
+        <div class="rt-malignancy-preview">
+            <div class="rt-malignancy-count">
+                <i class="fas fa-biohazard"></i>
+                <span>{{countType actor.items "isMalignancy"}} Malignancies</span>
+            </div>
+        </div>
+        {{/if}}
+
+        {{!-- Edit Mode (Expandable) --}}
+        <div class="rt-panel-details corruption_details" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
+
+            {{!-- Direct Edit Section --}}
+            <div class="rt-corruption-edit-section">
+                <div class="rt-corruption-edit-header">
+                    <i class="fas fa-cog"></i> Edit Corruption
+                </div>
+
+                <div class="rt-corruption-edit-field">
+                    <label class="rt-edit-label">Corruption Points (0-100)</label>
+                    <input type="number"
+                           data-dtype="Number"
+                           class="rt-edit-input"
+                           name="system.corruption"
+                           value="{{system.corruption}}"
+                           min="0"
+                           max="100"
+                           placeholder="0" />
+                </div>
+
+                {{!-- Quick Set Buttons --}}
+                <div class="rt-corruption-quick-set">
+                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="0" title="Set to 0 (PURE)">
+                        <i class="fas fa-dove"></i> PURE
+                    </button>
+                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="30" title="Set to 30 (SOILED)">
+                        30
+                    </button>
+                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="60" title="Set to 60 (DEBASED)">
+                        60
+                    </button>
+                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="90" title="Set to 90 (PROFANE)">
+                        90
+                    </button>
+                </div>
+            </div>
+
+            {{!-- Malignancies List --}}
+            <div class="rt-corruption-edit-section">
+                <div class="rt-corruption-edit-header">
+                    <i class="fas fa-biohazard"></i> Malignancies
+                    <button type="button"
+                            class="rt-add-btn-small item-create"
+                            data-type="malignancy"
+                            title="Add Malignancy">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                {{#if (any actor.items "isMalignancy")}}
+                <div class="rt-malignancy-list">
+                    {{#each actor.items as |item|}}
+                        {{#if item.isMalignancy}}
+                        <div class="rt-malignancy-card">
+                            <button type="button"
+                                    class="rt-malignancy-name item-edit"
+                                    data-item-id="{{item.id}}"
+                                    title="Edit {{item.name}}">
+                                <i class="fas fa-virus"></i>
+                                {{item.name}}
+                            </button>
+                            <button type="button"
+                                    class="rt-malignancy-delete item-delete"
+                                    data-item-id="{{item.id}}"
+                                    title="Remove {{item.name}}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        {{/if}}
+                    {{/each}}
+                </div>
+                {{else}}
+                <div class="rt-corruption-empty">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>No malignancies (yet)</span>
+                </div>
+                {{/if}}
+            </div>
+
+            {{!-- Info Section --}}
+            <div class="rt-corruption-edit-section">
+                <div class="rt-corruption-info-box">
+                    <i class="fas fa-book-dead"></i>
+                    <div class="rt-info-content">
+                        <strong>Corruption Degrees</strong>
+                        <ul class="rt-degree-list">
+                            <li><span class="rt-degree-name">PURE (0):</span> Untainted by Chaos - No penalty</li>
+                            <li><span class="rt-degree-name">TAINTED (1-30):</span> Minor exposure - No penalty</li>
+                            <li><span class="rt-degree-name">SOILED (31-60):</span> Visibly corrupted - <strong>-10</strong> to checks</li>
+                            <li><span class="rt-degree-name">DEBASED (61-90):</span> Deeply fallen - <strong>-20</strong> to checks</li>
+                            <li><span class="rt-degree-name">PROFANE (91-99):</span> On the edge - <strong>-30</strong> to checks</li>
+                            <li><span class="rt-degree-name rt-degree-damned">DAMNED (100):</span> Soul lost to Chaos - <strong>NPC only</strong></li>
+                        </ul>
+                        <p class="rt-corruption-warning"><i class="fas fa-skull"></i> Malignancies are physical and mental manifestations of Chaos corruption.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

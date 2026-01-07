@@ -1,11 +1,14 @@
-<div class="rt-panel rt-effects-panel rt-grid-col-2">
-    <div class="rt-effects-header">
-        <h3 class="rt-effects-title"><i class="fas fa-bolt"></i> Active Effects</h3>
+<div class="rt-panel rt-effects-panel">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title">
+            <i class="fas fa-bolt"></i> Active Effects
+        </span>
         <button type="button" class="rt-effects-add effect-create" title="Add Effect">
             <i class="fas fa-plus"></i>
         </button>
     </div>
-    <div class="rt-effects-list">
+    <div class="rt-panel-body">
+        <div class="rt-effects-list">
         {{#each effects as |effect|}}
             <div class="rt-effect-row {{#if effect.disabled}}rt-effect-disabled{{/if}}">
                 <button type="button" class="rt-effect-edit effect-edit" data-effect-id="{{effect.id}}" title="Edit">
@@ -28,5 +31,6 @@
                 </div>
             </div>
         {{/each}}
+        </div>
     </div>
 </div>

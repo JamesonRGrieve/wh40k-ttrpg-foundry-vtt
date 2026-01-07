@@ -189,8 +189,8 @@ $rt-panel-movement: rgb(42, 122, 154);
 
 .rt-effects-panel {
     border-left: 3px solid rgba($rt-panel-movement, 0.65);
-    
-    .rt-effects-header {
+
+    .rt-panel-header {
         background: linear-gradient(180deg, rgba($rt-panel-movement, 0.12), transparent);
     }
 }
