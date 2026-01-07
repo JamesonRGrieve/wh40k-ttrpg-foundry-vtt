@@ -36,9 +36,27 @@
 
 ---
 
+### Priority 1: Quick Wins (Session 2 - 2026-01-07)
+
+- [x] **Item 5**: Implement Search & Filter for Equipment ✅
+  - Added search box with clear button functionality
+  - Added type filter (All, Weapons, Armour, Gear, Cybernetics, Force Fields)
+  - Added status filter (All Items, Equipped, Unequipped)
+  - Real-time filtering with "No results" message
+  - Styled controls with focus states and transitions
+  - Files:
+    - `src/templates/actor/panel/loadout-equipment-panel.hbs`
+    - `src/module/applications/actor/acolyte-sheet.mjs` (#filterEquipment, #clearEquipmentSearch)
+    - `src/scss/panels/_loadout.scss`
+
+**Total Time**: ~3 hours
+**Build Status**: ✅ All builds passing
+
+---
+
 ## In Progress 🚧
 
-*Ready for Priority 1: Quick Wins*
+*Ready for next Quick Win item*
 
 ---
 

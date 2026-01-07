@@ -38,6 +38,110 @@
   }
 }
 
+// Search and Filter Controls
+.rt-equipment-controls {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: rgba(0, 0, 0, 0.05);
+  border-top: 1px solid $rt-border-medium;
+  border-bottom: 1px solid $rt-border-medium;
+}
+
+.rt-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.rt-search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rt-equipment-search {
+  flex: 1;
+  padding: 8px 36px 8px 36px; // Space for icon and clear button
+  border: 1px solid $rt-border-medium;
+  border-radius: 4px;
+  background: var(--color-input-bg, #fff);
+  color: var(--color-text-primary);
+  font-size: $rt-font-size-base;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $rt-accent-gold;
+    box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.15);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+    font-style: italic;
+  }
+}
+
+.rt-search-clear {
+  position: absolute;
+  right: 8px;
+  display: none; // Hidden by default, shown via JS when search has content
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  z-index: 1;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--color-text-primary);
+  }
+
+  i {
+    font-size: 12px;
+  }
+}
+
+.rt-filter-controls {
+  display: flex;
+  gap: $rt-space-sm;
+}
+
+.rt-equipment-type-filter,
+.rt-equipment-status-filter {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid $rt-border-medium;
+  border-radius: 4px;
+  background: var(--color-input-bg, #fff);
+  color: var(--color-text-primary);
+  font-size: $rt-font-size-sm;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $rt-accent-gold;
+    box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.15);
+  }
+
+  &:hover {
+    border-color: darken($rt-border-medium, 10%);
+  }
+}
+
 .rt-encumbrance-bar-wrapper {
   display: flex;
   align-items: center;
@@ -349,6 +453,29 @@
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: $rt-space-xs;
   margin-bottom: $rt-space-sm;
+}
+
+// No Results Message
+.rt-no-results {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-lg;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  text-align: center;
+
+  i {
+    font-size: 2rem;
+    opacity: 0.5;
+  }
+
+  span {
+    font-size: $rt-font-size-base;
+  }
 }
 
 .rt-inventory-card {

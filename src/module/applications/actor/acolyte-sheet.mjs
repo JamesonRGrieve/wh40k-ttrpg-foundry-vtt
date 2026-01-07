@@ -36,7 +36,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             stowItem: AcolyteSheet.#stowItem,
             unstowItem: AcolyteSheet.#unstowItem,
             toggleActivate: AcolyteSheet.#toggleActivate,
-            
+            filterEquipment: AcolyteSheet.#filterEquipment,
+            clearEquipmentSearch: AcolyteSheet.#clearEquipmentSearch,
+
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
             removeAcquisition: AcolyteSheet.#removeAcquisition,
@@ -1091,6 +1093,88 @@ export default class AcolyteSheet extends BaseActorSheet {
         } catch (error) {
             ui.notifications.error(`Failed to vocalize bonus: ${error.message}`);
             console.error("Bonus vocalize error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Equipment Filtering        */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle equipment filtering (search and type/status filters).
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static #filterEquipment(event, target) {
+        const equipmentPanel = this.element.querySelector('.rt-all-items-grid');
+        if (!equipmentPanel) return;
+
+        // Get filter values
+        const searchInput = this.element.querySelector('.rt-equipment-search');
+        const typeFilter = this.element.querySelector('.rt-equipment-type-filter');
+        const statusFilter = this.element.querySelector('.rt-equipment-status-filter');
+
+        const searchTerm = searchInput?.value.toLowerCase() || '';
+        const typeValue = typeFilter?.value || '';
+        const statusValue = statusFilter?.value || '';
+
+        // Get all item cards
+        const itemCards = equipmentPanel.querySelectorAll('.rt-inventory-card');
+
+        let visibleCount = 0;
+
+        itemCards.forEach(card => {
+            const itemName = card.getAttribute('title')?.toLowerCase() || '';
+            const itemType = card.getAttribute('data-item-type') || '';
+            const isEquipped = card.querySelector('.rt-inv-equipped') !== null;
+
+            // Check filters
+            const matchesSearch = !searchTerm || itemName.includes(searchTerm);
+            const matchesType = !typeValue || itemType === typeValue;
+            const matchesStatus = !statusValue ||
+                (statusValue === 'equipped' && isEquipped) ||
+                (statusValue === 'unequipped' && !isEquipped);
+
+            // Show/hide card
+            if (matchesSearch && matchesType && matchesStatus) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Toggle clear button visibility
+        const clearBtn = this.element.querySelector('.rt-search-clear');
+        if (clearBtn) {
+            clearBtn.style.display = searchTerm ? 'flex' : 'none';
+        }
+
+        // Show message if no results
+        const existingMsg = equipmentPanel.querySelector('.rt-no-results');
+        if (existingMsg) existingMsg.remove();
+
+        if (visibleCount === 0 && itemCards.length > 0) {
+            const noResults = document.createElement('div');
+            noResults.className = 'rt-no-results';
+            noResults.innerHTML = '<i class="fas fa-search"></i><span>No items match your filters</span>';
+            equipmentPanel.appendChild(noResults);
+        }
+    }
+
+    /**
+     * Handle clearing equipment search.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static #clearEquipmentSearch(event, target) {
+        const searchInput = this.element.querySelector('.rt-equipment-search');
+        if (searchInput) {
+            searchInput.value = '';
+            // Trigger filter update
+            this.constructor.#filterEquipment.call(this, event, searchInput);
         }
     }
 }
