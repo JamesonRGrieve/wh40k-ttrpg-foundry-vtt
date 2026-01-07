@@ -4,4 +4,4 @@
  */
 
 // Re-export from V2 implementation for backward compatibility
-export { ForceFieldDialog, prepareForceFieldRoll } from "../applications/prompts/force-field-dialog.mjs";
+export { default as ForceFieldDialog, prepareForceFieldRoll } from "../applications/prompts/force-field-dialog.mjs";

@@ -4,4 +4,4 @@
  */
 
 // Re-export from V2 implementation for backward compatibility
-export { PsychicPowerDialog, preparePsychicPowerRoll } from "../applications/prompts/psychic-power-dialog.mjs";
+export { default as PsychicPowerDialog, preparePsychicPowerRoll } from "../applications/prompts/psychic-power-dialog.mjs";

@@ -4,4 +4,4 @@
  */
 
 // Re-export from V2 implementation for backward compatibility
-export { WeaponAttackDialog, prepareWeaponRoll } from "../applications/prompts/weapon-attack-dialog.mjs";
+export { default as WeaponAttackDialog, prepareWeaponRoll } from "../applications/prompts/weapon-attack-dialog.mjs";
