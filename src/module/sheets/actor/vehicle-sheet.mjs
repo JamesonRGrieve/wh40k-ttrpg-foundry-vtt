@@ -6,6 +6,7 @@ export class VehicleSheet extends ActorContainerSheet {
             width: 1000,
             height: 750,
             resizable: true,
+            submitOnChange: true,
             tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'main' }],
         });
     }

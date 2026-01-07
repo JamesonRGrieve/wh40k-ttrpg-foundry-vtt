@@ -1,82 +1,139 @@
 /**
- * Rogue Trader Compendium Browser
+ * Rogue Trader Compendium Browser - ApplicationV2
  * Enhanced compendium browsing with filtering, searching, and type organization
  */
 
-export class RTCompendiumBrowser extends Application {
+import ApplicationV2Mixin from "./api/application-v2-mixin.mjs";
+
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+/**
+ * Compendium browser for browsing and filtering RT system compendiums.
+ */
+export class RTCompendiumBrowser extends ApplicationV2Mixin(HandlebarsApplicationMixin(ApplicationV2)) {
     constructor(options = {}) {
         super(options);
         this._filters = {
-            type: options.type || 'all',
-            search: '',
-            source: 'all',
-            category: 'all',
-            groupBy: options.groupBy || 'source'
+            type: options.type || "all",
+            search: "",
+            source: "all",
+            category: "all",
+            groupBy: options.groupBy || "source"
         };
     }
 
-    static get defaultOptions() {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: 'rt-compendium-browser',
-            classes: ['rt-compendium-browser'],
-            template: 'systems/rogue-trader/templates/applications/compendium-browser.hbs',
-            width: 900,
-            height: 700,
-            resizable: true,
-            title: 'RT Compendium Browser',
-            tabs: [{
-                navSelector: '.tabs',
-                contentSelector: '.content',
-                initial: 'items'
-            }]
-        });
-    }
+    /* -------------------------------------------- */
 
-    async getData() {
-        const data = await super.getData();
+    /** @override */
+    static DEFAULT_OPTIONS = {
+        id: "rt-compendium-browser",
+        classes: ["rt-compendium-browser", "standard-form"],
+        tag: "div",
+        actions: {
+            clearFilters: RTCompendiumBrowser.#clearFilters,
+            openItem: RTCompendiumBrowser.#openItem
+        },
+        position: {
+            width: 900,
+            height: 700
+        },
+        window: {
+            title: "RT Compendium Browser",
+            resizable: true,
+            minimizable: true
+        }
+    };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    static PARTS = {
+        browser: {
+            template: "systems/rogue-trader/templates/applications/compendium-browser.hbs",
+            scrollable: [".content"]
+        }
+    };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    static TABS = [
+        { id: "items", group: "primary", label: "Items" },
+        { id: "actors", group: "primary", label: "Actors" }
+    ];
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    tabGroups = {
+        primary: "items"
+    };
+
+    /* -------------------------------------------- */
+    /*  Rendering                                   */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
         
-        const packs = game.packs.filter(p => p.metadata.system === 'rogue-trader');
+        const packs = game.packs.filter(p => p.metadata.system === "rogue-trader");
         
-        data.tabs = {
+        context.tabs = {
             items: {
-                label: 'Items',
-                packs: packs.filter(p => p.documentName === 'Item'),
-                icon: 'fa-suitcase'
+                label: "Items",
+                packs: packs.filter(p => p.documentName === "Item"),
+                icon: "fa-suitcase"
             },
             actors: {
-                label: 'Actors',
-                packs: packs.filter(p => p.documentName === 'Actor'),
-                icon: 'fa-users'
+                label: "Actors",
+                packs: packs.filter(p => p.documentName === "Actor"),
+                icon: "fa-users"
             }
         };
 
-        data.sources = await this._getSources();
-        data.categories = await this._getCategories();
-        data.filters = this._filters;
-        data.results = await this._getFilteredResults();
-        data.groupByOptions = this._getGroupByOptions();
-        data.groupedResults = this._groupResults(data.results);
+        context.sources = await this._getSources();
+        context.categories = await this._getCategories();
+        context.filters = this._filters;
+        context.results = await this._getFilteredResults();
+        context.groupByOptions = this._getGroupByOptions();
+        context.groupedResults = this._groupResults(context.results);
         
-        return data;
+        return context;
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        html.find('.search-input').on('input', this._onSearch.bind(this));
-        html.find('.filter-source').on('change', this._onFilterSource.bind(this));
-        html.find('.filter-category').on('change', this._onFilterCategory.bind(this));
-        html.find('.filter-group-by').on('change', this._onGroupBy.bind(this));
-        html.find('.clear-filters').on('click', this._onClearFilters.bind(this));
-        html.find('.compendium-item').on('click', this._onItemClick.bind(this));
-        html.find('.compendium-item').on('dragstart', this._onDragStart.bind(this));
+    /* -------------------------------------------- */
+    /*  Event Listeners                             */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        // Set up event listeners
+        this.element.querySelector(".search-input")?.addEventListener("input", this._onSearch.bind(this));
+        this.element.querySelector(".filter-source")?.addEventListener("change", this._onFilterSource.bind(this));
+        this.element.querySelector(".filter-category")?.addEventListener("change", this._onFilterCategory.bind(this));
+        this.element.querySelector(".filter-group-by")?.addEventListener("change", this._onGroupBy.bind(this));
+
+        // Set up drag handlers for compendium items
+        this.element.querySelectorAll(".compendium-item").forEach(el => {
+            el.setAttribute("draggable", true);
+            el.addEventListener("dragstart", this._onDragStart.bind(this));
+            el.addEventListener("click", this._onItemClick.bind(this));
+        });
     }
+
+    /* -------------------------------------------- */
+    /*  Data Methods                                */
+    /* -------------------------------------------- */
 
     async _getSources() {
         const sources = new Set();
-        const packs = game.packs.filter(p => p.metadata.system === 'rogue-trader' && p.documentName === 'Item');
+        const packs = game.packs.filter(p => p.metadata.system === "rogue-trader" && p.documentName === "Item");
         
         for (const pack of packs) {
-            const index = await pack.getIndex({ fields: ['system.source'] });
+            const index = await pack.getIndex({ fields: ["system.source"] });
             for (const entry of index) {
                 const source = this._getEntrySource(entry);
                 if (source) sources.add(source);
@@ -197,12 +254,16 @@ export class RTCompendiumBrowser extends Application {
             if (this._getEntrySource(entry) !== this._filters.source) return false;
         }
         
-        if (this._filters.category !== 'all') {
+        if (this._filters.category !== "all") {
             if (this._getEntryCategory(entry) !== this._filters.category) return false;
         }
         
         return true;
     }
+
+    /* -------------------------------------------- */
+    /*  Instance Event Handlers                     */
+    /* -------------------------------------------- */
 
     _onSearch(event) {
         this._filters.search = event.target.value;
@@ -224,11 +285,6 @@ export class RTCompendiumBrowser extends Application {
         this.render();
     }
 
-    _onClearFilters() {
-        this._filters = { type: 'all', search: '', source: 'all', category: 'all', groupBy: 'source' };
-        this.render();
-    }
-
     async _onItemClick(event) {
         event.preventDefault();
         const uuid = event.currentTarget.dataset.uuid;
@@ -238,12 +294,48 @@ export class RTCompendiumBrowser extends Application {
 
     _onDragStart(event) {
         const uuid = event.currentTarget.dataset.uuid;
-        event.dataTransfer.setData('text/plain', JSON.stringify({
-            type: 'Item',
+        event.dataTransfer.setData("text/plain", JSON.stringify({
+            type: "Item",
             uuid: uuid
         }));
     }
 
+    /* -------------------------------------------- */
+    /*  Static Action Handlers                      */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle clearing all filters.
+     * @this {RTCompendiumBrowser}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static #clearFilters(event, target) {
+        this._filters = { type: "all", search: "", source: "all", category: "all", groupBy: "source" };
+        this.render();
+    }
+
+    /**
+     * Handle opening an item from the browser.
+     * @this {RTCompendiumBrowser}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #openItem(event, target) {
+        const uuid = target.dataset.uuid;
+        const doc = await fromUuid(uuid);
+        if (doc) doc.sheet.render(true);
+    }
+
+    /* -------------------------------------------- */
+    /*  Static Methods                              */
+    /* -------------------------------------------- */
+
+    /**
+     * Open a new compendium browser instance.
+     * @param {object} options  Options to pass to the browser.
+     * @returns {RTCompendiumBrowser}
+     */
     static open(options = {}) {
         return new RTCompendiumBrowser(options).render(true);
     }

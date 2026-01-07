@@ -6,6 +6,7 @@ export class StarshipSheet extends ActorContainerSheet {
             width: 900,
             height: 700,
             resizable: true,
+            submitOnChange: true,
             tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'stats' }],
         });
     }
