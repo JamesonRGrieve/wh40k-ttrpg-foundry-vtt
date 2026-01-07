@@ -47,7 +47,7 @@
 .rt-enc-label {
   font-size: $rt-font-size-sm;
   font-weight: 600;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .rt-encumbrance-bar-container {
@@ -83,7 +83,7 @@
 .rt-enc-text {
   font-size: $rt-font-size-sm;
   font-weight: 600;
-  color: $rt-text-primary;
+  color: var(--color-text-primary);
   white-space: nowrap;
 }
 
@@ -135,13 +135,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .rt-lift-value {
   font-size: 0.95rem;
   font-weight: 700;
-  color: $rt-text-primary;
+  color: var(--color-text-primary);
 }
 
 // ============================================
@@ -173,7 +173,7 @@
 .rt-backpack-text {
   font-size: $rt-font-size-sm;
   font-weight: 600;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
@@ -301,7 +301,7 @@
   &:hover {
     background: rgba($rt-accent-gold, 0.1);
     border-color: rgba($rt-accent-gold, 0.4);
-    color: $rt-text-secondary;
+    color: var(--color-text-secondary);
     
     i {
       color: $rt-accent-gold;
@@ -323,11 +323,11 @@
 .rt-dropzone-text {
   font-size: $rt-font-size-sm;
   font-weight: 500;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   text-align: center;
   
   .rt-dropzone:hover & {
-    color: $rt-text-primary;
+    color: var(--color-text-primary);
   }
 }
 
@@ -396,7 +396,7 @@
 .rt-inv-card-name {
   font-size: 0.75rem;
   font-weight: 600;
-  color: $rt-text-primary;
+  color: var(--color-text-primary);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;

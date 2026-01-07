@@ -1,7 +1,7 @@
 // ============================================
 // Global Input Field Styling Override
 // ============================================
-// Replaces blue input colors with neutral/warm tones
+// Uses theme-aware CSS custom properties
 
 .rt-sheet,
 .dh-actor {
@@ -12,20 +12,20 @@
   input[type="password"],
   textarea,
   select {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e8e6e3;
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-dark);
     transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      background: rgba(0, 0, 0, 0.3);
-      border-color: rgba(192, 128, 32, 0.5);
+      background: var(--rt-input-bg-focus);
+      border-color: var(--rt-gold);
       box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
     }
 
     &::placeholder {
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--rt-text-subtle);
     }
 
     &:disabled {
@@ -39,12 +39,12 @@
   .rt-field__input,
   .dh-header__input,
   .rt-header__input {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
 
     &:focus {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: rgba(192, 128, 32, 0.5);
+      background: var(--rt-input-bg-focus);
+      border-color: var(--rt-gold);
       box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
     }
   }
@@ -52,31 +52,25 @@
   // Settings inputs
   .rt-settings__input,
   .dh-settings__input {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
 
     &:focus {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: rgba(192, 128, 32, 0.5);
+      background: var(--rt-input-bg-focus);
+      border-color: var(--rt-gold);
     }
   }
 
   // Table inputs
   .table-cell input,
   .rt-table input {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
 
     &:focus {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: rgba(192, 128, 32, 0.5);
+      background: var(--rt-input-bg-focus);
+      border-color: var(--rt-gold);
     }
-  }
-
-  // Override any remaining blue backgrounds
-  *[style*="rgba(36, 107, 131"],
-  *[style*="rgba(51, 129, 155"] {
-    background: rgba(0, 0, 0, 0.2) !important;
   }
 }
 
@@ -84,13 +78,13 @@
 .rt-char-hud-field {
   input,
   select {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #e8e6e3;
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-dark);
 
     &:focus {
-      background: rgba(0, 0, 0, 0.4);
-      border-color: rgba(192, 128, 32, 0.5);
+      background: var(--rt-input-bg-focus);
+      border-color: var(--rt-gold);
       box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
     }
   }
@@ -99,40 +93,40 @@
 // Combat inputs
 .rt-combat-input,
 .rt-stat-input {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
 
   &:focus {
-    background: rgba(0, 0, 0, 0.4);
-    border-color: rgba(192, 128, 32, 0.5);
+    background: var(--rt-input-bg-focus);
+    border-color: var(--rt-gold);
   }
 }
 
 // Abilities tab inputs
 .rt-ability-input,
 .dh-ability-input {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
 
   &:focus {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(192, 128, 32, 0.5);
+    background: var(--rt-input-bg-focus);
+    border-color: var(--rt-gold);
   }
 }
 
 // Grid inputs
 .dh-grid input,
 .rt-grid input {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
 
   &:focus {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(192, 128, 32, 0.5);
+    background: var(--rt-input-bg-focus);
+    border-color: var(--rt-gold);
   }
 }
 
-// Active state styling (replace blue active states)
+// Active state styling
 .active-state,
 .form-active {
   background: rgba(192, 128, 32, 0.15) !important;

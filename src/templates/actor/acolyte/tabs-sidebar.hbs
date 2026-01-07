@@ -1,13 +1,13 @@
-{{!-- Acolyte Sheet Tab Navigation --}}
-{{!-- This part renders the tab navigation bar --}}
-<nav class="rt-navigation tabs" data-group="primary">
+{{!-- Acolyte Sheet Sidebar Tab Navigation --}}
+{{!-- This part renders the tab navigation as a vertical sidebar --}}
+<nav class="rt-navigation rt-sidebar-nav tabs" data-group="primary">
     {{#each tabs}}
     <a class="item rt-nav-item {{#if active}}active{{/if}} {{ cssClass }}" 
        data-action="tab" 
        data-group="{{ group }}"
        data-tab="{{ tab }}" 
        data-tooltip="{{ label }}">
-        {{ label }}
+        <span class="nav-label">{{ label }}</span>
     </a>
     {{/each}}
 </nav>

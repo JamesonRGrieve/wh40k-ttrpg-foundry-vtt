@@ -576,52 +576,42 @@ export default function ContextMenuMixin(Base) {
         /* -------------------------------------------- */
         
         async _onCharacteristicRoll(charKey) {
-            console.log("Roll characteristic:", charKey);
             // Implement in subclass
         }
         
         async _onCharacteristicRollWithModifier(charKey) {
-            console.log("Roll characteristic with modifier:", charKey);
             // Implement in subclass
         }
         
         async _showModifierSources(charKey) {
-            console.log("Show modifier sources:", charKey);
             // Implement in subclass
         }
         
         async _onAdvanceCharacteristic(charKey) {
-            console.log("Advance characteristic:", charKey);
             // Implement in subclass
         }
         
         async _postCharacteristicToChat(charKey, char) {
-            console.log("Post to chat:", charKey, char);
             // Implement in subclass
         }
         
         async _onSkillRoll(skillKey) {
-            console.log("Roll skill:", skillKey);
             // Implement in subclass
         }
         
         async _onSkillRollWithModifier(skillKey) {
-            console.log("Roll skill with modifier:", skillKey);
             // Implement in subclass
         }
         
         async _toggleSkillTraining(skillKey, level) {
-            console.log("Toggle skill training:", skillKey, level);
             // Implement in subclass
         }
         
         async _showGoverningCharacteristic(skillKey, skill) {
-            console.log("Show governing characteristic:", skillKey, skill);
             // Implement in subclass
         }
         
         async _addSkillSpecialization(skillKey) {
-            console.log("Add skill specialization:", skillKey);
             // Implement in subclass
         }
         
@@ -645,7 +635,6 @@ export default function ContextMenuMixin(Base) {
         }
         
         async _weaponAttack(item, mode) {
-            console.log("Weapon attack:", item.name, mode);
             // Implement in subclass
         }
         
@@ -658,7 +647,6 @@ export default function ContextMenuMixin(Base) {
         }
         
         async _spendFate(purpose) {
-            console.log("Spend fate:", purpose);
             // Implement in subclass
         }
         
@@ -671,7 +659,6 @@ export default function ContextMenuMixin(Base) {
             });
             
             if (confirmed) {
-                console.log("Burn fate point");
                 // Implement in subclass
             }
         }

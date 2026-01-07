@@ -1,6 +1,7 @@
 /**
  * Enhanced Characteristic HUD V2 - Circular Progress Rings
  * Modern, interactive characteristic display with visual feedback
+ * Uses Foundry color system for theme adaptation
  */
 
 /* -------------------------------------------- */
@@ -12,7 +13,7 @@
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 1rem;
     padding: 1rem;
-    background: linear-gradient(135deg, rgba(10, 10, 10, 0.6), rgba(30, 30, 30, 0.4));
+    background: var(--color-bg-secondary);
     border-radius: 8px;
     border: 2px solid var(--rt-bronze, #cd7f32);
 }
@@ -94,8 +95,8 @@
     flex-direction: column;
     align-items: center;
     padding: 0.75rem;
-    background: linear-gradient(135deg, rgba(62, 62, 62, 0.8), rgba(40, 40, 40, 0.9));
-    border: 2px solid var(--rt-iron, #3e3e3e);
+    background: var(--color-bg-tertiary);
+    border: 2px solid var(--color-border-secondary);
     border-radius: 8px;
     transition: all 0.3s ease;
     
@@ -144,12 +145,12 @@
 
 /* Background ring */
 .rt-char-ring-bg {
-    stroke: rgba(62, 62, 62, 0.5);
+    stroke: var(--color-border-tertiary);
     transition: stroke 0.3s ease;
 }
 
 .rt-char-card:hover .rt-char-ring-bg {
-    stroke: rgba(80, 80, 80, 0.7);
+    stroke: var(--color-border-secondary);
 }
 
 /* Progress ring (advancement) */

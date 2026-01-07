@@ -1,6 +1,6 @@
 {{!-- Acolyte Sheet Powers Tab --}}
 {{!-- This part renders the Powers tab content with psychic powers, navigator powers, etc. --}}
-<div class="tab rt-tab rt-tab-powers" data-group="primary" data-tab="powers">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="rt-powers-grid">
         {{!-- Left Column: Psy Rating & Psychic Powers --}}
         <div class="rt-powers-col">
@@ -15,4 +15,4 @@
             {{> systems/rogue-trader/templates/actor/panel/rituals-panel.hbs}}
         </div>
     </div>
-</div>
+</section>

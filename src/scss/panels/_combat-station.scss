@@ -104,7 +104,7 @@
 .rt-vital-current {
   font-size: $rt-font-size-xl;
   font-weight: 700;
-  color: $rt-text-primary;
+  color: var(--color-text-primary);
   min-width: 28px;
   text-align: center;
 }
@@ -116,7 +116,7 @@
 
 .rt-vital-max {
   font-size: $rt-font-size-base;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   min-width: 24px;
 }
 
@@ -222,7 +222,7 @@
   font-size: $rt-font-size-xs;
   font-weight: 600;
   text-transform: uppercase;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .rt-reaction-target {
@@ -296,7 +296,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .rt-quick-actions-row {
@@ -476,7 +476,7 @@
 .rt-move-label {
   font-size: 0.5rem;
   font-weight: 700;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1;
@@ -489,7 +489,7 @@
   font-family: 'Modesto Condensed', serif;
   font-size: 1.2rem;
   font-weight: 700;
-  color: $rt-text-primary;
+  color: var(--color-text-primary);
   line-height: 1;
   transition: color 0.2s ease;
   white-space: nowrap;
@@ -523,7 +523,7 @@
 }
 
 .rt-ff-rating {
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   font-size: $rt-font-size-sm;
 }
 
@@ -622,7 +622,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: $rt-font-size-sm;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   
   i {
     font-size: 0.9rem;
@@ -632,7 +632,7 @@
   &:hover {
     background: rgba($rt-accent-gold, 0.1);
     border-color: rgba($rt-accent-gold, 0.4);
-    color: $rt-text-primary;
+    color: var(--color-text-primary);
     
     i {
       color: $rt-accent-gold;
@@ -654,10 +654,10 @@
 .rt-dropzone-text {
   font-size: $rt-font-size-sm;
   font-weight: 500;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
   text-align: center;
   
   .rt-dropzone:hover & {
-    color: $rt-text-primary;
+    color: var(--color-text-primary);
   }
 }

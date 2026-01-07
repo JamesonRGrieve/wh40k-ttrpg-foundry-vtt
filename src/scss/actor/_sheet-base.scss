@@ -2,16 +2,11 @@
 // ROGUE TRADER CHARACTER SHEET STYLES
 // ============================================
 
-// Override Foundry's dark theme for our sheets
-body.theme-dark .rogue-trader.sheet.actor,
-body.theme-dark.application .rogue-trader.sheet.actor {
-    --color-bg-option: rgba(250, 244, 233, 0.95);
-    --color-bg-btn-secondary-hover: rgba(240, 230, 210, 0.9);
-}
+// Theme-adaptive styles using CSS custom properties
 
 .rogue-trader.sheet.actor .window-content {
-    background: rgba(250, 244, 233, 0.95) !important;
-    background-color: rgba(245, 235, 220, 0.95) !important;
+    background: var(--rt-sheet-bg) !important;
+    background-color: var(--rt-sheet-bg-alt) !important;
     // ApplicationV2: ensure window-content uses flex to allow child scrolling
     display: flex;
     flex-direction: column;
@@ -20,7 +15,7 @@ body.theme-dark.application .rogue-trader.sheet.actor {
 
 .rt-sheet {
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
-    background: rgba(250, 244, 233, 0.95) !important;
+    background: var(--rt-sheet-bg) !important;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -30,10 +25,10 @@ body.theme-dark.application .rogue-trader.sheet.actor {
     overflow: hidden;
 
     .rt-panel {
-        background: rgba(255, 255, 255, 0.5);
-        border: 1px solid rgba(120, 46, 34, 0.45);
+        background: var(--rt-panel-bg);
+        border: 1px solid var(--rt-border-color);
         border-radius: 10px;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.05);
+        box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft);
         position: relative;
         overflow: visible;
     }
@@ -44,7 +39,7 @@ body.theme-dark.application .rogue-trader.sheet.actor {
         gap: 8px;
         padding: 8px 12px;
         background: transparent;
-        border-bottom: 1px solid rgba(120, 46, 34, 0.45);
+        border-bottom: 1px solid var(--rt-border-color);
     }
 
     .rt-panel-title {
@@ -52,16 +47,16 @@ body.theme-dark.application .rogue-trader.sheet.actor {
         font-family: 'Modesto Condensed', serif;
         font-size: 1rem;
         font-weight: 600;
-        color: #3a2820;
+        color: var(--rt-text-medium);
         letter-spacing: 0.02em;
     }
 
     .rt-panel-title i {
-        color: #7a3a2f;
+        color: var(--rt-gold);
     }
 
 .rt-panel-body {
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--rt-panel-body-bg);
     padding: 10px 12px;
     overflow: visible;
 }
@@ -72,7 +67,7 @@ body.theme-dark.application .rogue-trader.sheet.actor {
 }
 
 .dh-wrapper .rt-sheet {
-    background: rgba(250, 244, 233, 0.6) !important;
+    background: var(--rt-sheet-bg) !important;
     position: relative;
     overflow: hidden;
 }
@@ -85,7 +80,7 @@ body.theme-dark.application .rogue-trader.sheet.actor {
 .rt-panel-details {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px dashed rgba(120, 46, 34, 0.35);
+    border-top: 1px dashed var(--rt-border-color-light);
     display: grid;
     gap: 10px;
     overflow: hidden;
@@ -108,8 +103,8 @@ body.theme-dark.application .rogue-trader.sheet.actor {
     width: 24px;
     height: 24px;
     border-radius: 6px;
-    border: 1px solid rgba(120, 46, 34, 0.5);
-    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid var(--rt-border-color);
+    background: var(--rt-btn-bg);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -118,7 +113,7 @@ body.theme-dark.application .rogue-trader.sheet.actor {
 
 .rt-panel-toggle-icon {
     font-size: 0.7em;
-    color: #3a2820;
+    color: var(--rt-text-medium);
     transition: transform 0.15s ease;
 }
 
@@ -190,15 +185,15 @@ $rt-panel-movement: rgb(42, 122, 154);
 }
 
 .rt-panel > :is(.rt-vitals-body, .rt-effects-list, .rt-ability-list, .rt-specialist-entries, .dh-table--border) {
-    background: rgba(255, 255, 255, 0.35);
+    background: var(--rt-panel-bg-translucent);
     padding: 10px 12px;
     }
 
     .rt-specialist-group {
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid rgba(74, 55, 40, 0.18);
+        background: var(--rt-panel-bg-solid);
+        border: 1px solid var(--rt-border-accent);
         border-radius: 8px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 3px 10px var(--rt-shadow-soft);
         position: relative;
         overflow: hidden;
 
@@ -206,9 +201,9 @@ $rt-panel-movement: rgb(42, 122, 154);
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(36, 107, 131, 0.12);
-            border-top: 2px solid rgba(36, 107, 131, 0.25);
-            border-bottom: 2px solid rgba(36, 107, 131, 0.25);
+            background: var(--rt-accent-overlay);
+            border-top: 2px solid var(--rt-accent-border);
+            border-bottom: 2px solid var(--rt-accent-border);
             pointer-events: none;
             z-index: 0;
         }
@@ -274,8 +269,8 @@ $rt-panel-movement: rgb(42, 122, 154);
     height: 80px;
     border-radius: 6px;
     overflow: hidden;
-    border: 2px solid rgba(120, 46, 34, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--rt-border-color);
+    box-shadow: 0 2px 8px var(--rt-shadow-medium);
 }
 
 .rt-header__logo-image,
@@ -314,19 +309,19 @@ $rt-panel-movement: rgb(42, 122, 154);
 }
 
 .rt-header-bio-input {
-    border: 1px solid rgba(74, 55, 40, 0.2);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: 6px;
     padding: 6px 8px;
-    background: rgba(255, 255, 255, 0.75);
+    background: var(--rt-input-bg);
     resize: vertical;
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
     font-size: 0.9em;
-    color: #2a1a0a;
+    color: var(--rt-text-dark);
     
     &:focus {
         outline: none;
-        border-color: rgba(74, 55, 40, 0.4);
-        box-shadow: 0 0 0 2px rgba(74, 55, 40, 0.1);
+        border-color: var(--rt-border-color);
+        box-shadow: 0 0 0 2px var(--rt-shadow-soft);
     }
 }
 
@@ -360,10 +355,10 @@ $rt-panel-movement: rgb(42, 122, 154);
     max-width: 620px;
     overflow: visible;
     position: relative;
-    background: linear-gradient(180deg, rgba(40, 40, 40, 0.28), rgba(20, 20, 20, 0.22));
-    border: 1px solid rgba(20, 20, 20, 0.6);
+    background: var(--rt-hud-bg);
+    border: 1px solid var(--rt-border-color-strong);
     border-radius: 8px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.35), 0 6px 18px rgba(0, 0, 0, 0.18);
+    box-shadow: inset 0 1px 0 var(--rt-text-shadow), inset 0 -1px 0 var(--rt-shadow-medium), 0 6px 18px var(--rt-shadow-medium);
     z-index: 1;
 }
 
@@ -389,10 +384,10 @@ $rt-panel-movement: rgb(42, 122, 154);
     min-width: 0;
     position: relative;
     text-align: center;
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid rgba(25, 25, 25, 0.4);
+    background: var(--rt-hud-item-bg);
+    border: 1px solid var(--rt-border-color);
     border-radius: 6px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 2px 6px rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft);
 }
 
 .rt-char-hud-name {
@@ -404,7 +399,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     letter-spacing: 0.12em;
     font-weight: 700;
     font-size: 0.78em;
-    color: #2b2b2b;
+    color: var(--rt-text-dark);
     text-align: center;
     width: 100%;
     display: block;
@@ -419,30 +414,30 @@ $rt-panel-movement: rgb(42, 122, 154);
     align-items: center;
     justify-content: center;
     gap: 1px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(210, 210, 210, 0.65));
-    border: 2px solid rgba(20, 20, 20, 0.55);
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 3px 8px rgba(0, 0, 0, 0.16);
+    background: var(--rt-circle-bg);
+    border: 2px solid var(--rt-border-color-strong);
+    box-shadow: inset 0 1px 2px var(--rt-text-shadow), 0 3px 8px var(--rt-shadow-soft);
 }
 
 .rt-char-hud-mod {
     font-size: 1.2em;
     font-weight: 700;
-    color: #2a1a0a;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    color: var(--rt-text-dark);
+    text-shadow: 0 1px 0 var(--rt-text-shadow);
 }
 
 .rt-char-hud-mod-label {
     font-size: 0.55em;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: #6a6a6a;
+    color: var(--rt-text-muted);
 }
 
 .rt-char-hud-base {
     font-size: 0.65em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #5c5c5c;
+    color: var(--rt-text-muted);
     text-align: center;
 }
 
@@ -450,9 +445,9 @@ $rt-panel-movement: rgb(42, 122, 154);
     width: 18px;
     height: 18px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(20, 20, 20, 0.35);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 3px rgba(0, 0, 0, 0.12);
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color);
+    box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 1px 3px var(--rt-shadow-soft);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -464,7 +459,7 @@ $rt-panel-movement: rgb(42, 122, 154);
 
 .rt-char-hud-toggle-icon {
     font-size: 0.7em;
-    color: #4c4c4c;
+    color: var(--rt-text-muted);
     display: inline-block;
     transition: transform 0.15s ease;
 }
@@ -482,10 +477,10 @@ $rt-panel-movement: rgb(42, 122, 154);
     gap: 6px;
     padding: 8px;
     width: 170px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(20, 20, 20, 0.35);
+    background: var(--rt-panel-bg-solid);
+    border: 1px solid var(--rt-border-color);
     border-radius: 8px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 16px var(--rt-shadow-medium);
     z-index: 20;
 }
 
@@ -499,16 +494,17 @@ $rt-panel-movement: rgb(42, 122, 154);
     font-size: 0.6em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #6a5a43;
+    color: var(--rt-text-muted);
 }
 
 .rt-char-hud-details input,
 .rt-char-hud-details select {
     width: 100%;
-    border: 1px solid rgba(74, 55, 40, 0.25);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: 4px;
     padding: 2px 4px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--rt-input-bg);
+    color: var(--rt-text-dark);
     font-size: 0.8em;
 }
 

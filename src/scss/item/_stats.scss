@@ -7,7 +7,7 @@
   flex-wrap: wrap;
   gap: $rt-space-sm;
   padding: $rt-space-md $rt-space-lg;
-  background: $rt-bg-tertiary;
+  background: var(--color-bg-tertiary);
   border-bottom: 1px solid rgba($rt-color-gold, 0.3);
 }
 
@@ -16,8 +16,8 @@
   align-items: center;
   gap: $rt-space-xs;
   padding: $rt-space-xs $rt-space-sm;
-  background: $rt-bg-primary;
-  border: 1px solid $rt-color-steel-dark;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-md;
   font-size: $rt-font-size-sm;
   transition: all $rt-transition-fast;
@@ -36,14 +36,14 @@
   }
   
   &__label {
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     font-size: $rt-font-size-xs;
     letter-spacing: 0.05em;
   }
   
   &__value {
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
     font-weight: 600;
   }
   

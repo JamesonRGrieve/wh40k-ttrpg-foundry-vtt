@@ -40,10 +40,10 @@
 
 // Inline meta controls in header
 .rt-meta-select {
-  background: rgba($rt-color-void, 0.6);
-  border: 1px solid $rt-color-steel-dark;
+  background: rgba(var(--color-bg-primary), 0.6);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-sm;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   font-size: $rt-font-size-xs;
   padding: 2px 4px;
   cursor: pointer;
@@ -58,8 +58,8 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  background: rgba($rt-color-void, 0.6);
-  border: 1px solid $rt-color-steel-dark;
+  background: rgba(var(--color-bg-primary), 0.6);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-sm;
   padding: 0 4px;
   
@@ -67,7 +67,7 @@
     width: 40px;
     background: transparent;
     border: none;
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
     font-size: $rt-font-size-xs;
     text-align: center;
     
@@ -78,7 +78,7 @@
   
   span {
     font-size: $rt-font-size-xs;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
   }
 }
 
@@ -87,7 +87,7 @@
   align-items: center;
   gap: 3px;
   font-size: $rt-font-size-xs;
-  color: $rt-color-steel-light;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   
   input[type="checkbox"] {
@@ -114,7 +114,7 @@
     flex: 1;
     background: transparent;
     border: none;
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
     font-size: $rt-font-size-sm;
     
     &::placeholder {
@@ -141,23 +141,23 @@
   
   label {
     font-size: $rt-font-size-xs;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
   
   input {
-    background: rgba($rt-color-void, 0.4);
-    border: 1px solid $rt-color-steel-dark;
+    background: rgba(var(--color-bg-primary), 0.4);
+    border: 1px solid var(--color-border-secondary);
     border-radius: $rt-radius-sm;
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
     font-size: $rt-font-size-sm;
     padding: $rt-space-xs $rt-space-sm;
     
     &:focus {
       outline: none;
       border-color: $rt-color-gold;
-      background: rgba($rt-color-void, 0.6);
+      background: rgba(var(--color-bg-primary), 0.6);
     }
   }
   
@@ -174,16 +174,16 @@
   
   label {
     font-size: $rt-font-size-xs;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
   
   textarea {
-    background: rgba($rt-color-void, 0.4);
-    border: 1px solid $rt-color-steel-dark;
+    background: rgba(var(--color-bg-primary), 0.4);
+    border: 1px solid var(--color-border-secondary);
     border-radius: $rt-radius-sm;
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
     font-size: $rt-font-size-sm;
     padding: $rt-space-sm;
     resize: vertical;
@@ -192,7 +192,7 @@
     &:focus {
       outline: none;
       border-color: $rt-color-gold;
-      background: rgba($rt-color-void, 0.6);
+      background: rgba(var(--color-bg-primary), 0.6);
     }
   }
 }
@@ -202,33 +202,33 @@
   display: flex;
   justify-content: flex-end;
   padding-top: $rt-space-xs;
-  border-top: 1px solid rgba($rt-color-steel-dark, 0.3);
+  border-top: 1px solid rgba(var(--color-border-secondary), 0.3);
 }
 
 .rt-source-input {
   background: transparent;
   border: none;
-  color: $rt-color-steel;
+  color: var(--color-border-primary);
   font-size: $rt-font-size-xs;
   font-style: italic;
   text-align: right;
   
   &::placeholder {
-    color: rgba($rt-color-steel, 0.5);
+    color: rgba(var(--color-border-primary), 0.5);
   }
   
   &:focus {
     outline: none;
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
   }
 }
 
 // Meta text inputs (replaces dropdowns)
 .rt-meta-text {
-  background: rgba($rt-color-void, 0.6);
-  border: 1px solid $rt-color-steel-dark;
+  background: rgba(var(--color-bg-primary), 0.6);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-sm;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   font-family: $rt-font-ui;
   font-size: $rt-font-size-xs;
   padding: 2px 6px;
@@ -258,7 +258,7 @@
   
   label {
     font-size: $rt-font-size-xs;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     
@@ -270,10 +270,10 @@
 }
 
 .rt-prose {
-  background: rgba($rt-color-void, 0.3);
-  border: 1px solid $rt-color-steel-dark;
+  background: rgba(var(--color-bg-primary), 0.3);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-sm;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   font-family: $rt-font-ui;
   font-size: $rt-font-size-sm;
   padding: $rt-space-sm;
@@ -285,12 +285,12 @@
   
   &:hover {
     border-color: $rt-color-gold;
-    background: rgba($rt-color-void, 0.5);
+    background: rgba(var(--color-bg-primary), 0.5);
   }
   
   &:empty::before {
     content: 'Click to edit...';
-    color: $rt-color-steel;
+    color: var(--color-border-primary);
     font-style: italic;
   }
   

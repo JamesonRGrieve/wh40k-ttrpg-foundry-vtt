@@ -2,95 +2,102 @@
 // Rogue Trader Design System Variables
 // ============================================
 // Single source of truth for all design tokens
+// Uses Foundry VTT CSS custom properties for theme adaptation
 
 // ============================================
 // Color Palette - Imperial Gothic Theme
 // ============================================
+// These are accent colors that remain consistent across themes
 
-// Gold / Brass / Bronze
+// Gold / Brass / Bronze (Imperial accents)
 $rt-color-gold: #c9a227;
 $rt-color-gold-dark: #8b7015;
 $rt-color-gold-light: #e6c84a;
 $rt-color-brass: #b5a642;
 $rt-color-bronze: #cd7f32;
 
-// Crimson
+// Crimson (Blood/Combat)
 $rt-color-crimson: #8b0000;
 $rt-color-crimson-dark: #5c0000;
 $rt-color-crimson-light: #b22222;
 
-// Parchment
-$rt-color-parchment: #f4e4bc;
-$rt-color-parchment-dark: #d4c49c;
-$rt-color-parchment-light: #faf5e6;
-
-// Void (dark backgrounds)
-$rt-color-void: #0a0a12;
-$rt-color-void-light: #1a1a2e;
-$rt-color-void-lighter: #2a2a3e;
-
-// Steel
-$rt-color-steel: #71797E;
-$rt-color-steel-dark: #4a4a52;
-$rt-color-steel-light: #9a9aa2;
-
-// Status colors
+// Status colors (consistent across themes)
 $rt-color-success: #2d5016;
 $rt-color-failure: #6b1010;
 $rt-color-warning: #8b6914;
 $rt-color-info: #1a4a6b;
 
 // ============================================
-// Semantic Backgrounds
+// Semantic Backgrounds - Using Foundry Variables
 // ============================================
+// Use Foundry's color system for automatic theme adaptation
 
-$rt-bg-primary: rgba(10, 10, 18, 0.95);
-$rt-bg-secondary: rgba(26, 26, 46, 0.9);
-$rt-bg-tertiary: rgba(42, 42, 62, 0.85);
+// Panel/Container backgrounds (use Foundry variables)
+// --color-bg-primary, --color-bg-secondary, --color-bg-tertiary
 
-// Light theme backgrounds (panels-modern)
-$rt-bg-paper: rgba(255, 255, 255, 0.75);
-$rt-bg-paper-light: rgba(255, 255, 255, 0.5);
-$rt-bg-subtle: rgba(244, 228, 188, 0.3);
-$rt-bg-input: rgba(255, 255, 255, 0.9);
-$rt-bg-translucent: rgba(250, 248, 240, 0.6);
+// Input backgrounds (use Foundry variables)
+// --color-bg-option for inputs
 
-// Dark theme inputs - changed from blue to neutral/brown tones
-$rt-bg-input-dark: rgba(0, 0, 0, 0.2);
+// Additional overlays with transparency
+$rt-bg-overlay-light: rgba(255, 255, 255, 0.05);
+$rt-bg-overlay-medium: rgba(0, 0, 0, 0.2);
+$rt-bg-overlay-heavy: rgba(0, 0, 0, 0.4);
+$rt-bg-input: rgba(0, 0, 0, 0.3);
 $rt-bg-input-focus: rgba(192, 128, 32, 0.15);
+$rt-bg-paper: rgba(30, 25, 20, 0.9);
+$rt-bg-paper-light: rgba(40, 35, 28, 0.85);
+$rt-bg-subtle: rgba(50, 45, 35, 0.6);
+$rt-bg-translucent: rgba(30, 25, 20, 0.7);
 
 // ============================================
-// Borders
+// Borders - Using Foundry Variables
 // ============================================
+// Use Foundry border colors for theme adaptation
 
 $rt-border-gold: 1px solid $rt-color-gold;
-$rt-border-dark: 1px solid rgba(0, 0, 0, 0.5);
-$rt-border-light: rgba(74, 55, 40, 0.2);
-$rt-border-medium: rgba(74, 55, 40, 0.35);
-$rt-border-heavy: rgba(74, 55, 40, 0.5);
+$rt-border-bronze: 1px solid $rt-color-bronze;
+$rt-border-light: rgba(120, 100, 80, 0.4);
+$rt-border-medium: rgba(120, 100, 80, 0.6);
+$rt-border-dark: rgba(40, 30, 20, 0.8);
 
-// Legacy border vars
-$border-color: black;
-$border-color-recessed: dimgrey;
-$grid-border: 1px solid $border-color;
-$grid-border-description: 1px dotted $border-color-recessed;
-$grid-border-settings: 2px dashed #404040;
+// Use Foundry variables for standard borders:
+// --color-border-primary (strongest contrast)
+// --color-border-secondary
+// --color-border-tertiary (subtle)
+// --color-border-highlight
+// --color-border-dark
+// --color-border-light
+
+// Legacy border vars (deprecated - use Foundry vars)
+$border-color: var(--color-border-primary);
+$border-color-recessed: var(--color-border-secondary);
+$grid-border: 1px solid var(--color-border-primary);
+$grid-border-description: 1px dotted var(--color-border-secondary);
+$grid-border-settings: 2px dashed var(--color-border-tertiary);
 
 // ============================================
-// Text Colors
+// Text Colors - Using Foundry Variables
 // ============================================
+// Use Foundry's text color system for automatic contrast:
+// --color-text-primary (highest contrast)
+// --color-text-secondary
+// --color-text-tertiary (muted)
+// --color-text-dark (dark mode light text)
+// --color-text-light (light mode dark text)
 
-$rt-text-primary: #2a1a0a;
-$rt-text-secondary: #5a4a3a;
-$rt-text-muted: #7a6a5a;
+// RT-specific text colors
+$rt-text-primary: #e8e0d0;
+$rt-text-secondary: #b8a890;
+$rt-text-muted: #8a7a6a;
+$rt-text-highlight: $rt-color-gold;
 
-// Legacy form colors - changed from blue to neutral
-$form-input-disabled: black;
-$form-input-foreground: #000;
-$form-input-background: rgba(0, 0, 0, 0.15);
-$form-input-border: 1px solid rgba(74, 55, 40, 0.3);
+// Legacy form colors - use Foundry variables for inputs
+$form-input-disabled: var(--color-text-tertiary);
+$form-input-foreground: var(--color-text-primary);
+$form-input-background: var(--color-bg-option);
+$form-input-border: 1px solid var(--color-border-secondary);
 $form-active: rgba(192, 128, 32, 0.15);
-$form-button-background: rgba(74, 55, 40, 0.5);
+$form-button-background: var(--color-warm-3);
 
 // ============================================
 // Accent Colors (for panels/tabs)

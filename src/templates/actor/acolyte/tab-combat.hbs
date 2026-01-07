@@ -1,5 +1,5 @@
 {{!-- Acolyte Sheet Combat Tab --}}
 {{!-- This part renders the Combat tab content with weapons and reactions --}}
-<div class="tab rt-tab rt-tab-combat" data-group="primary" data-tab="combat">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     {{> systems/rogue-trader/templates/actor/panel/combat-station-panel.hbs}}
-</div>
+</section>

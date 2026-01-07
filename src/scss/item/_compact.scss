@@ -41,7 +41,7 @@
   background: linear-gradient(135deg, $rt-color-gold-dark 0%, rgba($rt-color-gold, 0.3) 100%);
   border-radius: $rt-radius-md;
   margin-bottom: $rt-space-md;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   font-family: $rt-font-heading;
   
   i {
@@ -58,7 +58,7 @@
     gap: $rt-space-xs;
     font-size: $rt-font-size-sm;
     font-weight: 600;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: $rt-space-xs;
@@ -80,12 +80,12 @@
   align-items: center;
   gap: $rt-space-xs;
   padding: 2px $rt-space-sm;
-  background: rgba($rt-color-steel, 0.15);
-  border: 1px solid $rt-color-steel-dark;
+  background: rgba(var(--color-border-primary), 0.15);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-sm;
   font-size: $rt-font-size-xs;
   font-weight: 600;
-  color: $rt-color-parchment-dark;
+  color: var(--color-text-secondary);
   
   &--wounds {
     background: rgba($rt-color-crimson, 0.2);
@@ -119,8 +119,8 @@
 }
 
 .rt-compact-description {
-  background: rgba($rt-color-parchment, 0.03);
-  border: 1px solid rgba($rt-color-parchment, 0.1);
+  background: rgba(var(--color-text-primary), 0.03);
+  border: 1px solid rgba(var(--color-text-primary), 0.1);
   border-radius: $rt-radius-md;
   padding: $rt-space-md;
 }
@@ -142,7 +142,7 @@
 }
 
 .rt-description-content {
-  color: $rt-color-parchment-dark;
+  color: var(--color-text-secondary);
   line-height: 1.5;
   font-size: $rt-font-size-sm;
   
@@ -151,7 +151,7 @@
   }
   
   strong {
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
   }
 }
 

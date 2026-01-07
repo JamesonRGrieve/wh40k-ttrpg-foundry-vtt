@@ -364,6 +364,9 @@
         "Name": "Upgrade",
         "Effect": "Effect"
       }
+    },
+    "Theme": {
+      "Switched": "Theme switched to {theme} mode"
     }
   }
 }

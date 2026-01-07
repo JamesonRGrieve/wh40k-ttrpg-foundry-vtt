@@ -64,6 +64,7 @@ export class HandlebarManager {
             // Acolyte Tab Templates (for ApplicationV2 PARTS)
             'systems/rogue-trader/templates/actor/acolyte/header.hbs',
             'systems/rogue-trader/templates/actor/acolyte/tabs.hbs',
+            'systems/rogue-trader/templates/actor/acolyte/tabs-sidebar.hbs',
             'systems/rogue-trader/templates/actor/acolyte/body.hbs',
             'systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs',
             'systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs',

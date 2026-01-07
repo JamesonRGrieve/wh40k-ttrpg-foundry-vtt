@@ -44,7 +44,7 @@
 
                 &.active {
                     background: $form-input-background;
-                    border: 1px solid darken($form-input-background, 15%);
+                    border: 1px solid $rt-border-medium;
                 }
             }
         }
