@@ -123,16 +123,21 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare characteristic HUD data.
+     * Prepare characteristic HUD data and tooltip data.
      * @param {object} context  Context being prepared.
      * @protected
      */
     _prepareCharacteristicHUD(context) {
         const hudCharacteristics = context.actor?.characteristics ?? {};
-        Object.values(hudCharacteristics).forEach((char) => {
+        const modifierSources = context.system?.modifierSources?.characteristics ?? {};
+        
+        Object.entries(hudCharacteristics).forEach(([key, char]) => {
             const total = Number(char?.total ?? 0);
             char.hudMod = Math.floor(total / 10);
             char.hudTotal = total;
+            
+            // Prepare tooltip data using the mixin helper
+            char.tooltipData = this.prepareCharacteristicTooltip(key, char, modifierSources);
         });
     }
 
