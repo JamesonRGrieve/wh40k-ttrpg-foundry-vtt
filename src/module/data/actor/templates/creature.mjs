@@ -245,7 +245,36 @@ export default class CreatureTemplate extends CommonTemplate {
         }
       }
     }
+    
+    // Ensure fate values are integers
+    if (source.fate) {
+      source.fate.max = this._toInt(source.fate.max);
+      source.fate.value = this._toInt(source.fate.value);
+    }
+    
+    // Ensure psy values are integers
+    if (source.psy) {
+      source.psy.rating = this._toInt(source.psy.rating);
+      source.psy.sustained = this._toInt(source.psy.sustained);
+      source.psy.defaultPR = this._toInt(source.psy.defaultPR);
+    }
+    
     return super.migrateData(source);
+  }
+  
+  /** @override */
+  static cleanData(source, options = {}) {
+    // Clean integer fields before validation
+    if (source?.fate) {
+      source.fate.max = this._toInt(source.fate.max);
+      source.fate.value = this._toInt(source.fate.value);
+    }
+    if (source?.psy) {
+      source.psy.rating = this._toInt(source.psy.rating);
+      source.psy.sustained = this._toInt(source.psy.sustained);
+      source.psy.defaultPR = this._toInt(source.psy.defaultPR);
+    }
+    return super.cleanData(source, options);
   }
 
   /* -------------------------------------------- */

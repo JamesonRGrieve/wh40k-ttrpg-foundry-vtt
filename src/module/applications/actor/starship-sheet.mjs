@@ -40,6 +40,13 @@ export default class StarshipSheet extends BaseActorSheet {
     static TABS = [];  // Tabs are handled by the template itself for now
 
     /* -------------------------------------------- */
+
+    /** @override */
+    tabGroups = {
+        primary: "stats"
+    };
+
+    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
