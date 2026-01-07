@@ -7,6 +7,7 @@ import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
 import TooltipMixin from "../api/tooltip-mixin.mjs";
 import VisualFeedbackMixin from "../api/visual-feedback-mixin.mjs";
+import EnhancedAnimationsMixin from "../api/enhanced-animations-mixin.mjs";
 import CollapsiblePanelMixin from "../api/collapsible-panel-mixin.mjs";
 import ContextMenuMixin from "../api/context-menu-mixin.mjs";
 import EnhancedDragDropMixin from "../api/enhanced-drag-drop-mixin.mjs";
@@ -18,9 +19,9 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(ContextMenuMixin(CollapsiblePanelMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
+export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(ContextMenuMixin(CollapsiblePanelMixin(EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
     ApplicationV2Mixin(ActorSheetV2)
-))))))) {
+)))))))) {
     constructor(options = {}) {
         super(options);
     }
@@ -248,6 +249,9 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     async _onRender(context, options) {
         await super._onRender(context, options);
 
+        // Detect stat changes and trigger animations
+        this._detectAndAnimateChanges();
+
         // Handle delta inputs for numeric fields
         if (this.isEditable) {
             this.element.querySelectorAll('input[type="text"][data-dtype="Number"]')
@@ -267,6 +271,41 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         this.element.querySelectorAll(".sheet-control__hide-control").forEach(el => {
             el.addEventListener("click", this._onLegacyPanelToggle.bind(this));
         });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Detect stat changes and trigger appropriate animations.
+     * Compares current state with previous state captured during last render.
+     * @protected
+     */
+    _detectAndAnimateChanges() {
+        if (!this._previousState) return;
+        
+        const current = this.document.system;
+        const previous = this._previousState;
+        
+        // Check wounds
+        if (current.wounds?.value !== previous.wounds) {
+            this.animateWoundsChange?.(previous.wounds, current.wounds.value);
+        }
+        
+        // Check XP
+        if (current.experience?.total !== previous.experience) {
+            this.animateXPGain?.(previous.experience, current.experience.total);
+        }
+        
+        // Check characteristics
+        for (const [key, char] of Object.entries(current.characteristics || {})) {
+            const prevChar = previous.characteristics[key];
+            if (!prevChar) continue;
+            
+            // Check total change
+            if (char.total !== prevChar.total) {
+                this.animateCharacteristicChange?.(key, prevChar.total, char.total);
+            }
+        }
     }
 
     /* -------------------------------------------- */
