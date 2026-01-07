@@ -31,8 +31,8 @@ export default class StorageLocationSheet extends ContainerItemSheet {
 
     /** @override */
     static TABS = [
-        { id: "contents", group: "primary", label: "Contents" },
-        { id: "description", group: "primary", label: "Description" }
+        { tab: "contents", group: "primary", label: "Contents" },
+        { tab: "description", group: "primary", label: "Description" }
     ];
 
     /* -------------------------------------------- */

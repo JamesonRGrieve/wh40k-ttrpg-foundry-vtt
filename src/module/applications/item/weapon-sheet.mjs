@@ -31,9 +31,9 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /** @override */
     static TABS = [
-        { id: "stats", group: "primary", label: "Stats" },
-        { id: "description", group: "primary", label: "Description" },
-        { id: "effects", group: "primary", label: "Effects" }
+        { tab: "stats", group: "primary", label: "Stats" },
+        { tab: "description", group: "primary", label: "Description" },
+        { tab: "effects", group: "primary", label: "Effects" }
     ];
 
     /* -------------------------------------------- */

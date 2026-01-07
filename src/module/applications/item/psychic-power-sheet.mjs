@@ -31,9 +31,9 @@ export default class PsychicPowerSheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { id: "details", group: "primary", label: "Details" },
-        { id: "description", group: "primary", label: "Description" },
-        { id: "effects", group: "primary", label: "Effects" }
+        { tab: "details", group: "primary", label: "Details" },
+        { tab: "description", group: "primary", label: "Description" },
+        { tab: "effects", group: "primary", label: "Effects" }
     ];
 
     /* -------------------------------------------- */

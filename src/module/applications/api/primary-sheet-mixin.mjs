@@ -197,6 +197,74 @@ export default function PrimarySheetMixin(Base) {
                     event.stopPropagation();
                 };
             });
+            
+            // Activate legacy V1-style tabs for templates that use data-tab/data-group
+            this._activateLegacyTabs();
+        }
+
+        /* -------------------------------------------- */
+        
+        /**
+         * Activate legacy V1-style tabs that use data-tab and data-group attributes.
+         * This provides compatibility for templates not yet migrated to V2 tab patterns.
+         * @protected
+         */
+        _activateLegacyTabs() {
+            const tabsConfig = this.options.tabs ?? [];
+            for (const config of tabsConfig) {
+                const { navSelector, contentSelector, initial } = config;
+                const nav = this.element.querySelector(navSelector);
+                const content = this.element.querySelector(contentSelector);
+                if (!nav || !content) continue;
+                
+                // Get current active tab from tabGroups or use initial
+                const group = nav.dataset.group || "primary";
+                const activeTab = this.tabGroups?.[group] ?? initial;
+                
+                // Set up tab click handlers
+                nav.querySelectorAll("[data-tab]").forEach(tabLink => {
+                    tabLink.addEventListener("click", event => {
+                        event.preventDefault();
+                        const tab = tabLink.dataset.tab;
+                        this._activateTab(tab, group, nav, content);
+                    });
+                });
+                
+                // Activate initial tab
+                if (activeTab) {
+                    this._activateTab(activeTab, group, nav, content);
+                }
+            }
+        }
+        
+        /**
+         * Activate a specific tab.
+         * @param {string} tab         The tab identifier.
+         * @param {string} group       The tab group.
+         * @param {HTMLElement} nav    The navigation element.
+         * @param {HTMLElement} content The content container.
+         * @protected
+         */
+        _activateTab(tab, group, nav, content) {
+            // Update tabGroups tracking
+            if (this.tabGroups) this.tabGroups[group] = tab;
+            
+            // Update nav active states
+            nav.querySelectorAll("[data-tab]").forEach(link => {
+                const isActive = link.dataset.tab === tab;
+                link.classList.toggle("active", isActive);
+                link.closest(".rt-navigation__item, .rt-nav-item")?.classList.toggle("active", isActive);
+            });
+            
+            // Update content tab visibility
+            content.querySelectorAll(":scope > [data-tab]").forEach(tabContent => {
+                const isActive = tabContent.dataset.tab === tab;
+                tabContent.classList.toggle("active", isActive);
+            });
+            
+            // Update application element class
+            this.element.className = this.element.className.replace(/\btab-\w+/g, "");
+            this.element.classList.add(`tab-${tab}`);
         }
 
         /* -------------------------------------------- */

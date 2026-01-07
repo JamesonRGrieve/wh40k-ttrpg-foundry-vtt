@@ -58,8 +58,8 @@ export default class BaseItemSheet extends PrimarySheetMixin(
 
     /** @override */
     static TABS = [
-        { id: "description", group: "primary", label: "Description" },
-        { id: "effects", group: "primary", label: "Effects" }
+        { tab: "description", group: "primary", label: "Description" },
+        { tab: "effects", group: "primary", label: "Effects" }
     ];
 
     /* -------------------------------------------- */
@@ -115,13 +115,15 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      */
     _getTabs() {
         const tabs = {};
-        for (const tab of this.constructor.TABS) {
-            tabs[tab.id] = {
-                id: tab.id,
-                group: tab.group,
-                label: tab.label,
-                active: this.tabGroups[tab.group] === tab.id,
-                cssClass: this.tabGroups[tab.group] === tab.id ? "active" : ""
+        for (const { tab, group, label, condition } of this.constructor.TABS) {
+            if (condition && !condition(this.document)) continue;
+            tabs[tab] = {
+                id: tab,
+                tab,
+                group,
+                label,
+                active: this.tabGroups[group] === tab,
+                cssClass: this.tabGroups[group] === tab ? "active" : ""
             };
         }
         return tabs;

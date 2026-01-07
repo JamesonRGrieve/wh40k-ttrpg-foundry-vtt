@@ -31,7 +31,7 @@ export default class JournalEntryItemSheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { id: "content", group: "primary", label: "Content" }
+        { tab: "content", group: "primary", label: "Content" }
     ];
 
     /* -------------------------------------------- */

@@ -31,9 +31,9 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /** @override */
     static TABS = [
-        { id: "protection", group: "primary", label: "Protection" },
-        { id: "description", group: "primary", label: "Description" },
-        { id: "effects", group: "primary", label: "Effects" }
+        { tab: "protection", group: "primary", label: "Protection" },
+        { tab: "description", group: "primary", label: "Description" },
+        { tab: "effects", group: "primary", label: "Effects" }
     ];
 
     /* -------------------------------------------- */
