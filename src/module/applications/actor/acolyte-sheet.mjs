@@ -721,7 +721,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                     break;
             }
         } catch (error) {
-            ui.notifications.error(`Combat action failed: ${error.message}`);
+            foundry.applications.api.Toast.error(`Combat action failed: ${error.message}`, {
+                duration: 5000
+            });
             console.error("Combat action error:", error);
         }
     }
@@ -752,7 +754,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                 type: CONST.CHAT_MESSAGE_STYLES.ROLL
             });
         } catch (error) {
-            ui.notifications.error(`Initiative roll failed: ${error.message}`);
+            foundry.applications.api.Toast.error(`Initiative roll failed: ${error.message}`, {
+                duration: 5000
+            });
             console.error("Initiative roll error:", error);
         }
     }
@@ -809,7 +813,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                 setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
             }
         } catch (error) {
-            ui.notifications.error(`Hit location roll failed: ${error.message}`);
+            foundry.applications.api.Toast.error(`Hit location roll failed: ${error.message}`, {
+                duration: 5000
+            });
             console.error("Hit location roll error:", error);
         }
     }
@@ -937,7 +943,9 @@ export default class AcolyteSheet extends BaseActorSheet {
     static async #setCorruptionImpl(event, target) {
         const targetValue = parseInt(target.dataset.value);
         if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-            ui.notifications.error("Invalid corruption value");
+            foundry.applications.api.Toast.error("Invalid corruption value", {
+                duration: 3000
+            });
             return;
         }
         await this.actor.update({ "system.corruption": targetValue });
@@ -963,7 +971,9 @@ export default class AcolyteSheet extends BaseActorSheet {
     static async #setInsanityImpl(event, target) {
         const targetValue = parseInt(target.dataset.value);
         if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-            ui.notifications.error("Invalid insanity value");
+            foundry.applications.api.Toast.error("Invalid insanity value", {
+                duration: 3000
+            });
             return;
         }
         await this.actor.update({ "system.insanity": targetValue });
@@ -989,7 +999,9 @@ export default class AcolyteSheet extends BaseActorSheet {
     static async #restoreFateImpl(event, target) {
         const maxFate = this.actor.system.fate?.max || 0;
         await this.actor.update({ "system.fate.value": maxFate });
-        ui.notifications.info(`Restored all fate points to ${maxFate}`);
+        foundry.applications.api.Toast.info(`Restored all fate points to ${maxFate}`, {
+            duration: 3000
+        });
     }
 
     /* -------------------------------------------- */
@@ -1016,7 +1028,9 @@ export default class AcolyteSheet extends BaseActorSheet {
         const currentFate = this.actor.system.fate?.value || 0;
 
         if (currentFate <= 0) {
-            ui.notifications.warn("No fate points available to spend!");
+            foundry.applications.api.Toast.warning("No fate points available to spend!", {
+                duration: 3000
+            });
             return;
         }
 
@@ -1157,7 +1171,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                             count++;
                         }
                     }
-                    ui.notifications.info(`Equipped ${count} armour piece${count !== 1 ? 's' : ''}`);
+                    foundry.applications.api.Toast.info(`Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
+                        duration: 3000
+                    });
                     break;
 
                 case "unequip-all":
@@ -1167,7 +1183,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                         await item.update({ "system.equipped": false });
                         count++;
                     }
-                    ui.notifications.info(`Unequipped ${count} item${count !== 1 ? 's' : ''}`);
+                    foundry.applications.api.Toast.info(`Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
+                        duration: 3000
+                    });
                     break;
 
                 case "stow-gear":
@@ -1182,14 +1200,20 @@ export default class AcolyteSheet extends BaseActorSheet {
                         });
                         count++;
                     }
-                    ui.notifications.info(`Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`);
+                    foundry.applications.api.Toast.info(`Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
+                        duration: 3000
+                    });
                     break;
 
                 default:
-                    ui.notifications.warn(`Unknown bulk action: ${action}`);
+                    foundry.applications.api.Toast.warning(`Unknown bulk action: ${action}`, {
+                        duration: 3000
+                    });
             }
         } catch (error) {
-            ui.notifications.error(`Bulk operation failed: ${error.message}`);
+            foundry.applications.api.Toast.error(`Bulk operation failed: ${error.message}`, {
+                duration: 5000
+            });
             console.error("Bulk equipment error:", error);
         }
     }
@@ -1255,10 +1279,14 @@ export default class AcolyteSheet extends BaseActorSheet {
                     description: bonus.benefit
                 });
             } else {
-                ui.notifications.warn(`Bonus "${bonusName}" not found`);
+                foundry.applications.api.Toast.warning(`Bonus "${bonusName}" not found`, {
+                    duration: 3000
+                });
             }
         } catch (error) {
-            ui.notifications.error(`Failed to vocalize bonus: ${error.message}`);
+            foundry.applications.api.Toast.error(`Failed to vocalize bonus: ${error.message}`, {
+                duration: 5000
+            });
             console.error("Bonus vocalize error:", error);
         }
     }

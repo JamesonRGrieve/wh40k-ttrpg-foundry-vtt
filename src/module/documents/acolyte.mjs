@@ -131,7 +131,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
     async rollWeaponDamage(weapon) {
         if (!weapon.system.equipped) {
-            ui.notifications.warn('Actor must have weapon equipped!');
+            foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
+                duration: 3000
+            });
             return;
         }
         await prepareDamageRoll({
@@ -164,7 +166,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         const resolvedSkillName = this._resolveSkillName(skillName);
         let skill = this.skills[resolvedSkillName];
         if (!skill) {
-            ui.notifications.warn(`Unable to find skill ${skillName}`);
+            foundry.applications.api.Toast.warning(`Unable to find skill ${skillName}`, {
+                duration: 3000
+            });
             return;
         }
         let label = skill.label;
@@ -194,7 +198,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         switch (item.type) {
             case 'weapon':
                 if (!item.system.equipped) {
-                    ui.notifications.warn('Actor must have weapon equipped!');
+                    foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
+                        duration: 3000
+                    });
                     return;
                 }
                 if(game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
@@ -216,7 +222,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 return;
             case 'forceField':
                 if (!item.system.equipped || !item.system.activated) {
-                    ui.notifications.warn('Actor must have force field equipped and activated!');
+                    foundry.applications.api.Toast.warning('Actor must have force field equipped and activated!', {
+                        duration: 3000
+                    });
                     return;
                 }
                 await prepareForceFieldRoll(new ForceFieldData(this, item));
@@ -247,7 +255,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
-                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+                return foundry.applications.api.Toast.warning(`No actions implemented for item type: ${item.type}`, {
+                    duration: 3000
+                });
         }
     }
 

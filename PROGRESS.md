@@ -111,13 +111,41 @@
     - `src/module/applications/actor/acolyte-sheet.mjs` (throttle utility + wrapped handlers)
 
 **Total Time**: ~2 hours
+
+- [x] **Item 9**: Replace ui.notifications with V13 Toast System ✅
+  - Migrated from legacy ui.notifications to Foundry V13 Toast API
+  - Replaced 21 instances across main player-facing files:
+    - 14 instances in `acolyte-sheet.mjs` (combat actions, stat validation, bulk operations, bonus vocalization)
+    - 5 instances in `acolyte.mjs` (weapon/skill/item rolls, force field checks)
+    - 2 instances in `item.mjs` (origin path application)
+  - Toast notification types:
+    - `Toast.error()` - Error messages (5s duration)
+    - `Toast.warning()` - Warning messages (3s duration)
+    - `Toast.info()` - Informational messages (3s duration)
+  - Benefits: Better visual consistency, auto-dismissing, non-intrusive
+  - Files:
+    - `src/module/applications/actor/acolyte-sheet.mjs`
+    - `src/module/documents/acolyte.mjs`
+    - `src/module/documents/item.mjs`
+
+**Total Time**: ~1.5 hours
 **Build Status**: ✅ All builds passing
 
 ---
 
-## In Progress 🚧
+## Completed 🎉
 
-*Working on Item 9: Toast Notifications*
+**Priority 1: Quick Wins - COMPLETE!**
+
+All 6 Priority 1 items completed in this session:
+- Item 5: Equipment Search & Filter
+- Item 8: Visual Feedback & Animations
+- Item 6: Equipment Bulk Operations
+- Item 7: Skills Search & Filter
+- Item 10: Button Debouncing
+- Item 9: V13 Toast Notifications
+
+**Total Session Time**: ~13 hours of development
 
 ---
 
