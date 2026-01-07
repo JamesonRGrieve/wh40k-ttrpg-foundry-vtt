@@ -1,0 +1,151 @@
+/**
+ * Combat Quick Panel - Floating HUD styling
+ */
+
+.combat-hud.floating-panel {
+    background: linear-gradient(135deg, var(--rt-iron, #3e3e3e) 0%, var(--rt-black, #0a0a0a) 100%);
+    border: 3px solid var(--rt-bronze, #cd7f32);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+    
+    .combat-panel-content {
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        
+        // Opacity levels
+        &.opacity-high { opacity: 0.9; }
+        &.opacity-medium { opacity: 0.7; }
+        &.opacity-low { opacity: 0.5; }
+    }
+    
+    // Sections
+    .combat-panel-section {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--rt-bronze, #cd7f32);
+        border-radius: 4px;
+        padding: 0.5rem;
+        
+        h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--rt-gold, #d4af37);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    }
+    
+    // Vitals
+    .vital-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.25rem;
+        
+        .vital-label {
+            width: 60px;
+            color: var(--rt-bone, #e8dcc8);
+        }
+        
+        .vital-bar {
+            flex: 1;
+            height: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--rt-bronze, #cd7f32);
+            border-radius: 2px;
+            overflow: hidden;
+            
+            .vital-bar-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #4caf50, #8bc34a);
+                transition: width 0.3s ease;
+            }
+        }
+        
+        .vital-value {
+            width: 50px;
+            text-align: right;
+            color: var(--rt-bone, #e8dcc8);
+            font-weight: bold;
+        }
+        
+        &.low .vital-bar-fill { background: linear-gradient(90deg, #ff9800, #ffeb3b); }
+        &.critical .vital-bar-fill { background: linear-gradient(90deg, #f44336, #e91e63); }
+        &.exhausted .vital-bar-fill { background: linear-gradient(90deg, #9e9e9e, #757575); }
+    }
+    
+    // Weapon
+    .weapon-info {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        
+        .weapon-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--rt-gold, #d4af37);
+            border-radius: 2px;
+        }
+        
+        .weapon-details {
+            flex: 1;
+            
+            .weapon-name {
+                color: var(--rt-bone, #e8dcc8);
+                font-weight: bold;
+            }
+            
+            .weapon-stats {
+                font-size: 0.85rem;
+                color: var(--rt-gold, #d4af37);
+            }
+        }
+    }
+    
+    // Attack buttons
+    .attack-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        
+        .attack-btn {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--rt-bronze, #cd7f32);
+            border: 1px solid var(--rt-gold, #d4af37);
+            color: var(--rt-bone, #e8dcc8);
+            font-weight: bold;
+            cursor: pointer;
+            
+            &:hover { background: var(--rt-gold, #d4af37); }
+        }
+    }
+    
+    // Reaction/action buttons
+    .reaction-buttons,
+    .quick-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        
+        button {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--rt-iron, #3e3e3e);
+            border: 1px solid var(--rt-bronze, #cd7f32);
+            color: var(--rt-bone, #e8dcc8);
+            cursor: pointer;
+            
+            &:hover:not(:disabled) { 
+                background: var(--rt-bronze, #cd7f32);
+                border-color: var(--rt-gold, #d4af37);
+            }
+            
+            &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
