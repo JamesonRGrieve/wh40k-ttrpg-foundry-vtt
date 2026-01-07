@@ -1,0 +1,18 @@
+{{!-- Acolyte Sheet Powers Tab --}}
+{{!-- This part renders the Powers tab content with psychic powers, navigator powers, etc. --}}
+<div class="tab rt-tab rt-tab-powers" data-group="primary" data-tab="powers">
+    <div class="rt-powers-grid">
+        {{!-- Left Column: Psy Rating & Psychic Powers --}}
+        <div class="rt-powers-col">
+            {{> systems/rogue-trader/templates/actor/panel/psy-panel.hbs}}
+            {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
+        </div>
+        
+        {{!-- Right Column: Navigator, Orders, Rituals --}}
+        <div class="rt-powers-col">
+            {{> systems/rogue-trader/templates/actor/panel/navigator-powers-panel.hbs}}
+            {{> systems/rogue-trader/templates/actor/panel/orders-panel.hbs}}
+            {{> systems/rogue-trader/templates/actor/panel/rituals-panel.hbs}}
+        </div>
+    </div>
+</div>

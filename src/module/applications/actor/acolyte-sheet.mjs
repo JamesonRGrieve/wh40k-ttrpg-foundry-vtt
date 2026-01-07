@@ -57,20 +57,77 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /**
+     * Template parts for the Acolyte sheet.
+     * Each part can be re-rendered independently for better performance.
+     * @override
+     */
     static PARTS = {
-        // Use existing template as single part for initial migration
-        // This will be split into proper parts later
-        sheet: {
-            template: "systems/rogue-trader/templates/actor/actor-rt-sheet.hbs",
-            scrollable: [".rt-body"]
+        header: {
+            template: "systems/rogue-trader/templates/actor/acolyte/header.hbs"
+        },
+        tabs: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tabs.hbs",
+            container: { classes: ["rt-main-layout"], id: "main-layout" }
+        },
+        overview: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        combat: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        skills: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        talents: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-talents.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        equipment: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-equipment.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        powers: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-powers.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        dynasty: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-dynasty.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        biography: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
         }
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
-    static TABS = [];  // Tabs are handled by the template itself for now
+    /**
+     * Tab configuration for the primary tab group.
+     * @override
+     */
+    static TABS = [
+        { tab: "overview", label: "RT.Tabs.Overview", group: "primary", cssClass: "tab-overview" },
+        { tab: "combat", label: "RT.Tabs.Combat", group: "primary", cssClass: "tab-combat" },
+        { tab: "skills", label: "RT.Tabs.Skills", group: "primary", cssClass: "tab-skills" },
+        { tab: "talents", label: "RT.Tabs.Talents", group: "primary", cssClass: "tab-talents" },
+        { tab: "equipment", label: "RT.Tabs.Equipment", group: "primary", cssClass: "tab-equipment" },
+        { tab: "powers", label: "RT.Tabs.Powers", group: "primary", cssClass: "tab-powers" },
+        { tab: "dynasty", label: "RT.Tabs.Dynasty", group: "primary", cssClass: "tab-dynasty" },
+        { tab: "biography", label: "RT.Tabs.Biography", group: "primary", cssClass: "tab-biography" }
+    ];
 
     /* -------------------------------------------- */
 
@@ -117,6 +174,150 @@ export default class AcolyteSheet extends BaseActorSheet {
             );
         }
 
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare context data for a specific part.
+     * This enables targeted re-rendering of individual parts for better performance.
+     * @param {string} partId   The ID of the part being rendered.
+     * @param {object} context  The base context from _prepareContext.
+     * @param {object} options  Rendering options.
+     * @returns {Promise<object>}
+     * @override
+     * @protected
+     */
+    async _preparePartContext(partId, context, options) {
+        context = await super._preparePartContext(partId, context, options);
+        
+        switch (partId) {
+            case "header":
+                return this._prepareHeaderContext(context, options);
+            case "tabs":
+                return this._prepareTabsContext(context, options);
+            case "overview":
+                return this._prepareOverviewContext(context, options);
+            case "combat":
+                return this._prepareCombatTabContext(context, options);
+            case "skills":
+                return this._prepareSkillsContext(context, options);
+            case "talents":
+                return this._prepareTalentsContext(context, options);
+            case "equipment":
+                return this._prepareEquipmentContext(context, options);
+            case "powers":
+                return this._preparePowersContext(context, options);
+            case "dynasty":
+                return this._prepareDynastyContext(context, options);
+            case "biography":
+                return this._prepareBiographyContext(context, options);
+            default:
+                return context;
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare header part context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _prepareHeaderContext(context, options) {
+        // Header-specific preparation (characteristics HUD is already prepared)
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare tabs part context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _prepareTabsContext(context, options) {
+        // Tabs use the static TABS configuration
+        context.tabs = this.constructor.TABS.map(tab => ({
+            ...tab,
+            active: this.tabGroups[tab.group] === tab.tab,
+            label: game.i18n.localize(tab.label)
+        }));
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare skills tab context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _prepareSkillsContext(context, options) {
+        // Skills are already prepared in base class _prepareSkills
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare talents tab context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _prepareTalentsContext(context, options) {
+        // Talents and traits are already prepared in base _prepareItems
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare powers tab context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _preparePowersContext(context, options) {
+        // Psychic powers and navigator powers already prepared
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare dynasty tab context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _prepareDynastyContext(context, options) {
+        // Dynasty data (profit factor, acquisitions, endeavours) already prepared
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare biography tab context.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    async _prepareBiographyContext(context, options) {
+        // Biography data already prepared
         return context;
     }
 

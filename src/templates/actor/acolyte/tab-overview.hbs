@@ -1,0 +1,67 @@
+{{!-- Acolyte Sheet Overview Tab --}}
+{{!-- This part renders the Overview tab content with vitals and status --}}
+<div class="tab rt-tab rt-tab-overview" data-group="primary" data-tab="overview">
+    
+    {{!-- Two Column Layout --}}
+    <div class="rt-overview-grid">
+        {{!-- Left Column --}}
+        <div class="rt-overview-col">
+            {{!-- Wounds Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/wounds-panel-v2.hbs}}
+
+            {{!-- Fatigue Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/fatigue-panel-v2.hbs}}
+
+            {{!-- Corruption Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/corruption-panel-v2.hbs}}
+
+            {{!-- Insanity Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/insanity-panel-v2.hbs}}
+        </div>
+
+        {{!-- Right Column --}}
+        <div class="rt-overview-col">
+            {{!-- Fate Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/fate-panel-v2.hbs}}
+
+            {{!-- Movement & Capacity --}}
+            <div class="rt-panel rt-panel-movement">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-running"></i> Movement & Capacity</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-movement-grid">
+                        <div class="rt-move-cell">
+                            <span class="rt-move-label">Half</span>
+                            <span class="rt-move-value">{{actor.movement.half}}m</span>
+                        </div>
+                        <div class="rt-move-cell">
+                            <span class="rt-move-label">Full</span>
+                            <span class="rt-move-value">{{actor.movement.full}}m</span>
+                        </div>
+                        <div class="rt-move-cell">
+                            <span class="rt-move-label">Charge</span>
+                            <span class="rt-move-value">{{actor.movement.charge}}m</span>
+                        </div>
+                        <div class="rt-move-cell">
+                            <span class="rt-move-label">Run</span>
+                            <span class="rt-move-value">{{actor.movement.run}}m</span>
+                        </div>
+                    </div>
+                    <div class="rt-capacity-row">
+                        <div class="rt-capacity-item">
+                            <span class="rt-capacity-label">Carry</span>
+                            <span class="rt-capacity-value">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
+                        </div>
+                        <div class="rt-capacity-item">
+                            <span class="rt-capacity-label">Size</span>
+                            <span class="rt-capacity-value">{{actor.size}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{!-- Active Effects --}}
+            {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
+        </div>
+    </div>
+</div>
