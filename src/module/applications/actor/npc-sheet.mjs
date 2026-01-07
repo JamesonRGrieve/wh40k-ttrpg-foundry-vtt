@@ -35,4 +35,11 @@ export default class NpcSheet extends AcolyteSheet {
 
     /** @override */
     static TABS = [];  // Tabs are handled by the template itself for now
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    tabGroups = {
+        primary: "main"
+    };
 }

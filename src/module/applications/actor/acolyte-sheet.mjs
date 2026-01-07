@@ -73,6 +73,13 @@ export default class AcolyteSheet extends BaseActorSheet {
     static TABS = [];  // Tabs are handled by the template itself for now
 
     /* -------------------------------------------- */
+
+    /** @override */
+    tabGroups = {
+        primary: "overview"
+    };
+
+    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
