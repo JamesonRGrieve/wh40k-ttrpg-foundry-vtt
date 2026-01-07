@@ -10,7 +10,7 @@ import BaseActorSheet from "./base-actor-sheet.mjs";
 export default class VehicleSheet extends BaseActorSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "actor", "vehicle"],
+        classes: ["vehicle"],
         position: {
             width: 1000,
             height: 750

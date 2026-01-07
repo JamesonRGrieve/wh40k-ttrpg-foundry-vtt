@@ -14,7 +14,7 @@ export default class StarshipSheet extends BaseActorSheet {
             fireShipWeapon: StarshipSheet.#fireShipWeapon,
             rollInitiative: StarshipSheet.#rollInitiative
         },
-        classes: ["rogue-trader", "actor", "starship"],
+        classes: ["starship"],
         position: {
             width: 900,
             height: 700

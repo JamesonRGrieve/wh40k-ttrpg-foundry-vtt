@@ -44,7 +44,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Misc actions
             bonusVocalize: AcolyteSheet.#bonusVocalize
         },
-        classes: ["rogue-trader", "actor", "acolyte"],
+        classes: ["acolyte"],
         position: {
             width: 1050,
             height: 800

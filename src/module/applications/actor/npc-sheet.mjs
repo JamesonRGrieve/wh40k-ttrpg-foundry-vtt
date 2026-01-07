@@ -11,7 +11,7 @@ import AcolyteSheet from "./acolyte-sheet.mjs";
 export default class NpcSheet extends AcolyteSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "actor", "npc"],
+        classes: ["npc"],
         position: {
             width: 1000,
             height: 750

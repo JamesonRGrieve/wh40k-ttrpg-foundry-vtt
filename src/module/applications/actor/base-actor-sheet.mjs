@@ -39,7 +39,7 @@ export default class BaseActorSheet extends PrimarySheetMixin(
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
             deleteSpecialization: BaseActorSheet.#deleteSpecialization
         },
-        classes: ["rogue-trader", "actor", "standard-form"],
+        classes: ["rogue-trader", "sheet", "actor"],
         form: {
             submitOnChange: true
         },
