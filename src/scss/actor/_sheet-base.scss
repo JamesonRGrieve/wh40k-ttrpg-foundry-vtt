@@ -2,14 +2,21 @@
 // ROGUE TRADER CHARACTER SHEET STYLES
 // ============================================
 
+// Override Foundry's dark theme for our sheets
+body.theme-dark .rogue-trader.sheet.actor,
+body.theme-dark.application .rogue-trader.sheet.actor {
+    --color-bg-option: rgba(250, 244, 233, 0.95);
+    --color-bg-btn-secondary-hover: rgba(240, 230, 210, 0.9);
+}
+
 .rogue-trader.sheet.actor .window-content {
-    background: rgba(245, 235, 220, 0.6);
-    background-color: rgba(239, 227, 207, 0.6);
+    background: rgba(250, 244, 233, 0.95) !important;
+    background-color: rgba(245, 235, 220, 0.95) !important;
 }
 
 .rt-sheet {
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
-    background: rgba(250, 244, 233, 0.6);
+    background: rgba(250, 244, 233, 0.95) !important;
     position: relative;
     display: flex;
     flex-direction: column;
