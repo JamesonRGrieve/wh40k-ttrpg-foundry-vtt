@@ -89,7 +89,7 @@
     align-items: center;
     gap: $rt-space-sm;
     font-size: $rt-font-size-sm;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     
@@ -100,7 +100,7 @@
   
   &__source {
     font-size: $rt-font-size-xs;
-    color: $rt-color-steel;
+    color: var(--color-border-primary);
     font-style: italic;
   }
 }
@@ -118,11 +118,11 @@
   align-items: center;
   gap: 3px;
   padding: 2px $rt-space-xs;
-  background: rgba($rt-color-steel-dark, 0.3);
-  border: 1px solid $rt-color-steel-dark;
+  background: rgba(var(--color-border-secondary), 0.3);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-sm;
   font-size: $rt-font-size-xs;
-  color: $rt-color-steel-light;
+  color: var(--color-text-tertiary);
   
   i {
     font-size: 10px;
@@ -142,17 +142,17 @@
   }
   
   &--source {
-    background: rgba($rt-color-parchment-dark, 0.15);
-    border-color: rgba($rt-color-parchment-dark, 0.3);
-    color: $rt-color-parchment-dark;
+    background: rgba(var(--color-text-secondary), 0.15);
+    border-color: rgba(var(--color-text-secondary), 0.3);
+    color: var(--color-text-secondary);
   }
   
   &--aptitudes,
   &--psychic,
   &--type {
-    background: rgba($rt-color-steel, 0.2);
-    border-color: $rt-color-steel-dark;
-    color: $rt-color-parchment-dark;
+    background: rgba(var(--color-border-primary), 0.2);
+    border-color: var(--color-border-secondary);
+    color: var(--color-text-secondary);
   }
 }
 

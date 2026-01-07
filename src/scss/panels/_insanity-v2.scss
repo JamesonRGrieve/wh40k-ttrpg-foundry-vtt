@@ -4,16 +4,16 @@
 // Purple theme with threshold warnings, broken mind visual, mental disorder tracking
 
 .rt-insanity-panel-v2 {
-    background: linear-gradient(135deg, #f4f1f8 0%, #ebe5f5 100%);
-    border: 2px solid #9370db;
+    background: var(--rt-insanity-panel-bg);
+    border: 2px solid var(--rt-insanity-secondary);
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(147, 112, 219, 0.15);
+    box-shadow: 0 2px 8px var(--rt-insanity-bg);
     margin-bottom: 12px;
     transition: border-color 0.3s ease;
 
     // Dynamic border color based on insanity degree
     &.rt-insanity-stable {
-        border-color: #9370db; // STABLE - medium purple
+        border-color: var(--rt-insanity-secondary); // STABLE - medium purple
     }
 
     &.rt-insanity-unsettled {
@@ -29,7 +29,7 @@
     }
 
     &.rt-insanity-incurable {
-        border-color: #5a2894; // INCURABLE - darkest purple
+        border-color: var(--rt-insanity-primary); // INCURABLE - darkest purple
         box-shadow: 0 2px 12px rgba(90, 40, 148, 0.4);
     }
 
@@ -44,15 +44,15 @@
         align-items: center;
         justify-content: space-between;
         padding: 8px 12px;
-        background: linear-gradient(90deg, rgba(147, 112, 219, 0.15) 0%, rgba(147, 112, 219, 0.05) 100%);
-        border-bottom: 1px solid rgba(147, 112, 219, 0.2);
+        background: linear-gradient(90deg, var(--rt-insanity-bg) 0%, transparent 100%);
+        border-bottom: 1px solid var(--rt-insanity-border);
         border-radius: 6px 6px 0 0;
 
         .rt-panel-title {
             flex: 1;  // Allow title to expand and take available space
             font-size: 16px;
             font-weight: 600;
-            color: #5a2894;
+            color: var(--rt-insanity-primary);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -60,7 +60,7 @@
 
             i {
                 font-size: 18px;
-                color: #9370db;
+                color: var(--rt-insanity-secondary);
                 flex-shrink: 0;  // Prevent icon from shrinking
             }
         }
@@ -79,7 +79,7 @@
             &.rt-insanity-stable {
                 background: linear-gradient(135deg, #c8b8e8 0%, #b8a5d9 100%);
                 color: #4a2875;
-                border-color: #9370db;
+                border-color: var(--rt-insanity-secondary);
             }
 
             &.rt-insanity-unsettled {
@@ -118,17 +118,17 @@
         .rt-vital-expand-btn {
             flex-shrink: 0;  // Prevent button from shrinking
             background: transparent;
-            border: 1px solid rgba(147, 112, 219, 0.3);
-            color: #9370db;
+            border: 1px solid var(--rt-insanity-border);
+            color: var(--rt-insanity-secondary);
             padding: 4px 8px;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
 
             &:hover {
-                background: rgba(147, 112, 219, 0.1);
-                border-color: #9370db;
-                color: #7b4db8;
+                background: var(--rt-insanity-bg);
+                border-color: var(--rt-insanity-secondary);
+                color: var(--rt-insanity-primary);
             }
         }
     }
@@ -161,9 +161,9 @@
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        border: 2px solid #9370db;
+        border: 2px solid var(--rt-insanity-secondary);
         background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
-        color: #7b4db8;
+        color: var(--rt-insanity-primary);
         font-size: 16px;
         display: flex;
         align-items: center;
@@ -172,10 +172,10 @@
         transition: all 0.2s ease;
 
         &:hover {
-            background: linear-gradient(135deg, #9370db 0%, #8a63c4 100%);
+            background: linear-gradient(135deg, var(--rt-insanity-secondary) 0%, #8a63c4 100%);
             color: white;
             transform: scale(1.05);
-            box-shadow: 0 2px 6px rgba(147, 112, 219, 0.3);
+            box-shadow: 0 2px 6px var(--rt-insanity-bg);
         }
 
         &:active {
@@ -192,12 +192,12 @@
         .rt-insanity-current {
             font-size: 32px;
             font-weight: 700;
-            color: #5a2894;
+            color: var(--rt-insanity-primary);
         }
 
         .rt-insanity-max {
             font-size: 18px;
-            color: #9370db;
+            color: var(--rt-insanity-secondary);
         }
     }
 
@@ -206,20 +206,20 @@
         align-items: center;
         gap: 6px;
         padding: 6px 12px;
-        background: rgba(147, 112, 219, 0.1);
+        background: var(--rt-insanity-bg);
         border-radius: 6px;
-        border: 1px solid rgba(147, 112, 219, 0.2);
+        border: 1px solid var(--rt-insanity-border);
 
         .rt-modifier-label {
             font-size: 12px;
-            color: #7b4db8;
+            color: var(--rt-insanity-primary);
             font-weight: 600;
         }
 
         .rt-modifier-value {
             font-size: 16px;
             font-weight: 700;
-            color: #5a2894;
+            color: var(--rt-insanity-primary);
             font-family: 'Modesto Condensed', serif;
         }
     }
@@ -236,11 +236,11 @@
         height: 20px;
         background: linear-gradient(90deg,
             rgba(200, 184, 232, 0.3) 0%,
-            rgba(147, 112, 219, 0.3) 100%
+            var(--rt-insanity-bg) 100%
         );
         border-radius: 10px;
         overflow: hidden;
-        border: 1px solid rgba(147, 112, 219, 0.3);
+        border: 1px solid var(--rt-insanity-border);
     }
 
     .rt-insanity-bar-fill {
@@ -271,7 +271,7 @@
         .rt-threshold-line {
             width: 2px;
             height: 100%;
-            background: rgba(147, 112, 219, 0.5);
+            background: var(--rt-insanity-border);
             border-radius: 1px;
         }
 
@@ -280,11 +280,11 @@
             top: -20px;
             font-size: 10px;
             font-weight: 600;
-            color: #7b4db8;
-            background: rgba(255, 255, 255, 0.9);
+            color: var(--rt-insanity-primary);
+            background: var(--rt-panel-bg-solid);
             padding: 2px 4px;
             border-radius: 3px;
-            border: 1px solid rgba(147, 112, 219, 0.3);
+            border: 1px solid var(--rt-insanity-border);
         }
     }
 
@@ -295,14 +295,14 @@
         justify-content: center;
         gap: 8px;
         padding: 8px;
-        color: #9370db;
+        color: var(--rt-insanity-secondary);
         font-size: 14px;
         font-weight: 600;
         transition: all 0.3s ease;
 
         i {
             font-size: 24px;
-            filter: drop-shadow(0 2px 4px rgba(147, 112, 219, 0.2));
+            filter: drop-shadow(0 2px 4px var(--rt-insanity-bg));
         }
 
         .rt-mind-text {
@@ -313,7 +313,7 @@
 
     // Fractured Mind (60+ insanity)
     .rt-mind-fractured {
-        color: #7b4db8;
+        color: var(--rt-insanity-primary);
 
         i {
             filter: drop-shadow(0 2px 4px rgba(123, 77, 184, 0.4)) grayscale(0.2);
@@ -328,7 +328,7 @@
 
     // Shattered Mind (90+ insanity)
     .rt-mind-shattered {
-        color: #5a2894;
+        color: var(--rt-insanity-primary);
 
         i {
             filter: drop-shadow(0 2px 8px rgba(90, 40, 148, 0.6)) grayscale(0.4);
@@ -380,9 +380,9 @@
     .rt-disorder-preview {
         margin-top: 8px;
         padding: 8px 12px;
-        background: rgba(147, 112, 219, 0.1);
+        background: var(--rt-insanity-bg);
         border-radius: 6px;
-        border: 1px solid rgba(147, 112, 219, 0.2);
+        border: 1px solid var(--rt-insanity-border);
     }
 
     .rt-disorder-count {
@@ -391,11 +391,11 @@
         gap: 8px;
         font-size: 13px;
         font-weight: 600;
-        color: #7b4db8;
+        color: var(--rt-insanity-primary);
 
         i {
             font-size: 16px;
-            color: #9370db;
+            color: var(--rt-insanity-secondary);
         }
     }
 
@@ -403,7 +403,7 @@
     .rt-panel-details {
         margin-top: 12px;
         padding-top: 12px;
-        border-top: 1px solid rgba(147, 112, 219, 0.2);
+        border-top: 1px solid var(--rt-insanity-border);
     }
 
     .rt-insanity-edit-section {
@@ -421,11 +421,11 @@
         gap: 8px;
         font-size: 14px;
         font-weight: 600;
-        color: #5a2894;
+        color: var(--rt-insanity-primary);
         margin-bottom: 8px;
 
         i {
-            color: #9370db;
+            color: var(--rt-insanity-secondary);
         }
     }
 
@@ -438,22 +438,22 @@
         .rt-edit-label {
             font-size: 12px;
             font-weight: 600;
-            color: #7b4db8;
+            color: var(--rt-insanity-primary);
         }
 
         .rt-edit-input {
             padding: 8px 12px;
-            border: 1px solid rgba(147, 112, 219, 0.3);
+            border: 1px solid var(--rt-insanity-border);
             border-radius: 4px;
             font-size: 14px;
             font-family: 'Modesto Condensed', serif;
-            background: white;
+            background: var(--rt-input-bg);
             transition: all 0.2s ease;
 
             &:focus {
                 outline: none;
-                border-color: #9370db;
-                box-shadow: 0 0 0 2px rgba(147, 112, 219, 0.1);
+                border-color: var(--rt-insanity-secondary);
+                box-shadow: 0 0 0 2px var(--rt-insanity-bg);
             }
         }
     }
@@ -467,10 +467,10 @@
 
     .rt-quick-set-btn {
         padding: 8px;
-        border: 1px solid rgba(147, 112, 219, 0.3);
+        border: 1px solid var(--rt-insanity-border);
         border-radius: 4px;
         background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
-        color: #7b4db8;
+        color: var(--rt-insanity-primary);
         font-size: 12px;
         font-weight: 600;
         cursor: pointer;
@@ -485,11 +485,11 @@
         }
 
         &:hover {
-            background: linear-gradient(135deg, #9370db 0%, #8a63c4 100%);
+            background: linear-gradient(135deg, var(--rt-insanity-secondary) 0%, #8a63c4 100%);
             color: white;
-            border-color: #9370db;
+            border-color: var(--rt-insanity-secondary);
             transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(147, 112, 219, 0.3);
+            box-shadow: 0 2px 6px var(--rt-insanity-bg);
         }
 
         &:active {
@@ -511,13 +511,13 @@
         gap: 8px;
         padding: 8px 12px;
         background: linear-gradient(135deg, rgba(200, 184, 232, 0.15) 0%, rgba(200, 184, 232, 0.05) 100%);
-        border: 1px solid rgba(147, 112, 219, 0.2);
+        border: 1px solid var(--rt-insanity-border);
         border-radius: 6px;
         transition: all 0.2s ease;
 
         &:hover {
             background: linear-gradient(135deg, rgba(200, 184, 232, 0.25) 0%, rgba(200, 184, 232, 0.15) 100%);
-            border-color: #9370db;
+            border-color: var(--rt-insanity-secondary);
         }
     }
 
@@ -528,7 +528,7 @@
         gap: 6px;
         font-size: 13px;
         font-weight: 600;
-        color: #5a2894;
+        color: var(--rt-insanity-primary);
         background: transparent;
         border: none;
         cursor: pointer;
@@ -537,11 +537,11 @@
 
         i {
             font-size: 14px;
-            color: #9370db;
+            color: var(--rt-insanity-secondary);
         }
 
         &:hover {
-            color: #7b4db8;
+            color: var(--rt-insanity-primary);
         }
     }
 
@@ -549,9 +549,9 @@
         width: 24px;
         height: 24px;
         border-radius: 4px;
-        border: 1px solid rgba(147, 112, 219, 0.3);
+        border: 1px solid var(--rt-insanity-border);
         background: transparent;
-        color: #9370db;
+        color: var(--rt-insanity-secondary);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -559,8 +559,8 @@
         transition: all 0.2s ease;
 
         &:hover {
-            background: #e74c3c;
-            border-color: #e74c3c;
+            background: var(--rt-danger-primary);
+            border-color: var(--rt-danger-primary);
             color: white;
         }
     }
@@ -569,9 +569,9 @@
         width: 24px;
         height: 24px;
         border-radius: 4px;
-        border: 1px solid rgba(147, 112, 219, 0.3);
+        border: 1px solid var(--rt-insanity-border);
         background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
-        color: #9370db;
+        color: var(--rt-insanity-secondary);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -583,9 +583,9 @@
         }
 
         &:hover {
-            background: linear-gradient(135deg, #9370db 0%, #8a63c4 100%);
+            background: linear-gradient(135deg, var(--rt-insanity-secondary) 0%, #8a63c4 100%);
             color: white;
-            border-color: #9370db;
+            border-color: var(--rt-insanity-secondary);
         }
     }
 
@@ -595,7 +595,7 @@
         align-items: center;
         gap: 6px;
         padding: 16px;
-        color: #9370db;
+        color: var(--rt-insanity-secondary);
         font-size: 13px;
         text-align: center;
 
@@ -608,7 +608,7 @@
     // Info Box
     .rt-insanity-info-box {
         background: linear-gradient(135deg, rgba(200, 184, 232, 0.1) 0%, rgba(200, 184, 232, 0.05) 100%);
-        border: 1px solid rgba(147, 112, 219, 0.2);
+        border: 1px solid var(--rt-insanity-border);
         border-radius: 6px;
         padding: 12px;
         display: flex;
@@ -616,7 +616,7 @@
 
         > i {
             font-size: 24px;
-            color: #9370db;
+            color: var(--rt-insanity-secondary);
             flex-shrink: 0;
         }
 
@@ -626,7 +626,7 @@
             strong {
                 display: block;
                 font-size: 14px;
-                color: #5a2894;
+                color: var(--rt-insanity-primary);
                 margin-bottom: 8px;
             }
         }
@@ -640,11 +640,11 @@
 
         li {
             padding: 4px 0;
-            color: #7b4db8;
+            color: var(--rt-insanity-primary);
 
             .rt-degree-name {
                 font-weight: 600;
-                color: #5a2894;
+                color: var(--rt-insanity-primary);
 
                 &.rt-degree-insane {
                     color: #4b1c7d;
@@ -652,7 +652,7 @@
             }
 
             strong {
-                color: #5a2894;
+                color: var(--rt-insanity-primary);
             }
         }
     }
@@ -660,14 +660,14 @@
     .rt-insanity-warning {
         margin: 0;
         padding: 8px;
-        background: rgba(147, 112, 219, 0.1);
-        border-left: 3px solid #9370db;
+        background: var(--rt-insanity-bg);
+        border-left: 3px solid var(--rt-insanity-secondary);
         font-size: 12px;
-        color: #7b4db8;
+        color: var(--rt-insanity-primary);
         border-radius: 0 4px 4px 0;
 
         i {
-            color: #9370db;
+            color: var(--rt-insanity-secondary);
         }
     }
 }

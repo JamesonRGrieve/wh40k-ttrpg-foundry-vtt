@@ -13,8 +13,8 @@
 }
 
 .rt-item-sheet {
-  background: linear-gradient(135deg, $rt-bg-primary 0%, $rt-bg-secondary 100%);
-  color: $rt-color-parchment;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  color: var(--color-text-primary);
   font-family: $rt-font-body;
   font-size: $rt-font-size-base;
   
@@ -24,15 +24,15 @@
   }
   
   &::-webkit-scrollbar-track {
-    background: $rt-color-void;
+    background: var(--color-bg-primary);
   }
   
   &::-webkit-scrollbar-thumb {
-    background: $rt-color-steel-dark;
+    background: var(--color-border-secondary);
     border-radius: $rt-radius-md;
     
     &:hover {
-      background: $rt-color-steel;
+      background: var(--color-border-primary);
     }
   }
 }

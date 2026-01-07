@@ -98,7 +98,7 @@
 
 .rt-text-center { text-align: center; }
 .rt-text-right { text-align: right; }
-.rt-text-muted { color: $rt-text-muted; }
+.rt-text-muted { color: var(--color-text-tertiary); }
 .rt-text-sm { font-size: $rt-font-size-sm; }
 .rt-text-xs { font-size: $rt-font-size-xs; }
 .rt-uppercase { text-transform: uppercase; }

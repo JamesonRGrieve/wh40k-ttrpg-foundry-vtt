@@ -2,21 +2,21 @@
 // ============================================
 
 .rt-panel {
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: $rt-space-md;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--rt-shadow-soft);
   position: relative;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba($rt-accent-talents, 0.12);
-    border-top: 2px solid rgba($rt-accent-talents, 0.25);
-    border-bottom: 2px solid rgba($rt-accent-talents, 0.25);
+    background: var(--rt-accent-overlay);
+    border-top: 2px solid var(--rt-accent-border);
+    border-bottom: 2px solid var(--rt-accent-border);
     pointer-events: none;
     z-index: 0;
   }
@@ -34,7 +34,7 @@
   gap: $rt-space-sm;
   padding: $rt-space-sm $rt-space-md;
   background: linear-gradient(180deg, rgba($rt-accent-gold, 0.15) 0%, rgba($rt-accent-gold, 0.05) 100%);
-  border-bottom: 1px solid $rt-border-light;
+  border-bottom: 1px solid var(--rt-border-color-light);
   transition: box-shadow 0.2s ease, background 0.2s ease;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -45,7 +45,7 @@
     font-family: 'Modesto Condensed', serif;
     font-size: 1.1rem;
     font-weight: 600;
-    color: $rt-text-primary;
+    color: var(--rt-text-dark);
     letter-spacing: 0.02em;
     white-space: nowrap !important;
     overflow: hidden;
@@ -89,7 +89,7 @@
 // Chevron indicator for collapsible panels
 .rt-panel-chevron {
   font-size: 0.75rem;
-  color: $rt-text-muted;
+  color: var(--rt-text-muted);
   transition: transform 0.2s ease, color 0.15s ease;
   margin-left: auto;
   flex-shrink: 0;
@@ -105,11 +105,11 @@
 
 .rt-panel-body {
   padding: $rt-space-md;
-  background: $rt-bg-translucent;
+  background: var(--rt-panel-body-bg);
 }
 
 .rt-panel:hover .rt-panel-header {
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.35), 0 6px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 -1px 0 var(--rt-text-shadow), 0 6px 14px var(--rt-shadow-soft);
 }
 
 @keyframes rt-panel-in {

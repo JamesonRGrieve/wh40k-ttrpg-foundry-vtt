@@ -5,7 +5,7 @@
 .rt-origin-description {
     text-align: center;
     font-style: italic;
-    color: #666;
+    color: var(--rt-text-muted);
     margin: 5px 0 15px;
     font-size: 0.9em;
 }
@@ -18,20 +18,20 @@
 }
 
 .rt-origin-step {
-    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(240,235,225,0.6) 100%);
-    border: 2px solid rgba(74, 55, 40, 0.3);
+    background: var(--rt-panel-bg);
+    border: 2px solid var(--rt-border-color-light);
     border-radius: 6px;
     overflow: hidden;
     transition: all 0.2s ease;
     
     &:hover {
-        border-color: rgba(74, 55, 40, 0.5);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-color: var(--rt-border-color);
+        box-shadow: 0 2px 8px var(--rt-shadow-soft);
     }
     
     &.rt-origin-step--filled {
-        border-color: #4a3728;
-        background: linear-gradient(135deg, rgba(218,165,32,0.1) 0%, rgba(240,235,225,0.8) 100%);
+        border-color: var(--rt-border-color-strong);
+        background: var(--rt-panel-bg-solid);
     }
 }
 
@@ -40,8 +40,8 @@
     align-items: center;
     gap: 8px;
     padding: 8px 10px;
-    background: rgba(74, 55, 40, 0.1);
-    border-bottom: 1px solid rgba(74, 55, 40, 0.2);
+    background: var(--rt-accent-overlay);
+    border-bottom: 1px solid var(--rt-border-color-light);
 }
 
 .rt-origin-step-number {
@@ -50,7 +50,7 @@
     justify-content: center;
     width: 22px;
     height: 22px;
-    background: #4a3728;
+    background: var(--rt-gold);
     color: #fff;
     border-radius: 50%;
     font-size: 0.75em;
@@ -59,7 +59,7 @@
 
 .rt-origin-step-label {
     font-weight: bold;
-    color: #4a3728;
+    color: var(--rt-text-medium);
     text-transform: uppercase;
     font-size: 0.85em;
 }
@@ -79,7 +79,7 @@
     width: 40px;
     height: 40px;
     border-radius: 4px;
-    border: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid var(--rt-border-color-light);
 }
 
 .rt-origin-item-info {
@@ -88,12 +88,12 @@
 
 .rt-origin-item-name {
     font-weight: bold;
-    color: #2a1a0a;
+    color: var(--rt-text-dark);
     cursor: pointer;
     
     &:hover {
         text-decoration: underline;
-        color: #8B4513;
+        color: var(--rt-gold);
     }
 }
 
@@ -103,7 +103,7 @@
     
     &:hover {
         opacity: 1;
-        color: #8B0000;
+        color: var(--rt-red-bright);
     }
     
     .material-icons {
@@ -117,14 +117,14 @@
     align-items: center;
     justify-content: center;
     min-height: 50px;
-    border: 2px dashed rgba(74, 55, 40, 0.3);
+    border: 2px dashed var(--rt-border-color);
     border-radius: 4px;
-    color: rgba(74, 55, 40, 0.5);
+    color: var(--rt-text-muted);
     transition: all 0.2s ease;
     
     &:hover {
-        border-color: rgba(74, 55, 40, 0.6);
-        background: rgba(255, 255, 255, 0.3);
+        border-color: var(--rt-border-color-strong);
+        background: var(--rt-panel-bg-translucent);
     }
 }
 
@@ -147,8 +147,8 @@
 }
 
 .rt-effect-card {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(74, 55, 40, 0.2);
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -157,19 +157,19 @@
     display: flex;
     justify-content: space-between;
     padding: 6px 10px;
-    background: rgba(74, 55, 40, 0.1);
-    border-bottom: 1px solid rgba(74, 55, 40, 0.15);
+    background: var(--rt-accent-overlay);
+    border-bottom: 1px solid var(--rt-border-color-light);
 }
 
 .rt-effect-source {
     font-size: 0.75em;
     text-transform: uppercase;
-    color: #666;
+    color: var(--rt-text-muted);
 }
 
 .rt-effect-name {
     font-weight: bold;
-    color: #4a3728;
+    color: var(--rt-text-medium);
     font-size: 0.9em;
 }
 
@@ -180,7 +180,7 @@
 .rt-effect-benefit {
     font-size: 0.85em;
     line-height: 1.4;
-    color: #333;
+    color: var(--rt-text-dark);
     margin: 0;
     max-height: 80px;
     overflow-y: auto;
@@ -189,7 +189,7 @@
 .rt-origin-empty {
     text-align: center;
     padding: 30px;
-    color: #666;
+    color: var(--rt-text-muted);
     
     .rt-empty-icon {
         font-size: 48px;

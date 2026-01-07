@@ -49,9 +49,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             width: 1050,
             height: 800
         },
-        // Tab configuration - matches existing template
+        // Tab configuration - uses ApplicationV2 tab handling
         tabs: [
-            { navSelector: ".rt-navigation", contentSelector: ".rt-body", initial: "overview" }
+            { navSelector: "nav.rt-navigation", contentSelector: "#tab-body", initial: "overview", group: "primary" }
         ]
     };
 
@@ -59,8 +59,8 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Template parts for the Acolyte sheet.
-     * Each part can be re-rendered independently for better performance.
-     * Following dnd5e pattern: each tab is a separate part.
+     * Each tab part shares the same container so they stack in one place.
+     * Foundry V13 ApplicationV2 handles tab visibility automatically.
      * @override
      */
     static PARTS = {
@@ -72,34 +72,42 @@ export default class AcolyteSheet extends BaseActorSheet {
         },
         overview: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         combat: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         skills: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         talents: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-talents.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         equipment: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-equipment.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         powers: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-powers.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         dynasty: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-dynasty.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         biography: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         }
     };
@@ -197,12 +205,36 @@ export default class AcolyteSheet extends BaseActorSheet {
             case "powers":
             case "dynasty":
             case "biography":
-                // All tab data is prepared in _prepareContext
-                context.tab = this.tabGroups.primary;
-                return context;
+                // Provide tab object for the template
+                return this._prepareTabPartContext(partId, context, options);
             default:
                 return context;
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare context for a tab content part.
+     * @param {string} partId   The part ID (which matches the tab ID).
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {object}
+     * @protected
+     */
+    _prepareTabPartContext(partId, context, options) {
+        // Find the tab configuration
+        const tabConfig = this.constructor.TABS.find(t => t.tab === partId);
+        if (tabConfig) {
+            context.tab = {
+                id: tabConfig.tab,
+                group: tabConfig.group,
+                cssClass: tabConfig.cssClass,
+                label: game.i18n.localize(tabConfig.label),
+                active: this.tabGroups[tabConfig.group] === tabConfig.tab
+            };
+        }
+        return context;
     }
 
     /* -------------------------------------------- */
@@ -244,36 +276,19 @@ export default class AcolyteSheet extends BaseActorSheet {
     _onFirstRender(context, options) {
         super._onFirstRender(context, options);
         
-        // Create main layout structure for tabs
-        // This wraps the navigation and body into a proper layout container
-        const form = this.element.querySelector("form.rt-sheet");
-        if (!form) return;
+        // Ensure initial tab is active
+        const activeTab = this.tabGroups.primary || "overview";
         
-        const navigation = form.querySelector(".rt-navigation");
-        const tabs = form.querySelectorAll(".tab.rt-tab");
+        // Add active class to the initial tab content
+        const tabContent = this.element.querySelector(`section.tab[data-tab="${activeTab}"]`);
+        if (tabContent) {
+            tabContent.classList.add("active");
+        }
         
-        if (navigation && tabs.length) {
-            // Create the main layout container
-            let mainLayout = form.querySelector(".rt-main-layout");
-            if (!mainLayout) {
-                mainLayout = document.createElement("div");
-                mainLayout.classList.add("rt-main-layout");
-                navigation.after(mainLayout);
-            }
-            
-            // Move navigation into main layout
-            mainLayout.prepend(navigation);
-            
-            // Create body container for tabs
-            let body = mainLayout.querySelector(".rt-body");
-            if (!body) {
-                body = document.createElement("section");
-                body.classList.add("rt-body");
-                mainLayout.append(body);
-            }
-            
-            // Move all tabs into body
-            tabs.forEach(tab => body.append(tab));
+        // Add active class to the initial nav item
+        const navItem = this.element.querySelector(`nav.rt-navigation a[data-tab="${activeTab}"]`);
+        if (navItem) {
+            navItem.classList.add("active");
         }
     }
 
@@ -355,25 +370,65 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Categorize all items in a single pass for performance.
+     * Replaces multiple filter() calls with one iteration.
+     * @returns {object} Categorized items
+     * @protected
+     */
+    _categorizeItems() {
+        const categories = {
+            all: [],
+            weapons: [],
+            armour: [],
+            forceField: [],
+            cybernetic: [],
+            gear: [],
+            storageLocation: [],
+            criticalInjury: [],
+            equipped: []
+        };
+
+        for (const item of this.actor.items) {
+            categories.all.push(item);
+
+            // Categorize by type
+            if (item.type === "weapon" || item.isWeapon) categories.weapons.push(item);
+            else if (item.type === "armour" || item.isArmour) categories.armour.push(item);
+            else if (item.type === "forceField" || item.isForceField) categories.forceField.push(item);
+            else if (item.type === "cybernetic" || item.isCybernetic) categories.cybernetic.push(item);
+            else if (item.type === "gear" || item.isGear) categories.gear.push(item);
+            else if (item.type === "storageLocation") categories.storageLocation.push(item);
+            else if (item.type === "criticalInjury" || item.isCriticalInjury) categories.criticalInjury.push(item);
+
+            // Track equipped items
+            if (item.system?.equipped === true) categories.equipped.push(item);
+        }
+
+        return categories;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Prepare loadout/equipment data for the template.
      * @param {object} context  The template render context.
      * @protected
      */
     _prepareLoadoutData(context) {
-        const items = this.actor.items;
+        const categorized = this._categorizeItems();
 
         // Add all items to context for the Backpack panel
-        context.allItems = Array.from(items);
+        context.allItems = categorized.all;
 
         // Filter items by type
-        context.armourItems = items.filter(i => i.type === "armour" || i.isArmour);
-        context.forceFieldItems = items.filter(i => i.type === "forceField" || i.isForceField);
-        context.cyberneticItems = items.filter(i => i.type === "cybernetic" || i.isCybernetic);
-        context.gearItems = items.filter(i => i.type === "gear" || i.isGear);
-        context.storageLocations = items.filter(i => i.type === "storageLocation");
+        context.armourItems = categorized.armour;
+        context.forceFieldItems = categorized.forceField;
+        context.cyberneticItems = categorized.cybernetic;
+        context.gearItems = categorized.gear;
+        context.storageLocations = categorized.storageLocation;
 
         // Equipped items (all types that are equipped)
-        context.equippedItems = items.filter(i => i.system?.equipped === true);
+        context.equippedItems = categorized.equipped;
 
         // Counts for section headers
         context.armourCount = context.armourItems.length;
@@ -400,8 +455,8 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @protected
      */
     _prepareCombatData(context) {
-        const items = this.actor.items;
-        const weapons = items.filter(i => i.type === "weapon" || i.isWeapon);
+        const categorized = this._categorizeItems();
+        const weapons = categorized.weapons;
         const system = context.system ?? this.actor.system ?? {};
 
         // Calculate vitals percentages
@@ -432,10 +487,10 @@ export default class AcolyteSheet extends BaseActorSheet {
         context.parryTarget = parryBase;
 
         // Critical injuries
-        context.criticalInjuries = items.filter(i => i.type === "criticalInjury" || i.isCriticalInjury);
+        context.criticalInjuries = categorized.criticalInjury;
 
         // Force field (first active/equipped one)
-        const forceFields = items.filter(i => i.type === "forceField" || i.isForceField);
+        const forceFields = categorized.forceField;
         context.forceField = forceFields.find(ff => ff.system?.equipped || ff.system?.activated) || forceFields[0];
         context.hasForceField = !!context.forceField;
 
@@ -607,23 +662,28 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #combatAction(event, target) {
-        const action = target.dataset.combatAction;
+        try {
+            const action = target.dataset.combatAction;
 
-        switch (action) {
-            case "attack":
-                await DHTargetedActionManager.performWeaponAttack(this.actor);
-                break;
-            case "assign-damage":
-                const hitData = new Hit();
-                const assignData = new AssignDamageData(this.actor, hitData);
-                await prepareAssignDamageRoll(assignData);
-                break;
-            case "dodge":
-                await this.actor.rollSkill?.("dodge");
-                break;
-            case "parry":
-                await this.actor.rollSkill?.("parry");
-                break;
+            switch (action) {
+                case "attack":
+                    await DHTargetedActionManager.performWeaponAttack(this.actor);
+                    break;
+                case "assign-damage":
+                    const hitData = new Hit();
+                    const assignData = new AssignDamageData(this.actor, hitData);
+                    await prepareAssignDamageRoll(assignData);
+                    break;
+                case "dodge":
+                    await this.actor.rollSkill?.("dodge");
+                    break;
+                case "parry":
+                    await this.actor.rollSkill?.("parry");
+                    break;
+            }
+        } catch (error) {
+            ui.notifications.error(`Combat action failed: ${error.message}`);
+            console.error("Combat action error:", error);
         }
     }
 
@@ -636,21 +696,26 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollInitiative(event, target) {
-        const agBonus = this.actor.characteristics?.agility?.bonus ?? 0;
-        const roll = await new Roll("1d10 + @ab", { ab: agBonus }).evaluate();
+        try {
+            const agBonus = this.actor.characteristics?.agility?.bonus ?? 0;
+            const roll = await new Roll("1d10 + @ab", { ab: agBonus }).evaluate();
 
-        await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `
-                <div class="rt-initiative-roll">
-                    <h3><i class="fas fa-bolt"></i> Initiative Roll</h3>
-                    <div class="rt-roll-formula">1d10 + ${agBonus} (Ag Bonus)</div>
-                    <div class="rt-roll-result">${roll.total}</div>
-                </div>
-            `,
-            rolls: [roll],
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL
-        });
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content: `
+                    <div class="rt-initiative-roll">
+                        <h3><i class="fas fa-bolt"></i> Initiative Roll</h3>
+                        <div class="rt-roll-formula">1d10 + ${agBonus} (Ag Bonus)</div>
+                        <div class="rt-roll-result">${roll.total}</div>
+                    </div>
+                `,
+                rolls: [roll],
+                type: CONST.CHAT_MESSAGE_STYLES.ROLL
+            });
+        } catch (error) {
+            ui.notifications.error(`Initiative roll failed: ${error.message}`);
+            console.error("Initiative roll error:", error);
+        }
     }
 
     /* -------------------------------------------- */
@@ -662,46 +727,51 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollHitLocation(event, target) {
-        const roll = await new Roll("1d100").evaluate();
-        const result = roll.total;
+        try {
+            const roll = await new Roll("1d100").evaluate();
+            const result = roll.total;
 
-        const locations = [
-            { name: "Head", min: 1, max: 10, key: "head" },
-            { name: "Right Arm", min: 11, max: 20, key: "rightArm" },
-            { name: "Left Arm", min: 21, max: 30, key: "leftArm" },
-            { name: "Body", min: 31, max: 70, key: "body" },
-            { name: "Right Leg", min: 71, max: 85, key: "rightLeg" },
-            { name: "Left Leg", min: 86, max: 100, key: "leftLeg" }
-        ];
+            const locations = [
+                { name: "Head", min: 1, max: 10, key: "head" },
+                { name: "Right Arm", min: 11, max: 20, key: "rightArm" },
+                { name: "Left Arm", min: 21, max: 30, key: "leftArm" },
+                { name: "Body", min: 31, max: 70, key: "body" },
+                { name: "Right Leg", min: 71, max: 85, key: "rightLeg" },
+                { name: "Left Leg", min: 86, max: 100, key: "leftLeg" }
+            ];
 
-        const hitLocation = locations.find(loc => result >= loc.min && result <= loc.max);
-        const armourValue = this.actor.system.armour?.[hitLocation.key]?.total ?? 0;
+            const hitLocation = locations.find(loc => result >= loc.min && result <= loc.max);
+            const armourValue = this.actor.system.armour?.[hitLocation.key]?.total ?? 0;
 
-        const content = `
-            <div class="rt-hit-location-result">
-                <h3><i class="fas fa-crosshairs"></i> Hit Location Roll</h3>
-                <div class="rt-hit-roll">
-                    <span class="rt-roll-result">${result}</span>
+            const content = `
+                <div class="rt-hit-location-result">
+                    <h3><i class="fas fa-crosshairs"></i> Hit Location Roll</h3>
+                    <div class="rt-hit-roll">
+                        <span class="rt-roll-result">${result}</span>
+                    </div>
+                    <div class="rt-hit-location">
+                        <span class="rt-location-name">${hitLocation.name}</span>
+                        <span class="rt-location-armour">Armour: ${armourValue}</span>
+                    </div>
                 </div>
-                <div class="rt-hit-location">
-                    <span class="rt-location-name">${hitLocation.name}</span>
-                    <span class="rt-location-armour">Armour: ${armourValue}</span>
-                </div>
-            </div>
-        `;
+            `;
 
-        await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content,
-            rolls: [roll],
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL
-        });
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+                rolls: [roll],
+                type: CONST.CHAT_MESSAGE_STYLES.ROLL
+            });
 
-        // Flash highlight the hit location on the sheet
-        const locationSlot = this.element.querySelector(`[data-location="${hitLocation.key}"]`);
-        if (locationSlot) {
-            locationSlot.classList.add("rt-hit-location-highlight");
-            setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
+            // Flash highlight the hit location on the sheet
+            const locationSlot = this.element.querySelector(`[data-location="${hitLocation.key}"]`);
+            if (locationSlot) {
+                locationSlot.classList.add("rt-hit-location-highlight");
+                setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
+            }
+        } catch (error) {
+            ui.notifications.error(`Hit location roll failed: ${error.message}`);
+            console.error("Hit location roll error:", error);
         }
     }
 
@@ -968,7 +1038,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     static async #addAcquisition(event, target) {
         const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
         const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
-        const updatedAcquisitions = foundry.utils.duplicate(acquisitionList);
+        const updatedAcquisitions = structuredClone(acquisitionList);
         updatedAcquisitions.push({ name: "", availability: "", modifier: 0, notes: "", acquired: false });
         await this.actor.update({ "system.rogueTrader.acquisitions": updatedAcquisitions });
     }
@@ -991,7 +1061,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             return;
         }
 
-        const updatedAcquisitions = foundry.utils.duplicate(acquisitions);
+        const updatedAcquisitions = structuredClone(acquisitions);
         updatedAcquisitions.splice(index, 1);
         await this.actor.update({ "system.rogueTrader.acquisitions": updatedAcquisitions });
     }
@@ -1005,15 +1075,22 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #bonusVocalize(event, target) {
-        const bonusName = target.dataset.bonusName;
-        const bonus = this.actor.backgroundEffects?.abilities?.find(a => a.name === bonusName);
-        if (bonus) {
-            await DHBasicActionManager.sendItemVocalizeChat({
-                actor: this.actor.name,
-                name: bonus.name,
-                type: bonus.source,
-                description: bonus.benefit
-            });
+        try {
+            const bonusName = target.dataset.bonusName;
+            const bonus = this.actor.backgroundEffects?.abilities?.find(a => a.name === bonusName);
+            if (bonus) {
+                await DHBasicActionManager.sendItemVocalizeChat({
+                    actor: this.actor.name,
+                    name: bonus.name,
+                    type: bonus.source,
+                    description: bonus.benefit
+                });
+            } else {
+                ui.notifications.warn(`Bonus "${bonusName}" not found`);
+            }
+        } catch (error) {
+            ui.notifications.error(`Failed to vocalize bonus: ${error.message}`);
+            console.error("Bonus vocalize error:", error);
         }
     }
 }

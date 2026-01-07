@@ -1,6 +1,6 @@
 {{!-- Acolyte Sheet Overview Tab --}}
 {{!-- This part renders the Overview tab content with vitals and status --}}
-<div class="tab rt-tab rt-tab-overview" data-group="primary" data-tab="overview">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
     {{!-- Two Column Layout --}}
     <div class="rt-overview-grid">
@@ -64,4 +64,4 @@
             {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
         </div>
     </div>
-</div>
+</section>

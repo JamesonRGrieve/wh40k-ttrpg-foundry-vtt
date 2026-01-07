@@ -42,7 +42,7 @@
   font-family: $rt-font-ui;
   font-size: $rt-font-size-xs;
   font-weight: 600;
-  color: $rt-color-void;
+  color: var(--color-bg-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -56,14 +56,14 @@
   justify-content: space-between;
   align-items: center;
   padding: $rt-space-sm $rt-space-md;
-  background: rgba($rt-color-void-light, 0.5);
-  border: 1px solid $rt-color-void-lighter;
+  background: rgba(var(--color-bg-secondary), 0.5);
+  border: 1px solid var(--color-bg-tertiary);
   border-radius: $rt-radius-md;
   margin-bottom: $rt-space-sm;
   transition: all $rt-transition-fast;
   
   &:hover {
-    background: rgba($rt-color-void-light, 0.8);
+    background: rgba(var(--color-bg-secondary), 0.8);
     border-color: $rt-color-gold-dark;
   }
   
@@ -73,13 +73,13 @@
     gap: $rt-space-sm;
     
     strong {
-      color: $rt-color-parchment;
+      color: var(--color-text-primary);
     }
   }
   
   &__detail {
     font-size: $rt-font-size-sm;
-    color: $rt-color-steel;
+    color: var(--color-border-primary);
     margin-left: $rt-space-sm;
   }
 }

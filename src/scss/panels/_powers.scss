@@ -75,7 +75,7 @@
   background: linear-gradient(135deg, rgba($rt-accent-equipment, 0.12), rgba(255, 255, 255, 0.6));
   border: 1px solid rgba($rt-accent-equipment, 0.25);
   border-radius: 8px;
-  color: $rt-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .rt-equipment-legend-title {
@@ -83,7 +83,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
-  color: $rt-text-primary;
+  color: var(--color-text-primary);
 }
 
 .rt-equipment-legend-sub {

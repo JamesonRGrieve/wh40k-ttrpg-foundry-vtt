@@ -3,8 +3,8 @@
 // ============================================
 
 .rt-actor-sheet-modern {
-  background: linear-gradient(135deg, $rt-bg-primary 0%, $rt-bg-secondary 100%);
-  color: $rt-color-parchment;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  color: var(--color-text-primary);
   font-family: $rt-font-body;
 }
 
@@ -65,19 +65,19 @@
   justify-content: space-between;
   align-items: center;
   padding: $rt-space-xs $rt-space-sm;
-  background: rgba($rt-color-void-lighter, 0.5);
+  background: rgba(var(--color-bg-tertiary), 0.5);
   border-radius: $rt-radius-sm;
   min-width: 140px;
   
   &__label {
     font-size: $rt-font-size-xs;
-    color: $rt-color-steel-light;
+    color: var(--color-text-tertiary);
     text-transform: uppercase;
   }
   
   &__value {
     font-weight: 700;
-    color: $rt-color-parchment;
+    color: var(--color-text-primary);
   }
   
   &--wounds {
@@ -112,14 +112,14 @@
   flex-direction: column;
   align-items: center;
   padding: $rt-space-sm;
-  background: linear-gradient(135deg, $rt-bg-tertiary 0%, $rt-bg-secondary 100%);
-  border: 1px solid $rt-color-steel-dark;
+  background: linear-gradient(135deg, var(--color-bg-tertiary) 0%, var(--color-bg-secondary) 100%);
+  border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-md;
   cursor: pointer;
   transition: all $rt-transition-fast;
   
   &:hover {
-    background: linear-gradient(135deg, $rt-bg-secondary 0%, $rt-bg-primary 100%);
+    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
     border-color: $rt-color-gold;
     transform: translateY(-2px);
     box-shadow: $rt-shadow-glow-gold;
@@ -135,14 +135,14 @@
 
 .rt-char-value {
   font-size: $rt-font-size-xxl;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   font-weight: 700;
   margin: $rt-space-xs 0;
 }
 
 .rt-char-label {
   font-size: $rt-font-size-xs;
-  color: $rt-color-steel-light;
+  color: var(--color-text-tertiary);
   text-transform: uppercase;
 }
 
@@ -156,7 +156,7 @@
   align-items: center;
   gap: $rt-space-sm;
   padding: $rt-space-xs;
-  border-bottom: 1px solid rgba($rt-color-void-lighter, 0.3);
+  border-bottom: 1px solid rgba(var(--color-bg-tertiary), 0.3);
   
   &:hover {
     background: rgba($rt-color-gold, 0.05);
@@ -171,24 +171,24 @@
   width: 32px;
   height: 32px;
   border-radius: $rt-radius-sm;
-  border: 1px solid $rt-color-steel-dark;
+  border: 1px solid var(--color-border-secondary);
 }
 
 .rt-item-name {
   flex: 1;
-  color: $rt-color-parchment-dark;
+  color: var(--color-text-secondary);
 }
 
 .rt-item-weight {
   font-size: $rt-font-size-xs;
-  color: $rt-color-steel;
+  color: var(--color-border-primary);
 }
 
 .rt-weapon-row {
   display: flex;
   gap: $rt-space-sm;
   padding: $rt-space-sm;
-  background: rgba($rt-color-void-lighter, 0.3);
+  background: rgba(var(--color-bg-tertiary), 0.3);
   border-radius: $rt-radius-md;
   margin-bottom: $rt-space-sm;
 }
@@ -199,13 +199,13 @@
 
 .rt-weapon-name {
   font-weight: 600;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   margin-bottom: $rt-space-xs;
 }
 
 .rt-weapon-stats {
   font-size: $rt-font-size-sm;
-  color: $rt-color-steel-light;
+  color: var(--color-text-tertiary);
 }
 
 .rt-armour-display {
@@ -216,7 +216,7 @@
 
 .rt-armour-item {
   padding: $rt-space-sm;
-  background: rgba($rt-color-void-lighter, 0.3);
+  background: rgba(var(--color-bg-tertiary), 0.3);
   border-radius: $rt-radius-md;
 }
 
@@ -225,6 +225,6 @@
   gap: $rt-space-md;
   margin-top: $rt-space-xs;
   font-size: $rt-font-size-sm;
-  color: $rt-color-steel-light;
+  color: var(--color-text-tertiary);
 }
 

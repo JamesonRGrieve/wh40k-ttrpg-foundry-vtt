@@ -2,6 +2,7 @@
 // MODERN VITALS PANELS - Overview Tab
 // ============================================
 // Clean, sleek design matching Combat Tab style
+// Uses Foundry color system for theme adaptation
 
 // Vital Display Container
 .rt-vital-display {
@@ -26,18 +27,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(120, 46, 34, 0.3);
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
   border-radius: 6px;
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
-  color: #4a3728;
+  color: var(--color-text-primary);
   
   &:hover {
-    background: rgba(255, 255, 255, 1);
-    border-color: rgba(120, 46, 34, 0.5);
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-highlight);
     transform: scale(1.05);
   }
   
@@ -59,7 +60,7 @@
 .rt-vital-current {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2a1a0a;
+  color: var(--color-text-primary);
   min-width: 36px;
   text-align: center;
   font-family: 'Modesto Condensed', serif;
@@ -67,13 +68,13 @@
 
 .rt-vital-sep {
   font-size: 1.2rem;
-  color: #8b7355;
+  color: var(--color-text-secondary);
   font-weight: 400;
 }
 
 .rt-vital-max {
   font-size: 1rem;
-  color: #6a5a43;
+  color: var(--color-text-secondary);
   font-weight: 600;
   min-width: 28px;
   text-align: center;
@@ -82,7 +83,7 @@
 // Vital Progress Bar
 .rt-vital-bar {
   height: 8px;
-  background: rgba(74, 55, 40, 0.15);
+  background: var(--color-bg-tertiary);
   border-radius: 4px;
   overflow: hidden;
   position: relative;

@@ -16,10 +16,10 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(245, 242, 236, 0.78));
+    background: var(--rt-panel-bg-solid);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 14px var(--rt-shadow-soft);
     position: relative;
 }
 
@@ -55,17 +55,17 @@
 }
 
 .rt-skill-training select {
-    color: #1a1a1a;
+    color: var(--rt-text-dark);
 }
 
 .rt-skills-header {
-    border-bottom: 1px solid rgba(74, 55, 40, 0.18);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.85)) !important;
+    border-bottom: 1px solid var(--rt-border-color-light);
+    background: var(--rt-panel-bg-solid) !important;
 }
 
 .rt-skills-column {
     .rt-skill-row {
-        border-bottom: 1px solid rgba(74, 55, 40, 0.08);
+        border-bottom: 1px solid var(--rt-border-color-light);
     }
     
     .rt-skill-row:last-child {
@@ -110,7 +110,7 @@
 
 .rt-skill-char-tag {
     font-size: 0.75em;
-    color: #6a5a43;
+    color: var(--rt-text-muted);
     margin-left: 4px;
 }
 
@@ -128,11 +128,11 @@
     min-width: 180px;
     max-width: 240px;
     padding: 8px 10px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(74, 55, 40, 0.25);
+    background: var(--rt-panel-bg-solid);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: 6px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-    color: #2a1a0a;
+    box-shadow: 0 6px 18px var(--rt-shadow-medium);
+    color: var(--rt-text-dark);
     font-size: 0.75em;
     line-height: 1.3;
     text-transform: none;
@@ -152,7 +152,7 @@
     transform: translateX(-50%);
     border-width: 6px 6px 0 6px;
     border-style: solid;
-    border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
+    border-color: var(--rt-panel-bg-solid) transparent transparent transparent;
     opacity: 0;
     transition: opacity 0.15s ease;
     z-index: 3;
@@ -229,13 +229,13 @@
     font-size: 0.85em;
     font-weight: bold;
     text-transform: uppercase;
-    color: #4a3728;
+    color: var(--rt-text-medium);
     min-width: 70px;
 }
 
 .rt-header-value {
     font-size: 1em;
-    color: #2a1a0a;
+    color: var(--rt-text-dark);
     min-width: 0;
 }
 
@@ -244,7 +244,8 @@
     font-weight: bold;
     border: none;
     background: transparent;
-    border-bottom: 1px solid #4a3728;
+    border-bottom: 1px solid var(--rt-border-color);
+    color: var(--rt-text-dark);
     padding: 2px 5px;
     width: 100%;
     max-width: 260px;

@@ -6,6 +6,7 @@ import * as dataModels from './data/_module.mjs';
 
 // Import V2 Actor Sheets (ApplicationV2-based)
 import AcolyteSheet from './applications/actor/acolyte-sheet.mjs';
+import AcolyteSheetSidebar from './applications/actor/acolyte-sheet-sidebar.mjs';
 import NpcSheet from './applications/actor/npc-sheet.mjs';
 import VehicleSheet from './applications/actor/vehicle-sheet.mjs';
 import StarshipSheet from './applications/actor/starship-sheet.mjs';
@@ -188,6 +189,11 @@ Enable Debug with: game.rt.debug = true
             types: ["acolyte", "character"],
             makeDefault: true,
             label: "RT.Sheet.Acolyte"
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheetSidebar, {
+            types: ["acolyte", "character"],
+            makeDefault: false,
+            label: "RT.Sheet.AcolyteSidebar"
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NpcSheet, {
             types: ["npc"],

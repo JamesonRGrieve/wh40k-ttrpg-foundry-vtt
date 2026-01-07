@@ -52,7 +52,7 @@
     font-family: 'Modesto Condensed', serif;
     font-size: 1rem;
     font-weight: 600;
-    color: $rt-text-primary;
+    color: var(--color-text-primary);
   }
   
   .rt-specialist-char {
@@ -95,7 +95,7 @@
     background: transparent;
     border: none;
     border-bottom: 1px solid transparent;
-    color: $rt-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.9rem;
     padding: 2px 4px;
     
@@ -137,7 +137,7 @@
     background: $rt-bg-input;
     border: 1px solid $rt-border-light;
     border-radius: 4px;
-    color: $rt-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.8rem;
     padding: 2px 4px;
     text-align: center;

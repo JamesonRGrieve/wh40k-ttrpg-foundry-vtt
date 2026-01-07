@@ -1,6 +1,6 @@
 {{!-- Acolyte Sheet Dynasty Tab --}}
 {{!-- This part renders the Dynasty tab content with Profit Factor, acquisitions, and endeavours --}}
-<div class="tab rt-tab rt-tab-dynasty" data-group="primary" data-tab="dynasty">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="rt-dynasty-grid">
         {{!-- Left Column --}}
         <div class="rt-dynasty-col">
@@ -93,4 +93,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

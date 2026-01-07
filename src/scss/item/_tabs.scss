@@ -4,8 +4,8 @@
 
 .rt-item-sheet .rt-tabs {
   display: flex;
-  border-bottom: 2px solid $rt-color-void-lighter;
-  background: $rt-bg-secondary;
+  border-bottom: 2px solid var(--color-bg-tertiary);
+  background: var(--color-bg-secondary);
 }
 
 .rt-item-sheet .rt-tab {
@@ -14,7 +14,7 @@
   font-size: $rt-font-size-sm;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: $rt-color-steel-light;
+  color: var(--color-text-tertiary);
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
@@ -64,8 +64,8 @@
 // ============================================
 
 .rt-panel {
-  background: $rt-bg-secondary;
-  border: 1px solid $rt-color-void-lighter;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-bg-tertiary);
   border-radius: $rt-radius-md;
   margin: $rt-space-md;
   overflow: hidden;

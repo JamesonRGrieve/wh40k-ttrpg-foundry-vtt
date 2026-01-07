@@ -1,6 +1,6 @@
 {{!-- Acolyte Sheet Biography Tab --}}
 {{!-- This part renders the Biography tab content with identity, origin path, and notes --}}
-<div class="tab rt-tab rt-tab-biography" data-group="primary" data-tab="biography">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="rt-bio-grid">
         {{!-- Left Column: Identity & Origin --}}
         <div class="rt-bio-col">
@@ -143,4 +143,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

@@ -5,10 +5,10 @@
 .rt-empty-state {
   text-align: center;
   padding: $rt-space-xl;
-  color: $rt-color-steel;
+  color: var(--color-border-primary);
   font-style: italic;
-  background: rgba($rt-color-void-light, 0.3);
-  border: 1px dashed $rt-color-void-lighter;
+  background: rgba(var(--color-bg-secondary), 0.3);
+  border: 1px dashed var(--color-bg-tertiary);
   border-radius: $rt-radius-md;
 }
 
@@ -24,9 +24,9 @@
   }
   
   &--muted {
-    background: rgba($rt-color-steel-dark, 0.3);
-    border-color: $rt-color-steel-dark;
-    color: $rt-color-steel;
+    background: rgba(var(--color-border-secondary), 0.3);
+    border-color: var(--color-border-secondary);
+    color: var(--color-border-primary);
   }
   
   &--psychic {
@@ -55,7 +55,7 @@
     border-color: $rt-color-gold-light;
     
     .rt-stat-badge__value {
-      color: $rt-color-void;
+      color: var(--color-bg-primary);
       font-weight: 700;
     }
   }
@@ -88,9 +88,9 @@
   min-height: 100px;
   padding: $rt-space-md;
   background: $rt-bg-input;
-  border: 1px solid $rt-color-void-lighter;
+  border: 1px solid var(--color-bg-tertiary);
   border-radius: $rt-radius-md;
-  color: $rt-color-parchment;
+  color: var(--color-text-primary);
   font-family: $rt-font-body;
   font-size: $rt-font-size-base;
   line-height: 1.6;
@@ -105,7 +105,7 @@
   }
   
   &::placeholder {
-    color: $rt-color-steel;
+    color: var(--color-border-primary);
   }
 }
 
