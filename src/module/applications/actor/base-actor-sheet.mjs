@@ -142,10 +142,12 @@ export default class BaseActorSheet extends TooltipMixin(PrimarySheetMixin(
             if (value?.short) characteristicShorts[key] = value.short;
         });
 
-        // Add training info to standard skills
-        context.skillLists.standard.forEach(([, data]) => {
+        // Add training info and tooltip data to standard skills
+        const characteristics = this.actor.characteristics ?? {};
+        context.skillLists.standard.forEach(([key, data]) => {
             data.trainingLevel = trainingLevel(data);
             data.charShort = characteristicShorts[data.characteristic] ?? data.characteristic ?? "";
+            data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
         });
 
         // Split standard skills into columns
@@ -156,8 +158,9 @@ export default class BaseActorSheet extends TooltipMixin(PrimarySheetMixin(
             standardSkills.slice(splitIndex)
         ];
 
-        // Add training info to specialist skills
-        context.skillLists.specialist.forEach(([, data]) => {
+        // Add training info and tooltip data to specialist skills
+        context.skillLists.specialist.forEach(([key, data]) => {
+            data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
             data.entries?.forEach((entry) => {
                 entry.trainingLevel = trainingLevel(entry);
             });
