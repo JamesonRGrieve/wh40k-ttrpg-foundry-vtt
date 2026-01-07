@@ -31,7 +31,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
             effectToggle: BaseItemSheet.#effectToggle,
             toggleSection: BaseItemSheet.#toggleSection
         },
-        classes: ["rogue-trader", "item", "standard-form", "rt-item-sheet"],
+        classes: ["rogue-trader", "sheet", "item", "rt-item-sheet"],
         form: {
             submitOnChange: true
         },
