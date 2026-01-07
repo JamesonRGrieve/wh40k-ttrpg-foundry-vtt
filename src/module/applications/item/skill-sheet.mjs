@@ -31,8 +31,8 @@ export default class SkillSheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { id: "details", group: "primary", label: "Details" },
-        { id: "description", group: "primary", label: "Description" }
+        { tab: "details", group: "primary", label: "Details" },
+        { tab: "description", group: "primary", label: "Description" }
     ];
 
     /* -------------------------------------------- */
