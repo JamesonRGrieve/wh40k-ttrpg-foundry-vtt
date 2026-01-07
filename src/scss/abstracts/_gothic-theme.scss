@@ -434,3 +434,110 @@
 .rt-gap-sm { gap: var(--rt-space-sm); }
 .rt-gap-md { gap: var(--rt-space-md); }
 .rt-gap-lg { gap: var(--rt-space-lg); }
+
+/* ========================================
+   STAT CHANGE ANIMATIONS
+   ======================================== */
+
+// Increase animation - green flash with scale
+.rt-stat-increase {
+    animation: statIncrease 0.6s ease-out;
+}
+
+@keyframes statIncrease {
+    0% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+    25% {
+        background-color: rgba(74, 222, 128, 0.4);
+        transform: scale(1.15);
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
+    }
+    100% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+}
+
+// Decrease animation - red flash with shake
+.rt-stat-decrease {
+    animation: statDecrease 0.6s ease-out;
+}
+
+@keyframes statDecrease {
+    0% {
+        background-color: transparent;
+        transform: translateX(0);
+    }
+    10% {
+        transform: translateX(-3px);
+    }
+    20% {
+        background-color: rgba(220, 20, 60, 0.4);
+        transform: translateX(3px);
+        box-shadow: 0 0 15px rgba(220, 20, 60, 0.6);
+    }
+    30% {
+        transform: translateX(-2px);
+    }
+    40% {
+        transform: translateX(2px);
+    }
+    50% {
+        transform: translateX(0);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+// Generic value change animation - gold glow
+.rt-stat-changed {
+    animation: statChanged 0.5s ease-out;
+}
+
+@keyframes statChanged {
+    0% {
+        box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+    }
+}
+
+// Critical warning pulse
+.rt-stat-critical {
+    animation: statCritical 1.5s ease-in-out infinite;
+}
+
+@keyframes statCritical {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(220, 20, 60, 0.3);
+        border-color: var(--rt-red);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(220, 20, 60, 0.7);
+        border-color: var(--rt-red-bright);
+    }
+}
+
+// Success glow
+.rt-stat-success {
+    animation: statSuccess 0.8s ease-out;
+}
+
+@keyframes statSuccess {
+    0% {
+        box-shadow: 0 0 0 rgba(74, 222, 128, 0);
+    }
+    30% {
+        box-shadow: 0 0 25px rgba(74, 222, 128, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(74, 222, 128, 0);
+    }
+}
