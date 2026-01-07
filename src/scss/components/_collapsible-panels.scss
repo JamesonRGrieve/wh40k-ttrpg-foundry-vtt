@@ -1,0 +1,457 @@
+/**
+ * Collapsible Panel Styles
+ * Enhanced collapsible panels with smooth animations and Gothic 40K theming
+ */
+
+/* -------------------------------------------- */
+/*  Panel Structure                             */
+/* -------------------------------------------- */
+
+.rt-collapsible-panel {
+    border: 2px solid var(--color-border-dark, #3e3e3e);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.2) 100%);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        border-color: var(--rt-bronze, #cd7f32);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Panel Header                                */
+/* -------------------------------------------- */
+
+.rt-panel-header-collapsible {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: linear-gradient(90deg, 
+        var(--rt-iron, #3e3e3e) 0%, 
+        var(--rt-bronze, #cd7f32) 100%
+    );
+    border-bottom: 2px solid var(--rt-gold, #d4af37);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: linear-gradient(90deg, 
+            var(--rt-bronze, #cd7f32) 0%, 
+            var(--rt-gold, #d4af37) 100%
+        );
+        transform: translateX(2px);
+    }
+    
+    &:active {
+        transform: translateX(0);
+    }
+}
+
+.rt-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--rt-font-header, "Caslon Antique", serif);
+    font-size: 1.1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-bone, #e8dcc8);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    
+    i {
+        font-size: 0.9em;
+        color: var(--rt-gold, #d4af37);
+    }
+}
+
+.rt-panel-toggle-icon {
+    font-size: 1.2em;
+    color: var(--rt-bone, #e8dcc8);
+    transition: transform 0.3s ease;
+    
+    .collapsed & {
+        transform: rotate(-90deg);
+    }
+}
+
+.rt-panel-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 0.75em;
+    font-weight: bold;
+    color: var(--rt-gold, #d4af37);
+}
+
+/* -------------------------------------------- */
+/*  Panel Content                               */
+/* -------------------------------------------- */
+
+.rt-panel-content {
+    max-height: 2000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 1;
+    
+    .collapsed & {
+        max-height: 0 !important;
+        opacity: 0;
+    }
+}
+
+.rt-panel-body {
+    padding: 12px;
+}
+
+/* -------------------------------------------- */
+/*  Panel Presets Bar                           */
+/* -------------------------------------------- */
+
+.rt-panel-presets {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--color-border-dark, #3e3e3e);
+    flex-wrap: wrap;
+}
+
+.rt-preset-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border: 1px solid var(--rt-bronze, #cd7f32);
+    border-radius: 3px;
+    background: linear-gradient(135deg, 
+        rgba(62, 62, 62, 0.8) 0%, 
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    color: var(--rt-bone, #e8dcc8);
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    i {
+        font-size: 0.9em;
+        color: var(--rt-gold, #d4af37);
+    }
+    
+    &:hover {
+        background: linear-gradient(135deg, 
+            var(--rt-bronze, #cd7f32) 0%, 
+            var(--rt-iron, #3e3e3e) 100%
+        );
+        border-color: var(--rt-gold, #d4af37);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Keyboard Shortcut Hints                     */
+/* -------------------------------------------- */
+
+.rt-panel-shortcut {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.4);
+    font-size: 0.7em;
+    font-family: monospace;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: auto;
+}
+
+/* -------------------------------------------- */
+/*  Panel States                                */
+/* -------------------------------------------- */
+
+/* Collapsed state */
+.rt-collapsible-panel.collapsed {
+    .rt-panel-content {
+        max-height: 0;
+        padding: 0;
+        border-top: none;
+    }
+    
+    .rt-panel-toggle-icon {
+        transform: rotate(-90deg);
+    }
+}
+
+/* Disabled state */
+.rt-collapsible-panel.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    
+    .rt-panel-header-collapsible {
+        cursor: not-allowed;
+    }
+}
+
+/* Loading state */
+.rt-collapsible-panel.loading {
+    .rt-panel-header-collapsible::after {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+        border: 2px solid var(--rt-gold, #d4af37);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: panel-spin 0.8s linear infinite;
+    }
+}
+
+@keyframes panel-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Panel Variants                              */
+/* -------------------------------------------- */
+
+/* Compact variant */
+.rt-collapsible-panel.compact {
+    .rt-panel-header-collapsible {
+        padding: 6px 10px;
+    }
+    
+    .rt-panel-title {
+        font-size: 0.95em;
+    }
+    
+    .rt-panel-body {
+        padding: 8px;
+    }
+}
+
+/* Highlighted variant (important panels) */
+.rt-collapsible-panel.highlighted {
+    border-color: var(--rt-gold, #d4af37);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+    
+    .rt-panel-header-collapsible {
+        background: linear-gradient(90deg, 
+            var(--rt-bronze, #cd7f32) 0%, 
+            var(--rt-gold, #d4af37) 100%
+        );
+    }
+}
+
+/* Warning variant */
+.rt-collapsible-panel.warning {
+    border-color: #ff9800;
+    
+    .rt-panel-header-collapsible {
+        background: linear-gradient(90deg, 
+            rgba(255, 152, 0, 0.3) 0%, 
+            rgba(139, 0, 0, 0.3) 100%
+        );
+    }
+    
+    .rt-panel-title i {
+        color: #ff9800;
+        animation: pulse-warning 2s infinite;
+    }
+}
+
+@keyframes pulse-warning {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Danger variant */
+.rt-collapsible-panel.danger {
+    border-color: #dc143c;
+    
+    .rt-panel-header-collapsible {
+        background: linear-gradient(90deg, 
+            rgba(139, 0, 0, 0.5) 0%, 
+            rgba(75, 0, 0, 0.5) 100%
+        );
+    }
+    
+    .rt-panel-title i {
+        color: #dc143c;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Nested Panels                               */
+/* -------------------------------------------- */
+
+.rt-collapsible-panel .rt-collapsible-panel {
+    margin: 8px 0;
+    border-width: 1px;
+    
+    .rt-panel-header-collapsible {
+        padding: 6px 10px;
+        font-size: 0.9em;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Panel Animations                            */
+/* -------------------------------------------- */
+
+/* Slide in from top on first render */
+@keyframes panel-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rt-collapsible-panel {
+    animation: panel-slide-in 0.3s ease-out;
+}
+
+/* Stagger animation for multiple panels */
+.rt-collapsible-panel:nth-child(1) { animation-delay: 0.05s; }
+.rt-collapsible-panel:nth-child(2) { animation-delay: 0.1s; }
+.rt-collapsible-panel:nth-child(3) { animation-delay: 0.15s; }
+.rt-collapsible-panel:nth-child(4) { animation-delay: 0.2s; }
+.rt-collapsible-panel:nth-child(5) { animation-delay: 0.25s; }
+.rt-collapsible-panel:nth-child(6) { animation-delay: 0.3s; }
+.rt-collapsible-panel:nth-child(7) { animation-delay: 0.35s; }
+.rt-collapsible-panel:nth-child(8) { animation-delay: 0.4s; }
+.rt-collapsible-panel:nth-child(9) { animation-delay: 0.45s; }
+
+/* -------------------------------------------- */
+/*  Gothic 40K Theme Enhancements               */
+/* -------------------------------------------- */
+
+/* Rivets decoration */
+.rt-panel-header-collapsible::before,
+.rt-panel-header-collapsible::after {
+    content: "•";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 8px;
+    color: var(--rt-iron, #3e3e3e);
+    opacity: 0.6;
+}
+
+.rt-panel-header-collapsible::before {
+    left: 4px;
+}
+
+.rt-panel-header-collapsible::after {
+    right: 4px;
+}
+
+/* Aquila ornament (for important panels) */
+.rt-collapsible-panel.important .rt-panel-title::before {
+    content: "⚜";
+    margin-right: 4px;
+    color: var(--rt-gold, #d4af37);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+}
+
+/* Parchment texture background */
+.rt-panel-body {
+    background: 
+        linear-gradient(rgba(244, 234, 213, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244, 234, 213, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* -------------------------------------------- */
+/*  Accessibility & Reduced Motion              */
+/* -------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .rt-collapsible-panel,
+    .rt-panel-content,
+    .rt-panel-toggle-icon,
+    .rt-panel-header-collapsible,
+    .rt-preset-btn {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .rt-panel-toggle-icon {
+        .collapsed & {
+            transform: none;
+        }
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .rt-collapsible-panel {
+        border-width: 3px;
+    }
+    
+    .rt-panel-header-collapsible {
+        border-bottom-width: 3px;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Focus States for Keyboard Navigation        */
+/* -------------------------------------------- */
+
+.rt-panel-header-collapsible:focus {
+    outline: 2px solid var(--rt-gold, #d4af37);
+    outline-offset: 2px;
+}
+
+.rt-preset-btn:focus {
+    outline: 2px solid var(--rt-gold, #d4af37);
+    outline-offset: 1px;
+}
+
+/* -------------------------------------------- */
+/*  Mobile Responsiveness                       */
+/* -------------------------------------------- */
+
+@media (max-width: 768px) {
+    .rt-panel-presets {
+        flex-direction: column;
+    }
+    
+    .rt-preset-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .rt-panel-shortcut {
+        display: none; // Hide keyboard shortcuts on mobile
+    }
+}

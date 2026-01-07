@@ -7,6 +7,7 @@ import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
 import TooltipMixin from "../api/tooltip-mixin.mjs";
 import VisualFeedbackMixin from "../api/visual-feedback-mixin.mjs";
+import CollapsiblePanelMixin from "../api/collapsible-panel-mixin.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -14,9 +15,9 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
+export default class BaseActorSheet extends CollapsiblePanelMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
     ApplicationV2Mixin(ActorSheetV2)
-))) {
+)))) {
     constructor(options = {}) {
         super(options);
     }
@@ -39,7 +40,9 @@ export default class BaseActorSheet extends VisualFeedbackMixin(TooltipMixin(Pri
             toggleSection: BaseActorSheet.#toggleSection,
             toggleTraining: BaseActorSheet.#toggleTraining,
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
-            deleteSpecialization: BaseActorSheet.#deleteSpecialization
+            deleteSpecialization: BaseActorSheet.#deleteSpecialization,
+            togglePanel: BaseActorSheet._onTogglePanel,
+            applyPreset: BaseActorSheet._onApplyPreset
         },
         classes: ["rogue-trader", "sheet", "actor"],
         form: {
