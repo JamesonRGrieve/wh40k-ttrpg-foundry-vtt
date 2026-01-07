@@ -1,0 +1,521 @@
+/**
+ * Enhanced Characteristic HUD V2 - Circular Progress Rings
+ * Modern, interactive characteristic display with visual feedback
+ */
+
+/* -------------------------------------------- */
+/*  Container & Layout                          */
+/* -------------------------------------------- */
+
+.rt-characteristics-hud-v2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.6), rgba(30, 30, 30, 0.4));
+    border-radius: 8px;
+    border: 2px solid var(--rt-bronze, #cd7f32);
+}
+
+/* -------------------------------------------- */
+/*  Characteristic Card                         */
+/* -------------------------------------------- */
+
+.rt-char-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, rgba(62, 62, 62, 0.8), rgba(40, 40, 40, 0.9));
+    border: 2px solid var(--rt-iron, #3e3e3e);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        border-color: var(--rt-gold, #d4af37);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    /* Bonus modifier indicator */
+    &.rt-char-bonus {
+        border-color: rgba(76, 175, 80, 0.5);
+        
+        &:hover {
+            border-color: rgba(76, 175, 80, 0.8);
+        }
+    }
+    
+    /* Penalty indicator */
+    &.rt-char-penalty {
+        border-color: rgba(244, 67, 54, 0.5);
+        
+        &:hover {
+            border-color: rgba(244, 67, 54, 0.8);
+        }
+    }
+}
+
+/* -------------------------------------------- */
+/*  Circular Progress Ring                      */
+/* -------------------------------------------- */
+
+.rt-char-circle-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 0.5rem;
+}
+
+.rt-char-ring {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* Start from top */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Background ring */
+.rt-char-ring-bg {
+    stroke: rgba(62, 62, 62, 0.5);
+    transition: stroke 0.3s ease;
+}
+
+.rt-char-card:hover .rt-char-ring-bg {
+    stroke: rgba(80, 80, 80, 0.7);
+}
+
+/* Progress ring (advancement) */
+.rt-char-ring-progress {
+    stroke: var(--rt-gold, #d4af37);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                stroke 0.3s ease;
+    
+    /* Animate on load */
+    animation: ring-fill 1s ease-out;
+}
+
+@keyframes ring-fill {
+    from {
+        stroke-dashoffset: 327; /* Full circumference */
+    }
+}
+
+/* Bonus threshold markers */
+.rt-char-marker {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform-origin: 60px 60px;
+}
+
+.rt-char-card:hover .rt-char-marker {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* -------------------------------------------- */
+/*  Center Content                              */
+/* -------------------------------------------- */
+
+.rt-char-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rt-char-roll-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
+    background: radial-gradient(circle, rgba(30, 30, 30, 0.95), rgba(10, 10, 10, 0.98));
+    border: 2px solid var(--rt-bronze, #cd7f32);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background: radial-gradient(circle, rgba(40, 40, 40, 0.95), rgba(20, 20, 20, 0.98));
+        border-color: var(--rt-gold, #d4af37);
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+        transform: scale(1.05);
+    }
+    
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Characteristic abbreviation */
+.rt-char-short {
+    font-family: var(--rt-font-header, serif);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--rt-bone, #e8dcc8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+/* Total value (large) */
+.rt-char-total {
+    font-family: var(--rt-font-numbers, serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--rt-gold, #d4af37);
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+/* Bonus display */
+.rt-char-bonus-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.rt-char-bonus-label {
+    font-size: 0.65rem;
+    color: rgba(232, 220, 200, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rt-char-bonus-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rt-bone, #e8dcc8);
+}
+
+/* -------------------------------------------- */
+/*  Footer & Advancement Info                   */
+/* -------------------------------------------- */
+
+.rt-char-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(10, 10, 10, 0.5);
+    border-radius: 4px;
+    border-top: 1px solid var(--rt-iron, #3e3e3e);
+}
+
+.rt-char-advance-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.75rem;
+}
+
+.rt-char-advance-current {
+    color: var(--rt-bone, #e8dcc8);
+    font-weight: 600;
+}
+
+.rt-char-advance-next {
+    color: rgba(232, 220, 200, 0.7);
+    font-size: 0.7rem;
+}
+
+.rt-char-advance-max {
+    color: var(--rt-gold, #d4af37);
+    font-weight: 700;
+    font-size: 0.7rem;
+}
+
+.rt-char-edit-toggle {
+    padding: 0.25rem 0.5rem;
+    background: transparent;
+    border: 1px solid var(--rt-bronze, #cd7f32);
+    border-radius: 4px;
+    color: var(--rt-bone, #e8dcc8);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: var(--rt-bronze, #cd7f32);
+        color: var(--rt-black, #0a0a0a);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Edit Panel                                  */
+/* -------------------------------------------- */
+
+.rt-char-edit-panel {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid var(--rt-bronze, #cd7f32);
+    border-radius: 4px;
+    display: none; /* Hidden by default */
+    
+    &.active {
+        display: block;
+    }
+}
+
+.rt-char-edit-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rt-bronze, #cd7f32);
+    font-family: var(--rt-font-header, serif);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--rt-gold, #d4af37);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.rt-char-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.rt-char-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.rt-char-edit-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--rt-bone, #e8dcc8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rt-char-edit-field input,
+.rt-char-edit-field select {
+    padding: 0.25rem 0.5rem;
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid var(--rt-iron, #3e3e3e);
+    border-radius: 4px;
+    color: var(--rt-bone, #e8dcc8);
+    font-size: 0.85rem;
+    
+    &:focus {
+        outline: none;
+        border-color: var(--rt-gold, #d4af37);
+        box-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Breakdown Display                           */
+/* -------------------------------------------- */
+
+.rt-char-breakdown {
+    padding: 0.5rem;
+    background: rgba(20, 20, 20, 0.6);
+    border: 1px solid var(--rt-iron, #3e3e3e);
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.rt-char-breakdown-header {
+    font-weight: 700;
+    color: var(--rt-gold, #d4af37);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.rt-char-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+    color: var(--rt-bone, #e8dcc8);
+    
+    &:not(:last-child) {
+        border-bottom: 1px solid rgba(62, 62, 62, 0.3);
+    }
+}
+
+.rt-char-breakdown-total {
+    margin-top: 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 2px solid var(--rt-bronze, #cd7f32) !important;
+    font-weight: 700;
+    color: var(--rt-gold, #d4af37);
+}
+
+.rt-char-breakdown-bonus {
+    font-weight: 600;
+    color: var(--rt-gold, #d4af37);
+}
+
+/* -------------------------------------------- */
+/*  XP Advancement Helper                       */
+/* -------------------------------------------- */
+
+.rt-char-xp-helper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), rgba(205, 127, 50, 0.1));
+    border: 1px solid var(--rt-gold, #d4af37);
+    border-radius: 4px;
+}
+
+.rt-char-xp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rt-char-xp-cost {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--rt-gold, #d4af37);
+}
+
+.rt-char-xp-label {
+    font-size: 0.7rem;
+    color: rgba(232, 220, 200, 0.7);
+}
+
+.rt-char-xp-spend {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--rt-gold, #d4af37);
+    border: none;
+    border-radius: 4px;
+    color: var(--rt-black, #0a0a0a);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: var(--rt-bronze, #cd7f32);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.rt-char-xp-insufficient {
+    padding: 0.5rem;
+    background: rgba(139, 0, 0, 0.2);
+    border: 1px solid rgba(220, 20, 60, 0.5);
+    border-radius: 4px;
+    color: rgba(220, 20, 60, 0.9);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* -------------------------------------------- */
+/*  Responsive Design                           */
+/* -------------------------------------------- */
+
+@media (max-width: 1200px) {
+    .rt-characteristics-hud-v2 {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.75rem;
+    }
+    
+    .rt-char-circle-container {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .rt-char-center {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .rt-characteristics-hud-v2 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .rt-char-edit-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Accessibility & Reduced Motion              */
+/* -------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .rt-char-ring-progress,
+    .rt-char-roll-btn,
+    .rt-char-card,
+    .rt-char-marker,
+    .rt-char-xp-spend {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Color Variants by Characteristic            */
+/* -------------------------------------------- */
+
+/* Optional: Color-code characteristics */
+.rt-char-card[data-characteristic="weaponSkill"] .rt-char-ring-progress {
+    stroke: #dc143c; /* Crimson for combat */
+}
+
+.rt-char-card[data-characteristic="ballisticSkill"] .rt-char-ring-progress {
+    stroke: #ff8c00; /* Dark orange for ranged */
+}
+
+.rt-char-card[data-characteristic="strength"] .rt-char-ring-progress {
+    stroke: #8b0000; /* Dark red for strength */
+}
+
+.rt-char-card[data-characteristic="toughness"] .rt-char-ring-progress {
+    stroke: #696969; /* Dim gray for endurance */
+}
+
+.rt-char-card[data-characteristic="agility"] .rt-char-ring-progress {
+    stroke: #00ced1; /* Dark turquoise for speed */
+}
+
+.rt-char-card[data-characteristic="intelligence"] .rt-char-ring-progress {
+    stroke: #4169e1; /* Royal blue for mind */
+}
+
+.rt-char-card[data-characteristic="perception"] .rt-char-ring-progress {
+    stroke: #9370db; /* Medium purple for awareness */
+}
+
+.rt-char-card[data-characteristic="willpower"] .rt-char-ring-progress {
+    stroke: #daa520; /* Goldenrod for resolve */
+}
+
+.rt-char-card[data-characteristic="fellowship"] .rt-char-ring-progress {
+    stroke: #32cd32; /* Lime green for social */
+}

@@ -1,0 +1,202 @@
+{{!-- Enhanced Characteristic HUD with Circular Progress Rings --}}
+{{!-- Modern, interactive, visual characteristic display --}}
+<div class="rt-characteristics-hud-v2">
+    {{#each actor.characteristics as |characteristic name|}}
+        {{#unless (eq name "influence")}}
+        <div class="rt-char-card {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}"
+             data-characteristic="{{name}}"
+             data-rt-tooltip="characteristic"
+             data-rt-tooltip-data="{{this.tooltipData}}">
+            
+            {{!-- Circular Progress Ring Container --}}
+            <div class="rt-char-circle-container">
+                {{!-- SVG Progress Ring --}}
+                <svg class="rt-char-ring" viewBox="0 0 120 120">
+                    {{!-- Background Ring --}}
+                    <circle class="rt-char-ring-bg"
+                            cx="60" cy="60" r="52"
+                            stroke-width="8"
+                            fill="none" />
+                    
+                    {{!-- Progress Ring (advancement) --}}
+                    <circle class="rt-char-ring-progress"
+                            cx="60" cy="60" r="52"
+                            stroke-width="8"
+                            fill="none"
+                            stroke-dasharray="{{this.progressCircumference}}"
+                            stroke-dashoffset="{{this.progressOffset}}"
+                            data-progress="{{this.advanceProgress}}" />
+                    
+                    {{!-- Bonus Threshold Markers --}}
+                    {{#if (gte this.total 10)}}
+                    <circle class="rt-char-marker" cx="60" cy="8" r="3" fill="var(--rt-gold)" />
+                    {{/if}}
+                    {{#if (gte this.total 20)}}
+                    <circle class="rt-char-marker" cx="112" cy="60" r="3" fill="var(--rt-gold)" />
+                    {{/if}}
+                    {{#if (gte this.total 30)}}
+                    <circle class="rt-char-marker" cx="60" cy="112" r="3" fill="var(--rt-gold)" />
+                    {{/if}}
+                    {{#if (gte this.total 40)}}
+                    <circle class="rt-char-marker" cx="8" cy="60" r="3" fill="var(--rt-gold)" />
+                    {{/if}}
+                </svg>
+                
+                {{!-- Center Content --}}
+                <div class="rt-char-center">
+                    {{!-- Clickable Button for Rolling --}}
+                    <button class="rt-char-roll-btn"
+                            type="button"
+                            data-action="roll"
+                            data-roll-type="characteristic"
+                            data-roll-target="{{name}}"
+                            title="Roll {{this.label}} test">
+                        <span class="rt-char-short">{{this.short}}</span>
+                        <span class="rt-char-total value-counter">{{this.total}}</span>
+                        <span class="rt-char-bonus-display">
+                            <span class="rt-char-bonus-label">Bonus</span>
+                            <span class="rt-char-bonus-value value-counter characteristic-bonus">{{this.bonus}}</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            
+            {{!-- Advancement Info Footer --}}
+            <div class="rt-char-footer">
+                <div class="rt-char-advance-info">
+                    <span class="rt-char-advance-current">Adv: {{this.advance}}/5</span>
+                    {{#if (lt this.advance 5)}}
+                    <span class="rt-char-advance-next">
+                        Next: {{this.nextAdvanceCost}} XP
+                    </span>
+                    {{else}}
+                    <span class="rt-char-advance-max">MAX</span>
+                    {{/if}}
+                </div>
+                
+                {{!-- Quick Edit Toggle --}}
+                <button class="rt-char-edit-toggle"
+                        type="button"
+                        data-action="toggleSection"
+                        data-toggle="charhud_{{name}}"
+                        title="Edit {{this.label}}">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+            
+            {{!-- Expandable Edit Panel --}}
+            <div class="rt-char-edit-panel charhud_{{name}}" {{hideIfNot (isExpanded (concat 'charhud_' name ) @root.actor)}}>
+                <div class="rt-char-edit-header">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit {{this.label}}</span>
+                </div>
+                
+                <div class="rt-char-edit-grid">
+                    <label class="rt-char-edit-field">
+                        <span class="rt-char-edit-label">Base</span>
+                        <input type="number"
+                               name="system.characteristics.{{name}}.base"
+                               data-dtype="Number"
+                               value="{{this.base}}"
+                               min="1"
+                               max="100"
+                               title="Base characteristic value" />
+                    </label>
+                    
+                    <label class="rt-char-edit-field">
+                        <span class="rt-char-edit-label">Advances</span>
+                        <select name="system.characteristics.{{name}}.advance" title="Advancement level">
+                            {{option "0" this.advance "None (+0)"}}
+                            {{option "1" this.advance "Simple (+5)"}}
+                            {{option "2" this.advance "Intermediate (+10)"}}
+                            {{option "3" this.advance "Trained (+15)"}}
+                            {{option "4" this.advance "Proficient (+20)"}}
+                            {{option "5" this.advance "Expert (+25)"}}
+                        </select>
+                    </label>
+                    
+                    <label class="rt-char-edit-field">
+                        <span class="rt-char-edit-label">Modifier</span>
+                        <input type="number"
+                               name="system.characteristics.{{name}}.modifier"
+                               data-dtype="Number"
+                               value="{{this.modifier}}"
+                               min="-100"
+                               max="100"
+                               title="Additional modifier" />
+                    </label>
+                    
+                    <label class="rt-char-edit-field">
+                        <span class="rt-char-edit-label">Unnatural</span>
+                        <select name="system.characteristics.{{name}}.unnatural"
+                                data-dtype="Number"
+                                title="Unnatural characteristic multiplier">
+                            <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>None</option>
+                            <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
+                            <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
+                            <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
+                        </select>
+                    </label>
+                </div>
+                
+                {{!-- Breakdown Display --}}
+                <div class="rt-char-breakdown">
+                    <div class="rt-char-breakdown-header">Calculation</div>
+                    <div class="rt-char-breakdown-row">
+                        <span>Base:</span>
+                        <span>{{this.base}}</span>
+                    </div>
+                    <div class="rt-char-breakdown-row">
+                        <span>Advances:</span>
+                        <span>{{this.advance}} × 5 = +{{multiply this.advance 5}}</span>
+                    </div>
+                    {{#if this.modifier}}
+                    <div class="rt-char-breakdown-row">
+                        <span>Modifiers:</span>
+                        <span>{{numberFormat this.modifier sign=true}}</span>
+                    </div>
+                    {{/if}}
+                    {{#if (gt this.unnatural 0)}}
+                    <div class="rt-char-breakdown-row">
+                        <span>Unnatural:</span>
+                        <span>×{{this.unnatural}}</span>
+                    </div>
+                    {{/if}}
+                    <div class="rt-char-breakdown-row rt-char-breakdown-total">
+                        <span>Total:</span>
+                        <span>{{this.total}}</span>
+                    </div>
+                    <div class="rt-char-breakdown-row rt-char-breakdown-bonus">
+                        <span>Bonus:</span>
+                        <span>{{this.bonus}}</span>
+                    </div>
+                </div>
+                
+                {{!-- XP Advancement Helper --}}
+                {{#if (lt this.advance 5)}}
+                <div class="rt-char-xp-helper">
+                    <div class="rt-char-xp-info">
+                        <span class="rt-char-xp-cost">{{this.nextAdvanceCost}} XP</span>
+                        <span class="rt-char-xp-label">to advance</span>
+                    </div>
+                    {{#if (gte ../system.experience.available this.nextAdvanceCost)}}
+                    <button class="rt-char-xp-spend"
+                            type="button"
+                            data-action="spendXPAdvance"
+                            data-characteristic="{{name}}"
+                            title="Spend {{this.nextAdvanceCost}} XP to advance">
+                        <i class="fas fa-arrow-up"></i>
+                        Advance
+                    </button>
+                    {{else}}
+                    <div class="rt-char-xp-insufficient">
+                        Need {{subtract this.nextAdvanceCost ../system.experience.available}} more XP
+                    </div>
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        {{/unless}}
+    {{/each}}
+</div>

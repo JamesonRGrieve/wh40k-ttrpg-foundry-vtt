@@ -334,6 +334,14 @@ export function registerHandlebarsHelpers() {
         return a <= b;
     });
 
+    Handlebars.registerHelper('multiply', function(a, b) {
+        return (a || 0) * (b || 0);
+    });
+
+    Handlebars.registerHelper('subtract', function(a, b) {
+        return (a || 0) - (b || 0);
+    });
+
     Handlebars.registerHelper('eq', function(a, b) {
         return a === b;
     });

@@ -49,7 +49,8 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             applyPreset: BaseActorSheet._onApplyPreset,
             enterWhatIf: BaseActorSheet.#enterWhatIf,
             commitWhatIf: BaseActorSheet.#commitWhatIf,
-            cancelWhatIf: BaseActorSheet.#cancelWhatIf
+            cancelWhatIf: BaseActorSheet.#cancelWhatIf,
+            spendXPAdvance: BaseActorSheet.#spendXPAdvance
         },
         classes: ["rogue-trader", "sheet", "actor"],
         form: {
@@ -102,6 +103,9 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             rollableClass: this.isEditable ? "rollable" : ""
         };
 
+        // Prepare characteristics with HUD data
+        this._prepareCharacteristicsHUD(context);
+
         // Prepare skills
         await this._prepareSkills(context);
 
@@ -109,6 +113,44 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         await this._prepareItems(context);
 
         return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare characteristics with progress ring calculations.
+     * @param {object} context  Context being prepared.
+     * @protected
+     */
+    _prepareCharacteristicsHUD(context) {
+        const characteristics = this.actor.system.characteristics || {};
+        
+        for (const [key, char] of Object.entries(characteristics)) {
+            // Calculate advancement progress (0-5)
+            const advanceProgress = (char.advance || 0) / 5; // 0.0 to 1.0
+            
+            // SVG circle calculations (circumference = 2 * π * r, where r=52)
+            const radius = 52;
+            const circumference = 2 * Math.PI * radius; // ≈ 327
+            char.progressCircumference = circumference;
+            char.progressOffset = circumference * (1 - advanceProgress);
+            char.advanceProgress = Math.round(advanceProgress * 100); // Percentage
+            
+            // Calculate XP cost for next advance (follows RT progression)
+            // Simple: 100, Intermediate: 250, Trained: 500, Proficient: 750, Expert: 1000
+            const advanceCosts = [100, 250, 500, 750, 1000];
+            const nextAdvance = char.advance || 0;
+            char.nextAdvanceCost = nextAdvance < 5 ? advanceCosts[nextAdvance] : 0;
+            
+            // Prepare tooltip data if not already present
+            if (!char.tooltipData) {
+                char.tooltipData = this.prepareCharacteristicTooltip(key, char);
+            }
+            
+            // HUD display formatting
+            char.hudMod = char.modifier !== 0 ? `${char.modifier > 0 ? '+' : ''}${char.modifier}` : '—';
+            char.hudTotal = char.total;
+        }
     }
 
     /* -------------------------------------------- */
@@ -760,5 +802,67 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      */
     static async #cancelWhatIf(event, target) {
         await this.cancelWhatIfChanges();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle spending XP to advance a characteristic.
+     * @param {Event} event         Triggering click event
+     * @param {HTMLElement} target  The button element clicked
+     * @protected
+     */
+    static async #spendXPAdvance(event, target) {
+        const charKey = target.dataset.characteristic;
+        const char = this.actor.system.characteristics[charKey];
+        
+        if (!char) {
+            ui.notifications.error("Invalid characteristic!");
+            return;
+        }
+        
+        const cost = char.nextAdvanceCost;
+        const available = this.actor.system.experience?.available || 0;
+        
+        // Check if enough XP
+        if (available < cost) {
+            ui.notifications.warn(`Not enough XP! Need ${cost}, have ${available}.`);
+            return;
+        }
+        
+        // Check if already maxed
+        if ((char.advance || 0) >= 5) {
+            ui.notifications.warn(`${char.label} is already at maximum advancement!`);
+            return;
+        }
+        
+        // Confirm spending
+        const confirmed = await Dialog.confirm({
+            title: `Advance ${char.label}?`,
+            content: `<p>Spend <strong>${cost} XP</strong> to advance ${char.label} from ${char.total} to ${char.total + 5}?</p>
+                     <p><em>Available XP: ${available}</em></p>`,
+            yes: () => true,
+            no: () => false,
+            defaultYes: true
+        });
+        
+        if (!confirmed) return;
+        
+        // Update actor
+        const newAdvance = (char.advance || 0) + 1;
+        const newSpent = (this.actor.system.experience?.spent || 0) + cost;
+        
+        await this.actor.update({
+            [`system.characteristics.${charKey}.advance`]: newAdvance,
+            "system.experience.spent": newSpent
+        });
+        
+        // Success notification
+        ui.notifications.info(`${char.label} advanced to ${char.total + 5}! (−${cost} XP)`);
+        
+        // Trigger animation if available
+        if (this.animateCharacteristicChange) {
+            this.animateCharacteristicChange(charKey, char.total, char.total + 5);
+        }
     }
 }
