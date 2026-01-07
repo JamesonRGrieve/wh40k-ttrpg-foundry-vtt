@@ -1,0 +1,549 @@
+/**
+ * Enhanced Drag-Drop Visual Styling
+ * Gothic 40K themed drag-drop feedback with smooth animations
+ */
+
+/* -------------------------------------------- */
+/*  Drag Ghost                                  */
+/* -------------------------------------------- */
+
+.rt-drag-ghost {
+    position: absolute;
+    z-index: 10000;
+    pointer-events: none;
+    
+    .ghost-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: linear-gradient(135deg, var(--rt-iron) 0%, var(--rt-black) 100%);
+        border: 2px solid var(--rt-bronze);
+        border-radius: 4px;
+        box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.8),
+            inset 0 0 20px rgba(212, 175, 55, 0.1);
+        min-width: 200px;
+        max-width: 300px;
+        opacity: 0.95;
+        
+        img {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--rt-gold);
+            border-radius: 2px;
+            object-fit: cover;
+        }
+        
+        .ghost-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .ghost-name {
+            color: var(--rt-bone);
+            font-family: var(--rt-font-header, "Caslon Antique", serif);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .ghost-quantity {
+            color: var(--rt-gold);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .ghost-equipped {
+            color: var(--color-positive, #4caf50);
+            margin-left: 0.25rem;
+        }
+    }
+}
+
+/* -------------------------------------------- */
+/*  Dragging State                              */
+/* -------------------------------------------- */
+
+// Element being dragged
+[data-item-id].dragging {
+    opacity: 0.4;
+    cursor: grabbing !important;
+    transform: scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+// Sheet in drag-active state
+.rogue-trader.sheet.drag-active {
+    .inventory-list,
+    .item-list {
+        background: rgba(212, 175, 55, 0.05);
+        border-color: var(--rt-bronze);
+        transition: background 0.3s ease, border-color 0.3s ease;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Drop Zones                                  */
+/* -------------------------------------------- */
+
+[data-drop-zone] {
+    position: relative;
+    transition: all 0.3s ease;
+    
+    // Valid drop zone
+    &.drop-valid {
+        border: 2px dashed var(--rt-gold);
+        background: rgba(212, 175, 55, 0.1);
+        
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(212, 175, 55, 0.05) 10px,
+                    rgba(212, 175, 55, 0.05) 20px
+                );
+            pointer-events: none;
+            animation: drop-zone-pulse 2s ease-in-out infinite;
+        }
+        
+        &::after {
+            content: "⬇ Drop Here";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--rt-gold);
+            font-family: var(--rt-font-header, "Caslon Antique", serif);
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    }
+    
+    // Invalid drop zone
+    &.drop-invalid {
+        border: 2px dashed var(--color-negative, #dc143c);
+        background: rgba(220, 20, 60, 0.1);
+        cursor: not-allowed;
+        
+        &::after {
+            content: "✖ Cannot Drop";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--color-negative, #dc143c);
+            font-family: var(--rt-font-header, "Caslon Antique", serif);
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            pointer-events: none;
+        }
+    }
+    
+    // Hover state (when dragging over)
+    &.drop-hover {
+        background: rgba(212, 175, 55, 0.2);
+        border-style: solid;
+        box-shadow: 
+            0 0 15px rgba(212, 175, 55, 0.4),
+            inset 0 0 20px rgba(212, 175, 55, 0.2);
+        
+        &::after {
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes drop-zone-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* -------------------------------------------- */
+/*  Equipment Slots                             */
+/* -------------------------------------------- */
+
+[data-drop-zone="equipment"] {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border: 2px dashed var(--rt-iron);
+    border-radius: 4px;
+    background: rgba(62, 62, 62, 0.2);
+    transition: all 0.3s ease;
+    
+    &.empty {
+        &::after {
+            content: attr(data-slot-label);
+            color: var(--color-text-light-6, #666);
+            font-style: italic;
+            opacity: 0.6;
+        }
+    }
+    
+    &:not(.empty) {
+        border-style: solid;
+        background: rgba(62, 62, 62, 0.4);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Drop Indicator (for reordering)             */
+/* -------------------------------------------- */
+
+.drop-indicator {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--rt-gold), transparent);
+    margin: 2px 0;
+    position: relative;
+    animation: indicator-glow 1s ease-in-out infinite;
+    
+    &::before,
+    &::after {
+        content: "◆";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--rt-gold);
+        font-size: 0.6rem;
+        text-shadow: 0 0 5px var(--rt-gold);
+    }
+    
+    &::before {
+        left: 0;
+    }
+    
+    &::after {
+        right: 0;
+    }
+}
+
+@keyframes indicator-glow {
+    0%, 100% { 
+        box-shadow: 0 0 5px var(--rt-gold); 
+    }
+    50% { 
+        box-shadow: 0 0 15px var(--rt-gold), 0 0 25px var(--rt-gold); 
+    }
+}
+
+/* -------------------------------------------- */
+/*  Snap-to-Slot Animation                      */
+/* -------------------------------------------- */
+
+.snap-to-slot {
+    animation: snap-to-slot 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes snap-to-slot {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    30% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    60% {
+        transform: scale(0.95) rotate(-3deg);
+    }
+    80% {
+        transform: scale(1.05) rotate(1deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Favorites Bar                               */
+/* -------------------------------------------- */
+
+[data-favorites-bar] {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--rt-iron) 0%, var(--rt-black) 100%);
+    border: 2px solid var(--rt-bronze);
+    border-radius: 4px;
+    min-height: 60px;
+    
+    &.drop-hover {
+        background: linear-gradient(135deg, var(--rt-bronze) 0%, var(--rt-iron) 100%);
+        border-color: var(--rt-gold);
+        box-shadow: 
+            0 0 15px rgba(212, 175, 55, 0.4),
+            inset 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+    
+    .favorite-item {
+        width: 50px;
+        height: 50px;
+        position: relative;
+        border: 2px solid var(--rt-bronze);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        
+        .remove-favorite {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 18px;
+            height: 18px;
+            background: var(--color-negative, #dc143c);
+            border: 1px solid var(--rt-bone);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            cursor: pointer;
+            
+            &:hover {
+                background: var(--rt-red);
+                transform: scale(1.1);
+            }
+        }
+        
+        &:hover {
+            border-color: var(--rt-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+            
+            .remove-favorite {
+                opacity: 1;
+            }
+        }
+    }
+    
+    .favorite-empty {
+        width: 50px;
+        height: 50px;
+        border: 2px dashed var(--rt-iron);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-text-light-6, #666);
+        font-size: 1.5rem;
+        opacity: 0.5;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Split Dialog Styling                        */
+/* -------------------------------------------- */
+
+.rt-split-dialog {
+    .form-group {
+        margin-bottom: 1rem;
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--rt-bone);
+            font-family: var(--rt-font-header, "Caslon Antique", serif);
+            font-weight: bold;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--rt-black);
+            border: 2px solid var(--rt-bronze);
+            border-radius: 4px;
+            color: var(--rt-bone);
+            font-size: 1rem;
+            
+            &:focus {
+                border-color: var(--rt-gold);
+                box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+                outline: none;
+            }
+        }
+    }
+    
+    .hint {
+        color: var(--color-text-light-6, #999);
+        font-size: 0.85rem;
+        font-style: italic;
+        margin-top: 0.5rem;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Item Comparison Tooltip (while dragging)    */
+/* -------------------------------------------- */
+
+.rt-drag-compare-tooltip {
+    position: fixed;
+    z-index: 10001;
+    pointer-events: none;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--rt-iron) 0%, var(--rt-black) 100%);
+    border: 2px solid var(--rt-gold);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+    min-width: 250px;
+    max-width: 350px;
+    
+    .compare-header {
+        color: var(--rt-gold);
+        font-family: var(--rt-font-header, "Caslon Antique", serif);
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--rt-bronze);
+    }
+    
+    .compare-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+        color: var(--rt-bone);
+        font-size: 0.85rem;
+        
+        .label {
+            opacity: 0.8;
+        }
+        
+        .value {
+            font-weight: bold;
+            
+            &.better {
+                color: var(--color-positive, #4caf50);
+            }
+            
+            &.worse {
+                color: var(--color-negative, #dc143c);
+            }
+        }
+    }
+}
+
+/* -------------------------------------------- */
+/*  Responsive Adjustments                      */
+/* -------------------------------------------- */
+
+@media (max-width: 768px) {
+    .rt-drag-ghost .ghost-content {
+        min-width: 150px;
+        
+        img {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .ghost-name {
+            font-size: 0.8rem;
+        }
+    }
+    
+    [data-drop-zone] {
+        min-height: 60px;
+        
+        &::after {
+            font-size: 1rem;
+        }
+    }
+    
+    [data-favorites-bar] {
+        flex-wrap: wrap;
+        
+        .favorite-item,
+        .favorite-empty {
+            width: 40px;
+            height: 40px;
+        }
+    }
+}
+
+/* -------------------------------------------- */
+/*  Accessibility - Reduced Motion              */
+/* -------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .rt-drag-ghost,
+    [data-item-id].dragging,
+    [data-drop-zone],
+    .drop-indicator,
+    .snap-to-slot,
+    .favorite-item {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    [data-drop-zone]::before {
+        animation: none !important;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Touch Device Support                        */
+/* -------------------------------------------- */
+
+@media (hover: none) and (pointer: coarse) {
+    // Increase touch targets
+    [data-drop-zone] {
+        min-height: 100px;
+    }
+    
+    [data-favorites-bar] {
+        .favorite-item,
+        .favorite-empty {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .remove-favorite {
+            width: 24px;
+            height: 24px;
+            font-size: 0.8rem;
+            opacity: 1; // Always show on touch devices
+        }
+    }
+    
+    // Show drop zone labels always on touch
+    [data-drop-zone].drop-valid::after {
+        opacity: 1;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Print Styles                                */
+/* -------------------------------------------- */
+
+@media print {
+    .rt-drag-ghost,
+    .drop-indicator,
+    [data-favorites-bar] {
+        display: none !important;
+    }
+}
