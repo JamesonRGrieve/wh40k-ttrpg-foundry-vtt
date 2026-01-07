@@ -268,6 +268,50 @@ export default function PrimarySheetMixin(Base) {
         }
 
         /* -------------------------------------------- */
+
+        /**
+         * Animate a stat element to show a value change.
+         * @param {HTMLElement} element  The element to animate.
+         * @param {string} type          Animation type: "increase", "decrease", "changed", "critical", "success".
+         */
+        animateStatChange(element, type = "changed") {
+            if (!element) return;
+            
+            const animClass = `rt-stat-${type}`;
+            
+            // Remove any existing animation classes
+            element.classList.remove("rt-stat-increase", "rt-stat-decrease", "rt-stat-changed", "rt-stat-critical", "rt-stat-success");
+            
+            // Force reflow to restart animation
+            void element.offsetWidth;
+            
+            // Add the animation class
+            element.classList.add(animClass);
+            
+            // Remove the class after animation completes (unless it's a persistent one)
+            if (type !== "critical") {
+                element.addEventListener("animationend", () => {
+                    element.classList.remove(animClass);
+                }, { once: true });
+            }
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Animate a numeric value change with direction detection.
+         * @param {HTMLElement} element  The element containing the value.
+         * @param {number} oldValue      The previous value.
+         * @param {number} newValue      The new value.
+         */
+        animateValueChange(element, oldValue, newValue) {
+            if (!element || oldValue === newValue) return;
+            
+            const type = newValue > oldValue ? "increase" : "decrease";
+            this.animateStatChange(element, type);
+        }
+
+        /* -------------------------------------------- */
         /*  Event Listeners & Handlers                  */
         /* -------------------------------------------- */
 
