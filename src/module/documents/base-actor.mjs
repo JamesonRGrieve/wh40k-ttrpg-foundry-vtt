@@ -1,4 +1,4 @@
-import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
+import { prepareEnhancedSkillRoll } from '../applications/prompts/enhanced-skill-dialog.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { toCamelCase } from '../handlebars/handlebars-helpers.mjs';
 
@@ -67,7 +67,7 @@ export class RogueTraderBaseActor extends Actor {
         rollData.type = override ? override : 'Characteristic';
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
-        await prepareSimpleRoll(simpleSkillData);
+        await prepareEnhancedSkillRoll(simpleSkillData);
     }
 
     getCharacteristicFuzzy(char) {

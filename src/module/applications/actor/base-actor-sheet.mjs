@@ -5,6 +5,7 @@
 
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
+import TooltipMixin from "../api/tooltip-mixin.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -12,9 +13,9 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends PrimarySheetMixin(
+export default class BaseActorSheet extends TooltipMixin(PrimarySheetMixin(
     ApplicationV2Mixin(ActorSheetV2)
-) {
+)) {
     constructor(options = {}) {
         super(options);
     }
