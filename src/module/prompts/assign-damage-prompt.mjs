@@ -4,4 +4,4 @@
  */
 
 // Re-export from V2 implementation for backward compatibility
-export { AssignDamageDialog, prepareAssignDamageRoll } from "../applications/prompts/assign-damage-dialog.mjs";
+export { default as AssignDamageDialog, prepareAssignDamageRoll } from "../applications/prompts/assign-damage-dialog.mjs";
