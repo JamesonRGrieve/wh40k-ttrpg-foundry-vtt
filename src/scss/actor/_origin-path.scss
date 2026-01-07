@@ -89,23 +89,28 @@
     display: grid;
     grid-template-columns: 160px minmax(0, 1fr);
     gap: 12px;
-    align-items: start;
+    align-items: stretch;
     grid-column: 1 / -1;
     width: 100%;
     min-width: 0;
     position: relative;
     z-index: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .rt-main-layout .dh-body,
 .rt-main-layout .rt-navigation {
     grid-column: auto;
-    align-self: start;
+    align-self: stretch;
 }
 
 .rt-main-layout .dh-body {
     width: 100%;
     min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .rt-navigation {
@@ -221,6 +226,8 @@
     min-width: 0;
     position: relative;
     z-index: 1;
+    overflow-y: auto;
+    flex: 1 1 auto;
 }
 
 .rt-tab {

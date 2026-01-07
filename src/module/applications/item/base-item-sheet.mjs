@@ -145,6 +145,54 @@ export default class BaseItemSheet extends PrimarySheetMixin(
 
         // Set up existing tab listeners (V1 compatibility)
         this._setupTabListeners();
+
+        // Set up legacy effect handlers (V1 class-based handlers)
+        this._setupLegacyEffectHandlers();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Set up legacy effect handlers for V1-style templates using class-based selectors.
+     * @protected
+     */
+    _setupLegacyEffectHandlers() {
+        if (!this.isEditable) return;
+
+        this.element.querySelectorAll(".effect-create").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                await this.item.createEmbeddedDocuments("ActiveEffect", [{
+                    name: "New Effect",
+                    icon: "icons/svg/aura.svg",
+                    origin: this.item.uuid,
+                    disabled: true
+                }], { renderSheet: true });
+            });
+        });
+
+        this.element.querySelectorAll(".effect-edit").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const effectId = btn.dataset.effectId;
+                const effect = this.item.effects.get(effectId);
+                effect?.sheet.render(true);
+            });
+        });
+
+        this.element.querySelectorAll(".effect-delete").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const effectId = btn.dataset.effectId;
+                const effect = this.item.effects.get(effectId);
+                await effect?.delete();
+            });
+        });
+
+        this.element.querySelectorAll(".effect-enable, .effect-disable").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const effectId = btn.dataset.effectId;
+                const effect = this.item.effects.get(effectId);
+                await effect?.update({ disabled: !effect.disabled });
+            });
+        });
     }
 
     /* -------------------------------------------- */
