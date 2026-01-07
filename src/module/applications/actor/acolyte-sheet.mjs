@@ -40,6 +40,10 @@ export default class AcolyteSheet extends BaseActorSheet {
             clearEquipmentSearch: AcolyteSheet.#clearEquipmentSearch,
             bulkEquip: AcolyteSheet.#bulkEquip,
 
+            // Skills actions
+            filterSkills: AcolyteSheet.#filterSkills,
+            clearSkillsSearch: AcolyteSheet.#clearSkillsSearch,
+
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
             removeAcquisition: AcolyteSheet.#removeAcquisition,
@@ -1237,6 +1241,83 @@ export default class AcolyteSheet extends BaseActorSheet {
             searchInput.value = '';
             // Trigger filter update
             this.constructor.#filterEquipment.call(this, event, searchInput);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Skills                     */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle filtering skills by search term, characteristic, and training level.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static #filterSkills(event, target) {
+        const skillsPanel = this.element.querySelector('.rt-skills-columns');
+        if (!skillsPanel) return;
+
+        const searchInput = this.element.querySelector('.rt-skills-search');
+        const charFilter = this.element.querySelector('.rt-skills-char-filter');
+        const trainingFilter = this.element.querySelector('.rt-skills-training-filter');
+
+        const searchTerm = searchInput?.value.toLowerCase() || '';
+        const charValue = charFilter?.value || '';
+        const trainingValue = trainingFilter?.value || '';
+
+        const skillRows = skillsPanel.querySelectorAll('.rt-skill-row');
+        let visibleCount = 0;
+
+        skillRows.forEach(row => {
+            const skillName = row.getAttribute('data-skill-name')?.toLowerCase() || '';
+            const skillChar = row.getAttribute('data-characteristic') || '';
+            const skillTraining = row.getAttribute('data-training-level') || '0';
+
+            const matchesSearch = !searchTerm || skillName.includes(searchTerm);
+            const matchesChar = !charValue || skillChar === charValue;
+            const matchesTraining = !trainingValue || skillTraining === trainingValue;
+
+            if (matchesSearch && matchesChar && matchesTraining) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Toggle clear button visibility
+        const clearBtn = this.element.querySelector('.rt-skills-controls .rt-search-clear');
+        if (clearBtn) {
+            clearBtn.style.display = searchTerm ? 'flex' : 'none';
+        }
+
+        // Show "no results" message if needed
+        const existingMsg = skillsPanel.querySelector('.rt-no-results');
+        if (existingMsg) existingMsg.remove();
+
+        if (visibleCount === 0 && skillRows.length > 0) {
+            const noResults = document.createElement('div');
+            noResults.className = 'rt-no-results';
+            noResults.innerHTML = '<i class="fas fa-search"></i><span>No skills match your filters</span>';
+            skillsPanel.appendChild(noResults);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle clearing the skills search input.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static #clearSkillsSearch(event, target) {
+        const searchInput = this.element.querySelector('.rt-skills-search');
+        if (searchInput) {
+            searchInput.value = '';
+            // Trigger filter update
+            this.constructor.#filterSkills.call(this, event, searchInput);
         }
     }
 }

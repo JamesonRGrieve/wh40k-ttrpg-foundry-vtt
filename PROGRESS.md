@@ -79,6 +79,20 @@
     - `src/scss/panels/_loadout.scss` (bulk button styling)
 
 **Total Time**: ~2 hours
+
+- [x] **Item 7**: Add Search & Filter for Skills ✅
+  - Search box with clear button functionality
+  - Characteristic filter (All, WS, BS, S, T, Ag, Int, Per, WP, Fel)
+  - Training level filter (All, Untrained, Trained, +10, +20)
+  - Real-time filtering with "No results" message
+  - Styled controls with focus states matching equipment controls
+  - Skills accent color for focus borders
+  - Files:
+    - `src/templates/actor/panel/skills-panel.hbs` (controls and data attributes)
+    - `src/module/applications/actor/acolyte-sheet.mjs` (#filterSkills, #clearSkillsSearch)
+    - `src/scss/panels/_skills.scss` (controls styling)
+
+**Total Time**: ~2.5 hours
 **Build Status**: ✅ All builds passing
 
 ---
