@@ -133,6 +133,43 @@
 
 ---
 
+### Priority 2: Medium Priority (Session 3 - 2026-01-07)
+
+- [x] **Item 13**: Implement Lazy Template Loading ✅
+  - Refactored `HandlebarManager` with lazy loading infrastructure:
+    - `loadTemplateOnDemand()` - Load single template if not cached
+    - `loadTemplatesOnDemand()` - Load multiple templates efficiently
+    - `loadAcolyteTabTemplates()` - Load tab-specific templates by tab name
+    - `loadActorSheetTemplates()` - Load actor type-specific templates
+  - Reduced preloaded templates from 104 to ~30 core templates
+  - Core templates (always preloaded):
+    - Essential partials (character-field, characteristic-hud-v2, etc.)
+    - Acolyte header, tabs, and overview tab (default view)
+    - Chat templates (needed for roll results)
+  - Deferred templates (loaded on-demand):
+    - Acolyte tab templates (combat, skills, talents, equipment, powers, dynasty, biography)
+    - NPC sheet templates
+    - Vehicle sheet templates
+    - Starship sheet templates
+    - Legacy panels (v1 versions of panels)
+  - Sheet integration:
+    - `AcolyteSheet._prepareTabPartContext()` - Lazy loads tab templates before rendering
+    - `NpcSheet._prepareContext()` - Lazy loads NPC templates
+    - `VehicleSheet._prepareContext()` - Lazy loads Vehicle templates
+    - `StarshipSheet._prepareContext()` - Lazy loads Starship templates
+  - Files modified:
+    - `src/module/handlebars/handlebars-manager.mjs` (complete rewrite)
+    - `src/module/applications/actor/acolyte-sheet.mjs`
+    - `src/module/applications/actor/npc-sheet.mjs`
+    - `src/module/applications/actor/vehicle-sheet.mjs`
+    - `src/module/applications/actor/starship-sheet.mjs`
+  - **Expected Benefit**: 20-30% faster initial load time
+
+**Total Time**: ~1 hour
+**Build Status**: ✅ All builds passing
+
+---
+
 ## Completed 🎉
 
 **Priority 1: Quick Wins - COMPLETE!**
@@ -151,13 +188,14 @@ All 6 Priority 1 items completed in this session:
 
 ## Next Up 📋
 
-### Priority 1: Quick Wins
-- Equipment Search & Filter
-- Bulk Operations
-- Visual Feedback Improvements
-- Skills Search & Filter
-- Toast Notifications
-- Button Debouncing
+### Priority 2: Medium Priority
+- ✅ Item 13: Lazy Template Loading
+- Item 11: Keyboard Shortcuts System (2-3 days)
+- Item 12: Active Effects Foundation (2-3 days)
+- Item 14: State Persistence Enhancements (1-2 days)
+- Item 15: Replace Custom Context Menu with V13 Native (2-3 days)
+- Item 16: Data Caching & Memoization (1-2 days)
+- Item 17: Accessibility Compliance (WCAG AA) (2-3 days)
 
 ---
 
@@ -167,3 +205,75 @@ All 6 Priority 1 items completed in this session:
 - Following ROADMAP.md for detailed specifications
 - Testing after each fix before moving to next
 - Will commit to git after completing Priority 0 session
+
+---
+
+### Priority 2: Medium Priority (Session 3 - 2026-01-07)
+
+- [x] **Item 12**: Implement Active Effects Foundation ✅ COMPLETE
+  - Created custom `RogueTraderActiveEffect` document class extending Foundry's ActiveEffect
+  - Integrated with existing modifier system in CreatureTemplate
+  - Extended active-effects.mjs with comprehensive helper functions:
+    - `createEffect()` - Generic effect creation
+    - `createCharacteristicEffect()` - Characteristic modifiers
+    - `createSkillEffect()` - Skill modifiers
+    - `createCombatEffect()` - Combat stat modifiers
+    - `createConditionEffect()` - Predefined conditions (stunned, prone, blinded, etc.)
+    - `createTemporaryEffect()` - Duration-based effects
+    - `removeEffects()` - Bulk removal with filter function
+    - `toggleEffect()` - Enable/disable effects
+  - Created effects panel template with visual indicators:
+    - Color-coded by nature (beneficial/harmful/neutral)
+    - Duration tracking with expiring warnings
+    - Source attribution for transparency
+    - Enable/disable toggles
+    - Delete buttons for owners
+    - Changes summary display
+  - Added effects display to Overview tab
+  - Implemented action handlers in acolyte-sheet.mjs:
+    - `#createEffect` - Create new effects
+    - `#toggleEffect` - Enable/disable effects
+    - `#deleteEffect` - Remove effects with confirmation
+  - Styled effects panel with SCSS:
+    - Beneficial effects: green border
+    - Harmful effects: red border
+    - Neutral effects: white border
+    - Disabled state: grayscale + opacity
+    - Expiring animation: pulsing warning
+  - Files Created:
+    - `src/module/documents/active-effect.mjs` (360 lines)
+    - `src/templates/actor/panel/effects-panel.hbs` (73 lines)
+  - Files Modified:
+    - `src/module/documents/_module.mjs` (added export)
+    - `src/module/hooks-manager.mjs` (registered ActiveEffect)
+    - `src/module/rules/active-effects.mjs` (expanded from 42 → 250+ lines)
+    - `src/module/applications/actor/acolyte-sheet.mjs` (added handlers)
+    - `src/templates/actor/acolyte/tab-overview.hbs` (added panel)
+    - `src/scss/panels/_effects.scss` (replaced old styles)
+
+**Features Implemented**:
+- ✅ Proper V13 ActiveEffect integration
+- ✅ Nature classification (beneficial/harmful/neutral)
+- ✅ Duration tracking and expiring warnings
+- ✅ Source attribution for transparency
+- ✅ Visual change summary in cards
+- ✅ Enable/disable toggle functionality
+- ✅ Helper functions for common effects
+- ✅ Predefined condition effects (7 conditions)
+- ✅ Temporary effects with round/turn tracking
+- ✅ Custom effect application logic
+
+**Total Time**: ~2.5 hours
+**Build Status**: ✅ All builds passing
+
+---
+
+## Next Steps 📋
+
+### Priority 2: Medium Priority (Remaining)
+- Item 11: Keyboard Shortcuts System (2-3 days, VERY HIGH impact)
+- Item 13: Lazy Template Loading (3-4 hours)
+- Item 14: State Persistence Enhancements (1-2 days)
+- Item 15: Replace Context Menu with V13 Native (2-3 days)
+- Item 16: Data Caching & Memoization (1-2 days)
+- Item 17: Accessibility Compliance (2-3 days, HIGH impact)

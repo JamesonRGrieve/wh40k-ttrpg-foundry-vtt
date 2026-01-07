@@ -3,6 +3,7 @@
  */
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
+import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 
 /**
  * Actor sheet for Starship type actors.
@@ -52,6 +53,9 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options) {
+        // Lazy load Starship-specific templates
+        await HandlebarManager.loadActorSheetTemplates("starship");
+        
         const context = await super._prepareContext(options);
         context.dh = CONFIG.rt;
 

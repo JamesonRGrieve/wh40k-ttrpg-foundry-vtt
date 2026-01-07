@@ -3,6 +3,7 @@
  */
 
 import AcolyteSheet from "./acolyte-sheet.mjs";
+import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 
 /**
  * Actor sheet for NPC type actors.
@@ -42,4 +43,16 @@ export default class NpcSheet extends AcolyteSheet {
     tabGroups = {
         primary: "main"
     };
+
+    /* -------------------------------------------- */
+
+    /**
+     * Lazy load NPC templates before first render.
+     * @inheritDoc
+     */
+    async _prepareContext(options) {
+        // Lazy load NPC-specific templates
+        await HandlebarManager.loadActorSheetTemplates("npc");
+        return super._prepareContext(options);
+    }
 }
