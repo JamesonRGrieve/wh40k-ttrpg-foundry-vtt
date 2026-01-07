@@ -1,0 +1,436 @@
+/**
+ * Gothic 40K Theme System
+ * Central theme variables and mixins for consistent Rogue Trader aesthetic
+ */
+
+/* ========================================
+   COLOR PALETTE
+   ======================================== */
+
+:root {
+    // Primary Gothic Colors
+    --rt-black: #0a0a0a;
+    --rt-black-light: #1a1a1a;
+    --rt-bone: #e8dcc8;
+    --rt-bone-dark: #c8bcb0;
+    --rt-parchment: #f4ead5;
+    --rt-parchment-dark: #d4cabb;
+
+    // Metallic Accents
+    --rt-gold: #d4af37;
+    --rt-gold-bright: #ffd700;
+    --rt-gold-dark: #b8941f;
+    --rt-bronze: #cd7f32;
+    --rt-bronze-bright: #e89b5a;
+    --rt-bronze-dark: #8b5a2b;
+    --rt-iron: #3e3e3e;
+    --rt-iron-light: #5e5e5e;
+    --rt-silver: #c0c0c0;
+
+    // Thematic Colors
+    --rt-red: #8b0000;
+    --rt-red-bright: #dc143c;
+    --rt-red-dark: #5a0000;
+    --rt-green: #2d5a2d;
+    --rt-green-bright: #4ade80;
+    --rt-blue: #1e3a5f;
+    --rt-blue-bright: #4682b4;
+
+    // UI Colors
+    --rt-border: rgba(205, 127, 50, 0.5);
+    --rt-border-light: rgba(212, 175, 55, 0.3);
+    --rt-border-bright: rgba(212, 175, 55, 0.8);
+    --rt-bg-panel: rgba(10, 10, 10, 0.8);
+    --rt-bg-panel-light: rgba(30, 30, 30, 0.6);
+    --rt-bg-input: rgba(62, 62, 62, 0.8);
+
+    // Typography
+    --rt-font-header: "Caslon Antique", "Trajan Pro", serif;
+    --rt-font-body: "Garamond", "Georgia", serif;
+    --rt-font-numbers: "Cinzel", serif;
+    --rt-font-ui: "Roboto", sans-serif;
+
+    // Spacing Scale (based on 8px grid)
+    --rt-space-xs: 0.25rem;   // 4px
+    --rt-space-sm: 0.5rem;    // 8px
+    --rt-space-md: 1rem;      // 16px
+    --rt-space-lg: 1.5rem;    // 24px
+    --rt-space-xl: 2rem;      // 32px
+    --rt-space-2xl: 3rem;     // 48px
+
+    // Border Radius
+    --rt-radius-sm: 2px;
+    --rt-radius-md: 4px;
+    --rt-radius-lg: 6px;
+
+    // Transitions
+    --rt-transition-fast: 0.15s ease;
+    --rt-transition-normal: 0.2s ease;
+    --rt-transition-slow: 0.3s ease;
+
+    // Z-Index Scale
+    --rt-z-base: 1;
+    --rt-z-panel: 10;
+    --rt-z-dropdown: 100;
+    --rt-z-modal: 1000;
+    --rt-z-tooltip: 10000;
+}
+
+/* ========================================
+   MIXINS - Reusable Style Patterns
+   ======================================== */
+
+// Gothic Panel
+@mixin gothic-panel {
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(30, 30, 30, 0.95) 100%);
+    border: 2px solid var(--rt-bronze);
+    border-radius: var(--rt-radius-md);
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(212, 175, 55, 0.2),
+        inset 0 1px 0 rgba(212, 175, 55, 0.1);
+    position: relative;
+
+    // Parchment texture overlay
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(212, 175, 55, 0.02) 2px,
+            rgba(212, 175, 55, 0.02) 4px
+        );
+        pointer-events: none;
+        border-radius: var(--rt-radius-md);
+    }
+}
+
+// Gothic Panel Header
+@mixin gothic-panel-header {
+    padding: var(--rt-space-sm) var(--rt-space-md);
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.3) 0%, rgba(62, 62, 62, 0.3) 100%);
+    border-bottom: 1px solid var(--rt-border-bright);
+    font-family: var(--rt-font-header);
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--rt-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+
+    &::before {
+        content: "⚜";
+        margin-right: var(--rt-space-sm);
+        color: var(--rt-gold);
+        font-size: 1rem;
+    }
+}
+
+// Gothic Button
+@mixin gothic-button {
+    padding: var(--rt-space-sm) var(--rt-space-md);
+    background: linear-gradient(135deg, var(--rt-bronze) 0%, var(--rt-gold-dark) 100%);
+    border: 2px solid var(--rt-gold);
+    border-radius: var(--rt-radius-md);
+    color: var(--rt-black);
+    font-family: var(--rt-font-header);
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all var(--rt-transition-normal);
+    position: relative;
+    overflow: hidden;
+
+    // Shine effect
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.4),
+            0 0 20px rgba(212, 175, 55, 0.4);
+
+        &::before {
+            left: 100%;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    }
+}
+
+// Gothic Input
+@mixin gothic-input {
+    padding: var(--rt-space-sm);
+    background: var(--rt-bg-input);
+    border: 2px solid var(--rt-border);
+    border-radius: var(--rt-radius-sm);
+    color: var(--rt-bone);
+    font-family: var(--rt-font-body);
+    transition: all var(--rt-transition-normal);
+
+    &:focus {
+        outline: none;
+        border-color: var(--rt-gold);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        background: rgba(62, 62, 62, 1);
+    }
+
+    &::placeholder {
+        color: rgba(232, 220, 200, 0.4);
+        font-style: italic;
+    }
+}
+
+// Gothic Divider
+@mixin gothic-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rt-gold), transparent);
+    margin: var(--rt-space-md) 0;
+    opacity: 0.5;
+}
+
+// Ornate Border
+@mixin ornate-border {
+    border: 2px solid var(--rt-bronze);
+    position: relative;
+
+    // Corner decorations
+    &::after {
+        content: "⚔";
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        font-size: 0.7rem;
+        color: var(--rt-gold);
+        text-shadow: 0 0 4px rgba(212, 175, 55, 0.6);
+    }
+}
+
+// Glow Effect
+@mixin glow($color: var(--rt-gold)) {
+    box-shadow: 0 0 10px rgba($color, 0.5);
+}
+
+// Stat Bar
+@mixin stat-bar($color: var(--rt-gold)) {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--rt-border);
+    border-radius: var(--rt-radius-sm);
+    overflow: hidden;
+    position: relative;
+
+    .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, darken($color, 10%), $color);
+        transition: width var(--rt-transition-slow);
+        box-shadow: 0 0 8px rgba($color, 0.6);
+    }
+}
+
+// Pulse Animation
+@mixin pulse-animation($color: var(--rt-gold)) {
+    animation: pulse 2s ease-in-out infinite;
+
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba($color, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba($color, 0.6);
+        }
+    }
+}
+
+// Gothic Text Shadow
+@mixin gothic-text-shadow {
+    text-shadow:
+        1px 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 4px rgba(212, 175, 55, 0.3);
+}
+
+// Hover Lift
+@mixin hover-lift {
+    transition: transform var(--rt-transition-normal);
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Scrollbar Styling
+@mixin gothic-scrollbar {
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(10, 10, 10, 0.5);
+        border-radius: var(--rt-radius-sm);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--rt-bronze), var(--rt-gold-dark));
+        border-radius: var(--rt-radius-sm);
+        border: 1px solid var(--rt-gold);
+
+        &:hover {
+            background: linear-gradient(135deg, var(--rt-bronze-bright), var(--rt-gold));
+        }
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.rt-panel {
+    @include gothic-panel;
+}
+
+.rt-panel-header {
+    @include gothic-panel-header;
+}
+
+.rt-button {
+    @include gothic-button;
+}
+
+.rt-input {
+    @include gothic-input;
+}
+
+.rt-divider {
+    @include gothic-divider;
+}
+
+.rt-glow {
+    @include glow;
+}
+
+.rt-hover-lift {
+    @include hover-lift;
+}
+
+// Text Colors
+.rt-text-gold {
+    color: var(--rt-gold);
+}
+
+.rt-text-bone {
+    color: var(--rt-bone);
+}
+
+.rt-text-red {
+    color: var(--rt-red-bright);
+}
+
+.rt-text-green {
+    color: var(--rt-green-bright);
+}
+
+// Background Colors
+.rt-bg-panel {
+    background: var(--rt-bg-panel);
+}
+
+.rt-bg-panel-light {
+    background: var(--rt-bg-panel-light);
+}
+
+// Spacing Utilities
+.rt-m-sm { margin: var(--rt-space-sm); }
+.rt-m-md { margin: var(--rt-space-md); }
+.rt-m-lg { margin: var(--rt-space-lg); }
+
+.rt-p-sm { padding: var(--rt-space-sm); }
+.rt-p-md { padding: var(--rt-space-md); }
+.rt-p-lg { padding: var(--rt-space-lg); }
+
+.rt-mt-sm { margin-top: var(--rt-space-sm); }
+.rt-mt-md { margin-top: var(--rt-space-md); }
+.rt-mt-lg { margin-top: var(--rt-space-lg); }
+
+.rt-mb-sm { margin-bottom: var(--rt-space-sm); }
+.rt-mb-md { margin-bottom: var(--rt-space-md); }
+.rt-mb-lg { margin-bottom: var(--rt-space-lg); }
+
+// Animation Utilities
+.rt-fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rt-pulse {
+    @include pulse-animation;
+}
+
+// Flex Utilities
+.rt-flex {
+    display: flex;
+}
+
+.rt-flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.rt-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rt-flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rt-gap-sm { gap: var(--rt-space-sm); }
+.rt-gap-md { gap: var(--rt-space-md); }
+.rt-gap-lg { gap: var(--rt-space-lg); }
