@@ -46,6 +46,21 @@
                     <option value="unequipped">Unequipped</option>
                 </select>
             </div>
+            {{!-- Bulk Operations --}}
+            <div class="rt-bulk-operations">
+                <button type="button" class="rt-bulk-btn rt-bulk-equip" data-action="bulkEquip" data-bulk-action="equip-armour" title="Equip all armour pieces">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Equip All Armour</span>
+                </button>
+                <button type="button" class="rt-bulk-btn rt-bulk-unequip" data-action="bulkEquip" data-bulk-action="unequip-all" title="Unequip all items">
+                    <i class="fas fa-times-circle"></i>
+                    <span>Unequip All</span>
+                </button>
+                <button type="button" class="rt-bulk-btn rt-bulk-stow" data-action="bulkEquip" data-bulk-action="stow-gear" title="Stow all gear in backpack">
+                    <i class="fas fa-suitcase"></i>
+                    <span>Stow All Gear</span>
+                </button>
+            </div>
         </div>
 
         <div class="rt-panel-body">

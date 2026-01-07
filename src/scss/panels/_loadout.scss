@@ -142,6 +142,98 @@
   }
 }
 
+// Bulk Operations
+.rt-bulk-operations {
+  display: flex;
+  gap: $rt-space-sm;
+  padding-top: $rt-space-xs;
+  border-top: 1px solid rgba($rt-border-medium, 0.5);
+}
+
+.rt-bulk-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid $rt-border-medium;
+  border-radius: 4px;
+  background: var(--color-input-bg, #fff);
+  color: var(--color-text-secondary);
+  font-size: $rt-font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  // Ripple effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+  }
+
+  &:active::before {
+    width: 200%;
+    height: 200%;
+  }
+
+  i {
+    font-size: 0.9em;
+    position: relative;
+    z-index: 1;
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  // Specific button variants
+  &.rt-bulk-equip {
+    &:hover {
+      background: rgba($rt-color-success, 0.1);
+      border-color: rgba($rt-color-success, 0.4);
+      color: $rt-color-success;
+    }
+  }
+
+  &.rt-bulk-unequip {
+    &:hover {
+      background: rgba($rt-color-warning, 0.1);
+      border-color: rgba($rt-color-warning, 0.4);
+      color: $rt-color-warning;
+    }
+  }
+
+  &.rt-bulk-stow {
+    &:hover {
+      background: rgba($rt-accent-equipment, 0.1);
+      border-color: rgba($rt-accent-equipment, 0.4);
+      color: $rt-accent-equipment;
+    }
+  }
+}
+
 .rt-encumbrance-bar-wrapper {
   display: flex;
   align-items: center;

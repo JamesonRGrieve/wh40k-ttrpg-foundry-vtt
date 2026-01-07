@@ -38,6 +38,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             toggleActivate: AcolyteSheet.#toggleActivate,
             filterEquipment: AcolyteSheet.#filterEquipment,
             clearEquipmentSearch: AcolyteSheet.#clearEquipmentSearch,
+            bulkEquip: AcolyteSheet.#bulkEquip,
 
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
@@ -1025,6 +1026,67 @@ export default class AcolyteSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (!item) return;
         await item.update({ "system.activated": !item.system.activated });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle bulk equipment operations.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #bulkEquip(event, target) {
+        try {
+            const action = target.dataset.bulkAction;
+            const items = this.actor.items;
+            let count = 0;
+
+            switch (action) {
+                case "equip-armour":
+                    // Equip all armour items
+                    const armourItems = items.filter(i => i.type === "armour" || i.isArmour);
+                    for (const item of armourItems) {
+                        if (!item.system.equipped) {
+                            await item.update({ "system.equipped": true });
+                            count++;
+                        }
+                    }
+                    ui.notifications.info(`Equipped ${count} armour piece${count !== 1 ? 's' : ''}`);
+                    break;
+
+                case "unequip-all":
+                    // Unequip all equipped items
+                    const equippedItems = items.filter(i => i.system?.equipped === true);
+                    for (const item of equippedItems) {
+                        await item.update({ "system.equipped": false });
+                        count++;
+                    }
+                    ui.notifications.info(`Unequipped ${count} item${count !== 1 ? 's' : ''}`);
+                    break;
+
+                case "stow-gear":
+                    // Stow all gear items to backpack
+                    const gearItems = items.filter(i =>
+                        (i.type === "gear" || i.isGear) && !i.system.inBackpack
+                    );
+                    for (const item of gearItems) {
+                        await item.update({
+                            "system.inBackpack": true,
+                            "system.equipped": false
+                        });
+                        count++;
+                    }
+                    ui.notifications.info(`Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`);
+                    break;
+
+                default:
+                    ui.notifications.warn(`Unknown bulk action: ${action}`);
+            }
+        } catch (error) {
+            ui.notifications.error(`Bulk operation failed: ${error.message}`);
+            console.error("Bulk equipment error:", error);
+        }
     }
 
     /* -------------------------------------------- */

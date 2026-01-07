@@ -65,6 +65,20 @@
     - `src/scss/components/_navigation.scss`
 
 **Total Time**: ~2 hours
+
+- [x] **Item 6**: Add Equipment Bulk Operations ✅
+  - "Equip All Armour" button - equips all armour pieces
+  - "Unequip All" button - unequips all equipped items
+  - "Stow All Gear" button - stows all gear to backpack
+  - Smart counting with pluralized notifications
+  - Error handling with user feedback
+  - Ripple button animations with color-coded hover states
+  - Files:
+    - `src/module/applications/actor/acolyte-sheet.mjs` (#bulkEquip handler)
+    - `src/templates/actor/panel/loadout-equipment-panel.hbs` (bulk operation buttons)
+    - `src/scss/panels/_loadout.scss` (bulk button styling)
+
+**Total Time**: ~2 hours
 **Build Status**: ✅ All builds passing
 
 ---
