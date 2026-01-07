@@ -1,0 +1,463 @@
+/**
+ * What-If Mode Styling
+ * Preview mode for testing changes before committing
+ */
+
+/* -------------------------------------------- */
+/*  What-If Mode Overlay                        */
+/* -------------------------------------------- */
+
+.what-if-mode {
+    position: relative;
+    
+    // Overlay to indicate preview mode
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: 
+            repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(212, 175, 55, 0.03) 20px,
+                rgba(212, 175, 55, 0.03) 40px
+            );
+        pointer-events: none;
+        z-index: 1;
+        border: 3px solid var(--rt-gold);
+        border-radius: 8px;
+        box-shadow: 
+            0 0 20px rgba(212, 175, 55, 0.4),
+            inset 0 0 30px rgba(212, 175, 55, 0.1);
+    }
+}
+
+/* -------------------------------------------- */
+/*  What-If Toolbar                             */
+/* -------------------------------------------- */
+
+.what-if-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-bronze) 100%);
+    border-bottom: 3px solid var(--rt-gold);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    padding: 0.75rem 1rem;
+    animation: toolbar-slide-in 0.4s ease-out;
+    
+    .what-if-toolbar-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    
+    .what-if-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--rt-black);
+        font-weight: bold;
+        
+        i {
+            font-size: 1.2rem;
+            animation: flask-bubble 2s ease-in-out infinite;
+        }
+        
+        .what-if-label {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1rem;
+        }
+        
+        .what-if-count {
+            background: var(--rt-black);
+            color: var(--rt-gold);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+    }
+    
+    .what-if-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .what-if-btn {
+        padding: 0.5rem 1rem;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        
+        i {
+            margin-right: 0.25rem;
+        }
+        
+        &.commit-btn {
+            background: var(--color-positive, #4caf50);
+            color: white;
+            border-color: #2e7d32;
+            
+            &:hover {
+                background: #388e3c;
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+                transform: translateY(-1px);
+            }
+            
+            &:active {
+                transform: translateY(0);
+            }
+        }
+        
+        &.cancel-btn {
+            background: var(--color-negative, #f44336);
+            color: white;
+            border-color: #c62828;
+            
+            &:hover {
+                background: #d32f2f;
+                box-shadow: 0 0 10px rgba(244, 67, 54, 0.6);
+                transform: translateY(-1px);
+            }
+            
+            &:active {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+@keyframes toolbar-slide-in {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes flask-bubble {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* -------------------------------------------- */
+/*  Preview Changes Display                     */
+/* -------------------------------------------- */
+
+.what-if-preview {
+    position: relative;
+    
+    // Highlight changed element
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border: 2px solid var(--rt-gold);
+        border-radius: 4px;
+        pointer-events: none;
+        animation: preview-pulse 2s ease-in-out infinite;
+    }
+}
+
+@keyframes preview-pulse {
+    0%, 100% { 
+        opacity: 0.6;
+        box-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
+    }
+    50% { 
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Comparison Badges                           */
+/* -------------------------------------------- */
+
+.what-if-badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    z-index: 10;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    animation: badge-appear 0.3s ease-out;
+    pointer-events: none;
+    
+    // Positive change (increase)
+    &.positive {
+        background: linear-gradient(135deg, #4caf50, #8bc34a);
+        color: white;
+        border: 2px solid #2e7d32;
+        
+        &::before {
+            content: "↑ ";
+        }
+    }
+    
+    // Negative change (decrease)
+    &.negative {
+        background: linear-gradient(135deg, #f44336, #e91e63);
+        color: white;
+        border: 2px solid #c62828;
+        
+        &::before {
+            content: "↓ ";
+        }
+    }
+}
+
+@keyframes badge-appear {
+    from {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Comparison Panel (Optional Side-by-Side)    */
+/* -------------------------------------------- */
+
+.what-if-comparison-panel {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: linear-gradient(135deg, var(--rt-iron) 0%, var(--rt-black) 100%);
+    border: 3px solid var(--rt-gold);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+    z-index: 99;
+    animation: panel-slide-in 0.4s ease-out;
+    
+    .comparison-header {
+        background: var(--rt-gold);
+        color: var(--rt-black);
+        padding: 0.75rem 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--rt-bronze);
+        
+        i {
+            margin-right: 0.5rem;
+        }
+    }
+    
+    .comparison-content {
+        padding: 1rem;
+    }
+    
+    .comparison-section {
+        margin-bottom: 1rem;
+        
+        h4 {
+            color: var(--rt-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+    }
+    
+    .comparison-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem;
+        margin-bottom: 0.25rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-left: 3px solid transparent;
+        
+        .label {
+            color: var(--rt-bone);
+        }
+        
+        .values {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            
+            .current {
+                color: #999;
+            }
+            
+            .arrow {
+                color: var(--rt-gold);
+            }
+            
+            .preview {
+                color: var(--rt-bone);
+                font-weight: bold;
+            }
+            
+            .diff {
+                font-size: 0.85rem;
+                padding: 0.125rem 0.375rem;
+                border-radius: 3px;
+                
+                &.positive {
+                    background: #4caf50;
+                    color: white;
+                }
+                
+                &.negative {
+                    background: #f44336;
+                    color: white;
+                }
+            }
+        }
+        
+        &.increased {
+            border-left-color: #4caf50;
+        }
+        
+        &.decreased {
+            border-left-color: #f44336;
+        }
+    }
+}
+
+@keyframes panel-slide-in {
+    from {
+        transform: translateY(-50%) translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(-50%) translateX(0);
+        opacity: 1;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Impact Summary                              */
+/* -------------------------------------------- */
+
+.what-if-impacts {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 2px solid var(--rt-gold);
+    border-radius: 4px;
+    
+    h4 {
+        color: var(--rt-gold);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        
+        i {
+            margin-right: 0.5rem;
+        }
+    }
+    
+    .impact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+        li {
+            padding: 0.25rem 0;
+            color: var(--rt-bone);
+            font-size: 0.85rem;
+            
+            &::before {
+                content: "→ ";
+                color: var(--rt-gold);
+                margin-right: 0.5rem;
+            }
+            
+            &.combat { border-left: 3px solid #ff5722; padding-left: 0.5rem; }
+            &.survival { border-left: 3px solid #4caf50; padding-left: 0.5rem; }
+            &.movement { border-left: 3px solid #2196f3; padding-left: 0.5rem; }
+            &.characteristic { border-left: 3px solid #9c27b0; padding-left: 0.5rem; }
+        }
+    }
+}
+
+/* -------------------------------------------- */
+/*  Responsive Adjustments                      */
+/* -------------------------------------------- */
+
+@media (max-width: 1200px) {
+    .what-if-comparison-panel {
+        width: 250px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .what-if-toolbar {
+        .what-if-toolbar-content {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .what-if-actions {
+            width: 100%;
+            
+            button {
+                flex: 1;
+            }
+        }
+    }
+    
+    .what-if-comparison-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-height: none;
+        margin-top: 1rem;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Accessibility - Reduced Motion              */
+/* -------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .what-if-mode::before,
+    .what-if-toolbar,
+    .what-if-badge,
+    .what-if-preview::after,
+    .what-if-comparison-panel {
+        animation: none !important;
+    }
+    
+    .what-if-preview::after {
+        opacity: 1;
+    }
+}
+
+/* -------------------------------------------- */
+/*  Print Styles                                */
+/* -------------------------------------------- */
+
+@media print {
+    .what-if-mode::before,
+    .what-if-toolbar,
+    .what-if-badge,
+    .what-if-comparison-panel {
+        display: none !important;
+    }
+}
