@@ -167,21 +167,36 @@
   height: 100%;
   background: linear-gradient(90deg, $rt-color-success, lighten($rt-color-success, 15%));
   border-radius: 7px;
-  transition: width 0.4s ease, background 0.3s ease;
-  
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+  position: relative;
+
+  // 50-74%: Yellow caution
+  &.rt-enc-caution {
+    background: linear-gradient(90deg, #f4d03f, lighten(#f4d03f, 10%));
+  }
+
+  // 75-99%: Orange warning
   &.rt-enc-warning {
     background: linear-gradient(90deg, $rt-color-warning, lighten($rt-color-warning, 10%));
   }
-  
-  &.rt-enc-over {
+
+  // 100%+: Red danger with pulsing
+  &.rt-enc-danger {
     background: linear-gradient(90deg, $rt-accent-combat, lighten($rt-accent-combat, 10%));
-    animation: pulse-enc 1.5s infinite;
+    animation: pulse-danger 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    box-shadow: 0 0 8px rgba($rt-accent-combat, 0.5);
   }
 }
 
-@keyframes pulse-enc {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+@keyframes pulse-danger {
+  0%, 100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scaleY(0.95);
+  }
 }
 
 .rt-enc-text {
@@ -487,19 +502,36 @@
   background: $rt-bg-paper-light;
   border: 1px solid $rt-border-light;
   border-radius: $rt-radius-sm;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: grab;
   min-width: 0;
-  
+
   &:hover {
     background: rgba($rt-accent-gold, 0.08);
     border-color: rgba($rt-accent-gold, 0.3);
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   &:active {
     cursor: grabbing;
+    transform: translateY(0);
+  }
+
+  // Equipped item highlighting
+  &:has(.rt-inv-equipped) {
+    background: rgba($rt-accent-gold, 0.12);
+    border-color: $rt-accent-gold;
+    box-shadow: 0 0 12px rgba($rt-accent-gold, 0.4),
+                inset 0 0 0 1px rgba($rt-accent-gold, 0.2);
+
+    &:hover {
+      background: rgba($rt-accent-gold, 0.18);
+      border-color: lighten($rt-accent-gold, 5%);
+      box-shadow: 0 2px 6px rgba($rt-accent-gold, 0.5),
+                  0 0 16px rgba($rt-accent-gold, 0.3),
+                  inset 0 0 0 1px rgba($rt-accent-gold, 0.3);
+    }
   }
 }
 

@@ -1,11 +1,29 @@
 .dh-body .tab, .rt-body .tab {
     display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dh-body .tab.active, .rt-body .tab.active {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 0;
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .dh {

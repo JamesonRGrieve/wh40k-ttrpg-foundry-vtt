@@ -50,6 +50,21 @@
     - `src/scss/panels/_loadout.scss`
 
 **Total Time**: ~3 hours
+
+- [x] **Item 8**: Improve Visual Feedback & Animations ✅
+  - Color-coded encumbrance warnings (50-74%: yellow, 75-99%: orange, 100%+: red pulsing)
+  - Enhanced equipped item highlighting with golden glow and shadow
+  - Button press ripple animations for all card buttons
+  - Smooth tab transitions with fade & slide effects
+  - Improved hover states with cubic-bezier easing
+  - Press-down visual feedback (scale transforms)
+  - Files:
+    - `src/templates/actor/panel/loadout-equipment-panel.hbs`
+    - `src/scss/panels/_loadout.scss`
+    - `src/scss/panels/_equipment-cards.scss`
+    - `src/scss/components/_navigation.scss`
+
+**Total Time**: ~2 hours
 **Build Status**: ✅ All builds passing
 
 ---
