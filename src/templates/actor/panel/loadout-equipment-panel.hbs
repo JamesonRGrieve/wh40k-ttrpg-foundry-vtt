@@ -17,6 +17,37 @@
                 {{/if}}
             </div>
         </div>
+
+        {{!-- Search and Filter Controls --}}
+        <div class="rt-equipment-controls">
+            <div class="rt-search-box">
+                <i class="fas fa-search rt-search-icon"></i>
+                <input type="search"
+                       class="rt-equipment-search"
+                       placeholder="Search equipment..."
+                       data-action="filterEquipment"
+                       autocomplete="off">
+                <button type="button" class="rt-search-clear" data-action="clearEquipmentSearch" title="Clear search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="rt-filter-controls">
+                <select class="rt-equipment-type-filter" data-action="filterEquipment">
+                    <option value="">All Types</option>
+                    <option value="weapon">Weapons</option>
+                    <option value="armour">Armour</option>
+                    <option value="gear">Gear</option>
+                    <option value="cybernetic">Cybernetics</option>
+                    <option value="forceField">Force Fields</option>
+                </select>
+                <select class="rt-equipment-status-filter" data-action="filterEquipment">
+                    <option value="">All Items</option>
+                    <option value="equipped">Equipped</option>
+                    <option value="unequipped">Unequipped</option>
+                </select>
+            </div>
+        </div>
+
         <div class="rt-panel-body">
             {{#if allItems.length}}
             <div class="rt-all-items-grid">
