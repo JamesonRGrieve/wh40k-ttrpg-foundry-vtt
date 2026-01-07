@@ -1,0 +1,111 @@
+{{!-- Acquisition Dialog Template --}}
+<div class="acquisition-content">
+    
+    {{!-- Header: Profit Factor --}}
+    <div class="acquisition-header">
+        <h2><i class="fas fa-coins"></i> Profit Factor Acquisition</h2>
+        <div class="pf-display">
+            <span class="pf-label">Current PF:</span>
+            <span class="pf-value">{{profitFactor.current}}</span>
+        </div>
+    </div>
+
+    {{!-- Item Being Acquired --}}
+    {{#if item}}
+    <div class="acquisition-item">
+        <img src="{{item.img}}" alt="{{item.name}}" class="item-icon" />
+        <div class="item-details">
+            <div class="item-name">{{item.name}}</div>
+            <div class="item-meta">
+                <span>{{item.availability}}</span>
+                <span>{{item.craftsmanship}}</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{!-- Base Modifiers --}}
+    <div class="modifiers-section">
+        <h3>Base Modifiers</h3>
+        <div class="modifier-row">
+            <span class="modifier-label">Availability:</span>
+            <span class="modifier-value {{#if (gt availabilityModifier 0)}}positive{{else if (lt availabilityModifier 0)}}negative{{/if}}">
+                {{#if (gt availabilityModifier 0)}}+{{/if}}{{availabilityModifier}}
+            </span>
+        </div>
+        <div class="modifier-row">
+            <span class="modifier-label">Craftsmanship:</span>
+            <span class="modifier-value {{#if (gt craftsmanshipModifier 0)}}positive{{else if (lt craftsmanshipModifier 0)}}negative{{/if}}">
+                {{#if (gt craftsmanshipModifier 0)}}+{{/if}}{{craftsmanshipModifier}}
+            </span>
+        </div>
+    </div>
+
+    {{!-- Common Modifiers --}}
+    <div class="modifiers-section">
+        <h3>Additional Modifiers</h3>
+        {{#each commonModifiers}}
+        <label class="modifier-checkbox">
+            <input type="checkbox" 
+                   data-action="toggleModifier" 
+                   data-modifier="{{this.key}}"
+                   {{#if this.selected}}checked{{/if}} />
+            <span class="modifier-label">{{this.label}}</span>
+            <span class="modifier-value {{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
+                {{#if (gt this.value 0)}}+{{/if}}{{this.value}}
+            </span>
+        </label>
+        {{/each}}
+    </div>
+
+    {{!-- Custom Modifier --}}
+    <div class="modifiers-section">
+        <label class="custom-modifier">
+            <span class="modifier-label">Custom Modifier:</span>
+            <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0" />
+        </label>
+    </div>
+
+    {{!-- Summary --}}
+    <div class="acquisition-summary">
+        <div class="summary-row">
+            <span>Base PF:</span>
+            <span>{{profitFactor.current}}</span>
+        </div>
+        <div class="summary-row">
+            <span>Total Modifiers:</span>
+            <span class="{{#if (gt totalModifier 0)}}positive{{else if (lt totalModifier 0)}}negative{{/if}}">
+                {{#if (gt totalModifier 0)}}+{{/if}}{{totalModifier}}
+            </span>
+        </div>
+        <div class="summary-row final">
+            <span>Final Target:</span>
+            <span class="final-target">{{finalTarget}}</span>
+        </div>
+    </div>
+
+    {{!-- Actions --}}
+    <div class="acquisition-actions">
+        <button type="button" class="acquisition-roll-btn" data-action="roll">
+            <i class="fas fa-dice-d20"></i> Roll Acquisition Test
+        </button>
+        <button type="button" class="acquisition-cancel-btn" data-action="close">
+            <i class="fas fa-times"></i> Cancel
+        </button>
+    </div>
+
+    {{!-- Recent Acquisitions --}}
+    {{#if recentAcquisitions}}
+    <div class="recent-acquisitions">
+        <h4>Recent Acquisitions</h4>
+        <ul>
+            {{#each recentAcquisitions}}
+            <li class="{{#if this.success}}success{{else}}failure{{/if}}">
+                <span class="acq-name">{{this.item.name}}</span>
+                <span class="acq-result">{{this.roll}}/{{this.target}}</span>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+</div>
