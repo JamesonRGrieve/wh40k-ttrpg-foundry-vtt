@@ -1,16 +1,14 @@
 {{!-- Redesigned Fatigue Panel - Modern, Auto-Calc Transparency, Player-Friendly --}}
 <div class="rt-panel rt-fatigue-panel-v2 {{#if (gte system.fatigue.value system.fatigue.max)}}rt-exhausted{{/if}}">
 
-    {{!-- Panel Header --}}
-    <div class="rt-panel-header">
+    {{!-- Panel Header - Click to expand/collapse --}}
+    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+         data-toggle="fatigue_details"
+         title="Click to {{#if (isExpanded 'fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
         <span class="rt-panel-title">
             <i class="fas fa-bolt"></i> Fatigue
         </span>
-        <button type="button" class="rt-vital-expand-btn sheet-control__hide-control"
-                data-toggle="fatigue_details"
-                title="{{#if (isExpanded 'fatigue_details' actor)}}Hide Details{{else}}Edit Fatigue{{/if}}">
-            <i class="fas {{#if (isExpanded 'fatigue_details' actor)}}fa-chevron-up{{else}}fa-cog{{/if}}"></i>
-        </button>
+        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'fatigue_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
     </div>
 
     {{!-- Panel Body --}}
@@ -51,12 +49,26 @@
             </div>
             {{/unless}}
 
-            {{!-- Progress Bar with Blue → Orange Gradient --}}
+            {{!-- Progress Bar with Blue → Orange Gradient and Threshold Markers --}}
             <div class="rt-fatigue-bar-container">
                 <div class="rt-fatigue-bar"
                      data-percent="{{percent system.fatigue.value system.fatigue.max}}"
                      style="--fatigue-percent: {{percent system.fatigue.value system.fatigue.max}}%">
                     <div class="rt-fatigue-bar-fill"></div>
+
+                    {{!-- Threshold Markers --}}
+                    <div class="rt-threshold-marker" style="left: 33%;" title="Tired (33%)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">33%</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 66%;" title="Fatigued (66%)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">66%</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 100%;" title="Exhausted (100%)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">100%</span>
+                    </div>
                 </div>
                 <span class="rt-fatigue-percent">{{percent system.fatigue.value system.fatigue.max}}%</span>
             </div>

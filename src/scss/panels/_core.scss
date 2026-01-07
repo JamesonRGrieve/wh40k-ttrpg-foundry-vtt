@@ -72,6 +72,37 @@
   }
 }
 
+// Clickable panel header for expand/collapse
+.rt-panel-header--clickable {
+  cursor: pointer;
+  user-select: none;
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.2) 0%, rgba($rt-accent-gold, 0.08) 100%);
+  }
+  
+  &:active {
+    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.25) 0%, rgba($rt-accent-gold, 0.12) 100%);
+  }
+}
+
+// Chevron indicator for collapsible panels
+.rt-panel-chevron {
+  font-size: 0.75rem;
+  color: $rt-text-muted;
+  transition: transform 0.2s ease, color 0.15s ease;
+  margin-left: auto;
+  flex-shrink: 0;
+  
+  .rt-panel-header--clickable:hover & {
+    color: $rt-accent-gold;
+  }
+}
+
+.rt-panel-chevron--open {
+  transform: rotate(180deg);
+}
+
 .rt-panel-body {
   padding: $rt-space-md;
   background: $rt-bg-translucent;

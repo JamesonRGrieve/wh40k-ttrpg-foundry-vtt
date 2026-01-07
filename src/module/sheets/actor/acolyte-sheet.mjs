@@ -316,7 +316,23 @@ export class AcolyteSheet extends ActorContainerSheet {
         
         // Critical pip clicks
         html.find('.rt-crit-pip').click(async (ev) => await this._onCritPipClick(ev));
-        
+
+        // Fate star clicks
+        html.find('.rt-fate-star').click(async (ev) => await this._onFateStarClick(ev));
+
+        // Fate spending menu
+        html.find('[data-fate-action="menu"]').click((ev) => this._toggleFateMenu(ev));
+        html.find('.rt-fate-option').click(async (ev) => await this._onFateSpend(ev));
+
+        // Restore all fate
+        html.find('[data-action="restore-fate"]').click(async (ev) => await this._onRestoreFate(ev));
+
+        // Corruption quick-set buttons
+        html.find('[data-action="set-corruption"]').click(async (ev) => await this._onSetCorruption(ev));
+
+        // Insanity quick-set buttons
+        html.find('[data-action="set-insanity"]').click(async (ev) => await this._onSetInsanity(ev));
+
         // Hit location roll button
         html.find('.rt-hit-location-roll').click(async (ev) => await this._rollHitLocation(ev));
         
@@ -399,6 +415,10 @@ export class AcolyteSheet extends ActorContainerSheet {
         const min = button.dataset.min !== undefined ? parseInt(button.dataset.min) : null;
         const max = button.dataset.max !== undefined ? parseInt(button.dataset.max) : null;
 
+        // Add button press animation
+        button.classList.add('rt-btn-pressed');
+        setTimeout(() => button.classList.remove('rt-btn-pressed'), 200);
+
         // Handle special actions
         if (action === 'clear-fatigue') {
             await this.actor.update({ 'system.fatigue.value': 0 });
@@ -408,17 +428,38 @@ export class AcolyteSheet extends ActorContainerSheet {
         // Get current value using foundry's getProperty
         const currentValue = foundry.utils.getProperty(this.actor, field) || 0;
         let newValue = currentValue;
+        let hitLimit = false;
 
         if (action === 'increment') {
             newValue = currentValue + 1;
-            if (max !== null && newValue > max) newValue = max;
+            if (max !== null && newValue > max) {
+                newValue = max;
+                hitLimit = currentValue === max;
+            }
         } else if (action === 'decrement') {
             newValue = currentValue - 1;
-            if (min !== null && newValue < min) newValue = min;
+            if (min !== null && newValue < min) {
+                newValue = min;
+                hitLimit = currentValue === min;
+            }
+        }
+
+        // If we hit a limit, shake the button
+        if (hitLimit) {
+            button.classList.add('rt-btn-shake');
+            setTimeout(() => button.classList.remove('rt-btn-shake'), 400);
+            return; // Don't update if we're already at the limit
         }
 
         // Only update if value changed
         if (newValue !== currentValue) {
+            // Find the number display element and add roll animation
+            const numberDisplay = button.closest('.rt-vital-tracker, .rt-wounds-value, .rt-fatigue-value, .rt-corruption-value, .rt-insanity-value')?.querySelector('.rt-vital-current, .rt-wounds-current, .rt-fatigue-current, .rt-corruption-current, .rt-insanity-current');
+            if (numberDisplay) {
+                numberDisplay.classList.add('rt-number-roll');
+                setTimeout(() => numberDisplay.classList.remove('rt-number-roll'), 300);
+            }
+
             await this.actor.update({ [field]: newValue });
         }
     }
@@ -431,13 +472,197 @@ export class AcolyteSheet extends ActorContainerSheet {
         const pip = event.currentTarget;
         const level = parseInt(pip.dataset.critLevel);
         const currentCrit = this.actor.system.wounds?.critical || 0;
-        
+
         // If clicking on a filled pip at the current level, reduce by 1
         // Otherwise set to the clicked level
         const newValue = (level === currentCrit) ? level - 1 : level;
         const clampedValue = Math.min(Math.max(newValue, 0), 10);
-        
+
         await this.actor.update({ 'system.wounds.critical': clampedValue });
+    }
+
+    /**
+     * Handle clicking on a fate star pip
+     */
+    async _onFateStarClick(event) {
+        event.preventDefault();
+        const star = event.currentTarget;
+        const index = parseInt(star.dataset.fateIndex);
+        const currentFate = this.actor.system.fate?.value || 0;
+
+        // Toggle behavior: if clicking current value, reduce by 1, else set to clicked value
+        const newValue = (index === currentFate) ? index - 1 : index;
+        const maxFate = this.actor.system.fate?.max || 0;
+        const clampedValue = Math.min(Math.max(newValue, 0), maxFate);
+
+        // Add sparkle animation if gaining fate
+        if (clampedValue > currentFate) {
+            star.classList.add('rt-sparkle');
+            setTimeout(() => star.classList.remove('rt-sparkle'), 600);
+        }
+        // Add fade animation if spending fate
+        else if (clampedValue < currentFate) {
+            star.classList.add('rt-spending');
+            setTimeout(() => star.classList.remove('rt-spending'), 500);
+        }
+
+        await this.actor.update({ 'system.fate.value': clampedValue });
+    }
+
+    /**
+     * Toggle fate spending menu
+     */
+    _toggleFateMenu(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const dropdown = button.nextElementSibling;
+
+        if (!dropdown) return;
+
+        const isOpen = dropdown.style.display !== 'none';
+
+        if (isOpen) {
+            dropdown.style.display = 'none';
+            button.classList.remove('rt-menu-open');
+        } else {
+            dropdown.style.display = 'block';
+            button.classList.add('rt-menu-open');
+        }
+    }
+
+    /**
+     * Handle fate spending actions
+     */
+    async _onFateSpend(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const action = button.dataset.fateAction;
+        const currentFate = this.actor.system.fate?.value || 0;
+
+        if (currentFate <= 0) {
+            ui.notifications.warn("No fate points available to spend!");
+            return;
+        }
+
+        // Close menu
+        const dropdown = button.closest('.rt-fate-dropdown');
+        if (dropdown) {
+            dropdown.style.display = 'none';
+            const menuBtn = dropdown.previousElementSibling;
+            if (menuBtn) menuBtn.classList.remove('rt-menu-open');
+        }
+
+        // Handle different fate spending actions
+        let message = '';
+        switch (action) {
+            case 'reroll':
+                message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>re-roll</strong> a test!`;
+                break;
+            case 'bonus':
+                message = `<strong>${this.actor.name}</strong> spends a Fate Point to gain <strong>+10 bonus</strong> to a test!`;
+                break;
+            case 'dos':
+                message = `<strong>${this.actor.name}</strong> spends a Fate Point to add <strong>+1 Degree of Success</strong>!`;
+                break;
+            case 'heal':
+                message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>heal damage</strong>!`;
+                break;
+            case 'avoid':
+                message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`;
+                break;
+            case 'burn':
+                const confirm = await Dialog.confirm({
+                    title: "Burn Fate Point?",
+                    content: "<p>Are you sure you want to <strong>permanently burn</strong> a Fate Point? This will reduce your maximum Fate Points!</p>",
+                    yes: () => true,
+                    no: () => false
+                });
+                if (!confirm) return;
+
+                message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point for a miraculous effect!`;
+                await this.actor.update({
+                    'system.fate.max': Math.max(0, (this.actor.system.fate?.max || 0) - 1)
+                });
+                break;
+            default:
+                return;
+        }
+
+        // Spend the fate point
+        await this.actor.update({ 'system.fate.value': currentFate - 1 });
+
+        // Post message to chat
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: `
+                <div class="rt-fate-spend-message">
+                    <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">
+                        <i class="fas fa-star" style="font-size: 1.5rem; color: #c4871d;"></i>
+                        <div>${message}</div>
+                    </div>
+                </div>
+            `
+        });
+    }
+
+    /**
+     * Restore all fate points
+     */
+    async _onRestoreFate(event) {
+        event.preventDefault();
+        const maxFate = this.actor.system.fate?.max || 0;
+        await this.actor.update({ 'system.fate.value': maxFate });
+        ui.notifications.info(`Restored all fate points to ${maxFate}`);
+    }
+
+    /**
+     * Quick-set corruption to specific values (0, 30, 60, 90)
+     */
+    async _onSetCorruption(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const targetValue = parseInt(button.dataset.value);
+
+        if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
+            ui.notifications.error('Invalid corruption value');
+            return;
+        }
+
+        await this.actor.update({ 'system.corruption': targetValue });
+
+        // Get corruption degree name for feedback
+        const degreeName = targetValue === 0 ? 'PURE' :
+                          targetValue < 30 ? 'TAINTED' :
+                          targetValue < 60 ? 'SOILED' :
+                          targetValue < 90 ? 'DEBASED' :
+                          targetValue < 100 ? 'PROFANE' : 'DAMNED';
+
+        ui.notifications.info(`Corruption set to ${targetValue} (${degreeName})`);
+    }
+
+    /**
+     * Quick-set insanity to specific values (0, 30, 60, 90)
+     */
+    async _onSetInsanity(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const targetValue = parseInt(button.dataset.value);
+
+        if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
+            ui.notifications.error('Invalid insanity value');
+            return;
+        }
+
+        await this.actor.update({ 'system.insanity': targetValue });
+
+        // Get insanity degree name for feedback
+        const degreeName = targetValue === 0 ? 'STABLE' :
+                          targetValue < 30 ? 'UNSETTLED' :
+                          targetValue < 60 ? 'DISTURBED' :
+                          targetValue < 90 ? 'UNHINGED' :
+                          targetValue < 100 ? 'INCURABLE' : 'INSANE';
+
+        ui.notifications.info(`Insanity set to ${targetValue} (${degreeName})`);
     }
 
     async _combatControls(event) {

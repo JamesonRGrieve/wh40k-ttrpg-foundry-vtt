@@ -206,6 +206,15 @@ export function registerHandlebarsHelpers() {
         return list.some((item) => Boolean(item?.[prop]));
     });
 
+    /**
+     * Count items in a list that have a specific property
+     * Usage: {{countType actor.items "isMalignancy"}}
+     */
+    Handlebars.registerHelper('countType', function(list, prop) {
+        if (!Array.isArray(list) || !prop) return 0;
+        return list.filter((item) => Boolean(item?.[prop])).length;
+    });
+
     Handlebars.registerHelper('arrayToObject', function(array) {
         const obj = {};
         if (array == null || typeof array[Symbol.iterator] !== 'function') return obj;
@@ -267,6 +276,14 @@ export function registerHandlebarsHelpers() {
         if (e < s) return out;
         for (let i = s; i <= e; i++) out.push(i);
         return out;
+    });
+
+    /**
+     * Add two numbers
+     * Usage: {{add value 1}}
+     */
+    Handlebars.registerHelper('add', function(a, b) {
+        return (Number(a) || 0) + (Number(b) || 0);
     });
 
     /**

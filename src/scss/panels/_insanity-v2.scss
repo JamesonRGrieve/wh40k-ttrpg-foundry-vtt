@@ -1,0 +1,750 @@
+// ============================================
+// Insanity Panel V2 - Redesigned with Degree Badges
+// ============================================
+// Purple theme with threshold warnings, broken mind visual, mental disorder tracking
+
+.rt-insanity-panel-v2 {
+    background: linear-gradient(135deg, #f4f1f8 0%, #ebe5f5 100%);
+    border: 2px solid #9370db;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(147, 112, 219, 0.15);
+    margin-bottom: 12px;
+    transition: border-color 0.3s ease;
+
+    // Dynamic border color based on insanity degree
+    &.rt-insanity-stable {
+        border-color: #9370db; // STABLE - medium purple
+    }
+
+    &.rt-insanity-unsettled {
+        border-color: #8a63c4; // UNSETTLED - darker purple
+    }
+
+    &.rt-insanity-disturbed {
+        border-color: #7b4db8; // DISTURBED - deep purple
+    }
+
+    &.rt-insanity-unhinged {
+        border-color: #6a3aa8; // UNHINGED - very deep purple
+    }
+
+    &.rt-insanity-incurable {
+        border-color: #5a2894; // INCURABLE - darkest purple
+        box-shadow: 0 2px 12px rgba(90, 40, 148, 0.4);
+    }
+
+    &.rt-insanity-insane {
+        border-color: #4b1c7d; // INSANE - nearly black purple
+        box-shadow: 0 4px 16px rgba(75, 28, 125, 0.6);
+        animation: border-pulse-insane 2s ease-in-out infinite;
+    }
+
+    .rt-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background: linear-gradient(90deg, rgba(147, 112, 219, 0.15) 0%, rgba(147, 112, 219, 0.05) 100%);
+        border-bottom: 1px solid rgba(147, 112, 219, 0.2);
+        border-radius: 6px 6px 0 0;
+
+        .rt-panel-title {
+            flex: 1;  // Allow title to expand and take available space
+            font-size: 16px;
+            font-weight: 600;
+            color: #5a2894;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;  // Allow flexbox to shrink if needed
+
+            i {
+                font-size: 18px;
+                color: #9370db;
+                flex-shrink: 0;  // Prevent icon from shrinking
+            }
+        }
+
+        .rt-insanity-degree-badge {
+            flex-shrink: 0;  // Prevent badge from shrinking
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid;
+            transition: all 0.3s ease;
+
+            &.rt-insanity-stable {
+                background: linear-gradient(135deg, #c8b8e8 0%, #b8a5d9 100%);
+                color: #4a2875;
+                border-color: #9370db;
+            }
+
+            &.rt-insanity-unsettled {
+                background: linear-gradient(135deg, #b8a5d9 0%, #a890ca 100%);
+                color: #3d1f62;
+                border-color: #8a63c4;
+            }
+
+            &.rt-insanity-disturbed {
+                background: linear-gradient(135deg, #a890ca 0%, #9872ba 100%);
+                color: #31184f;
+                border-color: #7b4db8;
+            }
+
+            &.rt-insanity-unhinged {
+                background: linear-gradient(135deg, #9872ba 0%, #8855aa 100%);
+                color: #28113e;
+                border-color: #6a3aa8;
+            }
+
+            &.rt-insanity-incurable {
+                background: linear-gradient(135deg, #8855aa 0%, #743894 100%);
+                color: #f0e8f8;
+                border-color: #5a2894;
+                animation: badge-pulse-incurable 2s ease-in-out infinite;
+            }
+
+            &.rt-insanity-insane {
+                background: linear-gradient(135deg, #5a2894 0%, #4b1c7d 100%);
+                color: #ffffff;
+                border-color: #3c1465;
+                animation: badge-pulse-insane 1.5s ease-in-out infinite;
+            }
+        }
+
+        .rt-vital-expand-btn {
+            flex-shrink: 0;  // Prevent button from shrinking
+            background: transparent;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            color: #9370db;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: rgba(147, 112, 219, 0.1);
+                border-color: #9370db;
+                color: #7b4db8;
+            }
+        }
+    }
+
+    .rt-panel-body {
+        padding: 12px;
+    }
+
+    // Main Display
+    .rt-insanity-display {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .rt-insanity-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .rt-insanity-value {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .rt-insanity-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid #9370db;
+        background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
+        color: #7b4db8;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: linear-gradient(135deg, #9370db 0%, #8a63c4 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 2px 6px rgba(147, 112, 219, 0.3);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+
+    .rt-insanity-number {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        font-family: 'Modesto Condensed', serif;
+
+        .rt-insanity-current {
+            font-size: 32px;
+            font-weight: 700;
+            color: #5a2894;
+        }
+
+        .rt-insanity-max {
+            font-size: 18px;
+            color: #9370db;
+        }
+    }
+
+    .rt-insanity-modifier {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: rgba(147, 112, 219, 0.1);
+        border-radius: 6px;
+        border: 1px solid rgba(147, 112, 219, 0.2);
+
+        .rt-modifier-label {
+            font-size: 12px;
+            color: #7b4db8;
+            font-weight: 600;
+        }
+
+        .rt-modifier-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #5a2894;
+            font-family: 'Modesto Condensed', serif;
+        }
+    }
+
+    // Progress Bar with Threshold Markers
+    .rt-insanity-bar-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .rt-insanity-bar {
+        position: relative;
+        width: 100%;
+        height: 20px;
+        background: linear-gradient(90deg,
+            rgba(200, 184, 232, 0.3) 0%,
+            rgba(147, 112, 219, 0.3) 100%
+        );
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(147, 112, 219, 0.3);
+    }
+
+    .rt-insanity-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg,
+            #c8b8e8 0%,       // STABLE - light purple
+            #b8a5d9 15%,      // UNSETTLED - medium purple
+            #9370db 30%,      // DISTURBED - dark purple
+            #7b4db8 50%,      // mid
+            #6a3aa8 75%,      // UNHINGED - very dark purple
+            #5a2894 90%,      // INCURABLE - darkest purple
+            #4b1c7d 100%      // INSANE - nearly black purple
+        );
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px rgba(147, 112, 219, 0.4);
+    }
+
+    .rt-threshold-marker {
+        position: absolute;
+        top: -2px;
+        height: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: none;
+        z-index: 2;
+
+        .rt-threshold-line {
+            width: 2px;
+            height: 100%;
+            background: rgba(147, 112, 219, 0.5);
+            border-radius: 1px;
+        }
+
+        .rt-threshold-label {
+            position: absolute;
+            top: -20px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #7b4db8;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 4px;
+            border-radius: 3px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+    }
+
+    // Broken Mind Visual (fractures at high insanity)
+    .rt-broken-mind {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px;
+        color: #9370db;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+
+        i {
+            font-size: 24px;
+            filter: drop-shadow(0 2px 4px rgba(147, 112, 219, 0.2));
+        }
+
+        .rt-mind-text {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    }
+
+    // Fractured Mind (60+ insanity)
+    .rt-mind-fractured {
+        color: #7b4db8;
+
+        i {
+            filter: drop-shadow(0 2px 4px rgba(123, 77, 184, 0.4)) grayscale(0.2);
+            animation: mind-crack 3s ease-in-out infinite;
+        }
+
+        .rt-mind-text::after {
+            content: ' (Fractured)';
+            color: #6a3aa8;
+        }
+    }
+
+    // Shattered Mind (90+ insanity)
+    .rt-mind-shattered {
+        color: #5a2894;
+
+        i {
+            filter: drop-shadow(0 2px 8px rgba(90, 40, 148, 0.6)) grayscale(0.4);
+            animation: mind-shatter 1.5s ease-in-out infinite;
+        }
+
+        .rt-mind-text::after {
+            content: ' (Shattered)';
+            color: #4b1c7d;
+        }
+    }
+
+    // Alert Messages
+    .rt-insanity-alert {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid;
+        animation: alert-pulse 2s ease-in-out infinite;
+
+        i {
+            font-size: 16px;
+        }
+    }
+
+    .rt-alert-unhinged {
+        background: linear-gradient(135deg, rgba(106, 58, 168, 0.15) 0%, rgba(106, 58, 168, 0.05) 100%);
+        color: #6a3aa8;
+        border-color: #6a3aa8;
+    }
+
+    .rt-alert-incurable {
+        background: linear-gradient(135deg, rgba(90, 40, 148, 0.2) 0%, rgba(90, 40, 148, 0.1) 100%);
+        color: #5a2894;
+        border-color: #5a2894;
+    }
+
+    .rt-alert-insane {
+        background: linear-gradient(135deg, rgba(75, 28, 125, 0.25) 0%, rgba(75, 28, 125, 0.15) 100%);
+        color: #4b1c7d;
+        border-color: #4b1c7d;
+    }
+
+    // Mental Disorder Preview
+    .rt-disorder-preview {
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: rgba(147, 112, 219, 0.1);
+        border-radius: 6px;
+        border: 1px solid rgba(147, 112, 219, 0.2);
+    }
+
+    .rt-disorder-count {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #7b4db8;
+
+        i {
+            font-size: 16px;
+            color: #9370db;
+        }
+    }
+
+    // Edit Mode
+    .rt-panel-details {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(147, 112, 219, 0.2);
+    }
+
+    .rt-insanity-edit-section {
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .rt-insanity-edit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #5a2894;
+        margin-bottom: 8px;
+
+        i {
+            color: #9370db;
+        }
+    }
+
+    .rt-insanity-edit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+
+        .rt-edit-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #7b4db8;
+        }
+
+        .rt-edit-input {
+            padding: 8px 12px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Modesto Condensed', serif;
+            background: white;
+            transition: all 0.2s ease;
+
+            &:focus {
+                outline: none;
+                border-color: #9370db;
+                box-shadow: 0 0 0 2px rgba(147, 112, 219, 0.1);
+            }
+        }
+    }
+
+    // Quick Set Buttons
+    .rt-insanity-quick-set {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    .rt-quick-set-btn {
+        padding: 8px;
+        border: 1px solid rgba(147, 112, 219, 0.3);
+        border-radius: 4px;
+        background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
+        color: #7b4db8;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+
+        i {
+            font-size: 14px;
+        }
+
+        &:hover {
+            background: linear-gradient(135deg, #9370db 0%, #8a63c4 100%);
+            color: white;
+            border-color: #9370db;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(147, 112, 219, 0.3);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    // Mental Disorder List
+    .rt-disorder-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .rt-disorder-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 12px;
+        background: linear-gradient(135deg, rgba(200, 184, 232, 0.15) 0%, rgba(200, 184, 232, 0.05) 100%);
+        border: 1px solid rgba(147, 112, 219, 0.2);
+        border-radius: 6px;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: linear-gradient(135deg, rgba(200, 184, 232, 0.25) 0%, rgba(200, 184, 232, 0.15) 100%);
+            border-color: #9370db;
+        }
+    }
+
+    .rt-disorder-name {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #5a2894;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        padding: 0;
+
+        i {
+            font-size: 14px;
+            color: #9370db;
+        }
+
+        &:hover {
+            color: #7b4db8;
+        }
+    }
+
+    .rt-disorder-delete {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        border: 1px solid rgba(147, 112, 219, 0.3);
+        background: transparent;
+        color: #9370db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+        }
+    }
+
+    .rt-add-btn-small {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        border: 1px solid rgba(147, 112, 219, 0.3);
+        background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
+        color: #9370db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        i {
+            font-size: 12px;
+        }
+
+        &:hover {
+            background: linear-gradient(135deg, #9370db 0%, #8a63c4 100%);
+            color: white;
+            border-color: #9370db;
+        }
+    }
+
+    .rt-insanity-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 16px;
+        color: #9370db;
+        font-size: 13px;
+        text-align: center;
+
+        i {
+            font-size: 24px;
+            opacity: 0.5;
+        }
+    }
+
+    // Info Box
+    .rt-insanity-info-box {
+        background: linear-gradient(135deg, rgba(200, 184, 232, 0.1) 0%, rgba(200, 184, 232, 0.05) 100%);
+        border: 1px solid rgba(147, 112, 219, 0.2);
+        border-radius: 6px;
+        padding: 12px;
+        display: flex;
+        gap: 12px;
+
+        > i {
+            font-size: 24px;
+            color: #9370db;
+            flex-shrink: 0;
+        }
+
+        .rt-info-content {
+            flex: 1;
+
+            strong {
+                display: block;
+                font-size: 14px;
+                color: #5a2894;
+                margin-bottom: 8px;
+            }
+        }
+    }
+
+    .rt-degree-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 12px 0;
+        font-size: 12px;
+
+        li {
+            padding: 4px 0;
+            color: #7b4db8;
+
+            .rt-degree-name {
+                font-weight: 600;
+                color: #5a2894;
+
+                &.rt-degree-insane {
+                    color: #4b1c7d;
+                }
+            }
+
+            strong {
+                color: #5a2894;
+            }
+        }
+    }
+
+    .rt-insanity-warning {
+        margin: 0;
+        padding: 8px;
+        background: rgba(147, 112, 219, 0.1);
+        border-left: 3px solid #9370db;
+        font-size: 12px;
+        color: #7b4db8;
+        border-radius: 0 4px 4px 0;
+
+        i {
+            color: #9370db;
+        }
+    }
+}
+
+// Animations
+@keyframes border-pulse-insane {
+    0%, 100% {
+        border-color: #4b1c7d;
+        box-shadow: 0 4px 16px rgba(75, 28, 125, 0.6);
+    }
+    50% {
+        border-color: #5a2894;
+        box-shadow: 0 6px 20px rgba(90, 40, 148, 0.8);
+    }
+}
+
+@keyframes badge-pulse-incurable {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(90, 40, 148, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(90, 40, 148, 0.6);
+    }
+}
+
+@keyframes badge-pulse-insane {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(75, 28, 125, 0.6);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 15px rgba(75, 28, 125, 0.8);
+    }
+}
+
+@keyframes mind-crack {
+    0%, 100% {
+        transform: rotate(0deg);
+        filter: drop-shadow(0 2px 4px rgba(123, 77, 184, 0.4)) grayscale(0.2);
+    }
+    25% {
+        transform: rotate(-2deg);
+        filter: drop-shadow(0 2px 6px rgba(123, 77, 184, 0.5)) grayscale(0.25);
+    }
+    75% {
+        transform: rotate(2deg);
+        filter: drop-shadow(0 2px 6px rgba(123, 77, 184, 0.5)) grayscale(0.25);
+    }
+}
+
+@keyframes mind-shatter {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        filter: drop-shadow(0 2px 8px rgba(90, 40, 148, 0.6)) grayscale(0.4) brightness(1);
+    }
+    25% {
+        transform: rotate(-5deg) scale(0.98);
+        filter: drop-shadow(0 4px 12px rgba(90, 40, 148, 0.8)) grayscale(0.5) brightness(0.9);
+    }
+    50% {
+        transform: rotate(0deg) scale(0.95);
+        filter: drop-shadow(0 6px 16px rgba(90, 40, 148, 1)) grayscale(0.6) brightness(0.8);
+    }
+    75% {
+        transform: rotate(5deg) scale(0.98);
+        filter: drop-shadow(0 4px 12px rgba(90, 40, 148, 0.8)) grayscale(0.5) brightness(0.9);
+    }
+}
+
+@keyframes alert-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.85;
+    }
+}

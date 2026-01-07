@@ -57,20 +57,8 @@
   }
 }
 
-// Override for panel headers to ensure inline layout
-.rt-panel-header {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: $rt-space-sm;
-  
-  .rt-panel-title {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: $rt-space-sm;
-  }
-}
+// Panel header layout is now defined in _core.scss with complete styling
+// No override needed here - using the base styles
 
 // ============================================
 // VITALS PANELS
