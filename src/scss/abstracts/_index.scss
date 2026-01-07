@@ -1,8 +1,9 @@
 // ============================================
 // Abstracts Index
 // ============================================
-// Import order matters - variables first, then mixins, then themes
+// Import order matters - variables first, then mixins
+// Gothic theme is available but not globally imported to avoid conflicts
 
 @import 'variables';
 @import 'mixins';
-@import 'gothic-theme';
+// @import 'gothic-theme'; // Commented out - use mixins selectively instead
