@@ -84,12 +84,23 @@ Documents (src/module/documents/):
 | `utils/armour-calculator.mjs` | Armour calculation logic |
 | `utils/encumbrance-calculator.mjs` | Weight/carry capacity logic |
 
-### Sheets
+### Application Sheets (ApplicationV2)
+
+All sheets use the modern Foundry V13 ApplicationV2 framework.
 
 | File | Description |
 |------|-------------|
-| `sheets/actor/acolyte-sheet.mjs` | Character sheet UI |
-| `sheets/actor/actor-container-sheet.mjs` | Parent sheet class with shared handlers |
+| `applications/api/application-v2-mixin.mjs` | Core V2 mixin for RT applications |
+| `applications/api/primary-sheet-mixin.mjs` | Sheet modes, tabs, document actions |
+| `applications/api/dialog.mjs` | Base dialog class for V2 dialogs |
+| `applications/actor/base-actor-sheet.mjs` | Base actor sheet with common handlers |
+| `applications/actor/acolyte-sheet.mjs` | Character sheet |
+| `applications/actor/npc-sheet.mjs` | NPC sheet |
+| `applications/actor/vehicle-sheet.mjs` | Vehicle sheet |
+| `applications/actor/starship-sheet.mjs` | Starship sheet |
+| `applications/item/base-item-sheet.mjs` | Base item sheet |
+| `applications/item/container-item-sheet.mjs` | Items that hold other items |
+| `applications/prompts/base-roll-dialog.mjs` | Base roll configuration dialog |
 
 ## Schema Patterns
 
@@ -130,32 +141,34 @@ armour: {
 
 ## Event Handler Patterns
 
-### Sheet Event Handlers
+### V2 Action Handlers
 
-Event handlers are in parent class (`actor-container-sheet.mjs`) when shared:
+ApplicationV2 uses static action handlers defined in `DEFAULT_OPTIONS.actions`:
 
 ```javascript
-// Skill training toggle (handles both patterns)
-_toggleTraining(event) {
-  // Pattern 1: data-field/data-value (specialist skills)
-  // Pattern 2: data-skill/data-level (standard skills)
-}
+static DEFAULT_OPTIONS = {
+    actions: {
+        roll: ClassName.#onRoll,
+        itemEdit: ClassName.#onItemEdit
+    }
+};
 
-// Consolidated stat button handler
-_onStatButtonClick(event) {
-  // Handles wounds, fatigue, fate, critical, insanity, corruption
-  const target = element.dataset.target;  // e.g., "wounds.value"
-  const delta = element.dataset.action === 'increase' ? 1 : -1;
+// Static private method with 'this' bound to sheet instance
+static async #onRoll(event, target) {
+    await this.actor.rollCharacteristic(target.dataset.rollTarget);
 }
 ```
 
 ### Data Attributes
 
-Templates use `data-*` attributes, JS reads via `element.dataset.*`:
+Templates use `data-action` for V2 action handlers:
 
 ```html
-<button data-action="increase" data-target="wounds.value">+</button>
+<button data-action="roll" data-roll-target="weaponSkill">Roll WS</button>
+<button data-action="itemEdit" data-item-id="{{item.id}}">Edit</button>
 ```
+
+Legacy `data-*` attributes still work for custom handlers:
 
 ```javascript
 const action = event.currentTarget.dataset.action;
@@ -231,23 +244,27 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
 ```
 src/
 ├── module/
+│   ├── applications/           # ApplicationV2 sheets and dialogs
+│   │   ├── api/               # Mixins and base classes
+│   │   ├── actor/             # Actor sheets (V2)
+│   │   ├── item/              # Item sheets (V2)
+│   │   └── prompts/           # Roll dialogs (V2)
 │   ├── data/
 │   │   ├── actor/
-│   │   │   ├── templates/      # Schema templates (V13 pattern)
+│   │   │   ├── templates/     # Schema templates (V13 pattern)
 │   │   │   │   ├── common.mjs
 │   │   │   │   └── creature.mjs
-│   │   │   ├── character.mjs   # Character data model
-│   │   │   └── npc.mjs         # NPC data model
-│   │   └── item/               # Item data models
-│   ├── documents/              # Actor/Item document classes
-│   ├── sheets/                 # Application sheets
-│   ├── utils/                  # Utility functions
-│   ├── rolls/                  # Roll handling
-│   ├── actions/                # Combat actions
-│   └── prompts/                # Roll dialogs
-├── templates/                  # Handlebars templates
-├── styles/                     # SCSS styles
-└── packs/                      # Compendium source data
+│   │   │   ├── character.mjs  # Character data model
+│   │   │   └── npc.mjs        # NPC data model
+│   │   └── item/              # Item data models
+│   ├── documents/             # Actor/Item document classes
+│   ├── prompts/               # Legacy exports (re-exports from applications/prompts)
+│   ├── utils/                 # Utility functions
+│   ├── rolls/                 # Roll handling
+│   └── actions/               # Combat actions
+├── templates/                 # Handlebars templates
+├── styles/                    # SCSS styles
+└── packs/                     # Compendium source data
 ```
 
 ## Recent Changes (January 2026)
@@ -272,6 +289,13 @@ src/
 18. **Localization** - Added NPC types (RT.NPCType.*), threat levels (RT.Threat.*), starship UI strings
 19. **Equipment Tab Redesign** - New "Loadout Manager" with visual containers, encumbrance bar, item cards
 20. **Combat Tab Redesign** - New "Battle Station" with tactical overlay, weapon slots, vitals monitors, reaction buttons
+21. **ApplicationV2 Migration** - Migrated all sheets from deprecated V1 Application framework to V2:
+    - All actor sheets (AcolyteSheet, NpcSheet, VehicleSheet, StarshipSheet)
+    - All item sheets (18 sheet classes for different item types)
+    - CompendiumBrowser migrated to V2
+    - All roll dialogs (weapon, psychic, force field, damage, etc.)
+    - Uses DocumentSheetConfig API for sheet registration
+    - Eliminates V1 Application deprecation warning
 
 ## Feature Audit (vs RogueTraderInfo.md)
 
