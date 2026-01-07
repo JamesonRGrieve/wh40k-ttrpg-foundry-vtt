@@ -10,6 +10,7 @@ import VisualFeedbackMixin from "../api/visual-feedback-mixin.mjs";
 import CollapsiblePanelMixin from "../api/collapsible-panel-mixin.mjs";
 import ContextMenuMixin from "../api/context-menu-mixin.mjs";
 import EnhancedDragDropMixin from "../api/enhanced-drag-drop-mixin.mjs";
+import WhatIfMixin from "../api/what-if-mixin.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -17,9 +18,9 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends EnhancedDragDropMixin(ContextMenuMixin(CollapsiblePanelMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
+export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(ContextMenuMixin(CollapsiblePanelMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(
     ApplicationV2Mixin(ActorSheetV2)
-)))))) {
+))))))) {
     constructor(options = {}) {
         super(options);
     }
@@ -44,7 +45,10 @@ export default class BaseActorSheet extends EnhancedDragDropMixin(ContextMenuMix
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
             deleteSpecialization: BaseActorSheet.#deleteSpecialization,
             togglePanel: BaseActorSheet._onTogglePanel,
-            applyPreset: BaseActorSheet._onApplyPreset
+            applyPreset: BaseActorSheet._onApplyPreset,
+            enterWhatIf: BaseActorSheet.#enterWhatIf,
+            commitWhatIf: BaseActorSheet.#commitWhatIf,
+            cancelWhatIf: BaseActorSheet.#cancelWhatIf
         },
         classes: ["rogue-trader", "sheet", "actor"],
         form: {
@@ -683,5 +687,39 @@ export default class BaseActorSheet extends EnhancedDragDropMixin(ContextMenuMix
         });
 
         return this.actor.updateEmbeddedDocuments("Item", updateData);
+    }
+
+    /* -------------------------------------------- */
+    /*  What-If Mode Actions                        */
+    /* -------------------------------------------- */
+
+    /**
+     * Enter What-If preview mode
+     * @this {BaseActorSheet}
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    static async #enterWhatIf(event, target) {
+        await this.enterWhatIfMode();
+    }
+
+    /**
+     * Commit What-If changes
+     * @this {BaseActorSheet}
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    static async #commitWhatIf(event, target) {
+        await this.commitWhatIfChanges();
+    }
+
+    /**
+     * Cancel What-If mode
+     * @this {BaseActorSheet}
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    static async #cancelWhatIf(event, target) {
+        await this.cancelWhatIfChanges();
     }
 }
