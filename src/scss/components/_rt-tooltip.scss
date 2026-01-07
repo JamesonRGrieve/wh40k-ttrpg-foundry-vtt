@@ -1,0 +1,356 @@
+/**
+ * RT Rich Tooltips
+ * Gothic 40K themed contextual tooltips with breakdowns
+ */
+
+.rt-tooltip {
+    position: fixed;
+    z-index: 10000;
+    min-width: 250px;
+    max-width: 350px;
+    padding: 0;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(30, 30, 30, 0.98) 100%);
+    border: 2px solid var(--rt-bronze, #cd7f32);
+    border-radius: 4px;
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(212, 175, 55, 0.3),
+        inset 0 1px 0 rgba(212, 175, 55, 0.2);
+    color: var(--rt-bone, #e8dcc8);
+    font-family: var(--rt-font-body, "Garamond", serif);
+    font-size: 0.9rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    &.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    // Parchment texture overlay
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+            repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(212, 175, 55, 0.03) 2px,
+                rgba(212, 175, 55, 0.03) 4px
+            );
+        pointer-events: none;
+        border-radius: 4px;
+    }
+
+    /* Header */
+    .rt-tooltip__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(135deg, rgba(205, 127, 50, 0.3) 0%, rgba(62, 62, 62, 0.3) 100%);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+
+        .rt-tooltip__title {
+            margin: 0;
+            font-family: var(--rt-font-header, "Caslon Antique", serif);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--rt-gold, #d4af37);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .rt-tooltip__total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+        }
+    }
+
+    /* Divider */
+    .rt-tooltip__divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+        margin: 0 1rem;
+    }
+
+    /* Breakdown Section */
+    .rt-tooltip__breakdown {
+        padding: 0.75rem 1rem;
+
+        .rt-tooltip__line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0;
+            font-size: 0.9rem;
+
+            &.rt-tooltip__line--modifier {
+                color: rgba(232, 220, 200, 0.9);
+            }
+
+            .rt-tooltip__label {
+                color: rgba(232, 220, 200, 0.7);
+                font-size: 0.85rem;
+            }
+
+            .rt-tooltip__value {
+                font-weight: 600;
+                color: var(--rt-bone, #e8dcc8);
+
+                &.rt-tooltip__value--bonus {
+                    font-size: 1.2rem;
+                    color: var(--rt-gold, #d4af37);
+                }
+            }
+        }
+    }
+
+    /* Modifier Sources */
+    .rt-tooltip__sources {
+        padding: 0.75rem 1rem;
+
+        .rt-tooltip__sources-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--rt-gold, #d4af37);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rt-tooltip__source {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0.5rem;
+            background: rgba(62, 62, 62, 0.3);
+            border-left: 2px solid rgba(212, 175, 55, 0.5);
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+
+            .rt-tooltip__source-name {
+                color: rgba(232, 220, 200, 0.8);
+            }
+
+            .rt-tooltip__source-value {
+                font-weight: bold;
+                color: var(--rt-gold, #d4af37);
+            }
+        }
+    }
+
+    /* Bonus Display */
+    .rt-tooltip__bonus {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: rgba(212, 175, 55, 0.1);
+
+        .rt-tooltip__label {
+            font-size: 0.9rem;
+            color: rgba(232, 220, 200, 0.7);
+        }
+
+        .rt-tooltip__value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--rt-gold, #d4af37);
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+        }
+
+        .rt-tooltip__bonus-calc {
+            font-size: 0.8rem;
+            color: rgba(232, 220, 200, 0.6);
+            font-style: italic;
+        }
+    }
+
+    /* Training Track */
+    .rt-tooltip__training {
+        padding: 0.75rem 1rem;
+
+        .rt-tooltip__training-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--rt-gold, #d4af37);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rt-tooltip__training-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(62, 62, 62, 0.3);
+            border-radius: 4px;
+
+            span {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 3px;
+                background: rgba(0, 0, 0, 0.3);
+                color: rgba(232, 220, 200, 0.5);
+                white-space: nowrap;
+
+                &.active {
+                    background: linear-gradient(135deg, rgba(205, 127, 50, 0.5) 0%, rgba(212, 175, 55, 0.5) 100%);
+                    color: white;
+                    font-weight: bold;
+                    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+                }
+            }
+
+            i {
+                font-size: 0.7rem;
+                color: rgba(212, 175, 55, 0.5);
+            }
+        }
+    }
+
+    /* Equipped Items */
+    .rt-tooltip__equipped {
+        padding: 0.75rem 1rem;
+
+        .rt-tooltip__equipped-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--rt-gold, #d4af37);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rt-tooltip__equipped-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.5rem;
+            background: rgba(62, 62, 62, 0.3);
+            border-left: 2px solid rgba(212, 175, 55, 0.5);
+            margin-bottom: 0.25rem;
+
+            img {
+                width: 24px;
+                height: 24px;
+                object-fit: cover;
+                border-radius: 3px;
+                border: 1px solid rgba(212, 175, 55, 0.3);
+            }
+
+            span {
+                flex: 1;
+                font-size: 0.85rem;
+                color: rgba(232, 220, 200, 0.8);
+            }
+
+            .ap {
+                font-weight: bold;
+                color: var(--rt-gold, #d4af37);
+            }
+        }
+    }
+
+    /* Qualities */
+    .rt-tooltip__qualities {
+        padding: 0.75rem 1rem;
+
+        .rt-tooltip__qualities-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--rt-gold, #d4af37);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rt-tooltip__quality {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+            background: rgba(62, 62, 62, 0.5);
+            border: 1px solid rgba(205, 127, 50, 0.5);
+            border-radius: 3px;
+            font-size: 0.75rem;
+            color: rgba(232, 220, 200, 0.9);
+        }
+    }
+
+    /* Action Hint */
+    .rt-tooltip__action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(205, 127, 50, 0.2);
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
+        font-size: 0.85rem;
+        color: var(--rt-gold, #d4af37);
+        font-style: italic;
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Generic Content */
+    .rt-tooltip__content {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: rgba(232, 220, 200, 0.9);
+    }
+}
+
+/* Type-specific styling */
+.rt-tooltip--characteristic {
+    .rt-tooltip__header {
+        background: linear-gradient(135deg, rgba(220, 20, 60, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
+    }
+}
+
+.rt-tooltip--skill {
+    .rt-tooltip__header {
+        background: linear-gradient(135deg, rgba(70, 130, 180, 0.3) 0%, rgba(25, 25, 112, 0.3) 100%);
+    }
+}
+
+.rt-tooltip--armor {
+    .rt-tooltip__header {
+        background: linear-gradient(135deg, rgba(105, 105, 105, 0.3) 0%, rgba(47, 79, 79, 0.3) 100%);
+    }
+}
+
+.rt-tooltip--weapon {
+    .rt-tooltip__header {
+        background: linear-gradient(135deg, rgba(178, 34, 34, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
+    }
+}
+
+/* Hover state for elements with tooltips */
+[data-rt-tooltip] {
+    cursor: help;
+    position: relative;
+
+    &:hover {
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-decoration-color: rgba(212, 175, 55, 0.5);
+    }
+}
