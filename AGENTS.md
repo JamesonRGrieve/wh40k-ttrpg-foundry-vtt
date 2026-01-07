@@ -175,6 +175,38 @@ const action = event.currentTarget.dataset.action;
 const target = event.currentTarget.dataset.target;
 ```
 
+### Tab Configuration (V2)
+
+Tabs use the `static TABS` array with consistent `tab` property naming:
+
+```javascript
+// Define available tabs
+static TABS = [
+    { tab: "overview", group: "primary", label: "Overview" },
+    { tab: "combat", group: "primary", label: "Combat" },
+    { tab: "equipment", group: "primary", label: "Equipment", condition: doc => doc.isOwner }
+];
+
+// Set default active tab
+tabGroups = {
+    primary: "overview"
+};
+```
+
+**Important:** Always use `tab:` property (not `id:`). The `condition` function is optional for conditional tabs.
+
+For actor sheets using legacy V1-style templates with `data-tab` attributes, include a tabs config in DEFAULT_OPTIONS:
+
+```javascript
+static DEFAULT_OPTIONS = {
+    tabs: [
+        { navSelector: ".rt-navigation", contentSelector: ".rt-body", initial: "overview" }
+    ]
+};
+```
+
+The `_activateLegacyTabs()` method in PrimarySheetMixin handles these V1-style tabs.
+
 ## Item Types
 
 | Type | Description |
@@ -238,6 +270,12 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
 4. **DataModel item access** - Use `this.parent.items` in DataModel to access actor's items
 
 5. **prepareEmbeddedData timing** - Called after items are ready, from Document's `prepareData()`
+
+6. **Tab property naming** - Always use `tab:` property in TABS array, not `id:`. PrimarySheetMixin expects `{ tab: "name", ... }`
+
+7. **ApplicationV2 classes** - V2 doesn't auto-add `sheet` class like V1. Include `"sheet"` in classes array for CSS selectors
+
+8. **V2 integer validation** - Foundry V13 is stricter about integer fields. Use `migrateData()` and `cleanData()` to coerce values
 
 ## File Organization
 
