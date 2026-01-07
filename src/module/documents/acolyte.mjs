@@ -1,4 +1,4 @@
-import { prepareSimpleRoll } from '../prompts/simple-prompt.mjs';
+import { prepareEnhancedSkillRoll } from '../applications/prompts/enhanced-skill-dialog.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
@@ -185,7 +185,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         rollData.type = 'Skill';
         rollData.baseTarget = skill.current;
         rollData.modifiers.modifier = 0;
-        await prepareSimpleRoll(simpleSkillData);
+        await prepareEnhancedSkillRoll(simpleSkillData);
     }
 
     async rollItem(itemId) {

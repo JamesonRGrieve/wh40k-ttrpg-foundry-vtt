@@ -222,6 +222,9 @@ Both features follow these principles:
 - [x] Enhanced Skill Test Quick-Roller
 - [x] Smart Contextual Tooltips
 - [x] Documentation and guides
+- [x] **Integration Complete!** - Enhanced skill roller now used for all skill/characteristic rolls
+- [x] **TooltipMixin Added** - All actor sheets now have tooltip support
+- [x] **Gothic Theme SCSS** - Theme variables file created (not yet imported)
 
 ### Available to Build
 From the [APPLICATIONV2_FEATURES_VISION.md](APPLICATIONV2_FEATURES_VISION.md):
