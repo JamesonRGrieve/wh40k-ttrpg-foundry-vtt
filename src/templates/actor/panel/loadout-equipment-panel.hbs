@@ -9,7 +9,7 @@
             <div class="rt-encumbrance-bar-wrapper">
                 <span class="rt-enc-label">Carry:</span>
                 <div class="rt-encumbrance-bar-container">
-                    <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-over{{else if (gte encumbrancePercent 80)}}rt-enc-warning{{/if}}" style="width: {{encumbrancePercent}}%"></div>
+                    <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-danger{{else if (gte encumbrancePercent 75)}}rt-enc-warning{{else if (gte encumbrancePercent 50)}}rt-enc-caution{{/if}}" style="width: {{encumbrancePercent}}%"></div>
                 </div>
                 <span class="rt-enc-text">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
                 {{#if actor.encumbrance.encumbered}}

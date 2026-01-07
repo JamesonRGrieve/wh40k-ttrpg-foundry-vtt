@@ -154,30 +154,58 @@
   border: 1px solid rgba(120, 46, 34, 0.3);
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: #6a5a43;
   flex-shrink: 0;
-  
+  position: relative;
+  overflow: hidden;
+
+  // Ripple effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+  }
+
+  &:active::before {
+    width: 200%;
+    height: 200%;
+  }
+
   &:hover {
     background: rgba(255, 255, 255, 1);
     border-color: rgba(120, 46, 34, 0.5);
     transform: scale(1.05);
   }
-  
+
+  &:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+
   &.rt-action-equip {
     .fa-check-circle {
       color: #4a8f5c;
     }
   }
-  
+
   &.rt-action-activate {
     .fa-bolt {
       color: #3c8cd0;
     }
   }
-  
+
   i {
     font-size: 1rem;
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -291,10 +319,41 @@
   border: 1px solid rgba(120, 46, 34, 0.25);
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: #4a3728;
   font-size: 0.85rem;
-  
+  position: relative;
+  overflow: hidden;
+
+  // Ripple effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+  }
+
+  &:active::before {
+    width: 200%;
+    height: 200%;
+  }
+
+  &:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+  }
+
+  i {
+    position: relative;
+    z-index: 1;
+  }
+
   &:hover {
     background: rgba(255, 255, 255, 0.9);
     border-color: rgba(120, 46, 34, 0.4);
