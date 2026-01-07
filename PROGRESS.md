@@ -93,13 +93,31 @@
     - `src/scss/panels/_skills.scss` (controls styling)
 
 **Total Time**: ~2.5 hours
+
+- [x] **Item 10**: Add Button Debouncing ✅
+  - Implemented throttle utility to prevent rapid-fire clicks
+  - 200ms throttle on stat adjustments (wounds, fate, corruption, insanity, critical)
+  - 500ms throttle on fate restoration and spending (to prevent accidental double-spending)
+  - Per-actor throttling using unique keys
+  - Throttled handlers:
+    - `#adjustStat` - Increment/decrement buttons
+    - `#setCriticalPip` - Critical damage pips
+    - `#setFateStar` - Fate point pips
+    - `#setCorruption` - Corruption setters
+    - `#setInsanity` - Insanity setters
+    - `#restoreFate` - Fate restoration button
+    - `#spendFate` - All fate spending actions
+  - Files:
+    - `src/module/applications/actor/acolyte-sheet.mjs` (throttle utility + wrapped handlers)
+
+**Total Time**: ~2 hours
 **Build Status**: ✅ All builds passing
 
 ---
 
 ## In Progress 🚧
 
-*Ready for next Quick Win item*
+*Working on Item 9: Toast Notifications*
 
 ---
 
