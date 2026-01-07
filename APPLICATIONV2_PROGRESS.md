@@ -1,14 +1,14 @@
 # ApplicationV2 Enhancements - Progress Report
 
 **Branch:** `feature/applicationv2-enhancements`
-**Status:** 🚀 Three Showcase Features Complete!
+**Status:** 🚀 Six Showcase Features Complete!
 **Build Status:** ✅ All tests passing
 
 ---
 
 ## 🎉 Achievements
 
-We've successfully built **3 production-ready showcase features** demonstrating the power of Foundry V13's ApplicationV2 framework in Rogue Trader VTT.
+We've successfully built **6 production-ready showcase features** demonstrating the power of Foundry V13's ApplicationV2 framework in Rogue Trader VTT.
 
 ---
 
@@ -231,24 +231,123 @@ After:  ████░░░░░░ 8/20 (red damage pulse)
 
 ---
 
+## ✨ Showcase Feature #4: Collapsible Panels with State Persistence
+
+**Status:** ✅ Complete and Ready to Use
+
+### Features
+- 🎛️ **User-Specific State Persistence** via Foundry flags
+- 🎨 **5 Panel Presets** (Combat, Social, Exploration, Expand/Collapse All)
+- ⌨️ **Keyboard Shortcuts** (Alt+1-9 for panels 1-9)
+- 💫 **Smooth Animations** with max-height transitions
+- 🎯 **Shift+Click Focus Mode** (collapse all except clicked)
+- 🔧 **Per-Actor Configuration** (each character remembers own layout)
+- 🎨 **Gothic 40K Theme** with bronze headers and gold accents
+
+### Files Created
+```
+src/module/applications/api/collapsible-panel-mixin.mjs    (510 lines)
+src/scss/components/_collapsible-panels.scss               (450 lines)
+COLLAPSIBLE_PANELS_GUIDE.md                                (490 lines)
+```
+
+**Integration:** Automatically enabled via `CollapsiblePanelMixin` in `BaseActorSheet`
+
+---
+
+## ✨ Showcase Feature #5: Context Menus for Quick Actions
+
+**Status:** ✅ Complete and Ready to Use
+
+### Features
+- 🖱️ **Right-Click Context Menus** throughout character sheet
+- 🎯 **5 Menu Types** (Characteristics, Skills, Items, Weapons, Fate Points)
+- 📍 **Smart Positioning** (auto-flip if off-screen)
+- ⌨️ **Keyboard Navigation** (Arrow keys, Enter, Escape)
+- 📱 **Touch Support** (long-press detection)
+- 🎨 **Gothic 40K Theme** with ornate borders
+- ⚡ **Quick Actions** (Roll, Edit, Equip, Delete, etc.)
+
+### Files Created
+```
+src/module/applications/api/context-menu-mixin.mjs         (740 lines)
+src/scss/components/_context-menu.scss                     (410 lines)
+CONTEXT_MENU_GUIDE.md                                      (330 lines)
+```
+
+**Integration:** Automatically enabled via `ContextMenuMixin` in `BaseActorSheet`
+
+---
+
+## ✨ Showcase Feature #6: Enhanced Drag-Drop
+
+**Status:** ✅ Complete and Ready to Use
+
+### Features
+- 🎨 **Custom Drag Ghost** with Gothic 40K styling (item icon, name, quantity, equipped status)
+- 💡 **Visual Drop Zones** (gold pulse for valid, red border for invalid)
+- 🔄 **Item Reordering** within inventory lists with gold drop indicator
+- ⚡ **Quick Equip** to equipment slots with validation
+- ✂️ **Item Splitting** (Ctrl+Drag to split stacks with dialog)
+- ⭐ **Favorites Bar** (up to 8 quick-access items)
+- 🎯 **Snap-to-Slot Animation** (bounce effect when equipping)
+- 📱 **Touch Device Support** with optimized gestures
+- ♿ **Accessibility** (respects prefers-reduced-motion)
+
+### Visual Features
+
+**Custom Drag Ghost:**
+```
+┌────────────────────────┐
+│ 🖼️  Bolt Pistol        │
+│     ×20 rounds ✓       │
+└────────────────────────┘
+```
+
+**Drop Zone States:**
+- Valid: Gold dashed border, pulsing animation, "⬇ Drop Here" text
+- Invalid: Red dashed border, "✖ Cannot Drop" warning
+- Hover: Solid border with glow effect
+
+**Reorder Indicator:**
+```
+[Item 1]
+◆──────◆  ← Gold drop line with diamond markers
+[Item 2]
+```
+
+### Files Created
+```
+src/module/applications/api/enhanced-drag-drop-mixin.mjs   (800 lines)
+src/scss/components/_enhanced-drag-drop.scss               (600 lines)
+ENHANCED_DRAG_DROP_GUIDE.md                                (890 lines)
+```
+
+**Integration:** Automatically enabled via `EnhancedDragDropMixin` in `BaseActorSheet`
+
+---
+
 ## 📊 Overall Statistics
 
 ### Code Added
-- **JavaScript:** ~1,600 lines (dialogs, tooltips, visual feedback mixins)
+- **JavaScript:** ~3,000 lines (dialogs, tooltips, visual feedback, panels, context menus, drag-drop)
 - **Handlebars:** ~150 lines (templates)
-- **SCSS:** ~1,320 lines (Gothic 40K styling + animations)
-- **Documentation:** ~1,670 lines (4 comprehensive guides)
-- **Total:** ~4,740 lines of production-ready code
+- **SCSS:** ~2,720 lines (Gothic 40K styling + animations)
+- **Documentation:** ~3,490 lines (6 comprehensive guides)
+- **Total:** ~9,360 lines of production-ready code
 
 ### Files Created
-- **Module files:** 6
+- **Module files:** 9
 - **Template files:** 1
-- **SCSS files:** 3
-- **Documentation:** 5
-- **Total:** 15 new files
+- **SCSS files:** 6
+- **Documentation:** 7
+- **Total:** 23 new files
 
 ### Commits
 ```
+[NEW] feat: Add Enhanced Drag-Drop system (ApplicationV2 showcase #6)
+[NEW] feat: Add Context Menus for Quick Actions (ApplicationV2 showcase #5)
+[NEW] feat: Add Collapsible Panels with State Persistence (ApplicationV2 showcase #4)
 [NEW] feat: Add Inline Editing with Visual Feedback (ApplicationV2 showcase #3)
 0eb9c00 feat: Add Smart Contextual Tooltips system (ApplicationV2 showcase #2)
 4096019 docs: Add Enhanced Skill Roller usage guide
@@ -265,7 +364,7 @@ After:  ████░░░░░░ 8/20 (red damage pulse)
 
 ## 🎨 Design Philosophy
 
-All three features follow these principles:
+All six features follow these principles:
 
 1. **Gothic 40K Aesthetic**
    - Parchment textures and gradients
@@ -300,24 +399,26 @@ All three features follow these principles:
 - [x] Enhanced Skill Test Quick-Roller
 - [x] Smart Contextual Tooltips
 - [x] Inline Editing with Visual Feedback
+- [x] Collapsible Panels with State Persistence
+- [x] Context Menus for Quick Actions
+- [x] Enhanced Drag-Drop
 - [x] Documentation and guides
-- [x] **Integration Complete!** - Enhanced skill roller now used for all skill/characteristic rolls
-- [x] **TooltipMixin Added** - All actor sheets now have tooltip support
-- [x] **VisualFeedbackMixin Added** - All actor sheets now have animated stat changes
-- [x] **Gothic Theme SCSS** - Theme variables file created and imported
-- [x] **Tooltip Data Preparation** - Characteristics and skills now have tooltipData for templates
-- [x] **Template Integration** - Characteristic and skill panels now have `data-rt-tooltip` attributes
-- [x] **Gothic Theme Styling** - Characteristic and skills panels updated with Gothic 40K theme
-- [x] **Stat Change Animations** - Added animation keyframes and helper methods for visual feedback
+- [x] **Integration Complete!** - All 6 features integrated into BaseActorSheet
+- [x] **Mixin Architecture** - Clean nested mixin pattern established
+- [x] **Gothic Theme SCSS** - Consistent theming across all features
+- [x] **Build Validation** - All features compile without errors
 
 ### Available to Build
 From the [APPLICATIONV2_FEATURES_VISION.md](APPLICATIONV2_FEATURES_VISION.md):
 
 **Tier 1 - Foundation Features:**
-- [ ] Improved Collapsible Panels with State Persistence
-- [ ] Inline Editing with Visual Feedback
-- [ ] Enhanced Drag-Drop
-- [ ] Context Menus
+- [x] Enhanced Skill Roller (Complete)
+- [x] Smart Tooltips (Complete)
+- [x] Inline Editing with Visual Feedback (Complete)
+- [x] Collapsible Panels with State Persistence (Complete)
+- [x] Enhanced Drag-Drop (Complete)
+- [x] Context Menus (Complete)
+- **Tier 1 Complete: 6/6 features ✅**
 
 **Tier 2 - Advanced Interactive:**
 - [ ] Combat Quick Panel (Floating HUD)
