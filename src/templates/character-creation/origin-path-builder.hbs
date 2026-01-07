@@ -1,0 +1,254 @@
+{{!-- Origin Path Builder Template --}}
+<div class="origin-path-builder-content">
+    
+    {{!-- Header Toolbar --}}
+    <div class="builder-toolbar">
+        <div class="toolbar-left">
+            <button type="button" class="builder-button" data-action="randomize" data-tooltip="RT.OriginPath.RandomizeHint">
+                <i class="fa-solid fa-dice"></i>
+                <span>{{localize "RT.OriginPath.Randomize"}}</span>
+            </button>
+            <button type="button" class="builder-button" data-action="reset" data-tooltip="RT.OriginPath.ResetHint">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>{{localize "RT.OriginPath.Reset"}}</span>
+            </button>
+        </div>
+        <div class="toolbar-center">
+            <h3 class="path-title">{{localize "RT.OriginPath.YourJourney"}}</h3>
+        </div>
+        <div class="toolbar-right">
+            <button type="button" class="builder-button" data-action="export" data-tooltip="RT.OriginPath.ExportHint">
+                <i class="fa-solid fa-download"></i>
+            </button>
+            <button type="button" class="builder-button" data-action="import" data-tooltip="RT.OriginPath.ImportHint">
+                <i class="fa-solid fa-upload"></i>
+            </button>
+        </div>
+    </div>
+
+    {{!-- Path Canvas - Flowchart Area --}}
+    <div class="path-canvas">
+        
+        {{!-- Row 1: First 3 Steps --}}
+        <div class="path-row">
+            {{#each (slice steps 0 3) as |step|}}
+                <div class="origin-step" data-step="{{step.key}}">
+                    <div class="step-header">
+                        <i class="fa-solid {{step.icon}}"></i>
+                        <span class="step-label">{{step.label}}</span>
+                    </div>
+                    
+                    {{#if step.isEmpty}}
+                        <div class="origin-step-slot empty" data-step="{{step.key}}" draggable="false">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-plus-circle"></i>
+                                <p>{{localize "RT.OriginPath.DragHere"}}</p>
+                                <button type="button" class="browse-button" data-action="openCompendium">
+                                    <i class="fa-solid fa-book"></i>
+                                    {{localize "RT.OriginPath.Browse"}}
+                                </button>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="origin-step-slot filled" data-step="{{step.key}}" draggable="true">
+                            <div class="item-card">
+                                <div class="item-header">
+                                    <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
+                                    <div class="item-actions">
+                                        <button type="button" class="item-action" data-action="viewItem" data-tooltip="RT.OriginPath.ViewDetails">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="item-action" data-action="clearSlot" data-tooltip="RT.OriginPath.Clear">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <h4 class="item-name">{{step.item.name}}</h4>
+                                
+                                {{#if step.item.bonuses}}
+                                    <div class="item-bonuses">
+                                        {{#each step.item.bonuses as |bonus|}}
+                                            <span class="bonus-badge bonus-{{bonus.type}}">
+                                                {{bonus.label}}: {{bonus.value}}
+                                            </span>
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+
+                {{!-- Arrow connector (not after last step in row) --}}
+                {{#unless @last}}
+                    <div class="path-connector">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                {{/unless}}
+            {{/each}}
+        </div>
+
+        {{!-- Vertical connector --}}
+        <div class="path-connector-vertical">
+            <i class="fa-solid fa-arrow-down"></i>
+        </div>
+
+        {{!-- Row 2: Last 3 Steps (reversed for visual flow) --}}
+        <div class="path-row path-row-reverse">
+            {{#each (slice steps 3 6) as |step|}}
+                <div class="origin-step" data-step="{{step.key}}">
+                    <div class="step-header">
+                        <i class="fa-solid {{step.icon}}"></i>
+                        <span class="step-label">{{step.label}}</span>
+                    </div>
+                    
+                    {{#if step.isEmpty}}
+                        <div class="origin-step-slot empty" data-step="{{step.key}}" draggable="false">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-plus-circle"></i>
+                                <p>{{localize "RT.OriginPath.DragHere"}}</p>
+                                <button type="button" class="browse-button" data-action="openCompendium">
+                                    <i class="fa-solid fa-book"></i>
+                                    {{localize "RT.OriginPath.Browse"}}
+                                </button>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="origin-step-slot filled" data-step="{{step.key}}" draggable="true">
+                            <div class="item-card">
+                                <div class="item-header">
+                                    <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
+                                    <div class="item-actions">
+                                        <button type="button" class="item-action" data-action="viewItem" data-tooltip="RT.OriginPath.ViewDetails">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="item-action" data-action="clearSlot" data-tooltip="RT.OriginPath.Clear">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <h4 class="item-name">{{step.item.name}}</h4>
+                                
+                                {{#if step.item.bonuses}}
+                                    <div class="item-bonuses">
+                                        {{#each step.item.bonuses as |bonus|}}
+                                            <span class="bonus-badge bonus-{{bonus.type}}">
+                                                {{bonus.label}}: {{bonus.value}}
+                                            </span>
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+
+                {{!-- Arrow connector (except after last) --}}
+                {{#unless @last}}
+                    <div class="path-connector">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </div>
+                {{/unless}}
+            {{/each}}
+        </div>
+
+    </div>
+
+    {{!-- Preview Panel --}}
+    <div class="preview-panel">
+        <h3 class="preview-title">
+            <i class="fa-solid fa-chart-line"></i>
+            {{localize "RT.OriginPath.TotalBonuses"}}
+        </h3>
+        
+        <div class="preview-content">
+            {{!-- Characteristics --}}
+            {{#if preview.characteristics}}
+                <div class="preview-section">
+                    <h4>{{localize "RT.Characteristics"}}</h4>
+                    <div class="preview-grid">
+                        {{#each preview.characteristics as |value key|}}
+                            <div class="preview-item {{#if (gt value 0)}}positive{{else}}negative{{/if}}">
+                                <span class="preview-label">{{key}}</span>
+                                <span class="preview-value">{{#if (gt value 0)}}+{{/if}}{{value}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Skills --}}
+            {{#if preview.skills}}
+                <div class="preview-section">
+                    <h4>{{localize "RT.Skills"}}</h4>
+                    <div class="preview-grid">
+                        {{#each preview.skills as |value key|}}
+                            <div class="preview-item {{#if (gt value 0)}}positive{{else}}negative{{/if}}">
+                                <span class="preview-label">{{key}}</span>
+                                <span class="preview-value">{{#if (gt value 0)}}+{{/if}}{{value}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Abilities --}}
+            {{#if preview.abilities}}
+                <div class="preview-section">
+                    <h4>{{localize "RT.OriginPath.SpecialAbilities"}}</h4>
+                    <div class="abilities-list">
+                        {{#each preview.abilities as |ability|}}
+                            <div class="ability-item">
+                                <strong>{{ability.source}}:</strong> {{ability.text}}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Empty state --}}
+            {{#unless preview.characteristics}}
+                {{#unless preview.skills}}
+                    {{#unless preview.abilities}}
+                        <div class="preview-empty">
+                            <i class="fa-solid fa-info-circle"></i>
+                            <p>{{localize "RT.OriginPath.NoBonusesYet"}}</p>
+                        </div>
+                    {{/unless}}
+                {{/unless}}
+            {{/unless}}
+        </div>
+    </div>
+
+    {{!-- Footer Actions --}}
+    <div class="builder-footer">
+        <div class="footer-info">
+            {{#if isComplete}}
+                <span class="complete-badge">
+                    <i class="fa-solid fa-check-circle"></i>
+                    {{localize "RT.OriginPath.PathComplete"}}
+                </span>
+            {{else}}
+                <span class="incomplete-badge">
+                    <i class="fa-solid fa-exclamation-circle"></i>
+                    {{localize "RT.OriginPath.PathIncomplete"}}
+                </span>
+            {{/if}}
+            
+            {{#if hasChanges}}
+                <span class="changes-badge">
+                    <i class="fa-solid fa-pencil"></i>
+                    {{localize "RT.OriginPath.UnsavedChanges"}}
+                </span>
+            {{/if}}
+        </div>
+        
+        <div class="footer-actions">
+            <button type="button" class="commit-button" data-action="commitPath" {{#unless hasChanges}}disabled{{/unless}}>
+                <i class="fa-solid fa-save"></i>
+                {{localize "RT.OriginPath.CommitToCharacter"}}
+            </button>
+        </div>
+    </div>
+
+</div>

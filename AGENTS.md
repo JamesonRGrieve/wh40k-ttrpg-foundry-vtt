@@ -301,9 +301,71 @@ src/
 │   ├── rolls/                 # Roll handling
 │   └── actions/               # Combat actions
 ├── templates/                 # Handlebars templates
+│   └── actor/
+│       ├── acolyte/           # Character sheet template parts (V2 PARTS)
+│       │   ├── header.hbs     # Character header with portrait & characteristics
+│       │   ├── tabs.hbs       # Tab navigation bar
+│       │   ├── tab-overview.hbs     # Overview tab
+│       │   ├── tab-combat.hbs       # Combat tab
+│       │   ├── tab-skills.hbs       # Skills tab
+│       │   ├── tab-talents.hbs      # Talents tab
+│       │   ├── tab-equipment.hbs    # Equipment tab
+│       │   ├── tab-powers.hbs       # Powers tab
+│       │   ├── tab-dynasty.hbs      # Dynasty tab
+│       │   └── tab-biography.hbs    # Biography tab
+│       └── panel/             # Reusable panel partials
 ├── styles/                    # SCSS styles
 └── packs/                     # Compendium source data
 ```
+
+## ApplicationV2 Template Parts (PARTS System)
+
+The Acolyte sheet uses the modern ApplicationV2 PARTS system for modular, independently-renderable template sections.
+
+### How PARTS Work
+
+Each part in `static PARTS` can be:
+- Rendered independently for performance
+- Has its own context preparation via `_preparePartContext()`
+- Can use container configuration to specify parent elements
+
+```javascript
+static PARTS = {
+    header: {
+        template: "systems/rogue-trader/templates/actor/acolyte/header.hbs"
+    },
+    overview: {
+        template: "systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs",
+        container: { classes: ["rt-body"], id: "tab-body" },
+        scrollable: [""]
+    }
+    // ... more parts
+};
+```
+
+### Context Preparation Flow
+
+1. `_prepareContext()` - Prepares shared context data for all parts
+2. `_preparePartContext(partId, context)` - Routes to part-specific preparation:
+   - `_prepareHeaderContext()` - Header-specific data
+   - `_prepareOverviewContext()` - Overview tab data
+   - `_prepareCombatTabContext()` - Combat tab data
+   - etc.
+
+### Part Files (Acolyte Sheet)
+
+| Part | File | Description |
+|------|------|-------------|
+| header | `acolyte/header.hbs` | Portrait, name, career, characteristics HUD |
+| tabs | `acolyte/tabs.hbs` | Tab navigation bar |
+| overview | `acolyte/tab-overview.hbs` | Wounds, fatigue, fate, movement |
+| combat | `acolyte/tab-combat.hbs` | Weapons, reactions, hit locations |
+| skills | `acolyte/tab-skills.hbs` | Standard skills panel |
+| talents | `acolyte/tab-talents.hbs` | Specialist skills, talents, traits |
+| equipment | `acolyte/tab-equipment.hbs` | Loadout manager |
+| powers | `acolyte/tab-powers.hbs` | Psychic, navigator, orders, rituals |
+| dynasty | `acolyte/tab-dynasty.hbs` | Profit factor, acquisitions, endeavours |
+| biography | `acolyte/tab-biography.hbs` | Identity, origin path, journal |
 
 ## Recent Changes (January 2026)
 
@@ -334,6 +396,11 @@ src/
     - All roll dialogs (weapon, psychic, force field, damage, etc.)
     - Uses DocumentSheetConfig API for sheet registration
     - Eliminates V1 Application deprecation warning
+22. **Template Parts Refactor** - Acolyte sheet now uses proper ApplicationV2 PARTS system:
+    - 10 separate template parts (header, tabs, 8 tab content parts)
+    - Each part can be re-rendered independently for better performance
+    - Implemented `_preparePartContext()` for targeted context preparation
+    - Created `templates/actor/acolyte/` directory for part templates
 
 ## Feature Audit (vs RogueTraderInfo.md)
 

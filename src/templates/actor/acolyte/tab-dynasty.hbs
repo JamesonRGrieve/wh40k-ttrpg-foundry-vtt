@@ -1,0 +1,96 @@
+{{!-- Acolyte Sheet Dynasty Tab --}}
+{{!-- This part renders the Dynasty tab content with Profit Factor, acquisitions, and endeavours --}}
+<div class="tab rt-tab rt-tab-dynasty" data-group="primary" data-tab="dynasty">
+    <div class="rt-dynasty-grid">
+        {{!-- Left Column --}}
+        <div class="rt-dynasty-col">
+            {{!-- Profit Factor Panel --}}
+            <div class="rt-panel rt-panel-profit">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-coins"></i> Profit Factor</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-profit-main-display">
+                        <div class="rt-profit-current">
+                            <span class="rt-profit-label">Current PF</span>
+                            <input type="number" class="rt-profit-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
+                        </div>
+                        <div class="rt-profit-starting">
+                            <span class="rt-profit-label">Starting</span>
+                            <input type="number" class="rt-vital-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
+                        </div>
+                    </div>
+                    <div class="rt-misfortunes">
+                        <label class="rt-field-label">Misfortunes & PF Changes</label>
+                        <textarea class="rt-textarea" name="system.rogueTrader.profitFactor.misfortunes" rows="3" placeholder="Record any losses or gains to Profit Factor...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Experience Panel --}}
+            <div class="rt-panel">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-star"></i> Experience</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-xp-display">
+                        <div class="rt-xp-item">
+                            <span class="rt-xp-label">Total</span>
+                            <input type="number" class="rt-vital-input" name="system.experience.total" value="{{actor.system.experience.total}}" data-dtype="Number" />
+                        </div>
+                        <div class="rt-xp-item">
+                            <span class="rt-xp-label">Spent</span>
+                            <input type="number" class="rt-vital-input" name="system.experience.used" value="{{actor.system.experience.used}}" data-dtype="Number" />
+                        </div>
+                        <div class="rt-xp-item rt-xp-available">
+                            <span class="rt-xp-label">Available</span>
+                            <span class="rt-xp-value">{{actor.system.experience.available}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Ship Role --}}
+            {{> systems/rogue-trader/templates/actor/panel/ship-role-panel.hbs}}
+        </div>
+        
+        {{!-- Right Column --}}
+        <div class="rt-dynasty-col">
+            {{!-- Acquisitions --}}
+            {{> systems/rogue-trader/templates/actor/panel/acquisitions-panel.hbs}}
+            
+            {{!-- Endeavour Tracker --}}
+            <div class="rt-panel">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-map-marked-alt"></i> Current Endeavour</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-endeavour-fields">
+                        <div class="rt-field-row">
+                            <label class="rt-field-label">Endeavour Name</label>
+                            <input type="text" class="rt-field-input" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
+                        </div>
+                        <div class="rt-field-row rt-field-row-split">
+                            <div class="rt-field-half">
+                                <label class="rt-field-label">Achievement Points</label>
+                                <div class="rt-ap-tracker">
+                                    <input type="number" class="rt-vital-input" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
+                                    <span>/</span>
+                                    <input type="number" class="rt-vital-input" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
+                                </div>
+                            </div>
+                            <div class="rt-field-half">
+                                <label class="rt-field-label">PF Reward</label>
+                                <input type="number" class="rt-vital-input" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
+                            </div>
+                        </div>
+                        <div class="rt-field-row">
+                            <label class="rt-field-label">Objectives & Notes</label>
+                            <textarea class="rt-textarea" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

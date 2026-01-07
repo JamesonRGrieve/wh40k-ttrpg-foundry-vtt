@@ -13,3 +13,6 @@ export * from "./item/_module.mjs";
 
 // Prompt/Dialog exports
 export * from "./prompts/_module.mjs";
+
+// Character Creation exports
+export * from "./character-creation/_module.mjs";

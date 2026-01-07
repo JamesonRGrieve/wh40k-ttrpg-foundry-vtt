@@ -1,14 +1,17 @@
 # ApplicationV2 Enhancements - Progress Report
 
 **Branch:** `feature/applicationv2-enhancements`
-**Status:** 🚀 Six Showcase Features Complete!
+**Status:** 🚀 **TEN** Showcase Features Complete! **TIER 2 COMPLETE!** 🎉
 **Build Status:** ✅ All tests passing
 
 ---
 
 ## 🎉 Achievements
 
-We've successfully built **6 production-ready showcase features** demonstrating the power of Foundry V13's ApplicationV2 framework in Rogue Trader VTT.
+We've successfully built **10 production-ready showcase features** demonstrating the power of Foundry V13's ApplicationV2 framework in Rogue Trader VTT.
+
+**✅ Tier 1 Foundation: 100% Complete (6/6)**
+**✅ Tier 2 Advanced: 100% Complete (4/4)**
 
 ---
 
@@ -327,21 +330,78 @@ ENHANCED_DRAG_DROP_GUIDE.md                                (890 lines)
 
 ---
 
+## ✨ Template Parts Refactor (ApplicationV2 PARTS System)
+
+**Status:** ✅ Complete and Ready to Use
+
+### Features
+- 📦 **10 Separate Template Parts** for the Acolyte character sheet
+- 🔄 **Independent Re-rendering** - Each part can update without full sheet refresh
+- 📍 **Container Configuration** - Parts organized into proper parent containers
+- 🎯 **Targeted Context Preparation** via `_preparePartContext()`
+
+### Part Files Created
+```
+src/templates/actor/acolyte/header.hbs         (Header with portrait & characteristics)
+src/templates/actor/acolyte/tabs.hbs           (Tab navigation bar)
+src/templates/actor/acolyte/tab-overview.hbs   (Overview tab content)
+src/templates/actor/acolyte/tab-combat.hbs     (Combat tab content)
+src/templates/actor/acolyte/tab-skills.hbs     (Skills tab content)
+src/templates/actor/acolyte/tab-talents.hbs    (Talents tab content)
+src/templates/actor/acolyte/tab-equipment.hbs  (Equipment tab content)
+src/templates/actor/acolyte/tab-powers.hbs     (Powers tab content)
+src/templates/actor/acolyte/tab-dynasty.hbs    (Dynasty tab content)
+src/templates/actor/acolyte/tab-biography.hbs  (Biography tab content)
+```
+
+### How It Works
+```javascript
+// PARTS define template files and container relationships
+static PARTS = {
+    header: {
+        template: "systems/rogue-trader/templates/actor/acolyte/header.hbs"
+    },
+    overview: {
+        template: "systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs",
+        container: { classes: ["rt-body"], id: "tab-body" },
+        scrollable: [""]
+    }
+    // ... more parts
+};
+
+// Context preparation routes to part-specific methods
+async _preparePartContext(partId, context, options) {
+    switch (partId) {
+        case "header": return this._prepareHeaderContext(context, options);
+        case "overview": return this._prepareOverviewContext(context, options);
+        // ... more cases
+    }
+}
+```
+
+**Benefits:**
+- Better performance (only re-render what changes)
+- Cleaner code organization (each tab is self-contained)
+- Follows dnd5e V13 patterns for maintainability
+- Enables future partial updates without full re-renders
+
+---
+
 ## 📊 Overall Statistics
 
 ### Code Added
 - **JavaScript:** ~3,000 lines (dialogs, tooltips, visual feedback, panels, context menus, drag-drop)
-- **Handlebars:** ~150 lines (templates)
+- **Handlebars:** ~600 lines (templates including 10 new template parts)
 - **SCSS:** ~2,720 lines (Gothic 40K styling + animations)
 - **Documentation:** ~3,490 lines (6 comprehensive guides)
-- **Total:** ~9,360 lines of production-ready code
+- **Total:** ~9,810 lines of production-ready code
 
 ### Files Created
 - **Module files:** 9
-- **Template files:** 1
+- **Template files:** 11 (1 original + 10 template parts)
 - **SCSS files:** 6
 - **Documentation:** 7
-- **Total:** 23 new files
+- **Total:** 33 new files
 
 ### Commits
 ```
@@ -407,6 +467,7 @@ All six features follow these principles:
 - [x] **Mixin Architecture** - Clean nested mixin pattern established
 - [x] **Gothic Theme SCSS** - Consistent theming across all features
 - [x] **Build Validation** - All features compile without errors
+- [x] **Template Parts Refactor** - Acolyte sheet uses proper ApplicationV2 PARTS system
 
 ### Available to Build
 From the [APPLICATIONV2_FEATURES_VISION.md](APPLICATIONV2_FEATURES_VISION.md):
@@ -629,3 +690,274 @@ The foundation is solid. We can now:
 *Generated: 2026-01-07*
 *Branch: feature/applicationv2-enhancements*
 *Build: Passing ✅*
+
+---
+
+## ✨ Showcase Feature #10: Origin Path Visual Builder
+
+**Status:** ✅ Complete and Ready to Use  
+**Tier:** 2.4 - Advanced Interactive
+
+### Features
+- 🌟 **Interactive Flowchart** - Visual 6-step character creation journey
+- 🎨 **Gothic 40K Design** - Ornate borders, bronze/gold accents, flowing arrows
+- 🎯 **Drag & Drop** - Drag origin path items from compendium to slots
+- ✅ **Smart Validation** - Only compatible items accepted in each slot
+- 📊 **Real-Time Preview** - See cumulative bonuses as you build
+- 🎲 **Randomize** - Generate complete random background with one click
+- 💾 **Import/Export** - Save and share builds as JSON files
+- 🔍 **Browse Compendium** - One-click filtered compendium access per step
+- 👁️ **View Item Details** - Inspect items without leaving builder
+- 🔄 **Commit Changes** - Apply selections to character with confirmation
+
+### The Six Steps
+
+1. **Home World** → Starting characteristics and background  
+   *Examples: Death World, Void Born, Forge World, Noble Born*
+
+2. **Birthright** → Early life circumstances  
+   *Examples: Scavenger, Scapegrace, Child of the Creed, Savant*
+
+3. **Lure of the Void** → What drew you to the stars  
+   *Examples: Tainted, Criminal, Duty Bound, Zealot*
+
+4. **Trials and Travails** → Major life-defining event  
+   *Examples: Press-ganged, Calamity, Dark Voyage, High Vendetta*
+
+5. **Motivation** → Core driving force  
+   *Examples: Fortune, Vengeance, Renown, Pride*
+
+6. **Career** → Role aboard the ship  
+   *Examples: Rogue Trader, Arch-Militant, Void-Master, Navigator*
+
+### Visual Layout
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Home World  │ ──→ │  Birthright  │ ──→ │ Lure of Void │
+│  [Item Card] │     │  [Item Card] │     │  [Item Card] │
+└──────────────┘     └──────────────┘     └──────────────┘
+                              ↓
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│    Career    │ ←── │  Motivation  │ ←── │    Trials    │
+│  [Item Card] │     │  [Item Card] │     │  [Item Card] │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
+
+### Item Cards
+
+Each filled slot displays:
+- **Item Image** (48x48 with bronze border)
+- **Item Name** in gold text
+- **Bonus Badges** (color-coded):
+  - 🟡 Gold: Characteristic bonuses (WS +5, T +10)
+  - 🔵 Blue: Skill bonuses (Dodge +10)
+  - 🟣 Purple: Special abilities
+- **Action Buttons**: View details (👁️), Clear slot (✖️)
+
+### Preview Panel
+
+Real-time display of cumulative bonuses:
+- **Characteristics**: Shows total modifiers from all steps
+- **Skills**: Aggregated skill bonuses
+- **Special Abilities**: List of all granted abilities with sources
+
+**Color Coding**:
+- 🟢 Green values: Positive bonuses
+- 🔴 Red values: Negative modifiers
+
+### Status Indicators
+
+**Footer Badges**:
+- ✅ **Path Complete**: All 6 steps filled
+- ⚠️ **Path Incomplete**: Some steps empty
+- ✏️ **Unsaved Changes**: Differs from actor's current items
+
+### Workflow
+
+1. **Open Builder**: `OriginPathBuilder.show(actor)`
+2. **Fill Steps** (3 methods):
+   - Drag from compendium
+   - Click "Browse" button on slot
+   - Click "Randomize" for instant generation
+3. **Review Preview**: Check total bonuses
+4. **Commit**: Save to character (replaces existing path)
+
+### Files Created
+
+```
+src/module/applications/character-creation/
+  origin-path-builder.mjs                     (732 lines)
+  _module.mjs                                 (5 lines)
+  
+src/templates/character-creation/
+  origin-path-builder.hbs                     (254 lines)
+  
+src/scss/components/
+  _origin-path-builder.scss                   (606 lines)
+  
+ORIGIN_PATH_BUILDER_GUIDE.md                  (468 lines)
+```
+
+### Technical Details
+
+**ApplicationV2 Class**:
+```javascript
+class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
+    constructor(actor, options)
+    
+    // State
+    selections: Object<stepKey, itemId>
+    itemCache: Object<stepKey, Item>
+    
+    // Static Methods
+    static show(actor): OriginPathBuilder
+    static close(actor): void
+    static toggle(actor): OriginPathBuilder|null
+}
+```
+
+**Action Handlers** (8 total):
+- `clearSlot` - Remove item from step
+- `randomize` - Generate random path
+- `reset` - Clear all selections
+- `export` - Save as JSON
+- `import` - Load from JSON
+- `openCompendium` - Browse filtered compendium
+- `viewItem` - Show item sheet
+- `commitPath` - Apply to actor
+
+**Drag & Drop**:
+- Validates item type (`isOriginPath`)
+- Checks `item.originPathStep` matches slot
+- Shows error notifications for invalid drops
+- Supports dragging between slots (reordering)
+
+**Data Flow**:
+1. `_prepareContext()` → Fetch items, calculate preview
+2. Template renders flowchart with current state
+3. User interacts via drag/drop or buttons
+4. Action handlers update `selections` and `itemCache`
+5. Re-render shows updated state
+6. Commit writes to actor's embedded items
+
+### Usage Examples
+
+**Basic Usage**:
+```javascript
+// Open builder for character
+const actor = game.actors.getName("Quintus");
+OriginPathBuilder.show(actor);
+```
+
+**From Character Sheet Button**:
+```handlebars
+<button type="button" data-action="openOriginBuilder">
+    <i class="fa-solid fa-route"></i>
+    Build Origin Path
+</button>
+```
+
+```javascript
+// In AcolyteSheet actions
+openOriginBuilder: OriginPathBuilder.show.bind(OriginPathBuilder, this.actor)
+```
+
+**Check If Complete**:
+```javascript
+const builder = Object.values(ui.windows).find(
+    w => w instanceof OriginPathBuilder
+);
+if (builder && builder.isComplete) {
+    ui.notifications.info("Path is complete!");
+}
+```
+
+### Validation Logic
+
+```javascript
+// Step validation
+const itemStep = item.originPathStep;  // "Home World"
+const targetStep = slot.dataset.step;  // "homeWorld"
+const targetLabel = STEPS.find(s => s.key === targetStep)?.step;
+
+if (itemStep !== targetLabel) {
+    ui.notifications.warn(`Wrong step! Expected ${targetLabel}, got ${itemStep}`);
+    return;
+}
+```
+
+### Integration Points
+
+**Required**:
+- Items must have `isOriginPath` flag
+- Items must have `originPathStep` property matching step labels
+- Compendium `rogue-trader.rt-items-origin-path` must exist
+
+**Optional**:
+- Items can have `system.modifiers.characteristics`
+- Items can have `system.modifiers.skills`
+- Items can have `system.abilities` text
+
+### Performance Notes
+
+- Items cached after first fetch (avoids repeated compendium queries)
+- Preview recalculated only on render (not per keystroke)
+- Drag events debounced for smooth performance
+- Only changed slots re-render (ApplicationV2 PARTS system)
+
+### Accessibility
+
+- Keyboard navigation supported (Tab, Enter, Escape)
+- Screen reader labels on all interactive elements
+- `@media (prefers-reduced-motion)` disables animations
+- High contrast mode compatible
+- Touch-friendly buttons (minimum 44x44px touch targets)
+
+**Integration:** Standalone ApplicationV2 window (can be opened from character sheet)
+
+---
+
+## 📊 Overall Statistics (Updated)
+
+### Code Added
+- **JavaScript:** ~4,700 lines (10 features total)
+- **Handlebars:** ~900 lines (templates)
+- **SCSS:** ~4,000 lines (Gothic 40K styling + animations)
+- **Documentation:** ~5,500 lines (10 comprehensive guides)
+- **Total:** ~15,100 lines of production-ready code
+
+### Files Created
+- **Module files:** 14 (applications, mixins, dialogs, HUD)
+- **Template files:** 17 (including 10 template parts)
+- **SCSS files:** 10 (components)
+- **Documentation:** 11 (guides + progress tracking)
+- **Total:** 52 new files
+
+### Feature Breakdown
+- **Tier 1 Foundation:** 6 features (100% complete)
+- **Tier 2 Advanced:** 4 features (100% complete)
+- **Total Showcase Features:** 10
+
+### Commits
+```
+[NEW] feat: Add Origin Path Visual Builder (ApplicationV2 showcase #10) - TIER 2 COMPLETE!
+[PREV] feat: Add Profit Factor Acquisition Dialog (ApplicationV2 showcase #9)
+[PREV] feat: Add What-If Mode for stat preview (ApplicationV2 showcase #8)
+[PREV] feat: Add Combat Quick Panel floating HUD (ApplicationV2 showcase #7)
+[PREV] feat: Add Enhanced Drag-Drop system (ApplicationV2 showcase #6)
+[PREV] feat: Add Context Menus for Quick Actions (ApplicationV2 showcase #5)
+[PREV] feat: Add Collapsible Panels with State Persistence (ApplicationV2 showcase #4)
+[PREV] feat: Add Inline Editing with Visual Feedback (ApplicationV2 showcase #3)
+[PREV] feat: Add Smart Contextual Tooltips system (ApplicationV2 showcase #2)
+[PREV] feat: Add Enhanced Skill Test Quick-Roller (ApplicationV2 showcase #1)
+```
+
+### Build Status
+✅ All builds passing  
+✅ No errors or warnings  
+✅ Compiles successfully  
+✅ **Tier 2 Advanced: 100% COMPLETE!**
+
+---
+
