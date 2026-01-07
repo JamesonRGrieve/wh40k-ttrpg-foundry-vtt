@@ -1,0 +1,146 @@
+{{!-- Combat Quick Panel Template --}}
+<div class="combat-panel-content {{opacityClass}}">
+    
+    {{!-- Header: Initiative --}}
+    <div class="combat-panel-section initiative-section">
+        <h3><i class="fas fa-bolt"></i> Initiative</h3>
+        <div class="initiative-row">
+            {{#if initiative.rolled}}
+                <span class="initiative-value">{{initiative.value}}</span>
+                <button type="button" class="initiative-reroll" data-action="rollInitiative" data-tooltip="Re-roll">
+                    <i class="fas fa-dice"></i>
+                </button>
+            {{else}}
+                <button type="button" class="initiative-roll-btn" data-action="rollInitiative">
+                    <i class="fas fa-dice"></i> Roll Initiative
+                </button>
+            {{/if}}
+        </div>
+    </div>
+
+    {{!-- Vitals --}}
+    <div class="combat-panel-section vitals-section">
+        <div class="vital-row wounds-row {{#if wounds.critical}}critical{{else if wounds.low}}low{{/if}}">
+            <span class="vital-label">HP:</span>
+            <div class="vital-bar">
+                <div class="vital-bar-fill" style="width: {{wounds.percentage}}%"></div>
+            </div>
+            <span class="vital-value">{{wounds.value}}/{{wounds.max}}</span>
+        </div>
+        
+        <div class="vital-row fatigue-row {{#if fatigue.exhausted}}exhausted{{/if}}">
+            <span class="vital-label">Fatigue:</span>
+            <div class="vital-bar">
+                <div class="vital-bar-fill" style="width: {{fatigue.percentage}}%"></div>
+            </div>
+            <span class="vital-value">{{fatigue.value}}/{{fatigue.max}}</span>
+        </div>
+    </div>
+
+    {{!-- Primary Weapon --}}
+    <div class="combat-panel-section weapon-section">
+        <h3><i class="fas fa-crosshairs"></i> Primary Weapon</h3>
+        
+        {{#if weapon.none}}
+            <div class="no-weapon">
+                <i class="fas fa-exclamation-triangle"></i>
+                No weapon equipped
+            </div>
+        {{else}}
+            <div class="weapon-info">
+                <img src="{{weapon.img}}" alt="{{weapon.name}}" class="weapon-icon" />
+                <div class="weapon-details">
+                    <div class="weapon-name">{{weapon.name}}</div>
+                    <div class="weapon-stats">
+                        <span class="weapon-damage">{{weapon.damage}}</span>
+                        <span class="weapon-pen">Pen {{weapon.penetration}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Rate of Fire Buttons --}}
+            <div class="attack-buttons">
+                {{#if weapon.rateOfFire.single}}
+                    <button type="button" class="attack-btn standard-attack" data-action="standardAttack" data-tooltip="Standard Attack">
+                        <i class="fas fa-bullseye"></i> Standard
+                    </button>
+                {{/if}}
+                
+                {{#if weapon.rateOfFire.semiAuto}}
+                    <button type="button" class="attack-btn semi-auto-attack" data-action="semiAutoAttack" data-tooltip="Semi-Auto Burst">
+                        <i class="fas fa-burst"></i> Semi
+                    </button>
+                {{/if}}
+                
+                {{#if weapon.rateOfFire.fullAuto}}
+                    <button type="button" class="attack-btn full-auto-attack" data-action="fullAutoAttack" data-tooltip="Full Auto">
+                        <i class="fas fa-fire"></i> Full
+                    </button>
+                {{/if}}
+            </div>
+            
+            {{!-- Ammo Bar --}}
+            {{#if weapon.clip}}
+                <div class="ammo-row {{#if weapon.ammo.low}}low{{/if}}">
+                    <span class="ammo-label">Ammo:</span>
+                    <div class="ammo-bar">
+                        <div class="ammo-bar-fill" style="width: {{weapon.ammo.percentage}}%"></div>
+                    </div>
+                    <span class="ammo-value">{{weapon.ammo.current}}/{{weapon.ammo.max}}</span>
+                </div>
+            {{/if}}
+        {{/if}}
+    </div>
+
+    {{!-- Reactions --}}
+    <div class="combat-panel-section reactions-section">
+        <h3><i class="fas fa-shield-alt"></i> Reactions ({{reactions.remaining}})</h3>
+        <div class="reaction-buttons">
+            <button type="button" 
+                    class="reaction-btn dodge-btn" 
+                    data-action="dodge"
+                    {{#unless reactions.dodge.available}}disabled{{/unless}}
+                    data-tooltip="{{reactions.dodge.label}}">
+                <i class="fas fa-wind"></i> Dodge
+                {{#if reactions.dodge.available}}
+                    <span class="reaction-target">({{reactions.dodge.target}})</span>
+                {{/if}}
+            </button>
+            
+            <button type="button" 
+                    class="reaction-btn parry-btn" 
+                    data-action="parry"
+                    {{#unless reactions.parry.available}}disabled{{/unless}}
+                    data-tooltip="{{reactions.parry.label}}">
+                <i class="fas fa-hand-paper"></i> Parry
+                {{#if reactions.parry.available}}
+                    <span class="reaction-target">({{reactions.parry.target}})</span>
+                {{/if}}
+            </button>
+        </div>
+    </div>
+
+    {{!-- Quick Actions --}}
+    <div class="combat-panel-section actions-section">
+        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+        <div class="quick-actions">
+            {{#each actions}}
+                <button type="button" 
+                        class="action-btn" 
+                        data-action="{{this.action}}"
+                        {{#if this.disabled}}disabled{{/if}}
+                        data-tooltip="{{this.tooltip}}">
+                    <i class="{{this.icon}}"></i>
+                    {{this.label}}
+                </button>
+            {{/each}}
+        </div>
+    </div>
+
+    {{!-- Footer: Opacity Toggle --}}
+    <div class="combat-panel-footer">
+        <button type="button" class="opacity-toggle-btn" data-action="toggleOpacity" data-tooltip="Toggle Opacity">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
+</div>
