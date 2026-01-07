@@ -139,7 +139,8 @@ export default function ApplicationV2Mixin(Base) {
         _updateFrame(options) {
             super._updateFrame(options);
             if (options.window && ("subtitle" in options.window)) {
-                this.element.querySelector(".window-header > .window-subtitle").innerText = options.window.subtitle;
+                const subtitle = this.element.querySelector(".window-header > .window-subtitle");
+                if (subtitle) subtitle.innerText = options.window.subtitle;
             }
         }
 
