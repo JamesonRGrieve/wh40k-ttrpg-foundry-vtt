@@ -1,14 +1,14 @@
 # ApplicationV2 Enhancements - Progress Report
 
 **Branch:** `feature/applicationv2-enhancements`
-**Status:** 🚀 Two Showcase Features Complete!
+**Status:** 🚀 Three Showcase Features Complete!
 **Build Status:** ✅ All tests passing
 
 ---
 
 ## 🎉 Achievements
 
-We've successfully built **2 production-ready showcase features** demonstrating the power of Foundry V13's ApplicationV2 framework in Rogue Trader VTT.
+We've successfully built **3 production-ready showcase features** demonstrating the power of Foundry V13's ApplicationV2 framework in Rogue Trader VTT.
 
 ---
 
@@ -154,24 +154,102 @@ TOOLTIP_USAGE_EXAMPLE.md                                (400 lines)
 
 ---
 
+## ✨ Showcase Feature #3: Inline Editing with Visual Feedback
+
+**Status:** ✅ Complete and Ready to Use
+
+### Features
+- ✨ **Automatic Animation Detection** - Changes automatically detected and animated
+- 🎨 **Context-Aware Animations** - Different animations for increases, decreases, healing, damage
+- 💚 **Green Flash for Increases** - Positive changes pulse green
+- ❤️ **Red Flash for Decreases** - Negative changes pulse red
+- ⚕️ **Special Healing Effect** - Wounds restored get a healing animation
+- ⚔️ **Special Damage Effect** - Wounds lost get a damage animation
+- 🌟 **Advancement Glow** - XP gains and characteristic advances get gold glow
+- 🔢 **Number Counter Animation** - Values count up/down smoothly
+- 🔔 **Brief Notifications** - Tooltip-style notifications for actions
+- ♿ **Accessibility Support** - Respects `prefers-reduced-motion` setting
+
+### Animation Types
+
+#### 1. Stat Increase (Green, 0.6s)
+- Characteristic advances
+- Skill training increases
+- Gaining XP
+- Restoring fate points
+
+#### 2. Stat Decrease (Red, 0.6s)
+- Spending XP
+- Using fate points
+- Losing Profit Factor
+- Gaining corruption/insanity
+
+#### 3. Healing Effect (Green Glow, 0.8s)
+- Natural healing
+- Medicae treatment
+- Fate point healing
+
+#### 4. Damage Effect (Red Pulse, 0.8s)
+- Taking damage
+- Critical damage
+- Bleed effects
+
+#### 5. Advancement Glow (Gold, 1.0s)
+- Gaining XP rewards
+- Advancing characteristics
+- Purchasing skills
+
+#### 6. Flash Update (Blue, 0.5s)
+- Text field changes
+- Equipment toggles
+- Name updates
+
+### Files Created
+```
+src/module/applications/api/visual-feedback-mixin.mjs      (380 lines)
+src/scss/components/_stat-animations.scss                  (340 lines)
+INLINE_EDITING_FEEDBACK_GUIDE.md                           (490 lines)
+```
+
+### Visual Examples
+
+```
+Wounds Healing:
+Before: ██████░░░░ 6/10
+After:  █████████░ 9/10 (bright green glow)
+
+Characteristic Advance:
+Before: WS 42 (Bonus: 4)
+After:  WS 47 (Bonus: 4) (gold radiance, bonus pulses)
+
+Taking Damage:
+Before: ████████░░ 16/20
+After:  ████░░░░░░ 8/20 (red damage pulse)
+```
+
+**Integration:** Automatically enabled via `VisualFeedbackMixin` in `BaseActorSheet`
+
+---
+
 ## 📊 Overall Statistics
 
 ### Code Added
-- **JavaScript:** ~1,220 lines (dialogs, tooltips, mixins)
+- **JavaScript:** ~1,600 lines (dialogs, tooltips, visual feedback mixins)
 - **Handlebars:** ~150 lines (templates)
-- **SCSS:** ~980 lines (Gothic 40K styling)
-- **Documentation:** ~1,180 lines (3 comprehensive guides)
-- **Total:** ~3,530 lines of production-ready code
+- **SCSS:** ~1,320 lines (Gothic 40K styling + animations)
+- **Documentation:** ~1,670 lines (4 comprehensive guides)
+- **Total:** ~4,740 lines of production-ready code
 
 ### Files Created
-- **Module files:** 5
+- **Module files:** 6
 - **Template files:** 1
-- **SCSS files:** 2
-- **Documentation:** 4
-- **Total:** 12 new files
+- **SCSS files:** 3
+- **Documentation:** 5
+- **Total:** 15 new files
 
 ### Commits
 ```
+[NEW] feat: Add Inline Editing with Visual Feedback (ApplicationV2 showcase #3)
 0eb9c00 feat: Add Smart Contextual Tooltips system (ApplicationV2 showcase #2)
 4096019 docs: Add Enhanced Skill Roller usage guide
 93a009a feat: Add Enhanced Skill Test Quick-Roller (ApplicationV2 showcase)
@@ -187,7 +265,7 @@ TOOLTIP_USAGE_EXAMPLE.md                                (400 lines)
 
 ## 🎨 Design Philosophy
 
-Both features follow these principles:
+All three features follow these principles:
 
 1. **Gothic 40K Aesthetic**
    - Parchment textures and gradients
@@ -221,9 +299,11 @@ Both features follow these principles:
 ### Completed
 - [x] Enhanced Skill Test Quick-Roller
 - [x] Smart Contextual Tooltips
+- [x] Inline Editing with Visual Feedback
 - [x] Documentation and guides
 - [x] **Integration Complete!** - Enhanced skill roller now used for all skill/characteristic rolls
 - [x] **TooltipMixin Added** - All actor sheets now have tooltip support
+- [x] **VisualFeedbackMixin Added** - All actor sheets now have animated stat changes
 - [x] **Gothic Theme SCSS** - Theme variables file created and imported
 - [x] **Tooltip Data Preparation** - Characteristics and skills now have tooltipData for templates
 - [x] **Template Integration** - Characteristic and skill panels now have `data-rt-tooltip` attributes
