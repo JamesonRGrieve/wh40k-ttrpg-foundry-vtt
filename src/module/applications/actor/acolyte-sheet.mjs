@@ -60,6 +60,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Template parts for the Acolyte sheet.
      * Each part can be re-rendered independently for better performance.
+     * Following dnd5e pattern: each tab is a separate part.
      * @override
      */
     static PARTS = {
@@ -67,47 +68,38 @@ export default class AcolyteSheet extends BaseActorSheet {
             template: "systems/rogue-trader/templates/actor/acolyte/header.hbs"
         },
         tabs: {
-            template: "systems/rogue-trader/templates/actor/acolyte/tabs.hbs",
-            container: { classes: ["rt-main-layout"], id: "main-layout" }
+            template: "systems/rogue-trader/templates/actor/acolyte/tabs.hbs"
         },
         overview: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         combat: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         skills: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         talents: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-talents.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         equipment: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-equipment.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         powers: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-powers.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         dynasty: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-dynasty.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
         biography: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         }
     };
@@ -198,21 +190,16 @@ export default class AcolyteSheet extends BaseActorSheet {
             case "tabs":
                 return this._prepareTabsContext(context, options);
             case "overview":
-                return this._prepareOverviewContext(context, options);
             case "combat":
-                return this._prepareCombatTabContext(context, options);
             case "skills":
-                return this._prepareSkillsContext(context, options);
             case "talents":
-                return this._prepareTalentsContext(context, options);
             case "equipment":
-                return this._prepareEquipmentContext(context, options);
             case "powers":
-                return this._preparePowersContext(context, options);
             case "dynasty":
-                return this._prepareDynastyContext(context, options);
             case "biography":
-                return this._prepareBiographyContext(context, options);
+                // All tab data is prepared in _prepareContext
+                context.tab = this.tabGroups.primary;
+                return context;
             default:
                 return context;
         }
@@ -253,71 +240,54 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare skills tab context.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {object}
-     * @protected
-     */
-    async _prepareSkillsContext(context, options) {
-        // Skills are already prepared in base class _prepareSkills
-        return context;
+    /** @inheritDoc */
+    _onFirstRender(context, options) {
+        super._onFirstRender(context, options);
+        
+        // Create main layout structure for tabs
+        // This wraps the navigation and body into a proper layout container
+        const form = this.element.querySelector("form.rt-sheet");
+        if (!form) return;
+        
+        const navigation = form.querySelector(".rt-navigation");
+        const tabs = form.querySelectorAll(".tab.rt-tab");
+        
+        if (navigation && tabs.length) {
+            // Create the main layout container
+            let mainLayout = form.querySelector(".rt-main-layout");
+            if (!mainLayout) {
+                mainLayout = document.createElement("div");
+                mainLayout.classList.add("rt-main-layout");
+                navigation.after(mainLayout);
+            }
+            
+            // Move navigation into main layout
+            mainLayout.prepend(navigation);
+            
+            // Create body container for tabs
+            let body = mainLayout.querySelector(".rt-body");
+            if (!body) {
+                body = document.createElement("section");
+                body.classList.add("rt-body");
+                mainLayout.append(body);
+            }
+            
+            // Move all tabs into body
+            tabs.forEach(tab => body.append(tab));
+        }
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Prepare talents tab context.
+     * Prepare body part context (all tabs).
      * @param {object} context  Context being prepared.
      * @param {object} options  Render options.
      * @returns {object}
      * @protected
      */
-    async _prepareTalentsContext(context, options) {
-        // Talents and traits are already prepared in base _prepareItems
-        return context;
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare powers tab context.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {object}
-     * @protected
-     */
-    async _preparePowersContext(context, options) {
-        // Psychic powers and navigator powers already prepared
-        return context;
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare dynasty tab context.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {object}
-     * @protected
-     */
-    async _prepareDynastyContext(context, options) {
-        // Dynasty data (profit factor, acquisitions, endeavours) already prepared
-        return context;
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare biography tab context.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {object}
-     * @protected
-     */
-    async _prepareBiographyContext(context, options) {
-        // Biography data already prepared
+    async _prepareBodyContext(context, options) {
+        // All tab data is already prepared in _prepareContext
         return context;
     }
 
@@ -334,7 +304,8 @@ export default class AcolyteSheet extends BaseActorSheet {
         
         Object.entries(hudCharacteristics).forEach(([key, char]) => {
             const total = Number(char?.total ?? 0);
-            char.hudMod = Math.floor(total / 10);
+            // Use the calculated bonus (accounts for unnatural), fallback to tens digit
+            char.hudMod = char.bonus ?? Math.floor(total / 10);
             char.hudTotal = total;
             
             // Prepare tooltip data using the mixin helper

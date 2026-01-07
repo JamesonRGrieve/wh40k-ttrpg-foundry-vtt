@@ -147,27 +147,9 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
                 char.tooltipData = this.prepareCharacteristicTooltip(key, char);
             }
             
-            // HUD display formatting
-            char.hudMod = char.modifier !== 0 ? `${char.modifier > 0 ? '+' : ''}${char.modifier}` : '—';
+            // HUD display formatting - hudMod is the characteristic bonus (tens digit)
+            char.hudMod = char.bonus ?? Math.floor((char.total ?? 0) / 10);
             char.hudTotal = char.total;
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    _onRender(context, options) {
-        super._onRender(context, options);
-        
-        // Setup document update listener for visual feedback
-        if (!this._updateListener) {
-            this._updateListener = (document, changes, options, userId) => {
-                // Only animate changes from other users or from form submission
-                if (document.id === this.actor.id && userId !== game.userId) {
-                    this.visualizeChanges(changes);
-                }
-            };
-            Hooks.on("updateActor", this._updateListener);
         }
     }
 
@@ -290,6 +272,23 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     /** @inheritDoc */
     async _onRender(context, options) {
         await super._onRender(context, options);
+
+        // Add rt-sheet class to the form element for CSS styling
+        const form = this.element.querySelector("form");
+        if (form) {
+            form.classList.add("rt-sheet");
+        }
+
+        // Setup document update listener for visual feedback
+        if (!this._updateListener) {
+            this._updateListener = (document, changes, options, userId) => {
+                // Only animate changes from other users or from form submission
+                if (document.id === this.actor.id && userId !== game.userId) {
+                    this.visualizeChanges(changes);
+                }
+            };
+            Hooks.on("updateActor", this._updateListener);
+        }
 
         // Detect stat changes and trigger animations
         this._detectAndAnimateChanges();

@@ -17,6 +17,73 @@
     border: 2px solid var(--rt-bronze, #cd7f32);
 }
 
+/* Compact layout when inside the header */
+.rt-header .rt-characteristics-hud-v2,
+.rt-character-header .rt-characteristics-hud-v2 {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    max-width: 700px;
+    overflow-x: auto;
+    
+    .rt-char-card {
+        flex: 0 0 auto;
+        width: 70px;
+        min-width: 70px;
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .rt-char-circle-container {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 0.25rem;
+    }
+    
+    .rt-char-center {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .rt-char-short {
+        font-size: 0.65rem;
+    }
+    
+    .rt-char-total {
+        font-size: 1.1rem;
+    }
+    
+    .rt-char-bonus-display {
+        display: none; /* Hide bonus in compact mode */
+    }
+    
+    .rt-char-footer {
+        padding: 0.25rem;
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .rt-char-advance-info {
+        font-size: 0.6rem;
+        text-align: center;
+    }
+    
+    .rt-char-advance-next,
+    .rt-char-advance-max {
+        font-size: 0.55rem;
+    }
+    
+    .rt-char-edit-toggle {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.7rem;
+    }
+    
+    /* Hide edit panels in compact header mode */
+    .rt-char-edit-panel {
+        display: none !important;
+    }
+}
+
 /* -------------------------------------------- */
 /*  Characteristic Card                         */
 /* -------------------------------------------- */
