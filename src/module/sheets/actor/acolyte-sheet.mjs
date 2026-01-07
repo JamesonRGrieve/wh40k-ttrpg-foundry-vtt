@@ -12,6 +12,7 @@ export class AcolyteSheet extends ActorContainerSheet {
             width: 1050,
             height: 800,
             resizable: true,
+            submitOnChange: true,
             tabs: [{ navSelector: '.rt-navigation', contentSelector: '.rt-body', initial: 'overview' }],
         });
     }
@@ -22,6 +23,9 @@ export class AcolyteSheet extends ActorContainerSheet {
 
     getData() {
         const context = super.getData();
+        console.log('RT | getData called');
+        console.log('RT | context.system.wounds:', context.system?.wounds);
+        console.log('RT | this.actor.system.wounds:', this.actor.system.wounds);
         context.dh = CONFIG.rt;
         context.effects = this.actor.getEmbeddedCollection('ActiveEffect').contents;
         const skills = Object.entries(this.actor.skills ?? {});
@@ -311,8 +315,8 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('.acquisition-add').click(async (ev) => await this._addAcquisition(ev));
         html.find('.acquisition-remove').click(async (ev) => await this._removeAcquisition(ev));
 
-        // Stat adjustment buttons (arrow, tracker, vital, wounds, critical, fatigue buttons all use same handler)
-        html.find('.rt-arrow-btn, .rt-tracker-btn, .rt-vital-btn, .rt-wounds-btn, .rt-critical-btn, .rt-fatigue-btn, .rt-fatigue-action-btn').click(async (ev) => await this._onStatButtonClick(ev));
+        // Stat adjustment buttons (arrow, tracker, vital, wounds, critical, fatigue, corruption, insanity, fate buttons all use same handler)
+        html.find('.rt-arrow-btn, .rt-tracker-btn, .rt-vital-btn, .rt-wounds-btn, .rt-critical-btn, .rt-fatigue-btn, .rt-fatigue-action-btn, .rt-corruption-btn, .rt-insanity-btn, .rt-fate-quick-btn').click(async (ev) => await this._onStatButtonClick(ev));
         
         // Critical pip clicks
         html.find('.rt-crit-pip').click(async (ev) => await this._onCritPipClick(ev));
@@ -343,9 +347,38 @@ export class AcolyteSheet extends ActorContainerSheet {
         html.find('[data-action="toggleActivate"]').click(async (ev) => await this._onToggleActivate(ev));
         html.find('.rt-section-collapsible').click((ev) => this._onToggleSection(ev));
         
-        // Fatigue max manual override handler
+        // Fatigue max manual override handler - when editing fatigue max, switch to manual mode
         html.find('input[name="system.fatigue.max"]').change(async (ev) => {
             await this.actor.update({ 'system.fatigue.manualMax': true });
+        });
+        
+        // Fatigue mode radio buttons - handle boolean conversion
+        html.find('.rt-mode-radio').change(async (ev) => {
+            const value = ev.currentTarget.value === 'true';
+            await this.actor.update({ 'system.fatigue.manualMax': value });
+        });
+        
+        // Manual input handlers for overview panel fields that may not auto-save
+        // These explicitly trigger actor.update when the input changes
+        const editInputs = html.find('.rt-edit-input, .rt-critical-input');
+        editInputs.change(async (ev) => {
+            const input = ev.currentTarget;
+            const name = input.name;
+            if (!name) return;
+            
+            let value = input.value;
+            // Convert to number if data-dtype is Number
+            if (input.dataset.dtype === 'Number') {
+                value = parseInt(value) || 0;
+            }
+            
+            console.log('RT | Attempting update:', name, '=', value);
+            try {
+                const result = await this.actor.update({ [name]: value });
+                console.log('RT | Update succeeded:', result?.id, 'New value:', foundry.utils.getProperty(this.actor, name));
+            } catch (err) {
+                console.error('RT | Update FAILED:', err);
+            }
         });
         
         // Note: Skill training buttons (.rt-train-btn) are handled by parent class

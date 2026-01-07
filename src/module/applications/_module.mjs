@@ -7,3 +7,6 @@ export * from "./api/_module.mjs";
 
 // Actor sheet exports
 export * from "./actor/_module.mjs";
+
+// Item sheet exports
+export * from "./item/_module.mjs";

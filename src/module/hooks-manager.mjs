@@ -10,15 +10,27 @@ import NpcSheet from './applications/actor/npc-sheet.mjs';
 import VehicleSheet from './applications/actor/vehicle-sheet.mjs';
 import StarshipSheet from './applications/actor/starship-sheet.mjs';
 
-// Import V1 Item Sheets (will be migrated later)
-import { RogueTraderItemSheet } from './sheets/item/item-sheet.mjs';
-import { RogueTraderWeaponSheet } from './sheets/item/weapon-sheet.mjs';
-import { RogueTraderArmourSheet } from './sheets/item/armour-sheet.mjs';
-import { RogueTraderTalentSheet } from './sheets/item/talent-sheet.mjs';
-import { RogueTraderJournalEntrySheet } from './sheets/item/journal-entry-sheet.mjs';
-import { RogueTraderPeerEnemySheet } from './sheets/item/peer-enemy-sheet.mjs';
-import { RogueTraderAttackSpecialSheet } from './sheets/item/attack-special-sheet.mjs';
-import { RogueTraderWeaponModSheet } from './sheets/item/weapon-mod-sheet.mjs';
+// Import V2 Item Sheets (ApplicationV2-based)
+import {
+    BaseItemSheet,
+    WeaponSheet,
+    ArmourSheet,
+    TalentSheet,
+    TraitSheet,
+    GearSheet,
+    AmmoSheet,
+    PsychicPowerSheet,
+    SkillSheet,
+    CyberneticSheet,
+    ForceFieldSheet,
+    CriticalInjurySheet,
+    StorageLocationSheet,
+    PeerEnemySheet,
+    JournalEntryItemSheet,
+    WeaponModSheet,
+    AttackSpecialSheet
+} from './applications/item/_module.mjs';
+
 import { RTCompendiumBrowser } from './applications/compendium-browser.mjs';
 import {
     createCharacteristicMacro,
@@ -29,20 +41,11 @@ import {
     rollSkillMacro,
 } from './macros/macro-manager.mjs';
 import { HandlebarManager } from './handlebars/handlebars-manager.mjs';
-import { RogueTraderAmmoSheet } from './sheets/item/ammo-sheet.mjs';
-import { RogueTraderPsychicPowerSheet } from './sheets/item/psychic-power-sheet.mjs';
-import { RogueTraderStorageLocationSheet } from './sheets/item/storage-location-sheet.mjs';
-import { RogueTraderTraitSheet } from './sheets/item/trait-sheet.mjs';
-import { RogueTraderSkillSheet } from './sheets/item/skill-sheet.mjs';
 import { RogueTraderActorProxy } from './documents/actor-proxy.mjs';
-import { RogueTraderCriticalInjurySheet } from './sheets/item/critical-injury-sheet.mjs';
-import { RogueTraderGearSheet } from './sheets/item/gear-sheet.mjs';
 import { RogueTraderSettings } from './rogue-trader-settings.mjs';
 import { DHTargetedActionManager } from './actions/targeted-action-manager.mjs';
 import { DHBasicActionManager } from './actions/basic-action-manager.mjs';
 import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
-import { RogueTraderCyberneticSheet } from './sheets/item/cybernetic-sheet.mjs';
-import { RogueTraderForceFieldSheet } from './sheets/item/force-field-sheet.mjs';
 import { checkAndMigrateWorld } from './rogue-trader-migrations.mjs';
 import { DHTourMain } from './tours/main-tour.mjs';
 import { RollTableUtils } from './utils/roll-table-utils.mjs';
@@ -176,10 +179,8 @@ Enable Debug with: game.rt.debug = true
         };
 
         // Register sheet application classes
-        // V2 Actor Sheets use DocumentSheetConfig API
+        // V2 Sheets use DocumentSheetConfig API
         const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
-        const ItemCollection = foundry.documents.collections.Items;
-        const BaseItemSheet = foundry.appv1.sheets.ItemSheet;
 
         // Unregister core V1 actor sheet and register V2 actor sheets
         DocumentSheetConfig.unregisterSheet(Actor, "core", foundry.appv1.sheets.ActorSheet);
@@ -204,25 +205,126 @@ Enable Debug with: game.rt.debug = true
             label: "RT.Sheet.Starship"
         });
 
-        // Item Sheets (still using V1 until migrated)
-        ItemCollection.unregisterSheet('core', BaseItemSheet);
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderItemSheet, { makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderAmmoSheet, { types: ['ammunition'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderArmourSheet, { types: ['armour'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderAttackSpecialSheet, { types: ['attackSpecial'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderCriticalInjurySheet, { types: ['criticalInjury'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderCyberneticSheet, { types: ['cybernetic'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderJournalEntrySheet, { types: ['journalEntry'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderForceFieldSheet, { types: ['forceField'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderGearSheet, { types: ['consumable', 'gear', 'drug', 'tool'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderPeerEnemySheet, { types: ['peer', 'enemy'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderPsychicPowerSheet, { types: ['psychicPower'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderStorageLocationSheet, {types: ['storageLocation'],makeDefault: true,});
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderTalentSheet, { types: ['talent'], makeDefault: true });
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderTraitSheet, {types: ['trait'],makeDefault: true,});
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderSkillSheet, {types: ['skill'],makeDefault: true,});
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderWeaponModSheet, {types: ['weaponModification'],makeDefault: true,});
-        ItemCollection.registerSheet(SYSTEM_ID, RogueTraderWeaponSheet, { types: ['weapon'], makeDefault: true });
+        // Unregister core V1 item sheet and register V2 item sheets
+        DocumentSheetConfig.unregisterSheet(Item, "core", foundry.appv1.sheets.ItemSheet);
+        
+        // Default item sheet for unspecified types
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, BaseItemSheet, {
+            makeDefault: true,
+            label: "RT.Sheet.Item"
+        });
+        
+        // Weapon sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponSheet, {
+            types: ["weapon"],
+            makeDefault: true,
+            label: "RT.Sheet.Weapon"
+        });
+        
+        // Armour sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ArmourSheet, {
+            types: ["armour"],
+            makeDefault: true,
+            label: "RT.Sheet.Armour"
+        });
+        
+        // Talent sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, TalentSheet, {
+            types: ["talent"],
+            makeDefault: true,
+            label: "RT.Sheet.Talent"
+        });
+        
+        // Trait sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, TraitSheet, {
+            types: ["trait"],
+            makeDefault: true,
+            label: "RT.Sheet.Trait"
+        });
+        
+        // Gear sheet (consumables, drugs, tools, gear)
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, GearSheet, {
+            types: ["gear", "consumable", "drug", "tool"],
+            makeDefault: true,
+            label: "RT.Sheet.Gear"
+        });
+        
+        // Ammunition sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AmmoSheet, {
+            types: ["ammunition"],
+            makeDefault: true,
+            label: "RT.Sheet.Ammunition"
+        });
+        
+        // Psychic Power sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, PsychicPowerSheet, {
+            types: ["psychicPower"],
+            makeDefault: true,
+            label: "RT.Sheet.PsychicPower"
+        });
+        
+        // Skill sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SkillSheet, {
+            types: ["skill"],
+            makeDefault: true,
+            label: "RT.Sheet.Skill"
+        });
+        
+        // Cybernetic sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CyberneticSheet, {
+            types: ["cybernetic"],
+            makeDefault: true,
+            label: "RT.Sheet.Cybernetic"
+        });
+        
+        // Force Field sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ForceFieldSheet, {
+            types: ["forceField"],
+            makeDefault: true,
+            label: "RT.Sheet.ForceField"
+        });
+        
+        // Critical Injury sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CriticalInjurySheet, {
+            types: ["criticalInjury"],
+            makeDefault: true,
+            label: "RT.Sheet.CriticalInjury"
+        });
+        
+        // Storage Location sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, StorageLocationSheet, {
+            types: ["storageLocation"],
+            makeDefault: true,
+            label: "RT.Sheet.StorageLocation"
+        });
+        
+        // Peer/Enemy sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, PeerEnemySheet, {
+            types: ["peer", "enemy"],
+            makeDefault: true,
+            label: "RT.Sheet.PeerEnemy"
+        });
+        
+        // Journal Entry sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, JournalEntryItemSheet, {
+            types: ["journalEntry"],
+            makeDefault: true,
+            label: "RT.Sheet.JournalEntry"
+        });
+        
+        // Weapon Modification sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponModSheet, {
+            types: ["weaponModification"],
+            makeDefault: true,
+            label: "RT.Sheet.WeaponMod"
+        });
+        
+        // Attack Special sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AttackSpecialSheet, {
+            types: ["attackSpecial"],
+            makeDefault: true,
+            label: "RT.Sheet.AttackSpecial"
+        });
 
         RogueTraderSettings.registerSettings();
         HandlebarManager.loadTemplates();
