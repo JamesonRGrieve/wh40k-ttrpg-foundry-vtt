@@ -93,6 +93,7 @@
                 {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
                     <button type="button"
                             class="rt-crit-pip {{#if (lte level ../system.wounds.critical)}}rt-crit-pip--filled{{/if}}"
+                            data-action="setCriticalPip"
                             data-crit-level="{{level}}"
                             title="Critical Level {{level}} - Click to toggle">
                         <span class="rt-pip-inner"></span>
@@ -118,7 +119,7 @@
                                data-dtype="Number"
                                class="rt-edit-input"
                                name="system.wounds.max"
-                               value="{{source.wounds.max}}"
+                               value="{{system.wounds.max}}"
                                min="1"
                                placeholder="Max" />
                     </label>
@@ -129,7 +130,7 @@
                                data-dtype="Number"
                                class="rt-edit-input"
                                name="system.wounds.value"
-                               value="{{source.wounds.value}}"
+                               value="{{system.wounds.value}}"
                                min="0"
                                max="{{system.wounds.max}}"
                                placeholder="Current" />
@@ -157,7 +158,7 @@
                            data-dtype="Number"
                            class="rt-critical-input"
                            name="system.wounds.critical"
-                           value="{{source.wounds.critical}}"
+                           value="{{system.wounds.critical}}"
                            min="0"
                            max="10"
                            title="Critical Damage (0-10)" />
@@ -177,6 +178,7 @@
                     {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
                         <button type="button"
                                 class="rt-crit-pip {{#if (lte level ../system.wounds.critical)}}rt-crit-pip--filled{{/if}}"
+                                data-action="setCriticalPip"
                                 data-crit-level="{{level}}"
                                 title="Set Critical to {{level}}">
                             <span class="rt-pip-inner">{{level}}</span>

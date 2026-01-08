@@ -165,9 +165,9 @@
 .rt-connection-bonus {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4ade80;
+  color: $rt-color-success;
   padding: 2px 6px;
-  background: rgba(74, 222, 128, 0.15);
+  background: rgba($rt-color-success, 0.15);
   border-radius: 3px;
 }
 

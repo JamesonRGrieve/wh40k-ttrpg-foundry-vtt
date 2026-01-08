@@ -7,6 +7,7 @@
 @import 'core';        // Core panel component
 // @import 'vitals';      // Vitals grid (wounds, fatigue, fate) - LEGACY - REMOVED to fix conflicts
 @import 'vitals-modern'; // Modern vitals design for Overview tab
+@import 'overview-vitals'; // Themed vitals panels for Overview tab
 @import 'wounds';      // Wounds panel V2 - Modern redesign with pip system
 @import 'fatigue';     // Fatigue panel V2 - Auto-calc transparency and manual override
 @import 'fate';        // Fate panel V2 - Golden star pips and spending menu

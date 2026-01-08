@@ -25,6 +25,8 @@ export default class AcolyteSheet extends BaseActorSheet {
             
             // Stat adjustment actions
             adjustStat: AcolyteSheet.#adjustStat,
+            increment: AcolyteSheet.#increment,
+            decrement: AcolyteSheet.#decrement,
             setCriticalPip: AcolyteSheet.#setCriticalPip,
             setFateStar: AcolyteSheet.#setFateStar,
             setCorruption: AcolyteSheet.#setCorruption,
@@ -150,8 +152,65 @@ export default class AcolyteSheet extends BaseActorSheet {
     };
 
     /* -------------------------------------------- */
+    /*  Data Cache                                  */
+    /* -------------------------------------------- */
+
+    /**
+     * Cached categorized items. Invalidated when items change.
+     * @type {object|null}
+     * @private
+     */
+    _cachedItems = null;
+
+    /**
+     * Cached origin path steps. Invalidated when items change.
+     * @type {Array|null}
+     * @private
+     */
+    _cachedOriginPath = null;
+
+    /**
+     * Cache version number. Incremented on each actor update to invalidate caches.
+     * @type {number}
+     * @private
+     */
+    _cacheVersion = 0;
+
+    /**
+     * Last known actor update timestamp for cache invalidation.
+     * @type {number}
+     * @private
+     */
+    _lastActorUpdate = 0;
+
+    /* -------------------------------------------- */
     /*  Utility Methods                             */
     /* -------------------------------------------- */
+
+    /**
+     * Invalidate all cached data. Called when actor data changes.
+     * @private
+     */
+    _invalidateCache() {
+        this._cachedItems = null;
+        this._cachedOriginPath = null;
+        this._cacheVersion++;
+    }
+
+    /**
+     * Check if cache needs invalidation based on actor update time.
+     * @returns {boolean} True if cache was invalidated
+     * @private
+     */
+    _checkCacheValidity() {
+        const actorUpdate = this.actor?._stats?.modifiedTime ?? 0;
+        if (actorUpdate > this._lastActorUpdate) {
+            this._lastActorUpdate = actorUpdate;
+            this._invalidateCache();
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Throttle wrapper to prevent rapid-fire clicks on action buttons.
@@ -164,7 +223,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @returns {Promise}
      * @private
      */
-    static async _throttle(key, wait, func, context, args) {
+    async _throttle(key, wait, func, context, args) {
         // Initialize throttle tracking map if it doesn't exist
         if (!this._throttleTimers) this._throttleTimers = new Map();
 
@@ -182,11 +241,38 @@ export default class AcolyteSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+    /*  Notifications                               */
+    /* -------------------------------------------- */
+
+    /**
+     * Display a notification with a fallback between Toast and ui.notifications.
+     * @param {"info"|"warning"|"error"} type  Notification type.
+     * @param {string} message                 Message to display.
+     * @param {object} options                 Notification options.
+     * @private
+     */
+    _notify(type, message, options = {}) {
+        const toast = foundry.applications?.api?.Toast;
+        if (toast && typeof toast[type] === "function") {
+            return toast[type](message, options);
+        }
+        const notifications = ui?.notifications;
+        if (!notifications) return;
+        const method = type === "warning" ? "warn" : type;
+        if (typeof notifications[method] === "function") {
+            return notifications[method](message, options);
+        }
+    }
+
+    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
     async _prepareContext(options) {
+        // Check if caches need invalidation due to actor changes
+        this._checkCacheValidity();
+
         const context = await super._prepareContext(options);
         
         // RT-specific configuration
@@ -195,10 +281,11 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
 
-        // Prepare origin path
+        // Prepare origin path (cached)
         context.originPathSteps = this._prepareOriginPathSteps();
 
-        // Prepare navigator powers and ship roles
+        // Prepare navigator powers and ship roles (use cached items)
+        const categorized = this._getCategorizedItems();
         context.navigatorPowers = this.actor.items.filter(
             item => item.type === "navigatorPower" || item.isNavigatorPower
         );
@@ -206,11 +293,11 @@ export default class AcolyteSheet extends BaseActorSheet {
             item => item.type === "shipRole" || item.isShipRole
         );
 
-        // Prepare loadout/equipment data
-        this._prepareLoadoutData(context);
+        // Prepare loadout/equipment data (uses cached categorized items)
+        this._prepareLoadoutData(context, categorized);
 
-        // Prepare combat station data
-        this._prepareCombatData(context);
+        // Prepare combat station data (uses cached categorized items)
+        this._prepareCombatData(context, categorized);
 
         // Prepare Rogue Trader specific fields
         if (context.system) {
@@ -382,11 +469,14 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare origin path step data.
+     * Prepare origin path step data (cached).
      * @returns {Array<object>}
      * @protected
      */
     _prepareOriginPathSteps() {
+        // Return cached version if available
+        if (this._cachedOriginPath) return this._cachedOriginPath;
+
         const steps = CONFIG.rt.originPath?.steps || [
             { key: "homeWorld", label: "Home World", choiceGroup: "origin.home-world" },
             { key: "birthright", label: "Birthright", choiceGroup: "origin.birthright" },
@@ -400,7 +490,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             item => item.isOriginPath || (item.type === "trait" && item.flags?.rt?.kind === "origin")
         );
 
-        return steps.map(step => {
+        this._cachedOriginPath = steps.map(step => {
             const item = originItems.find(i => {
                 const itemStep = i.flags?.rt?.step || i.system?.step || "";
                 return itemStep === step.label || i.flags?.rt?.choiceGroup === step.choiceGroup;
@@ -416,17 +506,20 @@ export default class AcolyteSheet extends BaseActorSheet {
                 } : null
             };
         });
+
+        return this._cachedOriginPath;
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Categorize all items in a single pass for performance.
-     * Replaces multiple filter() calls with one iteration.
+     * Get cached categorized items, computing only if cache is invalid.
      * @returns {object} Categorized items
      * @protected
      */
-    _categorizeItems() {
+    _getCategorizedItems() {
+        if (this._cachedItems) return this._cachedItems;
+        
         const categories = {
             all: [],
             weapons: [],
@@ -455,6 +548,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             if (item.system?.equipped === true) categories.equipped.push(item);
         }
 
+        this._cachedItems = categories;
         return categories;
     }
 
@@ -462,11 +556,12 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Prepare loadout/equipment data for the template.
-     * @param {object} context  The template render context.
+     * @param {object} context      The template render context.
+     * @param {object} [categorized]  Pre-computed categorized items (optional).
      * @protected
      */
-    _prepareLoadoutData(context) {
-        const categorized = this._categorizeItems();
+    _prepareLoadoutData(context, categorized = null) {
+        categorized = categorized ?? this._getCategorizedItems();
 
         // Add all items to context for the Backpack panel
         context.allItems = categorized.all;
@@ -502,11 +597,12 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Prepare combat station data for the template.
-     * @param {object} context  The template render context.
+     * @param {object} context      The template render context.
+     * @param {object} [categorized]  Pre-computed categorized items (optional).
      * @protected
      */
-    _prepareCombatData(context) {
-        const categorized = this._categorizeItems();
+    _prepareCombatData(context, categorized = null) {
+        categorized = categorized ?? this._getCategorizedItems();
         const weapons = categorized.weapons;
         const system = context.system ?? this.actor.system ?? {};
 
@@ -740,7 +836,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                     break;
             }
         } catch (error) {
-            foundry.applications.api.Toast.error(`Combat action failed: ${error.message}`, {
+            this._notify("error", `Combat action failed: ${error.message}`, {
                 duration: 5000
             });
             console.error("Combat action error:", error);
@@ -773,7 +869,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 type: CONST.CHAT_MESSAGE_STYLES.ROLL
             });
         } catch (error) {
-            foundry.applications.api.Toast.error(`Initiative roll failed: ${error.message}`, {
+            this._notify("error", `Initiative roll failed: ${error.message}`, {
                 duration: 5000
             });
             console.error("Initiative roll error:", error);
@@ -832,7 +928,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
             }
         } catch (error) {
-            foundry.applications.api.Toast.error(`Hit location roll failed: ${error.message}`, {
+            this._notify("error", `Hit location roll failed: ${error.message}`, {
                 duration: 5000
             });
             console.error("Hit location roll error:", error);
@@ -860,7 +956,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of stat adjustment (used by throttled wrapper).
      * @private
      */
-    static async #adjustStatImpl(event, target) {
+    async #adjustStatImpl(event, target) {
         const field = target.dataset.field;
         const action = target.dataset.statAction;
         const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
@@ -892,6 +988,30 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Handle increment action (convenience wrapper for adjustStat).
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #increment(event, target) {
+        target.dataset.statAction = "increment";
+        return AcolyteSheet.#adjustStat.call(this, event, target);
+    }
+
+    /**
+     * Handle decrement action (convenience wrapper for adjustStat).
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #decrement(event, target) {
+        target.dataset.statAction = "decrement";
+        return AcolyteSheet.#adjustStat.call(this, event, target);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle clicking on a critical damage pip.
      * Throttled to prevent spam clicks.
      * @this {AcolyteSheet}
@@ -907,7 +1027,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of critical pip setting (used by throttled wrapper).
      * @private
      */
-    static async #setCriticalPipImpl(event, target) {
+    async #setCriticalPipImpl(event, target) {
         const level = parseInt(target.dataset.critLevel);
         const currentCrit = this.actor.system.wounds?.critical || 0;
         const newValue = (level === currentCrit) ? level - 1 : level;
@@ -933,7 +1053,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of fate star setting (used by throttled wrapper).
      * @private
      */
-    static async #setFateStarImpl(event, target) {
+    async #setFateStarImpl(event, target) {
         const index = parseInt(target.dataset.fateIndex);
         const currentFate = this.actor.system.fate?.value || 0;
         const newValue = (index === currentFate) ? index - 1 : index;
@@ -959,10 +1079,10 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of corruption setting (used by throttled wrapper).
      * @private
      */
-    static async #setCorruptionImpl(event, target) {
+    async #setCorruptionImpl(event, target) {
         const targetValue = parseInt(target.dataset.value);
         if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-            foundry.applications.api.Toast.error("Invalid corruption value", {
+            this._notify("error", "Invalid corruption value", {
                 duration: 3000
             });
             return;
@@ -987,10 +1107,10 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of insanity setting (used by throttled wrapper).
      * @private
      */
-    static async #setInsanityImpl(event, target) {
+    async #setInsanityImpl(event, target) {
         const targetValue = parseInt(target.dataset.value);
         if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-            foundry.applications.api.Toast.error("Invalid insanity value", {
+            this._notify("error", "Invalid insanity value", {
                 duration: 3000
             });
             return;
@@ -1015,10 +1135,10 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of fate restoration (used by throttled wrapper).
      * @private
      */
-    static async #restoreFateImpl(event, target) {
+    async #restoreFateImpl(event, target) {
         const maxFate = this.actor.system.fate?.max || 0;
         await this.actor.update({ "system.fate.value": maxFate });
-        foundry.applications.api.Toast.info(`Restored all fate points to ${maxFate}`, {
+        this._notify("info", `Restored all fate points to ${maxFate}`, {
             duration: 3000
         });
     }
@@ -1042,12 +1162,12 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Implementation of fate spending (used by throttled wrapper).
      * @private
      */
-    static async #spendFateImpl(event, target) {
+    async #spendFateImpl(event, target) {
         const action = target.dataset.fateAction;
         const currentFate = this.actor.system.fate?.value || 0;
 
         if (currentFate <= 0) {
-            foundry.applications.api.Toast.warning("No fate points available to spend!", {
+            this._notify("warning", "No fate points available to spend!", {
                 duration: 3000
             });
             return;
@@ -1190,7 +1310,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                             count++;
                         }
                     }
-                    foundry.applications.api.Toast.info(`Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
+                    this._notify("info", `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
                         duration: 3000
                     });
                     break;
@@ -1202,7 +1322,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                         await item.update({ "system.equipped": false });
                         count++;
                     }
-                    foundry.applications.api.Toast.info(`Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
+                    this._notify("info", `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
                         duration: 3000
                     });
                     break;
@@ -1219,18 +1339,18 @@ export default class AcolyteSheet extends BaseActorSheet {
                         });
                         count++;
                     }
-                    foundry.applications.api.Toast.info(`Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
+                    this._notify("info", `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
                         duration: 3000
                     });
                     break;
 
                 default:
-                    foundry.applications.api.Toast.warning(`Unknown bulk action: ${action}`, {
+                    this._notify("warning", `Unknown bulk action: ${action}`, {
                         duration: 3000
                     });
             }
         } catch (error) {
-            foundry.applications.api.Toast.error(`Bulk operation failed: ${error.message}`, {
+            this._notify("error", `Bulk operation failed: ${error.message}`, {
                 duration: 5000
             });
             console.error("Bulk equipment error:", error);
@@ -1298,12 +1418,12 @@ export default class AcolyteSheet extends BaseActorSheet {
                     description: bonus.benefit
                 });
             } else {
-                foundry.applications.api.Toast.warning(`Bonus "${bonusName}" not found`, {
+                this._notify("warning", `Bonus "${bonusName}" not found`, {
                     duration: 3000
                 });
             }
         } catch (error) {
-            foundry.applications.api.Toast.error(`Failed to vocalize bonus: ${error.message}`, {
+            this._notify("error", `Failed to vocalize bonus: ${error.message}`, {
                 duration: 5000
             });
             console.error("Bonus vocalize error:", error);
@@ -1507,11 +1627,11 @@ export default class AcolyteSheet extends BaseActorSheet {
                 changes: []
             }]);
             
-            foundry.applications.api.Toast.info("New effect created", {
+            this._notify("info", "New effect created", {
                 duration: 2000
             });
         } catch (error) {
-            foundry.applications.api.Toast.error(`Failed to create effect: ${error.message}`, {
+            this._notify("error", `Failed to create effect: ${error.message}`, {
                 duration: 5000
             });
             console.error("Create effect error:", error);
@@ -1532,7 +1652,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             const effect = this.actor.effects.get(effectId);
             
             if (!effect) {
-                foundry.applications.api.Toast.warning("Effect not found", {
+                this._notify("warning", "Effect not found", {
                     duration: 3000
                 });
                 return;
@@ -1540,11 +1660,11 @@ export default class AcolyteSheet extends BaseActorSheet {
             
             await effect.update({ disabled: !effect.disabled });
             
-            foundry.applications.api.Toast.info(`Effect ${effect.disabled ? 'disabled' : 'enabled'}`, {
+            this._notify("info", `Effect ${effect.disabled ? 'disabled' : 'enabled'}`, {
                 duration: 2000
             });
         } catch (error) {
-            foundry.applications.api.Toast.error(`Failed to toggle effect: ${error.message}`, {
+            this._notify("error", `Failed to toggle effect: ${error.message}`, {
                 duration: 5000
             });
             console.error("Toggle effect error:", error);
@@ -1565,7 +1685,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             const effect = this.actor.effects.get(effectId);
             
             if (!effect) {
-                foundry.applications.api.Toast.warning("Effect not found", {
+                this._notify("warning", "Effect not found", {
                     duration: 3000
                 });
                 return;
@@ -1579,12 +1699,12 @@ export default class AcolyteSheet extends BaseActorSheet {
             
             if (confirmed) {
                 await effect.delete();
-                foundry.applications.api.Toast.info("Effect deleted", {
+                this._notify("info", "Effect deleted", {
                     duration: 2000
                 });
             }
         } catch (error) {
-            foundry.applications.api.Toast.error(`Failed to delete effect: ${error.message}`, {
+            this._notify("error", `Failed to delete effect: ${error.message}`, {
                 duration: 5000
             });
             console.error("Delete effect error:", error);

@@ -1,4 +1,4 @@
-{{!-- Redesigned Fate Panel - Golden Star Pips, Spending Menu, Sacred Theme --}}
+{{!-- Redesigned Fate Panel - Compact Golden Stars Only --}}
 <div class="rt-panel rt-fate-panel-v2">
 
     {{!-- Panel Header - Click to expand/collapse --}}
@@ -14,21 +14,16 @@
     {{!-- Panel Body --}}
     <div class="rt-panel-body">
 
-        {{!-- Main Display: Golden Star Pips --}}
-        <div class="rt-fate-display">
-
-            {{!-- Current / Max Label --}}
-            <div class="rt-fate-label">
-                <span class="rt-fate-count">{{system.fate.value}} / {{system.fate.max}}</span>
-                <span class="rt-fate-subtitle">Points Remaining</span>
-            </div>
+        {{!-- Main Display: Star Pips Only --}}
+        <div class="rt-fate-display-compact">
 
             {{!-- Star Pip Display --}}
-            <div class="rt-fate-pips">
+            <div class="rt-fate-pips-compact">
                 {{#if (gt system.fate.max 0)}}
                     {{#each (range 1 (add system.fate.max 1)) as |index|}}
                         <button type="button"
                                 class="rt-fate-star {{#if (lte index ../system.fate.value)}}rt-fate-star--filled{{/if}}"
+                                data-action="setFateStar"
                                 data-fate-index="{{index}}"
                                 title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available){{else}} (Spent){{/if}}">
                             <i class="fas fa-star"></i>
@@ -42,43 +37,16 @@
                 {{/if}}
             </div>
 
-            {{!-- Spending Menu (only show if has fate points) --}}
-            {{#if (gt system.fate.value 0)}}
-            <div class="rt-fate-actions">
-                <div class="rt-fate-spend-menu">
-                    <button type="button" class="rt-fate-spend-btn" data-fate-action="menu">
-                        <i class="fas fa-hand-sparkles"></i>
-                        <span>Spend Fate Point</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-
-                    <div class="rt-fate-dropdown" style="display: none;">
-                        <button type="button" class="rt-fate-option" data-fate-action="reroll" title="Re-roll a failed test">
-                            <i class="fas fa-dice"></i>
-                            <span>Re-roll Test</span>
-                        </button>
-                        <button type="button" class="rt-fate-option" data-fate-action="bonus" title="Gain +10 bonus to a test">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>+10 Bonus</span>
-                        </button>
-                        <button type="button" class="rt-fate-option" data-fate-action="dos" title="Add +1 Degree of Success">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>+1 DoS</span>
-                        </button>
-                        <button type="button" class="rt-fate-option" data-fate-action="heal" title="Heal damage">
-                            <i class="fas fa-heart"></i>
-                            <span>Heal Damage</span>
-                        </button>
-                        <button type="button" class="rt-fate-option" data-fate-action="avoid" title="Avoid death">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Avoid Death</span>
-                        </button>
-                        <button type="button" class="rt-fate-option rt-fate-option--burn" data-fate-action="burn" title="Permanently burn a Fate Point for a major effect">
-                            <i class="fas fa-fire"></i>
-                            <span>Burn Fate (Permanent)</span>
-                        </button>
-                    </div>
-                </div>
+            {{!-- Quick Actions --}}
+            {{#if (gt system.fate.max 0)}}
+            <div class="rt-fate-actions-compact">
+                <button type="button"
+                        class="rt-quick-action-btn"
+                        data-action="restoreFate"
+                        title="Restore all fate points">
+                    <i class="fas fa-redo"></i>
+                    <span>Restore All</span>
+                </button>
             </div>
             {{/if}}
 
@@ -118,28 +86,6 @@
                                placeholder="Current" />
                     </label>
                 </div>
-
-                {{!-- Quick Actions --}}
-                <div class="rt-fate-quick-actions">
-                    <button type="button"
-                            class="rt-fate-quick-btn rt-restore-btn"
-                            data-action="restore-fate"
-                            title="Restore all fate points">
-                        <i class="fas fa-redo"></i>
-                        <span>Restore All</span>
-                    </button>
-                    {{#if (gt system.fate.value 0)}}
-                    <button type="button"
-                            class="rt-fate-quick-btn rt-spend-one-btn"
-                            data-action="decrement"
-                            data-field="system.fate.value"
-                            data-min="0"
-                            title="Spend one fate point">
-                        <i class="fas fa-minus-circle"></i>
-                        <span>Spend One</span>
-                    </button>
-                    {{/if}}
-                </div>
             </div>
 
             {{!-- Star Pips (Edit Mode) - Click to set exact value --}}
@@ -151,31 +97,12 @@
                     {{#each (range 0 (add system.fate.max 1)) as |index|}}
                         <button type="button"
                                 class="rt-fate-star {{#if (lte index ../system.fate.value)}}rt-fate-star--filled{{/if}}"
+                                data-action="setFateStar"
                                 data-fate-index="{{index}}"
                                 title="Set to {{index}} fate points">
                             <i class="fas fa-star"></i>
-                            <span class="rt-star-number">{{index}}</span>
                         </button>
                     {{/each}}
-                </div>
-            </div>
-
-            {{!-- Info Section --}}
-            <div class="rt-fate-edit-section">
-                <div class="rt-fate-info-box">
-                    <i class="fas fa-book-open"></i>
-                    <div class="rt-info-content">
-                        <strong>About Fate Points</strong>
-                        <p><strong>Fate Points</strong> represent the Emperor's divine favor. They can be spent to:</p>
-                        <ul>
-                            <li><strong>Re-roll</strong> a failed test</li>
-                            <li>Gain a <strong>+10 bonus</strong> to a test</li>
-                            <li>Add <strong>+1 Degree of Success</strong></li>
-                            <li><strong>Heal damage</strong> or remove conditions</li>
-                            <li><strong>Avoid death</strong> when reduced to 0 wounds</li>
-                        </ul>
-                        <p class="rt-fate-warning"><i class="fas fa-exclamation-triangle"></i> <strong>Burning Fate</strong> permanently reduces your maximum - use only in dire circumstances!</p>
-                    </div>
                 </div>
             </div>
 

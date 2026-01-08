@@ -129,13 +129,23 @@ export default class CommonTemplate extends ActorDataModel {
   static cleanData(source, options = {}) {
     // Clean integer fields before validation
     if (source?.wounds) {
-      source.wounds.max = this._toInt(source.wounds.max);
-      source.wounds.value = this._toInt(source.wounds.value);
-      source.wounds.critical = this._toInt(source.wounds.critical);
+      if (source.wounds.max !== undefined) {
+        source.wounds.max = this._toInt(source.wounds.max);
+      }
+      if (source.wounds.value !== undefined) {
+        source.wounds.value = this._toInt(source.wounds.value);
+      }
+      if (source.wounds.critical !== undefined) {
+        source.wounds.critical = this._toInt(source.wounds.critical);
+      }
     }
     if (source?.fatigue) {
-      source.fatigue.max = this._toInt(source.fatigue.max);
-      source.fatigue.value = this._toInt(source.fatigue.value);
+      if (source.fatigue.max !== undefined) {
+        source.fatigue.max = this._toInt(source.fatigue.max);
+      }
+      if (source.fatigue.value !== undefined) {
+        source.fatigue.value = this._toInt(source.fatigue.value);
+      }
     }
     return super.cleanData(source, options);
   }

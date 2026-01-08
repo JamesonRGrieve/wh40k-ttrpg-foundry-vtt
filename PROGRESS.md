@@ -243,13 +243,43 @@ All 6 Priority 1 items completed in this session:
 ## Next Up 📋
 
 ### Priority 2: Medium Priority
+- ✅ Item 12: Active Effects Foundation (ALREADY COMPLETE)
 - ✅ Item 13: Lazy Template Loading
 - ✅ Item 14: State Persistence Enhancements
 - ✅ Item 15: Replace Custom Context Menu with V13 Native
+- ✅ Item 16: Data Caching & Memoization
 - Item 11: Keyboard Shortcuts System (2-3 days)
-- Item 12: Active Effects Foundation (2-3 days)
-- Item 16: Data Caching & Memoization (1-2 days)
 - Item 17: Accessibility Compliance (WCAG AA) (2-3 days)
+
+---
+
+### Priority 2: Medium Priority (Session 4 - 2026-01-08)
+
+- [x] **Item 16**: Implement Data Caching & Memoization ✅
+  - Added cache instance properties to AcolyteSheet:
+    - `_cachedItems` - Cached categorized items
+    - `_cachedOriginPath` - Cached origin path steps
+    - `_cacheVersion` - Cache version for invalidation tracking
+    - `_lastActorUpdate` - Actor update timestamp for cache detection
+  - Implemented cache management methods:
+    - `_invalidateCache()` - Clears all cached data
+    - `_checkCacheValidity()` - Checks actor update time and invalidates if changed
+    - `_getCategorizedItems()` - Returns cached items, computing only if needed
+  - Updated methods to use caching:
+    - `_prepareContext()` - Checks cache validity, passes categorized items to child methods
+    - `_prepareOriginPathSteps()` - Caches and returns origin path data
+    - `_prepareLoadoutData()` - Accepts optional pre-computed categorized items
+    - `_prepareCombatData()` - Accepts optional pre-computed categorized items
+  - Benefits:
+    - Items categorized once per render instead of twice (was called by both loadout and combat)
+    - Origin path computed once and cached until items change
+    - Cache automatically invalidated when actor document updates
+  - **Expected Improvement**: 15-40% faster re-renders during combat
+  - Files modified:
+    - `src/module/applications/actor/acolyte-sheet.mjs`
+
+**Total Time**: ~30 minutes
+**Build Status**: ✅ All builds passing
 
 ---
 

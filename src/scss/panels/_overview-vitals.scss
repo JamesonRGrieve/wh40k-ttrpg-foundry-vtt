@@ -1,0 +1,364 @@
+// ============================================
+// Overview Tab Vitals Panels - Themed Colors
+// ============================================
+// Compact, color-coded vital panels for easy identification
+
+// Panel Theme Colors
+.rt-wounds-panel-v2 {
+  border-left: 3px solid $rt-accent-combat;
+  
+  .rt-panel-header {
+    background: linear-gradient(90deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+    
+    .rt-panel-title i {
+      color: $rt-accent-combat;
+    }
+  }
+}
+
+.rt-fatigue-panel-v2 {
+  border-left: 3px solid $rt-color-gold;
+  
+  .rt-panel-header {
+    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, transparent 100%);
+    
+    .rt-panel-title i {
+      color: $rt-color-gold;
+    }
+  }
+}
+
+.rt-fate-panel-v2 {
+  border-left: 3px solid $rt-color-gold;
+  
+  .rt-panel-header {
+    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, transparent 100%);
+    
+    .rt-panel-title i {
+      color: $rt-color-gold;
+    }
+  }
+}
+
+.rt-corruption-panel-v2 {
+  border-left: 3px solid #2d7a6b;
+  
+  .rt-panel-header {
+    background: linear-gradient(90deg, rgba(45, 122, 107, 0.12) 0%, transparent 100%);
+    
+    .rt-panel-title i {
+      color: #3ea88e;
+    }
+  }
+}
+
+.rt-insanity-panel-v2 {
+  border-left: 3px solid #7b5aa6;
+  
+  .rt-panel-header {
+    background: linear-gradient(90deg, rgba(123, 90, 166, 0.12) 0%, transparent 100%);
+    
+    .rt-panel-title i {
+      color: #9573bd;
+    }
+  }
+}
+
+.rt-experience-panel {
+  border-left: 3px solid $rt-color-gold;
+  
+  .rt-panel-header {
+    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, transparent 100%);
+    
+    .rt-panel-title i {
+      color: $rt-color-gold;
+    }
+  }
+}
+
+// Compact Tracker Style (for all vitals)
+.rt-vital-tracker-compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm 0;
+}
+
+.rt-vital-btn-compact {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--color-text-primary);
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-highlight);
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.rt-vital-value-compact {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: 'Modesto Condensed', serif;
+  
+  .rt-vital-current {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+  
+  .rt-vital-sep {
+    font-size: 1.2rem;
+    color: var(--color-text-tertiary);
+  }
+  
+  .rt-vital-max {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+  }
+}
+
+// Compact progress bar
+.rt-vital-bar-compact {
+  height: 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: $rt-space-xs;
+  
+  .rt-vital-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+}
+
+// Compact auto-calc badge
+.rt-auto-badge-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: rgba($rt-accent-gold, 0.1);
+  border: 1px solid rgba($rt-accent-gold, 0.2);
+  border-radius: 3px;
+  font-size: 0.65rem;
+  color: var(--color-text-tertiary);
+  margin-top: $rt-space-xs;
+  
+  i {
+    color: $rt-accent-gold;
+    font-size: 0.7rem;
+  }
+}
+
+// Quick action button (for fatigue clear, fate restore, etc.)
+.rt-quick-action-btn {
+  width: 100%;
+  padding: 6px;
+  margin-top: $rt-space-xs;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-highlight);
+    color: var(--color-text-primary);
+  }
+  
+  i {
+    font-size: 0.8rem;
+  }
+}
+
+// ============================================
+// Experience Panel (Compact)
+// ============================================
+
+.rt-experience-panel {
+  .rt-panel-body {
+    padding: $rt-space-sm;
+  }
+}
+
+.rt-xp-display {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+}
+
+.rt-xp-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-sm;
+}
+
+.rt-xp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-xp-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+}
+
+.rt-xp-input {
+  width: 100%;
+  padding: 6px 8px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Modesto Condensed', serif;
+  text-align: center;
+  transition: all 0.15s ease;
+
+  &:focus {
+    outline: none;
+    background: var(--color-bg-tertiary);
+    border-color: $rt-accent-gold;
+    box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
+  }
+  
+  &.rt-xp-spent {
+    color: var(--color-text-secondary);
+  }
+}
+
+.rt-xp-available-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $rt-space-sm;
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15) 0%, rgba($rt-color-gold, 0.05) 100%);
+  border: 2px solid rgba($rt-color-gold, 0.3);
+  border-radius: 6px;
+}
+
+.rt-xp-available-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+}
+
+.rt-xp-available-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: $rt-color-gold;
+  text-shadow: 0 0 8px rgba($rt-color-gold, 0.3);
+}
+
+.rt-xp-bar {
+  height: 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+
+  .rt-xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 6px rgba($rt-color-gold, 0.3);
+  }
+}
+
+// ============================================
+// Fate Panel (Compact)
+// ============================================
+
+.rt-fate-display-compact {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  align-items: center;
+  padding: $rt-space-xs 0;
+}
+
+.rt-fate-pips-compact {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.rt-fate-actions-compact {
+  width: 100%;
+}
+
+// ============================================
+// Overview Tab Layout Fix
+// ============================================
+
+.rt-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  height: 100%;
+  overflow-y: auto; // Only the grid scrolls
+  overflow-x: hidden;
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+    border-radius: 3px;
+    
+    &:hover {
+      background: var(--color-border-primary);
+    }
+  }
+}
+
+.rt-overview-col {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  // No overflow - columns don't scroll individually
+}
