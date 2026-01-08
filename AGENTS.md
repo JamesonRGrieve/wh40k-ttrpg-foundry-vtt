@@ -15,7 +15,7 @@ This document provides context for AI agents working on this Foundry VTT V13 gam
 - **Documents** (src/module/documents/) - Roll methods, API surface only
 - **ApplicationV2 Sheets** (src/module/applications/) - UI, events, 8-mixin stack
 - **PARTS System** - Modular template rendering (10 parts for AcolyteSheet)
-- **Panel Partials** (templates/actor/panel/) - 58 reusable panel components
+- **Panel Partials** (templates/actor/panel/) - 38 reusable panel components
 
 ### Sheet Architecture
 
@@ -635,7 +635,7 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
 
 ## Template Organization
 
-All templates live in `src/templates/` (109 template files after Phase 1 cleanup).
+All templates live in `src/templates/` (120 template files after V2 migration complete).
 
 ### Directory Structure
 
@@ -654,7 +654,7 @@ templates/
 │   │   ├── tab-dynasty.hbs   # Dynasty tab content
 │   │   └── tab-biography.hbs # Biography tab content
 │   │
-│   ├── panel/                # Reusable panel partials (44 files)
+│   ├── panel/                # Reusable panel partials (38 files)
 │   │   ├── wounds-panel-v2.hbs        # Modern wounds panel
 │   │   ├── fatigue-panel-v2.hbs       # Modern fatigue panel
 │   │   ├── fate-panel-v2.hbs          # Modern fate panel
@@ -669,7 +669,7 @@ templates/
 │   │   └── ... 33 more panels
 │   │
 │   ├── partial/              # Misc partials
-│   └── actor-*.hbs           # 3 legacy monolithic sheets (NPC, Starship, Vehicle)
+│   └── (no legacy monolithic sheets - all migrated to V2 PARTS directories)
 │
 ├── item/                     # Item sheet templates
 ├── chat/                     # Chat message templates

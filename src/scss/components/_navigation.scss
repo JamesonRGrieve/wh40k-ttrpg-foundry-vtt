@@ -68,16 +68,3 @@
         }
     }
 }
-
-// Legacy aliases for backwards compatibility
-.dh-body {
-    @extend .rt-body;
-}
-
-.dh-navigation {
-    @extend .rt-navigation;
-}
-
-.dh-navigation__item {
-    @extend .rt-navigation__item;
-}

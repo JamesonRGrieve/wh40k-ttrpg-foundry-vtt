@@ -3,8 +3,7 @@
 // ============================================
 // Uses theme-aware CSS custom properties
 
-.rt-sheet,
-.dh-actor {
+.rt-sheet {
   // Base input styling
   input[type="text"],
   input[type="number"],
@@ -35,9 +34,7 @@
   }
 
   // Specific overrides for common classes
-  .dh-field__input,
   .rt-field__input,
-  .dh-header__input,
   .rt-header__input {
     background: var(--rt-input-bg);
     border: 1px solid var(--rt-border-color-light);
@@ -50,8 +47,7 @@
   }
 
   // Settings inputs
-  .rt-settings__input,
-  .dh-settings__input {
+  .rt-settings__input {
     background: var(--rt-input-bg);
     border: 1px solid var(--rt-border-color-light);
 
@@ -103,8 +99,7 @@
 }
 
 // Abilities tab inputs
-.rt-ability-input,
-.dh-ability-input {
+.rt-ability-input {
   background: var(--rt-input-bg);
   border: 1px solid var(--rt-border-color-light);
 
@@ -115,7 +110,6 @@
 }
 
 // Grid inputs
-.dh-grid input,
 .rt-grid input {
   background: var(--rt-input-bg);
   border: 1px solid var(--rt-border-color-light);

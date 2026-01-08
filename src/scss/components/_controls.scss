@@ -19,11 +19,6 @@
     -webkit-font-smoothing: antialiased;
 }
 
-// Legacy alias for backwards compatibility
-.dh-material {
-    @extend .rt-material;
-}
-
 // Control button styles
 .rt-control-button {
     cursor: pointer;
