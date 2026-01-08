@@ -286,25 +286,32 @@ export default function EnhancedAnimationsMixin(Base) {
         animateCharacteristicBonus(charKey, oldBonus, newBonus) {
             if (this._shouldSkipAnimation()) return;
 
-            // Find bonus display
-            const bonusElement = this.element.querySelector(
-                `[data-characteristic="${charKey}"] .bonus-val`
+            // Find bonus display - try V1 HUD first, then fallback
+            let bonusElement = this.element.querySelector(
+                `[data-characteristic="${charKey}"] .rt-char-hud-mod`
             );
+            
+            // Fallback to generic bonus-val class
+            if (!bonusElement) {
+                bonusElement = this.element.querySelector(
+                    `[data-characteristic="${charKey}"] .bonus-val`
+                );
+            }
 
             if (!bonusElement) return;
 
             // Animate counter
             this.animateCounter(bonusElement, oldBonus, newBonus);
 
-            // Pulse effect on the badge container
-            const badgeContainer = bonusElement.closest('.char-badge');
-            if (badgeContainer) {
-                badgeContainer.classList.remove("advanced");
-                void badgeContainer.offsetWidth; // Force reflow
-                badgeContainer.classList.add("advanced");
+            // Pulse effect on the circle container (V1 HUD)
+            const circleContainer = bonusElement.closest('.rt-char-hud-circle');
+            if (circleContainer) {
+                circleContainer.classList.remove("value-changed");
+                void circleContainer.offsetWidth; // Force reflow
+                circleContainer.classList.add("value-changed");
 
                 setTimeout(() => {
-                    badgeContainer.classList.remove("advanced");
+                    circleContainer.classList.remove("value-changed");
                 }, 500);
             }
 

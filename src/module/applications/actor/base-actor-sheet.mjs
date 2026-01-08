@@ -181,7 +181,7 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             char.hudMod = char.bonus ?? Math.floor((char.total ?? 0) / 10);
             char.hudTotal = char.total;
 
-            // V3 HUD State flags for visual styling
+            // HUD State flags for visual styling (used by V1 HUD)
             char.hasBonus = (char.modifier || 0) > 0;
             char.hasPenalty = (char.modifier || 0) < 0;
             char.isMaxed = (char.advance || 0) >= 5;
@@ -1150,22 +1150,22 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             this.animateCharacteristicBonus(charKey, oldBonus, newBonus);
         }
 
-        // Animate badge for V3 HUD
-        const badgeElement = this.element.querySelector(
-            `[data-characteristic="${charKey}"] .char-badge`
+        // Animate circle for V1 HUD (bonus display)
+        const circleElement = this.element.querySelector(
+            `[data-characteristic="${charKey}"] .rt-char-hud-circle`
         );
-        if (badgeElement) {
-            badgeElement.classList.add('advanced');
-            setTimeout(() => badgeElement.classList.remove('advanced'), 500);
+        if (circleElement) {
+            circleElement.classList.add('value-changed');
+            setTimeout(() => circleElement.classList.remove('value-changed'), 500);
         }
 
-        // Add rolling animation to button for V3 HUD
-        const charBtn = this.element.querySelector(
-            `[data-characteristic="${charKey}"] .char-btn`
+        // Add value-changed animation to mod display for V1 HUD
+        const modElement = this.element.querySelector(
+            `[data-characteristic="${charKey}"] .rt-char-hud-mod`
         );
-        if (charBtn) {
-            charBtn.classList.add('rolling');
-            setTimeout(() => charBtn.classList.remove('rolling'), 400);
+        if (modElement) {
+            modElement.classList.add('value-changed');
+            setTimeout(() => modElement.classList.remove('value-changed'), 500);
         }
 
         // Update the border progress indicator
