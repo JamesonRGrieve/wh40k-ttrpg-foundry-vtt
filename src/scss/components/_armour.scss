@@ -177,7 +177,7 @@
 
 .rt-box-body {
   grid-area: body;
-  min-height: 100px;
+  min-height: 120px;
   
   .rt-box-ap {
     width: 46px;
@@ -201,15 +201,15 @@
 .rt-box-right-leg {
   grid-area: rleg;
   justify-self: center;
-  margin-right: 8px;
-  min-height: 95px;
+  margin-left: 8px;
+  min-height: 100px;
 }
 
 .rt-box-left-leg {
   grid-area: lleg;
   justify-self: center;
-  margin-left: 8px;
-  min-height: 95px;
+  margin-right: 8px;
+  min-height: 100px;
 }
 
 // ============================================
