@@ -1,0 +1,11 @@
+{{!-- NPC Notes Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <div class="rt-panel spacer rt-grid-col-6 rt-grid-row-2">
+        <h1 class="rt-panel-header">{{localize "RT.NPC.Description"}}</h1>
+        <textarea class="rt-header__textarea rt-npc-notes" name="system.description" rows="8">{{system.description}}</textarea>
+    </div>
+    <div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
+        <h1 class="rt-panel-header">{{localize "RT.NPC.Tactics"}}</h1>
+        <textarea class="rt-header__textarea" name="system.tactics" rows="4">{{system.tactics}}</textarea>
+    </div>
+</section>

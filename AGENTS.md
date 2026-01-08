@@ -28,7 +28,7 @@ BaseActorSheet = 8 mixins + ActorSheetV2
   ├── EnhancedAnimationsMixin  (Counter/bar animations)
   ├── CollapsiblePanelMixin    (Panel state + presets)
   ├── ContextMenuMixin         (Right-click menus)
-  ├── EnhancedDragDropMixin    (Visual drag feedback)
+  ├── DragDropVisualMixin      (Visual drag feedback)
   └── WhatIfMixin              (Preview stat changes)
 ```
 
@@ -117,7 +117,7 @@ All sheets use **Foundry V13 ApplicationV2** framework with **8 mixins** stacked
 ```javascript
 // BaseActorSheet = 8-layer mixin stack
 WhatIfMixin(
-  EnhancedDragDropMixin(
+  DragDropVisualMixin(
     ContextMenuMixin(
       CollapsiblePanelMixin(
         EnhancedAnimationsMixin(
@@ -141,13 +141,13 @@ WhatIfMixin(
 |-------|------|---------|
 | **ApplicationV2Mixin** | `application-v2-mixin.mjs` | Core V2 setup, collapse tracking, base classes |
 | **PrimarySheetMixin** | `primary-sheet-mixin.mjs` | Sheet modes (PLAY/EDIT), tab handling, document actions |
-| **DragDropMixin** | Included in PrimarySheet | Standard drag/drop handlers |
+| **DragDropAPIMixin** | Included in PrimarySheet | Core drag/drop API handlers |
 | **TooltipMixin** | `tooltip-mixin.mjs` | Rich tooltips with RTTooltip component |
 | **VisualFeedbackMixin** | `visual-feedback-mixin.mjs` | Flash effects, pulse animations, state changes |
 | **EnhancedAnimationsMixin** | `enhanced-animations-mixin.mjs` | Counter animations, bar fills, bonus pulses |
 | **CollapsiblePanelMixin** | `collapsible-panel-mixin.mjs` | Panel state persistence, presets (combat/social/exploration) |
 | **ContextMenuMixin** | `context-menu-mixin.mjs` | Right-click context menus for items/skills |
-| **EnhancedDragDropMixin** | `enhanced-drag-drop-mixin.mjs` | Visual drag feedback, drop zones |
+| **DragDropVisualMixin** | `drag-drop-visual-mixin.mjs` | Visual drag feedback, drop zones |
 | **WhatIfMixin** | `what-if-mixin.mjs` | "What-if" mode for previewing stat changes |
 
 ## Key Files
@@ -191,7 +191,8 @@ All sheets use the modern **Foundry V13 ApplicationV2** framework with **PARTS s
 | `enhanced-animations-mixin.mjs` | ~340 | Counter animations, bar fills, mutation observers |
 | `collapsible-panel-mixin.mjs` | ~200 | Panel collapse state + presets (combat/social/exploration) |
 | `context-menu-mixin.mjs` | ~140 | Right-click context menus |
-| `enhanced-drag-drop-mixin.mjs` | ~180 | Visual drag feedback, drop zones |
+| `drag-drop-api-mixin.mjs` | ~150 | Core drag/drop API handlers |
+| `drag-drop-visual-mixin.mjs` | ~180 | Visual drag feedback, drop zones, animations |
 | `what-if-mixin.mjs` | ~160 | Preview stat changes before committing |
 
 #### Actor Sheets (applications/actor/)
@@ -499,7 +500,8 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
    - EnhancedAnimationsMixin → Counter animations, bar fills
    - CollapsiblePanelMixin → Panel state persistence + presets
    - ContextMenuMixin → Right-click context menus
-   - EnhancedDragDropMixin → Visual drag feedback
+   - DragDropAPIMixin → Core drag/drop API (Jan 2026 renamed)
+   - DragDropVisualMixin → Visual drag feedback (Jan 2026 renamed)
    - WhatIfMixin → "What-if" mode for previewing changes
 
 ### UI Enhancements
@@ -588,6 +590,20 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
     - `_throttle()` - Prevent rapid-fire clicks
     - `_notify()` - Toast/notification fallback
 
+17. **Mixin Naming Clarification** (Jan 2026)
+    - Renamed `drag-drop-mixin.mjs` → `drag-drop-api-mixin.mjs` (core API layer)
+    - Renamed `enhanced-drag-drop-mixin.mjs` → `drag-drop-visual-mixin.mjs` (visual layer)
+    - Updated all 3 import locations
+    - Clearer separation of concerns between API and visual layers
+
+### Code Quality
+
+18. **TODO/FIXME Cleanup** (Jan 2026)
+    - Reviewed all 4 TODO comments in codebase
+    - Removed 2 outdated TODOs (item-container.mjs, basic-action-manager.mjs)
+    - Kept 2 valid future features (combat-quick-panel.mjs)
+    - Remaining TODOs: weapon selection dialog, consumable use logic
+
 ## Testing Changes
 
 1. Run `npm run build` - must pass without errors
@@ -619,7 +635,7 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
 
 ## Template Organization
 
-All templates live in `src/templates/` (77+ template files).
+All templates live in `src/templates/` (109 template files after Phase 1 cleanup).
 
 ### Directory Structure
 
@@ -638,7 +654,7 @@ templates/
 │   │   ├── tab-dynasty.hbs   # Dynasty tab content
 │   │   └── tab-biography.hbs # Biography tab content
 │   │
-│   ├── panel/                # Reusable panel partials (58 files)
+│   ├── panel/                # Reusable panel partials (44 files)
 │   │   ├── wounds-panel-v2.hbs        # Modern wounds panel
 │   │   ├── fatigue-panel-v2.hbs       # Modern fatigue panel
 │   │   ├── fate-panel-v2.hbs          # Modern fate panel
@@ -650,12 +666,10 @@ templates/
 │   │   ├── armour-display-panel.hbs   # Armour by hit location
 │   │   ├── loadout-equipment-panel.hbs # Equipment cards
 │   │   ├── combat-station-panel.hbs   # Combat overlay
-│   │   └── ... 47 more panels
+│   │   └── ... 33 more panels
 │   │
-│   ├── parts/                # Legacy parts (empty - moved to panel/)
 │   ├── partial/              # Misc partials
-│   ├── tabs/                 # Legacy tab templates
-│   └── actor-*.hbs           # 4 main actor sheet templates
+│   └── actor-*.hbs           # 3 legacy monolithic sheets (NPC, Starship, Vehicle)
 │
 ├── item/                     # Item sheet templates
 ├── chat/                     # Chat message templates

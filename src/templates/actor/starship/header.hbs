@@ -1,0 +1,48 @@
+{{!-- Starship Sheet Header --}}
+<div class="rt-header rt-grid-col-6 rt-panel rt-ship-header">
+    <div class="rt-header__info">
+        <div class="rt-header__logo rt-ship-portrait-container">
+            <img class="rt-header__logo-image rt-ship-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+        </div>
+        <div class="rt-ship-info">
+            <div class="rt-header-row rt-name-row">
+                <span class="rt-header-label">{{localize "RT.Starship.Name"}}</span>
+                <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
+            </div>
+            <div class="rt-header-row">
+                <span class="rt-header-label">{{localize "RT.Starship.HullType"}}</span>
+                <input class="rt-header-input" name="system.hullType" type="text" value="{{system.hullType}}" />
+            </div>
+            <div class="rt-header-row">
+                <span class="rt-header-label">{{localize "RT.Starship.HullClass"}}</span>
+                <input class="rt-header-input" name="system.hullClass" type="text" value="{{system.hullClass}}" />
+            </div>
+        </div>
+        <div class="rt-ship-quick-stats">
+            <div class="rt-stat-box rt-hull-box">
+                <span class="rt-stat-label">Hull Integrity</span>
+                <div class="rt-stat-values">
+                    <input type="number" class="rt-stat-input" name="system.hullIntegrity.value" value="{{system.hullIntegrity.value}}" title="Current" />
+                    <span class="rt-stat-separator">/</span>
+                    <input type="number" class="rt-stat-input" name="system.hullIntegrity.max" value="{{system.hullIntegrity.max}}" title="Max" />
+                </div>
+            </div>
+            <div class="rt-stat-box rt-morale-box">
+                <span class="rt-stat-label">Morale</span>
+                <div class="rt-stat-values">
+                    <input type="number" class="rt-stat-input" name="system.crew.morale.value" value="{{system.crew.morale.value}}" title="Current" />
+                    <span class="rt-stat-separator">/</span>
+                    <input type="number" class="rt-stat-input" name="system.crew.morale.max" value="{{system.crew.morale.max}}" title="Max" />
+                </div>
+            </div>
+            <div class="rt-stat-box rt-pop-box">
+                <span class="rt-stat-label">Population</span>
+                <input type="number" class="rt-stat-input rt-stat-single" name="system.crew.population" value="{{system.crew.population}}" />
+            </div>
+            <div class="rt-stat-box rt-crew-box">
+                <span class="rt-stat-label">Crew Rating</span>
+                <input type="number" class="rt-stat-input rt-stat-single" name="system.crew.crewRating" value="{{system.crew.crewRating}}" />
+            </div>
+        </div>
+    </div>
+</div>

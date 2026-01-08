@@ -1,0 +1,38 @@
+{{!-- Vehicle Sheet Header --}}
+<div class="rt-header rt-grid-col-6 rt-panel rt-vehicle-header">
+    <div class="rt-header__info">
+        <div class="rt-header__logo rt-portrait-container">
+            <img class="rt-header__logo-image rt-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+        </div>
+        <div class="rt-header-info">
+            <div class="rt-header-row rt-name-row">
+                <span class="rt-header-label">{{localize "RT.Vehicle.Name"}}</span>
+                <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
+            </div>
+            <div class="rt-header-row">
+                <span class="rt-header-label">{{localize "RT.Vehicle.Type"}}</span>
+                <select class="rt-header-input" name="system.type">
+                    {{selectOptions (arrayToObject dh.items.vehicle_types) selected=actor.system.type}}
+                </select>
+            </div>
+            <div class="rt-header-row">
+                <span class="rt-header-label">{{localize "RT.Vehicle.Crew"}}</span>
+                <input class="rt-header-input" name="system.crew" type="text" value="{{actor.system.crew}}" />
+            </div>
+        </div>
+        <div class="rt-quick-stats">
+            <div class="rt-stat-box rt-integrity-box">
+                <span class="rt-stat-label">Integrity</span>
+                <div class="rt-stat-values">
+                    <input type="number" class="rt-stat-input" name="system.integrity.value" value="{{system.integrity.value}}" title="Current" />
+                    <span class="rt-stat-separator">/</span>
+                    <input type="number" class="rt-stat-input" name="system.integrity.max" value="{{system.integrity.max}}" title="Max" />
+                </div>
+            </div>
+            <div class="rt-stat-box rt-capacity-box">
+                <span class="rt-stat-label">Capacity</span>
+                <input type="number" class="rt-stat-input rt-stat-single" name="system.carryingCapacity" value="{{system.carryingCapacity}}" />
+            </div>
+        </div>
+    </div>
+</div>

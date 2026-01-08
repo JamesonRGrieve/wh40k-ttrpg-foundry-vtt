@@ -8,7 +8,7 @@ import { DHBasicActionManager } from "../../actions/basic-action-manager.mjs";
 import { DHTargetedActionManager } from "../../actions/targeted-action-manager.mjs";
 import { Hit } from "../../rolls/damage-data.mjs";
 import { AssignDamageData } from "../../rolls/assign-damage-data.mjs";
-import { prepareAssignDamageRoll } from "../../prompts/assign-damage-prompt.mjs";
+import { prepareAssignDamageRoll } from "../prompts/assign-damage-dialog.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 import LoadoutPresetDialog from "../dialogs/loadout-preset-dialog.mjs";
 

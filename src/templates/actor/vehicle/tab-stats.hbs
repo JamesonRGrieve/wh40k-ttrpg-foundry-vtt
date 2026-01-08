@@ -1,0 +1,6 @@
+{{!-- Vehicle Stats Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{> systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/vehicle-movement-panel.hbs}}
+</section>

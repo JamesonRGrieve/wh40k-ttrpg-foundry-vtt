@@ -52,7 +52,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/dialog/acquisition-dialog.hbs"
+            template: "systems/rogue-trader/templates/dialogs/acquisition-dialog.hbs"
         }
     };
 

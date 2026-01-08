@@ -1,0 +1,116 @@
+{{!-- Starship Stats Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
+        <h1 class="rt-panel-header">{{localize "RT.Starship.Combat.Header"}}</h1>
+        <div class="rt-ship-initiative-box">
+            <button type="button" class="rt-initiative-btn" data-action="rollInitiative" title="{{localize 'RT.Starship.Combat.RollInitiative'}}">
+                <span class="material-icons">radar</span>
+                <span class="rt-init-label">{{localize "RT.Starship.Combat.Initiative"}}</span>
+            </button>
+            <span class="rt-detection-bonus" title="{{localize 'RT.Starship.Combat.DetectionBonus'}}">+{{system.detectionBonus}}</span>
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Combat.Speed"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.speed" value="{{system.speed}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Combat.Manoeuvrability"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.manoeuvrability" value="{{system.manoeuvrability}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Combat.Detection"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.detection" value="{{system.detection}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Combat.Armour"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.armour" value="{{system.armour}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Combat.VoidShields"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.voidShields" value="{{system.voidShields}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Combat.TurretRating"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.turretRating" value="{{system.turretRating}}" />
+        </div>
+    </div>
+
+    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
+        <h1 class="rt-panel-header">{{localize "RT.Starship.Resources.Header"}}</h1>
+        
+        {{!-- Power Status Indicator --}}
+        <div class="rt-resource-status {{#if system.hasPowerShortage}}rt-shortage{{/if}}">
+            <span class="rt-resource-icon material-icons">bolt</span>
+            <span class="rt-resource-label">{{localize "RT.Starship.Resources.Power"}}</span>
+            <span class="rt-resource-value {{#if system.hasPowerShortage}}rt-negative{{else}}rt-positive{{/if}}">
+                {{system.power.available}}
+            </span>
+            <span class="rt-resource-detail">( {{system.power.used}} / {{system.power.total}} )</span>
+        </div>
+        
+        {{!-- Space Status Indicator --}}
+        <div class="rt-resource-status {{#if system.hasSpaceShortage}}rt-shortage{{/if}}">
+            <span class="rt-resource-icon material-icons">warehouse</span>
+            <span class="rt-resource-label">{{localize "RT.Starship.Resources.Space"}}</span>
+            <span class="rt-resource-value {{#if system.hasSpaceShortage}}rt-negative{{else}}rt-positive{{/if}}">
+                {{system.space.available}}
+            </span>
+            <span class="rt-resource-detail">( {{system.space.used}} / {{system.space.total}} )</span>
+        </div>
+        
+        <div class="rt-resources-divider"></div>
+        
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Resources.SpaceTotal"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.space.total" value="{{system.space.total}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Resources.SpaceUsed"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.space.used" value="{{system.space.used}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Resources.PowerTotal"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.power.total" value="{{system.power.total}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Resources.PowerUsed"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.power.used" value="{{system.power.used}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.Resources.ShipPoints"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.shipPoints" value="{{system.shipPoints}}" />
+        </div>
+    </div>
+
+    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
+        <h1 class="rt-panel-header">{{localize "RT.Starship.WeaponCapacity.Header"}}</h1>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.WeaponCapacity.Prow"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.prow" value="{{system.weaponCapacity.prow}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.WeaponCapacity.Dorsal"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.dorsal" value="{{system.weaponCapacity.dorsal}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.WeaponCapacity.Port"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.port" value="{{system.weaponCapacity.port}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.WeaponCapacity.Starboard"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.starboard" value="{{system.weaponCapacity.starboard}}" />
+        </div>
+        <div class="rt-field__wrapper">
+            <span class="rt-field__header">{{localize "RT.Starship.WeaponCapacity.Keel"}}</span>
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.keel" value="{{system.weaponCapacity.keel}}" />
+        </div>
+    </div>
+
+    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
+        <h1 class="rt-panel-header">{{localize "RT.Starship.Physical.Header"}}</h1>
+        <div class="rt-field__wrapper rt-grid-col-3">
+            <span class="rt-field__header">{{localize "RT.Starship.Physical.Dimensions"}}</span>
+            <input type="text" class="rt-field__input" name="system.dimensions" value="{{system.dimensions}}" />
+        </div>
+    </div>
+</section>
