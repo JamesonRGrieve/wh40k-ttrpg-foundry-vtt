@@ -1,16 +1,15 @@
 /**
  * Context Menu Styles
- * Right-click context menus with Gothic 40K theming
- * Uses Foundry color system for theme adaptation
+ * Styles for Foundry V13 native ContextMenu with Rogue Trader theming
+ * The .rt-context-menu class is added by RTContextMenu._setPosition()
  */
 
 /* -------------------------------------------- */
-/*  Context Menu Container                      */
+/*  Native ContextMenu with RT Theme            */
 /* -------------------------------------------- */
 
-.rt-context-menu {
-    position: fixed;
-    z-index: 10000;
+#context-menu.rt-context-menu {
+    // Override Foundry defaults with RT theming
     min-width: 200px;
     max-width: 300px;
     background: var(--color-bg-primary);
@@ -21,398 +20,139 @@
         0 0 20px rgba(212, 175, 55, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     padding: 4px;
-    opacity: 0;
-    transform: scale(0.95) translateY(-4px);
-    transition: opacity 0.15s ease, transform 0.15s ease;
-    pointer-events: none;
     
-    &.visible {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-        pointer-events: auto;
-    }
-}
-
-/* Gothic frame decoration */
-.rt-context-menu::before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, 
-        var(--rt-bronze, #cd7f32) 0%, 
-        var(--rt-gold, #d4af37) 50%, 
-        var(--rt-bronze, #cd7f32) 100%
-    );
-    border-radius: 4px;
-    z-index: -1;
-    opacity: 0.5;
-}
-
-/* -------------------------------------------- */
-/*  Menu Items                                  */
-/* -------------------------------------------- */
-
-.rt-context-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    background: transparent;
-    color: var(--color-text-primary);
-    font-family: var(--rt-font-body, "Garamond", serif);
-    font-size: 0.95em;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    position: relative;
-    
-    i {
-        width: 16px;
-        text-align: center;
-        color: var(--rt-gold, #d4af37);
-        font-size: 0.9em;
-    }
-    
-    span {
-        flex: 1;
-    }
-    
-    &:hover:not(.disabled) {
-        background: linear-gradient(90deg, 
-            var(--color-warm-3) 0%, 
-            var(--color-warm-2) 100%
-        );
-        border-color: var(--rt-gold, #d4af37);
-        transform: translateX(2px);
-        box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-    }
-    
-    &:active:not(.disabled) {
-        background: linear-gradient(90deg, 
-            var(--color-warm-4) 0%, 
-            var(--color-warm-3) 100%
-        );
-        transform: translateX(0);
-    }
-    
-    &.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        color: var(--color-text-tertiary);
+    // Menu items - Foundry uses .context-item class
+    .context-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        background: transparent;
+        color: var(--color-text-primary);
+        font-family: var(--rt-font-body, "Garamond", serif);
+        font-size: 0.95em;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        position: relative;
         
         i {
-            color: rgba(212, 175, 55, 0.5);
+            width: 16px;
+            text-align: center;
+            color: var(--rt-gold, #d4af37);
+            font-size: 0.9em;
+        }
+        
+        &:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.3);
+            color: var(--rt-gold, #d4af37);
+            
+            i {
+                color: var(--rt-gold, #d4af37);
+                text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+            }
+        }
+        
+        &:active {
+            transform: scale(0.98);
+        }
+        
+        &:disabled,
+        &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
         }
     }
-}
-
-/* -------------------------------------------- */
-/*  Menu Item Variants                          */
-/* -------------------------------------------- */
-
-/* Danger action (delete, burn fate, etc.) */
-.rt-context-menu-item.danger {
-    color: #ff9999;
     
-    i {
-        color: #dc143c;
-    }
-    
-    &:hover:not(.disabled) {
-        background: linear-gradient(90deg, 
-            rgba(139, 0, 0, 0.3) 0%, 
-            rgba(220, 20, 60, 0.2) 100%
-        );
-        border-color: #dc143c;
+    // Danger items (like burn fate)
+    .context-item[data-group="danger"] {
+        color: var(--rt-purity-seal-red, #8b0000);
+        
+        i {
+            color: var(--rt-purity-seal-red, #8b0000);
+        }
+        
+        &:hover {
+            background: rgba(139, 0, 0, 0.2);
+            border-color: rgba(139, 0, 0, 0.4);
+            color: #b22222;
+            
+            i {
+                color: #b22222;
+            }
+        }
     }
     
-    &:active:not(.disabled) {
-        background: linear-gradient(90deg, 
-            rgba(139, 0, 0, 0.5) 0%, 
-            rgba(220, 20, 60, 0.4) 100%
-        );
-    }
-}
-
-/* Success action (equip, activate, etc.) */
-.rt-context-menu-item.success {
-    i {
-        color: #4caf50;
-    }
-    
-    &:hover:not(.disabled) {
-        background: linear-gradient(90deg, 
-            rgba(76, 175, 80, 0.2) 0%, 
-            rgba(76, 175, 80, 0.1) 100%
-        );
-        border-color: #4caf50;
-    }
-}
-
-/* Info action (view, show, etc.) */
-.rt-context-menu-item.info {
-    i {
-        color: #2196f3;
-    }
-    
-    &:hover:not(.disabled) {
-        background: linear-gradient(90deg, 
-            rgba(33, 150, 243, 0.2) 0%, 
-            rgba(33, 150, 243, 0.1) 100%
-        );
-        border-color: #2196f3;
+    // Separator - Foundry uses .context-group class for groups
+    hr,
+    .context-separator {
+        margin: 4px 8px;
+        border: none;
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
     }
 }
 
 /* -------------------------------------------- */
-/*  Separator                                   */
+/*  Focus States (Accessibility)                */
 /* -------------------------------------------- */
 
-.rt-context-menu-separator {
-    height: 1px;
-    margin: 4px 8px;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        var(--rt-bronze, #cd7f32) 50%, 
-        transparent 100%
-    );
-    opacity: 0.5;
-}
-
-/* -------------------------------------------- */
-/*  Submenu Support (Future)                    */
-/* -------------------------------------------- */
-
-.rt-context-menu-item.has-submenu {
-    padding-right: 24px;
-    
-    &::after {
-        content: "\f054"; // fa-chevron-right
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        position: absolute;
-        right: 8px;
-        font-size: 0.7em;
-        color: var(--rt-gold, #d4af37);
-    }
-}
-
-/* -------------------------------------------- */
-/*  Keyboard Navigation                         */
-/* -------------------------------------------- */
-
-.rt-context-menu-item:focus {
+#context-menu.rt-context-menu .context-item:focus {
     outline: 2px solid var(--rt-gold, #d4af37);
     outline-offset: -2px;
-    background: linear-gradient(90deg, 
-        rgba(205, 127, 50, 0.3) 0%, 
-        rgba(212, 175, 55, 0.2) 100%
-    );
+    background: rgba(212, 175, 55, 0.1);
 }
 
 /* -------------------------------------------- */
-/*  Animations                                  */
+/*  Theme Variations                            */
 /* -------------------------------------------- */
 
-/* Ripple effect on click */
-.rt-context-menu-item::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(212, 175, 55, 0.5);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.rt-context-menu-item:active::before {
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-    transition: none;
-}
-
-/* -------------------------------------------- */
-/*  Touch Support                               */
-/* -------------------------------------------- */
-
-@media (hover: none) and (pointer: coarse) {
-    .rt-context-menu-item {
-        padding: 12px 16px;
-        font-size: 1.05em;
-        
-        i {
-            font-size: 1.1em;
-        }
-    }
-    
-    .rt-context-menu {
-        min-width: 240px;
-    }
-}
-
-/* -------------------------------------------- */
-/*  High Contrast Mode                          */
-/* -------------------------------------------- */
-
-@media (prefers-contrast: high) {
-    .rt-context-menu {
-        border-width: 3px;
-        background: rgba(0, 0, 0, 1);
-    }
-    
-    .rt-context-menu-item {
-        border-width: 2px;
-    }
-}
-
-/* -------------------------------------------- */
-/*  Reduced Motion                              */
-/* -------------------------------------------- */
-
-@media (prefers-reduced-motion: reduce) {
-    .rt-context-menu {
-        transition: none;
-        transform: none !important;
-    }
-    
-    .rt-context-menu-item {
-        transition: none;
-        transform: none !important;
-    }
-    
-    .rt-context-menu-item::before {
-        display: none;
-    }
-}
-
-/* -------------------------------------------- */
-/*  Dark Theme Override                         */
-/* -------------------------------------------- */
-
-[data-theme="dark"] {
-    .rt-context-menu {
-        background: linear-gradient(135deg, 
-            rgba(5, 5, 5, 0.98) 0%, 
-            rgba(15, 15, 15, 0.98) 100%
-        );
-        border-color: var(--rt-gold, #d4af37);
-    }
-}
-
-/* -------------------------------------------- */
-/*  Light Theme Override                        */
-/* -------------------------------------------- */
-
+// Light theme adjustments
 [data-theme="light"] {
-    .rt-context-menu {
-        background: linear-gradient(135deg, 
-            rgba(244, 234, 213, 0.98) 0%, 
-            rgba(232, 220, 200, 0.98) 100%
-        );
-        border-color: var(--rt-bronze, #cd7f32);
-    }
-    
-    .rt-context-menu-item {
-        color: #2c2c2c;
+    #context-menu.rt-context-menu {
+        background: var(--color-bg-primary);
+        box-shadow: 
+            0 8px 24px rgba(0, 0, 0, 0.2),
+            0 0 10px rgba(212, 175, 55, 0.2);
         
-        &:hover:not(.disabled) {
-            background: linear-gradient(90deg, 
-                rgba(205, 127, 50, 0.2) 0%, 
-                rgba(212, 175, 55, 0.1) 100%
-            );
+        .context-item {
+            &:hover {
+                background: rgba(212, 175, 55, 0.2);
+            }
         }
     }
 }
 
-/* -------------------------------------------- */
-/*  Gothic Decorations                          */
-/* -------------------------------------------- */
-
-/* Aquila watermark (subtle) */
-.rt-context-menu::after {
-    content: "⚜";
-    position: absolute;
-    bottom: 4px;
-    right: 8px;
-    font-size: 2em;
-    color: var(--rt-gold, #d4af37);
-    opacity: 0.05;
-    pointer-events: none;
-    z-index: -1;
-}
-
-/* Rivets on corners */
-.rt-context-menu-rivet {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: radial-gradient(circle, 
-        var(--rt-iron, #3e3e3e) 0%, 
-        var(--rt-black, #0a0a0a) 100%
-    );
-    box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.5),
-        0 1px 0 rgba(255, 255, 255, 0.2);
-    
-    &.top-left {
-        top: 4px;
-        left: 4px;
-    }
-    
-    &.top-right {
-        top: 4px;
-        right: 4px;
-    }
-    
-    &.bottom-left {
-        bottom: 4px;
-        left: 4px;
-    }
-    
-    &.bottom-right {
-        bottom: 4px;
-        right: 4px;
+// High contrast mode
+@media (prefers-contrast: high) {
+    #context-menu.rt-context-menu {
+        border-width: 3px;
+        
+        .context-item {
+            border-width: 2px;
+            
+            &:focus {
+                outline-width: 3px;
+            }
+        }
     }
 }
 
-/* -------------------------------------------- */
-/*  Mobile Responsiveness                       */
-/* -------------------------------------------- */
-
-@media (max-width: 768px) {
-    .rt-context-menu {
-        min-width: 90vw;
-        max-width: 90vw;
-        left: 5vw !important;
-        top: 50% !important;
-        transform: translateY(-50%);
-    }
-    
-    .rt-context-menu-item {
-        padding: 14px 16px;
-        font-size: 1.1em;
-    }
-}
-
-/* -------------------------------------------- */
-/*  Print Styles                                */
-/* -------------------------------------------- */
-
-@media print {
-    .rt-context-menu {
-        display: none !important;
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+    #context-menu.rt-context-menu {
+        transition: none;
+        
+        .context-item {
+            transition: none;
+            
+            &:active {
+                transform: none;
+            }
+        }
     }
 }

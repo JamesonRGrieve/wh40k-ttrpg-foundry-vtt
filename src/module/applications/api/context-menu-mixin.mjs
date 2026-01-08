@@ -1,10 +1,39 @@
 /**
- * @file ContextMenuMixin - Right-click context menus for quick actions
+ * @file ContextMenuMixin - Right-click context menus using Foundry V13 native ContextMenu
  * Provides contextual action menus throughout the character sheet
  */
 
 /**
+ * Custom ContextMenu subclass for Rogue Trader styling.
+ * Uses Foundry V13's native ContextMenu with fixed positioning.
+ */
+export class RTContextMenu extends foundry.applications.ux.ContextMenu {
+    /** @override */
+    _setPosition(html, target, options = {}) {
+        html.classList.add("rt-context-menu");
+        return this._setFixedPosition(html, target, options);
+    }
+
+    /**
+     * Trigger a context menu event in response to a normal click.
+     * Useful for adding context menu buttons alongside right-click.
+     * @param {PointerEvent} event
+     */
+    static triggerEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const { clientX, clientY } = event;
+        const selector = "[data-item-id],[data-characteristic],[data-skill],[data-fate-point]";
+        const target = event.target.closest(selector) ?? event.currentTarget.closest(selector);
+        target?.dispatchEvent(new PointerEvent("contextmenu", {
+            view: window, bubbles: true, cancelable: true, clientX, clientY
+        }));
+    }
+}
+
+/**
  * Mixin to add context menu capabilities to ApplicationV2 sheets.
+ * Uses Foundry V13's native ContextMenu for better accessibility and keyboard navigation.
  * @template {ApplicationV2} T
  * @param {typeof T} Base   Application class being extended.
  * @returns {typeof ContextMenuApplication}
@@ -21,20 +50,10 @@ export default function ContextMenuMixin(Base) {
         _onRender(context, options) {
             super._onRender(context, options);
             
-            // Setup context menu listeners on first render
+            // Setup context menus on first render
             if (options.isFirstRender) {
-                this._setupContextMenus();
+                this._createContextMenus();
             }
-        }
-        
-        /* -------------------------------------------- */
-        
-        /** @override */
-        _onClose(options) {
-            super._onClose(options);
-            
-            // Clean up any open context menus
-            this._closeAllContextMenus();
         }
         
         /* -------------------------------------------- */
@@ -42,541 +61,286 @@ export default function ContextMenuMixin(Base) {
         /* -------------------------------------------- */
         
         /**
-         * Setup context menu listeners for various elements.
+         * Create all context menus for the sheet.
+         * Uses Foundry's native ContextMenu class for better accessibility.
          * @protected
          */
-        _setupContextMenus() {
+        _createContextMenus() {
             // Characteristics context menu
-            this._setupCharacteristicContextMenu();
+            new RTContextMenu(this.element, "[data-characteristic]", [], {
+                onOpen: target => this._getCharacteristicContextOptions(target),
+                jQuery: false
+            });
             
             // Skills context menu
-            this._setupSkillContextMenu();
+            new RTContextMenu(this.element, "[data-skill]", [], {
+                onOpen: target => this._getSkillContextOptions(target),
+                jQuery: false
+            });
             
             // Items context menu
-            this._setupItemContextMenu();
+            new RTContextMenu(this.element, "[data-item-id]", [], {
+                onOpen: target => this._getItemContextOptions(target),
+                jQuery: false
+            });
             
             // Fate points context menu
-            this._setupFatePointContextMenu();
-            
-            // Custom context menus (for subclasses to override)
-            this._setupCustomContextMenus();
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Setup context menu for characteristics.
-         * @protected
-         */
-        _setupCharacteristicContextMenu() {
-            const elements = this.element.querySelectorAll("[data-characteristic]");
-            
-            elements.forEach(element => {
-                element.addEventListener("contextmenu", (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    const charKey = element.dataset.characteristic;
-                    const char = this.actor.characteristics?.[charKey];
-                    if (!char) return;
-                    
-                    this._showCharacteristicContextMenu(event, charKey, char);
-                });
+            new RTContextMenu(this.element, "[data-fate-point]", [], {
+                onOpen: () => this._getFatePointContextOptions(),
+                jQuery: false
             });
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Setup context menu for skills.
-         * @protected
-         */
-        _setupSkillContextMenu() {
-            const elements = this.element.querySelectorAll("[data-skill]");
             
-            elements.forEach(element => {
-                element.addEventListener("contextmenu", (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    const skillKey = element.dataset.skill;
-                    const skill = this.actor.skills?.[skillKey];
-                    if (!skill) return;
-                    
-                    this._showSkillContextMenu(event, skillKey, skill);
-                });
-            });
+            // Allow subclasses to add custom menus
+            this._createCustomContextMenus();
+        }
+        
+        /**
+         * Create custom context menus (for subclasses to override).
+         * @protected
+         */
+        _createCustomContextMenus() {
+            // Override in subclasses
         }
         
         /* -------------------------------------------- */
+        /*  Context Menu Options                        */
+        /* -------------------------------------------- */
         
         /**
-         * Setup context menu for items.
+         * Get context menu options for a characteristic.
+         * @param {HTMLElement} target  Element that was right-clicked
+         * @returns {ContextMenuEntry[]}
          * @protected
          */
-        _setupItemContextMenu() {
-            const elements = this.element.querySelectorAll("[data-item-id]");
+        _getCharacteristicContextOptions(target) {
+            const charKey = target.dataset.characteristic;
+            const char = this.actor.characteristics?.[charKey];
+            if (!char) return [];
             
-            elements.forEach(element => {
-                element.addEventListener("contextmenu", (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    const itemId = element.dataset.itemId;
-                    const item = this.actor.items.get(itemId);
-                    if (!item) return;
-                    
-                    this._showItemContextMenu(event, item);
-                });
-            });
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Setup context menu for fate points.
-         * @protected
-         */
-        _setupFatePointContextMenu() {
-            const elements = this.element.querySelectorAll("[data-fate-point]");
-            
-            elements.forEach(element => {
-                element.addEventListener("contextmenu", (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    this._showFatePointContextMenu(event);
-                });
-            });
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Setup custom context menus (for subclasses to override).
-         * @protected
-         */
-        _setupCustomContextMenus() {
-            // Override in subclasses to add custom menus
-        }
-        
-        /* -------------------------------------------- */
-        /*  Context Menu Display                        */
-        /* -------------------------------------------- */
-        
-        /**
-         * Show characteristic context menu.
-         * @param {MouseEvent} event    Triggering event
-         * @param {string} charKey      Characteristic key
-         * @param {object} char         Characteristic data
-         * @protected
-         */
-        _showCharacteristicContextMenu(event, charKey, char) {
-            const menuItems = [
+            return [
                 {
-                    icon: "fa-dice-d20",
-                    label: `Roll ${char.label || charKey} Test`,
+                    name: `Roll ${char.label || charKey} Test`,
+                    icon: '<i class="fas fa-dice-d20"></i>',
                     callback: () => this._onCharacteristicRoll(charKey)
                 },
                 {
-                    icon: "fa-dice-d20",
-                    label: "Roll with Modifier...",
+                    name: "Roll with Modifier...",
+                    icon: '<i class="fas fa-dice-d20"></i>',
                     callback: () => this._onCharacteristicRollWithModifier(charKey)
                 },
-                { separator: true },
                 {
-                    icon: "fa-info-circle",
-                    label: "View Modifier Sources",
+                    name: "View Modifier Sources",
+                    icon: '<i class="fas fa-info-circle"></i>',
                     callback: () => this._showModifierSources(charKey)
                 },
                 {
-                    icon: "fa-star",
-                    label: "Spend XP to Advance",
+                    name: "Spend XP to Advance",
+                    icon: '<i class="fas fa-star"></i>',
                     callback: () => this._onAdvanceCharacteristic(charKey),
-                    disabled: char.advance >= 5
+                    condition: () => (char.advance ?? 0) < 5
                 },
-                { separator: true },
                 {
-                    icon: "fa-comment",
-                    label: "Post to Chat",
+                    name: "Post to Chat",
+                    icon: '<i class="fas fa-comment"></i>',
                     callback: () => this._postCharacteristicToChat(charKey, char)
                 }
             ];
-            
-            this._displayContextMenu(event, menuItems);
         }
         
         /* -------------------------------------------- */
         
         /**
-         * Show skill context menu.
-         * @param {MouseEvent} event    Triggering event
-         * @param {string} skillKey     Skill key
-         * @param {object} skill        Skill data
+         * Get context menu options for a skill.
+         * @param {HTMLElement} target  Element that was right-clicked
+         * @returns {ContextMenuEntry[]}
          * @protected
          */
-        _showSkillContextMenu(event, skillKey, skill) {
-            const menuItems = [
+        _getSkillContextOptions(target) {
+            const skillKey = target.dataset.skill;
+            const skill = this.actor.skills?.[skillKey];
+            if (!skill) return [];
+            
+            const options = [
                 {
-                    icon: "fa-dice-d20",
-                    label: `Roll ${skill.label || skillKey} Test`,
+                    name: `Roll ${skill.label || skillKey} Test`,
+                    icon: '<i class="fas fa-dice-d20"></i>',
                     callback: () => this._onSkillRoll(skillKey)
                 },
                 {
-                    icon: "fa-dice-d20",
-                    label: "Roll with Modifier...",
+                    name: "Roll with Modifier...",
+                    icon: '<i class="fas fa-dice-d20"></i>',
                     callback: () => this._onSkillRollWithModifier(skillKey)
                 },
-                { separator: true },
                 {
-                    icon: "fa-graduation-cap",
-                    label: skill.trained ? "Untrain" : "Train",
+                    name: skill.trained ? "Untrain" : "Train",
+                    icon: '<i class="fas fa-graduation-cap"></i>',
                     callback: () => this._toggleSkillTraining(skillKey, "trained")
                 },
                 {
-                    icon: "fa-plus-circle",
-                    label: skill.plus10 ? "Remove +10" : "Add +10",
+                    name: skill.plus10 ? "Remove +10" : "Add +10",
+                    icon: '<i class="fas fa-plus-circle"></i>',
                     callback: () => this._toggleSkillTraining(skillKey, "plus10"),
-                    disabled: !skill.trained
+                    condition: () => skill.trained
                 },
                 {
-                    icon: "fa-plus-circle",
-                    label: skill.plus20 ? "Remove +20" : "Add +20",
+                    name: skill.plus20 ? "Remove +20" : "Add +20",
+                    icon: '<i class="fas fa-plus-circle"></i>',
                     callback: () => this._toggleSkillTraining(skillKey, "plus20"),
-                    disabled: !skill.plus10
+                    condition: () => skill.plus10
                 },
-                { separator: true },
                 {
-                    icon: "fa-eye",
-                    label: "View Governing Characteristic",
+                    name: "View Governing Characteristic",
+                    icon: '<i class="fas fa-eye"></i>',
                     callback: () => this._showGoverningCharacteristic(skillKey, skill)
                 }
             ];
             
             // Add specialization option for specialist skills
             if (Array.isArray(skill.entries)) {
-                menuItems.push({ separator: true });
-                menuItems.push({
-                    icon: "fa-plus",
-                    label: "Add Specialization",
+                options.push({
+                    name: "Add Specialization",
+                    icon: '<i class="fas fa-plus"></i>',
                     callback: () => this._addSkillSpecialization(skillKey)
                 });
             }
             
-            this._displayContextMenu(event, menuItems);
+            return options;
         }
         
         /* -------------------------------------------- */
         
         /**
-         * Show item context menu.
-         * @param {MouseEvent} event    Triggering event
-         * @param {Item} item           Item document
+         * Get context menu options for an item.
+         * @param {HTMLElement} target  Element that was right-clicked
+         * @returns {ContextMenuEntry[]}
          * @protected
          */
-        _showItemContextMenu(event, item) {
-            const menuItems = [
-                {
-                    icon: "fa-edit",
-                    label: "Edit Item",
-                    callback: () => item.sheet.render(true)
-                },
-                {
-                    icon: "fa-copy",
-                    label: "Duplicate",
-                    callback: () => this._duplicateItem(item)
-                },
-                {
-                    icon: "fa-trash",
-                    label: "Delete",
-                    callback: () => this._deleteItem(item)
-                }
-            ];
+        _getItemContextOptions(target) {
+            const itemId = target.dataset.itemId;
+            const item = this.actor.items.get(itemId);
+            if (!item) return [];
             
-            // Type-specific options
+            const options = [];
+            
+            // Weapon-specific options
             if (item.type === "weapon") {
-                menuItems.unshift(
+                options.push(
                     {
-                        icon: "fa-crosshairs",
-                        label: "Standard Attack",
+                        name: "Standard Attack",
+                        icon: '<i class="fas fa-crosshairs"></i>',
                         callback: () => this._weaponAttack(item, "standard")
                     },
                     {
-                        icon: "fa-bullseye",
-                        label: "Aimed Attack",
+                        name: "Aimed Attack",
+                        icon: '<i class="fas fa-bullseye"></i>',
                         callback: () => this._weaponAttack(item, "aimed")
-                    },
-                    { separator: true }
+                    }
                 );
                 
                 if (item.system.rateOfFire?.includes("S")) {
-                    menuItems.splice(2, 0, {
-                        icon: "fa-redo",
-                        label: "Semi-Auto Burst",
+                    options.push({
+                        name: "Semi-Auto Burst",
+                        icon: '<i class="fas fa-redo"></i>',
                         callback: () => this._weaponAttack(item, "semi")
                     });
                 }
                 
                 if (item.system.rateOfFire?.includes("–") || item.system.rateOfFire?.includes("/-")) {
-                    menuItems.splice(3, 0, {
-                        icon: "fa-fire",
-                        label: "Full-Auto Burst",
+                    options.push({
+                        name: "Full-Auto Burst",
+                        icon: '<i class="fas fa-fire"></i>',
                         callback: () => this._weaponAttack(item, "full")
                     });
                 }
-                
-                menuItems.splice(4, 0, { separator: true });
             }
             
-            // Equip/Unequip
+            // Equip/Unequip for applicable items
             if (["weapon", "armour", "gear"].includes(item.type)) {
-                menuItems.splice(-3, 0, {
-                    icon: item.system.equipped ? "fa-times-circle" : "fa-check-circle",
-                    label: item.system.equipped ? "Unequip" : "Equip",
+                options.push({
+                    name: item.system.equipped ? "Unequip" : "Equip",
+                    icon: `<i class="fas ${item.system.equipped ? "fa-times-circle" : "fa-check-circle"}"></i>`,
                     callback: () => this._toggleEquipped(item)
-                }, { separator: true });
+                });
             }
             
-            // Activate/Deactivate (force fields, etc.)
+            // Activate/Deactivate for force fields, etc.
             if (item.system.activated !== undefined) {
-                menuItems.splice(-3, 0, {
-                    icon: item.system.activated ? "fa-power-off" : "fa-bolt",
-                    label: item.system.activated ? "Deactivate" : "Activate",
+                options.push({
+                    name: item.system.activated ? "Deactivate" : "Activate",
+                    icon: `<i class="fas ${item.system.activated ? "fa-power-off" : "fa-bolt"}"></i>`,
                     callback: () => this._toggleActivated(item)
                 });
             }
             
-            this._displayContextMenu(event, menuItems);
+            // Standard item actions
+            options.push(
+                {
+                    name: "Edit Item",
+                    icon: '<i class="fas fa-edit"></i>',
+                    callback: () => item.sheet.render(true)
+                },
+                {
+                    name: "Duplicate",
+                    icon: '<i class="fas fa-copy"></i>',
+                    callback: () => this._duplicateItem(item)
+                },
+                {
+                    name: "Delete",
+                    icon: '<i class="fas fa-trash"></i>',
+                    callback: () => this._deleteItem(item)
+                }
+            );
+            
+            return options;
         }
         
         /* -------------------------------------------- */
         
         /**
-         * Show fate point context menu.
-         * @param {MouseEvent} event    Triggering event
+         * Get context menu options for fate points.
+         * @returns {ContextMenuEntry[]}
          * @protected
          */
-        _showFatePointContextMenu(event) {
-            const menuItems = [
+        _getFatePointContextOptions() {
+            return [
                 {
-                    icon: "fa-redo",
-                    label: "Spend for Re-roll",
+                    name: "Spend for Re-roll",
+                    icon: '<i class="fas fa-redo"></i>',
                     callback: () => this._spendFate("reroll")
                 },
                 {
-                    icon: "fa-plus-circle",
-                    label: "Spend for +10 Bonus",
+                    name: "Spend for +10 Bonus",
+                    icon: '<i class="fas fa-plus-circle"></i>',
                     callback: () => this._spendFate("bonus")
                 },
                 {
-                    icon: "fa-arrow-up",
-                    label: "Spend for +1 DoS",
+                    name: "Spend for +1 DoS",
+                    icon: '<i class="fas fa-arrow-up"></i>',
                     callback: () => this._spendFate("dos")
                 },
                 {
-                    icon: "fa-heartbeat",
-                    label: "Spend for Healing (1d5)",
+                    name: "Spend for Healing (1d5)",
+                    icon: '<i class="fas fa-heartbeat"></i>',
                     callback: () => this._spendFate("healing")
                 },
-                { separator: true },
                 {
-                    icon: "fa-fire",
-                    label: "Burn Fate Point (Permanent)",
+                    name: "Burn Fate Point (Permanent)",
+                    icon: '<i class="fas fa-fire"></i>',
                     callback: () => this._burnFatePoint(),
-                    cssClass: "danger"
+                    group: "danger"
                 }
             ];
-            
-            this._displayContextMenu(event, menuItems);
         }
         
         /* -------------------------------------------- */
-        /*  Context Menu Rendering                      */
-        /* -------------------------------------------- */
-        
-        /**
-         * Display a context menu at the cursor position.
-         * @param {MouseEvent} event        Triggering event
-         * @param {Array<object>} menuItems Menu item definitions
-         * @protected
-         */
-        _displayContextMenu(event, menuItems) {
-            // Close any existing menus
-            this._closeAllContextMenus();
-            
-            // Create menu element
-            const menu = document.createElement("div");
-            menu.className = "rt-context-menu";
-            menu.dataset.contextMenu = "true";
-            
-            // Add menu items
-            menuItems.forEach(item => {
-                if (item.separator) {
-                    const separator = document.createElement("div");
-                    separator.className = "rt-context-menu-separator";
-                    menu.appendChild(separator);
-                } else {
-                    const menuItem = this._createMenuItem(item);
-                    menu.appendChild(menuItem);
-                }
-            });
-            
-            // Position menu
-            document.body.appendChild(menu);
-            this._positionContextMenu(menu, event.clientX, event.clientY);
-            
-            // Setup close handlers
-            this._setupContextMenuCloseHandlers(menu);
-            
-            // Animate in
-            requestAnimationFrame(() => {
-                menu.classList.add("visible");
-            });
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Create a menu item element.
-         * @param {object} item     Menu item definition
-         * @returns {HTMLElement}
-         * @protected
-         */
-        _createMenuItem(item) {
-            const menuItem = document.createElement("button");
-            menuItem.className = "rt-context-menu-item";
-            menuItem.type = "button";
-            
-            if (item.disabled) {
-                menuItem.disabled = true;
-                menuItem.classList.add("disabled");
-            }
-            
-            if (item.cssClass) {
-                menuItem.classList.add(item.cssClass);
-            }
-            
-            // Icon
-            if (item.icon) {
-                const icon = document.createElement("i");
-                icon.className = `fas ${item.icon}`;
-                menuItem.appendChild(icon);
-            }
-            
-            // Label
-            const label = document.createElement("span");
-            label.textContent = item.label;
-            menuItem.appendChild(label);
-            
-            // Callback
-            if (!item.disabled && item.callback) {
-                menuItem.addEventListener("click", async (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    try {
-                        await item.callback();
-                    } catch (error) {
-                        console.error("Context menu action error:", error);
-                        ui.notifications.error("Action failed. See console for details.");
-                    }
-                    
-                    this._closeAllContextMenus();
-                });
-            }
-            
-            return menuItem;
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Position context menu, ensuring it stays within viewport.
-         * @param {HTMLElement} menu    Menu element
-         * @param {number} x            X coordinate
-         * @param {number} y            Y coordinate
-         * @protected
-         */
-        _positionContextMenu(menu, x, y) {
-            const menuRect = menu.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            // Position menu
-            let left = x;
-            let top = y;
-            
-            // Flip horizontally if off-screen right
-            if (left + menuRect.width > viewportWidth) {
-                left = Math.max(0, x - menuRect.width);
-            }
-            
-            // Flip vertically if off-screen bottom
-            if (top + menuRect.height > viewportHeight) {
-                top = Math.max(0, y - menuRect.height);
-            }
-            
-            menu.style.left = `${left}px`;
-            menu.style.top = `${top}px`;
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Setup handlers to close context menu.
-         * @param {HTMLElement} menu    Menu element
-         * @protected
-         */
-        _setupContextMenuCloseHandlers(menu) {
-            // Close on click outside
-            const closeHandler = (event) => {
-                if (!menu.contains(event.target)) {
-                    this._closeAllContextMenus();
-                    document.removeEventListener("click", closeHandler);
-                }
-            };
-            
-            // Delay to avoid immediate close from triggering click
-            setTimeout(() => {
-                document.addEventListener("click", closeHandler);
-            }, 100);
-            
-            // Close on escape
-            const escapeHandler = (event) => {
-                if (event.key === "Escape") {
-                    this._closeAllContextMenus();
-                    document.removeEventListener("keydown", escapeHandler);
-                }
-            };
-            document.addEventListener("keydown", escapeHandler);
-            
-            // Close on scroll
-            const scrollHandler = () => {
-                this._closeAllContextMenus();
-                this.element.removeEventListener("scroll", scrollHandler, true);
-            };
-            this.element.addEventListener("scroll", scrollHandler, true);
-        }
-        
-        /* -------------------------------------------- */
-        
-        /**
-         * Close all open context menus.
-         * @protected
-         */
-        _closeAllContextMenus() {
-            document.querySelectorAll(".rt-context-menu").forEach(menu => {
-                menu.classList.remove("visible");
-                setTimeout(() => menu.remove(), 200);
-            });
-        }
-        
-        /* -------------------------------------------- */
-        /*  Context Menu Actions (for subclasses)      */
+        /*  Context Menu Actions                        */
         /* -------------------------------------------- */
         
         async _onCharacteristicRoll(charKey) {
-            // Implement in subclass
+            // Implement in subclass or delegate to actor
+            if (this.actor.rollCharacteristic) {
+                await this.actor.rollCharacteristic(charKey);
+            }
         }
         
         async _onCharacteristicRollWithModifier(charKey) {
@@ -592,11 +356,22 @@ export default function ContextMenuMixin(Base) {
         }
         
         async _postCharacteristicToChat(charKey, char) {
-            // Implement in subclass
+            // Create a simple chat message with characteristic info
+            const content = `<div class="rt-char-chat">
+                <strong>${char.label || charKey}</strong>: ${char.total}
+                (Bonus: ${char.bonus})
+            </div>`;
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content
+            });
         }
         
         async _onSkillRoll(skillKey) {
-            // Implement in subclass
+            // Implement in subclass or delegate to actor
+            if (this.actor.rollSkill) {
+                await this.actor.rollSkill(skillKey);
+            }
         }
         
         async _onSkillRollWithModifier(skillKey) {
@@ -608,7 +383,7 @@ export default function ContextMenuMixin(Base) {
         }
         
         async _showGoverningCharacteristic(skillKey, skill) {
-            // Implement in subclass
+            ui.notifications.info(`${skill.label || skillKey} is governed by ${skill.characteristic}`);
         }
         
         async _addSkillSpecialization(skillKey) {
@@ -621,11 +396,11 @@ export default function ContextMenuMixin(Base) {
         }
         
         async _deleteItem(item) {
-            const confirmed = await Dialog.confirm({
-                title: `Delete ${item.name}?`,
+            const confirmed = await foundry.applications.api.DialogV2.confirm({
+                window: { title: `Delete ${item.name}?` },
                 content: `<p>Are you sure you want to delete <strong>${item.name}</strong>?</p>`,
-                yes: () => true,
-                no: () => false
+                yes: { default: false },
+                no: { default: true }
             });
             
             if (confirmed) {
@@ -651,15 +426,20 @@ export default function ContextMenuMixin(Base) {
         }
         
         async _burnFatePoint() {
-            const confirmed = await Dialog.confirm({
-                title: "Burn Fate Point?",
+            const confirmed = await foundry.applications.api.DialogV2.confirm({
+                window: { title: "Burn Fate Point?" },
                 content: `<p><strong>Warning:</strong> This will permanently reduce your maximum Fate Points!</p><p>Are you sure?</p>`,
-                yes: () => true,
-                no: () => false
+                yes: { default: false },
+                no: { default: true }
             });
             
             if (confirmed) {
-                // Implement in subclass
+                // Implement burning fate point
+                const currentTotal = this.actor.system.fate?.total ?? 0;
+                if (currentTotal > 0) {
+                    await this.actor.update({ "system.fate.total": currentTotal - 1 });
+                    ui.notifications.warn("Fate Point burned! Maximum reduced permanently.");
+                }
             }
         }
     }
