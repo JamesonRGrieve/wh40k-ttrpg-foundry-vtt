@@ -196,6 +196,32 @@
 **Total Time**: ~45 minutes
 **Build Status**: ✅ All builds passing
 
+- [x] **Item 15**: Replace Custom Context Menu with V13 Native ✅
+  - Created `RTContextMenu` class extending `foundry.applications.ux.ContextMenu`
+  - Refactored `ContextMenuMixin` to use native ContextMenu API:
+    - `_createContextMenus()` - Creates menus using native ContextMenu constructor
+    - `_getCharacteristicContextOptions()` - Returns menu entries for characteristics
+    - `_getSkillContextOptions()` - Returns menu entries for skills
+    - `_getItemContextOptions()` - Returns menu entries for items
+    - `_getFatePointContextOptions()` - Returns menu entries for fate points
+  - Benefits gained from native ContextMenu:
+    - Automatic keyboard navigation (arrow keys, Enter, Escape)
+    - Built-in ARIA attributes for accessibility
+    - Proper viewport boundary detection and positioning
+    - Automatic cleanup on close
+  - Code reduction:
+    - `context-menu-mixin.mjs`: 668 → 448 lines (-33%)
+    - `_context-menu.scss`: 418 → 158 lines (-62%)
+    - **Total: ~480 lines removed**
+  - Updated CSS to target Foundry's native `#context-menu` element structure
+  - Updated dialogs to use V13 `DialogV2.confirm()` API
+  - Files modified:
+    - `src/module/applications/api/context-menu-mixin.mjs` (complete rewrite)
+    - `src/scss/components/_context-menu.scss` (complete rewrite)
+
+**Total Time**: ~1 hour
+**Build Status**: ✅ All builds passing
+
 ---
 
 ## Completed 🎉
@@ -219,12 +245,9 @@ All 6 Priority 1 items completed in this session:
 ### Priority 2: Medium Priority
 - ✅ Item 13: Lazy Template Loading
 - ✅ Item 14: State Persistence Enhancements
+- ✅ Item 15: Replace Custom Context Menu with V13 Native
 - Item 11: Keyboard Shortcuts System (2-3 days)
 - Item 12: Active Effects Foundation (2-3 days)
-- Item 15: Replace Custom Context Menu with V13 Native (2-3 days)
-- Item 16: Data Caching & Memoization (1-2 days)
-- Item 17: Accessibility Compliance (WCAG AA) (2-3 days)
-- Item 15: Replace Custom Context Menu with V13 Native (2-3 days)
 - Item 16: Data Caching & Memoization (1-2 days)
 - Item 17: Accessibility Compliance (WCAG AA) (2-3 days)
 
