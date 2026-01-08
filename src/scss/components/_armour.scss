@@ -1,5 +1,6 @@
 // ============================================
-// Hit Location Roll Bands & Modern Armour Panel
+// Armour Display Panel - Character Silhouette Layout
+// Uses CSS custom properties from _gothic-theme.scss
 // ============================================
 
 .rt-armour-panel {
@@ -8,7 +9,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--rt-space-sm);
     width: 100%;
     
     .rt-panel-title {
@@ -18,29 +19,31 @@
   }
   
   .rt-panel-body {
-    padding: 8px;
+    padding: var(--rt-space-md);
+    background: var(--rt-panel-body-bg);
   }
 }
 
 .rt-hit-location-roll {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  background: linear-gradient(180deg, rgba(74, 55, 40, 0.15), rgba(74, 55, 40, 0.25));
-  border: 1px solid rgba(74, 55, 40, 0.35);
-  border-radius: 4px;
-  color: #4a3728;
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color);
+  border-radius: var(--rt-radius-md);
+  color: var(--rt-text-dark);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: all var(--rt-transition-fast);
   flex-shrink: 0;
   
   &:hover {
-    background: linear-gradient(180deg, rgba(74, 55, 40, 0.25), rgba(74, 55, 40, 0.35));
-    border-color: rgba(74, 55, 40, 0.5);
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-gold);
     transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(var(--rt-gold), 0.3);
   }
   
   &:active {
@@ -48,170 +51,206 @@
   }
   
   i {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
 }
 
-.rt-armour-grid {
+// ============================================
+// Character Silhouette Grid Layout
+// ============================================
+// Uses CSS Grid to position boxes in a human body shape:
+//
+//        [HEAD]
+//  [R.ARM][BODY][L.ARM]
+//       [R.LEG][L.LEG]
+
+.rt-armour-silhouette {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    ".       head      ."
+    "rarm    body      larm"
+    "rleg    .         lleg";
+  gap: 6px;
+  padding: var(--rt-space-sm);
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+// Base box styling shared by all locations
+.rt-armour-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  width: 100%;
-}
-
-.rt-armour-row {
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
   justify-content: center;
-  align-items: stretch;
-}
-
-.rt-armour-slot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 8px;
-  background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(250, 248, 245, 0.9) 50%,
-    rgba(245, 243, 238, 0.85) 100%);
-  border: 2px solid rgba(74, 55, 40, 0.15);
-  border-radius: 6px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-sizing: border-box;
+  padding: var(--rt-space-sm) var(--rt-space-sm);
+  background: var(--rt-panel-bg);
+  border: 2px solid var(--rt-border-color);
+  border-radius: var(--rt-radius-lg);
+  box-shadow: 
+    0 2px 4px var(--rt-shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all var(--rt-transition-normal);
   cursor: pointer;
-  position: relative;
   
   &:hover {
-    background: linear-gradient(145deg, 
-      rgba(255, 255, 255, 1) 0%, 
-      rgba(255, 250, 240, 0.95) 50%,
-      rgba(250, 245, 235, 0.9) 100%);
-    border-color: rgba(212, 165, 32, 0.5);
+    background: var(--rt-panel-bg-solid);
+    border-color: var(--rt-gold);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(212, 165, 32, 0.15);
+    box-shadow: 
+      0 4px 12px var(--rt-shadow-medium),
+      0 0 8px rgba(212, 175, 55, 0.2);
     
-    .rt-armour-value {
-      transform: scale(1.05);
-      border-color: rgba(212, 165, 32, 0.5);
-      background: rgba(255, 250, 240, 0.95);
+    .rt-box-ap {
+      border-color: var(--rt-gold);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+      transform: scale(1.08);
     }
     
-    .rt-armour-roll-band {
-      background: rgba(212, 165, 32, 0.85);
-      color: rgba(255, 255, 255, 1);
+    .rt-box-range {
+      background: var(--rt-gold);
+      color: #fff;
     }
   }
 }
 
-.rt-armour-label {
-  font-size: 0.55rem;
-  font-weight: 800;
+// Location label (top text)
+.rt-box-label {
+  font-size: 0.6rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(74, 55, 40, 0.6);
+  color: var(--rt-text-muted);
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: var(--rt-space-xs);
   white-space: nowrap;
 }
 
-.rt-armour-value {
-  width: 36px;
-  height: 36px;
+// AP value (center, large circular badge)
+.rt-box-ap {
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Modesto Condensed', serif;
-  font-size: 1.4rem;
+  font-family: var(--rt-font-numbers, 'Cinzel', serif);
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #2a1a0a;
+  color: var(--rt-text-dark);
   line-height: 1;
-  background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.9) 0%, 
-    rgba(245, 240, 230, 0.8) 100%);
-  border: 2px solid rgba(74, 55, 40, 0.2);
-  border-radius: 4px;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
-  transition: all 0.2s ease;
-  margin: 4px 0;
+  background: var(--rt-panel-bg-solid);
+  border: 2px solid var(--rt-border-color-strong);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 1px 2px var(--rt-shadow-soft),
+    0 2px 4px var(--rt-shadow-soft);
+  transition: all var(--rt-transition-normal);
 }
 
-.rt-armour-roll-band {
-  font-size: 0.5rem;
+// Roll range (bottom badge)
+.rt-box-range {
+  font-size: 0.55rem;
   font-weight: 700;
-  color: rgba(74, 55, 40, 0.7);
-  background: rgba(74, 55, 40, 0.12);
-  padding: 2px 5px;
-  border-radius: 3px;
-  letter-spacing: 0.05em;
+  color: var(--rt-text-muted);
+  background: var(--rt-accent-overlay);
+  padding: 3px 6px;
+  border-radius: var(--rt-radius-sm);
+  letter-spacing: 0.03em;
   line-height: 1;
   font-family: 'Courier New', monospace;
-  transition: all 0.2s ease;
+  transition: all var(--rt-transition-normal);
   white-space: nowrap;
-  margin-top: 4px;
+  margin-top: var(--rt-space-xs);
 }
 
-// Head - centered, smaller and shorter
-.rt-armour-head {
-  min-width: 65px;
-  min-height: 60px;
-  flex: 0 0 auto;
+// ============================================
+// Grid Area Positioning
+// ============================================
+
+.rt-box-head {
+  grid-area: head;
+  justify-self: center;
+  min-width: 72px;
+  min-height: 68px;
 }
 
-// Arms - narrow stick figure arms
-.rt-armour-left-arm,
-.rt-armour-right-arm {
-  min-width: 60px;
-  min-height: 90px;
-  flex: 0 0 auto;
-}
-
-// Body - widest part of stick figure, taller
-.rt-armour-body {
-  min-width: 90px;
+.rt-box-body {
+  grid-area: body;
   min-height: 100px;
-  flex: 0 0 auto;
-}
-
-// Legs - same width as arms, longer height
-.rt-armour-left-leg,
-.rt-armour-right-leg {
-  min-width: 60px;
-  min-height: 95px;
-  flex: 0 0 auto;
-}
-
-// Hit location highlight animation
-.rt-hit-location-highlight {
-  animation: hitLocationPulse 0.4s ease-in-out 5;
   
-  @keyframes hitLocationPulse {
-    0%, 100% {
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(245, 240, 230, 0.5));
-      border-color: rgba(74, 55, 40, 0.25);
-      box-shadow: none;
-    }
-    50% {
-      background: linear-gradient(180deg, rgba(255, 200, 100, 0.7), rgba(255, 180, 80, 0.5));
-      border-color: rgba(212, 165, 32, 0.6);
-      box-shadow: 0 0 12px rgba(212, 165, 32, 0.4);
-    }
+  .rt-box-ap {
+    width: 46px;
+    height: 46px;
+    font-size: 1.7rem;
   }
 }
 
-// Hit location roll result chat message
+.rt-box-right-arm {
+  grid-area: rarm;
+  justify-self: end;
+  min-height: 85px;
+}
+
+.rt-box-left-arm {
+  grid-area: larm;
+  justify-self: start;
+  min-height: 85px;
+}
+
+.rt-box-right-leg {
+  grid-area: rleg;
+  justify-self: center;
+  margin-right: 8px;
+  min-height: 95px;
+}
+
+.rt-box-left-leg {
+  grid-area: lleg;
+  justify-self: center;
+  margin-left: 8px;
+  min-height: 95px;
+}
+
+// ============================================
+// Hit Location Highlight Animation
+// ============================================
+
+.rt-hit-location-highlight {
+  animation: hitLocationPulse 0.5s ease-in-out 4;
+}
+
+@keyframes hitLocationPulse {
+  0%, 100% {
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    box-shadow: 0 2px 4px var(--rt-shadow-soft);
+  }
+  50% {
+    background: rgba(212, 175, 55, 0.25);
+    border-color: var(--rt-gold);
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
+  }
+}
+
+// ============================================
+// Hit Location Chat Message Styles
+// ============================================
+
 .rt-hit-location-result {
   padding: 12px;
-  background: linear-gradient(135deg, rgba(74, 55, 40, 0.08), rgba(74, 55, 40, 0.15));
-  border-radius: 6px;
+  background: linear-gradient(145deg, 
+    rgba(250, 248, 245, 0.95) 0%, 
+    rgba(245, 243, 238, 0.9) 100%);
+  border: 2px solid rgba(74, 55, 40, 0.2);
+  border-radius: 8px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   
   h3 {
-    margin: 0 0 8px 0;
-    font-size: 0.85em;
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: #4a3728;
@@ -219,34 +258,44 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    
+    i {
+      color: rgba(212, 175, 55, 0.8);
+    }
   }
 }
 
 .rt-hit-roll {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .rt-roll-result {
   display: inline-block;
   font-family: 'Modesto Condensed', serif;
-  font-size: 2.2em;
+  font-size: 2.5em;
   font-weight: 700;
   color: #2a1a0a;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(245, 240, 230, 0.6));
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(245, 240, 230, 0.9) 100%);
   border: 2px solid rgba(74, 55, 40, 0.3);
   border-radius: 8px;
-  padding: 4px 16px;
-  min-width: 60px;
+  padding: 6px 20px;
+  min-width: 70px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .rt-hit-location {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  margin-top: 8px;
 }
 
 .rt-location-name {
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 700;
   color: #4a1a1a;
   text-transform: uppercase;
@@ -254,6 +303,11 @@
 }
 
 .rt-location-armour {
-  font-size: 0.85em;
+  font-size: 0.95em;
   color: #6a5a43;
+  font-weight: 600;
+  
+  strong {
+    color: #4a3728;
+  }
 }

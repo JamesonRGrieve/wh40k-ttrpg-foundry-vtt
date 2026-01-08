@@ -1,0 +1,140 @@
+{{!-- Full Movement Panel for Overview Tab --}}
+{{!-- Comprehensive movement and physical capacity display --}}
+
+<div class="rt-panel rt-panel-movement-full">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-running"></i> Movement &amp; Physical</span>
+    </div>
+    <div class="rt-panel-body">
+        
+        {{!-- Standard Movement --}}
+        <div class="rt-movement-section">
+            <div class="rt-section-label">
+                <i class="fas fa-shoe-prints"></i> Movement Rates
+            </div>
+            <div class="rt-movement-grid-full">
+                <div class="rt-move-cell">
+                    <i class="fas fa-walking rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Half</span>
+                        <span class="rt-move-value">{{actor.movement.half}}m</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell">
+                    <i class="fas fa-shoe-prints rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Full</span>
+                        <span class="rt-move-value">{{actor.movement.full}}m</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell">
+                    <i class="fas fa-running rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Charge</span>
+                        <span class="rt-move-value">{{actor.movement.charge}}m</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell">
+                    <i class="fas fa-wind rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Run</span>
+                        <span class="rt-move-value">{{actor.movement.run}}m</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Leap & Jump --}}
+        <div class="rt-movement-section">
+            <div class="rt-section-label">
+                <i class="fas fa-angle-double-up"></i> Leap &amp; Jump (SB: {{characteristics.strength.bonus}})
+            </div>
+            <div class="rt-movement-grid-full rt-movement-grid-3col">
+                <div class="rt-move-cell" title="Standing vertical leap height">
+                    <i class="fas fa-arrow-up rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Leap (V)</span>
+                        <span class="rt-move-value">{{actor.movement.leapVertical}}m</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell" title="Running horizontal leap distance">
+                    <i class="fas fa-arrows-alt-h rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Leap (H)</span>
+                        <span class="rt-move-value">{{actor.movement.leapHorizontal}}m</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell" title="Vertical jump height">
+                    <i class="fas fa-level-up-alt rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Jump</span>
+                        <span class="rt-move-value">{{actor.movement.jump}}cm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Lifting Capacity --}}
+        <div class="rt-movement-section">
+            <div class="rt-section-label">
+                <i class="fas fa-dumbbell"></i> Lifting Capacity (SB: {{characteristics.strength.bonus}})
+            </div>
+            <div class="rt-movement-grid-full rt-movement-grid-3col">
+                <div class="rt-move-cell" title="Sustained carrying capacity">
+                    <i class="fas fa-hand-holding rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Carry</span>
+                        <span class="rt-move-value">{{actor.lifting.carry}}kg</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell" title="Brief lifting over head">
+                    <i class="fas fa-hands rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Lift</span>
+                        <span class="rt-move-value">{{actor.lifting.lift}}kg</span>
+                    </div>
+                </div>
+                <div class="rt-move-cell" title="Pushing/dragging capacity">
+                    <i class="fas fa-shipping-fast rt-move-icon"></i>
+                    <div class="rt-move-info">
+                        <span class="rt-move-label">Push</span>
+                        <span class="rt-move-value">{{actor.lifting.push}}kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Current Encumbrance Bar --}}
+        <div class="rt-movement-section">
+            <div class="rt-section-label">
+                <i class="fas fa-weight-hanging"></i> Current Encumbrance
+            </div>
+            <div class="rt-encumbrance-display">
+                <div class="rt-enc-values">
+                    <span class="rt-enc-current">{{actor.encumbrance.current}} kg</span>
+                    <span class="rt-enc-sep">/</span>
+                    <span class="rt-enc-max">{{actor.encumbrance.max}} kg</span>
+                    {{#if actor.encumbrance.encumbered}}
+                    <span class="rt-enc-warning"><i class="fas fa-exclamation-triangle"></i> Encumbered</span>
+                    {{/if}}
+                </div>
+                <div class="rt-encumbrance-bar-container">
+                    <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-danger{{else if (gte encumbrancePercent 75)}}rt-enc-warning{{else if (gte encumbrancePercent 50)}}rt-enc-caution{{/if}}" 
+                         style="width: {{encumbrancePercent}}%"></div>
+                </div>
+                <div class="rt-enc-percentage">{{encumbrancePercent}}%</div>
+            </div>
+        </div>
+
+        {{!-- Size --}}
+        <div class="rt-movement-section rt-movement-size-field">
+            <label class="rt-field-label">
+                <i class="fas fa-ruler-vertical"></i> Size
+            </label>
+            <select class="rt-field-input rt-size-select" name="system.size" data-dtype="Number">
+                {{selectOptions dh.sizes selected=actor.system.size}}
+            </select>
+        </div>
+
+    </div>
+</div>

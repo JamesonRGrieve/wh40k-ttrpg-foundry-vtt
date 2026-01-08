@@ -264,6 +264,14 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     async _onRender(context, options) {
         await super._onRender(context, options);
 
+        // Auto-select number input values on focus for easy editing
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
+            .forEach(input => {
+                input.addEventListener("focus", (event) => {
+                    event.target.select();
+                });
+            });
+
         // Focus custom modifier input
         this.element.querySelector("#customModifier")?.addEventListener("input", (e) => {
             this._customModifier = parseInt(e.target.value) || 0;

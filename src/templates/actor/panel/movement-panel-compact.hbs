@@ -1,0 +1,40 @@
+{{!-- Compact Movement Panel for Combat Tab --}}
+{{!-- Essential movement rates only, space-optimized --}}
+
+<div class="rt-panel rt-panel-movement-compact">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-running"></i> Movement</span>
+    </div>
+    <div class="rt-panel-body">
+        <div class="rt-movement-grid-compact">
+            <div class="rt-move-cell-compact">
+                <i class="fas fa-walking rt-move-icon-sm"></i>
+                <div class="rt-move-info-compact">
+                    <span class="rt-move-label-sm">Half</span>
+                    <span class="rt-move-value-sm">{{system.movement.half}}m</span>
+                </div>
+            </div>
+            <div class="rt-move-cell-compact">
+                <i class="fas fa-shoe-prints rt-move-icon-sm"></i>
+                <div class="rt-move-info-compact">
+                    <span class="rt-move-label-sm">Full</span>
+                    <span class="rt-move-value-sm">{{system.movement.full}}m</span>
+                </div>
+            </div>
+            <div class="rt-move-cell-compact">
+                <i class="fas fa-running rt-move-icon-sm"></i>
+                <div class="rt-move-info-compact">
+                    <span class="rt-move-label-sm">Charge</span>
+                    <span class="rt-move-value-sm">{{system.movement.charge}}m</span>
+                </div>
+            </div>
+            <div class="rt-move-cell-compact">
+                <i class="fas fa-wind rt-move-icon-sm"></i>
+                <div class="rt-move-info-compact">
+                    <span class="rt-move-label-sm">Run</span>
+                    <span class="rt-move-value-sm">{{system.movement.run}}m</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

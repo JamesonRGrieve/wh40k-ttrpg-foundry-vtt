@@ -66,10 +66,7 @@ export default class CreatureTemplate extends CommonTemplate {
       ...super.defineSchema(),
       fatigue: new SchemaField({
         max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-        value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-        penaltyActive: new BooleanField({ required: true, initial: false }),
-        penalty: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-        manualMax: new BooleanField({ required: true, initial: false })
+        value: new NumberField({ required: true, initial: 0, min: 0, integer: true })
       }),
 
       fate: new SchemaField({
@@ -338,13 +335,12 @@ export default class CreatureTemplate extends CommonTemplate {
   }
 
   /**
-   * Prepare characteristic totals and bonuses, including fatigue penalty.
+   * Prepare characteristic totals and bonuses.
+   * Fatigue does NOT affect characteristics - it only applies -10 to all Tests.
    * @protected
    * @override
    */
   _prepareCharacteristics() {
-    const fatigueValue = this.fatigue?.value ?? 0;
-
     for (const [key, char] of Object.entries(this.characteristics)) {
       // Calculate total: base + (advance * 5) + modifier
       char.total = char.base + (char.advance * 5) + char.modifier;
@@ -355,13 +351,6 @@ export default class CreatureTemplate extends CommonTemplate {
       // Unnatural multiplies the modifier (0 = no unnatural, 2+ = multiplier)
       const unnaturalLevel = char.unnatural || 0;
       char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
-
-      // Apply fatigue penalty if applicable
-      if (fatigueValue > char.bonus) {
-        char.total = Math.ceil(char.total / 2);
-        const fatigueBaseModifier = Math.floor(char.total / 10);
-        char.bonus = unnaturalLevel >= 2 ? fatigueBaseModifier * unnaturalLevel : fatigueBaseModifier;
-      }
     }
 
     // Update initiative bonus
@@ -415,15 +404,16 @@ export default class CreatureTemplate extends CommonTemplate {
   }
 
   /**
-   * Prepare fatigue max.
-   * Only auto-calculates if not manually overridden.
+   * Prepare fatigue threshold.
+   * Per core rules: threshold = Toughness Bonus.
+   * Characters can take TB levels of fatigue before collapsing.
+   * Any fatigue imposes -10 to all Tests.
    * @protected
    */
   _prepareFatigue() {
     const toughness = this.characteristics.toughness;
-    const willpower = this.characteristics.willpower;
-    if (toughness && willpower && !this.fatigue.manualMax) {
-      this.fatigue.max = toughness.bonus + willpower.bonus;
+    if (toughness) {
+      this.fatigue.max = toughness.bonus;
     }
   }
 

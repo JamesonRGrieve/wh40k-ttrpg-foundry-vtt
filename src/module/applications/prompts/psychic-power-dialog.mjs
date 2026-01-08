@@ -58,6 +58,14 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     async _onRender(context, options) {
         await super._onRender(context, options);
 
+        // Auto-select number input values on focus for easy editing
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
+            .forEach(input => {
+                input.addEventListener("focus", (event) => {
+                    event.target.select();
+                });
+            });
+
         // Set up power selection listeners
         this.element.querySelectorAll(".power-select").forEach(el => {
             el.addEventListener("change", this._onPowerSelectChange.bind(this));

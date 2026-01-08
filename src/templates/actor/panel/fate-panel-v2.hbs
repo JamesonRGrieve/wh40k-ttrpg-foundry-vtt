@@ -88,21 +88,24 @@
                 </div>
             </div>
 
-            {{!-- Star Pips (Edit Mode) - Click to set exact value --}}
+            {{!-- About Fate Info Section --}}
             <div class="rt-fate-edit-section">
-                <div class="rt-fate-edit-header">
-                    <i class="fas fa-star"></i> Set Fate Points
-                </div>
-                <div class="rt-fate-pips rt-fate-pips-edit">
-                    {{#each (range 0 (add system.fate.max 1)) as |index|}}
-                        <button type="button"
-                                class="rt-fate-star {{#if (lte index ../system.fate.value)}}rt-fate-star--filled{{/if}}"
-                                data-action="setFateStar"
-                                data-fate-index="{{index}}"
-                                title="Set to {{index}} fate points">
-                            <i class="fas fa-star"></i>
-                        </button>
-                    {{/each}}
+                <div class="rt-fate-info-box">
+                    <i class="fas fa-book-open"></i>
+                    <div class="rt-info-content">
+                        <strong>About Fate Points</strong>
+                        <p>Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.</p>
+                        
+                        <strong>Uses of Fate:</strong>
+                        <ul>
+                            <li><strong>Reroll a Test:</strong> Reroll any failed test, keeping the second result</li>
+                            <li><strong>Avoid Death:</strong> When reduced to 0 wounds, spend a Fate Point to survive with 1 wound instead</li>
+                            <li><strong>Divine Intervention:</strong> Call upon the Emperor's grace for a minor miracle at the GM's discretion</li>
+                            <li><strong>Righteous Fury:</strong> Confirm a Righteous Fury result automatically</li>
+                        </ul>
+                        
+                        <p class="rt-fate-warning"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
+                    </div>
                 </div>
             </div>
 

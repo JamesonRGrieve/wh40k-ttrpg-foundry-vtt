@@ -129,44 +129,8 @@
 
         {{!-- RIGHT COLUMN: Actions & Info --}}
         <div class="rt-combat-col rt-combat-actions">
-            {{!-- Movement Reference Panel --}}
-            <div class="rt-panel rt-panel-movement">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-running"></i> Movement</span>
-                </div>
-                <div class="rt-panel-body">
-                    <div class="rt-movement-grid">
-                        <div class="rt-move-item rt-move-half">
-                            <i class="fas fa-walking rt-move-icon"></i>
-                            <div class="rt-move-info">
-                                <span class="rt-move-label">Half</span>
-                                <span class="rt-move-value">{{system.movement.half}}m</span>
-                            </div>
-                        </div>
-                        <div class="rt-move-item rt-move-full">
-                            <i class="fas fa-shoe-prints rt-move-icon"></i>
-                            <div class="rt-move-info">
-                                <span class="rt-move-label">Full</span>
-                                <span class="rt-move-value">{{system.movement.full}}m</span>
-                            </div>
-                        </div>
-                        <div class="rt-move-item rt-move-charge">
-                            <i class="fas fa-running rt-move-icon"></i>
-                            <div class="rt-move-info">
-                                <span class="rt-move-label">Charge</span>
-                                <span class="rt-move-value">{{system.movement.charge}}m</span>
-                            </div>
-                        </div>
-                        <div class="rt-move-item rt-move-run">
-                            <i class="fas fa-wind rt-move-icon"></i>
-                            <div class="rt-move-info">
-                                <span class="rt-move-label">Run</span>
-                                <span class="rt-move-value">{{system.movement.run}}m</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{!-- Movement Reference Panel (Compact Version) --}}
+            {{> systems/rogue-trader/templates/actor/panel/movement-panel-compact.hbs}}
 
             {{!-- Quick Actions Panel (with Initiative) --}}
             <div class="rt-panel rt-panel-quick-actions">

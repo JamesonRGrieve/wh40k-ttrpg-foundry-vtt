@@ -143,6 +143,14 @@ export default class BaseItemSheet extends PrimarySheetMixin(
                 .forEach(i => i.addEventListener("change", this._onChangeInputDelta.bind(this)));
         }
 
+        // Auto-select number input values on focus for easy editing
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
+            .forEach(input => {
+                input.addEventListener("focus", (event) => {
+                    event.target.select();
+                });
+            });
+
         // Set up existing tab listeners (V1 compatibility)
         this._setupTabListeners();
 

@@ -1,47 +1,80 @@
-<div class="rt-panel rt-armour-panel rt-grid-col-2 rt-grid-row-3">
+{{!-- Armour Display Panel - Character Body Silhouette Layout --}}
+<div class="rt-panel rt-armour-panel">
     <div class="rt-panel-header">
         <span class="rt-panel-title"><i class="fas fa-shield-alt"></i> Armour Points</span>
-        <button type="button" class="rt-header-btn rt-hit-location-roll" title="Roll Hit Location (1d100)">
+        <button type="button" 
+                class="rt-header-btn rt-hit-location-roll" 
+                data-action="rollHitLocation"
+                title="Roll Hit Location (1d100)">
             <i class="fas fa-dice-d20"></i>
         </button>
     </div>
     <div class="rt-panel-body">
-        <div class="rt-armour-grid">
-            <div class="rt-armour-slot rt-armour-head" data-location="head" data-roll-min="1" data-roll-max="10">
-                <div class="rt-armour-label">Head</div>
-                <div class="rt-armour-value">{{actor.armour.head.total}}</div>
-                <div class="rt-armour-roll-band">01-10</div>
+        <div class="rt-armour-silhouette">
+            {{!-- Head (centered at top) --}}
+            <div class="rt-armour-box rt-box-head" 
+                 data-location="head" 
+                 data-roll-min="1" 
+                 data-roll-max="10"
+                 title="Head - Roll: 01-10">
+                <span class="rt-box-label">Head</span>
+                <span class="rt-box-ap">{{system.armour.head.total}}</span>
+                <span class="rt-box-range">01-10</span>
             </div>
             
-            <div class="rt-armour-row rt-body-row">
-                <div class="rt-armour-slot rt-armour-left-arm" data-location="leftArm" data-roll-min="21" data-roll-max="30">
-                    <div class="rt-armour-label">L Arm</div>
-                    <div class="rt-armour-value">{{actor.armour.leftArm.total}}</div>
-                    <div class="rt-armour-roll-band">21-30</div>
-                </div>
-                <div class="rt-armour-slot rt-armour-body" data-location="body" data-roll-min="31" data-roll-max="70">
-                    <div class="rt-armour-label">Body</div>
-                    <div class="rt-armour-value">{{actor.armour.body.total}}</div>
-                    <div class="rt-armour-roll-band">31-70</div>
-                </div>
-                <div class="rt-armour-slot rt-armour-right-arm" data-location="rightArm" data-roll-min="11" data-roll-max="20">
-                    <div class="rt-armour-label">R Arm</div>
-                    <div class="rt-armour-value">{{actor.armour.rightArm.total}}</div>
-                    <div class="rt-armour-roll-band">11-20</div>
-                </div>
+            {{!-- Right Arm (left side of screen, character's right) --}}
+            <div class="rt-armour-box rt-box-right-arm" 
+                 data-location="rightArm" 
+                 data-roll-min="11" 
+                 data-roll-max="20"
+                 title="Right Arm - Roll: 11-20">
+                <span class="rt-box-label">R.Arm</span>
+                <span class="rt-box-ap">{{system.armour.rightArm.total}}</span>
+                <span class="rt-box-range">11-20</span>
             </div>
             
-            <div class="rt-armour-row rt-legs-row">
-                <div class="rt-armour-slot rt-armour-left-leg" data-location="leftLeg" data-roll-min="86" data-roll-max="100">
-                    <div class="rt-armour-label">L Leg</div>
-                    <div class="rt-armour-value">{{actor.armour.leftLeg.total}}</div>
-                    <div class="rt-armour-roll-band">86-00</div>
-                </div>
-                <div class="rt-armour-slot rt-armour-right-leg" data-location="rightLeg" data-roll-min="71" data-roll-max="85">
-                    <div class="rt-armour-label">R Leg</div>
-                    <div class="rt-armour-value">{{actor.armour.rightLeg.total}}</div>
-                    <div class="rt-armour-roll-band">71-85</div>
-                </div>
+            {{!-- Left Arm (right side of screen, character's left) --}}
+            <div class="rt-armour-box rt-box-left-arm" 
+                 data-location="leftArm" 
+                 data-roll-min="21" 
+                 data-roll-max="30"
+                 title="Left Arm - Roll: 21-30">
+                <span class="rt-box-label">L.Arm</span>
+                <span class="rt-box-ap">{{system.armour.leftArm.total}}</span>
+                <span class="rt-box-range">21-30</span>
+            </div>
+            
+            {{!-- Body (center, largest box) --}}
+            <div class="rt-armour-box rt-box-body" 
+                 data-location="body" 
+                 data-roll-min="31" 
+                 data-roll-max="70"
+                 title="Body - Roll: 31-70">
+                <span class="rt-box-label">Body</span>
+                <span class="rt-box-ap">{{system.armour.body.total}}</span>
+                <span class="rt-box-range">31-70</span>
+            </div>
+            
+            {{!-- Right Leg (left side of screen, character's right) --}}
+            <div class="rt-armour-box rt-box-right-leg" 
+                 data-location="rightLeg" 
+                 data-roll-min="71" 
+                 data-roll-max="85"
+                 title="Right Leg - Roll: 71-85">
+                <span class="rt-box-label">R.Leg</span>
+                <span class="rt-box-ap">{{system.armour.rightLeg.total}}</span>
+                <span class="rt-box-range">71-85</span>
+            </div>
+            
+            {{!-- Left Leg (right side of screen, character's left) --}}
+            <div class="rt-armour-box rt-box-left-leg" 
+                 data-location="leftLeg" 
+                 data-roll-min="86" 
+                 data-roll-max="100"
+                 title="Left Leg - Roll: 86-00">
+                <span class="rt-box-label">L.Leg</span>
+                <span class="rt-box-ap">{{system.armour.leftLeg.total}}</span>
+                <span class="rt-box-range">86-00</span>
             </div>
         </div>
     </div>

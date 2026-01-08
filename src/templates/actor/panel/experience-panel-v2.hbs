@@ -1,0 +1,174 @@
+{{!-- Redesigned Experience Panel V2 - Modern, Dynamic, Interactive --}}
+<div class="rt-panel rt-experience-panel-v2">
+
+    {{!-- Panel Header - Click to expand/collapse --}}
+    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+         data-toggle="experience_details"
+         title="Click to {{#if (isExpanded 'experience_details' actor)}}collapse{{else}}expand{{/if}}">
+        <span class="rt-panel-title">
+            <i class="fas fa-graduation-cap"></i> Experience
+        </span>
+        <span class="rt-xp-available-badge">{{actor.system.experience.available}} XP</span>
+        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'experience_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
+    </div>
+
+    {{!-- Panel Body --}}
+    <div class="rt-panel-body">
+
+        {{!-- Main Display: Available XP with Dynamic Visual --}}
+        <div class="rt-xp-display">
+            
+            {{!-- Large Available XP Display --}}
+            <div class="rt-xp-available-main">
+                <span class="rt-xp-available-label">Available</span>
+                <div class="rt-xp-available-number">{{actor.system.experience.available}}</div>
+                <span class="rt-xp-unit">Experience Points</span>
+            </div>
+
+            {{!-- Progress Ring or Bar --}}
+            <div class="rt-xp-visual">
+                <div class="rt-xp-ring">
+                    <svg viewBox="0 0 100 100" class="rt-xp-ring-svg">
+                        {{!-- Background circle --}}
+                        <circle cx="50" cy="50" r="45" 
+                                fill="none" 
+                                stroke="rgba(120, 46, 34, 0.2)" 
+                                stroke-width="8"/>
+                        {{!-- Progress circle --}}
+                        <circle cx="50" cy="50" r="45" 
+                                fill="none" 
+                                stroke="url(#xpGradient)" 
+                                stroke-width="8"
+                                stroke-linecap="round"
+                                stroke-dasharray="282.74"
+                                stroke-dashoffset="{{multiply (subtract 1 (divide actor.system.experience.used actor.system.experience.total)) 282.74}}"
+                                class="rt-xp-ring-progress"
+                                transform="rotate(-90 50 50)"/>
+                        {{!-- Gradient definition --}}
+                        <defs>
+                            <linearGradient id="xpGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#c08020;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#d09838;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="rt-xp-ring-center">
+                        <span class="rt-xp-percent">{{#if actor.system.experience.total}}{{floor (multiply (divide actor.system.experience.used actor.system.experience.total) 100)}}{{else}}0{{/if}}%</span>
+                        <span class="rt-xp-percent-label">Spent</span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Quick Stats Grid --}}
+            <div class="rt-xp-stats-grid">
+                <div class="rt-xp-stat-card rt-xp-stat-total">
+                    <i class="fas fa-coins"></i>
+                    <div class="rt-xp-stat-content">
+                        <span class="rt-xp-stat-label">Total Earned</span>
+                        <span class="rt-xp-stat-value">{{actor.system.experience.total}}</span>
+                    </div>
+                </div>
+                <div class="rt-xp-stat-card rt-xp-stat-spent">
+                    <i class="fas fa-arrow-up"></i>
+                    <div class="rt-xp-stat-content">
+                        <span class="rt-xp-stat-label">Spent</span>
+                        <span class="rt-xp-stat-value">{{actor.system.experience.used}}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {{!-- Quick Add/Subtract Buttons --}}
+        <div class="rt-xp-quick-actions">
+            <button type="button"
+                    class="rt-xp-quick-btn rt-xp-add-btn"
+                    data-action="addXP"
+                    data-amount="100"
+                    title="Add 100 XP">
+                <i class="fas fa-plus"></i>
+                <span>+100</span>
+            </button>
+            <button type="button"
+                    class="rt-xp-quick-btn rt-xp-add-btn"
+                    data-action="addXP"
+                    data-amount="500"
+                    title="Add 500 XP">
+                <i class="fas fa-plus"></i>
+                <span>+500</span>
+            </button>
+            <button type="button"
+                    class="rt-xp-quick-btn rt-xp-custom-btn"
+                    data-action="customXP"
+                    title="Add custom XP amount">
+                <i class="fas fa-edit"></i>
+                <span>Custom</span>
+            </button>
+        </div>
+
+        {{!-- Edit Mode (Expandable) --}}
+        <div class="rt-panel-details experience_details" {{hideIfNot (isExpanded 'experience_details' actor)}}>
+
+            {{!-- Direct Edit Section --}}
+            <div class="rt-xp-edit-section">
+                <div class="rt-xp-edit-header">
+                    <i class="fas fa-cog"></i> Edit Experience
+                </div>
+
+                <div class="rt-xp-edit-grid">
+                    <label class="rt-edit-field">
+                        <span class="rt-edit-label">Total XP Earned</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="rt-edit-input"
+                               name="system.experience.total"
+                               value="{{actor.system.experience.total}}"
+                               min="0"
+                               placeholder="0" />
+                    </label>
+
+                    <label class="rt-edit-field">
+                        <span class="rt-edit-label">XP Spent</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="rt-edit-input rt-xp-spent-input"
+                               name="system.experience.used"
+                               value="{{actor.system.experience.used}}"
+                               min="0"
+                               max="{{actor.system.experience.total}}"
+                               placeholder="0" />
+                    </label>
+                </div>
+
+                {{!-- Calculated Available (Read-only display) --}}
+                <div class="rt-xp-calc-display">
+                    <span class="rt-xp-calc-label">Available XP:</span>
+                    <span class="rt-xp-calc-value">{{actor.system.experience.total}} - {{actor.system.experience.used}} = <strong>{{actor.system.experience.available}}</strong></span>
+                </div>
+            </div>
+
+            {{!-- Info Section --}}
+            <div class="rt-xp-edit-section">
+                <div class="rt-xp-info-box">
+                    <i class="fas fa-book"></i>
+                    <div class="rt-info-content">
+                        <strong>About Experience Points</strong>
+                        <p>Experience Points (XP) represent your character's growth and learning through missions and adventures.</p>
+                        
+                        <strong>Earning XP:</strong>
+                        <ul>
+                            <li><strong>Mission Completion:</strong> 200-500 XP for successful missions</li>
+                            <li><strong>Exceptional Roleplay:</strong> 50-100 XP for outstanding character portrayal</li>
+                            <li><strong>Objectives Achieved:</strong> 100-300 XP per major objective</li>
+                            <li><strong>Defeating Enemies:</strong> Variable XP based on threat level</li>
+                        </ul>
+                        
+                        <strong>Spending XP:</strong>
+                        <p>Spend XP to improve characteristics, acquire new skills and talents, or gain psychic powers. Costs vary based on the advancement being purchased.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

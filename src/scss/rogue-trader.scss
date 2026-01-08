@@ -24,6 +24,9 @@
 // Global components (appended to document.body, not inside wrappers)
 @import 'src/scss/components/rt-tooltip';
 
+// Armour panel - needs to work both inside rt-wrapper and in ApplicationV2 sheets
+@import 'src/scss/components/armour';
+
 .rt-material {
     font-family: 'Material Icons';
     font-weight: normal;
@@ -58,7 +61,7 @@
     @import 'src/scss/components/header';
     @import 'src/scss/components/navigation';
     @import 'src/scss/components/settings';
-    @import 'src/scss/components/armour';
+    // NOTE: armour is imported at root level to work with both rt-wrapper and ApplicationV2 sheets
     @import 'src/scss/components/characteristic_roller';
     @import 'src/scss/components/characteristics';
     @import 'src/scss/components/skills';

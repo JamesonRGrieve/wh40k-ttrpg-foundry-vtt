@@ -29,6 +29,20 @@ RogueTrader.bio = {
     }
 };
 
+// Sizes object for selectOptions helper (matches bio.size structure)
+RogueTrader.sizes = {
+    1: 'Minuscule (1)',
+    2: 'Puny (2)',
+    3: 'Scrawny (3)',
+    4: 'Average (4)',
+    5: 'Hulking (5)',
+    6: 'Enormous (6)',
+    7: 'Massive (7)',
+    8: 'Immense (8)',
+    9: 'Monumental (9)',
+    10: 'Titanic (10)',
+};
+
 RogueTrader.items = {
     availability: ['Ubiquitous', 'Abundant', 'Plentiful', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
     craftsmanship: ['Poor', 'Common', 'Good', 'Best'],

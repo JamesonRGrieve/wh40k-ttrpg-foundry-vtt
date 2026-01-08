@@ -78,7 +78,8 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/fate-panel-v2.hbs',
             'systems/rogue-trader/templates/actor/panel/corruption-panel-v2.hbs',
             'systems/rogue-trader/templates/actor/panel/insanity-panel-v2.hbs',
-            'systems/rogue-trader/templates/actor/panel/movement-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs',
+            'systems/rogue-trader/templates/actor/panel/movement-panel-full.hbs',
             'systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs',
 
             // Chat templates - needed for roll results
@@ -126,6 +127,7 @@ export class HandlebarManager {
                 'systems/rogue-trader/templates/actor/panel/weapon-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/armour-display-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/combat-controls-panel.hbs',
+                'systems/rogue-trader/templates/actor/panel/movement-panel-compact.hbs',
             ],
             skills: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs',

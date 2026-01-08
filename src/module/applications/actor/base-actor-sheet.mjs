@@ -51,7 +51,8 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             commitWhatIf: BaseActorSheet.#commitWhatIf,
             cancelWhatIf: BaseActorSheet.#cancelWhatIf,
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
-            editCharacteristic: BaseActorSheet.#editCharacteristic
+            editCharacteristic: BaseActorSheet.#editCharacteristic,
+            rollHitLocation: BaseActorSheet.#rollHitLocation
         },
         classes: ["rogue-trader", "sheet", "actor"],
         form: {
@@ -568,6 +569,14 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             this.element.querySelectorAll('input[type="text"][data-dtype="Number"]')
                 .forEach(i => i.addEventListener("change", this._onChangeInputDelta.bind(this)));
         }
+
+        // Auto-select number input values on focus for easy editing
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
+            .forEach(input => {
+                input.addEventListener("focus", (event) => {
+                    event.target.select();
+                });
+            });
 
         // Set up drag handlers for items
         this.element.querySelectorAll("[data-item-id]").forEach(el => {
@@ -1315,6 +1324,63 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             });
 
             ui.notifications.info(`${char.label} updated successfully!`);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle hit location roll.
+     * @this {BaseActorSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollHitLocation(event, target) {
+        try {
+            const roll = await new Roll("1d100").evaluate();
+            const result = roll.total;
+
+            const locations = [
+                { name: "Head", min: 1, max: 10, key: "head" },
+                { name: "Right Arm", min: 11, max: 20, key: "rightArm" },
+                { name: "Left Arm", min: 21, max: 30, key: "leftArm" },
+                { name: "Body", min: 31, max: 70, key: "body" },
+                { name: "Right Leg", min: 71, max: 85, key: "rightLeg" },
+                { name: "Left Leg", min: 86, max: 100, key: "leftLeg" }
+            ];
+
+            const hitLocation = locations.find(loc => result >= loc.min && result <= loc.max);
+            const armourValue = this.actor.system.armour?.[hitLocation.key]?.total ?? 0;
+
+            const content = `
+                <div class="rt-hit-location-result">
+                    <h3><i class="fas fa-crosshairs"></i> Hit Location Roll</h3>
+                    <div class="rt-hit-roll">
+                        <span class="rt-roll-result">${result}</span>
+                    </div>
+                    <div class="rt-hit-location">
+                        <span class="rt-location-name">${hitLocation.name}</span>
+                        <span class="rt-location-armour">Armour: ${armourValue}</span>
+                    </div>
+                </div>
+            `;
+
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+                rolls: [roll],
+                type: CONST.CHAT_MESSAGE_STYLES.ROLL
+            });
+
+            // Flash highlight the hit location on the sheet
+            const locationSlot = this.element.querySelector(`[data-location="${hitLocation.key}"]`);
+            if (locationSlot) {
+                locationSlot.classList.add("rt-hit-location-highlight");
+                setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
+            }
+        } catch (error) {
+            ui.notifications.error(`Hit location roll failed: ${error.message}`);
+            console.error("Hit location roll error:", error);
         }
     }
 }

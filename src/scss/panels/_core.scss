@@ -108,6 +108,13 @@
   background: var(--rt-panel-body-bg);
 }
 
+// Expandable details section within panel body
+.rt-panel-details {
+  margin-top: $rt-space-md;
+  padding-top: $rt-space-md;
+  border-top: 1px solid rgba($rt-border-light, 0.5);
+}
+
 .rt-panel:hover .rt-panel-header {
   box-shadow: inset 0 -1px 0 var(--rt-text-shadow), 0 6px 14px var(--rt-shadow-soft);
 }

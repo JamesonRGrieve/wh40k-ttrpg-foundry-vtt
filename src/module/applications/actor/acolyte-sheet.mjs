@@ -24,7 +24,6 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Combat actions
             combatAction: AcolyteSheet.#combatAction,
             rollInitiative: AcolyteSheet.#rollInitiative,
-            rollHitLocation: AcolyteSheet.#rollHitLocation,
             
             // Stat adjustment actions
             adjustStat: AcolyteSheet.#adjustStat,
@@ -273,28 +272,15 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Update a nested system field while preserving required sibling values.
-     * This prevents DataModel defaults from clobbering missing fields in partial updates.
+     * Update a nested system field.
+     * Always updates just the specific field to avoid overwriting derived/calculated values.
      * @param {string} field     The dot-notation field path (e.g., "system.wounds.value").
      * @param {*} value          The new value to set.
      * @returns {Promise<void>}
      * @private
      */
     async _updateSystemField(field, value) {
-        const match = /^system\\.([^.]+)\\.([^.]+)$/.exec(field);
-        const guardedGroups = new Set(["wounds", "fatigue", "fate", "psy"]);
-        if (match) {
-            const [, group, key] = match;
-            if (guardedGroups.has(group)) {
-                const systemData = this.actor.system?.toObject
-                    ? this.actor.system.toObject()
-                    : foundry.utils.deepClone(this.actor.system ?? {});
-                const currentGroup = foundry.utils.deepClone(systemData?.[group] ?? {});
-                currentGroup[key] = value;
-                await this.actor.update({ [`system.${group}`]: currentGroup });
-                return;
-            }
-        }
+        // Direct field update to avoid overwriting calculated properties
         await this.actor.update({ [field]: value });
     }
 
@@ -955,65 +941,6 @@ export default class AcolyteSheet extends BaseActorSheet {
                 duration: 5000
             });
             console.error("Initiative roll error:", error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle hit location roll.
-     * @this {AcolyteSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollHitLocation(event, target) {
-        try {
-            const roll = await new Roll("1d100").evaluate();
-            const result = roll.total;
-
-            const locations = [
-                { name: "Head", min: 1, max: 10, key: "head" },
-                { name: "Right Arm", min: 11, max: 20, key: "rightArm" },
-                { name: "Left Arm", min: 21, max: 30, key: "leftArm" },
-                { name: "Body", min: 31, max: 70, key: "body" },
-                { name: "Right Leg", min: 71, max: 85, key: "rightLeg" },
-                { name: "Left Leg", min: 86, max: 100, key: "leftLeg" }
-            ];
-
-            const hitLocation = locations.find(loc => result >= loc.min && result <= loc.max);
-            const armourValue = this.actor.system.armour?.[hitLocation.key]?.total ?? 0;
-
-            const content = `
-                <div class="rt-hit-location-result">
-                    <h3><i class="fas fa-crosshairs"></i> Hit Location Roll</h3>
-                    <div class="rt-hit-roll">
-                        <span class="rt-roll-result">${result}</span>
-                    </div>
-                    <div class="rt-hit-location">
-                        <span class="rt-location-name">${hitLocation.name}</span>
-                        <span class="rt-location-armour">Armour: ${armourValue}</span>
-                    </div>
-                </div>
-            `;
-
-            await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-                rolls: [roll],
-                type: CONST.CHAT_MESSAGE_STYLES.ROLL
-            });
-
-            // Flash highlight the hit location on the sheet
-            const locationSlot = this.element.querySelector(`[data-location="${hitLocation.key}"]`);
-            if (locationSlot) {
-                locationSlot.classList.add("rt-hit-location-highlight");
-                setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
-            }
-        } catch (error) {
-            this._notify("error", `Hit location roll failed: ${error.message}`, {
-                duration: 5000
-            });
-            console.error("Hit location roll error:", error);
         }
     }
 
