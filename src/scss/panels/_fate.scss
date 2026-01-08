@@ -1,0 +1,575 @@
+// ============================================
+// FATE PANEL V2 - Blue Stars, Celestial Theme
+// ============================================
+// Complete redesign with star pips, spending menu, and sparkle animations
+
+.rt-fate-panel-v2 {
+  // Base panel styling inherits from rt-panel
+
+  // Celestial blue theme
+  .rt-panel-header {
+    background: linear-gradient(180deg, var(--rt-fate-bg) 0%, transparent 100%);
+    border-bottom: 2px solid var(--rt-fate-border);
+  }
+
+  // ============================================
+  // Main Display Area
+  // ============================================
+
+  .rt-fate-display {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+    align-items: center;
+  }
+
+  // Current/Max Label
+  .rt-fate-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .rt-fate-count {
+    font-family: 'Modesto Condensed', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--rt-fate-secondary);
+    text-shadow: 0 1px 3px var(--rt-fate-bg);
+  }
+
+  .rt-fate-subtitle {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-subtle);
+  }
+
+  // ============================================
+  // Blue Star Pips
+  // ============================================
+
+  .rt-fate-pips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $rt-space-sm;
+    justify-content: center;
+    padding: $rt-space-sm 0;
+  }
+
+  .rt-fate-star {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 2.2rem;
+      color: var(--rt-fate-border);
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 2px 4px var(--rt-shadow-soft));
+    }
+
+    &:hover {
+      transform: scale(1.15) rotate(5deg);
+
+      i {
+        color: var(--rt-fate-primary);
+        filter: drop-shadow(0 3px 8px var(--rt-fate-bg));
+      }
+    }
+
+    &:active {
+      transform: scale(1.05) rotate(0deg);
+    }
+  }
+
+  // Filled star (available fate)
+  .rt-fate-star--filled {
+    i {
+      color: var(--rt-fate-secondary);
+      filter: drop-shadow(0 3px 8px var(--rt-fate-border));
+      animation: gentle-glow 3s ease-in-out infinite;
+    }
+
+    &:hover i {
+      color: var(--rt-fate-secondary);
+      filter: drop-shadow(0 4px 12px var(--rt-fate-primary));
+    }
+  }
+
+  // Gentle glow animation for filled stars
+  @keyframes gentle-glow {
+    0%, 100% {
+      filter: drop-shadow(0 3px 8px var(--rt-fate-border));
+    }
+    50% {
+      filter: drop-shadow(0 4px 12px var(--rt-fate-primary));
+    }
+  }
+
+  // Sparkle effect when gaining fate (triggered via JS)
+  @keyframes sparkle {
+    0% {
+      transform: scale(0.5) rotate(0deg);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.3) rotate(180deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(360deg);
+      opacity: 1;
+    }
+  }
+
+  .rt-fate-star.rt-sparkle {
+    animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  // Fade effect when spending fate (triggered via JS)
+  @keyframes fade-spend {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+  }
+
+  .rt-fate-star.rt-spending {
+    animation: fade-spend 0.5s ease-out forwards;
+  }
+
+  // Empty state
+  .rt-fate-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-lg;
+    color: var(--rt-text-subtle);
+    opacity: 0.6;
+
+    i {
+      font-size: 3rem;
+      color: var(--rt-fate-border);
+    }
+
+    span {
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+  }
+
+  // ============================================
+  // Spending Menu
+  // ============================================
+
+  .rt-fate-actions {
+    width: 100%;
+  }
+
+  .rt-fate-spend-menu {
+    position: relative;
+  }
+
+  .rt-fate-spend-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-sm;
+    padding: $rt-space-sm $rt-space-md;
+    background: linear-gradient(180deg, var(--rt-fate-bg), rgba(196, 135, 29, 0.05));
+    border: 2px solid var(--rt-fate-border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rt-fate-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 0 1px 2px var(--rt-shadow-soft);
+
+    i:first-child {
+      font-size: 1.1em;
+    }
+
+    i:last-child {
+      font-size: 0.8em;
+      margin-left: auto;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      background: linear-gradient(180deg, rgba(196, 135, 29, 0.25), rgba(196, 135, 29, 0.15));
+      border-color: var(--rt-fate-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(196, 135, 29, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &.rt-menu-open i:last-child {
+      transform: rotate(180deg);
+    }
+  }
+
+  .rt-fate-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--rt-panel-bg-solid);
+    border: 2px solid var(--rt-fate-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px var(--rt-shadow-medium);
+    z-index: 100;
+    overflow: hidden;
+    animation: dropdown-slide 0.2s ease;
+  }
+
+  @keyframes dropdown-slide {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .rt-fate-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding: $rt-space-sm $rt-space-md;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rt-border-color-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--rt-text-medium);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    i {
+      width: 20px;
+      color: var(--rt-fate-secondary);
+      font-size: 1em;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--rt-fate-bg);
+      color: var(--rt-fate-secondary);
+
+      i {
+        transform: scale(1.1);
+      }
+    }
+
+    &:active {
+      background: rgba(196, 135, 29, 0.2);
+    }
+  }
+
+  // Burn fate option (dangerous action)
+  .rt-fate-option--burn {
+    color: var(--rt-wounds-secondary);
+    border-top: 2px solid var(--rt-wounds-bg);
+
+    i {
+      color: var(--rt-wounds-secondary);
+    }
+
+    &:hover {
+      background: var(--rt-wounds-bg);
+      color: var(--rt-wounds-primary);
+    }
+  }
+
+  // ============================================
+  // Edit Mode Sections
+  // ============================================
+
+  .rt-fate-edit-section {
+    padding: $rt-space-md;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    margin-bottom: $rt-space-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .rt-fate-edit-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-medium);
+    margin-bottom: $rt-space-sm;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    i {
+      font-size: 0.9em;
+      color: var(--rt-fate-secondary);
+    }
+  }
+
+  .rt-fate-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $rt-space-md;
+  }
+
+  .rt-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .rt-edit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+  }
+
+  .rt-edit-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 $rt-space-sm;
+    border: 2px solid var(--rt-fate-border);
+    border-radius: 6px;
+    background: var(--rt-input-bg);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--rt-fate-secondary);
+    text-align: center;
+    font-family: 'Modesto Condensed', serif;
+    transition: all 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--rt-fate-secondary);
+      background: var(--rt-input-bg-focus);
+      box-shadow: 0 0 0 3px var(--rt-fate-bg);
+    }
+
+    &:hover {
+      border-color: rgba(196, 135, 29, 0.5);
+    }
+  }
+
+  // ============================================
+  // Quick Actions
+  // ============================================
+
+  .rt-fate-quick-actions {
+    display: flex;
+    gap: $rt-space-sm;
+    margin-top: $rt-space-sm;
+  }
+
+  .rt-fate-quick-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: $rt-space-sm $rt-space-md;
+    background: var(--rt-panel-bg-solid);
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--rt-text-medium);
+
+    i {
+      font-size: 1em;
+    }
+
+    &:hover {
+      background: var(--rt-btn-bg-hover);
+      border-color: var(--rt-border-color);
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px var(--rt-shadow-medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .rt-restore-btn {
+    border-color: rgba(74, 143, 92, 0.4);
+    color: var(--rt-success-primary);
+
+    i {
+      color: var(--rt-success-secondary);
+    }
+
+    &:hover {
+      border-color: var(--rt-success-primary);
+      background: var(--rt-success-bg);
+    }
+  }
+
+  .rt-spend-one-btn {
+    border-color: var(--rt-fatigue-border);
+    color: var(--rt-fatigue-primary);
+
+    i {
+      color: var(--rt-fatigue-secondary);
+    }
+
+    &:hover {
+      border-color: var(--rt-fatigue-secondary);
+      background: var(--rt-fatigue-bg);
+    }
+  }
+
+  // ============================================
+  // Edit Mode Star Pips (with numbers)
+  // ============================================
+
+  .rt-fate-pips-edit {
+    .rt-fate-star {
+      width: 48px;
+      height: 48px;
+      position: relative;
+
+      .rt-star-number {
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--rt-text-muted);
+        background: var(--rt-panel-bg-solid);
+        padding: 1px 4px;
+        border-radius: 3px;
+        border: 1px solid var(--rt-border-color-light);
+        pointer-events: none;
+      }
+
+      &.rt-fate-star--filled .rt-star-number {
+        color: var(--rt-fate-secondary);
+        background: var(--rt-fate-bg);
+        border-color: var(--rt-fate-border);
+      }
+    }
+  }
+
+  // ============================================
+  // Info Box
+  // ============================================
+
+  .rt-fate-info-box {
+    display: flex;
+    gap: $rt-space-sm;
+    padding: $rt-space-md;
+    background: var(--rt-fate-bg);
+    border-left: 3px solid var(--rt-fate-border);
+    border-radius: 4px;
+
+    > i {
+      color: var(--rt-fate-secondary);
+      font-size: 1.2rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+  }
+
+  .rt-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
+
+    strong {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--rt-text-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    p {
+      font-size: 0.75rem;
+      color: var(--rt-text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    ul {
+      font-size: 0.75rem;
+      color: var(--rt-text-muted);
+      line-height: 1.5;
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin: 2px 0;
+      }
+
+      strong {
+        font-size: inherit;
+        text-transform: none;
+        letter-spacing: normal;
+        color: var(--rt-fate-secondary);
+      }
+    }
+  }
+
+  .rt-fate-warning {
+    margin-top: 6px;
+    padding: $rt-space-xs $rt-space-sm;
+    background: var(--rt-wounds-bg);
+    border-left: 2px solid var(--rt-wounds-secondary);
+    border-radius: 3px;
+    color: var(--rt-wounds-primary) !important;
+
+    i {
+      color: var(--rt-wounds-secondary);
+      margin-right: 4px;
+    }
+
+    strong {
+      color: var(--rt-wounds-secondary) !important;
+    }
+  }
+}

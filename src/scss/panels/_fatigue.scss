@@ -1,0 +1,569 @@
+// ============================================
+// FATIGUE PANEL V2 - Modern Redesign
+// ============================================
+// Complete overhaul with auto-calc transparency, manual override, and rest button
+
+.rt-fatigue-panel-v2 {
+  // Base panel styling inherits from rt-panel
+
+  // ============================================
+  // Main Display Area
+  // ============================================
+
+  .rt-fatigue-display {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+  }
+
+  .rt-fatigue-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-md;
+    padding: $rt-space-sm 0;
+  }
+
+  // +/- Control Buttons
+  .rt-fatigue-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-btn-bg);
+    border: 2px solid var(--rt-fatigue-border);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--rt-text-medium);
+
+    &:hover {
+      background: var(--rt-btn-bg-hover);
+      border-color: var(--rt-fatigue-primary);
+      transform: scale(1.08);
+      box-shadow: 0 2px 6px var(--rt-shadow-soft);
+    }
+
+    &:active {
+      transform: scale(0.95);
+      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    }
+
+    i {
+      font-size: 0.85rem;
+    }
+  }
+
+  .rt-fatigue-minus {
+    color: var(--rt-success-primary);
+    &:hover {
+      border-color: var(--rt-success-primary);
+      background: var(--rt-success-bg);
+    }
+  }
+
+  .rt-fatigue-plus {
+    color: var(--rt-fatigue-secondary);
+    &:hover {
+      border-color: var(--rt-fatigue-secondary);
+      background: var(--rt-fatigue-bg);
+    }
+  }
+
+  // Current/Max Value Display
+  .rt-fatigue-value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  .rt-fatigue-current {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+    line-height: 1;
+    transition: all 0.3s ease;
+  }
+
+  .rt-fatigue-sep {
+    font-size: 1.5rem;
+    color: var(--rt-text-subtle);
+    font-weight: 400;
+  }
+
+  .rt-fatigue-max {
+    font-size: 1.3rem;
+    color: var(--rt-text-muted);
+    font-weight: 600;
+  }
+
+  // ============================================
+  // Auto-Calc Badge
+  // ============================================
+
+  .rt-fatigue-auto-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-xs $rt-space-sm;
+    background: var(--rt-success-bg);
+    border: 1px solid rgba(74, 143, 92, 0.3);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--rt-success-primary);
+
+    i {
+      font-size: 0.9em;
+      color: var(--rt-success-secondary);
+    }
+  }
+
+  // ============================================
+  // Progress Bar with Blue → Orange Gradient
+  // ============================================
+
+  .rt-fatigue-bar-container {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+  }
+
+  .rt-fatigue-bar {
+    flex: 1;
+    height: 12px;
+    background: var(--rt-border-accent);
+    border-radius: 6px;
+    overflow: visible;  // Changed to visible for threshold markers
+    position: relative;
+    box-shadow: inset 0 1px 3px var(--rt-shadow-soft);
+  }
+
+  // Threshold Markers
+  .rt-threshold-marker {
+    position: absolute;
+    top: -2px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 2;
+
+    .rt-threshold-line {
+      width: 2px;
+      height: 100%;
+      background: var(--rt-skills-border);
+      border-radius: 1px;
+    }
+
+    .rt-threshold-label {
+      position: absolute;
+      top: -18px;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--rt-skills-primary);
+      background: var(--rt-panel-bg-solid);
+      padding: 1px 3px;
+      border-radius: 2px;
+      border: 1px solid var(--rt-skills-border);
+    }
+  }
+
+  .rt-fatigue-bar-fill {
+    height: 100%;
+    width: var(--fatigue-percent, 0%);
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+
+    // Dynamic gradient: blue (low) → orange (high)
+    background: linear-gradient(90deg,
+      #4a8fc5 0%,     // Blue (fresh)
+      #5ba3d1 25%,
+      #c4871d 50%,    // Amber (moderate)
+      #d89038 75%,
+      #c08020 100%    // Orange (exhausted)
+    );
+    background-size: 400% 100%;
+    background-position: calc((100 - var(--fatigue-percent, 0)) * 1%) 0%;
+
+    box-shadow: 0 0 10px rgba(192, 128, 32, 0.3);
+  }
+
+  .rt-fatigue-percent {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--rt-text-muted);
+    min-width: 36px;
+    text-align: right;
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  // ============================================
+  // Alert Messages
+  // ============================================
+
+  .rt-fatigue-alert {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-sm;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    margin-top: $rt-space-xs;
+
+    i {
+      font-size: 1.2em;
+    }
+  }
+
+  .rt-alert-exhausted {
+    background: var(--rt-fatigue-bg);
+    color: var(--rt-fatigue-primary);
+    border: 2px solid var(--rt-fatigue-border);
+    animation: pulse-orange 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-orange {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(192, 128, 32, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(192, 128, 32, 0);
+    }
+  }
+
+  // Panel state modifier for exhausted
+  &.rt-exhausted {
+    .rt-panel-header {
+      background: var(--rt-fatigue-bg);
+      border-bottom: 2px solid var(--rt-fatigue-secondary);
+    }
+
+    .rt-fatigue-current {
+      color: var(--rt-fatigue-secondary);
+      animation: pulse-scale 1.5s ease-in-out infinite;
+    }
+  }
+
+  @keyframes pulse-scale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  // ============================================
+  // Quick Action Buttons
+  // ============================================
+
+  .rt-fatigue-actions {
+    display: flex;
+    gap: $rt-space-sm;
+    margin-top: $rt-space-xs;
+  }
+
+  .rt-fatigue-action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: $rt-space-sm $rt-space-md;
+    background: var(--rt-panel-bg-solid);
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--rt-text-medium);
+
+    i {
+      font-size: 1em;
+    }
+
+    &:hover {
+      background: var(--rt-btn-bg-hover);
+      border-color: var(--rt-border-color);
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px var(--rt-shadow-medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    }
+  }
+
+  .rt-rest-btn {
+    border-color: rgba(74, 143, 92, 0.4);
+    color: var(--rt-success-primary);
+
+    i {
+      color: var(--rt-success-secondary);
+    }
+
+    &:hover {
+      border-color: var(--rt-success-primary);
+      background: var(--rt-success-bg);
+    }
+  }
+
+  .rt-clear-btn {
+    border-color: var(--rt-fatigue-border);
+    color: var(--rt-fatigue-primary);
+
+    i {
+      color: var(--rt-fatigue-secondary);
+    }
+
+    &:hover {
+      border-color: var(--rt-fatigue-secondary);
+      background: var(--rt-fatigue-bg);
+    }
+  }
+
+  // ============================================
+  // Edit Mode Sections
+  // ============================================
+
+  .rt-fatigue-edit-section {
+    padding: $rt-space-md;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    margin-bottom: $rt-space-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .rt-fatigue-edit-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-medium);
+    margin-bottom: $rt-space-sm;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    i {
+      font-size: 0.9em;
+    }
+  }
+
+  // ============================================
+  // Auto/Manual Mode Toggle
+  // ============================================
+
+  .rt-mode-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-sm;
+  }
+
+  .rt-mode-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: $rt-space-sm;
+    background: var(--rt-panel-bg);
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--rt-panel-bg-solid);
+      border-color: var(--rt-border-color);
+    }
+
+    &.rt-mode-active {
+      background: var(--rt-success-bg);
+      border-color: var(--rt-success-primary);
+      box-shadow: 0 0 0 2px rgba(74, 143, 92, 0.2);
+    }
+  }
+
+  .rt-mode-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .rt-mode-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+
+    i {
+      font-size: 1.2rem;
+      color: var(--rt-success-secondary);
+      margin-bottom: 4px;
+    }
+
+    strong {
+      font-size: 0.85rem;
+      color: var(--rt-text-dark);
+      font-weight: 700;
+    }
+
+    small {
+      font-size: 0.7rem;
+      color: var(--rt-text-muted);
+      font-weight: 600;
+    }
+  }
+
+  .rt-fatigue-formula {
+    display: flex;
+    align-items: flex-start;
+    gap: $rt-space-xs;
+    padding: $rt-space-sm;
+    background: var(--rt-success-bg);
+    border-left: 3px solid rgba(74, 143, 92, 0.4);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--rt-text-medium);
+
+    i {
+      color: var(--rt-success-secondary);
+      font-size: 0.9em;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    strong {
+      color: var(--rt-success-primary);
+      font-weight: 700;
+    }
+  }
+
+  // ============================================
+  // Value Editor
+  // ============================================
+
+  .rt-fatigue-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $rt-space-md;
+  }
+
+  .rt-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .rt-edit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .rt-auto-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    background: var(--rt-success-bg);
+    color: var(--rt-success-primary);
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .rt-edit-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 $rt-space-sm;
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    background: var(--rt-input-bg);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+    text-align: center;
+    font-family: 'Modesto Condensed', serif;
+    transition: all 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--rt-border-color-strong);
+      background: var(--rt-input-bg-focus);
+      box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+    }
+
+    &:hover:not(:readonly) {
+      border-color: var(--rt-border-color);
+    }
+
+    &:readonly {
+      background: var(--rt-panel-bg);
+      color: var(--rt-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  // ============================================
+  // Info Box
+  // ============================================
+
+  .rt-fatigue-info-box {
+    display: flex;
+    gap: $rt-space-sm;
+    padding: $rt-space-sm;
+    background: var(--rt-fatigue-bg);
+    border-left: 3px solid var(--rt-fatigue-border);
+    border-radius: 4px;
+
+    i {
+      color: var(--rt-fatigue-secondary);
+      font-size: 1.2rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+  }
+
+  .rt-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    strong {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--rt-text-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    p {
+      font-size: 0.75rem;
+      color: var(--rt-text-muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+}
