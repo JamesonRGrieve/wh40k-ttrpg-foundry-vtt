@@ -138,6 +138,22 @@
                         <label class="rt-field-label">Treasured Mementos</label>
                         <textarea class="rt-textarea" name="system.bio.mementos" rows="2" placeholder="Important possessions and keepsakes...">{{system.bio.mementos}}</textarea>
                     </div>
+                    <div class="rt-journal-section rt-journal-notes">
+                        <label class="rt-field-label">Background & Notes</label>
+                        {{#if editable}}
+                        <prose-mirror name="system.bio.notes" 
+                                      value="{{biography.source.notes}}" 
+                                      document-uuid="{{actor.uuid}}"
+                                      class="rt-prose-editor"
+                                      compact>
+                            {{{biography.enriched.notes}}}
+                        </prose-mirror>
+                        {{else}}
+                        <div class="rt-prose-content editor-content">
+                            {{{biography.enriched.notes}}}
+                        </div>
+                        {{/if}}
+                    </div>
                     {{> systems/rogue-trader/templates/actor/panel/journal-panel.hbs includePanel=false}}
                 </div>
             </div>

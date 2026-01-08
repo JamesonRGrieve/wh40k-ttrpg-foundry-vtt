@@ -208,6 +208,163 @@
     flex: 1;
     min-height: 200px;
   }
+
+  &.rt-journal-notes {
+    flex: 1;
+    min-height: 300px;
+  }
+}
+
+// ProseMirror Editor Integration
+.rt-prose-editor {
+  flex: 1;
+  min-height: 250px;
+  background: $rt-bg-input;
+  border: 1px solid $rt-border-light;
+  border-radius: 4px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  
+  &:focus,
+  &:focus-within {
+    outline: none;
+    border-color: $rt-accent-bio;
+    box-shadow: 0 0 0 2px rgba($rt-accent-bio, 0.1);
+  }
+  
+  // ProseMirror content styling
+  .ProseMirror {
+    padding: $rt-space-sm;
+    min-height: 100%;
+    outline: none;
+
+    p { 
+      margin: 0 0 $rt-space-sm 0; 
+      &:last-child { margin-bottom: 0; }
+    }
+    
+    ul, ol { 
+      margin: 0 0 $rt-space-sm $rt-space-lg;
+      padding-left: $rt-space-md;
+    }
+    
+    h1, h2, h3, h4, h5, h6 { 
+      font-family: 'Modesto Condensed', serif;
+      margin: $rt-space-md 0 $rt-space-sm 0;
+      color: var(--color-text-primary);
+      font-weight: 700;
+      
+      &:first-child { margin-top: 0; }
+    }
+    
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.2rem; }
+    h4 { font-size: 1.1rem; }
+    
+    blockquote {
+      margin: $rt-space-sm 0;
+      padding: $rt-space-sm $rt-space-md;
+      border-left: 3px solid $rt-accent-bio;
+      background: rgba($rt-accent-bio, 0.05);
+      font-style: italic;
+    }
+    
+    code {
+      background: rgba(0, 0, 0, 0.1);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+    }
+    
+    pre {
+      background: rgba(0, 0, 0, 0.1);
+      padding: $rt-space-sm;
+      border-radius: 4px;
+      overflow-x: auto;
+      
+      code {
+        background: none;
+        padding: 0;
+      }
+    }
+    
+    // Tables
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: $rt-space-sm 0;
+      
+      th, td {
+        border: 1px solid $rt-border-light;
+        padding: $rt-space-xs $rt-space-sm;
+        text-align: left;
+      }
+      
+      th {
+        background: rgba($rt-accent-bio, 0.1);
+        font-weight: 600;
+      }
+    }
+    
+    // Links
+    a {
+      color: $rt-accent-bio;
+      text-decoration: underline;
+      
+      &:hover {
+        color: lighten($rt-accent-bio, 10%);
+      }
+    }
+    
+    // Images
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin: $rt-space-sm 0;
+    }
+    
+    // Horizontal rule
+    hr {
+      margin: $rt-space-md 0;
+      border: none;
+      border-top: 2px solid $rt-border-light;
+    }
+  }
+}
+
+// Read-only prose content (for non-editable view)
+.rt-prose-content {
+  padding: $rt-space-sm;
+  background: $rt-bg-input;
+  border: 1px solid $rt-border-light;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  min-height: 100px;
+  
+  p { 
+    margin: 0 0 $rt-space-sm 0; 
+    &:last-child { margin-bottom: 0; }
+  }
+  
+  ul, ol { 
+    margin: 0 0 $rt-space-sm $rt-space-lg;
+  }
+  
+  h1, h2, h3 { 
+    font-family: 'Modesto Condensed', serif;
+    margin: $rt-space-sm 0;
+  }
+  
+  &:empty::before {
+    content: "No notes recorded...";
+    color: $rt-text-muted;
+    font-style: italic;
+  }
 }
 
 .rt-journal-editor {
