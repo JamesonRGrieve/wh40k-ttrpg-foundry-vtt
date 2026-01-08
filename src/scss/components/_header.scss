@@ -53,7 +53,7 @@
         &--build,
         &--complexion,
         &--hair {
-            @extend .dh-header__item-wrapper;
+            @extend .rt-header__item-wrapper;
         }
 
         &--span-2,
@@ -62,18 +62,18 @@
         &--careerpath,
         &--divination,
         &--elite {
-            @extend .dh-header__item-wrapper;
+            @extend .rt-header__item-wrapper;
             grid-column: span 2;
         }
 
         &--span-3,
         &--quirks {
-            @extend .dh-header__item-wrapper;
+            @extend .rt-header__item-wrapper;
             grid-column: span 3;
         }
 
         &--3-span-2 {
-            @extend .dh-header__item-wrapper;
+            @extend .rt-header__item-wrapper;
             grid-column: 3 / span 2;
         }
 
@@ -81,12 +81,12 @@
         &--mementos,
         &--superstition,
         &--notes {
-            @extend .dh-header__item-wrapper;
+            @extend .rt-header__item-wrapper;
             grid-column: span 4;
         }
 
         &--text-area {
-            @extend .dh-header__item-wrapper;
+            @extend .rt-header__item-wrapper;
             grid-column: span 4;
             grid-row: span 2;
             min-height: 150px;
@@ -133,9 +133,4 @@
     &__input {
         height: 100% !important;
     }
-}
-
-// Legacy alias for backwards compatibility
-.dh-header {
-    @extend .rt-header;
 }

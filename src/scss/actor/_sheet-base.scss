@@ -258,20 +258,17 @@ $rt-panel-movement: rgb(42, 122, 154);
     min-height: 0;
 }
 
-.rt-actor,
-.dh-actor {
+.rt-actor {
     display: contents;
 }
 
-.rt-header,
-.dh-header {
+.rt-header {
     grid-column: span 6;
     position: relative;
     z-index: 5;
 }
 
-.rt-header__logo,
-.dh-header__logo {
+.rt-header__logo {
     width: 80px;
     height: 80px;
     border-radius: 6px;
@@ -280,8 +277,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     box-shadow: 0 2px 8px var(--rt-shadow-medium);
 }
 
-.rt-header__logo-image,
-.dh-header__logo-image {
+.rt-header__logo-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -688,10 +684,4 @@ $rt-panel-movement: rgb(42, 122, 154);
     .rt-char-hud-item:hover {
         transform: none !important;
     }
-}
-
-
-// Legacy aliases for backwards compatibility
-.dh-wrapper {
-    @extend .rt-wrapper;
 }

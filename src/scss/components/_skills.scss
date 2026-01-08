@@ -325,11 +325,6 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   }
 }
 
-// Legacy alias
-.dh-skilltable--border {
-  @extend .rt-skilltable--border;
-}
-
 // Responsive adjustments for smaller screens
 @media (max-width: 1200px) {
   .rt-skills-panel,

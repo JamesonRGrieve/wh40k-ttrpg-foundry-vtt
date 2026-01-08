@@ -206,28 +206,50 @@ src/module/utils/
 
 ---
 
-## 10. Future: Complete V2 Migration
+## 10. Future: Complete V2 Migration ✅ COMPLETED (2026-01-08)
 
-**Remaining Monolithic Templates:** 3 actor sheets  
+**Status:** All 3 actor sheets migrated to PARTS system!
 
+**What Was Done:**
+- Created `npc/`, `starship/`, `vehicle/` template directories
+- Split monolithic templates into modular tab parts
+- All sheets now use ApplicationV2 PARTS rendering
+- Old monolithic templates deleted
+
+**Created Template Structure:**
 ```
 src/templates/actor/
-├── actor-npc-sheet.hbs         (9,462 bytes)
-├── actor-starship-sheet.hbs    (16,190 bytes)
-└── actor-vehicle-sheet.hbs     (4,609 bytes)
+├── acolyte/                   (12 template parts)
+├── npc/                       (7 template parts)
+│   ├── header.hbs
+│   ├── tabs.hbs
+│   ├── tab-combat.hbs
+│   ├── tab-abilities.hbs
+│   ├── tab-gear.hbs
+│   ├── tab-powers.hbs
+│   └── tab-notes.hbs
+├── starship/                  (7 template parts)
+│   ├── header.hbs
+│   ├── tabs.hbs
+│   ├── tab-stats.hbs
+│   ├── tab-components.hbs
+│   ├── tab-weapons.hbs
+│   ├── tab-crew.hbs
+│   └── tab-history.hbs
+├── vehicle/                   (5 template parts)
+│   ├── header.hbs
+│   ├── tabs.hbs
+│   ├── tab-stats.hbs
+│   ├── tab-weapons.hbs
+│   └── tab-traits.hbs
+└── panel/                     (44 reusable panel partials)
 ```
 
-**Recommendation:** Migrate to PARTS system like AcolyteSheet  
-- Create `npc/`, `starship/`, `vehicle/` directories
-- Split into modular tab templates
-- Use V2 panels consistently
-
-**Effort:** High (3-4 sessions)  
-**Benefit:**
-- Consistent architecture across all sheets
-- Can delete old panel templates (Phase 2 from TEMPLATE_CLEANUP_TRACKING.md)
-- Better performance (selective re-rendering)
-- Easier maintenance
+**Benefits Achieved:**
+- ✅ Consistent architecture across all sheets
+- ✅ Better performance (selective re-rendering)
+- ✅ Easier maintenance
+- ✅ Ready for Phase 2 SCSS cleanup
 
 ---
 
@@ -264,12 +286,12 @@ src/templates/actor/
      - `applications/actor/base-actor-sheet.mjs`
    - Clearer naming distinguishes API layer from visual feedback layer
 
-### Low Priority (After NPC Migration)
-6. **SCSS V2 consolidation** - Depends on NPC migration
+### Low Priority (After NPC Migration) - NOW READY
+6. **SCSS V2 consolidation** - Can now proceed!
 7. **Split large SCSS files** - Only if needed
 
-### Future (Multi-session effort)
-8. **Complete V2 migration** - NPC, Starship, Vehicle sheets
+### Future (Multi-session effort) ✅ COMPLETED
+8. ✅ **Complete V2 migration** - NPC, Starship, Vehicle sheets (DONE 2026-01-08)
 
 ---
 
@@ -285,15 +307,17 @@ src/templates/actor/
 - **Effort:** 1-2 hours
 - **Saved:** ~5KB, improved organization
 
-### Phase 2 (Post-NPC Migration)
+### Phase 2 (Post-NPC Migration) - NOW READY
 - **Remove:** 7 legacy panel templates, 4 old SCSS files
 - **Consolidate:** V2 → standard naming (drop -v2 suffix)
 - **Effort:** 2-3 hours
 - **Saved:** ~50KB SCSS, eliminates style conflicts
 
-### Phase 3 (V2 Migration Complete)
-- **Modernize:** 3 monolithic actor sheets → PARTS
-- **Effort:** 3-4 sessions
+### Phase 3 (V2 Migration Complete) ✅ DONE
+- ✅ **Modernized:** 3 monolithic actor sheets → PARTS
+- ✅ NPC sheet: 5 tabs (combat, abilities, gear, powers, notes)
+- ✅ Starship sheet: 5 tabs (stats, components, weapons, crew, history)
+- ✅ Vehicle sheet: 3 tabs (stats, weapons, traits)
 - **Benefit:** Architectural consistency, performance, maintainability
 
 ---

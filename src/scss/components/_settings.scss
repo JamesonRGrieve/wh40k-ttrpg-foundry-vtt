@@ -310,28 +310,3 @@
         }
     }
 }
-
-// Legacy aliases for backwards compatibility
-.dh-settings {
-    @extend .rt-settings;
-}
-
-.dh-settings--border {
-    @extend .rt-settings--border;
-}
-
-.dh-settings__row {
-    @extend .rt-settings__row;
-}
-
-.dh-settings__row--invert {
-    @extend .rt-settings__row--invert;
-}
-
-.dh-settings__row--span {
-    @extend .rt-settings__row--span;
-}
-
-.dh-settings__label {
-    @extend .rt-settings__label;
-}

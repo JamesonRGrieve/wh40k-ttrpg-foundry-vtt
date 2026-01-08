@@ -1,5 +1,5 @@
-import { prepareWeaponRoll } from '../applications/prompts/weapon-roll-dialog.mjs';
-import { preparePsychicPowerRoll } from '../applications/prompts/psychic-power-roll-dialog.mjs';
+import { prepareWeaponRoll } from '../applications/prompts/weapon-attack-dialog.mjs';
+import { preparePsychicPowerRoll } from '../applications/prompts/psychic-power-dialog.mjs';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';

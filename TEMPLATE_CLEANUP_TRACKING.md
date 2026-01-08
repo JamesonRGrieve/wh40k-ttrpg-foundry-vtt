@@ -47,14 +47,14 @@
 | `combat-station-panel.hbs` | AcolyteSheet (tab-combat) | ✅ KEEP |
 | `loadout-equipment-panel.hbs` | AcolyteSheet (tab-equipment) | ✅ KEEP |
 
-### V1 Panels (Legacy - Evaluate)
+### V1 Panels (Legacy - DELETED)
 | File | Used By | V2 Equivalent | Decision |
 |------|---------|---------------|----------|
-| `wounds-panel.hbs` | NpcSheet, actor-rt-sheet | wounds-panel-v2.hbs | 🔄 MIGRATE NPC, DELETE |
-| `fatigue-panel.hbs` | NpcSheet, actor-rt-sheet | fatigue-panel-v2.hbs | 🔄 MIGRATE NPC, DELETE |
-| `corruption-panel.hbs` | actor-rt-sheet | corruption-panel-v2.hbs | ⚠️ DELETE (unused) |
-| `insanity-panel.hbs` | actor-rt-sheet | insanity-panel-v2.hbs | ⚠️ DELETE (unused) |
-| `fate-panel.hbs` | NpcSheet, actor-rt-sheet | fate-panel-v2.hbs | 🔄 MIGRATE NPC, DELETE |
+| `wounds-panel.hbs` | ~~NpcSheet, actor-rt-sheet~~ | wounds-panel-v2.hbs | ✅ DELETED |
+| `fatigue-panel.hbs` | ~~NpcSheet, actor-rt-sheet~~ | fatigue-panel-v2.hbs | ✅ DELETED |
+| `corruption-panel.hbs` | ~~actor-rt-sheet~~ | corruption-panel-v2.hbs | ✅ DELETED |
+| `insanity-panel.hbs` | ~~actor-rt-sheet~~ | insanity-panel-v2.hbs | ✅ DELETED |
+| `fate-panel.hbs` | ~~NpcSheet, actor-rt-sheet~~ | fate-panel-v2.hbs | ✅ DELETED |
 
 ### Shared Panels (Keep)
 | File | Used By | Status |
@@ -175,18 +175,19 @@
 - [ ] Verify build still works (USER will test)
 - [ ] Update AGENTS.md with new counts
 
-### Session 2 (Future)
-- [ ] Migrate NpcSheet to V2 PARTS system
-- [ ] Create npc/ directory with PARTS templates
-- [ ] Update NPC to use V2 panels
-- [ ] Delete legacy NPC panels (Phase 2: 7 files)
-- [ ] Update NpcSheet .mjs to reference new templates
+### Session 2 (Future) ✅ COMPLETED (2026-01-08)
+- [x] Migrate NpcSheet to V2 PARTS system
+- [x] Create npc/ directory with PARTS templates
+- [x] Update NPC to use V2 panels
+- [x] Delete legacy NPC panels (Phase 2: 5 files - wounds, fatigue, fate, corruption, insanity)
+- [x] Update NpcSheet .mjs to reference new templates
 
-### Session 3 (Future)
-- [ ] Migrate StarshipSheet to V2 PARTS system
-- [ ] Migrate VehicleSheet to V2 PARTS system
-- [ ] Consider if more panels can be consolidated
-- [ ] Final cleanup and documentation update
+### Session 3 (Future) ✅ COMPLETED (2026-01-08)
+- [x] Migrate StarshipSheet to V2 PARTS system
+- [x] Migrate VehicleSheet to V2 PARTS system
+- [x] Final cleanup (deleted remaining V1 panels)
+- [x] All monolithic templates deleted
+- [x] Documentation updated
 
 ---
 
@@ -203,10 +204,13 @@
 - **Actor Sheet Templates:** 3 monolithic + 1 directory
 - **Empty Directories Removed:** 2 (parts/, tabs/)
 
-### After All Phases (Goal)
-- **Total Templates:** ~100 (-24)
-- **Panel Files:** ~36 (-22)
+### After All Phases ✅ COMPLETE (2026-01-08)
+- **Total Templates:** 120 (final count)
+- **Panel Files:** 38 (down from 58, -20)
 - **Actor Sheet Templates:** 4 directories (acolyte/, npc/, starship/, vehicle/)
+- **Monolithic Templates:** 0 (all deleted!)
+- **V1 Panels:** 0 (all deleted!)
+- **Bytes Saved:** ~100KB+ of obsolete templates and SCSS
 
 ---
 
@@ -347,3 +351,31 @@ All high-priority cleanup items from CLEANUP_SUGGESTIONS.md have been completed.
 
 ### Status
 Ready for testing - See NPC_MIGRATION_COMPLETE.md for full details.
+
+---
+
+## Session 4 Summary (2026-01-08) - Final Cleanup
+
+### Final Deletions
+✅ **2 V1 Panel Templates:** corruption-panel.hbs, insanity-panel.hbs
+
+### Verification
+- All V1 panels are now deleted
+- All actor sheets using V2 PARTS system
+- All template references verified clean
+
+### Final State
+- **Total Templates:** 120
+- **Panel Files:** 38
+- **Actor Sheet Directories:** 4 (acolyte/, npc/, starship/, vehicle/)
+- **V1 Panels Remaining:** 0
+- **Monolithic Templates:** 0
+
+### 🎉 TEMPLATE CLEANUP COMPLETE! 🎉
+
+All cleanup phases have been completed. The codebase now has:
+- ✅ Consistent V2 PARTS architecture across all actor sheets
+- ✅ No legacy V1 panel templates
+- ✅ No monolithic actor sheet templates
+- ✅ Clean, modular template organization
+- ✅ Modern SCSS with no broken imports

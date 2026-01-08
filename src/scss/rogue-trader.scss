@@ -40,11 +40,6 @@
     -webkit-font-smoothing: antialiased;
 }
 
-// Legacy alias for backwards compatibility
-.dh-material {
-    @extend .rt-material;
-}
-
 .rt-wrapper {
     position: relative;
 
