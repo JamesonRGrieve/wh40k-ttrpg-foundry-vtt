@@ -123,6 +123,14 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     async _onRender(context, options) {
         await super._onRender(context, options);
 
+        // Auto-select number input values on focus for easy editing
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
+            .forEach(input => {
+                input.addEventListener("focus", (event) => {
+                    event.target.select();
+                });
+            });
+
         // Set up button listeners for V1-style templates
         this.element.querySelector("[data-action='add']")?.addEventListener("click", (e) => {
             e.preventDefault();

@@ -8,6 +8,7 @@
         </button>
     </div>
     <div class="rt-panel-body">
+        {{#if effects.length}}
         <div class="rt-effects-list">
         {{#each effects as |effect|}}
             <div class="rt-effect-row {{#if effect.disabled}}rt-effect-disabled{{/if}}">
@@ -31,6 +32,11 @@
                 </div>
             </div>
         {{/each}}
+        </div>
+        {{/if}}
+        <div class="rt-dropzone effect-create">
+            <i class="fas fa-bolt rt-dropzone-icon"></i>
+            <span class="rt-dropzone-text">Drop Effects Here or Click to Create</span>
         </div>
     </div>
 </div>

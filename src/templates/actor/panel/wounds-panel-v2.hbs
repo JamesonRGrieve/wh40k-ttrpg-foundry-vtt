@@ -80,8 +80,8 @@
         </div>
         {{/if}}
 
-        {{!-- Critical Damage Pip System --}}
-        {{#if (gt system.wounds.critical 0)}}
+        {{!-- Critical Damage Pip System - Show if critical > 0 OR wounds = 0 --}}
+        {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
         <div class="rt-wounds-critical-section">
             <div class="rt-critical-header">
                 <span class="rt-critical-title">

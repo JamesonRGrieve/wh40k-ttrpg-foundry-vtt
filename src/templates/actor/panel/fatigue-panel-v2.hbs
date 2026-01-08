@@ -1,5 +1,5 @@
-{{!-- Redesigned Fatigue Panel - Modern, Auto-Calc Transparency, Player-Friendly --}}
-<div class="rt-panel rt-fatigue-panel-v2 {{#if (gte system.fatigue.value system.fatigue.max)}}rt-exhausted{{/if}}">
+{{!-- Redesigned Fatigue Panel - Core Rules Compliant --}}
+<div class="rt-panel rt-fatigue-panel-v2 {{#if (gt system.fatigue.value system.fatigue.max)}}rt-unconscious{{else if (gt system.fatigue.value 0)}}rt-fatigued{{/if}}">
 
     {{!-- Panel Header - Click to expand/collapse --}}
     <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
@@ -41,44 +41,39 @@
                 </button>
             </div>
 
-            {{!-- Auto-Calc Badge (when in auto mode) --}}
-            {{#unless system.fatigue.manualMax}}
+            {{!-- Auto-Calc Badge --}}
             <div class="rt-fatigue-auto-badge">
                 <i class="fas fa-calculator"></i>
-                <span>AUTO: TB ({{characteristics.toughness.bonus}}) + WB ({{characteristics.willpower.bonus}}) = {{system.fatigue.max}}</span>
+                <span>Threshold = TB ({{characteristics.toughness.bonus}})</span>
             </div>
-            {{/unless}}
 
-            {{!-- Progress Bar with Blue → Orange Gradient and Threshold Markers --}}
+            {{!-- Progress Bar --}}
             <div class="rt-fatigue-bar-container">
                 <div class="rt-fatigue-bar"
                      data-percent="{{percent system.fatigue.value system.fatigue.max}}"
                      style="--fatigue-percent: {{percent system.fatigue.value system.fatigue.max}}%">
                     <div class="rt-fatigue-bar-fill"></div>
 
-                    {{!-- Threshold Markers --}}
-                    <div class="rt-threshold-marker" style="left: 33%;" title="Tired (33%)">
+                    {{!-- Threshold Marker at 100% --}}
+                    <div class="rt-threshold-marker" style="left: 100%;" title="Collapse Threshold">
                         <span class="rt-threshold-line"></span>
-                        <span class="rt-threshold-label">33%</span>
-                    </div>
-                    <div class="rt-threshold-marker" style="left: 66%;" title="Fatigued (66%)">
-                        <span class="rt-threshold-line"></span>
-                        <span class="rt-threshold-label">66%</span>
-                    </div>
-                    <div class="rt-threshold-marker" style="left: 100%;" title="Exhausted (100%)">
-                        <span class="rt-threshold-line"></span>
-                        <span class="rt-threshold-label">100%</span>
+                        <span class="rt-threshold-label">TB</span>
                     </div>
                 </div>
-                <span class="rt-fatigue-percent">{{percent system.fatigue.value system.fatigue.max}}%</span>
+                <span class="rt-fatigue-percent">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
             </div>
         </div>
 
-        {{!-- Exhausted Warning Banner --}}
-        {{#if (gte system.fatigue.value system.fatigue.max)}}
-        <div class="rt-fatigue-alert rt-alert-exhausted">
+        {{!-- Warning Messages --}}
+        {{#if (gt system.fatigue.value system.fatigue.max)}}
+        <div class="rt-fatigue-alert rt-alert-unconscious">
             <i class="fas fa-dizzy"></i>
-            <span>EXHAUSTED - All Characteristics Halved!</span>
+            <span>UNCONSCIOUS - Collapsed for {{sub 10 characteristics.toughness.bonus}} minutes!</span>
+        </div>
+        {{else if (gt system.fatigue.value 0)}}
+        <div class="rt-fatigue-alert rt-alert-fatigued">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>FATIGUED - Suffer –10 penalty to all Tests</span>
         </div>
         {{/if}}
 
@@ -107,49 +102,7 @@
         {{!-- Edit Mode (Expandable) --}}
         <div class="rt-panel-details fatigue_details" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
 
-            {{!-- Auto/Manual Toggle --}}
-            <div class="rt-fatigue-edit-section">
-                <div class="rt-fatigue-edit-header">
-                    <i class="fas fa-toggle-on"></i> Calculation Mode
-                </div>
-
-                <div class="rt-mode-toggle">
-                    <label class="rt-mode-option {{#unless system.fatigue.manualMax}}rt-mode-active{{/unless}}">
-                        <input type="radio"
-                               name="system.fatigue.manualMax"
-                               value="false"
-                               {{#unless system.fatigue.manualMax}}checked{{/unless}}
-                               class="rt-mode-radio" />
-                        <span class="rt-mode-label">
-                            <i class="fas fa-calculator"></i>
-                            <strong>Auto-Calculate</strong>
-                            <small>TB + WB</small>
-                        </span>
-                    </label>
-
-                    <label class="rt-mode-option {{#if system.fatigue.manualMax}}rt-mode-active{{/if}}">
-                        <input type="radio"
-                               name="system.fatigue.manualMax"
-                               value="true"
-                               {{#if system.fatigue.manualMax}}checked{{/if}}
-                               class="rt-mode-radio" />
-                        <span class="rt-mode-label">
-                            <i class="fas fa-pen"></i>
-                            <strong>Manual Override</strong>
-                            <small>Custom Value</small>
-                        </span>
-                    </label>
-                </div>
-
-                {{#unless system.fatigue.manualMax}}
-                <div class="rt-fatigue-formula">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Threshold automatically calculates as <strong>Toughness Bonus + Willpower Bonus</strong></span>
-                </div>
-                {{/unless}}
-            </div>
-
-            {{!-- Threshold and Current Editor --}}
+            {{!-- Current Fatigue Editor --}}
             <div class="rt-fatigue-edit-section">
                 <div class="rt-fatigue-edit-header">
                     <i class="fas fa-cog"></i> Edit Values
@@ -159,9 +112,7 @@
                     <label class="rt-edit-field">
                         <span class="rt-edit-label">
                             Threshold
-                            {{#unless system.fatigue.manualMax}}
-                            <span class="rt-auto-tag">AUTO</span>
-                            {{/unless}}
+                            <span class="rt-auto-tag">AUTO: TB</span>
                         </span>
                         <input type="number"
                                data-dtype="Number"
@@ -169,7 +120,7 @@
                                name="system.fatigue.max"
                                value="{{system.fatigue.max}}"
                                min="0"
-                               {{#unless system.fatigue.manualMax}}readonly{{/unless}}
+                               readonly
                                placeholder="Threshold" />
                     </label>
 
@@ -191,9 +142,10 @@
                 <div class="rt-fatigue-info-box">
                     <i class="fas fa-book"></i>
                     <div class="rt-info-content">
-                        <strong>About Fatigue</strong>
-                        <p>When fatigue reaches or exceeds the threshold, you become <strong>Exhausted</strong> and all characteristics are halved.</p>
-                        <p>Rest or recovery can reduce fatigue over time.</p>
+                        <strong>Fatigue Rules (Core)</strong>
+                        <p><strong>Any Fatigue:</strong> –10 penalty to all Tests.</p>
+                        <p><strong>Exceeds TB:</strong> Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.</p>
+                        <p><strong>Recovery:</strong> Each hour of rest removes 1 fatigue. Eight consecutive hours removes all fatigue.</p>
                     </div>
                 </div>
             </div>

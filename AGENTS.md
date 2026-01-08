@@ -91,7 +91,7 @@ ApplicationV2 Sheets (src/module/applications/actor/):
 | Layer | File | Responsibility |
 |-------|------|----------------|
 | **CommonTemplate** | `templates/common.mjs` | Base schema: characteristics, wounds, initiative, movement, size |
-| **CreatureTemplate** | `templates/creature.mjs` | Skills, fatigue, fate, psy, armour, encumbrance, item modifiers |
+| **CreatureTemplate** | `templates/creature.mjs` | Skills, fatigue (TB-based), fate, psy, armour, encumbrance, item modifiers |
 | **CharacterData** | `character.mjs` | Character-specific: bio, experience, origin path, rogueTrader extras |
 | **NPCData** | `npc.mjs` | NPC-specific: faction, subfaction, type, threatLevel |
 
@@ -157,7 +157,7 @@ WhatIfMixin(
 | File | Lines | Description |
 |------|-------|-------------|
 | `actor/templates/common.mjs` | ~180 | Base characteristics, wounds, initiative |
-| `actor/templates/creature.mjs` | ~670 | Skills, fatigue, fate, psy, item modifiers |
+| `actor/templates/creature.mjs` | ~670 | Skills, fatigue (TB), fate, psy, item modifiers |
 | `actor/character.mjs` | ~340 | Character schema + experience/origin path |
 | `actor/npc.mjs` | ~42 | NPC-specific fields |
 
@@ -258,6 +258,24 @@ armour: {
 ```
 
 **Calculation**: `total = TB + traitBonus (Machine/Natural) + cybernetic AP + max equipped armour`
+
+### Fatigue System (Core Rules)
+
+```javascript
+fatigue: {
+  max: { type: Number },    // Threshold = Toughness Bonus (auto-calculated)
+  value: { type: Number }    // Current fatigue levels
+}
+```
+
+**Rules** (Rogue Trader Core, p. 232):
+1. **Threshold**: Toughness Bonus (TB). Character can take TB levels of fatigue before collapsing.
+2. **Any Fatigue**: –10 penalty to **all Tests** (does NOT stack; 1 or more levels = –10).
+3. **Exceeds TB**: Character collapses unconscious for (10 – TB) minutes.
+4. **Upon Waking**: Fatigue resets to TB (threshold level).
+5. **Recovery**: 1 hour rest = –1 fatigue. 8 consecutive hours = all fatigue removed.
+
+**Note**: Fatigue does NOT affect characteristic values or bonuses, only Test rolls.
 
 ## Event Handler Patterns
 
@@ -509,7 +527,7 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
 5. **Panel System V2** (Jan 2026)
    - Modern collapsible panels with state persistence
    - `wounds-panel-v2.hbs` - Pip system, progress bars
-   - `fatigue-panel-v2.hbs` - Auto-calc + manual override
+   - `fatigue-panel-v2.hbs` - TB-based threshold, -10 penalty display, collapse warning
    - `fate-panel-v2.hbs` - Golden star pips, spend/restore menu
    - `corruption-panel-v2.hbs` - Degree badges, threshold warnings
    - `insanity-panel-v2.hbs` - Degree badges, disorder tracking
@@ -985,7 +1003,7 @@ $rt-accent-biography: #34495e;   // Dark blue-gray
 - Skills with training tiers (Basic/Trained/+10/+20)
 - Specialist skills with entries (Lore, Pilot, Drive, etc.)
 - Wounds (total/current/critical) + Critical Injuries as items
-- Fatigue (threshold/current, exhaustion warning)
+- Fatigue (TB threshold, -10 penalty on any fatigue, collapse > TB)
 - Fate Points (total/current)
 - Insanity (points, degree, disorders as items)
 - Corruption (points, degree, malignancies as items)

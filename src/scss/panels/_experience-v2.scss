@@ -1,0 +1,491 @@
+// ============================================
+// EXPERIENCE PANEL V2 - Modern, Dynamic, Interactive
+// ============================================
+// Complete redesign with progress ring, quick actions, and visual feedback
+
+.rt-experience-panel-v2 {
+  // Base panel styling inherits from rt-panel
+
+  // Golden/Bronze theme for XP
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba(192, 128, 32, 0.2) 0%, rgba(192, 128, 32, 0.08) 100%);
+    border-bottom: 2px solid rgba(192, 128, 32, 0.3);
+  }
+
+  // ============================================
+  // Available XP Badge in Header
+  // ============================================
+
+  .rt-xp-available-badge {
+    padding: 4px 12px;
+    background: linear-gradient(135deg, rgba(192, 128, 32, 0.25), rgba(208, 152, 56, 0.15));
+    border: 1px solid rgba(192, 128, 32, 0.5);
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #d09838;
+    font-family: 'Modesto Condensed', serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    margin-left: auto;
+    margin-right: $rt-space-sm;
+  }
+
+  // ============================================
+  // Main Display Area
+  // ============================================
+
+  .rt-xp-display {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+  }
+
+  // Large Available XP Display
+  .rt-xp-available-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: $rt-space-md 0;
+    background: linear-gradient(135deg, rgba(192, 128, 32, 0.15), rgba(208, 152, 56, 0.08));
+    border-radius: 12px;
+    border: 2px solid rgba(192, 128, 32, 0.3);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(208, 152, 56, 0.1) 0%, transparent 70%);
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  .rt-xp-available-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8b7355;
+    position: relative;
+    z-index: 1;
+  }
+
+  .rt-xp-available-number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    font-family: 'Modesto Condensed', serif;
+    color: #d09838;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(192, 128, 32, 0.5),
+                 0 0 20px rgba(208, 152, 56, 0.3);
+    position: relative;
+    z-index: 1;
+    animation: number-shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes number-shimmer {
+    0%, 100% {
+      text-shadow: 0 2px 8px rgba(192, 128, 32, 0.5),
+                   0 0 20px rgba(208, 152, 56, 0.3);
+    }
+    50% {
+      text-shadow: 0 2px 12px rgba(192, 128, 32, 0.7),
+                   0 0 30px rgba(208, 152, 56, 0.5);
+    }
+  }
+
+  .rt-xp-unit {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6a5a43;
+    position: relative;
+    z-index: 1;
+  }
+
+  // ============================================
+  // Progress Ring Visualization
+  // ============================================
+
+  .rt-xp-visual {
+    display: flex;
+    justify-content: center;
+    padding: $rt-space-sm 0;
+  }
+
+  .rt-xp-ring {
+    width: 140px;
+    height: 140px;
+    position: relative;
+  }
+
+  .rt-xp-ring-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    filter: drop-shadow(0 2px 8px rgba(192, 128, 32, 0.3));
+  }
+
+  .rt-xp-ring-progress {
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .rt-xp-ring-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rt-xp-percent {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Modesto Condensed', serif;
+    color: #c08020;
+    line-height: 1;
+  }
+
+  .rt-xp-percent-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8b7355;
+    margin-top: 2px;
+  }
+
+  // ============================================
+  // Quick Stats Grid
+  // ============================================
+
+  .rt-xp-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $rt-space-sm;
+  }
+
+  .rt-xp-stat-card {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding: $rt-space-sm;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(120, 46, 34, 0.25);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+      border-color: rgba(120, 46, 34, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    i {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+  }
+
+  .rt-xp-stat-total {
+    border-left: 3px solid #d09838;
+
+    i {
+      color: #d09838;
+    }
+  }
+
+  .rt-xp-stat-spent {
+    border-left: 3px solid #c08020;
+
+    i {
+      color: #c08020;
+    }
+  }
+
+  .rt-xp-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .rt-xp-stat-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6a5a43;
+  }
+
+  .rt-xp-stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-family: 'Modesto Condensed', serif;
+    color: #2a1a0a;
+    line-height: 1;
+  }
+
+  // ============================================
+  // Quick Action Buttons
+  // ============================================
+
+  .rt-xp-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: $rt-space-sm;
+  }
+
+  .rt-xp-quick-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: $rt-space-sm;
+    background: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgba(120, 46, 34, 0.3);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #4a3728;
+
+    i {
+      font-size: 1em;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      border-color: rgba(120, 46, 34, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .rt-xp-add-btn {
+    border-color: rgba(74, 143, 92, 0.4);
+    color: #3a6d47;
+
+    i {
+      color: #4a8f5c;
+    }
+
+    &:hover {
+      border-color: #4a8f5c;
+      background: rgba(74, 143, 92, 0.08);
+    }
+  }
+
+  .rt-xp-custom-btn {
+    border-color: rgba(192, 128, 32, 0.4);
+    color: #8b5a0a;
+
+    i {
+      color: #c08020;
+    }
+
+    &:hover {
+      border-color: #c08020;
+      background: rgba(192, 128, 32, 0.08);
+    }
+  }
+
+  // ============================================
+  // Edit Mode Sections
+  // ============================================
+
+  .rt-xp-edit-section {
+    padding: $rt-space-md;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(120, 46, 34, 0.2);
+    border-radius: 8px;
+    margin-bottom: $rt-space-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .rt-xp-edit-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4a3728;
+    margin-bottom: $rt-space-sm;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    i {
+      font-size: 0.9em;
+      color: #c08020;
+    }
+  }
+
+  .rt-xp-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $rt-space-md;
+  }
+
+  .rt-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .rt-edit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6a5a43;
+  }
+
+  .rt-edit-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 $rt-space-sm;
+    border: 2px solid rgba(120, 46, 34, 0.3);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2a1a0a;
+    text-align: center;
+    font-family: 'Modesto Condensed', serif;
+    transition: all 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: rgba(120, 46, 34, 0.7);
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 0 3px rgba(120, 46, 34, 0.1);
+    }
+
+    &:hover {
+      border-color: rgba(120, 46, 34, 0.5);
+    }
+
+    &.rt-xp-spent-input {
+      color: #c08020;
+    }
+  }
+
+  // Calculated Available Display
+  .rt-xp-calc-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-sm;
+    margin-top: $rt-space-sm;
+    background: rgba(192, 128, 32, 0.1);
+    border: 1px solid rgba(192, 128, 32, 0.3);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #6a5a43;
+  }
+
+  .rt-xp-calc-label {
+    font-weight: 600;
+  }
+
+  .rt-xp-calc-value {
+    font-family: 'Modesto Condensed', serif;
+
+    strong {
+      font-size: 1.2rem;
+      color: #d09838;
+      font-weight: 700;
+    }
+  }
+
+  // ============================================
+  // Info Box
+  // ============================================
+
+  .rt-xp-info-box {
+    display: flex;
+    gap: $rt-space-sm;
+    padding: $rt-space-md;
+    background: rgba(192, 128, 32, 0.08);
+    border-left: 3px solid rgba(192, 128, 32, 0.4);
+    border-radius: 4px;
+
+    > i {
+      color: #c08020;
+      font-size: 1.2rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+  }
+
+  .rt-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
+
+    strong {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #4a3728;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    p {
+      font-size: 0.75rem;
+      color: #6a5a43;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    ul {
+      font-size: 0.75rem;
+      color: #6a5a43;
+      line-height: 1.5;
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin: 4px 0;
+      }
+
+      strong {
+        font-size: inherit;
+        text-transform: none;
+        letter-spacing: normal;
+        color: #c08020;
+      }
+    }
+  }
+}

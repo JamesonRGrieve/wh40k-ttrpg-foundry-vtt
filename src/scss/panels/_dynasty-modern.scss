@@ -3,7 +3,7 @@
 // ============================================
 // Acquisitions, Experience, Profit Factor modernization
 
-// Biography Panel
+// Biography Panel Form Fields Grid
 // ============================================
 .rt-biography-panel {
   .rt-panel-header {
@@ -12,7 +12,7 @@
   }
 }
 
-.rt-bio-grid {
+.rt-bio-fields-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;

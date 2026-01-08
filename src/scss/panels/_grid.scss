@@ -15,11 +15,17 @@
 .rt-powers-grid,
 .rt-equipment-grid,
 .rt-dynasty-grid,
-.rt-bio-grid {
+.rt-bio-grid,
+.rt-talents-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $rt-space-md;
   width: 100%;
+}
+
+// Talents tab uses 60/40 split instead of 50/50
+.rt-talents-grid {
+  grid-template-columns: 60% 40%;
 }
 
 .rt-overview-col,
@@ -27,7 +33,8 @@
 .rt-powers-col,
 .rt-equipment-col,
 .rt-dynasty-col,
-.rt-bio-col {
+.rt-bio-col,
+.rt-talents-col {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -61,3 +68,19 @@
 }
 
 // ============================================
+
+// ============================================
+// Responsive Breakpoints
+// ============================================
+
+@media (max-width: 1200px) {
+  .rt-overview-grid,
+  .rt-combat-grid,
+  .rt-powers-grid,
+  .rt-equipment-grid,
+  .rt-dynasty-grid,
+  .rt-bio-grid,
+  .rt-talents-grid {
+    grid-template-columns: 1fr;
+  }
+}

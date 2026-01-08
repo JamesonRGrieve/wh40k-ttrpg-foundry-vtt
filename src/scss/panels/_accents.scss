@@ -67,6 +67,15 @@
   }
 }
 
+.rt-tab[data-tab="talents"],
+.tab[data-tab="talents"] {
+  .rt-panel-header,
+  .rt-specialist-header,
+  .rt-ability-header {
+    background: linear-gradient(180deg, rgba($rt-accent-talents, 0.12) 0%, transparent 100%);
+  }
+}
+
 .rt-tab[data-tab="equipment"] {
   // Override the base .rt-tab grid display
   &.active {
