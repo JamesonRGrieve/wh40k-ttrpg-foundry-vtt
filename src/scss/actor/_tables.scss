@@ -1,7 +1,7 @@
 // ============================================
 
 .rt-tab {
-    .dh-table--border {
+    .rt-table--border {
         border-radius: 6px;
         overflow: hidden;
         border: 1px solid rgba(74, 55, 40, 0.15);
@@ -19,7 +19,7 @@
         padding: 6px 4px;
     }
     
-    .dh-control-button {
+    .rt-control-button {
         opacity: 0.7;
         transition: opacity 0.2s ease, transform 0.15s ease;
         
@@ -50,7 +50,7 @@
         background: rgba(74, 55, 40, 0.08);
     }
     
-    .dh-item-img {
+    .rt-item-img {
         width: 24px;
         height: 24px;
         border-radius: 4px;
@@ -72,7 +72,7 @@
     flex-direction: column;
     gap: 1rem;
     
-    .dh-panel {
+    .rt-panel {
         width: 100%;
     }
 }
@@ -105,7 +105,7 @@
     min-width: 0;
     width: 100%;
     
-    .dh-panel {
+    .rt-panel {
         width: 100%;
     }
 }

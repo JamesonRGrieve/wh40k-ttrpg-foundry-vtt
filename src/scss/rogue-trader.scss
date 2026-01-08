@@ -24,7 +24,7 @@
 // Global components (appended to document.body, not inside wrappers)
 @import 'src/scss/components/rt-tooltip';
 
-.dh-material {
+.rt-material {
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
@@ -40,7 +40,12 @@
     -webkit-font-smoothing: antialiased;
 }
 
-.dh-wrapper, .rt-wrapper {
+// Legacy alias for backwards compatibility
+.dh-material {
+    @extend .rt-material;
+}
+
+.rt-wrapper {
     position: relative;
 
     @import 'src/scss/base/reset';
@@ -77,8 +82,6 @@
 
     // Actor Sheets (split into modules)
     @import 'src/scss/actor/index';
-    @import 'src/scss/sheets/item';
-    @import 'src/scss/sheets/attack';
 }
 
 // Alias for rt-actor (same as dh-actor)
@@ -805,7 +808,7 @@
         top: calc(100% + 6px) !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        display: grid !important;
+        display: none !important; // Hidden by default
         gap: 6px !important;
         padding: 8px !important;
         width: 170px !important;
@@ -814,6 +817,11 @@
         border-radius: 8px !important;
         box-shadow: 0 6px 16px var(--rt-shadow-medium, rgba(0,0,0,0.2)) !important;
         z-index: 20 !important;
+
+        // Show when expanded
+        &.expanded {
+            display: grid !important;
+        }
     }
 
     .rt-char-hud-field {

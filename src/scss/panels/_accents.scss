@@ -37,10 +37,6 @@
   }
   padding: $rt-space-md;
   
-  .dh-panel__header {
-    background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
-  }
-  
   .rt-panel-header {
     background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
   }
@@ -77,7 +73,7 @@
     display: block !important;
   }
   
-  .dh-panel__header {
+  .rt-panel-header {
     background: linear-gradient(180deg, rgba($rt-accent-equipment, 0.12) 0%, transparent 100%);
   }
 }
@@ -88,7 +84,7 @@
     display: block !important;
   }
   
-  .dh-panel__header {
+  .rt-panel-header {
     background: linear-gradient(180deg, rgba($rt-accent-powers, 0.12) 0%, transparent 100%);
   }
 }
@@ -99,8 +95,7 @@
     display: block !important;
   }
   
-  .rt-panel-header,
-  .dh-panel__header {
+  .rt-panel-header {
     background: linear-gradient(180deg, rgba($rt-accent-dynasty, 0.12) 0%, transparent 100%);
   }
 }
@@ -111,8 +106,7 @@
     display: block !important;
   }
   
-  .rt-panel-header,
-  .dh-panel__header {
+  .rt-panel-header {
     background: linear-gradient(180deg, rgba($rt-accent-bio, 0.08) 0%, transparent 100%);
   }
 }
@@ -144,12 +138,12 @@
 }
 
 // Reset grid spans for panels within modern layout
-.rt-tab .dh-panel {
-  &.dh-grid-col-2,
-  &.dh-grid-col-3,
-  &.dh-grid-col-4,
-  &.dh-grid-col-5,
-  &.dh-grid-col-6 {
+.rt-tab .rt-panel {
+  &.rt-grid-col-2,
+  &.rt-grid-col-3,
+  &.rt-grid-col-4,
+  &.rt-grid-col-5,
+  &.rt-grid-col-6 {
     grid-column: auto;
   }
 }

@@ -1,86 +1,70 @@
-.dh {
-    &-controls {
-        button {
-            background: rgba($form-button-background, 0.125);
-            text-align: center;
-        }
+// ============================================
+// Panel Component System
+// ============================================
+
+.rt-controls {
+    button {
+        background: rgba($form-button-background, 0.125);
+        text-align: center;
+    }
+}
+
+//noinspection CssUnknownTarget
+.rt-panel {
+    position: relative;
+    padding: 2px;
+
+    background: url('../images/40k_back.png') #eff2f1 center/cover;
+    border: 3px solid transparent;
+    border-image: url('../images/panel_border.png') 8 / 2 / 0 repeat;
+
+    &.spacer {
+        padding-bottom: 5pt;
     }
 
-  //noinspection CssUnknownTarget
-  &-panel {
-        position: relative;
-        padding: 2px;
+    //noinspection CssUnknownTarget
+    &--inquisition {
+        background: url('../images/inqu_watermark.png') center/70% no-repeat, url('../images/40k_back.png') center/cover;
+        grid-column: span 1;
+        grid-row: span 2;
+        min-height: 150px;
+    }
 
-        background: url('../images/40k_back.png') #eff2f1 center/cover;
-        border: 3px solid transparent;
-        border-image: url('../images/panel_border.png') 8 / 2 / 0 repeat;
+    h1 {
+        border-bottom: $grid-border;
 
-        &.spacer {
-            padding-bottom: 5pt;
-        }
+        &.rt-panel__header {
+            font-size: $h1-size;
+            font-weight: normal;
+            text-align: center;
+            text-transform: uppercase;
 
-      //noinspection CssUnknownTarget
-      &--inquisition {
-            @extend .dh-panel;
-            background: url('../images/inqu_watermark.png') center/70% no-repeat, url('../images/40k_back.png') center/cover;
-            grid-column: span 1;
-            grid-row: span 2;
-            min-height: 150px;
-        }
-
-        h1 {
-            border-bottom: $grid-border;
-
-            &.dh-panel__header, &.rt-panel__header {
+            .rt-trait-toggle__span {
                 font-size: $h1-size;
                 font-weight: normal;
                 text-align: center;
                 text-transform: uppercase;
-
-                .dh-trait-toggle__span, .rt-trait-toggle__span {
-                    font-size: $h1-size;
-                    font-weight: normal;
-                    text-align: center;
-                    text-transform: uppercase;
-                }
-            }
-
-            &.span-4 {
-                grid-column: span 4;
             }
         }
-    }
 
-  //noinspection CssUnknownTarget
-  &-divider {
-        width: 100%;
-        height: 10px;
-        grid-column: 1/-1;
-
-        background: url('../images/divider.png') no-repeat center/100% 100%;
-    }
-
-    &-item-img {
-        width: 24px;
-        height: 24px;
-        border: none;
-        object-fit: contain;
+        &.span-4 {
+            grid-column: span 4;
+        }
     }
 }
 
-// RT prefix aliases
-.rt-controls {
-    @extend .dh-controls;
-}
-
-.rt-panel {
-    @extend .dh-panel;
-}
-
+//noinspection CssUnknownTarget
 .rt-divider {
-    @extend .dh-divider;
+    width: 100%;
+    height: 10px;
+    grid-column: 1/-1;
+
+    background: url('../images/divider.png') no-repeat center/100% 100%;
 }
 
 .rt-item-img {
-    @extend .dh-item-img;
+    width: 24px;
+    height: 24px;
+    border: none;
+    object-fit: contain;
 }

@@ -1,4 +1,4 @@
-.dh-body .tab, .rt-body .tab {
+.rt-body .tab {
     display: none;
     opacity: 0;
     transform: translateY(10px);
@@ -6,7 +6,7 @@
                 transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dh-body .tab.active, .rt-body .tab.active {
+.rt-body .tab.active {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 0;
@@ -26,13 +26,13 @@
     }
 }
 
-.dh {
+.rt {
     &-body {
         grid-column: span 6;
     }
 
     &-navigation {
-        @extend .dh-panel;
+        @extend .rt-panel;
         grid-column: span 6;
         display: flex;
         align-items: center;
@@ -69,15 +69,15 @@
     }
 }
 
-// RT aliases
-.rt-body {
-    @extend .dh-body;
+// Legacy aliases for backwards compatibility
+.dh-body {
+    @extend .rt-body;
 }
 
-.rt-navigation {
-    @extend .dh-navigation;
+.dh-navigation {
+    @extend .rt-navigation;
 }
 
-.rt-navigation__item {
-    @extend .dh-navigation__item;
+.dh-navigation__item {
+    @extend .rt-navigation__item;
 }

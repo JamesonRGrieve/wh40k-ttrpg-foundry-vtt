@@ -8,7 +8,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 // Skills panel layout adjustments
 .rt-skills-panel,
 .rt-specialist-skills-panel {
-  .dh-panel__header {
+  .rt-panel__header {
     font-size: 1.2em;
     padding: 0.5rem;
     text-align: center;
@@ -306,7 +306,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Update the grid layout for skill tables
-.dh-skilltable--border {
+.rt-skilltable--border {
   .table-row--head,
   .table-row,
   .rt-skill-row,
@@ -325,6 +325,11 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   }
 }
 
+// Legacy alias
+.dh-skilltable--border {
+  @extend .rt-skilltable--border;
+}
+
 // Responsive adjustments for smaller screens
 @media (max-width: 1200px) {
   .rt-skills-panel,
@@ -332,7 +337,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     grid-column: span 6 !important;
   }
   
-  .dh-skilltable--border {
+  .rt-skilltable--border {
     .table-row--head,
     .table-row,
     .rt-skill-row,
@@ -348,8 +353,8 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Additional polish
-.rt-skills-panel .dh-table--border,
-.rt-specialist-skills-panel .dh-table--border {
+.rt-skills-panel .rt-table--border,
+.rt-specialist-skills-panel .rt-table--border {
   border: 1px solid rgba(36, 107, 131, 0.3);
   border-radius: 4px;
   overflow: hidden;

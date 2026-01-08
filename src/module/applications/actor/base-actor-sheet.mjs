@@ -209,6 +209,12 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             Hooks.off("updateActor", this._updateListener);
             this._updateListener = null;
         }
+
+        // Clean up click-outside handler
+        if (this._clickOutsideHandler) {
+            document.removeEventListener("click", this._clickOutsideHandler);
+            this._clickOutsideHandler = null;
+        }
     }
 
     /* -------------------------------------------- */
@@ -576,6 +582,39 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         this.element.querySelectorAll(".sheet-control__hide-control").forEach(el => {
             el.addEventListener("click", this._onLegacyPanelToggle.bind(this));
         });
+
+        // Click-outside handler to close characteristic HUD dropdowns
+        this._setupClickOutsideHandler();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Setup click-outside handler to close characteristic HUD dropdowns.
+     * @protected
+     */
+    _setupClickOutsideHandler() {
+        // Remove any existing handler to avoid duplicates
+        if (this._clickOutsideHandler) {
+            document.removeEventListener("click", this._clickOutsideHandler);
+        }
+
+        this._clickOutsideHandler = (event) => {
+            // Check if click was outside any dropdown or toggle button
+            const clickedDropdown = event.target.closest(".rt-char-hud-details");
+            const clickedToggle = event.target.closest(".rt-char-hud-toggle");
+
+            // If clicked outside dropdowns and toggle buttons, close all dropdowns
+            if (!clickedDropdown && !clickedToggle) {
+                this.element?.querySelectorAll(".rt-char-hud-details.expanded").forEach(el => {
+                    el.classList.remove("expanded");
+                    const toggleIcon = el.closest(".rt-char-hud-item")?.querySelector(".rt-char-hud-toggle-icon");
+                    if (toggleIcon) toggleIcon.classList.remove("active");
+                });
+            }
+        };
+
+        document.addEventListener("click", this._clickOutsideHandler);
     }
 
     /* -------------------------------------------- */
@@ -852,26 +891,39 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     /* -------------------------------------------- */
 
     /**
-     * Handle toggling section visibility.
+     * Handle toggling section visibility (characteristic HUD dropdowns).
+     * Uses CSS class toggling for immediate feedback without re-render.
      * @this {BaseActorSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleSection(event, target) {
+        event.stopPropagation();
         const sectionName = target.dataset.toggle;
         if (!sectionName) return;
 
-        // Get current expanded state from actor flags
-        const expanded = this.actor.getFlag("rogue-trader", "ui.expanded") || [];
-        const isCurrentlyExpanded = expanded.includes(sectionName);
+        // Find the dropdown panel element
+        const dropdown = this.element.querySelector(`.rt-char-hud-details.${sectionName}`);
+        if (!dropdown) return;
 
-        // Toggle the state
-        const newExpanded = isCurrentlyExpanded
-            ? expanded.filter(name => name !== sectionName)
-            : [...expanded, sectionName];
+        // Close all other dropdowns first
+        this.element.querySelectorAll(".rt-char-hud-details.expanded").forEach(el => {
+            if (el !== dropdown) {
+                el.classList.remove("expanded");
+                // Also remove active class from the toggle icon
+                const toggleIcon = el.closest(".rt-char-hud-item")?.querySelector(".rt-char-hud-toggle-icon");
+                if (toggleIcon) toggleIcon.classList.remove("active");
+            }
+        });
 
-        // Update actor flags
-        await this.actor.setFlag("rogue-trader", "ui.expanded", newExpanded);
+        // Toggle this dropdown
+        const isExpanded = dropdown.classList.toggle("expanded");
+
+        // Toggle the chevron icon
+        const toggleIcon = target.querySelector(".rt-char-hud-toggle-icon");
+        if (toggleIcon) {
+            toggleIcon.classList.toggle("active", isExpanded);
+        }
     }
 
     /* -------------------------------------------- */

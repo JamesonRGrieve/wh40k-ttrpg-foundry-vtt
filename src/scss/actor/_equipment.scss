@@ -22,8 +22,8 @@
         }
     }
     
-    .dh-armourtable--border,
-    .dh-geartable--border {
+    .rt-armourtable--border,
+    .rt-geartable--border {
         .table-cell--description {
             background: rgba(245, 250, 248, 0.6);
             border-left: 3px solid rgba(47, 79, 79, 0.3);
@@ -42,7 +42,7 @@
         border-bottom-color: rgba(150, 110, 20, 0.5);
     }
 
-    .dh-field__wrapper {
+    .rt-field__wrapper {
         padding: 8px 10px;
         margin: 4px;
         background: rgba(255, 255, 255, 0.6);
@@ -50,7 +50,7 @@
         border: 1px solid rgba(218, 165, 32, 0.15);
     }
     
-    .dh-field__header {
+    .rt-field__header {
         font-weight: 600;
         color: #8B6914;
         text-transform: uppercase;
@@ -79,9 +79,9 @@
         border-bottom-color: rgba(50, 35, 28, 0.5);
     }
 
-    .dh-header__item-wrapper,
-    .dh-header__item-wrapper--span-2,
-    .dh-header__item-wrapper--span-4 {
+    .rt-header__item-wrapper,
+    .rt-header__item-wrapper--span-2,
+    .rt-header__item-wrapper--span-4 {
         padding: 8px;
         background: rgba(255, 255, 255, 0.5);
         border-radius: 4px;
@@ -89,7 +89,7 @@
         margin: 2px;
     }
     
-    .dh-header__title {
+    .rt-header__title {
         font-weight: 600;
         color: #4a3728;
         text-transform: uppercase;
@@ -97,8 +97,8 @@
         letter-spacing: 0.05em;
     }
     
-    .dh-header__input,
-    .dh-header__textarea {
+    .rt-header__input,
+    .rt-header__textarea {
         border: 1px solid rgba(74, 55, 40, 0.2);
         border-radius: 4px;
         padding: 6px 8px;

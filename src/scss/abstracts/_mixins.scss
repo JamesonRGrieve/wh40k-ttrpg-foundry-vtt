@@ -217,8 +217,7 @@
   flex-direction: column;
   gap: 0;
 
-  .rt-panel,
-  .dh-panel {
+  .rt-panel {
     margin-bottom: $rt-space-md;
 
     &:last-child {
