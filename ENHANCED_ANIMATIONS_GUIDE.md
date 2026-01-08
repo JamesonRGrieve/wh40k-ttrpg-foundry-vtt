@@ -109,9 +109,9 @@ Advancing from 42 → 52:
 ```
 
 **CSS Classes:**
-- `.characteristic-value`, `.char-total` - Total value display
-- `.characteristic-bonus`, `.char-bonus` - Bonus value display
-- `.changed` - Applied to bonus when it changes
+- `.rt-char-hud-base`, `.characteristic-value` - Total value display
+- `.rt-char-hud-mod`, `.characteristic-bonus` - Bonus value display
+- `.value-changed` - Applied when value changes
 - `.stat-advancement` - Gold radiance effect
 
 ---
@@ -260,11 +260,11 @@ Add `value-counter` class to elements displaying numbers:
 {{!-- Wounds Display --}}
 <span class="rt-wounds-current value-counter">{{system.wounds.value}}</span>
 
-{{!-- Characteristic Total --}}
-<div class="char-total value-counter">{{characteristics.weaponSkill.total}}</div>
+{{!-- Characteristic Total (V1 HUD) --}}
+<div class="rt-char-hud-base value-counter">Total {{characteristics.weaponSkill.total}}</div>
 
-{{!-- Characteristic Bonus --}}
-<div class="char-bonus value-counter">{{characteristics.weaponSkill.bonus}}</div>
+{{!-- Characteristic Bonus (V1 HUD) --}}
+<span class="rt-char-hud-mod value-counter">{{characteristics.weaponSkill.bonus}}</span>
 ```
 
 ### For Progress Bars

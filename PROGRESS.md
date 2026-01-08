@@ -143,7 +143,7 @@
     - `loadActorSheetTemplates()` - Load actor type-specific templates
   - Reduced preloaded templates from 104 to ~30 core templates
   - Core templates (always preloaded):
-    - Essential partials (character-field, characteristic-hud-v2, etc.)
+    - Essential partials (character-field, display-toggle, etc.)
     - Acolyte header, tabs, and overview tab (default view)
     - Chat templates (needed for roll results)
   - Deferred templates (loaded on-demand):
