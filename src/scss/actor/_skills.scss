@@ -188,12 +188,26 @@
 }
 
 .rt-portrait-container {
-    grid-row: span 1;
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    &:hover .rt-portrait {
+        border-color: var(--rt-gold, #d4af37);
+        box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    }
 }
 
 .rt-header-info {
-    grid-column: 2;
-    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    flex: 1;
 }
 
 .rt-quick-status-gothic {
@@ -204,18 +218,12 @@
 }
 
 .rt-portrait {
-    width: 88px;
-    height: 88px;
+    width: 96px;
+    height: 96px;
     object-fit: cover;
-    border: 2px solid #4a3728;
-    border-radius: 4px;
-}
-
-.rt-header-info {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    min-width: 0;
+    border: 2px solid var(--rt-border-color, #4a3728);
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
 .rt-header-row {
@@ -239,16 +247,48 @@
     min-width: 0;
 }
 
-.rt-name-input {
-    font-size: 1.2em;
-    font-weight: bold;
+// Header layout for single column (no HUD)
+.rt-header-single-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 12px;
+    width: 100%;
+}
+
+// Header input fields
+.rt-header-input {
     border: none;
     background: transparent;
     border-bottom: 1px solid var(--rt-border-color);
     color: var(--rt-text-dark);
     padding: 2px 5px;
-    width: 100%;
-    max-width: 260px;
-    min-width: 160px;
+    flex: 1;
+    min-width: 120px;
+    
+    &:focus {
+        outline: none;
+        border-bottom-color: var(--rt-gold, #d4af37);
+        box-shadow: 0 1px 0 var(--rt-gold, #d4af37);
+    }
+}
+
+.rt-name-input {
+    font-size: 1.2em;
+    font-weight: bold;
+    max-width: 320px;
+}
+
+.rt-player-input,
+.rt-rank-input {
+    font-size: 1em;
+    max-width: 240px;
+}
+
+// Optional: Header HUD section
+.rt-header-hud {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rt-border-color-light);
 }
 

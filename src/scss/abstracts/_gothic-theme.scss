@@ -198,12 +198,12 @@ body.theme-dark {
     --rt-fatigue-border: rgba(160, 120, 24, 0.4);
     --rt-fatigue-gradient: linear-gradient(90deg, rgba(180, 120, 20, 0.85), rgba(220, 160, 30, 0.85));
     
-    // Fate Panel - Gold/Divine
-    --rt-fate-primary: #d4a520;
-    --rt-fate-secondary: #e8c040;
-    --rt-fate-bg: rgba(212, 165, 32, 0.08);
-    --rt-fate-border: rgba(212, 165, 32, 0.4);
-    --rt-fate-gradient: linear-gradient(90deg, rgba(180, 140, 20, 0.85), rgba(220, 180, 50, 0.85));
+    // Fate Panel - Blue/Celestial
+    --rt-fate-primary: #2563eb;
+    --rt-fate-secondary: #3b82f6;
+    --rt-fate-bg: rgba(37, 99, 235, 0.08);
+    --rt-fate-border: rgba(37, 99, 235, 0.4);
+    --rt-fate-gradient: linear-gradient(90deg, rgba(37, 99, 235, 0.85), rgba(59, 130, 246, 0.85));
     
     // Corruption Panel - Teal/Dark Green
     --rt-corruption-primary: #147058;
@@ -290,7 +290,7 @@ body.theme-light {
     // Light theme: panels have subtle tinted backgrounds
     --rt-wounds-panel-bg: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
     --rt-fatigue-panel-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-    --rt-fate-panel-bg: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+    --rt-fate-panel-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     --rt-corruption-panel-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
     --rt-insanity-panel-bg: linear-gradient(135deg, #f4f1f8 0%, #ebe5f5 100%);
     --rt-skills-panel-bg: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -302,7 +302,7 @@ body.theme-dark {
     // Dark theme: panels have subtle dark tinted backgrounds
     --rt-wounds-panel-bg: linear-gradient(135deg, rgba(80, 20, 20, 0.4) 0%, rgba(60, 15, 15, 0.5) 100%);
     --rt-fatigue-panel-bg: linear-gradient(135deg, rgba(80, 60, 20, 0.4) 0%, rgba(60, 45, 15, 0.5) 100%);
-    --rt-fate-panel-bg: linear-gradient(135deg, rgba(80, 70, 20, 0.4) 0%, rgba(60, 50, 15, 0.5) 100%);
+    --rt-fate-panel-bg: linear-gradient(135deg, rgba(20, 40, 80, 0.4) 0%, rgba(15, 35, 70, 0.5) 100%);
     --rt-corruption-panel-bg: linear-gradient(135deg, rgba(20, 60, 50, 0.4) 0%, rgba(15, 45, 40, 0.5) 100%);
     --rt-insanity-panel-bg: linear-gradient(135deg, rgba(50, 30, 70, 0.4) 0%, rgba(40, 25, 55, 0.5) 100%);
     --rt-skills-panel-bg: linear-gradient(135deg, rgba(20, 50, 70, 0.4) 0%, rgba(15, 40, 55, 0.5) 100%);

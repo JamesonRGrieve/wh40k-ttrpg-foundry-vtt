@@ -3,21 +3,13 @@
 // ============================================
 
 @keyframes rt-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 @keyframes rt-glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba($rt-color-gold, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba($rt-color-gold, 0.8);
-  }
+  0%, 100% { box-shadow: 0 0 5px var(--rt-gold-glow); }
+  50% { box-shadow: 0 0 20px var(--rt-gold-glow); }
 }
 
 .rt-animate-pulse {
@@ -37,12 +29,12 @@
   align-items: center;
   padding: 2px $rt-space-sm;
   margin-left: $rt-space-sm;
-  background: linear-gradient(135deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
+  background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
   border-radius: $rt-radius-sm;
   font-family: $rt-font-ui;
   font-size: $rt-font-size-xs;
   font-weight: 600;
-  color: var(--color-bg-primary);
+  color: var(--rt-sheet-bg);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -56,15 +48,15 @@
   justify-content: space-between;
   align-items: center;
   padding: $rt-space-sm $rt-space-md;
-  background: rgba(var(--color-bg-secondary), 0.5);
-  border: 1px solid var(--color-bg-tertiary);
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-md;
   margin-bottom: $rt-space-sm;
   transition: all $rt-transition-fast;
   
   &:hover {
-    background: rgba(var(--color-bg-secondary), 0.8);
-    border-color: $rt-color-gold-dark;
+    background: var(--rt-input-bg);
+    border-color: var(--rt-gold-dark);
   }
   
   &__info {
@@ -73,13 +65,13 @@
     gap: $rt-space-sm;
     
     strong {
-      color: var(--color-text-primary);
+      color: var(--rt-text-dark);
     }
   }
   
   &__detail {
     font-size: $rt-font-size-sm;
-    color: var(--color-border-primary);
+    color: var(--rt-text-muted);
     margin-left: $rt-space-sm;
   }
 }

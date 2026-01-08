@@ -38,14 +38,14 @@
   align-items: center;
   gap: $rt-space-sm;
   padding: $rt-space-sm $rt-space-md;
-  background: linear-gradient(135deg, $rt-color-gold-dark 0%, rgba($rt-color-gold, 0.3) 100%);
+  background: linear-gradient(135deg, var(--rt-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
   border-radius: $rt-radius-md;
   margin-bottom: $rt-space-md;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-family: $rt-font-heading;
   
   i {
-    color: $rt-color-gold-light;
+    color: var(--rt-gold-light);
   }
 }
 
@@ -58,13 +58,13 @@
     gap: $rt-space-xs;
     font-size: $rt-font-size-sm;
     font-weight: 600;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: $rt-space-xs;
     
     i {
-      color: $rt-color-gold;
+      color: var(--rt-gold);
     }
   }
 }
@@ -80,47 +80,59 @@
   align-items: center;
   gap: $rt-space-xs;
   padding: 2px $rt-space-sm;
-  background: rgba(var(--color-border-primary), 0.15);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-sm;
   font-size: $rt-font-size-xs;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: var(--rt-text-dark);
   
   &--wounds {
     background: rgba($rt-color-crimson, 0.2);
     border-color: $rt-color-crimson-dark;
-    color: lighten($rt-color-crimson, 30%);
+    color: $rt-color-crimson;
+    
+    .theme-dark & {
+      color: lighten($rt-color-crimson, 30%);
+    }
   }
   
   &--fate {
-    background: rgba($rt-color-gold, 0.2);
-    border-color: $rt-color-gold-dark;
-    color: $rt-color-gold-light;
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--rt-gold-dark);
+    color: var(--rt-gold);
   }
   
   &--profit {
     background: rgba($rt-color-brass, 0.2);
     border-color: darken($rt-color-brass, 15%);
-    color: lighten($rt-color-brass, 20%);
+    color: $rt-color-brass;
+    
+    .theme-dark & {
+      color: lighten($rt-color-brass, 20%);
+    }
   }
   
   &--skill {
     background: rgba(36, 107, 131, 0.2);
     border-color: rgba(36, 107, 131, 0.5);
-    color: lighten(rgb(36, 107, 131), 20%);
+    color: rgb(36, 107, 131);
+    
+    .theme-dark & {
+      color: lighten(rgb(36, 107, 131), 20%);
+    }
   }
   
   &--talent {
-    background: rgba($rt-color-gold, 0.2);
-    border-color: $rt-color-gold-dark;
-    color: $rt-color-gold-light;
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--rt-gold-dark);
+    color: var(--rt-gold);
   }
 }
 
 .rt-compact-description {
-  background: rgba(var(--color-text-primary), 0.03);
-  border: 1px solid rgba(var(--color-text-primary), 0.1);
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-md;
   padding: $rt-space-md;
 }
@@ -142,7 +154,7 @@
 }
 
 .rt-description-content {
-  color: var(--color-text-secondary);
+  color: var(--rt-text-dark);
   line-height: 1.5;
   font-size: $rt-font-size-sm;
   
@@ -151,7 +163,8 @@
   }
   
   strong {
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
+    font-weight: 700;
   }
 }
 

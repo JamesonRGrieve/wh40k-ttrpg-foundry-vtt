@@ -5,12 +5,12 @@
 
 import ApplicationV2Mixin from "./api/application-v2-mixin.mjs";
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Compendium browser for browsing and filtering RT system compendiums.
  */
-export class RTCompendiumBrowser extends ApplicationV2Mixin(HandlebarsApplicationMixin(ApplicationV2)) {
+export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     constructor(options = {}) {
         super(options);
         this._filters = {

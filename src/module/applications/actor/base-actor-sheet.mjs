@@ -50,7 +50,8 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             enterWhatIf: BaseActorSheet.#enterWhatIf,
             commitWhatIf: BaseActorSheet.#commitWhatIf,
             cancelWhatIf: BaseActorSheet.#cancelWhatIf,
-            spendXPAdvance: BaseActorSheet.#spendXPAdvance
+            spendXPAdvance: BaseActorSheet.#spendXPAdvance,
+            editCharacteristic: BaseActorSheet.#editCharacteristic
         },
         classes: ["rogue-trader", "sheet", "actor"],
         form: {
@@ -175,10 +176,22 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             if (!char.tooltipData) {
                 char.tooltipData = this.prepareCharacteristicTooltip(key, char);
             }
-            
+
             // HUD display formatting - hudMod is the characteristic bonus (tens digit)
             char.hudMod = char.bonus ?? Math.floor((char.total ?? 0) / 10);
             char.hudTotal = char.total;
+
+            // V3 HUD State flags for visual styling
+            char.hasBonus = (char.modifier || 0) > 0;
+            char.hasPenalty = (char.modifier || 0) < 0;
+            char.isMaxed = (char.advance || 0) >= 5;
+
+            // Calculate unnatural bonus if applicable
+            const unnaturalMult = char.unnatural || 1;
+            if (unnaturalMult > 1) {
+                const baseBonus = Math.floor((char.total || 0) / 10);
+                char.unnaturalBonus = baseBonus * unnaturalMult;
+            }
         }
     }
 
@@ -424,6 +437,24 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             data.trainingLevel = trainingLevel(data);
             data.charShort = characteristicShorts[data.characteristic] ?? data.characteristic ?? "";
             data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
+            
+            // Calculate breakdown for tooltip
+            const char = characteristics[data.characteristic];
+            const charTotal = char?.total ?? 0;
+            const level = data.trainingLevel;
+            const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
+            const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
+            const bonus = data.bonus || 0;
+            
+            let breakdownParts = [];
+            if (level > 0) {
+                breakdownParts.push(`${char?.short || data.characteristic}: ${charTotal}`);
+            } else {
+                breakdownParts.push(`${char?.short || data.characteristic}: ${charTotal}/2 = ${baseValue}`);
+            }
+            if (trainingBonus > 0) breakdownParts.push(`Training: +${trainingBonus}`);
+            if (bonus !== 0) breakdownParts.push(`Bonus: ${bonus >= 0 ? '+' : ''}${bonus}`);
+            data.breakdown = breakdownParts.join(', ');
         });
 
         // Split standard skills into columns
@@ -439,6 +470,24 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
             data.entries?.forEach((entry) => {
                 entry.trainingLevel = trainingLevel(entry);
+                
+                // Calculate breakdown for specialist entries
+                const entryChar = entry.characteristic ? characteristics[entry.characteristic] : characteristics[data.characteristic];
+                const entryCharTotal = entryChar?.total ?? 0;
+                const entryLevel = entry.trainingLevel;
+                const entryBaseValue = entryLevel > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
+                const entryTrainingBonus = entryLevel >= 3 ? 20 : entryLevel >= 2 ? 10 : 0;
+                const entryBonus = entry.bonus || 0;
+                
+                let entryBreakdownParts = [];
+                if (entryLevel > 0) {
+                    entryBreakdownParts.push(`${entryChar?.short || entry.characteristic || data.characteristic}: ${entryCharTotal}`);
+                } else {
+                    entryBreakdownParts.push(`${entryChar?.short || entry.characteristic || data.characteristic}: ${entryCharTotal}/2 = ${entryBaseValue}`);
+                }
+                if (entryTrainingBonus > 0) entryBreakdownParts.push(`Training: +${entryTrainingBonus}`);
+                if (entryBonus !== 0) entryBreakdownParts.push(`Bonus: ${entryBonus >= 0 ? '+' : ''}${entryBonus}`);
+                entry.breakdown = entryBreakdownParts.join(', ');
             });
         });
     }
@@ -657,6 +706,14 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         const rollType = target.dataset.rollType;
         const rollTarget = target.dataset.rollTarget;
         const specialty = target.dataset.specialty;
+
+        // Add rolling animation for characteristic rolls
+        if (rollType === "characteristic") {
+            target.classList.add("rolling");
+            target.addEventListener("animationend", () => {
+                target.classList.remove("rolling");
+            }, { once: true });
+        }
 
         switch (rollType) {
             case "characteristic":
@@ -1061,22 +1118,151 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         });
         
         if (!confirmed) return;
-        
+
+        // Capture old values for animation
+        const oldTotal = char.total;
+        const oldBonus = char.bonus;
+        const oldAdvance = char.advance || 0;
+
         // Update actor
-        const newAdvance = (char.advance || 0) + 1;
+        const newAdvance = oldAdvance + 1;
         const newSpent = (this.actor.system.experience?.spent || 0) + cost;
-        
+
         await this.actor.update({
             [`system.characteristics.${charKey}.advance`]: newAdvance,
             "system.experience.spent": newSpent
         });
-        
+
+        // Calculate new values
+        const newTotal = char.base + (newAdvance * 5) + (char.modifier || 0);
+        const newBonus = Math.floor(newTotal / 10) * (char.unnatural || 1);
+
         // Success notification
-        ui.notifications.info(`${char.label} advanced to ${char.total + 5}! (−${cost} XP)`);
-        
-        // Trigger animation if available
+        ui.notifications.info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
+
+        // Trigger characteristic change animation
         if (this.animateCharacteristicChange) {
-            this.animateCharacteristicChange(charKey, char.total, char.total + 5);
+            this.animateCharacteristicChange(charKey, oldTotal, newTotal);
+        }
+
+        // Trigger bonus change animation if bonus changed
+        if (oldBonus !== newBonus && this.animateCharacteristicBonus) {
+            this.animateCharacteristicBonus(charKey, oldBonus, newBonus);
+        }
+
+        // Animate badge for V3 HUD
+        const badgeElement = this.element.querySelector(
+            `[data-characteristic="${charKey}"] .char-badge`
+        );
+        if (badgeElement) {
+            badgeElement.classList.add('advanced');
+            setTimeout(() => badgeElement.classList.remove('advanced'), 500);
+        }
+
+        // Add rolling animation to button for V3 HUD
+        const charBtn = this.element.querySelector(
+            `[data-characteristic="${charKey}"] .char-btn`
+        );
+        if (charBtn) {
+            charBtn.classList.add('rolling');
+            setTimeout(() => charBtn.classList.remove('rolling'), 400);
+        }
+
+        // Update the border progress indicator
+        const charBox = this.element.querySelector(
+            `[data-characteristic="${charKey}"]`
+        );
+        if (charBox) {
+            charBox.style.setProperty('--advance-progress', newAdvance / 5);
+            charBox.dataset.advance = newAdvance;
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Open edit dialog for a characteristic.
+     * @param {Event} event         Triggering event
+     * @param {HTMLElement} target  Button clicked
+     * @protected
+     */
+    static async #editCharacteristic(event, target) {
+        const charKey = target.closest('[data-characteristic]')?.dataset.characteristic;
+        if (!charKey) return;
+
+        const char = this.actor.system.characteristics[charKey];
+        if (!char) {
+            ui.notifications.error("Invalid characteristic!");
+            return;
+        }
+
+        // Calculate current values
+        const currentBase = char.base || 0;
+        const currentAdvance = char.advance || 0;
+        const currentModifier = char.modifier || 0;
+        const currentUnnatural = char.unnatural || 1;
+
+        // Create edit dialog using DialogV2
+        const result = await foundry.applications.api.DialogV2.wait({
+            window: {
+                title: `Edit ${char.label}`,
+                icon: "fas fa-edit"
+            },
+            content: `
+                <div class="rt-char-edit-dialog">
+                    <div class="form-group">
+                        <label>Base Value</label>
+                        <input type="number" name="base" value="${currentBase}" min="0" max="100" />
+                    </div>
+                    <div class="form-group">
+                        <label>Advances (0-5)</label>
+                        <input type="number" name="advance" value="${currentAdvance}" min="0" max="5" />
+                    </div>
+                    <div class="form-group">
+                        <label>Modifier</label>
+                        <input type="number" name="modifier" value="${currentModifier}" min="-100" max="100" />
+                    </div>
+                    <div class="form-group">
+                        <label>Unnatural Multiplier</label>
+                        <input type="number" name="unnatural" value="${currentUnnatural}" min="1" max="10" />
+                    </div>
+                    <hr/>
+                    <div class="rt-char-preview">
+                        <p><strong>Total:</strong> <span class="preview-total">${char.total}</span></p>
+                        <p><strong>Bonus:</strong> <span class="preview-bonus">${char.bonus}</span></p>
+                    </div>
+                </div>
+            `,
+            buttons: [
+                {
+                    action: "save",
+                    label: "Save",
+                    icon: "fas fa-save",
+                    default: true,
+                    callback: (event, button, dialog) => {
+                        const formData = new FormDataExtended(button.form).object;
+                        return formData;
+                    }
+                },
+                {
+                    action: "cancel",
+                    label: "Cancel",
+                    icon: "fas fa-times"
+                }
+            ],
+            close: () => null
+        });
+
+        // Update actor with new values if saved
+        if (result) {
+            await this.actor.update({
+                [`system.characteristics.${charKey}.base`]: parseInt(result.base) || 0,
+                [`system.characteristics.${charKey}.advance`]: parseInt(result.advance) || 0,
+                [`system.characteristics.${charKey}.modifier`]: parseInt(result.modifier) || 0,
+                [`system.characteristics.${charKey}.unnatural`]: parseInt(result.unnatural) || 1
+            });
+
+            ui.notifications.info(`${char.label} updated successfully!`);
         }
     }
 }

@@ -5,7 +5,7 @@
             {{#each skillLists.standardColumns.[0] as |entry|}}
             <div class="rt-skill-row" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
-                    <img class="rt-skill-icon" src="{{skillIcon entry.[0]}}" alt="" loading="lazy">
+                    <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <button type="button" class="rt-skill-name roll-skill" data-skill="{{entry.[0]}}"
                             data-rt-tooltip="skill" data-rt-tooltip-data="{{entry.[1].tooltipData}}">
                         <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
@@ -13,11 +13,11 @@
                 </div>
                 <div class="rt-spec-training">
                     <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}"
-                            data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
+                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
                     <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}"
-                            data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
+                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
                     <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}"
-                            data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
+                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
@@ -30,7 +30,7 @@
             {{#each skillLists.standardColumns.[1] as |entry|}}
             <div class="rt-skill-row" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
-                    <img class="rt-skill-icon" src="{{skillIcon entry.[0]}}" alt="" loading="lazy">
+                    <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <button type="button" class="rt-skill-name roll-skill" data-skill="{{entry.[0]}}"
                             data-rt-tooltip="skill" data-rt-tooltip-data="{{entry.[1].tooltipData}}">
                         <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
@@ -38,11 +38,11 @@
                 </div>
                 <div class="rt-spec-training">
                     <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}"
-                            data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
+                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
                     <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}"
-                            data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
+                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
                     <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}"
-                            data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
+                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>

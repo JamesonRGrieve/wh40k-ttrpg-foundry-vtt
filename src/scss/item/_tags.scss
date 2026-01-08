@@ -5,10 +5,10 @@
 .rt-empty-state {
   text-align: center;
   padding: $rt-space-xl;
-  color: var(--color-border-primary);
+  color: var(--rt-text-muted);
   font-style: italic;
-  background: rgba(var(--color-bg-secondary), 0.3);
-  border: 1px dashed var(--color-bg-tertiary);
+  background: var(--rt-panel-bg);
+  border: 1px dashed var(--rt-border-color-light);
   border-radius: $rt-radius-md;
 }
 
@@ -18,21 +18,31 @@
 
 .rt-tag {
   &--success {
-    background: rgba($rt-color-success, 0.3);
-    border-color: $rt-color-success;
-    color: lighten($rt-color-success, 35%);
+    background: rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+    color: #27ae60;
+    
+    .theme-dark & {
+      background: rgba(46, 204, 113, 0.3);
+      color: #58d68d;
+    }
   }
   
   &--muted {
-    background: rgba(var(--color-border-secondary), 0.3);
-    border-color: var(--color-border-secondary);
-    color: var(--color-border-primary);
+    background: var(--rt-input-bg);
+    border-color: var(--rt-border-color-light);
+    color: var(--rt-text-muted);
   }
   
   &--psychic {
-    background: rgba(#6a0dad, 0.3);
+    background: rgba(106, 13, 173, 0.2);
     border-color: #8b00ff;
-    color: #d8a8ff;
+    color: #6a0dad;
+    
+    .theme-dark & {
+      background: rgba(106, 13, 173, 0.3);
+      color: #d8a8ff;
+    }
   }
 }
 
@@ -42,30 +52,34 @@
 
 .rt-stat-badge {
   &--primary {
-    background: linear-gradient(135deg, $rt-color-gold-dark 0%, rgba($rt-color-gold, 0.3) 100%);
-    border-color: $rt-color-gold;
+    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
+    border-color: var(--rt-gold);
     
     .rt-stat-badge__value {
-      color: $rt-color-gold-light;
+      color: var(--rt-gold);
     }
   }
   
   &--gold {
-    background: linear-gradient(135deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
-    border-color: $rt-color-gold-light;
+    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
+    border-color: var(--rt-gold-light);
     
     .rt-stat-badge__value {
-      color: var(--color-bg-primary);
+      color: var(--rt-sheet-bg);
       font-weight: 700;
     }
   }
   
   &--psychic {
-    background: linear-gradient(135deg, rgba(#6a0dad, 0.4) 0%, rgba(#8b00ff, 0.2) 100%);
+    background: linear-gradient(135deg, rgba(106, 13, 173, 0.4) 0%, rgba(139, 0, 255, 0.2) 100%);
     border-color: #8b00ff;
     
     .rt-stat-badge__value {
-      color: #d8a8ff;
+      color: #6a0dad;
+      
+      .theme-dark & {
+        color: #d8a8ff;
+      }
     }
   }
   
@@ -87,10 +101,10 @@
   width: 100%;
   min-height: 100px;
   padding: $rt-space-md;
-  background: $rt-bg-input;
-  border: 1px solid var(--color-bg-tertiary);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-md;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-family: $rt-font-body;
   font-size: $rt-font-size-base;
   line-height: 1.6;
@@ -99,13 +113,13 @@
   
   &:focus {
     outline: none;
-    background: $rt-bg-input-focus;
-    border-color: $rt-color-gold;
-    box-shadow: $rt-shadow-glow-gold;
+    background: var(--rt-input-bg-focus);
+    border-color: var(--rt-gold);
+    box-shadow: var(--rt-gold-glow);
   }
   
   &::placeholder {
-    color: var(--color-border-primary);
+    color: var(--rt-text-muted);
   }
 }
 

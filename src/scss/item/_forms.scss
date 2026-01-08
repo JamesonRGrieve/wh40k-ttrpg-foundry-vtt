@@ -11,30 +11,34 @@
     font-size: $rt-font-size-xs;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
   }
   
   &__input,
   &__select,
   &__textarea {
-    background: $rt-bg-input;
-    border: 1px solid var(--color-border-secondary);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: $rt-radius-sm;
     padding: $rt-space-xs $rt-space-sm;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
     font-family: $rt-font-body;
     font-size: $rt-font-size-base;
     transition: all $rt-transition-fast;
     
     &:focus {
       outline: none;
-      border-color: $rt-color-gold;
-      background: $rt-bg-input-focus;
-      box-shadow: $rt-shadow-glow-gold;
+      border-color: var(--rt-gold);
+      background: var(--rt-input-bg-focus);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
     }
     
     &::placeholder {
-      color: var(--color-border-primary);
+      color: var(--rt-text-subtle);
+    }
+    
+    &--centered {
+      text-align: center;
     }
   }
   
@@ -42,8 +46,8 @@
     cursor: pointer;
     
     option {
-      background: var(--color-bg-primary);
-      color: var(--color-text-primary);
+      background: var(--rt-sheet-bg);
+      color: var(--rt-text-dark);
     }
   }
   
@@ -57,21 +61,24 @@
     align-items: center;
     gap: $rt-space-sm;
     cursor: pointer;
+    color: var(--rt-text-dark);
+    font-size: $rt-font-size-sm;
     
     input[type="checkbox"] {
       appearance: none;
       width: 18px;
       height: 18px;
-      border: 2px solid var(--color-border-secondary);
+      border: 2px solid var(--rt-border-color);
       border-radius: $rt-radius-sm;
-      background: $rt-bg-input;
+      background: var(--rt-input-bg);
       cursor: pointer;
       position: relative;
       transition: all $rt-transition-fast;
+      flex-shrink: 0;
       
       &:checked {
-        background: $rt-color-gold;
-        border-color: $rt-color-gold;
+        background: var(--rt-gold);
+        border-color: var(--rt-gold);
         
         &::after {
           content: '✓';
@@ -79,14 +86,14 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          color: var(--color-bg-primary);
+          color: #1a1a1a;
           font-size: 12px;
           font-weight: bold;
         }
       }
       
       &:hover {
-        border-color: $rt-color-gold;
+        border-color: var(--rt-gold);
       }
     }
   }
@@ -107,18 +114,20 @@
 // ============================================
 
 .rt-description {
-  background: rgba(var(--color-text-primary), 0.05);
-  border: 1px solid rgba(var(--color-text-primary), 0.1);
+  background: var(--rt-panel-body-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-md;
   padding: $rt-space-md;
+  min-height: 80px;
   
-  .editor-content {
-    color: var(--color-text-secondary);
+  .editor-content,
+  .editor {
+    color: var(--rt-text-dark);
     line-height: 1.6;
     
     h1, h2, h3, h4 {
       font-family: $rt-font-heading;
-      color: $rt-color-gold;
+      color: var(--rt-gold);
       margin-top: $rt-space-md;
       margin-bottom: $rt-space-sm;
     }
@@ -128,7 +137,7 @@
     }
     
     strong, b {
-      color: var(--color-text-primary);
+      color: var(--rt-text-dark);
     }
     
     ul, ol {
@@ -140,5 +149,16 @@
       margin-bottom: $rt-space-xs;
     }
   }
+}
+
+// ============================================
+// Empty State
+// ============================================
+
+.rt-empty-state {
+  color: var(--rt-text-subtle);
+  font-style: italic;
+  text-align: center;
+  padding: $rt-space-md;
 }
 

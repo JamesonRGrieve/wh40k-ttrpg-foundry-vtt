@@ -4,12 +4,12 @@
 
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Dialog for adding specialist skill specializations.
  */
-export default class SpecialistSkillDialog extends ApplicationV2Mixin(HandlebarsApplicationMixin(ApplicationV2)) {
+export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.

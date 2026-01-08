@@ -5,12 +5,8 @@
 .rt-compact {
   .rt-item-header--compact {
     grid-template-columns: 50px 1fr;
-    padding: $rt-space-md;
+    padding: $rt-space-sm $rt-space-md;
     gap: $rt-space-sm;
-    
-    &::before, &::after {
-      display: none;
-    }
   }
   
   .rt-item-image--sm {
@@ -28,6 +24,9 @@
     display: flex;
     flex-direction: column;
     gap: $rt-space-sm;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   // Override textarea font to use UI font (cleaner look)
@@ -40,17 +39,17 @@
 
 // Inline meta controls in header
 .rt-meta-select {
-  background: rgba(var(--color-bg-primary), 0.6);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-sm;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-size: $rt-font-size-xs;
   padding: 2px 4px;
   cursor: pointer;
   
   &:focus {
     outline: none;
-    border-color: $rt-color-gold;
+    border-color: var(--rt-gold);
   }
 }
 
@@ -58,8 +57,8 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  background: rgba(var(--color-bg-primary), 0.6);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-sm;
   padding: 0 4px;
   
@@ -67,7 +66,7 @@
     width: 40px;
     background: transparent;
     border: none;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
     font-size: $rt-font-size-xs;
     text-align: center;
     
@@ -78,7 +77,7 @@
   
   span {
     font-size: $rt-font-size-xs;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
   }
 }
 
@@ -87,11 +86,12 @@
   align-items: center;
   gap: 3px;
   font-size: $rt-font-size-xs;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
   cursor: pointer;
   
   input[type="checkbox"] {
     margin: 0;
+    accent-color: var(--rt-gold);
   }
 }
 
@@ -101,12 +101,12 @@
   align-items: center;
   gap: $rt-space-sm;
   padding: $rt-space-xs $rt-space-sm;
-  background: rgba($rt-color-crimson-dark, 0.15);
-  border: 1px solid rgba($rt-color-crimson, 0.3);
+  background: rgba(139, 0, 0, 0.1);
+  border: 1px solid rgba(139, 0, 0, 0.3);
   border-radius: $rt-radius-sm;
   
   i {
-    color: $rt-color-crimson;
+    color: var(--rt-red);
     font-size: $rt-font-size-sm;
   }
   
@@ -114,11 +114,11 @@
     flex: 1;
     background: transparent;
     border: none;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
     font-size: $rt-font-size-sm;
     
     &::placeholder {
-      color: rgba($rt-color-crimson, 0.5);
+      color: var(--rt-text-subtle);
     }
     
     &:focus {
@@ -141,23 +141,28 @@
   
   label {
     font-size: $rt-font-size-xs;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    
+    i {
+      margin-right: 4px;
+      color: var(--rt-gold);
+    }
   }
   
   input {
-    background: rgba(var(--color-bg-primary), 0.4);
-    border: 1px solid var(--color-border-secondary);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: $rt-radius-sm;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
     font-size: $rt-font-size-sm;
     padding: $rt-space-xs $rt-space-sm;
     
     &:focus {
       outline: none;
-      border-color: $rt-color-gold;
-      background: rgba(var(--color-bg-primary), 0.6);
+      border-color: var(--rt-gold);
+      background: var(--rt-input-bg-focus);
     }
   }
   
@@ -174,16 +179,16 @@
   
   label {
     font-size: $rt-font-size-xs;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
   
   textarea {
-    background: rgba(var(--color-bg-primary), 0.4);
-    border: 1px solid var(--color-border-secondary);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
     border-radius: $rt-radius-sm;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
     font-size: $rt-font-size-sm;
     padding: $rt-space-sm;
     resize: vertical;
@@ -191,8 +196,8 @@
     
     &:focus {
       outline: none;
-      border-color: $rt-color-gold;
-      background: rgba(var(--color-bg-primary), 0.6);
+      border-color: var(--rt-gold);
+      background: var(--rt-input-bg-focus);
     }
   }
 }
@@ -202,33 +207,33 @@
   display: flex;
   justify-content: flex-end;
   padding-top: $rt-space-xs;
-  border-top: 1px solid rgba(var(--color-border-secondary), 0.3);
+  border-top: 1px solid var(--rt-border-color-light);
 }
 
 .rt-source-input {
   background: transparent;
   border: none;
-  color: var(--color-border-primary);
+  color: var(--rt-text-subtle);
   font-size: $rt-font-size-xs;
   font-style: italic;
   text-align: right;
   
   &::placeholder {
-    color: rgba(var(--color-border-primary), 0.5);
+    color: var(--rt-text-subtle);
   }
   
   &:focus {
     outline: none;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
   }
 }
 
 // Meta text inputs (replaces dropdowns)
 .rt-meta-text {
-  background: rgba(var(--color-bg-primary), 0.6);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-input-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-sm;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-family: $rt-font-ui;
   font-size: $rt-font-size-xs;
   padding: 2px 6px;
@@ -236,7 +241,7 @@
   
   &:focus {
     outline: none;
-    border-color: $rt-color-gold;
+    border-color: var(--rt-gold);
   }
   
   &--tiny {
@@ -255,25 +260,28 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1 1 auto;
+  min-height: 0;
   
   label {
     font-size: $rt-font-size-xs;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    flex-shrink: 0;
     
     i {
       margin-right: 4px;
-      color: $rt-color-gold;
+      color: var(--rt-gold);
     }
   }
 }
 
 .rt-prose {
-  background: rgba(var(--color-bg-primary), 0.3);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-panel-body-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-sm;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-family: $rt-font-ui;
   font-size: $rt-font-size-sm;
   padding: $rt-space-sm;
@@ -282,15 +290,16 @@
   overflow-y: auto;
   cursor: pointer;
   line-height: 1.4;
+  flex: 1 1 auto;
   
   &:hover {
-    border-color: $rt-color-gold;
-    background: rgba(var(--color-bg-primary), 0.5);
+    border-color: var(--rt-gold);
+    background: var(--rt-input-bg-focus);
   }
   
   &:empty::before {
     content: 'Click to edit...';
-    color: var(--color-border-primary);
+    color: var(--rt-text-subtle);
     font-style: italic;
   }
   
@@ -301,11 +310,5 @@
       margin-bottom: 0;
     }
   }
-}
-
-// Remove old prereq-row styling, use inline-field instead
-.rt-compact .rt-inline-field label i {
-  margin-right: 4px;
-  color: $rt-color-crimson;
 }
 

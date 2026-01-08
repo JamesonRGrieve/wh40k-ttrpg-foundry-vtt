@@ -44,9 +44,9 @@
   flex-direction: column;
   gap: $rt-space-sm;
   padding: $rt-space-sm $rt-space-md;
-  background: rgba(0, 0, 0, 0.05);
-  border-top: 1px solid $rt-border-medium;
-  border-bottom: 1px solid $rt-border-medium;
+  background: var(--rt-panel-bg-translucent);
+  border-top: 1px solid var(--rt-border-color-light);
+  border-bottom: 1px solid var(--rt-border-color-light);
 }
 
 .rt-search-box {
@@ -68,16 +68,17 @@
 .rt-equipment-search {
   flex: 1;
   padding: 8px 36px 8px 36px; // Space for icon and clear button
-  border: 1px solid $rt-border-medium;
+  border: 1px solid var(--rt-border-color);
   border-radius: 4px;
-  background: var(--color-input-bg, #fff);
+  background: var(--rt-input-bg);
   color: var(--color-text-primary);
   font-size: $rt-font-size-base;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 
   &:focus {
     outline: none;
     border-color: $rt-accent-gold;
+    background: var(--rt-input-bg-focus);
     box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.15);
   }
 
@@ -97,7 +98,7 @@
   height: 24px;
   padding: 0;
   border: none;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--rt-shadow-soft);
   border-radius: 50%;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -105,7 +106,7 @@
   z-index: 1;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--rt-shadow-medium);
     color: var(--color-text-primary);
   }
 
@@ -123,22 +124,24 @@
 .rt-equipment-status-filter {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid $rt-border-medium;
+  border: 1px solid var(--rt-border-color);
   border-radius: 4px;
-  background: var(--color-input-bg, #fff);
+  background: var(--rt-input-bg);
   color: var(--color-text-primary);
   font-size: $rt-font-size-sm;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 
   &:focus {
     outline: none;
     border-color: $rt-accent-gold;
+    background: var(--rt-input-bg-focus);
     box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.15);
   }
 
   &:hover {
-    border-color: darken($rt-border-medium, 10%);
+    background: var(--rt-input-bg-focus);
+    border-color: var(--rt-border-color-strong);
   }
 }
 
@@ -147,7 +150,7 @@
   display: flex;
   gap: $rt-space-sm;
   padding-top: $rt-space-xs;
-  border-top: 1px solid rgba($rt-border-medium, 0.5);
+  border-top: 1px solid var(--rt-border-color-light);
 }
 
 .rt-bulk-btn {
@@ -157,9 +160,9 @@
   justify-content: center;
   gap: 6px;
   padding: 8px 12px;
-  border: 1px solid $rt-border-medium;
+  border: 1px solid var(--rt-border-color);
   border-radius: 4px;
-  background: var(--color-input-bg, #fff);
+  background: var(--rt-btn-bg);
   color: var(--color-text-secondary);
   font-size: $rt-font-size-sm;
   font-weight: 600;
@@ -177,7 +180,7 @@
     width: 0;
     height: 0;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--rt-shadow-soft);
     transform: translate(-50%, -50%);
     transition: width 0.3s, height 0.3s;
   }
@@ -200,7 +203,9 @@
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-border-color-strong);
+    box-shadow: 0 2px 4px var(--rt-shadow-soft);
   }
 
   &:active {
@@ -209,27 +214,35 @@
   }
 
   // Specific button variants
+  &.rt-bulk-preset {
+    &:hover {
+      background: var(--rt-dynasty-bg);
+      border-color: var(--rt-dynasty-border);
+      color: var(--rt-dynasty-primary);
+    }
+  }
+
   &.rt-bulk-equip {
     &:hover {
-      background: rgba($rt-color-success, 0.1);
-      border-color: rgba($rt-color-success, 0.4);
-      color: $rt-color-success;
+      background: var(--rt-success-bg);
+      border-color: var(--rt-success-primary);
+      color: var(--rt-success-secondary);
     }
   }
 
   &.rt-bulk-unequip {
     &:hover {
-      background: rgba($rt-color-warning, 0.1);
-      border-color: rgba($rt-color-warning, 0.4);
-      color: $rt-color-warning;
+      background: var(--rt-warning-bg);
+      border-color: var(--rt-warning-primary);
+      color: var(--rt-warning-secondary);
     }
   }
 
   &.rt-bulk-stow {
     &:hover {
-      background: rgba($rt-accent-equipment, 0.1);
-      border-color: rgba($rt-accent-equipment, 0.4);
-      color: $rt-accent-equipment;
+      background: var(--rt-equipment-bg);
+      border-color: var(--rt-equipment-border);
+      color: var(--rt-equipment-secondary);
     }
   }
 }
@@ -249,8 +262,8 @@
 .rt-encumbrance-bar-container {
   width: 150px;
   height: 14px;
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid $rt-border-medium;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color);
   border-radius: 7px;
   overflow: hidden;
 }

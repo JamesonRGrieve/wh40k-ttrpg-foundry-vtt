@@ -3,7 +3,7 @@
  * Allows saving, loading, and managing preset equipment configurations
  */
 
-import { ApplicationV2Mixin } from "../api/application-v2-mixin.mjs";
+import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 
 /**
  * Dialog for managing equipment loadout presets.

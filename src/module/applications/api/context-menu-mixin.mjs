@@ -134,6 +134,11 @@ export default function ContextMenuMixin(Base) {
                     callback: () => this._showModifierSources(charKey)
                 },
                 {
+                    name: "Edit Characteristic",
+                    icon: '<i class="fas fa-edit"></i>',
+                    callback: () => this._onEditCharacteristic(charKey)
+                },
+                {
                     name: "Spend XP to Advance",
                     icon: '<i class="fas fa-star"></i>',
                     callback: () => this._onAdvanceCharacteristic(charKey),
@@ -365,6 +370,13 @@ export default function ContextMenuMixin(Base) {
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content
             });
+        }
+
+        async _onEditCharacteristic(charKey) {
+            // Call the static method with a fake target that has the data
+            const fakeTarget = document.createElement('div');
+            fakeTarget.dataset.characteristic = charKey;
+            await this.constructor.actions.editCharacteristic.call(this, null, fakeTarget);
         }
         
         async _onSkillRoll(skillKey) {
