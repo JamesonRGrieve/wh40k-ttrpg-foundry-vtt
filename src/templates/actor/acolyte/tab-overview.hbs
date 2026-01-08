@@ -23,6 +23,34 @@
         <div class="rt-overview-col">
             {{!-- Fate Panel V2 --}}
             {{> systems/rogue-trader/templates/actor/panel/fate-panel-v2.hbs}}
+            
+            {{!-- Experience Panel --}}
+            <div class="rt-panel rt-experience-panel">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-graduation-cap"></i> Experience</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-xp-display">
+                        <div class="rt-xp-row">
+                            <div class="rt-xp-field">
+                                <span class="rt-xp-label">Total</span>
+                                <input type="number" class="rt-xp-input" name="system.experience.total" value="{{actor.system.experience.total}}" data-dtype="Number" />
+                            </div>
+                            <div class="rt-xp-field">
+                                <span class="rt-xp-label">Spent</span>
+                                <input type="number" class="rt-xp-input rt-xp-spent" name="system.experience.used" value="{{actor.system.experience.used}}" data-dtype="Number" />
+                            </div>
+                        </div>
+                        <div class="rt-xp-available-display">
+                            <span class="rt-xp-available-label">Available</span>
+                            <span class="rt-xp-available-value">{{actor.system.experience.available}}</span>
+                        </div>
+                        <div class="rt-xp-bar">
+                            <div class="rt-xp-bar-fill" style="width: {{#if actor.system.experience.total}}{{multiply (divide actor.system.experience.used actor.system.experience.total) 100}}{{else}}0{{/if}}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {{!-- Movement & Capacity --}}
             <div class="rt-panel rt-panel-movement">
@@ -62,7 +90,7 @@
             </div>
             
             {{!-- Active Effects Panel --}}
-            {{> systems/rogue-trader/templates/actor/panel/effects-panel.hbs}}
+            {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
         </div>
     </div>
 </section>

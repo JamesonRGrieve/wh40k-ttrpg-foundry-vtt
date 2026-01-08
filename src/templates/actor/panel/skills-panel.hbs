@@ -1,40 +1,4 @@
 <div class="rt-skills-panel">
-    {{!-- Search and Filter Controls --}}
-    <div class="rt-skills-controls">
-        <div class="rt-search-box">
-            <i class="fas fa-search rt-search-icon"></i>
-            <input type="search"
-                   class="rt-skills-search"
-                   placeholder="Search skills..."
-                   data-action="filterSkills"
-                   autocomplete="off">
-            <button type="button" class="rt-search-clear" data-action="clearSkillsSearch" title="Clear search">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="rt-filter-controls">
-            <select class="rt-skills-char-filter" data-action="filterSkills">
-                <option value="">All Characteristics</option>
-                <option value="weaponSkill">Weapon Skill (WS)</option>
-                <option value="ballisticSkill">Ballistic Skill (BS)</option>
-                <option value="strength">Strength (S)</option>
-                <option value="toughness">Toughness (T)</option>
-                <option value="agility">Agility (Ag)</option>
-                <option value="intelligence">Intelligence (Int)</option>
-                <option value="perception">Perception (Per)</option>
-                <option value="willpower">Willpower (WP)</option>
-                <option value="fellowship">Fellowship (Fel)</option>
-            </select>
-            <select class="rt-skills-training-filter" data-action="filterSkills">
-                <option value="">All Training Levels</option>
-                <option value="0">Untrained</option>
-                <option value="1">Trained</option>
-                <option value="2">+10</option>
-                <option value="3">+20</option>
-            </select>
-        </div>
-    </div>
-
     <div class="rt-skills-columns">
         <!-- Left Column -->
         <div class="rt-skills-column">

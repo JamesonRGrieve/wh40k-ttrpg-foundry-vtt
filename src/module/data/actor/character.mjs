@@ -163,6 +163,33 @@ export default class CharacterData extends CreatureTemplate {
     return super.migrateData(source);
   }
 
+  /** @override */
+  static cleanData(source, options = {}) {
+    if (source?.experience) {
+      source.experience.used = this._toInt(source.experience.used);
+      source.experience.total = this._toInt(source.experience.total);
+      source.experience.available = this._toInt(source.experience.available);
+      source.experience.spentCharacteristics = this._toInt(source.experience.spentCharacteristics);
+      source.experience.spentSkills = this._toInt(source.experience.spentSkills);
+      source.experience.spentTalents = this._toInt(source.experience.spentTalents);
+      source.experience.spentPsychicPowers = this._toInt(source.experience.spentPsychicPowers);
+      source.experience.calculatedTotal = this._toInt(source.experience.calculatedTotal);
+    }
+    if (source?.insanity !== undefined) {
+      source.insanity = this._toInt(source.insanity);
+    }
+    if (source?.corruption !== undefined) {
+      source.corruption = this._toInt(source.corruption);
+    }
+    if (source?.insanityBonus !== undefined) {
+      source.insanityBonus = this._toInt(source.insanityBonus);
+    }
+    if (source?.corruptionBonus !== undefined) {
+      source.corruptionBonus = this._toInt(source.corruptionBonus);
+    }
+    return super.cleanData(source, options);
+  }
+
   /* -------------------------------------------- */
   /*  Data Preparation                            */
   /* -------------------------------------------- */
