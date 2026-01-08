@@ -11,6 +11,8 @@ import { AssignDamageData } from "../../rolls/assign-damage-data.mjs";
 import { prepareAssignDamageRoll } from "../../prompts/assign-damage-prompt.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 
+const TextEditor = foundry.applications.ux.TextEditor.implementation;
+
 /**
  * Actor sheet for Acolyte/Character type actors.
  */
@@ -265,6 +267,36 @@ export default class AcolyteSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+    /*  Update Helpers                              */
+    /* -------------------------------------------- */
+
+    /**
+     * Update a nested system field while preserving required sibling values.
+     * This prevents DataModel defaults from clobbering missing fields in partial updates.
+     * @param {string} field     The dot-notation field path (e.g., "system.wounds.value").
+     * @param {*} value          The new value to set.
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _updateSystemField(field, value) {
+        const match = /^system\\.([^.]+)\\.([^.]+)$/.exec(field);
+        const guardedGroups = new Set(["wounds", "fatigue", "fate", "psy"]);
+        if (match) {
+            const [, group, key] = match;
+            if (guardedGroups.has(group)) {
+                const systemData = this.actor.system?.toObject
+                    ? this.actor.system.toObject()
+                    : foundry.utils.deepClone(this.actor.system ?? {});
+                const currentGroup = foundry.utils.deepClone(systemData?.[group] ?? {});
+                currentGroup[key] = value;
+                await this.actor.update({ [`system.${group}`]: currentGroup });
+                return;
+            }
+        }
+        await this.actor.update({ [field]: value });
+    }
+
+    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
@@ -329,6 +361,8 @@ export default class AcolyteSheet extends BaseActorSheet {
                 return this._prepareHeaderContext(context, options);
             case "tabs":
                 return this._prepareTabsContext(context, options);
+            case "biography":
+                return await this._prepareBiographyContext(context, options);
             case "overview":
             case "combat":
             case "skills":
@@ -336,7 +370,6 @@ export default class AcolyteSheet extends BaseActorSheet {
             case "equipment":
             case "powers":
             case "dynasty":
-            case "biography":
                 // Provide tab object for the template
                 return this._prepareTabPartContext(partId, context, options);
             default:
@@ -372,6 +405,38 @@ export default class AcolyteSheet extends BaseActorSheet {
                 active: this.tabGroups[tabConfig.group] === tabConfig.tab
             };
         }
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare biography tab context with ProseMirror enriched content.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {Promise<object>}
+     * @protected
+     */
+    async _prepareBiographyContext(context, options) {
+        // First prepare the standard tab context
+        await this._prepareTabPartContext("biography", context, options);
+
+        // Prepare biography data with enriched HTML for ProseMirror
+        const rawNotes = this.actor.system.bio?.notes ?? "";
+        
+        context.biography = {
+            source: {
+                notes: rawNotes
+            },
+            enriched: {
+                notes: await TextEditor.enrichHTML(rawNotes, {
+                    relativeTo: this.actor,
+                    secrets: this.actor.isOwner,
+                    rollData: this.actor.getRollData()
+                })
+            }
+        };
+
         return context;
     }
 
@@ -964,7 +1029,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Handle special actions
         if (action === "clear-fatigue") {
-            await this.actor.update({ "system.fatigue.value": 0 });
+            await this._updateSystemField("system.fatigue.value", 0);
             return;
         }
 
@@ -981,7 +1046,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
 
         if (newValue !== currentValue) {
-            await this.actor.update({ [field]: newValue });
+            await this._updateSystemField(field, newValue);
         }
     }
 
@@ -1032,7 +1097,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const currentCrit = this.actor.system.wounds?.critical || 0;
         const newValue = (level === currentCrit) ? level - 1 : level;
         const clampedValue = Math.min(Math.max(newValue, 0), 10);
-        await this.actor.update({ "system.wounds.critical": clampedValue });
+        await this._updateSystemField("system.wounds.critical", clampedValue);
     }
 
     /* -------------------------------------------- */
@@ -1059,7 +1124,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const newValue = (index === currentFate) ? index - 1 : index;
         const maxFate = this.actor.system.fate?.max || 0;
         const clampedValue = Math.min(Math.max(newValue, 0), maxFate);
-        await this.actor.update({ "system.fate.value": clampedValue });
+        await this._updateSystemField("system.fate.value", clampedValue);
     }
 
     /* -------------------------------------------- */
@@ -1137,7 +1202,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     async #restoreFateImpl(event, target) {
         const maxFate = this.actor.system.fate?.max || 0;
-        await this.actor.update({ "system.fate.value": maxFate });
+        await this._updateSystemField("system.fate.value", maxFate);
         this._notify("info", `Restored all fate points to ${maxFate}`, {
             duration: 3000
         });
@@ -1206,7 +1271,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 return;
         }
 
-        await this.actor.update({ "system.fate.value": currentFate - 1 });
+        await this._updateSystemField("system.fate.value", currentFate - 1);
 
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),

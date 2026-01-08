@@ -352,12 +352,58 @@ All 6 Priority 1 items completed in this session:
 
 ---
 
+---
+
+### Priority 3: Long-term Strategic (Session 5 - 2026-01-08)
+
+- [x] **Item 18**: ProseMirror Rich Text Editor Integration ✅
+  - Integrated Foundry V13's native `<prose-mirror>` custom element
+  - Added rich text editing for Biography tab's "Background & Notes" field
+  - Implemented TextEditor enrichment in `_prepareBiographyContext()`:
+    - Enriches HTML with inline rolls, entity links, secrets
+    - Passes rollData context for dynamic content
+    - Respects owner permissions for secret content
+  - Features implemented:
+    - Rich text formatting (bold, italic, underline, headers, lists)
+    - Embedded images and tables
+    - Inline entity links (@Actor, @Item, @JournalEntry)
+    - Inline roll formulas ([[/roll 1d100]])
+    - Blockquotes and code blocks
+    - Read-only view for non-editable sheets
+  - Styled ProseMirror editor with theme integration:
+    - Bio accent color for focus states
+    - Modesto Condensed font for headers
+    - Consistent spacing and typography
+    - Table styling with alternating rows
+    - Link hover effects
+    - Empty state placeholder
+  - Files Modified:
+    - `src/module/applications/actor/acolyte-sheet.mjs` (added TextEditor import, _prepareBiographyContext)
+    - `src/templates/actor/acolyte/tab-biography.hbs` (replaced textarea with prose-mirror element)
+    - `src/scss/panels/_biography.scss` (added comprehensive ProseMirror styles)
+  
+**Benefits**:
+- ✅ Rich text authoring for character backgrounds
+- ✅ Embedded images and formatted content
+- ✅ Inline entity linking for NPCs, locations, items
+- ✅ Inline roll formulas for quick reference
+- ✅ No external dependencies (uses Foundry's built-in ProseMirror)
+- ✅ Seamless integration with existing Biography tab
+
+**Total Time**: ~1 hour
+**Build Status**: ✅ All builds passing
+
+---
+
 ## Next Steps 📋
 
 ### Priority 2: Medium Priority (Remaining)
-- Item 11: Keyboard Shortcuts System (2-3 days, VERY HIGH impact)
-- Item 13: Lazy Template Loading (3-4 hours)
-- Item 14: State Persistence Enhancements (1-2 days)
-- Item 15: Replace Context Menu with V13 Native (2-3 days)
-- Item 16: Data Caching & Memoization (1-2 days)
-- Item 17: Accessibility Compliance (2-3 days, HIGH impact)
+- Item 11: Keyboard Shortcuts System (2-3 days, VERY HIGH impact) - **SKIPPED**
+- Item 17: Accessibility Compliance (2-3 days, HIGH impact) - **SKIPPED**
+
+### Priority 3: Long-term Strategic (Remaining)
+- Item 19: Advanced Tooltip System with Enrichers (2-3 days)
+- Item 20: Responsive Design for Mobile/Tablet (4-5 days)
+- Item 21: Character Import/Export System (3-4 days)
+- Item 22: Character Comparison & Build Planning Tool (3-5 days)
+- Item 23: Equipment Loadout Preset System (2-3 days)
