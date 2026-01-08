@@ -338,6 +338,12 @@ export function registerHandlebarsHelpers() {
         return (a || 0) * (b || 0);
     });
 
+    Handlebars.registerHelper('divide', function(a, b) {
+        const divisor = Number(b) || 0;
+        if (divisor === 0) return 0;
+        return (Number(a) || 0) / divisor;
+    });
+
     Handlebars.registerHelper('subtract', function(a, b) {
         return (a || 0) - (b || 0);
     });

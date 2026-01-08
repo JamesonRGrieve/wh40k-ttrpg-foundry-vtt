@@ -1,12 +1,12 @@
 // ============================================
-// FATE PANEL V2 - Golden Stars, Sacred Theme
+// FATE PANEL V2 - Blue Stars, Celestial Theme
 // ============================================
 // Complete redesign with star pips, spending menu, and sparkle animations
 
 .rt-fate-panel-v2 {
   // Base panel styling inherits from rt-panel
 
-  // Sacred gold theme
+  // Celestial blue theme
   .rt-panel-header {
     background: linear-gradient(180deg, var(--rt-fate-bg) 0%, transparent 100%);
     border-bottom: 2px solid var(--rt-fate-border);
@@ -48,7 +48,7 @@
   }
 
   // ============================================
-  // Golden Star Pips
+  // Blue Star Pips
   // ============================================
 
   .rt-fate-pips {
@@ -83,8 +83,8 @@
       transform: scale(1.15) rotate(5deg);
 
       i {
-        color: rgba(196, 135, 29, 0.6);
-        filter: drop-shadow(0 3px 8px rgba(196, 135, 29, 0.4));
+        color: var(--rt-fate-primary);
+        filter: drop-shadow(0 3px 8px var(--rt-fate-bg));
       }
     }
 
@@ -97,23 +97,23 @@
   .rt-fate-star--filled {
     i {
       color: var(--rt-fate-secondary);
-      filter: drop-shadow(0 3px 8px rgba(196, 135, 29, 0.6));
+      filter: drop-shadow(0 3px 8px var(--rt-fate-border));
       animation: gentle-glow 3s ease-in-out infinite;
     }
 
     &:hover i {
-      color: #d09838;
-      filter: drop-shadow(0 4px 12px rgba(196, 135, 29, 0.8));
+      color: var(--rt-fate-secondary);
+      filter: drop-shadow(0 4px 12px var(--rt-fate-primary));
     }
   }
 
   // Gentle glow animation for filled stars
   @keyframes gentle-glow {
     0%, 100% {
-      filter: drop-shadow(0 3px 8px rgba(196, 135, 29, 0.6));
+      filter: drop-shadow(0 3px 8px var(--rt-fate-border));
     }
     50% {
-      filter: drop-shadow(0 4px 12px rgba(196, 135, 29, 0.8));
+      filter: drop-shadow(0 4px 12px var(--rt-fate-primary));
     }
   }
 

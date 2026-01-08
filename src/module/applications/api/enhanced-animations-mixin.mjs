@@ -255,22 +255,21 @@ export default function EnhancedAnimationsMixin(Base) {
          */
         animateCharacteristicChange(charKey, oldValue, newValue) {
             if (this._shouldSkipAnimation()) return;
-            
+
             // Find the characteristic display
             const charElement = this.element.querySelector(
-                `[data-characteristic="${charKey}"] .characteristic-value, ` +
-                `[data-char="${charKey}"] .char-total`
+                `[data-characteristic="${charKey}"] .char-total`
             );
-            
+
             if (charElement) {
                 this.animateCounter(charElement, oldValue, newValue);
-                this._flashElement(charElement, "stat-advancement", 1000);
+                this._flashElement(charElement, "changed", 500);
             }
-            
+
             // Check if bonus changed
             const oldBonus = Math.floor(oldValue / 10);
             const newBonus = Math.floor(newValue / 10);
-            
+
             if (oldBonus !== newBonus) {
                 this.animateCharacteristicBonus(charKey, oldBonus, newBonus);
             }
@@ -286,27 +285,29 @@ export default function EnhancedAnimationsMixin(Base) {
          */
         animateCharacteristicBonus(charKey, oldBonus, newBonus) {
             if (this._shouldSkipAnimation()) return;
-            
+
             // Find bonus display
             const bonusElement = this.element.querySelector(
-                `[data-characteristic="${charKey}"] .characteristic-bonus, ` +
-                `[data-char="${charKey}"] .char-bonus`
+                `[data-characteristic="${charKey}"] .bonus-val`
             );
-            
+
             if (!bonusElement) return;
-            
+
             // Animate counter
             this.animateCounter(bonusElement, oldBonus, newBonus);
-            
-            // Pulse effect
-            bonusElement.classList.remove("changed");
-            void bonusElement.offsetWidth; // Force reflow
-            bonusElement.classList.add("changed");
-            
-            setTimeout(() => {
-                bonusElement.classList.remove("changed");
-            }, this._animationConfig.pulseDuration);
-            
+
+            // Pulse effect on the badge container
+            const badgeContainer = bonusElement.closest('.char-badge');
+            if (badgeContainer) {
+                badgeContainer.classList.remove("advanced");
+                void badgeContainer.offsetWidth; // Force reflow
+                badgeContainer.classList.add("advanced");
+
+                setTimeout(() => {
+                    badgeContainer.classList.remove("advanced");
+                }, 500);
+            }
+
             // Show notification
             const delta = newBonus - oldBonus;
             if (delta !== 0) {

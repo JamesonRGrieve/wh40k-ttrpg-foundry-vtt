@@ -6,12 +6,12 @@ import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import { sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
 import { ActionData } from "../../rolls/action-data.mjs";
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Dialog for configuring damage rolls.
  */
-export default class DamageRollDialog extends ApplicationV2Mixin(HandlebarsApplicationMixin(ApplicationV2)) {
+export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
      * @param {object} rollData      The roll data.
      * @param {object} [options={}]  Dialog options.

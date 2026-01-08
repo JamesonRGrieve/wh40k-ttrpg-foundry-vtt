@@ -7,8 +7,8 @@
   align-items: center;
   gap: $rt-space-md;
   padding: $rt-space-md;
-  background: linear-gradient(135deg, rgba($rt-color-crimson, 0.1) 0%, transparent 100%);
-  border: 1px solid $rt-color-crimson-dark;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
+  border: 1px solid var(--rt-red-dark);
   border-radius: $rt-radius-md;
   
   &__dice {
@@ -17,11 +17,11 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    background: $rt-color-crimson-dark;
+    background: var(--rt-red-dark);
     border-radius: $rt-radius-md;
     font-family: $rt-font-display;
     font-size: $rt-font-size-lg;
-    color: var(--color-text-primary);
+    color: #fff;
     box-shadow: $rt-shadow-md;
   }
   
@@ -32,23 +32,23 @@
   &__formula {
     font-family: $rt-font-display;
     font-size: $rt-font-size-xl;
-    color: $rt-color-crimson-light;
+    color: var(--rt-red-bright);
   }
   
   &__type {
     font-size: $rt-font-size-sm;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
   }
   
   &__pen {
     padding: $rt-space-xs $rt-space-sm;
-    background: var(--color-border-secondary);
+    background: var(--rt-panel-bg);
     border-radius: $rt-radius-sm;
     font-size: $rt-font-size-sm;
     
     span {
-      color: $rt-color-gold;
+      color: var(--rt-gold);
       font-weight: 600;
     }
   }
@@ -69,37 +69,49 @@
   align-items: center;
   gap: $rt-space-xs;
   padding: 2px $rt-space-sm;
-  background: rgba(var(--color-border-primary), 0.2);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: 12px;
   font-size: $rt-font-size-xs;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
   transition: all $rt-transition-fast;
   cursor: default;
   
   &:hover {
-    background: rgba(var(--color-border-primary), 0.3);
-    border-color: var(--color-border-primary);
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
   }
   
-  &--positive {
-    background: rgba($rt-color-success, 0.2);
-    border-color: $rt-color-success;
-    color: lighten($rt-color-success, 30%);
+  &--positive,
+  &--success {
+    background: rgba(45, 90, 45, 0.2);
+    border-color: var(--rt-green);
+    color: var(--rt-green-bright);
   }
   
-  &--negative {
-    background: rgba($rt-color-failure, 0.2);
-    border-color: $rt-color-failure;
-    color: lighten($rt-color-failure, 30%);
+  &--negative,
+  &--danger {
+    background: rgba(139, 0, 0, 0.2);
+    border-color: var(--rt-red);
+    color: var(--rt-red-bright);
   }
   
   &--special {
-    background: rgba($rt-color-gold, 0.2);
-    border-color: $rt-color-gold-dark;
-    color: $rt-color-gold-light;
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--rt-gold-dark);
+    color: var(--rt-gold);
+  }
+  
+  &--psychic {
+    background: rgba(106, 32, 144, 0.15);
+    border-color: var(--rt-powers-primary);
+    color: var(--rt-powers-secondary);
+  }
+  
+  &--muted {
+    opacity: 0.6;
   }
 }
 

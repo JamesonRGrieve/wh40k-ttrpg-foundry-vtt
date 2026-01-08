@@ -5,13 +5,13 @@
 
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Base dialog class for roll prompts.
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
-export default class BaseRollDialog extends ApplicationV2Mixin(HandlebarsApplicationMixin(ApplicationV2)) {
+export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
      * @param {object} rollData     The roll data to configure.
      * @param {object} [options={}] Dialog options.

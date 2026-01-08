@@ -8,10 +8,10 @@
   justify-content: center;
   gap: $rt-space-xs;
   padding: $rt-space-sm $rt-space-md;
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color);
   border-radius: $rt-radius-md;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-family: $rt-font-body;
   font-size: $rt-font-size-sm;
   cursor: pointer;
@@ -22,31 +22,31 @@
   }
   
   &:hover {
-    background: var(--color-bg-secondary);
-    border-color: $rt-color-gold;
-    color: $rt-color-gold;
-    box-shadow: $rt-shadow-glow-gold;
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-gold);
+    color: var(--rt-gold);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
   }
   
   &--primary {
-    background: linear-gradient(135deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
-    border-color: $rt-color-gold;
-    color: var(--color-bg-primary);
+    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
+    border-color: var(--rt-gold);
+    color: #1a1a1a;
     
     &:hover {
-      background: linear-gradient(135deg, $rt-color-gold 0%, $rt-color-gold-light 100%);
-      color: var(--color-bg-primary);
+      background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-bright) 100%);
+      color: #1a1a1a;
     }
   }
   
   &--danger {
-    border-color: $rt-color-crimson-dark;
+    border-color: var(--rt-red-dark);
     
     &:hover {
-      background: $rt-color-crimson-dark;
-      border-color: $rt-color-crimson;
-      color: var(--color-text-primary);
-      box-shadow: $rt-shadow-glow-crimson;
+      background: var(--rt-red-dark);
+      border-color: var(--rt-red);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
     }
   }
   
@@ -68,27 +68,27 @@
   th, td {
     padding: $rt-space-sm;
     text-align: left;
-    border-bottom: 1px solid var(--color-bg-tertiary);
+    border-bottom: 1px solid var(--rt-border-color-light);
   }
   
   th {
     font-size: $rt-font-size-xs;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--color-text-tertiary);
-    background: var(--color-bg-tertiary);
+    color: var(--rt-text-muted);
+    background: var(--rt-panel-bg-translucent);
   }
   
   tr {
     transition: background $rt-transition-fast;
     
     &:hover {
-      background: rgba($rt-color-gold, 0.05);
+      background: rgba(212, 175, 55, 0.05);
     }
   }
   
   td {
-    color: var(--color-text-secondary);
+    color: var(--rt-text-dark);
   }
 }
 

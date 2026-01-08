@@ -6,9 +6,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: $rt-space-sm;
-  padding: $rt-space-md $rt-space-lg;
-  background: var(--color-bg-tertiary);
-  border-bottom: 1px solid rgba($rt-color-gold, 0.3);
+  padding: $rt-space-sm $rt-space-md;
+  background: var(--rt-panel-bg-translucent);
+  border-bottom: 1px solid var(--rt-border-color-light);
+  flex-shrink: 0;
 }
 
 .rt-stat-badge {
@@ -16,8 +17,8 @@
   align-items: center;
   gap: $rt-space-xs;
   padding: $rt-space-xs $rt-space-sm;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-secondary);
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-md;
   font-size: $rt-font-size-sm;
   transition: all $rt-transition-fast;
@@ -28,7 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $rt-color-gold;
+    color: var(--rt-gold);
     
     i, .material-icons {
       font-size: 14px;
@@ -36,44 +37,59 @@
   }
   
   &__label {
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
     font-size: $rt-font-size-xs;
     letter-spacing: 0.05em;
   }
   
   &__value {
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
     font-weight: 600;
   }
   
   &:hover {
-    border-color: $rt-color-gold;
-    box-shadow: $rt-shadow-glow-gold;
+    border-color: var(--rt-gold);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
   }
   
   // Variants
   &--damage {
-    border-color: $rt-color-crimson-dark;
+    border-color: var(--rt-red-dark);
     
     .rt-stat-badge__icon {
-      color: $rt-color-crimson;
+      color: var(--rt-red);
     }
     
     &:hover {
-      border-color: $rt-color-crimson;
-      box-shadow: $rt-shadow-glow-crimson;
+      border-color: var(--rt-red);
+      box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
     }
   }
   
   &--equipped {
-    background: rgba($rt-color-success, 0.3);
-    border-color: $rt-color-success;
+    background: rgba(45, 90, 45, 0.2);
+    border-color: var(--rt-green);
   }
   
-  &--rare {
-    border-color: $rt-color-gold;
-    background: linear-gradient(135deg, rgba($rt-color-gold, 0.1) 0%, transparent 100%);
+  &--primary {
+    border-color: var(--rt-gold-dark);
+    
+    .rt-stat-badge__icon {
+      color: var(--rt-gold);
+    }
+  }
+  
+  &--muted {
+    opacity: 0.7;
+  }
+  
+  &--psychic {
+    border-color: var(--rt-powers-primary);
+    
+    .rt-stat-badge__icon {
+      color: var(--rt-powers-primary);
+    }
   }
 }
 

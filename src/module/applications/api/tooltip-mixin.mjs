@@ -49,7 +49,8 @@ export default function TooltipMixin(Base) {
                 }))
             };
 
-            return JSON.stringify(data);
+            // Return JSON string wrapped in Handlebars.SafeString to prevent double-escaping
+            return new Handlebars.SafeString(JSON.stringify(data));
         }
 
         /* -------------------------------------------- */
@@ -59,7 +60,7 @@ export default function TooltipMixin(Base) {
          * @param {string} key      Skill key.
          * @param {object} skill    Skill data.
          * @param {object} characteristics  Character characteristics.
-         * @returns {string}  JSON string for data attribute.
+         * @returns {Handlebars.SafeString}  JSON string for data attribute.
          */
         prepareSkillTooltip(key, skill, characteristics) {
             const charKey = skill.characteristic || skill.char || "strength";
@@ -77,7 +78,8 @@ export default function TooltipMixin(Base) {
                 basic: skill.basic || false
             };
 
-            return JSON.stringify(data);
+            // Return JSON string wrapped in Handlebars.SafeString to prevent double-escaping
+            return new Handlebars.SafeString(JSON.stringify(data));
         }
 
         /* -------------------------------------------- */
@@ -87,7 +89,7 @@ export default function TooltipMixin(Base) {
          * @param {string} location     Armor location.
          * @param {object} armorData    Armor data for this location.
          * @param {Array} [equipped]    Equipped armor pieces.
-         * @returns {string}  JSON string for data attribute.
+         * @returns {Handlebars.SafeString}  JSON string for data attribute.
          */
         prepareArmorTooltip(location, armorData, equipped = []) {
             const data = {
@@ -103,7 +105,8 @@ export default function TooltipMixin(Base) {
                 }))
             };
 
-            return JSON.stringify(data);
+            // Return JSON string wrapped in Handlebars.SafeString to prevent double-escaping
+            return new Handlebars.SafeString(JSON.stringify(data));
         }
 
         /* -------------------------------------------- */
@@ -111,7 +114,7 @@ export default function TooltipMixin(Base) {
         /**
          * Prepare weapon tooltip data.
          * @param {object} weapon  Weapon item.
-         * @returns {string}  JSON string for data attribute.
+         * @returns {Handlebars.SafeString}  JSON string for data attribute.
          */
         prepareWeaponTooltip(weapon) {
             const data = {
@@ -123,7 +126,8 @@ export default function TooltipMixin(Base) {
                 qualities: weapon.system?.qualities?.map(q => q.name || q) || []
             };
 
-            return JSON.stringify(data);
+            // Return JSON string wrapped in Handlebars.SafeString to prevent double-escaping
+            return new Handlebars.SafeString(JSON.stringify(data));
         }
 
         /* -------------------------------------------- */
@@ -132,7 +136,7 @@ export default function TooltipMixin(Base) {
          * Prepare modifier sources tooltip data.
          * @param {string} title    Tooltip title.
          * @param {Array} sources   Modifier sources.
-         * @returns {string}  JSON string for data attribute.
+         * @returns {Handlebars.SafeString}  JSON string for data attribute.
          */
         prepareModifierTooltip(title, sources) {
             const data = {
@@ -143,7 +147,8 @@ export default function TooltipMixin(Base) {
                 }))
             };
 
-            return JSON.stringify(data);
+            // Return JSON string wrapped in Handlebars.SafeString to prevent double-escaping
+            return new Handlebars.SafeString(JSON.stringify(data));
         }
 
         /* -------------------------------------------- */

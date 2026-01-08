@@ -60,7 +60,6 @@ export class HandlebarManager {
         const coreTemplates = [
             // Essential partials used across multiple sheets
             'systems/rogue-trader/templates/actor/partial/character-field.hbs',
-            'systems/rogue-trader/templates/actor/partial/characteristic-hud-v2.hbs',
             'systems/rogue-trader/templates/actor/partial/display-toggle.hbs',
             'systems/rogue-trader/templates/actor/partial/trait-toggle.hbs',
 
@@ -90,6 +89,20 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/chat/navigator-power-chat.hbs',
             'systems/rogue-trader/templates/chat/order-roll-chat.hbs',
             'systems/rogue-trader/templates/chat/ritual-roll-chat.hbs',
+            'systems/rogue-trader/templates/chat/simple-roll-chat.hbs',
+            'systems/rogue-trader/templates/chat/action-roll-chat.hbs',
+            'systems/rogue-trader/templates/chat/damage-roll-chat.hbs',
+            'systems/rogue-trader/templates/chat/psychic-action-chat.hbs',
+            'systems/rogue-trader/templates/chat/force-field-roll-chat.hbs',
+
+            // Roll prompt templates
+            'systems/rogue-trader/templates/prompt/enhanced-skill-roll.hbs',
+            'systems/rogue-trader/templates/prompt/simple-roll-prompt.hbs',
+            'systems/rogue-trader/templates/prompt/weapon-roll-prompt.hbs',
+            'systems/rogue-trader/templates/prompt/damage-roll-prompt.hbs',
+            'systems/rogue-trader/templates/prompt/psychic-power-roll-prompt.hbs',
+            'systems/rogue-trader/templates/prompt/force-field-prompt.hbs',
+            'systems/rogue-trader/templates/prompt/assign-damage-prompt.hbs',
 
             // Item panels (used in item sheets)
             'systems/rogue-trader/templates/item/panel/active-effects-panel.hbs',

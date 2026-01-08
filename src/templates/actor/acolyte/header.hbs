@@ -1,5 +1,5 @@
 {{!-- Acolyte Sheet Header Part --}}
-{{!-- This part renders the character header with portrait, name, and characteristics HUD --}}
+{{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD V1 Enhanced) --}}
 <div class="rt-header rt-grid-col-6 rt-panel rt-character-header">
     <div class="rt-header__info rt-header-grid">
         <div class="rt-header-left">
@@ -31,11 +31,65 @@
                 </div>
             </div>
         </div>
-{{!--         <div class="rt-header-right"> --}}
-{{!--             <div class="rt-hud-stack"> --}}
-{{!--                  --}}{{!-- Enhanced Characteristics HUD V2 with Circular Progress Rings --}}
-{{!--                 {{> systems/rogue-trader/templates/actor/partial/characteristic-hud-v2.hbs}} --}}
-{{!--             </div> --}}
-{{!--         </div> --}}
+        <div class="rt-header-right">
+            <div class="rt-hud-stack">
+                {{!-- Characteristics HUD V1 Enhanced --}}
+                <div class="rt-characteristics-hud">
+                    {{#each actor.characteristics as |characteristic name|}}
+                        {{#unless (eq name "influence")}}
+                        <div class="rt-char-hud-item {{#if (gt this.modifier 0)}}rt-char-buffed{{/if}}{{#if (lt this.modifier 0)}}rt-char-debuffed{{/if}}"
+                             data-advance="{{this.advance}}"
+                             style="--advance-progress: {{divide this.advance 5}};">
+                            <button
+                                class="rt-char-hud-name roll-characteristic actor-drag"
+                                type="button"
+                                data-action="roll"
+                                data-roll-type="characteristic"
+                                data-roll-target="{{name}}"
+                                data-item-type="characteristic"
+                                data-item-id="{{name}}"
+                                data-characteristic="{{name}}"
+                                title="{{this.label}}"
+                            >{{this.short}}</button>
+                            <div class="rt-char-hud-circle" title="{{this.label}}">
+                                <span class="rt-char-hud-mod">{{this.bonus}}</span>
+                                <span class="rt-char-hud-mod-label">MOD</span>
+                            </div>
+                            <div class="rt-char-hud-base">Total {{this.total}}</div>
+                            <label class="rt-char-hud-toggle" data-action="toggleSection" data-toggle="charhud_{{name}}" title="Edit {{this.label}}">
+                                <span class="rt-char-hud-toggle-icon">v</span>
+                            </label>
+                            <div class="rt-char-hud-details charhud_{{name}}" {{hideIfNot (isExpanded (concat 'charhud_' name ) @root.actor)}}>
+                                <label class="rt-char-hud-field">
+                                    <span class="rt-char-hud-field-label">Base</span>
+                                    <input type="number" name="system.characteristics.{{name}}.base" data-dtype="Number" value="{{this.base}}" />
+                                </label>
+                                <label class="rt-char-hud-field">
+                                    <span class="rt-char-hud-field-label">Advances</span>
+                                    <select name="system.characteristics.{{name}}.advance">
+                                        {{option "0" this.advance "None"}}
+                                        {{option "1" this.advance "Simple"}}
+                                        {{option "2" this.advance "Intermediate"}}
+                                        {{option "3" this.advance "Trained"}}
+                                        {{option "4" this.advance "Proficient"}}
+                                        {{option "5" this.advance "Expert"}}
+                                    </select>
+                                </label>
+                                <label class="rt-char-hud-field">
+                                    <span class="rt-char-hud-field-label">Unnatural</span>
+                                    <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select" data-dtype="Number">
+                                        <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>
+                                        <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
+                                        <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
+                                        <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        {{/unless}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>

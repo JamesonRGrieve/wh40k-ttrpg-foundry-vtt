@@ -6,33 +6,16 @@
   display: grid;
   grid-template-columns: 80px 1fr;
   gap: $rt-space-md;
-  padding: $rt-space-lg;
-  background: linear-gradient(180deg, rgba($rt-color-gold-dark, 0.2) 0%, transparent 100%);
-  border-bottom: 2px solid $rt-color-gold-dark;
-  position: relative;
+  padding: $rt-space-md $rt-space-lg;
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
+  border-bottom: 2px solid var(--rt-gold-dark);
+  flex-shrink: 0;
   
-  // Decorative corner flourishes
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background-image: url('../images/corner-flourish.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.6;
-  }
-  
-  &::before {
-    top: 8px;
-    left: 8px;
-  }
-  
-  &::after {
-    top: 8px;
-    right: 8px;
-    transform: scaleX(-1);
+  // Compact variant for smaller sheets
+  &--compact {
+    grid-template-columns: 50px 1fr;
+    padding: $rt-space-sm $rt-space-md;
+    gap: $rt-space-sm;
   }
 }
 
@@ -40,12 +23,13 @@
 .rt-item-image {
   width: 80px;
   height: 80px;
-  border: 2px solid $rt-color-gold;
+  border: 2px solid var(--rt-gold);
   border-radius: $rt-radius-md;
   overflow: hidden;
-  box-shadow: $rt-shadow-md, $rt-shadow-glow-gold;
+  box-shadow: $rt-shadow-md, 0 0 10px rgba(212, 175, 55, 0.3);
   cursor: pointer;
   transition: transform $rt-transition-base, box-shadow $rt-transition-base;
+  flex-shrink: 0;
   
   img {
     width: 100%;
@@ -55,7 +39,13 @@
   
   &:hover {
     transform: scale(1.05);
-    box-shadow: $rt-shadow-lg, 0 0 20px rgba($rt-color-gold, 0.6);
+    box-shadow: $rt-shadow-lg, 0 0 20px rgba(212, 175, 55, 0.5);
+  }
+  
+  // Small variant for compact sheets
+  &--sm {
+    width: 50px;
+    height: 50px;
   }
 }
 
@@ -65,12 +55,13 @@
   flex-direction: column;
   justify-content: center;
   gap: $rt-space-xs;
+  min-width: 0;
   
   &__name {
     font-family: $rt-font-display;
     font-size: $rt-font-size-xl;
-    color: $rt-color-gold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    color: var(--rt-gold);
+    text-shadow: 0 1px 2px var(--rt-text-shadow);
     border: none;
     background: transparent;
     padding: $rt-space-xs $rt-space-sm;
@@ -79,8 +70,12 @@
     
     &:focus {
       outline: none;
-      background: $rt-bg-input-focus;
+      background: var(--rt-input-bg-focus);
       border-radius: $rt-radius-sm;
+    }
+    
+    &::placeholder {
+      color: var(--rt-text-muted);
     }
   }
   
@@ -89,18 +84,18 @@
     align-items: center;
     gap: $rt-space-sm;
     font-size: $rt-font-size-sm;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     
     i {
-      color: $rt-color-gold;
+      color: var(--rt-gold);
     }
   }
   
   &__source {
     font-size: $rt-font-size-xs;
-    color: var(--color-border-primary);
+    color: var(--rt-text-subtle);
     font-style: italic;
   }
 }
@@ -111,18 +106,19 @@
   flex-wrap: wrap;
   gap: $rt-space-xs;
   margin-top: $rt-space-xs;
+  align-items: center;
 }
 
 .rt-meta-badge {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px $rt-space-xs;
-  background: rgba(var(--color-border-secondary), 0.3);
-  border: 1px solid var(--color-border-secondary);
+  padding: 2px $rt-space-sm;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-sm;
   font-size: $rt-font-size-xs;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
   
   i {
     font-size: 10px;
@@ -130,29 +126,29 @@
   }
   
   &--craft {
-    background: rgba($rt-color-brass, 0.2);
-    border-color: darken($rt-color-brass, 15%);
-    color: lighten($rt-color-brass, 15%);
+    background: rgba(181, 166, 66, 0.15);
+    border-color: rgba(181, 166, 66, 0.4);
+    color: $rt-color-brass;
   }
   
   &--availability {
-    background: rgba(36, 107, 131, 0.2);
-    border-color: rgba(36, 107, 131, 0.5);
+    background: rgba(36, 107, 131, 0.15);
+    border-color: rgba(36, 107, 131, 0.4);
     color: lighten(rgb(36, 107, 131), 15%);
   }
   
   &--source {
-    background: rgba(var(--color-text-secondary), 0.15);
-    border-color: rgba(var(--color-text-secondary), 0.3);
-    color: var(--color-text-secondary);
+    background: var(--rt-panel-bg-translucent);
+    border-color: var(--rt-border-color-light);
+    color: var(--rt-text-subtle);
   }
   
   &--aptitudes,
   &--psychic,
   &--type {
-    background: rgba(var(--color-border-primary), 0.2);
-    border-color: var(--color-border-secondary);
-    color: var(--color-text-secondary);
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.3);
+    color: var(--rt-gold-dark);
   }
 }
 

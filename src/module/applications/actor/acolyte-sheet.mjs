@@ -522,11 +522,26 @@ export default class AcolyteSheet extends BaseActorSheet {
         const hudCharacteristics = context.actor?.characteristics ?? {};
         const modifierSources = context.system?.modifierSources?.characteristics ?? {};
         
+        // SVG circle parameters for progress ring
+        const radius = 52;
+        const circumference = 2 * Math.PI * radius; // ~326.7
+        
         Object.entries(hudCharacteristics).forEach(([key, char]) => {
             const total = Number(char?.total ?? 0);
+            const advance = Number(char?.advance ?? 0);
+            
             // Use the calculated bonus (accounts for unnatural), fallback to tens digit
             char.hudMod = char.bonus ?? Math.floor(total / 10);
             char.hudTotal = total;
+            
+            // Progress ring data (advancement 0-5 maps to 0-100%)
+            char.advanceProgress = (advance / 5) * 100;
+            char.progressCircumference = circumference;
+            char.progressOffset = circumference * (1 - (advance / 5));
+            
+            // XP cost for next advancement (using RT/DH2e progression)
+            const xpCosts = [100, 250, 500, 750, 1000]; // Simple to Expert
+            char.nextAdvanceCost = advance < 5 ? xpCosts[advance] : 0;
             
             // Prepare tooltip data using the mixin helper
             char.tooltipData = this.prepareCharacteristicTooltip(key, char, modifierSources);

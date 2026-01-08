@@ -1,11 +1,13 @@
 {{!-- Acolyte Sheet Talents Tab --}}
 {{!-- This part renders the Talents/Specialties tab content --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="rt-specialties-left">
-        {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
-    </div>
-    <div class="rt-specialties-right">
-        {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
-        {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+    <div class="rt-specialties-layout">
+        <div class="rt-specialties-left">
+            {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+        </div>
+        <div class="rt-specialties-right">
+            {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
+            {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+        </div>
     </div>
 </section>

@@ -412,7 +412,7 @@ ROGUE_TRADER.defaultIcons = {
 };
 
 const gameIconPath = (name) =>
-  `modules/game-icons-net/blacktransparent/${name}.svg`;
+  `modules/game-icons-net/whitetransparent/${name}.svg`;
 
 ROGUE_TRADER.skillIcons = {
   acrobatics: gameIconPath("jump-across"),
@@ -424,7 +424,7 @@ ROGUE_TRADER.skillIcons = {
   charm: gameIconPath("conversation"),
   chemUse: gameIconPath("medicine-pills"),
   ciphers: gameIconPath("lockpicks"),
-  climb: gameIconPath("grappling-hook"),
+  climb: gameIconPath("climbing"),
   command: gameIconPath("crossed-pistols"),
   commerce: gameIconPath("conversation"),
   commonLore: gameIconPath("magnifying-glass"),
@@ -437,7 +437,7 @@ ROGUE_TRADER.skillIcons = {
   drive: gameIconPath("jeep"),
   evaluate: gameIconPath("magnifying-glass"),
   forbiddenLore: gameIconPath("brain"),
-  gamble: gameIconPath("throw"),
+  gamble: gameIconPath("card-joker"),
   inquiry: gameIconPath("magnifying-glass"),
   interrogation: gameIconPath("conversation"),
   intimidate: gameIconPath("death-skull"),
@@ -466,7 +466,7 @@ ROGUE_TRADER.skillIcons = {
   techUse: gameIconPath("gears"),
   tracking: gameIconPath("archery-target"),
   trade: gameIconPath("toolbox"),
-  wrangling: gameIconPath("grappling-hook")
+  wrangling: gameIconPath("lasso")
 };
 
 ROGUE_TRADER.getSkillIcon = function(skillKey) {

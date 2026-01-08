@@ -3,8 +3,8 @@
 // ============================================
 
 .rt-actor-sheet-modern {
-  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
-  color: var(--color-text-primary);
+  background: linear-gradient(135deg, var(--rt-sheet-bg) 0%, var(--rt-panel-bg) 100%);
+  color: var(--rt-text-dark);
   font-family: $rt-font-body;
 }
 
@@ -13,14 +13,14 @@
   grid-template-columns: 120px 1fr auto;
   gap: $rt-space-md;
   padding: $rt-space-lg;
-  background: linear-gradient(180deg, rgba($rt-color-gold-dark, 0.2) 0%, transparent 100%);
-  border-bottom: 2px solid $rt-color-gold-dark;
+  background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
+  border-bottom: 2px solid var(--rt-gold-dark);
 }
 
 .rt-actor-portrait {
   width: 120px;
   height: 120px;
-  border: 3px solid $rt-color-gold;
+  border: 3px solid var(--rt-gold);
   border-radius: $rt-radius-md;
   overflow: hidden;
   cursor: pointer;
@@ -41,7 +41,7 @@
 .rt-actor-name {
   font-family: $rt-font-display;
   font-size: $rt-font-size-xxl;
-  color: $rt-color-gold;
+  color: var(--rt-gold);
   background: transparent;
   border: none;
   padding: $rt-space-xs;
@@ -49,7 +49,7 @@
   
   &:focus {
     outline: none;
-    background: $rt-bg-input-focus;
+    background: var(--rt-input-bg-focus);
     border-radius: $rt-radius-sm;
   }
 }
@@ -65,19 +65,19 @@
   justify-content: space-between;
   align-items: center;
   padding: $rt-space-xs $rt-space-sm;
-  background: rgba(var(--color-bg-tertiary), 0.5);
+  background: var(--rt-panel-bg);
   border-radius: $rt-radius-sm;
   min-width: 140px;
   
   &__label {
     font-size: $rt-font-size-xs;
-    color: var(--color-text-tertiary);
+    color: var(--rt-text-muted);
     text-transform: uppercase;
   }
   
   &__value {
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: var(--rt-text-dark);
   }
   
   &--wounds {
@@ -85,7 +85,7 @@
   }
   
   &--fate {
-    border-left: 3px solid $rt-color-gold;
+    border-left: 3px solid var(--rt-gold);
   }
 }
 
@@ -112,37 +112,37 @@
   flex-direction: column;
   align-items: center;
   padding: $rt-space-sm;
-  background: linear-gradient(135deg, var(--color-bg-tertiary) 0%, var(--color-bg-secondary) 100%);
-  border: 1px solid var(--color-border-secondary);
+  background: linear-gradient(135deg, var(--rt-panel-bg) 0%, var(--rt-input-bg) 100%);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: $rt-radius-md;
   cursor: pointer;
   transition: all $rt-transition-fast;
   
   &:hover {
-    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
-    border-color: $rt-color-gold;
+    background: linear-gradient(135deg, var(--rt-input-bg) 0%, var(--rt-sheet-bg) 100%);
+    border-color: var(--rt-gold);
     transform: translateY(-2px);
-    box-shadow: $rt-shadow-glow-gold;
+    box-shadow: var(--rt-gold-glow);
   }
 }
 
 .rt-char-abbr {
   font-family: $rt-font-display;
   font-size: $rt-font-size-lg;
-  color: $rt-color-gold;
+  color: var(--rt-gold);
   font-weight: 700;
 }
 
 .rt-char-value {
   font-size: $rt-font-size-xxl;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   font-weight: 700;
   margin: $rt-space-xs 0;
 }
 
 .rt-char-label {
   font-size: $rt-font-size-xs;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
   text-transform: uppercase;
 }
 
@@ -156,10 +156,10 @@
   align-items: center;
   gap: $rt-space-sm;
   padding: $rt-space-xs;
-  border-bottom: 1px solid rgba(var(--color-bg-tertiary), 0.3);
+  border-bottom: 1px solid var(--rt-border-color-light);
   
   &:hover {
-    background: rgba($rt-color-gold, 0.05);
+    background: rgba(212, 175, 55, 0.05);
   }
   
   &--trait {
@@ -171,24 +171,24 @@
   width: 32px;
   height: 32px;
   border-radius: $rt-radius-sm;
-  border: 1px solid var(--color-border-secondary);
+  border: 1px solid var(--rt-border-color-light);
 }
 
 .rt-item-name {
   flex: 1;
-  color: var(--color-text-secondary);
+  color: var(--rt-text-dark);
 }
 
 .rt-item-weight {
   font-size: $rt-font-size-xs;
-  color: var(--color-border-primary);
+  color: var(--rt-text-muted);
 }
 
 .rt-weapon-row {
   display: flex;
   gap: $rt-space-sm;
   padding: $rt-space-sm;
-  background: rgba(var(--color-bg-tertiary), 0.3);
+  background: var(--rt-panel-bg);
   border-radius: $rt-radius-md;
   margin-bottom: $rt-space-sm;
 }
@@ -199,13 +199,13 @@
 
 .rt-weapon-name {
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--rt-text-dark);
   margin-bottom: $rt-space-xs;
 }
 
 .rt-weapon-stats {
   font-size: $rt-font-size-sm;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
 }
 
 .rt-armour-display {
@@ -216,7 +216,7 @@
 
 .rt-armour-item {
   padding: $rt-space-sm;
-  background: rgba(var(--color-bg-tertiary), 0.3);
+  background: var(--rt-panel-bg);
   border-radius: $rt-radius-md;
 }
 
@@ -225,6 +225,6 @@
   gap: $rt-space-md;
   margin-top: $rt-space-xs;
   font-size: $rt-font-size-sm;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
 }
 

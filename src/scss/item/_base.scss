@@ -1,39 +1,65 @@
 // ============================================
 // Modern Item Sheet Styles
 // ============================================
-// Variables and mixins imported via abstracts in main file
+// Uses theme-adaptive CSS custom properties from gothic-theme.scss
 
 // ============================================
-// Base Item Sheet Container
+// Base Window Content - Transparent for item sheets
 // ============================================
 
 .rogue-trader.sheet.item .window-content {
   background: transparent;
   padding: 0;
+  overflow: hidden;
 }
 
+// ============================================
+// Base Item Sheet Container
+// ============================================
+
 .rt-item-sheet {
-  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
-  color: var(--color-text-primary);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--rt-sheet-bg);
+  color: var(--rt-text-dark);
   font-family: $rt-font-body;
   font-size: $rt-font-size-base;
+  overflow: hidden;
+  
+  // Form should fill container
+  form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
   
   // Modern scrollbar
-  &::-webkit-scrollbar {
+  &::-webkit-scrollbar,
+  .rt-tab-content::-webkit-scrollbar {
     width: 8px;
   }
   
-  &::-webkit-scrollbar-track {
-    background: var(--color-bg-primary);
+  &::-webkit-scrollbar-track,
+  .rt-tab-content::-webkit-scrollbar-track {
+    background: var(--rt-panel-bg);
   }
   
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-border-secondary);
+  &::-webkit-scrollbar-thumb,
+  .rt-tab-content::-webkit-scrollbar-thumb {
+    background: var(--rt-border-color);
     border-radius: $rt-radius-md;
     
     &:hover {
-      background: var(--color-border-primary);
+      background: var(--rt-gold-dark);
     }
+  }
+  
+  // All boxes use border-box
+  * {
+    box-sizing: border-box;
   }
 }
 

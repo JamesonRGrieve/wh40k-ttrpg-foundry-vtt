@@ -5,12 +5,12 @@
 
 import ApplicationV2Mixin from "./application-v2-mixin.mjs";
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Base dialog class for creating RT dialogs.
  */
-export default class DialogRT extends ApplicationV2Mixin(HandlebarsApplicationMixin(ApplicationV2)) {
+export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "dialog",

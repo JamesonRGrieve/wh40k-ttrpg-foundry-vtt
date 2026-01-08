@@ -4,8 +4,9 @@
 
 .rt-item-sheet .rt-tabs {
   display: flex;
-  border-bottom: 2px solid var(--color-bg-tertiary);
-  background: var(--color-bg-secondary);
+  border-bottom: 2px solid var(--rt-border-color);
+  background: var(--rt-panel-bg-translucent);
+  flex-shrink: 0;
 }
 
 .rt-item-sheet .rt-tab {
@@ -14,27 +15,28 @@
   font-size: $rt-font-size-sm;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-text-tertiary);
+  color: var(--rt-text-muted);
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   cursor: pointer;
   transition: all $rt-transition-base;
+  text-decoration: none;
   
   i {
     margin-right: $rt-space-xs;
   }
   
   &:hover {
-    color: $rt-color-gold-light;
-    background: rgba($rt-color-gold, 0.05);
+    color: var(--rt-gold);
+    background: rgba(212, 175, 55, 0.08);
   }
   
   &.active {
-    color: $rt-color-gold;
-    border-bottom-color: $rt-color-gold;
-    background: rgba($rt-color-gold, 0.1);
+    color: var(--rt-gold);
+    border-bottom-color: var(--rt-gold);
+    background: rgba(212, 175, 55, 0.12);
   }
 }
 
@@ -43,9 +45,9 @@
 // ============================================
 
 .rt-item-sheet .rt-tab-content {
-  grid-column: span 6;
   flex: 1 1 auto;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
   padding: $rt-space-md;
   
@@ -60,46 +62,46 @@
 }
 
 // ============================================
-// Content Panels
+// Content Panels (scoped to item sheets)
 // ============================================
 
-.rt-panel {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-bg-tertiary);
-  border-radius: $rt-radius-md;
-  margin: $rt-space-md;
+.rt-item-sheet .rt-panel {
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: $rt-radius-lg;
+  margin-bottom: $rt-space-md;
   overflow: hidden;
+}
+
+.rt-item-sheet .rt-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
+  border-bottom: 1px solid var(--rt-border-color-light);
   
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $rt-space-sm $rt-space-md;
-    background: linear-gradient(90deg, rgba($rt-color-gold-dark, 0.3) 0%, transparent 100%);
-    border-bottom: 1px solid $rt-color-gold-dark;
+  h3 {
+    font-family: $rt-font-display;
+    font-size: $rt-font-size-md;
+    color: var(--rt-gold);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     
-    h3 {
-      font-family: $rt-font-display;
-      font-size: $rt-font-size-md;
-      color: $rt-color-gold;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      
-      i {
-        margin-right: $rt-space-sm;
-        opacity: 0.8;
-      }
+    i {
+      margin-right: $rt-space-sm;
+      opacity: 0.8;
     }
   }
-  
-  &__content {
-    padding: $rt-space-md;
-  }
-  
-  &__actions {
-    display: flex;
-    gap: $rt-space-xs;
-  }
+}
+
+.rt-item-sheet .rt-panel__content {
+  padding: $rt-space-md;
+}
+
+.rt-item-sheet .rt-panel__actions {
+  display: flex;
+  gap: $rt-space-xs;
 }
 
