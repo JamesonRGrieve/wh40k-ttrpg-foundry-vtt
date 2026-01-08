@@ -66,8 +66,8 @@ button {
     text-shadow: none;
 }
 
-.dh-field,
-.dh-textarea {
+.rt-field,
+.rt-textarea {
     border-bottom: $grid-border;
 
     &:last-child {
@@ -92,7 +92,7 @@ button {
     }
 }
 
-.dh-field {
+.rt-field {
     display: flex;
     flex-flow: row nowrap;
 
@@ -115,7 +115,6 @@ button {
 
     &__input {
         flex-grow: 1;
-        // padding-right: 0.5em;
 
         &.check {
             background: $form-input-background;
@@ -138,7 +137,7 @@ button {
     }
 }
 
-.dh-textarea {
+.rt-textarea {
     display: flex;
     flex-flow: row nowrap;
 

@@ -16,8 +16,8 @@
 
         select,
         input[type='number'],
-        .dh-chartable__cell,
-        .dh-chartable__cell--head {
+        .rt-chartable__cell,
+        .rt-chartable__cell--head {
             height: 100%;
             text-align: center !important;
             text-align-last: center !important;
@@ -48,7 +48,7 @@
             font-family: $font-family-alt;
             padding: 4px;
 
-            .dh-field__input {
+            .rt-field__input {
                 border-right: none !important;
             }
 
@@ -118,7 +118,7 @@
 // ============================================
 
 .rt-char-simplified {
-    .dh-panel__header {
+    .rt-panel__header {
         font-size: 1.2em;
         padding: 0.75rem;
         text-align: center;
@@ -295,7 +295,7 @@
         border-bottom: 2px solid rgba(36, 107, 131, 0.3);
     }
     
-    .dh-chartable {
+    .rt-chartable {
         margin: 0;
         border-radius: 0 0 6px 6px;
     }

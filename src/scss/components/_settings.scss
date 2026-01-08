@@ -1,4 +1,4 @@
-.dh {
+.rt {
     &-settings {
         padding-top: $margin-general;
         padding-bottom: $margin-general;
@@ -9,10 +9,10 @@
         grid-template-columns: 1fr 1fr;
         gap: 3px;
 
-        input.dh-settings__input[type='text'],
-        input.dh-settings__input[type='number'],
-        textarea.dh-settings__textarea,
-        select.dh-settings__select {
+        input.rt-settings__input[type='text'],
+        input.rt-settings__input[type='number'],
+        textarea.rt-settings__textarea,
+        select.rt-settings__select {
             background-color: $form-input-background;
             color: $form-input-foreground;
             border-radius: 3px;
@@ -20,14 +20,14 @@
         }
 
         &--border {
-            @extend .dh-settings;
+            @extend .rt-settings;
             gap: 0;
 
             .clean {
                 border-top: none;
             }
 
-            .dh-settings {
+            .rt-settings {
                 &__row--xlarge,
                 &__row--large,
                 &__row {
@@ -53,7 +53,7 @@
         }
 
         &--noborder {
-            @extend .dh-settings;
+            @extend .rt-settings;
             border: 0;
         }
 
@@ -68,7 +68,7 @@
         }
 
         &--large {
-            @extend .dh-settings;
+            @extend .rt-settings;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         }
 
@@ -78,36 +78,36 @@
             text-align: left;
 
             &--large {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 0.3fr 1fr 0.3fr 1fr 0.3fr 1fr;
             }
 
             &--xlarge {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 0.4fr 1fr 0.4fr 1fr 0.4fr 1fr 0.4fr 1fr;
             }
 
             &--label {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-template-columns: 5rem 1fr;
             }
 
             &--span {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 9rem 1fr;
             }
 
             &--span-even {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 1fr 1fr;
             }
 
             &--characteristics {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 1.5fr repeat(10, 1fr);
 
@@ -144,13 +144,13 @@
             }
 
             &--invert {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-template-columns: 2fr 0.5fr;
                 text-align: left;
             }
 
             &--skill {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-template-columns: 1fr 0.35fr;
                 gap: 3px;
                 margin-bottom: 3pt;
@@ -159,7 +159,7 @@
             &--skillinit,
             &--talentinit,
             &--traitinit {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-template-columns: 1fr 0.45fr 0.45fr;
                 gap: 3px;
                 margin-bottom: 3pt;
@@ -167,7 +167,7 @@
 
             &--talent,
             &--trait {
-                @extend .dh-settings__row;
+                @extend .rt-settings__row;
                 grid-template-columns: 1fr 0.35fr;
                 gap: 3px;
                 margin-bottom: 3pt;
@@ -179,8 +179,8 @@
             margin-left: 5pt;
 
             &--add {
-                @extend .dh-material;
-                @extend .dh-settings__label;
+                @extend .rt-material;
+                @extend .rt-settings__label;
                 cursor: pointer;
                 &:hover {
                     color: red;
@@ -206,7 +206,7 @@
                 display: none;
             }
 
-            input.dh-settings__input.dh-settings__input[type='number'] {
+            input.rt-settings__input.rt-settings__input[type='number'] {
                 pointer-events: none;
                 background: transparent;
                 color: #000;
@@ -257,7 +257,7 @@
         }
 
         &__controlwrap {
-            span.dh-current_level {
+            span.rt-current_level {
               //noinspection CssUnknownTarget
               &--1,
                 &--2,
@@ -292,7 +292,7 @@
                             display: none;
                         }
 
-                        & ~ span.dh-current_level--#{$level} {
+                        & ~ span.rt-current_level--#{$level} {
                             display: block;
                         }
                     }
@@ -311,27 +311,27 @@
     }
 }
 
-// RT prefix aliases
-.rt-settings {
-    @extend .dh-settings;
+// Legacy aliases for backwards compatibility
+.dh-settings {
+    @extend .rt-settings;
 }
 
-.rt-settings--border {
-    @extend .dh-settings--border;
+.dh-settings--border {
+    @extend .rt-settings--border;
 }
 
-.rt-settings__row {
-    @extend .dh-settings__row;
+.dh-settings__row {
+    @extend .rt-settings__row;
 }
 
-.rt-settings__row--invert {
-    @extend .dh-settings__row--invert;
+.dh-settings__row--invert {
+    @extend .rt-settings__row--invert;
 }
 
-.rt-settings__row--span {
-    @extend .dh-settings__row--span;
+.dh-settings__row--span {
+    @extend .rt-settings__row--span;
 }
 
-.rt-settings__label {
-    @extend .dh-settings__label;
+.dh-settings__label {
+    @extend .rt-settings__label;
 }

@@ -31,15 +31,3 @@
     background: linear-gradient(180deg, rgba($color, $header-opacity), transparent);
   }
 }
-
-.dh-actor {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    border: 20px solid transparent;
-    border-image: url('../images/border-floral.png') 95 / 20px / 0 round;
-    grid-gap: 0;
-
-    > * {
-        min-width: 100px;
-    }
-}

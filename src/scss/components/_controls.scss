@@ -1,85 +1,79 @@
-// Shared control button styles mixin
-@mixin control-button-styles {
-    // Settings Cog
-    &-control-button {
-        cursor: pointer;
+// ============================================
+// Control Buttons and Material Icons
+// ============================================
 
-        .active {
-            opacity: 1;
-        }
-
-        &:hover {
-            opacity: 1;
-        }
-
-        &__disabled {
-            cursor: unset;
-            opacity: 1;
-            text-decoration: line-through;
-        }
-
-        &__label {
-            padding-top: 1px;
-            padding-left: 5px;
-            vertical-align: text-top;
-            opacity: .5;
-            font-size: 12px;
-            line-height: 1;
-            display: inline-grid;
-            white-space: nowrap;
-            word-wrap: normal;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        &__span {
-            padding-top: 3px;
-            padding-left: 2px;
-            @extend .dh-material;
-            opacity: 0.5;
-        }
-    }
-
-    &-trait-toggle {
-        cursor: pointer;
-        opacity: 1;
-
-        &:hover {
-            opacity: 0.5;
-        }
-
-        &__span {
-            text-align: left;
-        }
-    }
+// Material Icons base class
+.rt-material {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-grid;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
 }
 
-.dh {
-    &-material {
-        font-family: 'Material Icons';
-        font-weight: normal;
-        font-style: normal;
+// Legacy alias for backwards compatibility
+.dh-material {
+    @extend .rt-material;
+}
+
+// Control button styles
+.rt-control-button {
+    cursor: pointer;
+
+    .active {
+        opacity: 1;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &__disabled {
+        cursor: unset;
+        opacity: 1;
+        text-decoration: line-through;
+    }
+
+    &__label {
+        padding-top: 1px;
+        padding-left: 5px;
+        vertical-align: text-top;
+        opacity: .5;
         font-size: 12px;
         line-height: 1;
-        letter-spacing: normal;
-        text-transform: none;
         display: inline-grid;
         white-space: nowrap;
         word-wrap: normal;
-        direction: ltr;
-        -webkit-font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
     }
 
-    @include control-button-styles;
+    &__span {
+        padding-top: 3px;
+        padding-left: 2px;
+        @extend .rt-material;
+        opacity: 0.5;
+    }
 }
 
-// RT prefix aliases (allows gradual migration)
-.rt {
-    &-material {
-        @extend .dh-material;
+.rt-trait-toggle {
+    cursor: pointer;
+    opacity: 1;
+
+    &:hover {
+        opacity: 0.5;
     }
 
-    @include control-button-styles;
+    &__span {
+        text-align: left;
+    }
 }
 
 button[type='roll'] {
@@ -92,8 +86,8 @@ button[type='roll'] {
 }
 
 // Vocalise Button
-button.dh-vocalise[type='roll'] {
-    @extend .dh-material;
+button.rt-vocalise[type='roll'] {
+    @extend .rt-material;
     opacity: 0.5;
     text-align: center;
     padding-top: 3px;
@@ -103,7 +97,7 @@ button.dh-vocalise[type='roll'] {
     }
 }
 
-button.dh-material[type='action'] {
+button.rt-material[type='action'] {
     &:hover {
         color: red;
     }

@@ -59,7 +59,7 @@
                             <label class="rt-char-hud-toggle" data-action="toggleSection" data-toggle="charhud_{{name}}" title="Edit {{this.label}}">
                                 <span class="rt-char-hud-toggle-icon">v</span>
                             </label>
-                            <div class="rt-char-hud-details charhud_{{name}}" {{hideIfNot (isExpanded (concat 'charhud_' name ) @root.actor)}}>
+                            <div class="rt-char-hud-details charhud_{{name}}">
                                 <label class="rt-char-hud-field">
                                     <span class="rt-char-hud-field-label">Base</span>
                                     <input type="number" name="system.characteristics.{{name}}.base" data-dtype="Number" value="{{this.base}}" />

@@ -1,56 +1,40 @@
-.dh {
-    &-char-roller {
-      //noinspection CssUnknownTarget
-      &__wrapper {
-            background: url('../images/inqu_watermark.png') bottom/50% no-repeat, url('../images/40k_back.png') center/cover;
-        }
+// ============================================
+// Characteristic Roller Panel
+// ============================================
 
-        &__row {
-            display: flex;
-            justify-content: space-between;
-            max-height: 8rem;
-        }
+.rt-char-roller {
+  //noinspection CssUnknownTarget
+  &__wrapper {
+    background: url('../images/inqu_watermark.png') bottom/50% no-repeat, url('../images/40k_back.png') center/cover;
+  }
 
-        &__block {
-            flex-grow: 0;
-            flex-basis: 30%;
-            text-align: center;
-        }
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    max-height: 8rem;
+  }
 
-        &__display {
-            border: $grid-border;
-            font-family: $font-family-alt;
-            font-size: 14pt;
-            font-weight: bold;
-            line-height: 3.5rem;
-            display: inline-block;
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 5pt;
+  &__block {
+    flex-grow: 0;
+    flex-basis: 30%;
+    text-align: center;
+  }
 
-            background-color: rgba($form-button-background, 0.125);
-            cursor: pointer;
+  &__display {
+    border: $grid-border;
+    font-family: $font-family-alt;
+    font-size: 14pt;
+    font-weight: bold;
+    line-height: 3.5rem;
+    display: inline-block;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 5pt;
+    background-color: rgba($form-button-background, 0.125);
+    cursor: pointer;
 
-            &:hover {
-                color: red;
-            }
-        }
+    &:hover {
+      color: red;
     }
-}
-
-// RT prefix aliases
-.rt-char-roller__wrapper {
-    @extend .dh-char-roller__wrapper;
-}
-
-.rt-char-roller__row {
-    @extend .dh-char-roller__row;
-}
-
-.rt-char-roller__block {
-    @extend .dh-char-roller__block;
-}
-
-.rt-char-roller__display {
-    @extend .dh-char-roller__display;
+  }
 }

@@ -1,4 +1,4 @@
-.dh-header, .rt-header {
+.rt-header {
     padding: 0;
     font-size: 12pt;
 
@@ -133,4 +133,9 @@
     &__input {
         height: 100% !important;
     }
+}
+
+// Legacy alias for backwards compatibility
+.dh-header {
+    @extend .rt-header;
 }

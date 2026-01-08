@@ -81,7 +81,7 @@
     }
 
     // Improve characteristics table
-    .dh-chartable {
+    .rt-chartable {
         padding: 8px;
         
         &__cell--head {
@@ -114,8 +114,8 @@
 }
 
 // Talents and Traits panels - positioned and styled better
-.dh-talenttable--border,
-.dh-traittable--border {
+.rt-talenttable--border,
+.rt-traittable--border {
     .table-row {
         transition: background-color 0.2s ease;
         border-bottom: 1px solid rgba(74, 55, 40, 0.1);
@@ -149,7 +149,7 @@
         border-bottom-color: rgba(45, 0, 90, 0.5);
     }
 
-    .dh-field__wrapper {
+    .rt-field__wrapper {
         padding: 6px 8px;
         margin: 2px 4px;
         background: rgba(255, 255, 255, 0.6);
@@ -168,7 +168,7 @@
         }
     }
     
-    .dh-psychictable--border {
+    .rt-psychictable--border {
         .table-cell--description {
             background: rgba(248, 245, 255, 0.6);
             border-left: 3px solid rgba(75, 0, 130, 0.3);
