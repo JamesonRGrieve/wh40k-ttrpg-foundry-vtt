@@ -10,6 +10,7 @@ import { Hit } from "../../rolls/damage-data.mjs";
 import { AssignDamageData } from "../../rolls/assign-damage-data.mjs";
 import { prepareAssignDamageRoll } from "../../prompts/assign-damage-prompt.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
+import LoadoutPresetDialog from "../dialogs/loadout-preset-dialog.mjs";
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
@@ -44,6 +45,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             filterEquipment: AcolyteSheet.#filterEquipment,
             clearEquipmentSearch: AcolyteSheet.#clearEquipmentSearch,
             bulkEquip: AcolyteSheet.#bulkEquip,
+            managePresets: AcolyteSheet.#managePresets,
 
             // Skills actions
             filterSkills: AcolyteSheet.#filterSkills,
@@ -1420,6 +1422,19 @@ export default class AcolyteSheet extends BaseActorSheet {
             });
             console.error("Bulk equipment error:", error);
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle opening the loadout preset management dialog.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #managePresets(event, target) {
+        event.preventDefault();
+        await LoadoutPresetDialog.show(this.actor);
     }
 
     /* -------------------------------------------- */

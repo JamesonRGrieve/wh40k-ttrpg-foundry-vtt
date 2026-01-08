@@ -436,10 +436,65 @@ All 6 Priority 1 items completed in this session:
 
 ---
 
+### Priority 3: Long-term Strategic (Session 7 - 2026-01-08)
+
+- [x] **Item 23**: Equipment Loadout Preset System ✅
+  - Implemented comprehensive loadout management system for quick equipment changes
+  - Features:
+    - **Save Presets**: Capture current equipment/activation state with custom names
+    - **Load Presets**: One-click restoration of saved loadouts
+    - **Manage Presets**: Rename, delete, export/import presets
+    - **Visual Cards**: Each preset displays equipped items count, activated items, thumbnails
+    - **Import/Export**: Share presets between characters via JSON files
+    - **Overwrite Protection**: Confirms before overwriting existing presets
+    - **Empty State**: Helpful suggestions for creating common preset types
+  - Dialog interface:
+    - Preset cards with icons, item counts, item thumbnails
+    - Load, Rename, Export, Delete actions per preset
+    - Import from file button in footer
+    - Responsive grid layout (auto-fill columns)
+  - Storage:
+    - Presets stored in actor flags: `rogue-trader.equipmentPresets`
+    - Unique ID per preset for safe referencing
+    - Timestamp tracking for preset age
+  - Equipment button integration:
+    - "Loadout Presets" button added to bulk operations bar
+    - Gold accent styling to stand out
+    - Opens preset management dialog
+  - Loadout capture:
+    - Tracks equipped state for weapons, armour, gear, cybernetics, force fields
+    - Tracks activated state for force fields and other activatable items
+    - Stores item metadata (id, name, type, img) for display
+  - Apply preset logic:
+    - First unequips/deactivates all items
+    - Then equips items from preset
+    - Finally activates items from preset
+    - Handles missing items gracefully (e.g., if item deleted)
+  - Files Created:
+    - `src/module/applications/dialogs/loadout-preset-dialog.mjs` (535 lines) - Dialog class
+    - `src/templates/dialogs/loadout-preset-dialog.hbs` (79 lines) - Dialog template
+    - `src/scss/dialogs/_loadout-preset-dialog.scss` (353 lines) - Dialog styling
+  - Files Modified:
+    - `src/module/applications/actor/acolyte-sheet.mjs` - Import dialog, add action handler
+    - `src/templates/actor/panel/loadout-equipment-panel.hbs` - Add presets button
+    - `src/scss/rogue-trader.scss` - Import dialog styles
+
+**Use Cases**:
+- ✅ Combat loadout (heavy armor, weapons)
+- ✅ Social loadout (light armor, concealed weapons)
+- ✅ Exploration loadout (balanced gear)
+- ✅ Stealth loadout (minimal encumbrance)
+- ✅ Share builds with party members
+- ✅ Quick-swap for different missions
+
+**Total Time**: ~2.5 hours
+**Build Status**: ✅ All builds passing
+
+---
+
 ## Next Steps 📋
 
 ### Priority 3: Long-term Strategic (Remaining)
 - Item 20: Responsive Design for Mobile/Tablet (4-5 days)
 - Item 21: Character Import/Export System (3-4 days)
 - Item 22: Character Comparison & Build Planning Tool (3-5 days)
-- Item 23: Equipment Loadout Preset System (2-3 days)
