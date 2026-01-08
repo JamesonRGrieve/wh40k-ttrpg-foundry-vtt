@@ -3,7 +3,7 @@
  * Based on dnd5e's PrimarySheetMixin pattern
  */
 
-import DragDropMixin from "./drag-drop-mixin.mjs";
+import DragDropMixin from "./drag-drop-api-mixin.mjs";
 
 /**
  * Adds V2 sheet functionality shared between primary document sheets (Actors & Items).

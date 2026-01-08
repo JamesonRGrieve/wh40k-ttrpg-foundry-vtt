@@ -5,17 +5,12 @@
 
 @import 'grid';        // Shared grid/column classes, header HUD
 @import 'core';        // Core panel component
-// @import 'vitals';      // Vitals grid (wounds, fatigue, fate) - LEGACY - REMOVED to fix conflicts
 @import 'vitals-modern'; // Modern vitals design for Overview tab
 @import 'overview-vitals'; // Themed vitals panels for Overview tab
-@import 'wounds';      // Wounds panel V2 - Modern redesign with pip system
-@import 'fatigue';     // Fatigue panel V2 - Auto-calc transparency and manual override
-@import 'fate';        // Fate panel V2 - Golden star pips and spending menu
 @import 'corruption-v2'; // Corruption panel V2 - Degree badges, threshold warnings, malignancy tracking
 @import 'insanity-v2'; // Insanity panel V2 - Degree badges, threshold warnings, mental disorder tracking
 @import 'equipment-cards'; // Modern card-based equipment design
 @import 'dynasty-modern'; // Modern Dynasty tab components (acquisitions, XP, profit)
-@import 'corruption';  // Corruption/insanity panels, degree badges
 @import 'movement';    // Movement grid, affliction lists
 @import 'specialist';  // Specialist skills panel
 @import 'talents';     // Talents & traits panels

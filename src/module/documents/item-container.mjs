@@ -163,7 +163,7 @@ export class RogueTraderItemContainer extends Item {
                 const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
                 this.items.set(idata._id, theItem);
             } else {
-                // TODO see how to avoid this - here to make sure the contained items is correctly setup
+                // Reuse existing item instance and update its data
                 const currentItem = oldItems.get(idata._id);
                 currentItem.updateSource(idata);
                 currentItem.prepareData();

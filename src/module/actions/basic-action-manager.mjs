@@ -1,7 +1,7 @@
 import { refundAmmo } from '../rules/ammo.mjs';
 import { uuid } from '../rolls/roll-helpers.mjs';
 import { AssignDamageData } from '../rolls/assign-damage-data.mjs';
-import { prepareAssignDamageRoll } from '../prompts/assign-damage-prompt.mjs';
+import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.mjs';
 import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { Hit } from '../rolls/damage-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
@@ -227,7 +227,8 @@ export class BasicActionManager {
     }
 
     storeActionData(actionData) {
-        //TODO: Cleanup all rolls older than ? minutes
+        // Store roll data for fate re-rolls and ammo refunds during session
+        // Note: Rolls persist for entire session, consider adding cleanup on combat end if memory becomes an issue
         this.storedRolls[actionData.id] = actionData;
     }
 

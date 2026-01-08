@@ -1,5 +1,5 @@
 /**
- * @file StarshipSheet - Starship actor sheet using ApplicationV2
+ * @file StarshipSheet - Starship actor sheet using ApplicationV2 with PARTS system
  */
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
@@ -7,6 +7,7 @@ import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 
 /**
  * Actor sheet for Starship type actors.
+ * Uses V2 PARTS system for modular template rendering.
  */
 export default class StarshipSheet extends BaseActorSheet {
     /** @override */
@@ -21,7 +22,7 @@ export default class StarshipSheet extends BaseActorSheet {
             height: 700
         },
         tabs: [
-            { navSelector: ".rt-navigation", contentSelector: ".rt-body", initial: "stats" }
+            { navSelector: "nav.rt-navigation", contentSelector: "#tab-body", initial: "stats", group: "primary" }
         ]
     };
 
@@ -29,16 +30,49 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @override */
     static PARTS = {
-        sheet: {
-            template: "systems/rogue-trader/templates/actor/actor-starship-sheet.hbs",
-            scrollable: [".rt-body"]
+        header: {
+            template: "systems/rogue-trader/templates/actor/starship/header.hbs"
+        },
+        tabs: {
+            template: "systems/rogue-trader/templates/actor/starship/tabs.hbs"
+        },
+        stats: {
+            template: "systems/rogue-trader/templates/actor/starship/tab-stats.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        components: {
+            template: "systems/rogue-trader/templates/actor/starship/tab-components.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        weapons: {
+            template: "systems/rogue-trader/templates/actor/starship/tab-weapons.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        crew: {
+            template: "systems/rogue-trader/templates/actor/starship/tab-crew.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        history: {
+            template: "systems/rogue-trader/templates/actor/starship/tab-history.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
         }
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [];  // Tabs are handled by the template itself for now
+    static TABS = [
+        { tab: "stats", label: "RT.Starship.Tabs.Stats", group: "primary", cssClass: "tab-stats" },
+        { tab: "components", label: "RT.Starship.Tabs.Components", group: "primary", cssClass: "tab-components" },
+        { tab: "weapons", label: "RT.Starship.Tabs.Weapons", group: "primary", cssClass: "tab-weapons" },
+        { tab: "crew", label: "RT.Starship.Tabs.Crew", group: "primary", cssClass: "tab-crew" },
+        { tab: "history", label: "RT.Starship.Tabs.History", group: "primary", cssClass: "tab-history" }
+    ];
 
     /* -------------------------------------------- */
 
@@ -113,6 +147,29 @@ export default class StarshipSheet extends BaseActorSheet {
 
         context.powerAvailable = context.powerGenerated - context.powerUsed;
         context.spaceAvailable = (this.actor.system.space?.total || 0) - context.spaceUsed;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare context for specific parts.
+     * @inheritDoc
+     */
+    async _preparePartContext(partId, context, options) {
+        context = await super._preparePartContext(partId, context, options);
+        
+        // Add tab metadata for tab parts
+        if (["stats", "components", "weapons", "crew", "history"].includes(partId)) {
+            const tabConfig = this.constructor.TABS.find(t => t.tab === partId);
+            context.tab = {
+                id: partId,
+                group: tabConfig?.group || "primary",
+                active: this.tabGroups.primary === partId,
+                cssClass: tabConfig?.cssClass || ""
+            };
+        }
+        
+        return context;
     }
 
     /* -------------------------------------------- */

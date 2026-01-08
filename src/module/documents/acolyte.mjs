@@ -1,10 +1,10 @@
 import { prepareEnhancedSkillRoll } from '../applications/prompts/enhanced-skill-dialog.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
-import { prepareDamageRoll } from '../prompts/damage-prompt.mjs';
+import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { RogueTraderBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
-import { prepareForceFieldRoll } from '../prompts/force-field-prompt.mjs';
+import { prepareForceFieldRoll } from '../applications/prompts/force-field-dialog.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';

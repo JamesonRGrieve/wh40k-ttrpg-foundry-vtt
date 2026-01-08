@@ -1,0 +1,9 @@
+{{!-- NPC Abilities Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{> systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/skills-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+    {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
+</section>

@@ -10,7 +10,7 @@ import VisualFeedbackMixin from "../api/visual-feedback-mixin.mjs";
 import EnhancedAnimationsMixin from "../api/enhanced-animations-mixin.mjs";
 import CollapsiblePanelMixin from "../api/collapsible-panel-mixin.mjs";
 import ContextMenuMixin from "../api/context-menu-mixin.mjs";
-import EnhancedDragDropMixin from "../api/enhanced-drag-drop-mixin.mjs";
+import EnhancedDragDropMixin from "../api/drag-drop-visual-mixin.mjs";
 import WhatIfMixin from "../api/what-if-mixin.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;

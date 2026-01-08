@@ -79,7 +79,6 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/corruption-panel-v2.hbs',
             'systems/rogue-trader/templates/actor/panel/insanity-panel-v2.hbs',
             'systems/rogue-trader/templates/actor/panel/movement-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/initiative-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs',
 
             // Chat templates - needed for roll results
@@ -141,12 +140,6 @@ export class HandlebarManager {
             equipment: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-equipment.hbs',
                 'systems/rogue-trader/templates/actor/panel/loadout-equipment-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/encumbrance-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/backpack-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/gear-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/cybernetic-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/force-field-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/storage-location-panel.hbs',
             ],
             powers: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-powers.hbs',
@@ -158,26 +151,22 @@ export class HandlebarManager {
             ],
             dynasty: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-dynasty.hbs',
-                'systems/rogue-trader/templates/actor/panel/profit-factor-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/rogue-trader-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/acquisitions-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/ship-role-panel.hbs',
             ],
             biography: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs',
-                'systems/rogue-trader/templates/actor/panel/biography-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/origin-path-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/journal-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/experience-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/peer-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/enemy-panel.hbs',
-                'systems/rogue-trader/templates/actor/panel/aptitude-panel.hbs',
             ],
         },
 
         // Vehicle sheet templates
         vehicle: [
-            'systems/rogue-trader/templates/actor/actor-vehicle-sheet.hbs',
+            'systems/rogue-trader/templates/actor/vehicle/header.hbs',
+            'systems/rogue-trader/templates/actor/vehicle/tabs.hbs',
+            'systems/rogue-trader/templates/actor/vehicle/tab-stats.hbs',
+            'systems/rogue-trader/templates/actor/vehicle/tab-weapons.hbs',
+            'systems/rogue-trader/templates/actor/vehicle/tab-traits.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-integrity-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/vehicle-movement-panel.hbs',
@@ -186,7 +175,13 @@ export class HandlebarManager {
 
         // Starship sheet templates
         starship: [
-            'systems/rogue-trader/templates/actor/actor-starship-sheet.hbs',
+            'systems/rogue-trader/templates/actor/starship/header.hbs',
+            'systems/rogue-trader/templates/actor/starship/tabs.hbs',
+            'systems/rogue-trader/templates/actor/starship/tab-stats.hbs',
+            'systems/rogue-trader/templates/actor/starship/tab-components.hbs',
+            'systems/rogue-trader/templates/actor/starship/tab-weapons.hbs',
+            'systems/rogue-trader/templates/actor/starship/tab-crew.hbs',
+            'systems/rogue-trader/templates/actor/starship/tab-history.hbs',
             'systems/rogue-trader/templates/actor/panel/ship-components-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/ship-crew-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/ship-upgrades-panel.hbs',
@@ -195,21 +190,21 @@ export class HandlebarManager {
 
         // NPC sheet templates
         npc: [
-            'systems/rogue-trader/templates/actor/actor-npc-sheet.hbs',
+            'systems/rogue-trader/templates/actor/npc/header.hbs',
+            'systems/rogue-trader/templates/actor/npc/tabs.hbs',
+            'systems/rogue-trader/templates/actor/npc/tab-combat.hbs',
+            'systems/rogue-trader/templates/actor/npc/tab-abilities.hbs',
+            'systems/rogue-trader/templates/actor/npc/tab-gear.hbs',
+            'systems/rogue-trader/templates/actor/npc/tab-powers.hbs',
+            'systems/rogue-trader/templates/actor/npc/tab-notes.hbs',
             'systems/rogue-trader/templates/actor/panel/characteristic-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/characteristic-roller-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/combat-controls-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs',
         ],
 
-        // Legacy panels (used less frequently)
-        legacy: [
-            'systems/rogue-trader/templates/actor/panel/armour-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/bonuses-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/corruption-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/fate-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/fatigue-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/insanity-panel.hbs',
-            'systems/rogue-trader/templates/actor/panel/wounds-panel.hbs',
-        ],
+        // Legacy panels (no longer used - kept temporarily for reference)
+        legacy: [],
     };
 
     /**
