@@ -201,14 +201,14 @@
 .rt-box-right-leg {
   grid-area: rleg;
   justify-self: center;
-  margin-left: 8px;
+  margin-right: -16px;
   min-height: 100px;
 }
 
 .rt-box-left-leg {
   grid-area: lleg;
   justify-self: center;
-  margin-right: 8px;
+  margin-left: -16px;
   min-height: 100px;
 }
 
