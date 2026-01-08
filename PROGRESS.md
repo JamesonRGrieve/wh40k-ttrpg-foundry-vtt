@@ -395,14 +395,50 @@ All 6 Priority 1 items completed in this session:
 
 ---
 
+### Priority 3: Long-term Strategic (Session 6 - 2026-01-08)
+
+- [x] **Item 19**: Advanced Tooltip System with Enrichers ✅
+  - Implemented custom text enrichers for Rogue Trader content
+  - Added 4 enricher types:
+    - **Characteristic** enrichers: `[[/characteristic ws]]` - Click-to-roll with tooltips
+    - **Skill** enrichers: `[[/skill dodge]]`, `[[/skill commonLore:imperium]]` - Supports specializations
+    - **Modifier** enrichers: `[[/modifier strength +10]]` - Color-coded display
+    - **Armor** enrichers: `[[/armor head]]`, `[[/armor all]]` - AP values with breakdowns
+  - Features:
+    - Interactive click-to-roll for characteristics and skills
+    - Automatic UUID-based actor context resolution
+    - Rich tooltips with stat breakdowns
+    - Type-specific styling (gold for char, skills accent, green/red for modifiers)
+    - Error handling with visual feedback
+    - Works in ProseMirror editor, item descriptions, chat, journals
+  - Event delegation with single document.body listener
+  - Support for custom labels: `[[/skill dodge]]{Dodge Test}`
+  - Short codes for characteristics: `ws`, `bs`, `s`, `t`, `ag`, `int`, `per`, `wp`, `fel`
+  - Preserved existing RTTooltip system (583 lines) for hover tooltips
+  - Files Created:
+    - `src/module/enrichers.mjs` (340 lines) - Enricher registration and handlers
+    - `src/scss/components/_enrichers.scss` (170 lines) - Type-specific styling
+    - `ENRICHERS_GUIDE.md` - Comprehensive usage and implementation guide
+  - Files Modified:
+    - `src/module/rogue-trader.mjs` - Import and register enrichers
+    - `src/scss/rogue-trader.scss` - Import enricher styles
+
+**Benefits**:
+- ✅ Inline interactive content in all text fields
+- ✅ Click-to-roll from any description or journal
+- ✅ Rich tooltips for stat breakdowns
+- ✅ Complements existing tooltip system
+- ✅ No breaking changes to existing content
+- ✅ Follows Foundry V13 enricher patterns (like dnd5e)
+
+**Total Time**: ~2 hours
+**Build Status**: ✅ All builds passing
+
+---
+
 ## Next Steps 📋
 
-### Priority 2: Medium Priority (Remaining)
-- Item 11: Keyboard Shortcuts System (2-3 days, VERY HIGH impact) - **SKIPPED**
-- Item 17: Accessibility Compliance (2-3 days, HIGH impact) - **SKIPPED**
-
 ### Priority 3: Long-term Strategic (Remaining)
-- Item 19: Advanced Tooltip System with Enrichers (2-3 days)
 - Item 20: Responsive Design for Mobile/Tablet (4-5 days)
 - Item 21: Character Import/Export System (3-4 days)
 - Item 22: Character Comparison & Build Planning Tool (3-5 days)
