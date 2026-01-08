@@ -1,0 +1,632 @@
+// ============================================
+// WOUNDS PANEL V2 - Modern Redesign
+// ============================================
+// Complete overhaul with pip system, interactive controls, and visual feedback
+
+.rt-wounds-panel-v2 {
+  // Base panel styling inherits from rt-panel
+
+  // ============================================
+  // Main Display Area
+  // ============================================
+
+  .rt-wounds-display {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+  }
+
+  .rt-wounds-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-md;
+    padding: $rt-space-sm 0;
+  }
+
+  // +/- Control Buttons
+  .rt-wounds-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-btn-bg);
+    border: 2px solid var(--rt-wounds-border);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--rt-text-medium);
+
+    &:hover {
+      background: var(--rt-btn-bg-hover);
+      border-color: var(--rt-wounds-primary);
+      transform: scale(1.08);
+      box-shadow: 0 2px 6px var(--rt-shadow-soft);
+    }
+
+    &:active {
+      transform: scale(0.95);
+      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    }
+
+    i {
+      font-size: 0.85rem;
+    }
+  }
+
+  .rt-wounds-minus {
+    color: var(--rt-wounds-secondary);
+    &:hover {
+      border-color: var(--rt-wounds-secondary);
+      background: var(--rt-wounds-bg);
+    }
+  }
+
+  .rt-wounds-plus {
+    color: var(--rt-success-primary);
+    &:hover {
+      border-color: var(--rt-success-primary);
+      background: var(--rt-success-bg);
+    }
+  }
+
+  // Current/Max Value Display
+  .rt-wounds-value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  .rt-wounds-current {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+    line-height: 1;
+    transition: all 0.3s ease;
+  }
+
+  .rt-wounds-sep {
+    font-size: 1.5rem;
+    color: var(--rt-text-subtle);
+    font-weight: 400;
+  }
+
+  .rt-wounds-max {
+    font-size: 1.3rem;
+    color: var(--rt-text-muted);
+    font-weight: 600;
+  }
+
+  // ============================================
+  // Progress Bar with Gradient
+  // ============================================
+
+  .rt-wounds-bar-container {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+  }
+
+  .rt-wounds-bar {
+    flex: 1;
+    height: 12px;
+    background: var(--rt-border-accent);
+    border-radius: 6px;
+    overflow: visible;  // Changed to visible for threshold markers
+    position: relative;
+    box-shadow: inset 0 1px 3px var(--rt-shadow-soft);
+  }
+
+  // Threshold Markers
+  .rt-threshold-marker {
+    position: absolute;
+    top: -2px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 2;
+
+    .rt-threshold-line {
+      width: 2px;
+      height: 100%;
+      background: var(--rt-border-accent);
+      border-radius: 1px;
+    }
+
+    .rt-threshold-label {
+      position: absolute;
+      top: -18px;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--rt-text-muted);
+      background: var(--rt-panel-bg-solid);
+      padding: 1px 3px;
+      border-radius: 2px;
+      border: 1px solid var(--rt-border-color-light);
+    }
+  }
+
+  .rt-wounds-bar-fill {
+    height: 100%;
+    width: var(--wounds-percent, 100%);
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+
+    // Dynamic gradient based on percentage
+    background: linear-gradient(90deg,
+      #4a8f5c 0%,     // Green (healthy)
+      #7fa65c 25%,
+      #c4871d 50%,    // Yellow (moderate)
+      #d85545 75%,
+      #b63a2b 100%    // Red (critical)
+    );
+    background-size: 400% 100%;
+    background-position: calc((100 - var(--wounds-percent, 100)) * 1%) 0%;
+
+    box-shadow: 0 0 10px rgba(182, 58, 43, 0.3);
+  }
+
+  .rt-wounds-percent {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--rt-text-muted);
+    min-width: 36px;
+    text-align: right;
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  // ============================================
+  // Alert Messages
+  // ============================================
+
+  .rt-wounds-alert {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-xs $rt-space-sm;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    margin-top: $rt-space-xs;
+
+    i {
+      font-size: 1em;
+    }
+  }
+
+  .rt-alert-critical {
+    background: var(--rt-wounds-bg);
+    color: var(--rt-wounds-primary);
+    border: 2px solid var(--rt-wounds-border);
+    animation: pulse-red 2s ease-in-out infinite;
+  }
+
+  .rt-alert-warning {
+    background: var(--rt-warning-bg);
+    color: var(--rt-warning-primary);
+    border: 2px solid rgba(196, 135, 29, 0.5);
+  }
+
+  // Red pulse animation for critical wounds
+  @keyframes pulse-red {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(182, 58, 43, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(182, 58, 43, 0);
+    }
+  }
+
+  // Panel state modifiers
+  &.rt-wounds-critical {
+    .rt-panel-header {
+      background: var(--rt-wounds-bg);
+      border-bottom: 2px solid var(--rt-wounds-secondary);
+    }
+
+    .rt-wounds-current {
+      color: var(--rt-wounds-secondary);
+      animation: pulse-scale 1.5s ease-in-out infinite;
+    }
+  }
+
+  &.rt-wounds-warning {
+    .rt-panel-header {
+      background: var(--rt-warning-bg);
+    }
+  }
+
+  @keyframes pulse-scale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  // ============================================
+  // Critical Damage Pip System
+  // ============================================
+
+  .rt-wounds-critical-section {
+    margin-top: $rt-space-md;
+    padding: $rt-space-sm;
+    background: var(--rt-wounds-bg);
+    border: 1px solid var(--rt-wounds-border);
+    border-radius: 8px;
+  }
+
+  .rt-critical-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $rt-space-sm;
+  }
+
+  .rt-critical-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-wounds-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    i { font-size: 0.9em; }
+  }
+
+  .rt-critical-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rt-wounds-secondary);
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  .rt-critical-pips {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .rt-crit-pip {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 50%;
+    background: var(--rt-btn-bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    &:hover {
+      border-color: var(--rt-wounds-border);
+      transform: scale(1.12);
+      box-shadow: 0 2px 6px var(--rt-shadow-medium);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .rt-pip-inner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--rt-border-accent);
+    transition: all 0.2s ease;
+  }
+
+  .rt-crit-pip--filled {
+    border-color: var(--rt-wounds-secondary);
+    background: var(--rt-wounds-bg);
+
+    .rt-pip-inner {
+      background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
+      box-shadow: 0 0 8px rgba(182, 58, 43, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    &:hover {
+      box-shadow: 0 0 12px rgba(182, 58, 43, 0.5);
+    }
+  }
+
+  // ============================================
+  // Edit Mode Sections
+  // ============================================
+
+  .rt-wounds-edit-section {
+    padding: $rt-space-md;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    margin-bottom: $rt-space-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .rt-wounds-edit-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-medium);
+    margin-bottom: $rt-space-sm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    i {
+      font-size: 0.9em;
+      margin-right: 4px;
+    }
+  }
+
+  .rt-wounds-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $rt-space-md;
+  }
+
+  .rt-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .rt-edit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+  }
+
+  .rt-edit-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 $rt-space-sm;
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    background: var(--rt-input-bg);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+    text-align: center;
+    font-family: 'Modesto Condensed', serif;
+    transition: all 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--rt-border-color-strong);
+      background: var(--rt-input-bg-focus);
+      box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+    }
+
+    &:hover {
+      border-color: var(--rt-border-color);
+    }
+  }
+
+  // ============================================
+  // Critical Controls (Edit Mode)
+  // ============================================
+
+  .rt-critical-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+  }
+
+  .rt-critical-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-input-bg);
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    i {
+      font-size: 0.75rem;
+      color: var(--rt-text-medium);
+    }
+
+    &:hover {
+      background: var(--rt-input-bg-focus);
+      border-color: var(--rt-border-color);
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .rt-critical-input {
+    width: 70px;
+    height: 36px;
+    padding: 0 $rt-space-sm;
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    background: var(--rt-input-bg);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--rt-wounds-secondary);
+    text-align: center;
+    font-family: 'Modesto Condensed', serif;
+    transition: all 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--rt-wounds-secondary);
+      background: var(--rt-input-bg-focus);
+      box-shadow: 0 0 0 3px var(--rt-wounds-bg);
+    }
+  }
+
+  // Edit mode pips with level numbers
+  .rt-critical-pips-edit {
+    .rt-pip-inner {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--rt-text-muted);
+      background: none;
+      width: auto;
+      height: auto;
+    }
+
+    .rt-crit-pip--filled .rt-pip-inner {
+      color: #fff;
+      background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
+    }
+  }
+
+  // ============================================
+  // Critical Injuries List
+  // ============================================
+
+  .rt-add-btn-small {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-success-bg);
+    border: 1px solid rgba(74, 143, 92, 0.4);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    i {
+      font-size: 0.7rem;
+      color: var(--rt-success-secondary);
+    }
+
+    &:hover {
+      background: rgba(74, 143, 92, 0.25);
+      border-color: var(--rt-success-primary);
+      transform: scale(1.05);
+    }
+  }
+
+  .rt-injury-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rt-injury-card {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-xs $rt-space-sm;
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--rt-panel-bg-solid);
+      border-color: var(--rt-border-color);
+    }
+  }
+
+  .rt-injury-name {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 4px;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rt-text-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease;
+
+    i {
+      font-size: 0.85em;
+      color: var(--rt-wounds-secondary);
+    }
+
+    &:hover {
+      color: var(--rt-wounds-secondary);
+    }
+  }
+
+  .rt-injury-delete {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-wounds-bg);
+    border: 1px solid var(--rt-wounds-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    i {
+      font-size: 0.7rem;
+      color: var(--rt-wounds-secondary);
+    }
+
+    &:hover {
+      background: rgba(182, 58, 43, 0.2);
+      border-color: var(--rt-wounds-secondary);
+      transform: scale(1.05);
+    }
+  }
+
+  .rt-wounds-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-md;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px dashed var(--rt-border-color-light);
+    border-radius: 6px;
+
+    i {
+      font-size: 1.8rem;
+      color: var(--rt-success-secondary);
+      opacity: 0.5;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: var(--rt-text-muted);
+      font-style: italic;
+    }
+  }
+}
