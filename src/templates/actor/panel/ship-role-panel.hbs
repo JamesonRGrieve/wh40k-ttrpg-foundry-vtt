@@ -1,41 +1,114 @@
-<div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
-    <h1 class="rt-panel-header">{{localize "RT.ShipRole.Header"}}</h1>
-    <div class="rt-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "RT.ShipRole.Role"}}</div>
-            <div class="table-cell">{{localize "RT.ShipRole.Rank"}}</div>
-            <div class="table-cell--last">
-                <label class="rt-control-button">
-                    <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-                </label>
-            </div>
-        </div>
-        {{#each shipRoles as |role|}}
-            <div class="table-row">
-                <div class="table-cell--span2">
-                    <button class="item-name" data-item-id="{{role._id}}" type="button">
-                        <img class="rt-item-img" src="{{role.img}}" alt="{{role.name}}" />
-                        {{role.name}}
-                    </button>
-                </div>
-                <div class="table-cell">{{role.system.rank}}</div>
-                <div class="table-cell--last">
-                    <label class="rt-control-button item-delete" data-item-id="{{role._id}}">
-                        <span class="rt-control-button__span material-icons">delete</span>
-                    </label>
-                </div>
-            </div>
-        {{/each}}
+<div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1 rt-panel-ship-roles">
+    <div class="rt-panel-header collapsible-header" data-panel="ship-roles">
+        <i class="fas fa-user-tie"></i>
+        <span class="rt-panel-title">{{localize "RT.ShipRole.Header"}}</span>
+        <span class="rt-panel-count">{{shipRoles.length}}</span>
+        <button type="button" class="rt-panel-add-btn" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
+            <i class="fas fa-plus"></i>
+        </button>
+        <i class="fas fa-chevron-down collapse-icon"></i>
     </div>
-    {{#if shipRoles.length}}
-        <div class="rt-ship-role-details">
-            {{#each shipRoles as |role|}}
-                <div class="rt-ship-role-detail">
-                    <h3>{{role.name}}</h3>
-                    <p><strong>{{localize "RT.ShipRole.Purpose"}}:</strong> {{role.system.purpose}}</p>
-                    <p><strong>{{localize "RT.ShipRole.Effect"}}:</strong> {{role.system.effect}}</p>
-                </div>
-            {{/each}}
-        </div>
-    {{/if}}
+    
+    <div class="rt-panel-body collapsible-body" data-panel-body="ship-roles">
+        {{#if shipRoles.length}}
+            <div class="rt-ship-roles-list">
+                {{#each shipRoles as |role|}}
+                    <div class="rt-ship-role-card">
+                        <div class="rt-ship-role-header">
+                            <button class="rt-ship-role-name" data-action="itemEdit" data-item-id="{{role._id}}" type="button">
+                                <img class="rt-item-img" src="{{role.img}}" alt="{{role.name}}" />
+                                <span class="rt-role-name-text">{{role.name}}</span>
+                            </button>
+                            <span class="rt-role-rank-badge" data-tooltip="Rank {{role.system.rank}}">
+                                R{{role.system.rank}}
+                            </span>
+                            <button class="rt-control-icon" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="Remove Role">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="rt-ship-role-body">
+                            {{#if role.system.purpose}}
+                            <div class="rt-role-section">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.Purpose"}}:</strong>
+                                <span class="rt-role-value">{{{role.system.purpose}}}</span>
+                            </div>
+                            {{/if}}
+                            
+                            {{#if role.system.careerPreferencesLabel}}
+                            <div class="rt-role-section">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.CareerPreferences"}}:</strong>
+                                <span class="rt-role-value">{{role.system.careerPreferencesLabel}}</span>
+                            </div>
+                            {{/if}}
+                            
+                            {{#if role.system.subordinatesLabel}}
+                            <div class="rt-role-section">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.Subordinates"}}:</strong>
+                                <span class="rt-role-value">{{role.system.subordinatesLabel}}</span>
+                            </div>
+                            {{/if}}
+                            
+                            {{#if role.system.importantSkillsLabel}}
+                            <div class="rt-role-section">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.ImportantSkills"}}:</strong>
+                                <span class="rt-role-skills">{{role.system.importantSkillsLabel}}</span>
+                            </div>
+                            {{/if}}
+                            
+                            {{!-- Abilities (modern structured display) --}}
+                            {{#if role.system.abilities.length}}
+                            <div class="rt-role-section rt-role-abilities">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.Abilities"}}:</strong>
+                                <div class="rt-role-abilities-list">
+                                    {{#each role.system.abilities as |ability|}}
+                                    <div class="rt-role-ability">
+                                        <span class="rt-ability-name">{{ability.name}}</span>
+                                        {{#if ability.bonus}}
+                                        <span class="rt-ability-bonus {{#if (gt ability.bonus 0)}}rt-bonus-positive{{else}}rt-bonus-negative{{/if}}">
+                                            {{#if (gt ability.bonus 0)}}+{{/if}}{{ability.bonus}}
+                                        </span>
+                                        {{/if}}
+                                        {{#if ability.description}}
+                                        <div class="rt-ability-desc">{{{ability.description}}}</div>
+                                        {{/if}}
+                                    </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{else if role.system.effect}}
+                            {{!-- Legacy effect fallback --}}
+                            <div class="rt-role-section rt-role-effect">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.Effect"}}:</strong>
+                                <span class="rt-role-value">{{{role.system.effect}}}</span>
+                            </div>
+                            {{/if}}
+                            
+                            {{!-- Ship Bonuses --}}
+                            {{#if role.system.shipBonusesArray.length}}
+                            <div class="rt-role-section rt-role-bonuses">
+                                <strong class="rt-role-label">{{localize "RT.ShipRole.ShipBonuses"}}:</strong>
+                                <div class="rt-bonus-badges">
+                                    {{#each role.system.shipBonusesArray as |bonus|}}
+                                    <span class="rt-bonus-badge {{#if (gt bonus.value 0)}}rt-bonus-positive{{else}}rt-bonus-negative{{/if}}">
+                                        {{bonus.label}}: {{bonus.display}}
+                                    </span>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="rt-empty-state">
+                <i class="fas fa-user-tie fa-3x"></i>
+                <p>{{localize "RT.ShipRole.NoRoles"}}</p>
+                <button type="button" data-action="itemCreate" data-item-type="shipRole" class="rt-btn-create">
+                    <i class="fas fa-plus"></i> {{localize "RT.ShipRole.AddRole"}}
+                </button>
+            </div>
+        {{/if}}
+    </div>
 </div>
