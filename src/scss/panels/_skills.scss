@@ -90,7 +90,10 @@
   height: 16px;
   flex: 0 0 16px;
   opacity: 0.9;
-  object-fit: contain;
+  background-image: var(--icon-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 // Use the same rt-spec-training class as specialist panel

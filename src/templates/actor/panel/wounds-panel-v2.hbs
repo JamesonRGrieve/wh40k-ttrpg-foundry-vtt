@@ -36,7 +36,6 @@
                         class="rt-wounds-btn rt-wounds-plus"
                         data-action="increment"
                         data-field="system.wounds.value"
-                        data-max="{{system.wounds.max}}"
                         title="Increase Wounds">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -121,7 +120,8 @@
                                name="system.wounds.max"
                                value="{{system.wounds.max}}"
                                min="1"
-                               placeholder="Max" />
+                               placeholder="Max"
+                               {{#unless (isExpanded 'wounds_details' actor)}}disabled{{/unless}} />
                     </label>
 
                     <label class="rt-edit-field">
@@ -133,7 +133,8 @@
                                value="{{system.wounds.value}}"
                                min="0"
                                max="{{system.wounds.max}}"
-                               placeholder="Current" />
+                               placeholder="Current"
+                               {{#unless (isExpanded 'wounds_details' actor)}}disabled{{/unless}} />
                     </label>
                 </div>
             </div>
@@ -161,7 +162,8 @@
                            value="{{system.wounds.critical}}"
                            min="0"
                            max="10"
-                           title="Critical Damage (0-10)" />
+                           title="Critical Damage (0-10)"
+                           {{#unless (isExpanded 'wounds_details' actor)}}disabled{{/unless}} />
 
                     <button type="button"
                             class="rt-critical-btn rt-btn-plus"

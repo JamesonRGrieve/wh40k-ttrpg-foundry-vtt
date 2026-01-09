@@ -322,11 +322,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
     async spendFate() {
         await this.update({
-            system: {
-                fate: {
-                    value: this.system.fate.value - 1
-                }
-            }
+            "system.fate.value": this.system.fate.value - 1
         });
     }
 

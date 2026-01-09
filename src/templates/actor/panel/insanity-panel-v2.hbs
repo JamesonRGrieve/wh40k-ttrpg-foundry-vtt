@@ -1,4 +1,4 @@
-{{!-- Redesigned Insanity Panel - Degree Badges, Threshold Warnings, Mental Disorder Tracking --}}
+{{!-- Insanity Panel V2 - Matches Corruption Panel Design --}}
 <div class="rt-panel rt-insanity-panel-v2 {{insanityDegreeClass system.insanity}}">
 
     {{!-- Panel Header - Click to expand/collapse --}}
@@ -8,9 +8,16 @@
         <span class="rt-panel-title">
             <i class="fas fa-brain"></i> Insanity
         </span>
-        <span class="rt-insanity-degree-badge {{insanityDegreeClass system.insanity}}">
-            {{insanityDegree system.insanity}}
-        </span>
+        
+        {{!-- Dynamic Mind Badge --}}
+        <div class="rt-insanity-header-status">
+            <div class="rt-insanity-badge {{insanityDegreeClass system.insanity}}"
+                 title="{{insanityDegree system.insanity}} - {{insanityModifier system.insanity}} to tests">
+                <i class="fas fa-brain rt-badge-icon"></i>
+                <span class="rt-badge-label">{{insanityDegree system.insanity}}</span>
+            </div>
+        </div>
+        
         <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'insanity_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
     </div>
 
@@ -59,42 +66,40 @@
                     <div class="rt-insanity-bar-fill" style="width: {{system.insanity}}%"></div>
 
                     {{!-- Threshold Markers --}}
-                    <div class="rt-threshold-marker" style="left: 30%;" title="UNSETTLED → DISTURBED (30)">
+                    <div class="rt-threshold-marker" style="left: 10%;" title="STABLE → UNSETTLED (10)">
                         <span class="rt-threshold-line"></span>
-                        <span class="rt-threshold-label">30</span>
+                        <span class="rt-threshold-label">10</span>
+                    </div>
+                    <div class="rt-threshold-marker" style="left: 40%;" title="UNSETTLED → DISTURBED (40)">
+                        <span class="rt-threshold-line"></span>
+                        <span class="rt-threshold-label">40</span>
                     </div>
                     <div class="rt-threshold-marker" style="left: 60%;" title="DISTURBED → UNHINGED (60)">
                         <span class="rt-threshold-line"></span>
                         <span class="rt-threshold-label">60</span>
                     </div>
-                    <div class="rt-threshold-marker" style="left: 90%;" title="UNHINGED → INCURABLE (90)">
+                    <div class="rt-threshold-marker" style="left: 80%;" title="UNHINGED → DERANGED (80)">
                         <span class="rt-threshold-line"></span>
-                        <span class="rt-threshold-label">90</span>
+                        <span class="rt-threshold-label">80</span>
                     </div>
                 </div>
-            </div>
-
-            {{!-- Broken Mind Visual (fractures at high insanity) --}}
-            <div class="rt-broken-mind {{#if (gte system.insanity 60)}}rt-mind-fractured{{/if}} {{#if (gte system.insanity 90)}}rt-mind-shattered{{/if}}">
-                <i class="fas fa-brain"></i>
-                <span class="rt-mind-text">Sanity</span>
             </div>
 
             {{!-- Warning Messages at Thresholds --}}
             {{#if (eq system.insanity 100)}}
             <div class="rt-insanity-alert rt-alert-insane">
                 <i class="fas fa-dizzy"></i>
-                <span>INSANE - Mind Lost to Madness!</span>
+                <span>TERMINALLY INSANE - Mind Lost to Madness!</span>
             </div>
-            {{else if (gte system.insanity 90)}}
-            <div class="rt-insanity-alert rt-alert-incurable">
+            {{else if (gte system.insanity 80)}}
+            <div class="rt-insanity-alert rt-alert-deranged">
                 <i class="fas fa-exclamation-triangle"></i>
-                <span>INCURABLE - Teetering on the Brink (-30)</span>
+                <span>DERANGED - On the Edge of Madness (-20)</span>
             </div>
             {{else if (gte system.insanity 60)}}
             <div class="rt-insanity-alert rt-alert-unhinged">
                 <i class="fas fa-user-injured"></i>
-                <span>UNHINGED - Severe Mental Instability (-20)</span>
+                <span>UNHINGED - Severe Mental Instability (-10)</span>
             </div>
             {{/if}}
 
@@ -128,22 +133,47 @@
                            value="{{system.insanity}}"
                            min="0"
                            max="100"
-                           placeholder="0" />
+                           placeholder="0"
+                           {{#unless (isExpanded 'insanity_details' actor)}}disabled{{/unless}} />
                 </div>
 
-                {{!-- Quick Set Buttons --}}
-                <div class="rt-insanity-quick-set">
-                    <button type="button" class="rt-quick-set-btn" data-action="set-insanity" data-value="0" title="Set to 0 (STABLE)">
-                        <i class="fas fa-smile"></i> STABLE
+                {{!-- Quick Adjust Buttons --}}
+                <div class="rt-insanity-quick-adjust">
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.insanity" 
+                            data-delta="-5"
+                            data-min="0"
+                            title="Decrease by 5">
+                        -5
                     </button>
-                    <button type="button" class="rt-quick-set-btn" data-action="set-insanity" data-value="30" title="Set to 30 (DISTURBED)">
-                        30
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.insanity" 
+                            data-delta="-1"
+                            data-min="0"
+                            title="Decrease by 1">
+                        -1
                     </button>
-                    <button type="button" class="rt-quick-set-btn" data-action="set-insanity" data-value="60" title="Set to 60 (UNHINGED)">
-                        60
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.insanity" 
+                            data-delta="1"
+                            data-max="100"
+                            title="Increase by 1">
+                        +1
                     </button>
-                    <button type="button" class="rt-quick-set-btn" data-action="set-insanity" data-value="90" title="Set to 90 (INCURABLE)">
-                        90
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.insanity" 
+                            data-delta="5"
+                            data-max="100"
+                            title="Increase by 5">
+                        +5
                     </button>
                 </div>
             </div>
@@ -152,12 +182,6 @@
             <div class="rt-insanity-edit-section">
                 <div class="rt-insanity-edit-header">
                     <i class="fas fa-head-side-virus"></i> Mental Disorders
-                    <button type="button"
-                            class="rt-add-btn-small item-create"
-                            data-type="mentalDisorder"
-                            title="Add Mental Disorder">
-                        <i class="fas fa-plus"></i>
-                    </button>
                 </div>
 
                 {{#if (any actor.items "isMentalDisorder")}}
@@ -182,12 +206,21 @@
                         {{/if}}
                     {{/each}}
                 </div>
-                {{else}}
-                <div class="rt-insanity-empty">
-                    <i class="fas fa-smile-beam"></i>
-                    <span>No mental disorders (yet)</span>
-                </div>
                 {{/if}}
+                
+                {{!-- Drop Zone (always visible) --}}
+                <div class="rt-dropzone {{#unless (any actor.items "isMentalDisorder")}}rt-dropzone-empty{{/unless}}" 
+                     data-action="itemCreate"
+                     data-type="mentalDisorder">
+                    <i class="fas fa-smile-beam rt-dropzone-icon"></i>
+                    <span class="rt-dropzone-text">
+                        {{#if (any actor.items "isMentalDisorder")}}
+                            Drop Mental Disorders Here or Click to Create
+                        {{else}}
+                            No mental disorders (yet)
+                        {{/if}}
+                    </span>
+                </div>
             </div>
 
             {{!-- Info Section --}}
@@ -197,14 +230,14 @@
                     <div class="rt-info-content">
                         <strong>Insanity Degrees</strong>
                         <ul class="rt-degree-list">
-                            <li><span class="rt-degree-name">STABLE (0):</span> Sound of mind - No penalty</li>
-                            <li><span class="rt-degree-name">UNSETTLED (1-30):</span> Minor trauma - No penalty</li>
-                            <li><span class="rt-degree-name">DISTURBED (31-60):</span> Troubled mind - <strong>-10</strong> to checks</li>
-                            <li><span class="rt-degree-name">UNHINGED (61-90):</span> Severe instability - <strong>-20</strong> to checks</li>
-                            <li><span class="rt-degree-name">INCURABLE (91-99):</span> On the brink - <strong>-30</strong> to checks</li>
-                            <li><span class="rt-degree-name rt-degree-insane">INSANE (100):</span> Mind lost to madness - <strong>NPC only</strong></li>
+                            <li><span class="rt-degree-name">STABLE (0-9):</span> Sound of mind - No penalty</li>
+                            <li><span class="rt-degree-name">UNSETTLED (10-39):</span> Minor unease - <strong>+10</strong> to Fear tests</li>
+                            <li><span class="rt-degree-name">DISTURBED (40-59):</span> Troubled mind - No modifier</li>
+                            <li><span class="rt-degree-name">UNHINGED (60-79):</span> Severe instability - <strong>-10</strong> to checks</li>
+                            <li><span class="rt-degree-name">DERANGED (80-99):</span> On the brink - <strong>-20</strong> to checks</li>
+                            <li><span class="rt-degree-name rt-degree-insane">TERMINALLY INSANE (100):</span> Mind lost - <strong>NPC only</strong></li>
                         </ul>
-                        <p class="rt-insanity-warning"><i class="fas fa-brain"></i> Mental disorders are psychological trauma from exposure to horrors beyond mortal comprehension.</p>
+                        <p class="rt-insanity-warning"><i class="fas fa-brain"></i> Mental disorders represent psychological trauma from witnessing horrors beyond mortal comprehension.</p>
                     </div>
                 </div>
             </div>

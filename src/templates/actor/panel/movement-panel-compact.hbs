@@ -1,39 +1,58 @@
-{{!-- Compact Movement Panel for Combat Tab --}}
-{{!-- Essential movement rates only, space-optimized --}}
+{{!-- Modern Compact Movement Panel for Combat Tab --}}
+{{!-- Sleek, dense design with visual hierarchy --}}
 
 <div class="rt-panel rt-panel-movement-compact">
     <div class="rt-panel-header">
         <span class="rt-panel-title"><i class="fas fa-running"></i> Movement</span>
     </div>
     <div class="rt-panel-body">
-        <div class="rt-movement-grid-compact">
-            <div class="rt-move-cell-compact">
-                <i class="fas fa-walking rt-move-icon-sm"></i>
-                <div class="rt-move-info-compact">
-                    <span class="rt-move-label-sm">Half</span>
-                    <span class="rt-move-value-sm">{{system.movement.half}}m</span>
+        <div class="rt-movement-modern-compact">
+            {{!-- Half Move --}}
+            <div class="rt-move-modern-cell rt-move-half">
+                <div class="rt-move-modern-icon">
+                    <i class="fas fa-walking"></i>
                 </div>
+                <div class="rt-move-modern-content">
+                    <span class="rt-move-modern-label">Half</span>
+                    <span class="rt-move-modern-value">{{system.movement.half}}<span class="rt-move-unit">m</span></span>
+                </div>
+                <div class="rt-move-modern-bar" style="--move-percent: 25%;"></div>
             </div>
-            <div class="rt-move-cell-compact">
-                <i class="fas fa-shoe-prints rt-move-icon-sm"></i>
-                <div class="rt-move-info-compact">
-                    <span class="rt-move-label-sm">Full</span>
-                    <span class="rt-move-value-sm">{{system.movement.full}}m</span>
+
+            {{!-- Full Move --}}
+            <div class="rt-move-modern-cell rt-move-full">
+                <div class="rt-move-modern-icon">
+                    <i class="fas fa-shoe-prints"></i>
                 </div>
+                <div class="rt-move-modern-content">
+                    <span class="rt-move-modern-label">Full</span>
+                    <span class="rt-move-modern-value">{{system.movement.full}}<span class="rt-move-unit">m</span></span>
+                </div>
+                <div class="rt-move-modern-bar" style="--move-percent: 50%;"></div>
             </div>
-            <div class="rt-move-cell-compact">
-                <i class="fas fa-running rt-move-icon-sm"></i>
-                <div class="rt-move-info-compact">
-                    <span class="rt-move-label-sm">Charge</span>
-                    <span class="rt-move-value-sm">{{system.movement.charge}}m</span>
+
+            {{!-- Charge --}}
+            <div class="rt-move-modern-cell rt-move-charge">
+                <div class="rt-move-modern-icon">
+                    <i class="fas fa-running"></i>
                 </div>
+                <div class="rt-move-modern-content">
+                    <span class="rt-move-modern-label">Charge</span>
+                    <span class="rt-move-modern-value">{{system.movement.charge}}<span class="rt-move-unit">m</span></span>
+                </div>
+                <div class="rt-move-modern-bar" style="--move-percent: 75%;"></div>
             </div>
-            <div class="rt-move-cell-compact">
-                <i class="fas fa-wind rt-move-icon-sm"></i>
-                <div class="rt-move-info-compact">
-                    <span class="rt-move-label-sm">Run</span>
-                    <span class="rt-move-value-sm">{{system.movement.run}}m</span>
+
+            {{!-- Run --}}
+            <div class="rt-move-modern-cell rt-move-run">
+                <div class="rt-move-modern-icon">
+                    <i class="fas fa-wind"></i>
                 </div>
+                <div class="rt-move-modern-content">
+                    <span class="rt-move-modern-label">Run</span>
+                    <span class="rt-move-modern-value">{{system.movement.run}}<span class="rt-move-unit">m</span></span>
+                </div>
+                <div class="rt-move-modern-bar" style="--move-percent: 100%;"></div>
             </div>
         </div>
     </div>

@@ -4,75 +4,114 @@
 <div class="rt-combat-tab">
     {{!-- Main Combat Layout: 3 Columns --}}
     <div class="rt-combat-grid">
-        {{!-- LEFT COLUMN: Vitals --}}
+        {{!-- LEFT COLUMN: Vitals HUD --}}
         <div class="rt-combat-col rt-combat-vitals">
-            {{!-- Wounds Panel --}}
-            <div class="rt-panel rt-panel-wounds">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-heart"></i> Wounds</span>
+            {{!-- Compact Vitals Monitor --}}
+            <div class="rt-vitals-hud">
+                <div class="rt-vitals-hud-header">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>VITALS</span>
                 </div>
-                <div class="rt-panel-body">
-                    <div class="rt-vital-display">
-                        <div class="rt-vital-tracker">
-                            <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.wounds.value" data-min="0">−</button>
-                            <span class="rt-vital-current">{{system.wounds.value}}</span>
-                            <span class="rt-vital-sep">/</span>
-                            <span class="rt-vital-max">{{system.wounds.max}}</span>
-                            <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.wounds.value" data-max="{{system.wounds.max}}">+</button>
+                
+                {{!-- Wounds Status --}}
+                <div class="rt-vital-stat rt-vital-wounds {{#if (eq system.wounds.value 0)}}rt-vital-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}rt-vital-warning{{/if}}">
+                    <div class="rt-vital-stat-header">
+                        <div class="rt-vital-label">
+                            <i class="fas fa-heart"></i>
+                            <span>WOUNDS</span>
                         </div>
-                        <div class="rt-vital-bar">
-                            <div class="rt-vital-bar-fill rt-wounds-fill" style="width: {{woundsPercent}}%"></div>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-ctrl-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="Decrease">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="rt-vital-ctrl-btn" data-action="increment" data-field="system.wounds.value" title="Increase">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
-                        {{#if (gt system.wounds.critical 0)}}
-                        <div class="rt-critical-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <span>Critical: {{system.wounds.critical}}</span>
-                        </div>
-                        {{/if}}
                     </div>
-                </div>
-            </div>
-
-            {{!-- Fatigue Panel --}}
-            <div class="rt-panel rt-panel-fatigue {{#if (gte system.fatigue.value system.fatigue.max)}}rt-exhausted{{/if}}">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-bolt"></i> Fatigue</span>
-                </div>
-                <div class="rt-panel-body">
-                    <div class="rt-vital-display">
-                        <div class="rt-vital-tracker">
-                            <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0">−</button>
-                            <span class="rt-vital-current">{{system.fatigue.value}}</span>
-                            <span class="rt-vital-sep">/</span>
-                            <span class="rt-vital-max">{{system.fatigue.max}}</span>
-                            <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.fatigue.value">+</button>
+                    <div class="rt-vital-stat-body">
+                        <div class="rt-vital-readout">
+                            <span class="rt-vital-value">{{system.wounds.value}}</span>
+                            <span class="rt-vital-max-label">/ {{system.wounds.max}}</span>
                         </div>
-                        <div class="rt-vital-bar">
-                            <div class="rt-vital-bar-fill rt-fatigue-fill" style="width: {{fatiguePercent}}%"></div>
+                        <div class="rt-vital-bar-wrapper">
+                            <div class="rt-vital-bar-track">
+                                <div class="rt-vital-bar-progress rt-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%"></div>
+                            </div>
+                            <span class="rt-vital-percent">{{percent system.wounds.value system.wounds.max}}%</span>
                         </div>
-                        {{#if (gte system.fatigue.value system.fatigue.max)}}
-                        <div class="rt-exhausted-warning">
-                            <i class="fas fa-dizzy"></i>
-                            <span>EXHAUSTED</span>
-                        </div>
-                        {{/if}}
                     </div>
+                    {{#if (gt system.wounds.critical 0)}}
+                    <div class="rt-vital-alert">
+                        <i class="fas fa-skull"></i>
+                        <span>CRITICAL DAMAGE: {{system.wounds.critical}}</span>
+                    </div>
+                    {{/if}}
                 </div>
-            </div>
 
-            {{!-- Fate Points Panel --}}
-            <div class="rt-panel rt-panel-fate">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-star"></i> Fate Points</span>
+                {{!-- Fatigue Status --}}
+                <div class="rt-vital-stat rt-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}rt-vital-critical{{else if (gt system.fatigue.value 0)}}rt-vital-warning{{/if}}">
+                    <div class="rt-vital-stat-header">
+                        <div class="rt-vital-label">
+                            <i class="fas fa-bolt"></i>
+                            <span>FATIGUE</span>
+                        </div>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-ctrl-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="Decrease">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="rt-vital-ctrl-btn" data-action="increment" data-field="system.fatigue.value" title="Increase">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rt-vital-stat-body">
+                        <div class="rt-vital-readout">
+                            <span class="rt-vital-value">{{system.fatigue.value}}</span>
+                            <span class="rt-vital-max-label">/ {{system.fatigue.max}}</span>
+                        </div>
+                        <div class="rt-vital-bar-wrapper">
+                            <div class="rt-vital-bar-track">
+                                <div class="rt-vital-bar-progress rt-fatigue-progress" style="--progress: {{percent system.fatigue.value system.fatigue.max}}%"></div>
+                            </div>
+                            <span class="rt-vital-percent">{{percent system.fatigue.value system.fatigue.max}}%</span>
+                        </div>
+                    </div>
+                    {{#if (gt system.fatigue.value 0)}}
+                    <div class="rt-vital-alert rt-alert-fatigue">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{#if (gt system.fatigue.value system.fatigue.max)}}UNCONSCIOUS{{else}}−10 ALL TESTS{{/if}}</span>
+                    </div>
+                    {{/if}}
                 </div>
-                <div class="rt-panel-body">
-                    <div class="rt-vital-display">
-                        <div class="rt-vital-tracker">
-                            <button type="button" class="rt-vital-btn rt-btn-minus rt-tracker-btn" data-action="decrement" data-field="system.fate.value" data-min="0">−</button>
-                            <span class="rt-vital-current rt-fate-value">{{system.fate.value}}</span>
-                            <span class="rt-vital-sep">/</span>
-                            <span class="rt-vital-max">{{system.fate.max}}</span>
-                            <button type="button" class="rt-vital-btn rt-btn-plus rt-tracker-btn" data-action="increment" data-field="system.fate.value" data-max="{{system.fate.max}}">+</button>
+
+                {{!-- Fate Points Status --}}
+                <div class="rt-vital-stat rt-vital-fate">
+                    <div class="rt-vital-stat-header">
+                        <div class="rt-vital-label">
+                            <i class="fas fa-star"></i>
+                            <span>FATE</span>
+                        </div>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-ctrl-btn" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="rt-vital-ctrl-btn" data-action="increment" data-field="system.fate.value" title="Restore">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rt-vital-stat-body">
+                        <div class="rt-fate-stars">
+                            {{#each (range 1 (add system.fate.max 1)) as |index|}}
+                                <span class="rt-fate-pip {{#if (lte index ../system.fate.value)}}rt-fate-pip--active{{/if}}">
+                                    <i class="fas fa-star"></i>
+                                </span>
+                            {{/each}}
+                        </div>
+                        <div class="rt-fate-counter">
+                            <span class="rt-fate-available">{{system.fate.value}}</span>
+                            <span class="rt-fate-total">/ {{system.fate.max}}</span>
                         </div>
                     </div>
                 </div>

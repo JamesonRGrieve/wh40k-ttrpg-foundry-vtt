@@ -41,12 +41,6 @@
                 </button>
             </div>
 
-            {{!-- Auto-Calc Badge --}}
-            <div class="rt-fatigue-auto-badge">
-                <i class="fas fa-calculator"></i>
-                <span>Threshold = TB ({{characteristics.toughness.bonus}})</span>
-            </div>
-
             {{!-- Progress Bar --}}
             <div class="rt-fatigue-bar-container">
                 <div class="rt-fatigue-bar"
@@ -112,7 +106,6 @@
                     <label class="rt-edit-field">
                         <span class="rt-edit-label">
                             Threshold
-                            <span class="rt-auto-tag">AUTO: TB</span>
                         </span>
                         <input type="number"
                                data-dtype="Number"
@@ -121,7 +114,8 @@
                                value="{{system.fatigue.max}}"
                                min="0"
                                readonly
-                               placeholder="Threshold" />
+                               placeholder="Threshold"
+                               {{#unless (isExpanded 'fatigue_details' actor)}}disabled{{/unless}} />
                     </label>
 
                     <label class="rt-edit-field">
@@ -132,7 +126,8 @@
                                name="system.fatigue.value"
                                value="{{system.fatigue.value}}"
                                min="0"
-                               placeholder="Current" />
+                               placeholder="Current"
+                               {{#unless (isExpanded 'fatigue_details' actor)}}disabled{{/unless}} />
                     </label>
                 </div>
             </div>

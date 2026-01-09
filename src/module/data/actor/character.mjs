@@ -165,15 +165,32 @@ export default class CharacterData extends CreatureTemplate {
 
   /** @override */
   static cleanData(source, options = {}) {
+    // Only clean properties that actually exist in the update
     if (source?.experience) {
-      source.experience.used = this._toInt(source.experience.used);
-      source.experience.total = this._toInt(source.experience.total);
-      source.experience.available = this._toInt(source.experience.available);
-      source.experience.spentCharacteristics = this._toInt(source.experience.spentCharacteristics);
-      source.experience.spentSkills = this._toInt(source.experience.spentSkills);
-      source.experience.spentTalents = this._toInt(source.experience.spentTalents);
-      source.experience.spentPsychicPowers = this._toInt(source.experience.spentPsychicPowers);
-      source.experience.calculatedTotal = this._toInt(source.experience.calculatedTotal);
+      if (source.experience.used !== undefined) {
+        source.experience.used = this._toInt(source.experience.used);
+      }
+      if (source.experience.total !== undefined) {
+        source.experience.total = this._toInt(source.experience.total);
+      }
+      if (source.experience.available !== undefined) {
+        source.experience.available = this._toInt(source.experience.available);
+      }
+      if (source.experience.spentCharacteristics !== undefined) {
+        source.experience.spentCharacteristics = this._toInt(source.experience.spentCharacteristics);
+      }
+      if (source.experience.spentSkills !== undefined) {
+        source.experience.spentSkills = this._toInt(source.experience.spentSkills);
+      }
+      if (source.experience.spentTalents !== undefined) {
+        source.experience.spentTalents = this._toInt(source.experience.spentTalents);
+      }
+      if (source.experience.spentPsychicPowers !== undefined) {
+        source.experience.spentPsychicPowers = this._toInt(source.experience.spentPsychicPowers);
+      }
+      if (source.experience.calculatedTotal !== undefined) {
+        source.experience.calculatedTotal = this._toInt(source.experience.calculatedTotal);
+      }
     }
     if (source?.insanity !== undefined) {
       source.insanity = this._toInt(source.insanity);

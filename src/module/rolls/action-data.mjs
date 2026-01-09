@@ -274,11 +274,7 @@ export class ActionData {
         // Use a Fate for Eye of Vengeance
         if(this.rollData.eyeOfVengeance) {
             await this.rollData.sourceActor.update({
-                system: {
-                    fate: {
-                        value: this.rollData.sourceActor.system.fate.value + 1
-                    }
-                }
+                "system.fate.value": this.rollData.sourceActor.system.fate.value + 1
             });
         }
     }

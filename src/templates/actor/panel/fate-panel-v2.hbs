@@ -71,7 +71,8 @@
                                value="{{system.fate.max}}"
                                min="0"
                                max="10"
-                               placeholder="Max" />
+                               placeholder="Max"
+                               {{#unless (isExpanded 'fate_details' actor)}}disabled{{/unless}} />
                     </label>
 
                     <label class="rt-edit-field">
@@ -83,7 +84,8 @@
                                value="{{system.fate.value}}"
                                min="0"
                                max="{{system.fate.max}}"
-                               placeholder="Current" />
+                               placeholder="Current"
+                               {{#unless (isExpanded 'fate_details' actor)}}disabled{{/unless}} />
                     </label>
                 </div>
             </div>

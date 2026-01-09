@@ -197,7 +197,7 @@
     justify-content: center;
     gap: $rt-space-sm;
     padding: $rt-space-sm $rt-space-md;
-    background: linear-gradient(180deg, var(--rt-fate-bg), rgba(196, 135, 29, 0.05));
+    background: linear-gradient(180deg, var(--rt-fate-bg), transparent);
     border: 2px solid var(--rt-fate-border);
     border-radius: 8px;
     font-size: 0.85rem;
@@ -218,10 +218,10 @@
     }
 
     &:hover {
-      background: linear-gradient(180deg, rgba(196, 135, 29, 0.25), rgba(196, 135, 29, 0.15));
+      background: linear-gradient(180deg, var(--rt-fate-bg), var(--rt-fate-bg));
       border-color: var(--rt-fate-secondary);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(196, 135, 29, 0.3);
+      box-shadow: 0 4px 12px var(--rt-fate-bg);
     }
 
     &:active {
@@ -294,7 +294,7 @@
     }
 
     &:active {
-      background: rgba(196, 135, 29, 0.2);
+      background: var(--rt-fate-bg);
     }
   }
 
@@ -388,7 +388,7 @@
     }
 
     &:hover {
-      border-color: rgba(196, 135, 29, 0.5);
+      border-color: var(--rt-fate-border);
     }
   }
 

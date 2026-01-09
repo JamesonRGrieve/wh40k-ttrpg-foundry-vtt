@@ -1,145 +1,160 @@
 // ============================================
-// Talents & Traits Panels
+// Talents & Traits Panels - Modern Dropzone Style
 // ============================================
 
-.rt-ability-panel {
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: $rt-space-md;
+.rt-panel-talents-list,
+.rt-panel-traits-list {
+  .rt-panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+  }
 }
 
-.rt-ability-header {
+.rt-talents-list,
+.rt-traits-list {
   display: flex;
-  align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm $rt-space-md;
-  background: linear-gradient(180deg, rgba($rt-accent-talents, 0.12) 0%, transparent 100%);
-  border-bottom: 1px solid $rt-border-light;
-}
-
-.rt-ability-title {
-  margin: 0;
-  flex: 1;
-  font-family: 'Modesto Condensed', serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  flex-direction: column;
+  gap: 6px;
+  min-height: 60px;
   
-  i {
-    margin-right: $rt-space-xs;
-    color: $rt-accent-talents;
-  }
-}
-
-.rt-ability-add {
-  @include rt-icon-button(24px, $rt-accent-gold, 0.7rem);
-}
-
-.rt-ability-list {
-  max-height: 350px;
-  overflow-y: auto;
-  padding: $rt-space-sm;
-  
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $rt-border-medium;
-    border-radius: 3px;
-  }
-}
-
-.rt-ability-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-xs $rt-space-sm;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
-  border-left: 3px solid $rt-accent-talents;
-  border-radius: 6px;
-  margin-bottom: 4px;
-  
-  &:hover {
-    background: $rt-bg-paper;
-    border-color: $rt-border-medium;
-    border-left-color: $rt-accent-talents;
+  // Dropzone styling when empty or dragging
+  &[data-drop-zone] {
+    position: relative;
+    transition: all 0.3s ease;
     
-    .rt-ability-actions {
-      opacity: 1;
+    &.drop-valid {
+      background: linear-gradient(135deg, 
+        rgba($rt-accent-talents, 0.08) 0%, 
+        rgba($rt-accent-talents, 0.02) 100%);
+      border: 2px dashed rgba($rt-accent-talents, 0.5);
+      border-radius: 6px;
+      padding: $rt-space-sm;
+      min-height: 100px;
+    }
+    
+    &.drop-invalid {
+      background: linear-gradient(135deg, 
+        rgba(139, 0, 0, 0.05) 0%, 
+        transparent 100%);
+      border: 2px dashed rgba(139, 0, 0, 0.3);
+      border-radius: 6px;
+      padding: $rt-space-sm;
     }
   }
 }
 
-.rt-ability-thumb {
-  width: 28px;
-  height: 28px;
-  border: 2px solid $rt-border-light;
-  border-radius: 4px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.rt-ability-name {
-  background: none;
-  border: none;
-  padding: 0;
-  text-align: left;
-  font-size: 0.95rem;
-  color: var(--color-text-primary);
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.rt-talent-card,
+.rt-trait-card {
+  background: var(--rt-panel-bg-solid);
+  border: 1px solid var(--rt-border-color-light);
+  border-left: 3px solid $rt-accent-talents;
+  border-radius: 6px;
+  padding: $rt-space-sm;
+  transition: all 0.2s ease;
+  cursor: grab;
   
   &:hover {
-    color: $rt-accent-talents;
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    border-left-color: $rt-accent-talents;
+    transform: translateX(2px);
+    box-shadow: 0 2px 6px var(--rt-shadow-soft);
+  }
+  
+  &.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+  
+  .rt-card-header {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-xs;
+  }
+  
+  .rt-card-icon {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  
+  .rt-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  
+  .rt-card-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    &:hover {
+      color: $rt-accent-talents;
+    }
+  }
+  
+  .rt-card-meta {
+    font-size: 0.7rem;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  
+  .rt-card-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+  }
+  
+  .rt-card-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--rt-text-muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    
+    &:hover {
+      color: var(--rt-text-dark);
+      background: var(--rt-panel-bg-translucent);
+      border-color: var(--rt-border-color-light);
+    }
+    
+    &.rt-btn-danger:hover {
+      color: var(--rt-wounds-secondary);
+      background: var(--rt-wounds-bg);
+      border-color: var(--rt-wounds-border);
+    }
   }
 }
 
-.rt-ability-pill {
-  padding: 3px 8px;
-  background: rgba($rt-accent-gold, 0.15);
-  border: 2px solid rgba($rt-accent-gold, 0.4);
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: $rt-accent-gold;
-  flex-shrink: 0;
-}
-
-.rt-ability-actions {
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-
-.rt-ability-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  color: $rt-text-muted;
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 4px;
-  
-  &:hover {
-    color: var(--color-text-primary);
-    background: $rt-bg-subtle;
-    border-color: $rt-border-light;
-  }
-}
-
-.rt-traits-panel {
-  .rt-ability-row {
+.rt-traits-list {
+  .rt-trait-card {
     border-left-color: $rt-accent-equipment;
+    
+    .rt-card-name:hover {
+      color: $rt-accent-equipment;
+    }
   }
   
-  .rt-ability-name:hover {
-    color: $rt-accent-equipment;
+  &[data-drop-zone].drop-valid {
+    background: linear-gradient(135deg, 
+      rgba($rt-accent-equipment, 0.08) 0%, 
+      rgba($rt-accent-equipment, 0.02) 100%);
+    border-color: rgba($rt-accent-equipment, 0.5);
   }
 }
 
