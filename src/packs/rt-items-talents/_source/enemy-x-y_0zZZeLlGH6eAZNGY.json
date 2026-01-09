@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: General, Social, Unaligned",
-    "effect": "Character is despised and possibly hunted by a specific group or organisation, suffering -10*X to Fellowship Whenever interacting with them. This Talent doesn't cost anything, and can't be taken. It is awarded by the GM. Can be awarded multiple times for different or same groups, count X seperately for each seperate group. Groups include: Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Astartes, Adeptus Mechanicus, Adepta Sororitas, Adeptus Titanicus, Administratum, Astropaths, Dark Mechanicus, Daemon Prince, Ecclesiarchy, Chartist Captains, Heretical Cult, Imperial Navy, Inquisition, Navigators, Officio Assassinorum, Planetary Defence Force, Planetary Governors or Warlords, Rogue Traders, Schola Progenium, Scholastica Psykana, Traitor Legions.",
+    "category": "social",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character is despised and possibly hunted by a specific group or organisation, suffering -10*X to Fellowship Whenever interacting with them. This Talent doesn't cost anything, and can't be taken. It is awarded by the GM. Can be awarded multiple times for different or same groups, count X seperately for each seperate group. Groups include: Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Astartes, Adeptus Mechanicus, Adepta Sororitas, Adeptus Titanicus, Administratum, Astropaths, Dark Mechanicus, Daemon Prince, Ecclesiarchy, Chartist Captains, Heretical Cult, Imperial Navy, Inquisition, Navigators, Officio Assassinorum, Planetary Defence Force, Planetary Governors or Warlords, Rogue Traders, Schola Progenium, Scholastica Psykana, Traitor Legions.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character is despised and possibly hunted by a specific group or organisation, suffering -10*X to Fellowship Whenever interacting with them. This Talent doesn't cost anything, and can't be taken. It is awarded by the GM. Can be awarded multiple times for different or same groups, count X seperately for each seperate group. Groups include: Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Astartes, Adeptus Mechanicus, Adepta Sororitas, Adeptus Titanicus, Administratum, Astropaths, Dark Mechanicus, Daemon Prince, Ecclesiarchy, Chartist Captains, Heretical Cult, Imperial Navy, Inquisition, Navigators, Officio Assassinorum, Planetary Defence Force, Planetary Governors or Warlords, Rogue Traders, Schola Progenium, Scholastica Psykana, Traitor Legions.</p>",
     "aptitudes": [
       "General",
       "Social",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

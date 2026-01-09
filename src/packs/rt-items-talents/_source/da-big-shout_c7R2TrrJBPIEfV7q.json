@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork Weirdboy, The Power of Da Waaagh, Psy Rating 2, Willpower 35",
-    "effect": "Weirdboy gains Astrotelepathy Psychic Technique, but can only send messages up to one word per point of Willpower Bonus. Character (and optionally, player) must shout this message as loud as possible whilst making Focus Power Test.",
+    "category": "knowledge",
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>Weirdboy gains Astrotelepathy Psychic Technique, but can only send messages up to one word per point of Willpower Bonus. Character (and optionally, player) must shout this message as loud as possible whilst making Focus Power Test.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Weirdboy gains Astrotelepathy Psychic Technique, but can only send messages up to one word per point of Willpower Bonus. Character (and optionally, player) must shout this message as loud as possible whilst making Focus Power Test.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Weirdboy, The Power of Da Waaagh, Psy Rating 2, Willpower 35",
+      "characteristics": {
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

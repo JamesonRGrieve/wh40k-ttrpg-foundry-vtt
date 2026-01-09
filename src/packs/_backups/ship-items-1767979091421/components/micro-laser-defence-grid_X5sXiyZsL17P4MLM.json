@@ -1,0 +1,29 @@
+{
+  "name": "Micro Laser Defence Grid",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 2,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "An extremely upscaled set of thousands of digi-lasers. Increases Turret Rating by 2.  Component Can't be Damaged or Destroyed Except from a Critical Hit.",
+    "availability": "near-unique",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>An extremely upscaled set of thousands of digi-lasers. Increases Turret Rating by 2.  Component Can't be Damaged or Destroyed Except from a Critical Hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "X5sXiyZsL17P4MLM"
+}

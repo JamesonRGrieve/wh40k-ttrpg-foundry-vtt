@@ -3,28 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Perception 30\nAptitudes: Perception, FIeldcraft, Tzeentch",
-    "effect": "Character is considered to be awake even whilst asleep for purposes of Awareness Tests. However their sleep is more easily interrupted.",
+    "category": "general",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character is considered to be awake even whilst asleep for purposes of Awareness Tests. However their sleep is more easily interrupted.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Character is considered to be awake even whilst asleep for purposes of Awareness Tests. However their sleep is more easily interrupted.</p>",
     "aptitudes": [
       "Perception",
       "FIeldcraft",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Perception 30",
+      "characteristics": {
+        "per": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

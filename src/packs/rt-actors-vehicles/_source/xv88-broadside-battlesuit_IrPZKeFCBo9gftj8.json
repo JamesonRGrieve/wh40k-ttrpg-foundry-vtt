@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Battlesuit",
-    "size": "-",
-    "tacticalSpeed": "-",
-    "cruisingSpeed": "-",
-    "maneuverability": "-",
-    "frontArmour": "Enormous (+20)",
-    "sideArmour": "15 All",
-    "rearArmour": "Wearer",
-    "structuralIntegrity": "None",
-    "crew": "3 Hardpoints for Weapons and/or Support Systems\nRecommended Loadout: Twin-Linked Heavy Rail Rifle/Twin-Linked High-Yield Missile Pod, Twin-Linked Smart Missile System/Twin-Linked Plasma Rifle, Target Lock/Velocity Tracker",
-    "passengers": "Battle Suit Strength: 65\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker",
-    "cargo": "Near Unique",
-    "availability": "RT: Tau Character Guide",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "nearunique"
   },
   "effects": [],
   "items": [],

@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau, Fellowship 45, New Allies",
-    "effect": "Once per session, the explorer can spend a Fate Point and gain the benefits of a Talent an ally possess, or grant the benefits of a Talent they possess to an ally. Neither the ally nor the character must meet any requirements the Talent possesses. This effect persists until the end of the encounter.",
+    "category": "knowledge",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Once per session, the explorer can spend a Fate Point and gain the benefits of a Talent an ally possess, or grant the benefits of a Talent they possess to an ally. Neither the ally nor the character must meet any requirements the Talent possesses. This effect persists until the end of the encounter.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Once per session, the explorer can spend a Fate Point and gain the benefits of a Talent an ally possess, or grant the benefits of a Talent they possess to an ally. Neither the ally nor the character must meet any requirements the Talent possesses. This effect persists until the end of the encounter.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau, Fellowship 45, New Allies",
+      "characteristics": {
+        "fel": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

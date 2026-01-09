@@ -1,0 +1,27 @@
+{
+  "name": "Vortex Torpedo",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Topedo Warhead",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "damage": "2d10+5",
+    "strength": "-",
+    "critRating": "6+",
+    "range": 60,
+    "availability": "unique",
+    "notes": "Reroll (5). Ignores armour, also does +1d5 Morale damage. If torpedo tube damaged while holding this, does 3 additional critical hits to you and destroys torpedo tubes. If upkeep of torpedos is failed by 2 or more degrees, torpedos are defective, and explode when DM chooses (doesn't destroy torpedo tubes). Refer to Torpedo Rules block.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 2d10+5</p><p><b>Notes:</b> Reroll (5). Ignores armour, also does +1d5 Morale damage. If torpedo tube damaged while holding this, does 3 additional critical hits to you and destroys torpedo tubes. If upkeep of torpedos is failed by 2 or more degrees, torpedos are defective, and explode when DM chooses (doesn't destroy torpedo tubes). Refer to Torpedo Rules block.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "V9S9Aa8LECemYDub"
+}

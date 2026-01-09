@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Rector Erudite Advanced Specialty (300xp)",
-    "effect": "When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.",
+    "category": "knowledge",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Rector Erudite Advanced Specialty (300xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

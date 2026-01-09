@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "intelligence",
     "descriptor": "The Solving of problems, such as through calculating equations, deciphering puzzles, infering missing information, or preparing reasoned arguments in debates. Can also be used to know when to gamble, and to decode complex ciphers and codes.",
     "uses": "Use: Thinking Logically, Solving Puzzles, dissecting information rationally and quickly. Detection of patterns, etc.\nSpecial Use: Gambling: Use Logic when gambling, make Opposed Test with Logic, character with most Degrees of Success/Least Failiure Wins. If playing dishonestly, use Deceive or Sleight of Hand.\nCiphers and Decoding: Use Logic Skill to decode Ciphers and Codes, takes a long time (days/weeks), should be at the easiest a -10 Test unless an available decoding Key or work partially done to start with.",
     "useTime": "1 Minute or longer for complex problems",
     "description": {
       "value": "<p>The Solving of problems, such as through calculating equations, deciphering puzzles, infering missing information, or preparing reasoned arguments in debates. Can also be used to know when to gamble, and to decode complex ciphers and codes.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Intelligence",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

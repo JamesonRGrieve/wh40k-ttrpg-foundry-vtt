@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Fellowship 45, Infamy 30\nAptitudes: Unaligned",
-    "effect": "Character acquires a Minion of Chaos, such as a wyrd sorcerer, trained traitor Guardsman, or alien Mercenary. Talent can be taken more than once, each time adding another Minion.",
+    "category": "general",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character acquires a Minion of Chaos, such as a wyrd sorcerer, trained traitor Guardsman, or alien Mercenary. Talent can be taken more than once, each time adding another Minion.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character acquires a Minion of Chaos, such as a wyrd sorcerer, trained traitor Guardsman, or alien Mercenary. Talent can be taken more than once, each time adding another Minion.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Fellowship 45, Infamy 30",
+      "characteristics": {
+        "fel": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

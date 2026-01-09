@@ -1,0 +1,27 @@
+{
+  "name": "Master of the Vox",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Keep clear and maintain vox communications.",
+    "careerPreferences": "Astropath Transcendant, Seneschal or Void-master.",
+    "subordinates": "Communication and Cryptography Officers, vox-maintenance personnel",
+    "importantSkills": "Ciphers (Rogue Trader), Secret Tongue (Rogue Trader), Trade (Cryptographer)",
+    "effect": "+20 to \"Jam Communications\" Extended Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Keep clear and maintain vox communications.</p><p><b>Effect:</b> +20 to \"Jam Communications\" Extended Action</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sN1LcJWtSv0eC4fI"
+}

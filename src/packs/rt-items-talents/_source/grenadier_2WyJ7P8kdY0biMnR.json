@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Ballistic Skill 35\nAptitudes: Ballistic Skill, Finesse",
-    "effect": "When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.",
+    "category": "combat",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Ballistic Skill 35",
+      "characteristics": {
+        "bs": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

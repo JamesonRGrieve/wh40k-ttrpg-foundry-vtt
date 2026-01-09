@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; 1+ Cybernetic Limbs, Tech-Use \nAptitudes: Intelligence, Tech",
-    "effect": "As a Half Action, character can spend Fate Point and make +0 Tech-Use Test. If succesful they gain Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on Test. (if they have the trait, increase by X instead). The bonus lasts until the character decides to end it, which can be done at any time. However, at the end of each Round in which it persists, they gain 1 Fatigue.",
+    "category": "knowledge",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As a Half Action, character can spend Fate Point and make +0 Tech-Use Test. If succesful they gain Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on Test. (if they have the trait, increase by X instead). The bonus lasts until the character decides to end it, which can be done at any time. However, at the end of each Round in which it persists, they gain 1 Fatigue.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>As a Half Action, character can spend Fate Point and make +0 Tech-Use Test. If succesful they gain Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on Test. (if they have the trait, increase by X instead). The bonus lasts until the character decides to end it, which can be done at any time. However, at the end of each Round in which it persists, they gain 1 Fatigue.</p>",
     "aptitudes": [
       "Intelligence",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "1+ Cybernetic Limbs, Tech-Use",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

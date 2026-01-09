@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Stealth +10 \nAptitudes: Ballistic Skill, Fieldcraft",
-    "effect": "Whenever character makes a Standard Ranged Attack or Ranged Called Shot Action against an enemy whilst they are in cover or otherwise concealed, they can make a +0 Opposed Stealth Test vs Awareness of any foes who may hear or see the shot. If successful, they remain hidden from enemies. Test may be easier or harder depending on the noise the weapon makes and the environment they are in.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever character makes a Standard Ranged Attack or Ranged Called Shot Action against an enemy whilst they are in cover or otherwise concealed, they can make a +0 Opposed Stealth Test vs Awareness of any foes who may hear or see the shot. If successful, they remain hidden from enemies. Test may be easier or harder depending on the noise the weapon makes and the environment they are in.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Whenever character makes a Standard Ranged Attack or Ranged Called Shot Action against an enemy whilst they are in cover or otherwise concealed, they can make a +0 Opposed Stealth Test vs Awareness of any foes who may hear or see the shot. If successful, they remain hidden from enemies. Test may be easier or harder depending on the noise the weapon makes and the environment they are in.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Fieldcraft"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Stealth +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

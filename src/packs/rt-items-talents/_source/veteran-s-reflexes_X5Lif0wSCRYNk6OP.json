@@ -3,24 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tau Battlesuit Pilot Alternative Advance, 1000xp, Agility 45+, Talented(Pilot)",
-    "effect": "Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.",
+    "category": "leadership",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau Battlesuit Pilot Alternative Advance, 1000xp, Agility 45+, Talented(Pilot)",
+      "characteristics": {
+        "ag": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

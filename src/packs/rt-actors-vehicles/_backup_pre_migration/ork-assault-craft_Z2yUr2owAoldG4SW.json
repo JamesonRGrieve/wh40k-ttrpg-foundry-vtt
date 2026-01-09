@@ -1,0 +1,54 @@
+{
+  "name": "Ork Assault Craft",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "28m/ 18AU's",
+    "faction": "",
+    "subfaction": "",
+    "type": "skimmer",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 12,
+        "descriptor": "Massive (+30)"
+      },
+      "side": {
+        "value": 0,
+        "descriptor": "Front 50, Side 45, Rear 25"
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": "Ork Pilot, Ork Co-Pilot, Grot Gunners."
+      }
+    },
+    "speed": {
+      "cruising": -10,
+      "tactical": 2,
+      "notes": ""
+    },
+    "crew": {
+      "required": 3,
+      "notes": "Ork Pilot, Ork Co-Pilot, Grot Gunners."
+    },
+    "passengers": 0,
+    "manoeuverability": 50,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 50,
+      "value": 50,
+      "critical": 0
+    },
+    "weapons": "<p>Gunners: 4x Bigga Big Shoota Turrets(All, Range 400m (4 AU's), S/3/10, 2d10+10 I, Pen 5, Clip 1000, Reload -, Inaccurate, Unreliable, Twin-Linked.</p>",
+    "specialRules": "<p>Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can affix to Spacecraft ship hull as +0 Pilot(Space Craft) Test and spend 4 Full Rounds to burn through. Has Craft Rating of +8 for Attack Craft Purposes, squadron size 15. Can only acquire if allied with Ork Freebooters.</p>",
+    "traitsText": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can affix to Spacecraft ship hull as +0 Pilot(Space Craft) Test and spend 4 Full Rounds to burn through. Has Craft Rating of +8 for Attack Craft Purposes, squadron size 15. Can only acquire if allied with Ork Freebooters.",
+    "availability": "veryrare",
+    "source": "RT: Battlefleet Koronus"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Z2yUr2owAoldG4SW"
+}

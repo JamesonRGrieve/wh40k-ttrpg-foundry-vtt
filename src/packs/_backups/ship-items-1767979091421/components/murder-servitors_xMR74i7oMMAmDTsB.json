@@ -1,0 +1,29 @@
+{
+  "name": "Murder-Servitors",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "A stock of terrifyingly armed servitors. When they are used, +20 to Opposed Command Tests during Hit and Run actions, and may choose any result between 1 and 6 when determining Critical Hit inflicted by Hit and Run Action. Only one per vessel.",
+    "availability": "rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>A stock of terrifyingly armed servitors. When they are used, +20 to Opposed Command Tests during Hit and Run actions, and may choose any result between 1 and 6 when determining Critical Hit inflicted by Hit and Run Action. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xMR74i7oMMAmDTsB"
+}

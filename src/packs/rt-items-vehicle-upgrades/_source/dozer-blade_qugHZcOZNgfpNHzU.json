@@ -3,22 +3,24 @@
   "type": "vehicleUpgrade",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "type": "Standard",
-    "allowedVehicles": "Any Tracked Vehicle",
-    "difficulty": "-10",
     "descriptionText": "Add +4 Armour to Front Face, Treat Heavy Rubble and other detritus as Open Ground as long as moving at Tactical Speed or less each turn. Can be used as an Improvised Weapon.\nMutually Exclusive with Minesweeper.",
-    "availability": "rare",
-    "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Add +4 Armour to Front Face, Treat Heavy Rubble and other detritus as Open Ground as long as moving at Tactical Speed or less each turn. Can be used as an Improvised Weapon.\nMutually Exclusive with Minesweeper.</p>"
     },
+    "availability": "rare",
+    "source": "OW: Shield of Humanity",
     "installCost": 0,
     "modifiers": {
       "speed": 0,
       "manoeuvrability": 0,
       "armour": 0,
       "integrity": 0
-    }
+    },
+    "upgradeType": "standard",
+    "difficulty": -10,
+    "allowedVehicles": "Any Tracked Vehicle",
+    "identifier": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

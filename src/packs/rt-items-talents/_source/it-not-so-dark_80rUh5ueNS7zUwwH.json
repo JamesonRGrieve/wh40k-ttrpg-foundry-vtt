@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Willpower 40, is an Ogryn\nAptitudes: Willpower, General",
-    "effect": "Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. \nAdditionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.",
+    "category": "leadership",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. \nAdditionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. \nAdditionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.</p>",
     "aptitudes": [
       "Willpower",
       "General"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Willpower 40, is an Ogryn",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

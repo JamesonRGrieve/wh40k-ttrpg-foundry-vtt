@@ -3,28 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Ballistic Skill 35\nAptitudes: Ballistic Skill, Finesse, Unaligned",
-    "effect": "Character suffers no penalties for Ballistic Skill Tests at long or extreme ranges.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character suffers no penalties for Ballistic Skill Tests at long or extreme ranges.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Character suffers no penalties for Ballistic Skill Tests at long or extreme ranges.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 35",
+      "characteristics": {
+        "bs": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

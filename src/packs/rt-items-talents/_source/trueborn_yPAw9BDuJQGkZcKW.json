@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Dark Eldar, Character Creation Only.",
-    "effect": "This character was born naturally as opposed to the disgusting wretches born through Amniotic Tanks and Vitae Wombs. The Character can purchase Fellowship Advances at a rate of (1st 100xp, 2nd 250xp, 3rd 500xp, 4th 1000xp)\nThis Talent can only be purchased at character creation, and never afterwards.",
+    "category": "social",
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>This character was born naturally as opposed to the disgusting wretches born through Amniotic Tanks and Vitae Wombs. The Character can purchase Fellowship Advances at a rate of (1st 100xp, 2nd 250xp, 3rd 500xp, 4th 1000xp)\nThis Talent can only be purchased at character creation, and never afterwards.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>This character was born naturally as opposed to the disgusting wretches born through Amniotic Tanks and Vitae Wombs. The Character can purchase Fellowship Advances at a rate of (1st 100xp, 2nd 250xp, 3rd 500xp, 4th 1000xp)\nThis Talent can only be purchased at character creation, and never afterwards.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Dark Eldar, Character Creation Only.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

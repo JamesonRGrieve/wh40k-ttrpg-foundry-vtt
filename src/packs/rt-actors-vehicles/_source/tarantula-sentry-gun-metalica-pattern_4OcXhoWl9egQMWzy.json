@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Gun Platform",
-    "size": "N/A",
-    "tacticalSpeed": "N/A",
-    "cruisingSpeed": "+0",
-    "maneuverability": "12",
-    "frontArmour": "Hulking (+10)",
-    "sideArmour": "Front 12\nSide 10\nRear 10",
-    "rearArmour": "None (Automated)\nHas BS 35, Ag 40, Per 30, and Awareness +10",
-    "structuralIntegrity": "None",
-    "crew": "Turret, one of: Twin-Linked Heavy Bolter, or Twin-Linked Lascannon\nTwin-linked lascannon (300m; S/–/–; 5d10+10 E; Pen 10; Clip 80; Reload 2 Full; Proven [3], Twin-Linked)\nTwin-linked heavy bolter (150m; –/–/6; 1D10+8 X; Pen 5; Clip 240; Reload Full; Tearing, Twin-Linked)",
-    "passengers": "Traits: Immobile, Enclosed, Sentry\nSpecial Rules: Has Preysense Sight (Ignore Penalties and +20 Perception in Darkness) and Targeter (Reduce Test Difficulty by 1 step). Controller Swaps Sentry mode with +10 Tech-Use, fail jams but loses no ammo.\nPoint Defence Mode: Functions as Permenant Overwatch with 90 Fire Arc.\nSentry Mode: Area of Infleunce up to half weapon range. Can Fire in any direction and rolls for initiative as if an NPC.",
-    "cargo": "Very Rare",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "veryrare"
   },
   "effects": [],
   "items": [],

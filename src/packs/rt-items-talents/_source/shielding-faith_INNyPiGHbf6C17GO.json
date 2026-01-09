@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - SoB) (T1)",
-    "requirements": "Tier 1: Sister of Battle E.Adv, Deny the Witch\nAptitudes: Willpower, Defence",
-    "effect": "When using the Deny the Witch talent to make Evasion reactions against Psychic Powers, the Sister can spend a Fate Point to automatically pass the evasion test with Willpower Bonus Degrees of Success, as well as force the attacking psyker to make a Fear test against Fear 1 (+0 Fear Test).",
+    "category": "combat",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When using the Deny the Witch talent to make Evasion reactions against Psychic Powers, the Sister can spend a Fate Point to automatically pass the evasion test with Willpower Bonus Degrees of Success, as well as force the attacking psyker to make a Fear test against Fear 1 (+0 Fear Test).</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When using the Deny the Witch talent to make Evasion reactions against Psychic Powers, the Sister can spend a Fate Point to automatically pass the evasion test with Willpower Bonus Degrees of Success, as well as force the attacking psyker to make a Fear test against Fear 1 (+0 Fear Test).</p>",
     "aptitudes": [
       "Willpower",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Sister of Battle E.Adv, Deny the Witch",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

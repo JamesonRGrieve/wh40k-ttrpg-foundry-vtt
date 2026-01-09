@@ -3,24 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Fel 50, Peer (X)",
-    "effect": "Additional +10 (+20 with peer) to Fellowship Tests with relevent Group. Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers. Ork Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.",
+    "category": "social",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Additional +10 (+20 with peer) to Fellowship Tests with relevent Group. Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers. Ork Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Additional +10 (+20 with peer) to Fellowship Tests with relevent Group. Academics, Sororitas, Arbites, Mechanicus, Administratum, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Inquistion, Military, Navigators, Nobility, Rogue Trader, Underworld, Workers. Ork Groups Include: Bad Moons, Blood Axes, Death Skulls, Evil Suns, Snakebites, Mekboyz, Painboyz, Runtherdz, Freebooters.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fel 50, Peer (X)",
+      "characteristics": {
+        "fel": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

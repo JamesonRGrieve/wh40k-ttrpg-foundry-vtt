@@ -3,24 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Defender of the Fourth Cipher Alternative Advance, 500xp, Per 35+, Paranoia",
-    "effect": "Once per session, the character can choose a single target individual within line of sight as the target of their vigil. They may only target one such character at a time. Once per encounter they may make a Standard Attack against this target as a Reaction whilst gaining the benefits of a Full Action Aim (+20 to WS/BS Test) for this attack.",
+    "category": "combat",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Once per session, the character can choose a single target individual within line of sight as the target of their vigil. They may only target one such character at a time. Once per encounter they may make a Standard Attack against this target as a Reaction whilst gaining the benefits of a Full Action Aim (+20 to WS/BS Test) for this attack.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": false,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Once per session, the character can choose a single target individual within line of sight as the target of their vigil. They may only target one such character at a time. Once per encounter they may make a Standard Attack against this target as a Reaction whilst gaining the benefits of a Full Action Aim (+20 to WS/BS Test) for this attack.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Defender of the Fourth Cipher Alternative Advance, 500xp, Per 35+, Paranoia",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

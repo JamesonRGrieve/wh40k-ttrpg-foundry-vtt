@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Spacecraft",
-    "size": "25m / 14AU's",
-    "tacticalSpeed": "2000kph/  5VU's",
-    "cruisingSpeed": "+0",
-    "maneuverability": "45",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 40, \nSide 35, \nRear 30",
-    "rearArmour": "Pilot, Co-Pilot (Optional), Enginseer, 2 Gunners.",
-    "structuralIntegrity": "Living Quarters for 6 and Space for 30 People or Eqv. Cargo.",
-    "crew": "Pilot: 2x Long-Barrelled Autocannons (Front, 450m/5AU, Heavy, S/2/5, 4d10+5 I, Pen 4, Clip 500, Reload 2 Full)\nGunner: 2x Twin-Linked Heavy Bolters (Front-Left or Front-Right, 120m/2AU, Heavy, -/-/10, 2d10 X, Pen 5, Clip 400, Reload 3 Full).",
-    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.",
-    "cargo": "Very Rare",
-    "availability": "RT: Into the Storm",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "veryrare"
   },
   "effects": [],
   "items": [],

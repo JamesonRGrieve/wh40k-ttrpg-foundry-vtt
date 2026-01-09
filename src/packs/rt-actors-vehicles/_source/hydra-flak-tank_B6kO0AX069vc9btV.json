@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "15m",
-    "tacticalSpeed": "50kph",
-    "cruisingSpeed": "+0",
-    "maneuverability": "40",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 30\nSide 18\nRear 16",
-    "rearArmour": "Commander, Driver, Comms Op, Gunner, Loader.",
-    "structuralIntegrity": "None",
-    "crew": "Turret: 2x Hydra Autocannons  (1500m; S/–/6; 3d10+8 I; Pen 6; Clip 200; Reload 4 Full; Reliable, Tearing, Twin-Linked)\nHull, one of: Front Facing Heavy Bolter, Heavy Flamer\nPintle (Optional), one of: Heavy Stubber, Storm Bolter\n---\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)",
-    "passengers": "Traits: Anti-Air (Advanced), Enclosed, Tracked Vehicle\nSpecial Rules: When successfully hitting an enemy Aircraft with Autocannons, count as having performed a Half-Action Aim (+10 to hit) for all subsequent hits against that aircraft until aircraft is destroyed, new target fired at, or firing stopped. Both Autocannons must fire at same target, which is done as a single Attack Action.",
-    "cargo": "Rare",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": 5,
+    "faction": "",
+    "subfaction": "",
+    "type": "tank",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "rare"
   },
   "effects": [],
   "items": [],

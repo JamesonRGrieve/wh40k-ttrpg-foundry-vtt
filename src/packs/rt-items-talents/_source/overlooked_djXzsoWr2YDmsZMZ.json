@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Perception 35, Unremarkable \nAptitudes: Perception, Defence",
-    "effect": "Any Enemy the character has not already attacked this encounter must pass a +20 Intelligence Test to attack them so long as there is a friendly character with a Size Trait of a higher value within 5 metres. If a foe fails this test, they ignore the character and favour the larger target instead.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Any Enemy the character has not already attacked this encounter must pass a +20 Intelligence Test to attack them so long as there is a friendly character with a Size Trait of a higher value within 5 metres. If a foe fails this test, they ignore the character and favour the larger target instead.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Any Enemy the character has not already attacked this encounter must pass a +20 Intelligence Test to attack them so long as there is a friendly character with a Size Trait of a higher value within 5 metres. If a foe fails this test, they ignore the character and favour the larger target instead.</p>",
     "aptitudes": [
       "Perception",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Perception 35, Unremarkable",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

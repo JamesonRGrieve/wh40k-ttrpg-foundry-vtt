@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "perception",
     "descriptor": "The Active, concious ability to investigate and discover things about ones surroundings, as opposed to Awareness' Passive, subconcious detection. Used for finding hidden things or people.",
     "uses": "Opposed Skill test vs Concealment to cover a small room or area to try to find someone or something.\nUse: Inspection, Extended Test to find hidden stores, contraband, evidence, etc on a vehicle, starship, or person varies in time taken based on size.",
     "useTime": "1 Minute for basic search, more for larger area.",
     "description": {
       "value": "<p>The Active, concious ability to investigate and discover things about ones surroundings, as opposed to Awareness' Passive, subconcious detection. Used for finding hidden things or people.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Perception",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

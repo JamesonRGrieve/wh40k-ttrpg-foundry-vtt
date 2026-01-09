@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "Allows use of Flame weapons without -20 Penalty: Groups: Universal (All non Exotic weapons with flame quality)",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Allows use of Flame weapons without -20 Penalty: Groups: Universal (All non Exotic weapons with flame quality)</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Allows use of Flame weapons without -20 Penalty: Groups: Universal (All non Exotic weapons with flame quality)</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "perception",
     "descriptor": "Determining Honesty, motives, personality, or temprament of a person. Noticing small details or characteristics that may pass unseen. For auspex returns, determining A Vessel's mass, velocity, etc.",
     "uses": "Used to tell if someone is lying, discerning information and conclusions from a complex report, interpreting Augur or Auspx readings and determining what they mean.",
     "useTime": "Half Action",
     "description": {
       "value": "<p>Determining Honesty, motives, personality, or temprament of a person. Noticing small details or characteristics that may pass unseen. For auspex returns, determining A Vessel's mass, velocity, etc.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Perception",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

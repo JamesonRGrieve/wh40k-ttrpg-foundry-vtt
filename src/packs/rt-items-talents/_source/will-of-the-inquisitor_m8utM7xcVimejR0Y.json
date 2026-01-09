@@ -3,27 +3,30 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Inq) (T3)",
-    "requirements": "Tier 3: Inquisitor E.Adv, Fated, Intelligence 50, Perception 50, Willpower 55.\nAptitudes: Knowledge, Willpower",
-    "effect": "Before rolling the d100 when making a test. The Inquisitor can spend a Fate Point to count as having rolled a 01 on that roll.",
+    "category": "general",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Before rolling the d100 when making a test. The Inquisitor can spend a Fate Point to count as having rolled a 01 on that roll.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Before rolling the d100 when making a test. The Inquisitor can spend a Fate Point to count as having rolled a 01 on that roll.</p>",
     "aptitudes": [
       "Knowledge",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Inquisitor E.Adv, Fated, Intelligence 50, Perception 50, Willpower 55.",
+      "characteristics": {
+        "int": 50,
+        "per": 50,
+        "wp": 55
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

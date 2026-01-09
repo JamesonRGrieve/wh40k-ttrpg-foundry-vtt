@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Not Rogue Trader, Kroot, or Ork. RT Rank 4+. Fellowship 30+, and Intelligence or Willpower 40+. Worked closely with relevent political body, such as Noble House, Rogue Trader Dynasty, Navigator House, etc.",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Hostile Acquisitions \n(Page 38)",
     "description": {
       "value": "<p>The House Operative works for their house, to further its gains, or keep whoever they are working with in line with the intent of their house. Such people are trained early in their lives to act out wider scale schemes and plots to which they may play only a small part of.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the House Operative\nAllows for the purchasing of the Unique Talent Operative Conditioning</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the House Operative\nAllows for the purchasing of the Unique Talent Operative Conditioning",
-    "level": null
+    "level": 0,
+    "benefit": "<p>The House Operative works for their house, to further its gains, or keep whoever they are working with in line with the intent of their house. Such people are trained early in their lives to act out wider scale schemes and plots to which they may play only a small part of.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the House Operative\nAllows for the purchasing of the Unique Talent Operative Conditioning</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

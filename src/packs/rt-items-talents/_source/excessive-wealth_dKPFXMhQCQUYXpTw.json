@@ -3,18 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Infamy 40\nAptitudes: Slaanesh",
-    "effect": "Character adds +10 to their Infamy when making Acquisition Tests using Infamy.",
+    "category": "general",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character adds +10 to their Infamy when making Acquisition Tests using Infamy.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character adds +10 to their Infamy when making Acquisition Tests using Infamy.</p>",
     "aptitudes": [
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Infamy 40",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

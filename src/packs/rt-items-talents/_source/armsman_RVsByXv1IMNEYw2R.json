@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Weapons Specialist Advanced Specialty\n250xp",
-    "effect": "If Comrade is in Cohesion, Character can switch weapons as a Free Action.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>If Comrade is in Cohesion, Character can switch weapons as a Free Action.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": false,
     "isRollable": false,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>If Comrade is in Cohesion, Character can switch weapons as a Free Action.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Weapons Specialist Advanced Specialty",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

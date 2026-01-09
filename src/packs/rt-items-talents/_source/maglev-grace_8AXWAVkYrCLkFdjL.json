@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

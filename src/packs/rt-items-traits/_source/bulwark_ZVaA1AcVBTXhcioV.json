@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Ogryn",
-    "descriptionText": "",
-    "effects": "",
     "source": "OW: Shield of Humanity (Page 62)",
     "description": {
       "value": "<p>Brutal strength is in the Ogryn's very DNA, they tower over the \"Litte 'Uns\", and can even give the mighty Space Marines a challenging opponent in terms of raw might. The Bulwark exemplify these traits utterly, becoming a terrifying force of muscle and rage.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Bulwark. Apt: Fieldcraft, Offence, Strength, Toughness, Weapon Skill, Willpower\nAdd. Equipment: Good Mace-Fist or Good Great Weapon or Best Warhammer, 2 Frag Grenades. Gain Talents: Frenzy+Sound Constitution or Vengeful Protector. \nCan Purchase Unique Talents: Escalating Range and Shattering Blow. </p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Bulwark. Apt: Fieldcraft, Offence, Strength, Toughness, Weapon Skill, Willpower\nAdd. Equipment: Good Mace-Fist or Good Great Weapon or Best Warhammer, 2 Frag Grenades. Gain Talents: Frenzy+Sound Constitution or Vengeful Protector. \nCan Purchase Unique Talents: Escalating Range and Shattering Blow. ",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Brutal strength is in the Ogryn's very DNA, they tower over the \"Litte 'Uns\", and can even give the mighty Space Marines a challenging opponent in terms of raw might. The Bulwark exemplify these traits utterly, becoming a terrifying force of muscle and rage.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Bulwark. Apt: Fieldcraft, Offence, Strength, Toughness, Weapon Skill, Willpower\nAdd. Equipment: Good Mace-Fist or Good Great Weapon or Best Warhammer, 2 Frag Grenades. Gain Talents: Frenzy+Sound Constitution or Vengeful Protector. \nCan Purchase Unique Talents: Escalating Range and Shattering Blow. </p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

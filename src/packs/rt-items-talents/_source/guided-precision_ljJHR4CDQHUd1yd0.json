@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tau Pathfinder Alternative Advance, 300xp\nBS 40, Deadeye Shot",
-    "effect": "When Character hits a target with a Markerlight, other characters who attack the marked target gain an additional +10 to hit and ignore Character's Perception Bonus of Cover-provided AP.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>When Character hits a target with a Markerlight, other characters who attack the marked target gain an additional +10 to hit and ignore Character's Perception Bonus of Cover-provided AP.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When Character hits a target with a Markerlight, other characters who attack the marked target gain an additional +10 to hit and ignore Character's Perception Bonus of Cover-provided AP.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau Pathfinder Alternative Advance, 300xp",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

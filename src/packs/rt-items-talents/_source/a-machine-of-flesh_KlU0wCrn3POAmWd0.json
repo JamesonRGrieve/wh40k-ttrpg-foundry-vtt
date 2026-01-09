@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Genetor Alternate Advance, 500xp",
-    "effect": "The Character gains either one of the following Traits: Regeneration, Sonar Sense, or Sturdy, or one of the following mutations: Brute, Clawed/Fanged, Feels No Pain, Nightstrider, Tough Hide, or Venomous.\nThese Mutations come about through deliberate genetic manipulation, so are not Warp-Caused Mutations that some would have issue with.\nThis Talent can be taken multiple times, choosing a different Mutation/Trait each time.",
+    "category": "psychic",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Character gains either one of the following Traits: Regeneration, Sonar Sense, or Sturdy, or one of the following mutations: Brute, Clawed/Fanged, Feels No Pain, Nightstrider, Tough Hide, or Venomous.\nThese Mutations come about through deliberate genetic manipulation, so are not Warp-Caused Mutations that some would have issue with.\nThis Talent can be taken multiple times, choosing a different Mutation/Trait each time.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character gains either one of the following Traits: Regeneration, Sonar Sense, or Sturdy, or one of the following mutations: Brute, Clawed/Fanged, Feels No Pain, Nightstrider, Tough Hide, or Venomous.\nThese Mutations come about through deliberate genetic manipulation, so are not Warp-Caused Mutations that some would have issue with.\nThis Talent can be taken multiple times, choosing a different Mutation/Trait each time.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Genetor Alternate Advance, 500xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

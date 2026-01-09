@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; BS 35, Lasgun Volley \nAptitudes: Ballistic Skill, General",
-    "effect": "Whenever this character makes a ranged attack with a las weapon, they impose a -5 Penalty to Dodge tests per Degree of Success scored beyond the first (max -30) made to avoid it their shots.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever this character makes a ranged attack with a las weapon, they impose a -5 Penalty to Dodge tests per Degree of Success scored beyond the first (max -30) made to avoid it their shots.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Whenever this character makes a ranged attack with a las weapon, they impose a -5 Penalty to Dodge tests per Degree of Success scored beyond the first (max -30) made to avoid it their shots.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "General"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 35, Lasgun Volley",
+      "characteristics": {
+        "bs": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

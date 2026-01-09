@@ -1,0 +1,27 @@
+{
+  "name": "Ship's Confessor",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Maintains Crew Spritual Purity and Faith.",
+    "careerPreferences": "Usually Missionary, any but Explorator/Seneschal",
+    "subordinates": "Lesser Clerics/Confessors of shrines, Ministorum Emissaries, Zealots mobs.",
+    "importantSkills": "Scholastic Lore (Imperial Creed), Common Lore (Ecclesiarchy/Imperial Creed), Charm, Intimidate.",
+    "effect": "+10 to \"Put your Backs in It!\" Extended Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Maintains Crew Spritual Purity and Faith.</p><p><b>Effect:</b> +10 to \"Put your Backs in It!\" Extended Action</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fwawTXJa08g9WwSb"
+}

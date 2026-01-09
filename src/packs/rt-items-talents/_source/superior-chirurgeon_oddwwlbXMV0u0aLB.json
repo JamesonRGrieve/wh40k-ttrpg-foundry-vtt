@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Rank 2 in Medicae Skill\nAptitudes: Intelligence, Fieldcraft",
-    "effect": "Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.",
+    "category": "combat",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.</p>",
     "aptitudes": [
       "Intelligence",
       "Fieldcraft"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Rank 2 in Medicae Skill",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

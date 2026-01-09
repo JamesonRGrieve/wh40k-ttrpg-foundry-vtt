@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "",
-    "effect": "When rolling to determine the effects of Shock, can roll twice and take the better result",
+    "category": "willpower",
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Astartes, Pilot (Personal)",
-    "effect": "When the character makes a Charge Action whilst using a Junp Pack, their melee attack deals an extra 1d10 damage per two degrees of success on the melee attack they make at the end of their charge. Max 2d10.",
+    "category": "combat",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>When the character makes a Charge Action whilst using a Junp Pack, their melee attack deals an extra 1d10 damage per two degrees of success on the melee attack they make at the end of their charge. Max 2d10.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When the character makes a Charge Action whilst using a Junp Pack, their melee attack deals an extra 1d10 damage per two degrees of success on the melee attack they make at the end of their charge. Max 2d10.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Astartes, Pilot (Personal)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

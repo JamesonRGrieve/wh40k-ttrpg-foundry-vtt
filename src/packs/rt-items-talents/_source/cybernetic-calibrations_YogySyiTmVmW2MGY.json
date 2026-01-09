@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; 2+ Cybernetics, Tech-Use +10, Cybernetic Boost. Aptitudes: Intelligence, Tech",
-    "effect": "All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)",
+    "category": "technical",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>",
     "aptitudes": [
       "Intelligence",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "2+ Cybernetics, Tech-Use +10, Cybernetic Boost.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

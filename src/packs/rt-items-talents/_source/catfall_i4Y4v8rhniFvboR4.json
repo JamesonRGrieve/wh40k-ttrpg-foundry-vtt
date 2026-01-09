@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Agility 30\nAptitudes: Agility, Fieldcraft, Slaanesh",
-    "effect": "Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist. Also add +20 to Acrobatics Skill Tests when using the Jump Special Use for the purpose of reducing Fall Damage.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist. Also add +20 to Acrobatics Skill Tests when using the Jump Special Use for the purpose of reducing Fall Damage.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist. Also add +20 to Acrobatics Skill Tests when using the Jump Special Use for the purpose of reducing Fall Damage.</p>",
     "aptitudes": [
       "Agility",
       "Fieldcraft",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility 30",
+      "characteristics": {
+        "ag": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

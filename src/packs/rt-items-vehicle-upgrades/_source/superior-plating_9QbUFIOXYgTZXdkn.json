@@ -3,22 +3,24 @@
   "type": "vehicleUpgrade",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "type": "Integral",
-    "allowedVehicles": "Any",
-    "difficulty": "-30",
     "descriptionText": "Vehicle Gains +2 Armour to all locations and gains Reinforced Armour Trait. If it already had this trait it halves Critical Damage it would suffer again (to a minimum of 1). Takes Twice as long to repair Superior Plating than it does regular Armour Plating.",
-    "availability": "extremely-rare",
-    "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Vehicle Gains +2 Armour to all locations and gains Reinforced Armour Trait. If it already had this trait it halves Critical Damage it would suffer again (to a minimum of 1). Takes Twice as long to repair Superior Plating than it does regular Armour Plating.</p>"
     },
+    "availability": "extremely-rare",
+    "source": "OW: Shield of Humanity",
     "installCost": 0,
     "modifiers": {
       "speed": 0,
       "manoeuvrability": 0,
       "armour": 0,
       "integrity": 0
-    }
+    },
+    "upgradeType": "integral",
+    "difficulty": -30,
+    "allowedVehicles": "Any",
+    "identifier": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

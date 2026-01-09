@@ -1,0 +1,27 @@
+{
+  "name": "Twistcatcher",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Keep Mutants in check and press them to work",
+    "careerPreferences": "Usually Arch-Militant or Missionary, not Rogue Trader.",
+    "subordinates": "Press Gangers, mutant informants, bilge workers.",
+    "importantSkills": "Forbidden Lore (Mutants), Secret Tongue (Underdecks), Tracking",
+    "effect": "After Starship combat, can capture and press gang mutant slaves. Regaining 1d5 Crew but losing 1 Morale.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Keep Mutants in check and press them to work</p><p><b>Effect:</b> After Starship combat, can capture and press gang mutant slaves. Regaining 1d5 Crew but losing 1 Morale.</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EOvoxTy9H03uXbFb"
+}

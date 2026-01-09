@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Kroot, Shamanic Powers",
-    "effect": "A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them one additional Degree of Success on any Concealment, Shadowing, or Silent Move Tests they make. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.",
+    "category": "psychic",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them one additional Degree of Success on any Concealment, Shadowing, or Silent Move Tests they make. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them one additional Degree of Success on any Concealment, Shadowing, or Silent Move Tests they make. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Kroot, Shamanic Powers",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

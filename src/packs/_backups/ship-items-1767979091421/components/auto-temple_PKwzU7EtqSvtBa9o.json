@@ -1,0 +1,29 @@
+{
+  "name": "Auto Temple",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 0,
+    "effect": "A fully staffed temple of the Imperial Creed within the vessel, can be deployed from the ship to the surface of a planet to directly tend to the needs of its unwashed masses. Permenant +2 to Morale, and +150 Achievement Points towards Creed Objectives. Once deployed, takes several days to decontruct and bring back to the ship via lifters. One per vessel.",
+    "availability": "scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>A fully staffed temple of the Imperial Creed within the vessel, can be deployed from the ship to the surface of a planet to directly tend to the needs of its unwashed masses. Permenant +2 to Morale, and +150 Achievement Points towards Creed Objectives. Once deployed, takes several days to decontruct and bring back to the ship via lifters. One per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PKwzU7EtqSvtBa9o"
+}

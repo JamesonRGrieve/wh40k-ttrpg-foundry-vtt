@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; BS 40, Weapon Skill (Melta)\nAptitudes: Ballistic Skill, Offence",
-    "effect": "Whenever this character wields a Melta Weapon, they count its range as being increased by +2xBallistic Skill Bonus metres.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever this character wields a Melta Weapon, they count its range as being increased by +2xBallistic Skill Bonus metres.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>Whenever this character wields a Melta Weapon, they count its range as being increased by +2xBallistic Skill Bonus metres.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 40, Weapon Skill (Melta)",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

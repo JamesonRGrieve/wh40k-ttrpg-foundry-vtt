@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau, Fellowship 40, Bonding Ritual",
-    "effect": "When in Melee Combat, for each ally with the Bonding Ritual Talent who are engaged with the same target, the Explorer gains +5 to Weapon Skill Tests and +1 Damage on melee attacks.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>When in Melee Combat, for each ally with the Bonding Ritual Talent who are engaged with the same target, the Explorer gains +5 to Weapon Skill Tests and +1 Damage on melee attacks.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When in Melee Combat, for each ally with the Bonding Ritual Talent who are engaged with the same target, the Explorer gains +5 to Weapon Skill Tests and +1 Damage on melee attacks.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau, Fellowship 40, Bonding Ritual",
+      "characteristics": {
+        "fel": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

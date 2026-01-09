@@ -1,0 +1,29 @@
+{
+  "name": "Manufactorum",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "Allows constructing of basic components. +10 to Extended Repairs Tech-use Checks as well as Acquisition Tests to restore Hull. +10 Achievement Points for Trade Objectives and at GM discrection can manufacture a small number of personal items, generally a few dozen of more common templates, such as basic ammo, weapons, gear, etc. One per Vessel.",
+    "availability": "rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Allows constructing of basic components. +10 to Extended Repairs Tech-use Checks as well as Acquisition Tests to restore Hull. +10 Achievement Points for Trade Objectives and at GM discrection can manufacture a small number of personal items, generally a few dozen of more common templates, such as basic ammo, weapons, gear, etc. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MHfass5emIjABeb1"
+}

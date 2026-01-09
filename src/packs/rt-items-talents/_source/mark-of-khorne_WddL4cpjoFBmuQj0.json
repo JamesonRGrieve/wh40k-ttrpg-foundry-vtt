@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Rewards of the Dark Gods: Khorne",
-    "effect": "Character is marked by the Blood God upon their soul and possibly their body. They are driven to forever spill blood in the name of Khorne.\nThe Character gains Resistance (Psychic Powers), Brutal Charge, and Unnatural Strength(+2), the Mark itself also may be required for some other abilities.\nLeaving the path of Khorne will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.",
+    "category": "psychic",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character is marked by the Blood God upon their soul and possibly their body. They are driven to forever spill blood in the name of Khorne.\nThe Character gains Resistance (Psychic Powers), Brutal Charge, and Unnatural Strength(+2), the Mark itself also may be required for some other abilities.\nLeaving the path of Khorne will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character is marked by the Blood God upon their soul and possibly their body. They are driven to forever spill blood in the name of Khorne.\nThe Character gains Resistance (Psychic Powers), Brutal Charge, and Unnatural Strength(+2), the Mark itself also may be required for some other abilities.\nLeaving the path of Khorne will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Rewards of the Dark Gods: Khorne",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

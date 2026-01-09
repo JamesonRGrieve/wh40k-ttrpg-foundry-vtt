@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; WS 40, Weapon Training (Chain)\nAptitudes: Weapon Skill, Offence",
-    "effect": "When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WS 40, Weapon Training (Chain)",
+      "characteristics": {
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

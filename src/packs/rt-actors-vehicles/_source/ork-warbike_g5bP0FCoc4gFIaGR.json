@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Ground Vehicle",
-    "size": "18m",
-    "tacticalSpeed": "85kph",
-    "cruisingSpeed": "+10",
-    "maneuverability": "8",
-    "frontArmour": "Hulking (+10)",
-    "sideArmour": "Front 17,\nSide 12,\nRear 10",
-    "rearArmour": "Driver",
-    "structuralIntegrity": "None",
-    "crew": "Dakkagun (Front, Range 75m, Heavy, -/-/7, 1d10+6, Pen 2, Clip 100, Reload 3 Full",
-    "passengers": "This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action. Can be equipped with one Kustom Bit: Armour Plates (+3 AP Front, Right, Left or Rear), or Red Paint Job (Add 1d10 to Tactical Movement each turn). The Driver of the Vehicle gains the Auto-Stabilised Trait for the purpose of firing this vehicles weapons, however if the driver moves in the same turn they fire, they do not gain the bonus to hit from full-auto fire.",
-    "cargo": "Scarce",
-    "availability": "RT: Into the Storm",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": 6,
+    "faction": "",
+    "subfaction": "",
+    "type": "bike",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "scarce"
   },
   "effects": [],
   "items": [],

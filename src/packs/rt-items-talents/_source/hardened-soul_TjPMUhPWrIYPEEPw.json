@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Willpower 35, 10+ Corruption\nAptitudes: Defence, Willpower",
-    "effect": "Whenever character would gain Corruption, they may halve the amount (rounding up), and gain an equal amount of Insanity.",
+    "category": "general",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Whenever character would gain Corruption, they may halve the amount (rounding up), and gain an equal amount of Insanity.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Whenever character would gain Corruption, they may halve the amount (rounding up), and gain an equal amount of Insanity.</p>",
     "aptitudes": [
       "Defence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Willpower 35, 10+ Corruption",
+      "characteristics": {
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

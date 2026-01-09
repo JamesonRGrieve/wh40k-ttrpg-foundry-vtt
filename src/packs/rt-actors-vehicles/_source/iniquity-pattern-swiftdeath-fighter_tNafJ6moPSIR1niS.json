@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Spacecraft",
-    "size": "30m/ 25AU's",
-    "tacticalSpeed": "2,750kph / 11VU's",
-    "cruisingSpeed": "+15",
-    "maneuverability": "30",
-    "frontArmour": "Enormous (+20)",
-    "sideArmour": "Front 34, \nSide 32, \nRear 28",
-    "rearArmour": "Pilot, Co-Pilot",
-    "structuralIntegrity": "None",
-    "crew": "Pilot: 3 Focused Plasma Cannons (Front, Range 500m (5 AU), Heavy, S/2/-, 3d10+15 E, Pen 15, Clip 50, Reload -, Unreliable\nCo-Pilot: 6 Hunter-Killer Missiles(Front, Range 50km (50 AU), Heavy, S/-/-, 4d10+10 X, Pen 8, Clip 1, Reload -, Accurate). Can fire two missiles/turn at seperate targets.",
-    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. All Pilot Weapons can be fired as one shooting weapons, at targets no more than 1 AU Apart. Roll for Hits and Damage Seperately. Has Craft Rating of +10 and squadron size of 30 for Attack Craft Purposes. +1 to Squadron Losses, or -5 to Upkeep Tests. Can only acquire if allied with Chaos Reavers. ",
-    "cargo": "Extremely Rare",
-    "availability": "RT: Battlefleet Koronus",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "extremelyrare"
   },
   "effects": [],
   "items": [],

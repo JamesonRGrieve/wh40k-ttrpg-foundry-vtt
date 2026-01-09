@@ -1,0 +1,40 @@
+{
+  "name": "Frightened",
+  "type": "condition",
+  "img": "icons/svg/terror.svg",
+  "system": {
+    "identifier": "frightened",
+    "nature": "harmful",
+    "effect": "<p>A frightened character suffers a -10 penalty to all Willpower Tests. The character may be required to flee or cower depending on the source of fear and the GM's discretion.</p>",
+    "removal": "<p>Removed when the source of fear is no longer present, or by passing a Willpower Test at the end of the character's turn.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>A frightened character suffers a -10 penalty to all Willpower Tests. The character may be required to flee or cower depending on the source of fear and the GM's discretion.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "296",
+        "custom": "Fear & Insanity rules"
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "UDxEcj4kUmlJcIbB"
+}

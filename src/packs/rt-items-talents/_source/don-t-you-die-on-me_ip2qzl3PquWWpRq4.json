@@ -3,27 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Master Chirurgeon, Methodical Care \nAptitudes: Intelligence, Knowledge",
-    "effect": "Whenever an ally dies from Blood Loss or due to a failed Characteristic Test, the character has Intelligence Bonus Rounds where they can bring them back from the dead by spending a Fate Point and as a Full Action making a -30 Medicae Test. On success the ally is resuscitated, although not cured of any lost limbs or characteristic damage.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever an ally dies from Blood Loss or due to a failed Characteristic Test, the character has Intelligence Bonus Rounds where they can bring them back from the dead by spending a Fate Point and as a Full Action making a -30 Medicae Test. On success the ally is resuscitated, although not cured of any lost limbs or characteristic damage.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": false,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Whenever an ally dies from Blood Loss or due to a failed Characteristic Test, the character has Intelligence Bonus Rounds where they can bring them back from the dead by spending a Fate Point and as a Full Action making a -30 Medicae Test. On success the ally is resuscitated, although not cured of any lost limbs or characteristic damage.</p>",
     "aptitudes": [
       "Intelligence",
       "Knowledge"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Master Chirurgeon, Methodical Care",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

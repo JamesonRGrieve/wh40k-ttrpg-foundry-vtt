@@ -22,12 +22,14 @@
                             {{item.name}}
                         </button>
                     </div>
-                    <div class="table-cell">{{item.system.componentType}}</div>
-                    <div class="table-cell {{#if (gt item.system.powerUsage 0)}}rt-power-gen{{else}}rt-power-use{{/if}}">
-                        {{item.system.powerUsage}}
+                    <div class="table-cell" title="{{item.system.componentTypeLabel}}">
+                        {{item.system.componentTypeLabel}}
                     </div>
-                    <div class="table-cell">{{item.system.spaceUsage}}</div>
-                    <div class="table-cell">{{item.system.spCost}}</div>
+                    <div class="table-cell {{#if (gt item.system.power.generated 0)}}rt-power-gen{{else if (gt item.system.power.used 0)}}rt-power-use{{/if}}">
+                        {{item.system.powerDisplay}}
+                    </div>
+                    <div class="table-cell">{{item.system.space}}</div>
+                    <div class="table-cell">{{item.system.shipPoints}}</div>
                     <div class="table-cell--last">
                         <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
                             <span class="rt-control-button__span material-icons">settings</span>

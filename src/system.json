@@ -377,6 +377,24 @@
       }
     },
     {
+      "name": "rt-items-critical-injuries",
+      "label": "Critical Injuries",
+      "path": "packs/rt-items-critical-injuries",
+      "system": "rogue-trader",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {
+        "rt": {
+          "types": [
+            "criticalInjury"
+          ]
+        }
+      }
+    },
+    {
       "name": "rt-items-gear",
       "label": "Gear",
       "path": "packs/rt-items-gear",
@@ -822,7 +840,8 @@
         "rt-items-talents",
         "rt-items-traits",
         "rt-items-origin-path",
-        "rt-items-conditions"
+        "rt-items-conditions",
+        "rt-items-critical-injuries"
       ]
     },
     {

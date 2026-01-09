@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Rewards of the Dark Gods: Slaanesh",
-    "effect": "Character is marked by the Prince of Pleasure upon their soul and possibly their body. They desire to seduce others along the path of lust and excess so they may join Slaanesh.\nThe Character gains Heightened Senses(All) and Unnatural Fellowship(+2). the mark itself also may be required for some other abilities.\nLeaving the path of Slaanesh will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.",
+    "category": "social",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character is marked by the Prince of Pleasure upon their soul and possibly their body. They desire to seduce others along the path of lust and excess so they may join Slaanesh.\nThe Character gains Heightened Senses(All) and Unnatural Fellowship(+2). the mark itself also may be required for some other abilities.\nLeaving the path of Slaanesh will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character is marked by the Prince of Pleasure upon their soul and possibly their body. They desire to seduce others along the path of lust and excess so they may join Slaanesh.\nThe Character gains Heightened Senses(All) and Unnatural Fellowship(+2). the mark itself also may be required for some other abilities.\nLeaving the path of Slaanesh will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Rewards of the Dark Gods: Slaanesh",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

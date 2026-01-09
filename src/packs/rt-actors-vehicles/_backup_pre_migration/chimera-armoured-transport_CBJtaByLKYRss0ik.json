@@ -1,0 +1,54 @@
+{
+  "name": "Chimera Armoured Transport",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "15m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 22,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 70,
+      "notes": ""
+    },
+    "crew": {
+      "required": 3,
+      "notes": "Commander (Turret), Driver, Gunner (Hull Weapon)"
+    },
+    "passengers": 0,
+    "manoeuverability": 35,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 12,
+      "value": 12,
+      "critical": 0
+    },
+    "weapons": "<p>Turret (Commander), one of: Multilaser, Heavy Bolter, Autocannon, Heavy Flamer</p>\n<p>Hull (Front) (Gunner), one of: Heavy Bolter, Heavy Flamer</p>\n<p>Pintle (Optional), one of: Storm Bolter, Heavy Stubber</p>\n<p>Hull (Left and Right) (Passengers) (Optional): 3x Lasguns (Basic, 100m, S/3/-, 1d10+3 E, Pen 0, Clip 60, Rld Full)</p>\n<p>---</p>\n<p>Multi-Laser     (150m; –/–/5; 2d10+10 E; Pen 2; Clip 100; Reload 2 Full; Reliable)</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Autocannon     (300m; S/3/–; 3d10+8 I; Pen 6; Clip 40; Reload 2 Full; Reliable)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter    (90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Traits: Amphibious, Enclosed, Rugged, Tracked Vehicle</p>\n<p>If 3x Lasgun option not taken, instead have firing holes that allow passengers to shoot their own Basic or Pistol weapons through, or Heavy Weapons if vehicle is stationary (may or may not then count as Enclosed?)</p>",
+    "traitsText": "Traits: Amphibious, Enclosed, Rugged, Tracked Vehicle\nIf 3x Lasgun option not taken, instead have firing holes that allow passengers to shoot their own Basic or Pistol weapons through, or Heavy Weapons if vehicle is stationary (may or may not then count as Enclosed?)",
+    "availability": "extremelyrare",
+    "source": "Dark Heresy 2E: Core"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "CBJtaByLKYRss0ik"
+}

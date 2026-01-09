@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Navigator",
-    "effect": "Gain a new Navigator Power, can take this talent multiple times for different powers.",
+    "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Navigator",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

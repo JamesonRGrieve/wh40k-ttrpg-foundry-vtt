@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; WP 40, Scholastic Lore (Imperial Creed) +10. Aptitudes: Willpower, Social ",
-    "effect": "Character scores an additional three Degrees of Success whenever suceeding on a Command Test while using the Terrify Special Use to counteract the presence of Daemons, Mutants, and the Unnatural Effects of the Warp.",
+    "category": "social",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character scores an additional three Degrees of Success whenever suceeding on a Command Test while using the Terrify Special Use to counteract the presence of Daemons, Mutants, and the Unnatural Effects of the Warp.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character scores an additional three Degrees of Success whenever suceeding on a Command Test while using the Terrify Special Use to counteract the presence of Daemons, Mutants, and the Unnatural Effects of the Warp.</p>",
     "aptitudes": [
       "Willpower",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WP 40, Scholastic Lore (Imperial Creed) +10.",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

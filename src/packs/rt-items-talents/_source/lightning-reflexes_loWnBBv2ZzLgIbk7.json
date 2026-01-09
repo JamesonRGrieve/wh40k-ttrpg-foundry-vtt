@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: Agility, Fieldcraft, Slaanesh",
-    "effect": "When making an Initiative Roll, the Character rolls twice and chooses the higher of the two to add their Agility Bonus to.",
+    "category": "general",
     "source": "Only War Core",
     "description": {
       "value": "<p>When making an Initiative Roll, the Character rolls twice and chooses the higher of the two to add their Agility Bonus to.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When making an Initiative Roll, the Character rolls twice and chooses the higher of the two to add their Agility Bonus to.</p>",
     "aptitudes": [
       "Agility",
       "Fieldcraft",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

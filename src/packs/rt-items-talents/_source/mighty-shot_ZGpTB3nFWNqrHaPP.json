@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Ballistic Skill 40\nAptitudes: Ballistic Skill, Offence, Nurgle",
-    "effect": "The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 40",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

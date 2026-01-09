@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Psy Rating, Psyniscience +10, 10+ Corruption. Aptitudes: Knowledge, Psyker ",
-    "effect": "When making a Focus Power Test, the character can choose to gain Corruption Points up to their Psy Rating, for each point gained this way, they gain +10 to their Focus Power Test, but +5 to Psychic Phenomena.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When making a Focus Power Test, the character can choose to gain Corruption Points up to their Psy Rating, for each point gained this way, they gain +10 to their Focus Power Test, but +5 to Psychic Phenomena.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When making a Focus Power Test, the character can choose to gain Corruption Points up to their Psy Rating, for each point gained this way, they gain +10 to their Focus Power Test, but +5 to Psychic Phenomena.</p>",
     "aptitudes": [
       "Knowledge",
       "Psyker"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Psy Rating, Psyniscience +10, 10+ Corruption.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

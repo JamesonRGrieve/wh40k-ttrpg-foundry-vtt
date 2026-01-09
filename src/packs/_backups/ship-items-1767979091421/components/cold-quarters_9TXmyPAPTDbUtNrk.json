@@ -1,0 +1,29 @@
+{
+  "name": "Cold Quarters",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 3,
+    "spaceUsage": 4,
+    "spCost": 1,
+    "effect": "Where the regular crew live. Once per game session, Ship's Captain can reduce one source of Crew Population loss to zero by drawing on cryo-frozen reserves.",
+    "availability": "rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Where the regular crew live. Once per game session, Ship's Captain can reduce one source of Crew Population loss to zero by drawing on cryo-frozen reserves.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9TXmyPAPTDbUtNrk"
+}

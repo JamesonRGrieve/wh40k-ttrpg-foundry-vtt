@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Willpower 35\nAptitudes: Willpower, Defence",
-    "effect": "Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.",
+    "category": "combat",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>",
     "aptitudes": [
       "Willpower",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Willpower 35",
+      "characteristics": {
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

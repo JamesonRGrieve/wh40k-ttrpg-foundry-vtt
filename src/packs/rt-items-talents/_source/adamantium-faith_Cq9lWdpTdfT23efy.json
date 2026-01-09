@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Jaded, Resistance (Fear), WP 45\nAptitudes: Willpower, Defence",
-    "effect": "Character can subtract their Willpower Bonus from the number of Degrees of Failiure they suffer on any failed Fear Test. If this reduces the number to 0 or less, they count as passing the Fear Test with 1 degree of success.",
+    "category": "psychic",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character can subtract their Willpower Bonus from the number of Degrees of Failiure they suffer on any failed Fear Test. If this reduces the number to 0 or less, they count as passing the Fear Test with 1 degree of success.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Character can subtract their Willpower Bonus from the number of Degrees of Failiure they suffer on any failed Fear Test. If this reduces the number to 0 or less, they count as passing the Fear Test with 1 degree of success.</p>",
     "aptitudes": [
       "Willpower",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Jaded, Resistance (Fear), WP 45",
+      "characteristics": {
+        "wp": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

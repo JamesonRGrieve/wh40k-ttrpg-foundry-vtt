@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Spacecraft",
-    "size": "28m/ 18AU's",
-    "tacticalSpeed": "2,400kph / 10VU's",
-    "cruisingSpeed": "-10",
-    "maneuverability": "50",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 50, Side 45, Rear 25",
-    "rearArmour": "Ork Pilot, Ork Co-Pilot, Grot Gunners.",
-    "structuralIntegrity": "50 Boyz",
-    "crew": "Gunners: 4x Bigga Big Shoota Turrets(All, Range 400m (4 AU's), S/3/10, 2d10+10 I, Pen 5, Clip 1000, Reload -, Inaccurate, Unreliable, Twin-Linked.",
-    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can affix to Spacecraft ship hull as +0 Pilot(Space Craft) Test and spend 4 Full Rounds to burn through. Has Craft Rating of +8 for Attack Craft Purposes, squadron size 15. Can only acquire if allied with Ork Freebooters.",
-    "cargo": "Very Rare",
-    "availability": "RT: Battlefleet Koronus",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "veryrare"
   },
   "effects": [],
   "items": [],

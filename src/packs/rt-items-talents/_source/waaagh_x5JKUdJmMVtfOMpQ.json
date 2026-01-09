@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork, Berserk Charge, Furious Assault, Weapon Skill 40",
-    "effect": "If Ork succesfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>If Ork succesfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>If Ork succesfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork, Berserk Charge, Furious Assault, Weapon Skill 40",
+      "characteristics": {
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

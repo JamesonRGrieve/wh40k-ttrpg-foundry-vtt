@@ -3,16 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau, Ballistic Skill 40, Fellowship 35",
-    "effect": "Once per encounter, assuming appropriate fire-support assets are available and the character is equipped with a marker light, they may make a +0 Ballistic Skill Test as a Full Action. If successful, 1d5 Rounds later, -1 round per Degree of Success on Test (min. 1 Round). A Seeker Missile strikes the target, dealing 3d10+5 E Damage with PEN 10.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Once per encounter, assuming appropriate fire-support assets are available and the character is equipped with a marker light, they may make a +0 Ballistic Skill Test as a Full Action. If successful, 1d5 Rounds later, -1 round per Degree of Success on Test (min. 1 Round). A Seeker Missile strikes the target, dealing 3d10+5 E Damage with PEN 10.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Once per encounter, assuming appropriate fire-support assets are available and the character is equipped with a marker light, they may make a +0 Ballistic Skill Test as a Full Action. If successful, 1d5 Rounds later, -1 round per Degree of Success on Test (min. 1 Round). A Seeker Missile strikes the target, dealing 3d10+5 E Damage with PEN 10.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau, Ballistic Skill 40, Fellowship 35",
+      "characteristics": {
+        "bs": 40,
+        "fel": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

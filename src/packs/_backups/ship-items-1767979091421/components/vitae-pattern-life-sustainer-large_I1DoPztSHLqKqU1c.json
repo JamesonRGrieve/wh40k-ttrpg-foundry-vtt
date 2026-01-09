@@ -1,0 +1,29 @@
+{
+  "name": "Vitae Pattern Life Sustainer (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Life Sustainer",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 5,
+    "spaceUsage": 3,
+    "spCost": 0,
+    "effect": "Recycles air and water for the ship. Considered the Default Option.",
+    "availability": "scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Recycles air and water for the ship. Considered the Default Option.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "I1DoPztSHLqKqU1c"
+}

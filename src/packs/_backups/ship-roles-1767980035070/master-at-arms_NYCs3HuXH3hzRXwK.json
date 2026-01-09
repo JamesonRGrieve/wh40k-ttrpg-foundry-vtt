@@ -1,0 +1,27 @@
+{
+  "name": "Master-At-Arms",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Responsible for Military Actions and Security.",
+    "careerPreferences": "Ususally Arch-Militant, any but Void-master",
+    "subordinates": "Armoury Crew, Ship Commanders, Mercenary Leaders",
+    "importantSkills": "Command, Tech-Use, Intimidate, Scholastic Lore (Tactica Imperialis)",
+    "effect": "+10 to \"Prepare to Repel Boardars\" Extended Actions.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Responsible for Military Actions and Security.</p><p><b>Effect:</b> +10 to \"Prepare to Repel Boardars\" Extended Actions.</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NYCs3HuXH3hzRXwK"
+}

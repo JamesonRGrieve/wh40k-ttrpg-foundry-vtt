@@ -1,0 +1,29 @@
+{
+  "name": "Bridge of Antiquity",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge (Archeotech)",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "Add +10 to All Command or Social Skill Tests any character on the bridge makes. +5 Ship Manoeuverability. Can be used as the Ship's Bridge.",
+    "availability": "extremely-rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Add +10 to All Command or Social Skill Tests any character on the bridge makes. +5 Ship Manoeuverability. Can be used as the Ship's Bridge.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n1BNtyEM5iTKS01z"
+}

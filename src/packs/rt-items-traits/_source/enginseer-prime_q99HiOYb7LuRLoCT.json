@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Tech-Priest Enginseer",
-    "descriptionText": "",
-    "effects": "",
     "source": "OW: Shield of Humanity (Page 53)",
     "description": {
       "value": "<p>The Enginseer Prime seeks mastery over mechanised flesh, controlling multiple servitors to see enemies before them dead and sacred tasks of maintenance completed, all in utmost efficiency and dedication to the Omnissiah.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with Enginseer Prime. Apt: Ballistic Skill, Intelligence, Perception, Knowledge, Toughness, Tech, Willpower\nAdd. Equipment: Sacred Ungents, Dataslate, Omnissian Axe, Calculus Logi, Ballistic, Manipulator, and Utility Mechadendrites. Gain Talents: Ferric Summons +Peer(Mechanicus) or Battlefield Tech-Wright. Can Purchase Unique Talents: Redundant Systems, Coordination Algorithms and Basic Order: Machine Lord</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace Current Specialty's Aptitudes and Equipment with Enginseer Prime. Apt: Ballistic Skill, Intelligence, Perception, Knowledge, Toughness, Tech, Willpower\nAdd. Equipment: Sacred Ungents, Dataslate, Omnissian Axe, Calculus Logi, Ballistic, Manipulator, and Utility Mechadendrites. Gain Talents: Ferric Summons +Peer(Mechanicus) or Battlefield Tech-Wright. Can Purchase Unique Talents: Redundant Systems, Coordination Algorithms and Basic Order: Machine Lord",
-    "level": null
+    "level": 0,
+    "benefit": "<p>The Enginseer Prime seeks mastery over mechanised flesh, controlling multiple servitors to see enemies before them dead and sacred tasks of maintenance completed, all in utmost efficiency and dedication to the Omnissiah.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with Enginseer Prime. Apt: Ballistic Skill, Intelligence, Perception, Knowledge, Toughness, Tech, Willpower\nAdd. Equipment: Sacred Ungents, Dataslate, Omnissian Axe, Calculus Logi, Ballistic, Manipulator, and Utility Mechadendrites. Gain Talents: Ferric Summons +Peer(Mechanicus) or Battlefield Tech-Wright. Can Purchase Unique Talents: Redundant Systems, Coordination Algorithms and Basic Order: Machine Lord</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

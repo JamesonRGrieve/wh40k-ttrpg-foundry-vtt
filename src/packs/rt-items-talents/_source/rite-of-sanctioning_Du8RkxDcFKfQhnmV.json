@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Psy Rating, Special",
-    "effect": "Choose a Psychic Phenomena (other than perils of the Warp). Can substitute any result you roll on Psychic Pnenomena except Perils of the Warp with this effect.\nMutually exclusive with Warp Affinity, cannot have both Talents",
+    "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Choose a Psychic Phenomena (other than perils of the Warp). Can substitute any result you roll on Psychic Pnenomena except Perils of the Warp with this effect.\nMutually exclusive with Warp Affinity, cannot have both Talents</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Choose a Psychic Phenomena (other than perils of the Warp). Can substitute any result you roll on Psychic Pnenomena except Perils of the Warp with this effect.\nMutually exclusive with Warp Affinity, cannot have both Talents</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Psy Rating, Special",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

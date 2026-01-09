@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Intelligence 40\nAptitudes: Knowledge, Perception",
-    "effect": "When making Scholastic Lore or Forbidden Lore tests using sources of recorded information of any sort, character can reroll a failed test once with a -10 penalty to the reroll. Tests to perform research or find information in such circumstances take half the time.",
+    "category": "knowledge",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>When making Scholastic Lore or Forbidden Lore tests using sources of recorded information of any sort, character can reroll a failed test once with a -10 penalty to the reroll. Tests to perform research or find information in such circumstances take half the time.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When making Scholastic Lore or Forbidden Lore tests using sources of recorded information of any sort, character can reroll a failed test once with a -10 penalty to the reroll. Tests to perform research or find information in such circumstances take half the time.</p>",
     "aptitudes": [
       "Knowledge",
       "Perception"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Intelligence 40",
+      "characteristics": {
+        "int": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

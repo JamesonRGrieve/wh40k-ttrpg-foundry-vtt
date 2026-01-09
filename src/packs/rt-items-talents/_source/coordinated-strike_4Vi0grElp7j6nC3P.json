@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Beastmaster Alternative Advance, 500xp\nWrangling +10, Bestial Minion",
-    "effect": "As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.",
+    "category": "combat",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Beastmaster Alternative Advance, 500xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

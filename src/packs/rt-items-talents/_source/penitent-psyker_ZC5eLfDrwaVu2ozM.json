@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Psy Rating, Strong Minded, WP 40 \nAptitudes: Psyker, Defence",
-    "effect": "When the Character or an ally within 10m is targeted by a Psychic Power, the character may choose to suffer any number of levels of Fatigue, each level suffered gives +10 to any Opposed Test to resist the power or Evasion Test to avoid its effects. If target's test to resist or avoid rolls a double, the character generates Psychic Phenomena as they would when making a Focus Power Tests.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>When the Character or an ally within 10m is targeted by a Psychic Power, the character may choose to suffer any number of levels of Fatigue, each level suffered gives +10 to any Opposed Test to resist the power or Evasion Test to avoid its effects. If target's test to resist or avoid rolls a double, the character generates Psychic Phenomena as they would when making a Focus Power Tests.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>When the Character or an ally within 10m is targeted by a Psychic Power, the character may choose to suffer any number of levels of Fatigue, each level suffered gives +10 to any Opposed Test to resist the power or Evasion Test to avoid its effects. If target's test to resist or avoid rolls a double, the character generates Psychic Phenomena as they would when making a Focus Power Tests.</p>",
     "aptitudes": [
       "Psyker",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Psy Rating, Strong Minded, WP 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

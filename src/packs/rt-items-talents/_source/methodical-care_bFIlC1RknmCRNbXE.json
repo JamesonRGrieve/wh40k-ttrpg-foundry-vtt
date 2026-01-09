@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Intelligence 40, Swift Suture \nAptitudes: Intelligence, Knowledge",
-    "effect": "Whenever the character Fails a test as part of the Extended Care Medicae Special Use that leads to their Patient taking damage, the character can reduce that damage by their Int Bonus.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever the character Fails a test as part of the Extended Care Medicae Special Use that leads to their Patient taking damage, the character can reduce that damage by their Int Bonus.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Whenever the character Fails a test as part of the Extended Care Medicae Special Use that leads to their Patient taking damage, the character can reduce that damage by their Int Bonus.</p>",
     "aptitudes": [
       "Intelligence",
       "Knowledge"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Intelligence 40, Swift Suture",
+      "characteristics": {
+        "int": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

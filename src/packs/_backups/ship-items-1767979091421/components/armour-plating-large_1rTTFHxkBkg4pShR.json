@@ -1,0 +1,29 @@
+{
+  "name": "Armour Plating (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 0,
+    "spaceUsage": 2,
+    "spCost": 2,
+    "effect": "+1 Armour, -2 Manoeuvrability, only one per vessel",
+    "availability": "rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+1 Armour, -2 Manoeuvrability, only one per vessel</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1rTTFHxkBkg4pShR"
+}

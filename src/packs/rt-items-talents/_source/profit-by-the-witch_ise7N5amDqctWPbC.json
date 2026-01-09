@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Bonetrader Alternative Advance (Innate)\nInt 35+",
-    "effect": "Whenever the character completes an Endeavour involving a Psyker or group of Psykers from outside of the ship's crew, increase the Group's Profit Factor by an additional 1 point.",
+    "category": "psychic",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Whenever the character completes an Endeavour involving a Psyker or group of Psykers from outside of the ship's crew, increase the Group's Profit Factor by an additional 1 point.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever the character completes an Endeavour involving a Psyker or group of Psykers from outside of the ship's crew, increase the Group's Profit Factor by an additional 1 point.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Bonetrader Alternative Advance (Innate)",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

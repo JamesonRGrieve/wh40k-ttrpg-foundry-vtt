@@ -399,6 +399,81 @@ ROGUE_TRADER.npcTypes = {
 };
 
 /* -------------------------------------------- */
+/*  Vehicle Types                               */
+/* -------------------------------------------- */
+
+/**
+ * Vehicle type classifications.
+ * @type {Object<string, {label: string, icon: string}>}
+ */
+ROGUE_TRADER.vehicleTypes = {
+  vehicle: { label: "RT.VehicleType.Vehicle", icon: "fa-car" },
+  walker: { label: "RT.VehicleType.Walker", icon: "fa-robot" },
+  flyer: { label: "RT.VehicleType.Flyer", icon: "fa-plane" },
+  skimmer: { label: "RT.VehicleType.Skimmer", icon: "fa-helicopter" },
+  bike: { label: "RT.VehicleType.Bike", icon: "fa-motorcycle" },
+  tank: { label: "RT.VehicleType.Tank", icon: "fa-shield" }
+};
+
+/**
+ * Vehicle class categories.
+ * @type {Object<string, {label: string}>}
+ */
+ROGUE_TRADER.vehicleClasses = {
+  ground: { label: "RT.VehicleClass.Ground" },
+  air: { label: "RT.VehicleClass.Air" },
+  water: { label: "RT.VehicleClass.Water" },
+  space: { label: "RT.VehicleClass.Space" },
+  walker: { label: "RT.VehicleClass.Walker" }
+};
+
+/**
+ * Vehicle size categories (aligned with creature sizes).
+ * @type {Object<number, {label: string, modifier: number, descriptor: string}>}
+ */
+ROGUE_TRADER.vehicleSizes = {
+  1: { label: "RT.Size.Miniscule", modifier: -30, descriptor: "~1m" },
+  2: { label: "RT.Size.Puny", modifier: -20, descriptor: "~2m" },
+  3: { label: "RT.Size.Scrawny", modifier: -10, descriptor: "~3-5m" },
+  4: { label: "RT.Size.Average", modifier: 0, descriptor: "~6-10m" },
+  5: { label: "RT.Size.Hulking", modifier: 10, descriptor: "~11-15m" },
+  6: { label: "RT.Size.Enormous", modifier: 20, descriptor: "~16-20m" },
+  7: { label: "RT.Size.Massive", modifier: 30, descriptor: "~21-30m" },
+  8: { label: "RT.Size.Immense", modifier: 40, descriptor: "~31-50m" },
+  9: { label: "RT.Size.Monumental", modifier: 50, descriptor: "~51-100m" },
+  10: { label: "RT.Size.Titanic", modifier: 60, descriptor: "100m+" }
+};
+
+/* -------------------------------------------- */
+/*  Vehicle Upgrade Types                       */
+/* -------------------------------------------- */
+
+/**
+ * Vehicle upgrade type classifications.
+ * @type {Object<string, {label: string}>}
+ */
+ROGUE_TRADER.vehicleUpgradeTypes = {
+  standard: { label: "RT.VehicleUpgradeType.Standard" },
+  integral: { label: "RT.VehicleUpgradeType.Integral" },
+  custom: { label: "RT.VehicleUpgradeType.Custom" }
+};
+
+/* -------------------------------------------- */
+/*  Vehicle Stats                               */
+/* -------------------------------------------- */
+
+/**
+ * Vehicle stat labels.
+ * @type {Object<string, {label: string, abbreviation: string}>}
+ */
+ROGUE_TRADER.vehicleStats = {
+  speed: { label: "RT.VehicleStat.Speed", abbreviation: "Spd" },
+  manoeuvrability: { label: "RT.VehicleStat.Manoeuvrability", abbreviation: "Man" },
+  armour: { label: "RT.VehicleStat.Armour", abbreviation: "AP" },
+  integrity: { label: "RT.VehicleStat.Integrity", abbreviation: "Int" }
+};
+
+/* -------------------------------------------- */
 /*  Difficulty Modifiers                        */
 /* -------------------------------------------- */
 
@@ -573,6 +648,478 @@ ROGUE_TRADER.getSkillIcon = function(skillKey) {
 ROGUE_TRADER.getDefaultIcon = function(type) {
   const icon = this.defaultIcons[type];
   return icon || "icons/svg/item-bag.svg";
+};
+
+/* -------------------------------------------- */
+/*  Weapon Qualities                            */
+/* -------------------------------------------- */
+
+/**
+ * Weapon qualities (special properties).
+ * @type {Object<string, {label: string, description: string, hasLevel: boolean}>}
+ */
+ROGUE_TRADER.weaponQualities = {
+  // Accuracy & Reliability
+  'accurate': {
+    label: "RT.WeaponQuality.Accurate",
+    description: "RT.WeaponQuality.AccurateDesc",
+    hasLevel: false
+  },
+  'inaccurate': {
+    label: "RT.WeaponQuality.Inaccurate",
+    description: "RT.WeaponQuality.InaccurateDesc",
+    hasLevel: false
+  },
+  'reliable': {
+    label: "RT.WeaponQuality.Reliable",
+    description: "RT.WeaponQuality.ReliableDesc",
+    hasLevel: false
+  },
+  'unreliable': {
+    label: "RT.WeaponQuality.Unreliable",
+    description: "RT.WeaponQuality.UnreliableDesc",
+    hasLevel: false
+  },
+  'unreliable-2': {
+    label: "RT.WeaponQuality.Unreliable2",
+    description: "RT.WeaponQuality.Unreliable2Desc",
+    hasLevel: false
+  },
+  
+  // Melee Properties
+  'balanced': {
+    label: "RT.WeaponQuality.Balanced",
+    description: "RT.WeaponQuality.BalancedDesc",
+    hasLevel: false
+  },
+  'defensive': {
+    label: "RT.WeaponQuality.Defensive",
+    description: "RT.WeaponQuality.DefensiveDesc",
+    hasLevel: false
+  },
+  'fast': {
+    label: "RT.WeaponQuality.Fast",
+    description: "RT.WeaponQuality.FastDesc",
+    hasLevel: false
+  },
+  'flexible': {
+    label: "RT.WeaponQuality.Flexible",
+    description: "RT.WeaponQuality.FlexibleDesc",
+    hasLevel: false
+  },
+  'unbalanced': {
+    label: "RT.WeaponQuality.Unbalanced",
+    description: "RT.WeaponQuality.UnbalancedDesc",
+    hasLevel: false
+  },
+  'unwieldy': {
+    label: "RT.WeaponQuality.Unwieldy",
+    description: "RT.WeaponQuality.UnwieldyDesc",
+    hasLevel: false
+  },
+  
+  // Damage Effects
+  'tearing': {
+    label: "RT.WeaponQuality.Tearing",
+    description: "RT.WeaponQuality.TearingDesc",
+    hasLevel: false
+  },
+  'razor-sharp': {
+    label: "RT.WeaponQuality.RazorSharp",
+    description: "RT.WeaponQuality.RazorSharpDesc",
+    hasLevel: false
+  },
+  'proven': {
+    label: "RT.WeaponQuality.Proven",
+    description: "RT.WeaponQuality.ProvenDesc",
+    hasLevel: true
+  },
+  'felling': {
+    label: "RT.WeaponQuality.Felling",
+    description: "RT.WeaponQuality.FellingDesc",
+    hasLevel: true
+  },
+  'crippling': {
+    label: "RT.WeaponQuality.Crippling",
+    description: "RT.WeaponQuality.CripplingDesc",
+    hasLevel: true
+  },
+  'devastating': {
+    label: "RT.WeaponQuality.Devastating",
+    description: "RT.WeaponQuality.DevastatingDesc",
+    hasLevel: true
+  },
+  
+  // Area Effects
+  'blast': {
+    label: "RT.WeaponQuality.Blast",
+    description: "RT.WeaponQuality.BlastDesc",
+    hasLevel: true
+  },
+  'scatter': {
+    label: "RT.WeaponQuality.Scatter",
+    description: "RT.WeaponQuality.ScatterDesc",
+    hasLevel: false
+  },
+  'spray': {
+    label: "RT.WeaponQuality.Spray",
+    description: "RT.WeaponQuality.SprayDesc",
+    hasLevel: false
+  },
+  'storm': {
+    label: "RT.WeaponQuality.Storm",
+    description: "RT.WeaponQuality.StormDesc",
+    hasLevel: false
+  },
+  
+  // Status Effects
+  'concussive': {
+    label: "RT.WeaponQuality.Concussive",
+    description: "RT.WeaponQuality.ConcussiveDesc",
+    hasLevel: true
+  },
+  'corrosive': {
+    label: "RT.WeaponQuality.Corrosive",
+    description: "RT.WeaponQuality.CorrosiveDesc",
+    hasLevel: false
+  },
+  'toxic': {
+    label: "RT.WeaponQuality.Toxic",
+    description: "RT.WeaponQuality.ToxicDesc",
+    hasLevel: true
+  },
+  'hallucinogenic': {
+    label: "RT.WeaponQuality.Hallucinogenic",
+    description: "RT.WeaponQuality.HallucinogenicDesc",
+    hasLevel: true
+  },
+  'snare': {
+    label: "RT.WeaponQuality.Snare",
+    description: "RT.WeaponQuality.SnareDesc",
+    hasLevel: true
+  },
+  'shocking': {
+    label: "RT.WeaponQuality.Shocking",
+    description: "RT.WeaponQuality.ShockingDesc",
+    hasLevel: false
+  },
+  'shock': {
+    label: "RT.WeaponQuality.Shock",
+    description: "RT.WeaponQuality.ShockDesc",
+    hasLevel: false
+  },
+  
+  // Weapon Type Markers
+  'bolt': {
+    label: "RT.WeaponQuality.Bolt",
+    description: "RT.WeaponQuality.BoltDesc",
+    hasLevel: false
+  },
+  'chain': {
+    label: "RT.WeaponQuality.Chain",
+    description: "RT.WeaponQuality.ChainDesc",
+    hasLevel: false
+  },
+  'flame': {
+    label: "RT.WeaponQuality.Flame",
+    description: "RT.WeaponQuality.FlameDesc",
+    hasLevel: false
+  },
+  'force': {
+    label: "RT.WeaponQuality.Force",
+    description: "RT.WeaponQuality.ForceDesc",
+    hasLevel: false
+  },
+  'las': {
+    label: "RT.WeaponQuality.Las",
+    description: "RT.WeaponQuality.LasDesc",
+    hasLevel: false
+  },
+  'melta': {
+    label: "RT.WeaponQuality.Melta",
+    description: "RT.WeaponQuality.MeltaDesc",
+    hasLevel: false
+  },
+  'plasma': {
+    label: "RT.WeaponQuality.Plasma",
+    description: "RT.WeaponQuality.PlasmaDesc",
+    hasLevel: false
+  },
+  'power': {
+    label: "RT.WeaponQuality.Power",
+    description: "RT.WeaponQuality.PowerDesc",
+    hasLevel: false
+  },
+  'power-field': {
+    label: "RT.WeaponQuality.PowerField",
+    description: "RT.WeaponQuality.PowerFieldDesc",
+    hasLevel: false
+  },
+  'primitive': {
+    label: "RT.WeaponQuality.Primitive",
+    description: "RT.WeaponQuality.PrimitiveDesc",
+    hasLevel: true
+  },
+  
+  // Special Weapon Types
+  'grenade': {
+    label: "RT.WeaponQuality.Grenade",
+    description: "RT.WeaponQuality.GrenadeDesc",
+    hasLevel: false
+  },
+  'launcher': {
+    label: "RT.WeaponQuality.Launcher",
+    description: "RT.WeaponQuality.LauncherDesc",
+    hasLevel: false
+  },
+  'indirect': {
+    label: "RT.WeaponQuality.Indirect",
+    description: "RT.WeaponQuality.IndirectDesc",
+    hasLevel: true
+  },
+  
+  // Energy Weapon Effects
+  'haywire': {
+    label: "RT.WeaponQuality.Haywire",
+    description: "RT.WeaponQuality.HaywireDesc",
+    hasLevel: true
+  },
+  'overheats': {
+    label: "RT.WeaponQuality.Overheats",
+    description: "RT.WeaponQuality.OverheatsDesc",
+    hasLevel: false
+  },
+  'overcharge': {
+    label: "RT.WeaponQuality.Overcharge",
+    description: "RT.WeaponQuality.OverchargeDesc",
+    hasLevel: true
+  },
+  'recharge': {
+    label: "RT.WeaponQuality.Recharge",
+    description: "RT.WeaponQuality.RechargeDesc",
+    hasLevel: false
+  },
+  'maximal': {
+    label: "RT.WeaponQuality.Maximal",
+    description: "RT.WeaponQuality.MaximalDesc",
+    hasLevel: false
+  },
+  
+  // Special/Rare Properties
+  'sanctified': {
+    label: "RT.WeaponQuality.Sanctified",
+    description: "RT.WeaponQuality.SanctifiedDesc",
+    hasLevel: false
+  },
+  'tainted': {
+    label: "RT.WeaponQuality.Tainted",
+    description: "RT.WeaponQuality.TaintedDesc",
+    hasLevel: false
+  },
+  'daemon-wep': {
+    label: "RT.WeaponQuality.DaemonWep",
+    description: "RT.WeaponQuality.DaemonWepDesc",
+    hasLevel: false
+  },
+  'daemonbane': {
+    label: "RT.WeaponQuality.Daemonbane",
+    description: "RT.WeaponQuality.DaemonbaneDesc",
+    hasLevel: false
+  },
+  'warp-weapon': {
+    label: "RT.WeaponQuality.WarpWeapon",
+    description: "RT.WeaponQuality.WarpWeaponDesc",
+    hasLevel: false
+  },
+  'witch-edge': {
+    label: "RT.WeaponQuality.WitchEdge",
+    description: "RT.WeaponQuality.WitchEdgeDesc",
+    hasLevel: false
+  },
+  'rune-wep': {
+    label: "RT.WeaponQuality.RuneWep",
+    description: "RT.WeaponQuality.RuneWepDesc",
+    hasLevel: false
+  },
+  
+  // Xenos Weapons
+  'gauss': {
+    label: "RT.WeaponQuality.Gauss",
+    description: "RT.WeaponQuality.GaussDesc",
+    hasLevel: false
+  },
+  'graviton': {
+    label: "RT.WeaponQuality.Graviton",
+    description: "RT.WeaponQuality.GravitonDesc",
+    hasLevel: false
+  },
+  'necron-wep': {
+    label: "RT.WeaponQuality.NecronWep",
+    description: "RT.WeaponQuality.NecronWepDesc",
+    hasLevel: false
+  },
+  
+  // Special Ammunition/Effects
+  'smoke': {
+    label: "RT.WeaponQuality.Smoke",
+    description: "RT.WeaponQuality.SmokeDesc",
+    hasLevel: true
+  },
+  'living-ammunition': {
+    label: "RT.WeaponQuality.LivingAmmunition",
+    description: "RT.WeaponQuality.LivingAmmunitionDesc",
+    hasLevel: false
+  },
+  
+  // Combat Modifiers
+  'twin-linked': {
+    label: "RT.WeaponQuality.TwinLinked",
+    description: "RT.WeaponQuality.TwinLinkedDesc",
+    hasLevel: false
+  },
+  'gyro-stabilised': {
+    label: "RT.WeaponQuality.GyroStabilised",
+    description: "RT.WeaponQuality.GyroStabilisedDesc",
+    hasLevel: false
+  },
+  'vengeful': {
+    label: "RT.WeaponQuality.Vengeful",
+    description: "RT.WeaponQuality.VengefulDesc",
+    hasLevel: true
+  },
+  'lance': {
+    label: "RT.WeaponQuality.Lance",
+    description: "RT.WeaponQuality.LanceDesc",
+    hasLevel: false
+  },
+  
+  // Miscellaneous
+  'decay': {
+    label: "RT.WeaponQuality.Decay",
+    description: "RT.WeaponQuality.DecayDesc",
+    hasLevel: true
+  },
+  'irradiated': {
+    label: "RT.WeaponQuality.Irradiated",
+    description: "RT.WeaponQuality.IrradiatedDesc",
+    hasLevel: true
+  },
+  'reactive': {
+    label: "RT.WeaponQuality.Reactive",
+    description: "RT.WeaponQuality.ReactiveDesc",
+    hasLevel: false
+  },
+  'unstable': {
+    label: "RT.WeaponQuality.Unstable",
+    description: "RT.WeaponQuality.UnstableDesc",
+    hasLevel: false
+  },
+  'integrated-weapon': {
+    label: "RT.WeaponQuality.IntegratedWeapon",
+    description: "RT.WeaponQuality.IntegratedWeaponDesc",
+    hasLevel: false
+  },
+  'ogryn-proof': {
+    label: "RT.WeaponQuality.OgrynProof",
+    description: "RT.WeaponQuality.OgrynProofDesc",
+    hasLevel: false
+  },
+  
+  // Faction-Specific
+  'sm-wep': {
+    label: "RT.WeaponQuality.SMWep",
+    description: "RT.WeaponQuality.SMWepDesc",
+    hasLevel: false
+  },
+  
+  // Special/Placeholder
+  'customised': {
+    label: "RT.WeaponQuality.Customised",
+    description: "RT.WeaponQuality.CustomisedDesc",
+    hasLevel: false
+  },
+  'sp': {
+    label: "RT.WeaponQuality.SP",
+    description: "RT.WeaponQuality.SPDesc",
+    hasLevel: false
+  },
+  'cleansing-fire': {
+    label: "RT.WeaponQuality.CleansingFire",
+    description: "RT.WeaponQuality.CleansingFireDesc",
+    hasLevel: false
+  },
+  
+  // Craftsmanship-Only (never in pack data)
+  'never-jam': {
+    label: "RT.WeaponQuality.NeverJam",
+    description: "RT.WeaponQuality.NeverJamDesc",
+    hasLevel: false
+  }
+};
+
+/**
+ * Get quality definition from identifier.
+ * @param {string} identifier    Quality identifier (e.g., "tearing", "blast-3")
+ * @returns {object|null}        Quality definition or null
+ */
+ROGUE_TRADER.getQualityDefinition = function(identifier) {
+  // Strip level suffix if present
+  const baseId = identifier.replace(/-\d+$/, '').replace(/-x$/i, '');
+  return this.weaponQualities[baseId] ?? null;
+};
+
+/**
+ * Get localized quality label.
+ * @param {string} identifier    Quality identifier
+ * @param {number} [level]       Optional level for qualities with (X)
+ * @returns {string}             Localized label
+ */
+ROGUE_TRADER.getQualityLabel = function(identifier, level = null) {
+  const def = this.getQualityDefinition(identifier);
+  if (!def) return identifier;
+  
+  let label = game.i18n.localize(def.label);
+  if (def.hasLevel && level !== null) {
+    label += ` (${level})`;
+  } else if (def.hasLevel) {
+    label += ` (X)`;
+  }
+  
+  return label;
+};
+
+/**
+ * Get localized quality description.
+ * @param {string} identifier    Quality identifier
+ * @returns {string}             Localized description
+ */
+ROGUE_TRADER.getQualityDescription = function(identifier) {
+  const def = this.getQualityDefinition(identifier);
+  if (!def) return "";
+  
+  return game.i18n.localize(def.description);
+};
+
+/**
+ * Get jam threshold for weapon based on qualities and craftsmanship.
+ * @param {object} weapon    Weapon item
+ * @returns {number|null}    Jam threshold (90-100) or null if cannot jam
+ */
+ROGUE_TRADER.getJamThreshold = function(weapon) {
+  const craftsmanship = weapon.system?.craftsmanship;
+  const qualities = weapon.system?.effectiveSpecial || weapon.system?.special;
+  
+  // Best/Master-crafted never jam
+  if (['best', 'master-crafted'].includes(craftsmanship)) {
+    return null;
+  }
+  
+  // Check for reliability qualities
+  if (qualities?.has?.('unreliable-2')) return 90;
+  if (qualities?.has?.('unreliable')) return 96;
+  if (qualities?.has?.('reliable')) return 95;
+  
+  return 100;  // Normal jamming threshold
 };
 
 /* -------------------------------------------- */

@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Ork Mek Boy Alternate Advance, 500xp\nTech-Use +10, Willpower 30+",
-    "effect": "The Ork Character treats all Ork-made weapons as Reliable. Additionally, they may make a Tech-Use Test to \"Kustomise\" any device they come across. For weapons this takes a number of minutes equal to the number of Half Actions the weapon takes to reload. If successful the weapon's Craftsmanship improves by one step until it needs to be reloaded, at which point it breaks and needs to be repaired. Kustomising Gear instead gives a +5 bonus to use it for Willpower Bonus hours, at which point it breaks. If the Tech-Use Test fails, the object breaks until repaired. These Kustomisations may have other effects decided between GM and Player",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Ork Character treats all Ork-made weapons as Reliable. Additionally, they may make a Tech-Use Test to \"Kustomise\" any device they come across. For weapons this takes a number of minutes equal to the number of Half Actions the weapon takes to reload. If successful the weapon's Craftsmanship improves by one step until it needs to be reloaded, at which point it breaks and needs to be repaired. Kustomising Gear instead gives a +5 bonus to use it for Willpower Bonus hours, at which point it breaks. If the Tech-Use Test fails, the object breaks until repaired. These Kustomisations may have other effects decided between GM and Player</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Ork Character treats all Ork-made weapons as Reliable. Additionally, they may make a Tech-Use Test to \"Kustomise\" any device they come across. For weapons this takes a number of minutes equal to the number of Half Actions the weapon takes to reload. If successful the weapon's Craftsmanship improves by one step until it needs to be reloaded, at which point it breaks and needs to be repaired. Kustomising Gear instead gives a +5 bonus to use it for Willpower Bonus hours, at which point it breaks. If the Tech-Use Test fails, the object breaks until repaired. These Kustomisations may have other effects decided between GM and Player</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Mek Boy Alternate Advance, 500xp",
+      "characteristics": {
+        "wp": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

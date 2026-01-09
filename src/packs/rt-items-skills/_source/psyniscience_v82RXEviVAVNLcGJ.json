@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "perception",
     "descriptor": "A Usually Psychic individuals's ability to sense the flow of the Warp, detecting presences or absences of Daemons, Psychic Powers, Phenomena, Disturbances, voids, etc. Non psykers may gain this, often taking the form of a sixth sense.",
     "uses": "Detection Range is Perception Bonus Kilometres. Used for determining whether a psyker has recently used their powers, finding Weak Points between the Materium and Immaterium. More info dependant on DoS:\n1 DoS: Awareness of a Disruption in the Immaterium or number of warp-entities present. 2 DoS: Aproximate Direction of phenomena or warp entities. 3 DoS: Rough Location of Warp Entities or beings affecting the Immaterium. 4+ DoS: Exact Position of Warp Entities or Psykers present. ",
     "useTime": "Full Action",
     "description": {
       "value": "<p>A Usually Psychic individuals's ability to sense the flow of the Warp, detecting presences or absences of Daemons, Psychic Powers, Phenomena, Disturbances, voids, etc. Non psykers may gain this, often taking the form of a sixth sense.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Perception",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

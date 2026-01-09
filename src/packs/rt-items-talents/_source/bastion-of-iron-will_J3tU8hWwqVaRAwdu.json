@@ -3,24 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Psy Rating, Strong Minded, WP 40\nAptitudes; Willpower, Psyker, Tzeentch",
-    "effect": "Character adds 5xPsy Rating to any Opposed Test involving defending against Psychic powers",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character adds 5xPsy Rating to any Opposed Test involving defending against Psychic powers</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character adds 5xPsy Rating to any Opposed Test involving defending against Psychic powers</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Psy Rating, Strong Minded, WP 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

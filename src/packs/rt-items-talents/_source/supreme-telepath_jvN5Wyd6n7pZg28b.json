@@ -3,18 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Ast) (T2)",
-    "requirements": "Tier 3: Astropath E.Adv, Fellowship 40, Willpower 50. Aptitudes: Fellowship",
-    "effect": "Before making a Focus Power test to manifest a power of the Telepathy Discipline or provided by the Astropath Elite Advance, the Astropath's can spend a Fate Point to increase their Psy Rating by half their Willpower Bonus (rounded down) for that test.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Before making a Focus Power test to manifest a power of the Telepathy Discipline or provided by the Astropath Elite Advance, the Astropath's can spend a Fate Point to increase their Psy Rating by half their Willpower Bonus (rounded down) for that test.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Before making a Focus Power test to manifest a power of the Telepathy Discipline or provided by the Astropath Elite Advance, the Astropath's can spend a Fate Point to increase their Psy Rating by half their Willpower Bonus (rounded down) for that test.</p>",
     "aptitudes": [
       "Fellowship"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Astropath E.Adv, Fellowship 40, Willpower 50.",
+      "characteristics": {
+        "fel": 40,
+        "wp": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

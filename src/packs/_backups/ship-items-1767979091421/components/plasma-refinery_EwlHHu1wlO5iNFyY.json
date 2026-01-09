@@ -1,0 +1,29 @@
+{
+  "name": "Plasma Refinery",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Unique)",
+    "hullType": "Special",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
+    "effect": "\"Goliath Factory Ship\" Unique Component. Allows collection+refining of stellar plasma with ores. Make two +10 Pilot (Space Craft) +Manoeuvrability Tests near Blue-Giant Star. Fail by 5 DoF destroys ship. Success gathers full load. +100 Achievement Points to Endeavour. One per Vessel, designed only for its listed ship.",
+    "availability": "unique",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>\"Goliath Factory Ship\" Unique Component. Allows collection+refining of stellar plasma with ores. Make two +10 Pilot (Space Craft) +Manoeuvrability Tests near Blue-Giant Star. Fail by 5 DoF destroys ship. Success gathers full load. +100 Achievement Points to Endeavour. One per Vessel, designed only for its listed ship.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EwlHHu1wlO5iNFyY"
+}

@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "8m",
-    "tacticalSpeed": "25kph",
-    "cruisingSpeed": "-30",
-    "maneuverability": "120",
-    "frontArmour": "Immense (+40)",
-    "sideArmour": "Front 48\nSide 40\nRear 30",
-    "rearArmour": "Commander, Driver, 4 Gunners, Commos Op, Enginseer",
-    "structuralIntegrity": "None",
-    "crew": "Fixed: Front Volcano Cannon (3000m, S/-/-, 10d10+20, Pen 20, Blast(8), Felling(6), Overheats, Recharge). Anything of Size 5 (Hulking) or smaller that is hit by this instantly dies. Can't Move on same turn this weapon fires or is recharging.\nSponsons: Left/Right Facing Twin Linked Heavy Bolters\nTurret: 2x Lascannons (on top of Sponsons)                                                  (click for more!)\nPintle (Optional), one of: Heavy Stubber, Storm Bolter.\n---\nTwin-linked heavy bolter (150m; –/–/6; 1D10+8 X; Pen 5; Clip 240; Reload Full; Tearing, Twin-Linked)\nLascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)\n\n",
-    "passengers": "Traits: Command and Control, Damage Control, Enclosed, Ponderous, Reinforced Armour, Super-Heavy,TrackedVehicle\nSpecial Rules: Lascannon Turrets located above Sponsons, can be fired at the same time and at different angles to the their Sponson as one Full Action. Can replace Lascannons with Logis Engine (BS 35, Ag 40, Per 45, Awareness +10, Preysense Sight, Targeter), Gives Sponsons the Sentry Vehicle Trait. If Enginseer in Crew, Reinforced Armour counts against Righteous Fury, and Tests to put out fire have +20. Can have Environmentally Sealed Trait.",
-    "cargo": "Near Unique",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "nearunique"
   },
   "effects": [],
   "items": [],

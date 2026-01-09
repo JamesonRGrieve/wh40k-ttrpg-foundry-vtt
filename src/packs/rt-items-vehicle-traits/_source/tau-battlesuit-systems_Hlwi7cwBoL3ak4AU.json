@@ -3,7 +3,7 @@
   "type": "vehicleTrait",
   "img": "icons/svg/aura.svg",
   "system": {
-    "descriptionText": null,
+    "descriptionText": "",
     "description": {
       "value": ""
     },
@@ -12,7 +12,11 @@
       "manoeuvrability": 0,
       "armour": 0,
       "integrity": 0
-    }
+    },
+    "identifier": "",
+    "hasLevel": false,
+    "level": null,
+    "notes": ""
   },
   "effects": [],
   "flags": {},

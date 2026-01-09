@@ -3,26 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Operate (Aeronautica)\nAptitudes: Unaligned",
-    "effect": "When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.",
+    "category": "combat",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": false,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Operate (Aeronautica)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

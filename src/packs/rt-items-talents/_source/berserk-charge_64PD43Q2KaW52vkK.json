@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: Strength, Offence, Khorne",
-    "effect": "Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>",
     "aptitudes": [
       "Strength",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

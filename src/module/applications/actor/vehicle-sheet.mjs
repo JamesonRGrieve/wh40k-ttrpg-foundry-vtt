@@ -4,6 +4,7 @@
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
+import ROGUE_TRADER from "../../config.mjs";
 
 /**
  * Actor sheet for Vehicle type actors.
@@ -16,6 +17,10 @@ export default class VehicleSheet extends BaseActorSheet {
         position: {
             width: 1000,
             height: 750
+        },
+        actions: {
+            adjustIntegrity: VehicleSheet.#adjustIntegrity,
+            rollWeapon: VehicleSheet.#rollWeapon
         },
         tabs: [
             { navSelector: "nav.rt-navigation", contentSelector: "#tab-body", initial: "stats", group: "primary" }
@@ -76,7 +81,13 @@ export default class VehicleSheet extends BaseActorSheet {
         await HandlebarManager.loadActorSheetTemplates("vehicle");
         
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.rt;
+        context.dh = CONFIG.rt || ROGUE_TRADER;
+        
+        // Categorize items
+        context.weapons = this.actor.items.filter(i => i.type === 'weapon');
+        context.traits = this.actor.items.filter(i => i.type === 'vehicleTrait');
+        context.upgrades = this.actor.items.filter(i => i.type === 'vehicleUpgrade');
+        
         return context;
     }
 
@@ -87,7 +98,9 @@ export default class VehicleSheet extends BaseActorSheet {
      * @inheritDoc
      */
     async _preparePartContext(partId, context, options) {
-        context = await super._preparePartContext(partId, context, options);
+        // Get shared context from _prepareContext
+        const sharedContext = await this._prepareContext(options);
+        context = { ...sharedContext, ...context };
         
         // Add tab metadata for tab parts
         if (["stats", "weapons", "traits"].includes(partId)) {
@@ -101,5 +114,47 @@ export default class VehicleSheet extends BaseActorSheet {
         }
         
         return context;
+    }
+
+    /* -------------------------------------------- */
+    /*  Action Handlers                             */
+    /* -------------------------------------------- */
+
+    /**
+     * Adjust vehicle integrity value.
+     * @param {Event} event - The triggering event
+     * @param {HTMLElement} target - The action target
+     */
+    static async #adjustIntegrity(event, target) {
+        const delta = parseInt(target.dataset.delta) || 0;
+        const current = this.actor.system.integrity.value;
+        const max = this.actor.system.integrity.max;
+        
+        const newValue = Math.max(0, Math.min(max, current + delta));
+        
+        await this.actor.update({ "system.integrity.value": newValue });
+        
+        // Visual feedback
+        if (delta < 0) {
+            this._flashElement(target, 'damage');
+        } else {
+            this._flashElement(target, 'healing');
+        }
+    }
+
+    /**
+     * Roll a vehicle weapon attack.
+     * @param {Event} event - The triggering event
+     * @param {HTMLElement} target - The action target
+     */
+    static async #rollWeapon(event, target) {
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+        
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        
+        // Use the vehicle's rollItem method
+        await this.actor.rollItem(itemId);
     }
 }

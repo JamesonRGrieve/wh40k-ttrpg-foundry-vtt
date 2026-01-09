@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Heavy Gunner Specialty\n250xp",
-    "effect": "Comrade in Cohesion assists in reloading the Character's currently equipped weapon. This can be used in combination with the Character's own actions. For example, if a weapon requires 2 Full Actions to reload, both the Character and Comrade can use their Full Action to reload it in 1 Turn.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Comrade in Cohesion assists in reloading the Character's currently equipped weapon. This can be used in combination with the Character's own actions. For example, if a weapon requires 2 Full Actions to reload, both the Character and Comrade can use their Full Action to reload it in 1 Turn.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Comrade in Cohesion assists in reloading the Character's currently equipped weapon. This can be used in combination with the Character's own actions. For example, if a weapon requires 2 Full Actions to reload, both the Character and Comrade can use their Full Action to reload it in 1 Turn.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Heavy Gunner Specialty",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; 1+ Cybernetic Limb, Tech-Use +10 \nAptitudes: Intelligence, Tech",
-    "effect": "Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.</p>",
     "aptitudes": [
       "Intelligence",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "1+ Cybernetic Limb, Tech-Use +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

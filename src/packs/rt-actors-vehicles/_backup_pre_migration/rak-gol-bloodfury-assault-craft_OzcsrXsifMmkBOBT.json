@@ -1,0 +1,54 @@
+{
+  "name": "Rak'Gol Bloodfury Assault Craft",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "18m/ 18AU's",
+    "faction": "",
+    "subfaction": "",
+    "type": "skimmer",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 40,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 25,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -5,
+      "tactical": 2,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Unknown"
+    },
+    "passengers": 0,
+    "manoeuverability": 40,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 20,
+      "value": 20,
+      "critical": 0
+    },
+    "weapons": "<p>1 Radcannon (Front, Range 150m (2 AU), S/-/-, 3d10+10 E, Pen 10, Clip 100, Reload 2 Full, Unreliable)</p>\n<p>2 Flechette Cannons (Front/Left/Rear or Front/Right/Rear, Range 300m (3 AU), S/4/-, 3d10+10 R, Pen 3, Clip 500, Reload 2 Full) +10 to hit vehicles, dealing 3d10+20 damage at short range.</p>",
+    "specialRules": "<p>Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. Pilot can make +0 Pilot (Space Craft) Test to affix to a Spacecraft, taking 5 Full Rounds to drill through. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can be launched as either Assault Craft or Fighter, has Craft Rating of +8 (Assault Craft) or +4 (Fighter) and squadron size of 15 for Attack Craft Purposes.</p>",
+    "traitsText": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. Pilot can make +0 Pilot (Space Craft) Test to affix to a Spacecraft, taking 5 Full Rounds to drill through. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can be launched as either Assault Craft or Fighter, has Craft Rating of +8 (Assault Craft) or +4 (Fighter) and squadron size of 15 for Attack Craft Purposes.",
+    "availability": "special",
+    "source": "RT: Battlefleet Koronus"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "OzcsrXsifMmkBOBT"
+}

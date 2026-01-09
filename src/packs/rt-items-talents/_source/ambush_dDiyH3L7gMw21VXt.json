@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Stealth Skill \nAptitudes: Agility, Field Craft",
-    "effect": "The Character's attacks against Unaware targets inflict +1 damage per 2 Degrees of Success on the Weapon Skill or Ballistic Skill beyond the first (aka DoS 3, 5, 7, etc)",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>The Character's attacks against Unaware targets inflict +1 damage per 2 Degrees of Success on the Weapon Skill or Ballistic Skill beyond the first (aka DoS 3, 5, 7, etc)</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>The Character's attacks against Unaware targets inflict +1 damage per 2 Degrees of Success on the Weapon Skill or Ballistic Skill beyond the first (aka DoS 3, 5, 7, etc)</p>",
     "aptitudes": [
       "Agility",
       "Field Craft"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Stealth Skill",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

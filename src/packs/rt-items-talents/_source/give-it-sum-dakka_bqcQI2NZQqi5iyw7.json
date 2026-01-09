@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork, Bulging Biceps, Strength 50",
-    "effect": "The Ork may use the Suppressive Fire Combat Action as a Half Action instead of a Full Action.",
+    "category": "general",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Ork may use the Suppressive Fire Combat Action as a Half Action instead of a Full Action.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Ork may use the Suppressive Fire Combat Action as a Half Action instead of a Full Action.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork, Bulging Biceps, Strength 50",
+      "characteristics": {
+        "s": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

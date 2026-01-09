@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any Non-Psyker, RT Rank 3+, Perception 40+. Must have defeated at least one hostile Psyker using non-lethal methods.",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Faith and Coin\n(Page 70)",
     "description": {
       "value": "<p>The hunter of the witch, psyker, and warp-spawn. Honed in mind, body, and soul to battle with the terrors of the warp. Some see the work as divine, some see it is a grim neccesity.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Witch Finder\nAllows for the purchasing of the Unique Talent Mind Sight, as well as the Psyniscience Skill, even though not a Psyker.</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Witch Finder\nAllows for the purchasing of the Unique Talent Mind Sight, as well as the Psyniscience Skill, even though not a Psyker.",
-    "level": null
+    "level": 0,
+    "benefit": "<p>The hunter of the witch, psyker, and warp-spawn. Honed in mind, body, and soul to battle with the terrors of the warp. Some see the work as divine, some see it is a grim neccesity.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Witch Finder\nAllows for the purchasing of the Unique Talent Mind Sight, as well as the Psyniscience Skill, even though not a Psyker.</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

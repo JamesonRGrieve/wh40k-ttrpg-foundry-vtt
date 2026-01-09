@@ -1,0 +1,29 @@
+{
+  "name": "Warp Sextant",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Archeotech",
+    "hullType": "All Ships",
+    "powerUsage": 4,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "Navigators receive +20 to Perception or Navigation(Warp) Tests to steer the vessel through the warp.",
+    "availability": "extremely-rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Navigators receive +20 to Perception or Navigation(Warp) Tests to steer the vessel through the warp.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "I8yx6XCyRXDTh7Fk"
+}

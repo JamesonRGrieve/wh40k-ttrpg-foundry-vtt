@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "Does not gain fatigue from using Luminen Charge, Luminen Shock, and Luminen Blast.",
+    "category": "general",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Does not gain fatigue from using Luminen Charge, Luminen Shock, and Luminen Blast.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Does not gain fatigue from using Luminen Charge, Luminen Shock, and Luminen Blast.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,29 @@
+{
+  "name": "Augmented Retro-Thrusters (Small)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Raiders, Frigates",
+    "powerUsage": 3,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.",
+    "availability": "rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>+5 to Ship Manoeuvrability. Can't be Damaged or Destroyed Except from a Critical Hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lew5iFX5I4v999IL"
+}

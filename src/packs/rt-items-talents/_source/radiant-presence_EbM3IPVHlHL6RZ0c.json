@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Fellowship 40\nAptitudes: Fellowship, Leadership, Slaanesh",
-    "effect": "All Allies within 20 metres that can see this character gain +10 to Willpower Tests to resist Fear and Intimidation Attempts.\nTalent doesn't affect the character themselves.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>All Allies within 20 metres that can see this character gain +10 to Willpower Tests to resist Fear and Intimidation Attempts.\nTalent doesn't affect the character themselves.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>All Allies within 20 metres that can see this character gain +10 to Willpower Tests to resist Fear and Intimidation Attempts.\nTalent doesn't affect the character themselves.</p>",
     "aptitudes": [
       "Fellowship",
       "Leadership",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fellowship 40",
+      "characteristics": {
+        "fel": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

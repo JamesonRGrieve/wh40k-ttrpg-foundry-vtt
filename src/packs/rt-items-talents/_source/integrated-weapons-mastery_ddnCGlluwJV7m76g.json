@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; T 40, WP 40, Implanted Potentia Coil or Mechanicus Implants, Integrated Weapon Expertise. Aptitudes: Ballistic Skill, Defence ",
-    "effect": "As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "T 40, WP 40, Implanted Potentia Coil or Mechanicus Implants, Integrated Weapon Expertise.",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

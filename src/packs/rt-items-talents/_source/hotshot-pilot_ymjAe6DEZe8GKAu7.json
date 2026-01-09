@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Survival +10 or Operate (Any), Agility 35. Aptitudes: Agility, Tech",
-    "effect": "When character succeeds on an Operate Test (or Survival if riding a living steed), they can choose to suffer 1 Fatigue to increase their number of Degrees of Success by Agility Bonus / 2\nWhen character fails on such a test, can choose to suffer 1 Fatigue to reduce their number of Degrees of Failiure by Agility Bonus / 2 (min 1).",
+    "category": "technical",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>When character succeeds on an Operate Test (or Survival if riding a living steed), they can choose to suffer 1 Fatigue to increase their number of Degrees of Success by Agility Bonus / 2\nWhen character fails on such a test, can choose to suffer 1 Fatigue to reduce their number of Degrees of Failiure by Agility Bonus / 2 (min 1).</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>When character succeeds on an Operate Test (or Survival if riding a living steed), they can choose to suffer 1 Fatigue to increase their number of Degrees of Success by Agility Bonus / 2\nWhen character fails on such a test, can choose to suffer 1 Fatigue to reduce their number of Degrees of Failiure by Agility Bonus / 2 (min 1).</p>",
     "aptitudes": [
       "Agility",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Survival +10 or Operate (Any), Agility 35.",
+      "characteristics": {
+        "ag": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

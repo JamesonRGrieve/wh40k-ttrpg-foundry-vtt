@@ -3,20 +3,27 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Flak, Mesh, Carapace, or Power",
     "effect": "Gain +5 AP, each hit agains the armour reduces AP by 1 until reaching standard AP. \nDecrease Armour Availability by 1 (Rare-->Very Rare)",
-    "weight": "+1.5kg",
     "availability": "Special",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Gain +5 AP, each hit agains the armour reduces AP by 1 until reaching standard AP. \nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 5,
+      "maxAgility": 0,
+      "weight": 1.5
+    },
+    "restrictions": {
+      "armourTypes": [
+        "flak",
+        "mesh",
+        "carapace",
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

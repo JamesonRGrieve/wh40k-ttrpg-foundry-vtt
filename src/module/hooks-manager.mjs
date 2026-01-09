@@ -19,6 +19,7 @@ import {
     BaseItemSheet,
     WeaponSheet,
     ArmourSheet,
+    ArmourModSheet,
     TalentSheet,
     TraitSheet,
     GearSheet,
@@ -28,11 +29,15 @@ import {
     CyberneticSheet,
     ForceFieldSheet,
     CriticalInjurySheet,
+    ConditionSheet,
     StorageLocationSheet,
     PeerEnemySheet,
     JournalEntryItemSheet,
     WeaponModSheet,
-    AttackSpecialSheet
+    AttackSpecialSheet,
+    ShipComponentSheet,
+    ShipWeaponSheet,
+    ShipUpgradeSheet
 } from './applications/item/_module.mjs';
 
 import { RTCompendiumBrowser } from './applications/compendium-browser.mjs';
@@ -310,6 +315,13 @@ Enable Debug with: game.rt.debug = true
             label: "RT.Sheet.CriticalInjury"
         });
         
+        // Condition sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ConditionSheet, {
+            types: ["condition"],
+            makeDefault: true,
+            label: "RT.Sheet.Condition"
+        });
+        
         // Storage Location sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, StorageLocationSheet, {
             types: ["storageLocation"],
@@ -338,11 +350,39 @@ Enable Debug with: game.rt.debug = true
             label: "RT.Sheet.WeaponMod"
         });
         
+        // Armour Modification sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ArmourModSheet, {
+            types: ["armourModification"],
+            makeDefault: true,
+            label: "RT.Sheet.ArmourMod"
+        });
+        
         // Attack Special sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AttackSpecialSheet, {
             types: ["attackSpecial"],
             makeDefault: true,
             label: "RT.Sheet.AttackSpecial"
+        });
+        
+        // Ship Component sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipComponentSheet, {
+            types: ["shipComponent"],
+            makeDefault: true,
+            label: "RT.Sheet.ShipComponent"
+        });
+        
+        // Ship Weapon sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipWeaponSheet, {
+            types: ["shipWeapon"],
+            makeDefault: true,
+            label: "RT.Sheet.ShipWeapon"
+        });
+        
+        // Ship Upgrade sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipUpgradeSheet, {
+            types: ["shipUpgrade"],
+            makeDefault: true,
+            label: "RT.Sheet.ShipUpgrade"
         });
 
         RogueTraderSettings.registerSettings();

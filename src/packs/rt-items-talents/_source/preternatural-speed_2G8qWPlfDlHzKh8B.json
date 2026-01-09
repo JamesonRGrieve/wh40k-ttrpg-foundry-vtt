@@ -3,20 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Weapon Skill 40, Agility 50\nAptitudes: Agility, Offence, Slaanesh",
-    "effect": "When making a Charge Move, the character doubles their normal charge movement (EG: Agility Bonus 3 --> Charge Move 9, Doubled to 18 by this talent).",
+    "category": "general",
     "source": "Only War Core",
     "description": {
       "value": "<p>When making a Charge Move, the character doubles their normal charge movement (EG: Agility Bonus 3 --> Charge Move 9, Doubled to 18 by this talent).</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When making a Charge Move, the character doubles their normal charge movement (EG: Agility Bonus 3 --> Charge Move 9, Doubled to 18 by this talent).</p>",
     "aptitudes": [
       "Agility",
       "Offence",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 40, Agility 50",
+      "characteristics": {
+        "ws": 40,
+        "ag": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

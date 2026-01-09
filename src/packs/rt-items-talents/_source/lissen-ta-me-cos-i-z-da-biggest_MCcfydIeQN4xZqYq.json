@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork, Might Makes Right, Intimidate +10",
-    "effect": "The Ork can now use Might Makes Right Trait (Can use Intimidate to perform all functions of Command) on Non Orks as well as Orks, and can affect a number of creatures with Might Makes Right equal to 10x Strength Bonus.",
+    "category": "social",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Ork can now use Might Makes Right Trait (Can use Intimidate to perform all functions of Command) on Non Orks as well as Orks, and can affect a number of creatures with Might Makes Right equal to 10x Strength Bonus.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Ork can now use Might Makes Right Trait (Can use Intimidate to perform all functions of Command) on Non Orks as well as Orks, and can affect a number of creatures with Might Makes Right equal to 10x Strength Bonus.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork, Might Makes Right, Intimidate +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,27 @@
+{
+  "name": "Master of Whispers",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Spymaster for both internal and external plots.",
+    "careerPreferences": "Usually Seneschal, any but Missionary.",
+    "subordinates": "Agents/Spies (on and off ship), void-ship librarium savants.",
+    "importantSkills": "Inquiry, Deceive, Interrogation, Scrutiny",
+    "effect": "+10 to Disinformation Extended Action",
+    "description": {
+      "value": "<p><b>Purpose:</b> Spymaster for both internal and external plots.</p><p><b>Effect:</b> +10 to Disinformation Extended Action</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YyrDEEsfT2ITWOT0"
+}

@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Fellowship 35\nAptitudes: Unaligned",
-    "effect": "Character acquires a Lesser Minion of Chaos, such as a cultist, servitor, feral xenos hound, etc. talent can be taken more than once, each time adding another Lesser Minion.",
+    "category": "general",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character acquires a Lesser Minion of Chaos, such as a cultist, servitor, feral xenos hound, etc. talent can be taken more than once, each time adding another Lesser Minion.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character acquires a Lesser Minion of Chaos, such as a cultist, servitor, feral xenos hound, etc. talent can be taken more than once, each time adding another Lesser Minion.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Fellowship 35",
+      "characteristics": {
+        "fel": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

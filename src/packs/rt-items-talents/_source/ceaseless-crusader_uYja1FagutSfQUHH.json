@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - SoB) (T1)",
-    "requirements": "Tier 1: Sister of Battle E.Adv, Willpower 45\nAptitudes:  Leadership, Willpower",
-    "effect": "As a Free Action, the Sister can spend a Fate Point to ignore the effects of Fatigue until the end of the encounter. On doing so every other firendly character within 30m removes 1 Fatigue.",
+    "category": "general",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As a Free Action, the Sister can spend a Fate Point to ignore the effects of Fatigue until the end of the encounter. On doing so every other firendly character within 30m removes 1 Fatigue.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": false,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>As a Free Action, the Sister can spend a Fate Point to ignore the effects of Fatigue until the end of the encounter. On doing so every other firendly character within 30m removes 1 Fatigue.</p>",
     "aptitudes": [
       "Leadership",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Sister of Battle E.Adv, Willpower 45",
+      "characteristics": {
+        "wp": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

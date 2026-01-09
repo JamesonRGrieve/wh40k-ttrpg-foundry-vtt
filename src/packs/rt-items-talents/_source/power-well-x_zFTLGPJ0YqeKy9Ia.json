@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Psy Rating",
-    "effect": "Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times",
+    "category": "psychic",
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Psy Rating",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

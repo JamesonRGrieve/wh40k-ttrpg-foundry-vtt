@@ -3,20 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; WS 40, BS 40, Two-Weapon Wielder (Ranged and Melee) Aptitudes: WS, BS, Unaligned",
-    "effect": "Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)</p>",
     "aptitudes": [
       "WS",
       "BS",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WS 40, BS 40, Two-Weapon Wielder (Ranged and Melee)",
+      "characteristics": {
+        "ws": 40,
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "Warrant of Trade carries increased signficance, +10 to Interaction Tests with those who understand the importance of the Warrant, such as traders and imperial officials.",
+    "category": "general",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Warrant of Trade carries increased signficance, +10 to Interaction Tests with those who understand the importance of the Warrant, such as traders and imperial officials.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Warrant of Trade carries increased signficance, +10 to Interaction Tests with those who understand the importance of the Warrant, such as traders and imperial officials.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Unt) (T3)",
-    "requirements": "Tier 3: Untouchable E.Adv, Warp Anathema, Willpower 55. Aptitudes: Willpower",
-    "effect": "All creatures with the Daemonic Trait within Willpower Bonus metres of the Untouchable do not gain any of the benefits of that trait.",
+    "category": "psychic",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>All creatures with the Daemonic Trait within Willpower Bonus metres of the Untouchable do not gain any of the benefits of that trait.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>All creatures with the Daemonic Trait within Willpower Bonus metres of the Untouchable do not gain any of the benefits of that trait.</p>",
     "aptitudes": [
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Untouchable E.Adv, Warp Anathema, Willpower 55.",
+      "characteristics": {
+        "wp": 55
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

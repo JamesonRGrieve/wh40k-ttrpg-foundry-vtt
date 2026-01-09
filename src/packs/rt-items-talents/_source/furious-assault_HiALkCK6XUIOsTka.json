@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Weapon Skill 35\nAptitudes: Weapon Skill, Offence, Khorne",
-    "effect": "On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nNote using a reaction in this way means the character cannot Parry or Dodge until their next turn.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nNote using a reaction in this way means the character cannot Parry or Dodge until their next turn.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nNote using a reaction in this way means the character cannot Parry or Dodge until their next turn.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 35",
+      "characteristics": {
+        "ws": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

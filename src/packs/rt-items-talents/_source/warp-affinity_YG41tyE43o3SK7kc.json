@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Psy Rating, Special",
-    "effect": "When rolling Psychic Phenomenon, can discard result, take 1d5 Corruption, and roll again with no modifiers.\nMutually exclusive with Rite of Sanctioning Talent, cannot have both. ",
+    "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When rolling Psychic Phenomenon, can discard result, take 1d5 Corruption, and roll again with no modifiers.\nMutually exclusive with Rite of Sanctioning Talent, cannot have both. </p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When rolling Psychic Phenomenon, can discard result, take 1d5 Corruption, and roll again with no modifiers.\nMutually exclusive with Rite of Sanctioning Talent, cannot have both. </p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Psy Rating, Special",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

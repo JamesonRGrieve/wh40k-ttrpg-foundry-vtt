@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Fellowship 40, Infamy 60, Air of Authority. Aptitudes: Unaligned",
-    "effect": "The Character can have a number of minions equal to one and a half times their Fellowship Bonus, rounded down. Instead of their Fellowship Bonus.",
+    "category": "social",
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character can have a number of minions equal to one and a half times their Fellowship Bonus, rounded down. Instead of their Fellowship Bonus.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>The Character can have a number of minions equal to one and a half times their Fellowship Bonus, rounded down. Instead of their Fellowship Bonus.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fellowship 40, Infamy 60, Air of Authority.",
+      "characteristics": {
+        "fel": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,29 @@
+{
+  "name": "Gyro-stabilisation Matrix",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Archeotech)",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "When Performing the \"Adjust Speed and Bearing\", \"Come to a New Heading\", or \"Evasive Manoeuver\" Manoeuvre Actions, Pilot (Space Craft) + Manoeuvrability Tests are +0. (instead of -20, -10, and -10 Respectively). Only one per vessel.",
+    "availability": "extremely-rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>When Performing the \"Adjust Speed and Bearing\", \"Come to a New Heading\", or \"Evasive Manoeuver\" Manoeuvre Actions, Pilot (Space Craft) + Manoeuvrability Tests are +0. (instead of -20, -10, and -10 Respectively). Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BIhWXRsA5rxh2Djf"
+}

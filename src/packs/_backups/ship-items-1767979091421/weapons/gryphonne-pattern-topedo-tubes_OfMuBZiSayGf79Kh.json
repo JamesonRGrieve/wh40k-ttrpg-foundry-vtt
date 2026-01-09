@@ -1,0 +1,27 @@
+{
+  "name": "Gryphonne-pattern Topedo Tubes",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Torpedo Tubes",
+    "hullType": "Raiders, Frigates, Light cruisers, Cruisers.",
+    "powerUsage": 2,
+    "spaceUsage": 6,
+    "spCost": 1,
+    "damage": "-",
+    "strength": 4,
+    "critRating": "-",
+    "range": "-",
+    "availability": "scarce",
+    "notes": "Must mount on Prow or Keel. Can fire 4 torpedos per salvo, can store 24 (+4 in tubes). If component is damaged/destroyed but not unpowered/depressurised while torpedos are loaded, roll 1d10, on a 0, component explodes, destroying it and doing 2d5 Hull Damage.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Prow or Keel. Can fire 4 torpedos per salvo, can store 24 (+4 in tubes). If component is damaged/destroyed but not unpowered/depressurised while torpedos are loaded, roll 1d10, on a 0, component explodes, destroying it and doing 2d5 Hull Damage.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OfMuBZiSayGf79Kh"
+}

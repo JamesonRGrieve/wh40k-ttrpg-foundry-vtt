@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Any Armour",
     "effect": "Allows fitting of any small tool or compact/micro ranged weapon to be fitted outside the armour. Tool/Weapon must be acquired seperately.",
-    "weight": "+0.1kg",
     "availability": "common",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Allows fitting of any small tool or compact/micro ranged weapon to be fitted outside the armour. Tool/Weapon must be acquired seperately.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0.1
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,29 @@
+{
+  "name": "Clan-kin Quarters",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 1,
+    "spaceUsage": 4,
+    "spCost": 1,
+    "effect": "Where the regular crew live. All Command Tests to defend against boarding and hit and run attacks gain +5. All Sources of Morale loss are reduced by 1 (minimum 1)",
+    "availability": "rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Where the regular crew live. All Command Tests to defend against boarding and hit and run attacks gain +5. All Sources of Morale loss are reduced by 1 (minimum 1)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PS2LecQGjlePCIXR"
+}

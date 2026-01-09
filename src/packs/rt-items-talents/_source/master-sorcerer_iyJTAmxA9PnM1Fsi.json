@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent  (Elite)",
-    "requirements": "Sorcerer, Intelligence 45, Forbidden Lore (Warp/Daemonology)+10, Scholastic Lore (Occult) +10, 1000xp",
-    "effect": "Sorcerous Powers now have a \"Psy Rating\" of the character's Full Unmodified Intelligence Bonus, as opposed to Half. Still unaffected by Unnatural Intelligence.",
+    "category": "knowledge",
     "source": "RT: Edge of the Abyss",
     "description": {
       "value": "<p>Sorcerous Powers now have a \"Psy Rating\" of the character's Full Unmodified Intelligence Bonus, as opposed to Half. Still unaffected by Unnatural Intelligence.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Sorcerous Powers now have a \"Psy Rating\" of the character's Full Unmodified Intelligence Bonus, as opposed to Half. Still unaffected by Unnatural Intelligence.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Sorcerer, Intelligence 45, Forbidden Lore (Warp/Daemonology)+10, Scholastic Lore (Occult) +10, 1000xp",
+      "characteristics": {
+        "int": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

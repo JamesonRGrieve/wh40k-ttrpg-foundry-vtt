@@ -3,20 +3,25 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Any Carapace or Power Armour",
     "effect": "Weighs half regular amount, +1 AP, halve PEN of weapons when calculating damage against wearer (round up). Armour is Best Craftsmanship. Usually innate to armour rather than added.",
-    "weight": "x1/2",
     "availability": "near-unique",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Weighs half regular amount, +1 AP, halve PEN of weapons when calculating damage against wearer (round up). Armour is Best Craftsmanship. Usually innate to armour rather than added.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 1,
+      "maxAgility": 0,
+      "weight": 1
+    },
+    "restrictions": {
+      "armourTypes": [
+        "carapace",
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Dark Eldar, Power Through Pain",
-    "effect": "After the character spends a fate point to regain lost wounds, for the rest of the encounter they will regain 1d5 lost wounds every time they gain a Pain Token.",
+    "category": "general",
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>After the character spends a fate point to regain lost wounds, for the rest of the encounter they will regain 1d5 lost wounds every time they gain a Pain Token.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>After the character spends a fate point to regain lost wounds, for the rest of the encounter they will regain 1d5 lost wounds every time they gain a Pain Token.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Dark Eldar, Power Through Pain",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

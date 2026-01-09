@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Power Armour, Legion/Astartes Power Armour",
     "effect": "Allows user to adhere to metal surfaces such as hull plating in low or zero gravity. This halves their Agility (and as a result movement), but otherwise allows normal movement.",
-    "weight": "0kg",
     "availability": "Special",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Allows user to adhere to metal surfaces such as hull plating in low or zero gravity. This halves their Agility (and as a result movement), but otherwise allows normal movement.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

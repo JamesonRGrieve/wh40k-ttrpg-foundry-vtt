@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Toughness 40\nAptitudes: Toughness, Defence, Nurgle",
-    "effect": "When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.</p>",
     "aptitudes": [
       "Toughness",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Toughness 40",
+      "characteristics": {
+        "t": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

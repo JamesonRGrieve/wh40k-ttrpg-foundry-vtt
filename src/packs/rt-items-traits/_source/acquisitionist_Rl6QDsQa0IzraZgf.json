@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Seneschal, RT Rank 3+",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Into the Storm\n(Page 72)",
     "description": {
       "value": "<p>A Seneschal focuses their interest into the criminal underworld. Mastering knowledge of who and what organisations may be bribed, how best to avoid those that can't, and the process acquiring anything and everything illict or otherwise whilst leaving barely a trace, or at least plasuble deniability.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Acquisitionist.</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Acquisitionist.",
-    "level": null
+    "level": 0,
+    "benefit": "<p>A Seneschal focuses their interest into the criminal underworld. Mastering knowledge of who and what organisations may be bribed, how best to avoid those that can't, and the process acquiring anything and everything illict or otherwise whilst leaving barely a trace, or at least plasuble deniability.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Acquisitionist.</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

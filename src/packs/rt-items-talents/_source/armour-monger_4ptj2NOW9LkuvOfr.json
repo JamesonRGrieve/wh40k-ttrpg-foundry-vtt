@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Int 35, Tech-Use, Trade (Armourer) Aptitudes; Intelligence, Tech, Unaligned",
-    "effect": "Character increases AP of any armour they wear by 1 in all locations that armour covers. Requires one hour per day to clean, repair, and make minor modifications to armour (no test needed). Bonus only applies to armour when worn by character.\nDH 2E: Gain Intelligence Bonus points that can be distributed between Armour pieces (Head, Body, Left/Right Arm, Left/Right Leg), each point increases AP by 1 at that location.",
+    "category": "knowledge",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character increases AP of any armour they wear by 1 in all locations that armour covers. Requires one hour per day to clean, repair, and make minor modifications to armour (no test needed). Bonus only applies to armour when worn by character.\nDH 2E: Gain Intelligence Bonus points that can be distributed between Armour pieces (Head, Body, Left/Right Arm, Left/Right Leg), each point increases AP by 1 at that location.</p>"
     },
     "tier": 2,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character increases AP of any armour they wear by 1 in all locations that armour covers. Requires one hour per day to clean, repair, and make minor modifications to armour (no test needed). Bonus only applies to armour when worn by character.\nDH 2E: Gain Intelligence Bonus points that can be distributed between Armour pieces (Head, Body, Left/Right Arm, Left/Right Leg), each point increases AP by 1 at that location.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Int 35, Tech-Use, Trade (Armourer) Aptitudes; Intelligence, Tech, Unaligned",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

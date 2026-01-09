@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Praecentor of Penance Advanced Specialty (300xp)",
-    "effect": "The Character gains an extra Comrade. This advance can be taken multiple times, up to the character's Fellowship Bonus, indicated by \"X\"",
+    "category": "social",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Character gains an extra Comrade. This advance can be taken multiple times, up to the character's Fellowship Bonus, indicated by \"X\"</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character gains an extra Comrade. This advance can be taken multiple times, up to the character's Fellowship Bonus, indicated by \"X\"</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Praecentor of Penance Advanced Specialty (300xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Perception 45, Bulging Biceps \nAptitudes: Perception, Offence",
-    "effect": "When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.</p>",
     "aptitudes": [
       "Perception",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Perception 45, Bulging Biceps",
+      "characteristics": {
+        "per": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; WS 40, BS 40, Wep. Training (Any Two)\nAptitudes; Weapon Skill, Ballistic Skill, Unaligned",
-    "effect": "When using a Non-Exotic weapon that the character is not trained in, suffer -10 penalty rather than -20.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When using a Non-Exotic weapon that the character is not trained in, suffer -10 penalty rather than -20.</p>"
     },
     "tier": 3,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When using a Non-Exotic weapon that the character is not trained in, suffer -10 penalty rather than -20.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "WS 40, BS 40, Wep. Training (Any Two)",
+      "characteristics": {
+        "ws": 40,
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

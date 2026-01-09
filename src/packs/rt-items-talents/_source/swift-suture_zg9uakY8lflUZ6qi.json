@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Medicae \nAptitudes: Finesse, Intelligence",
-    "effect": "Whenever character succeeds on a Test to use First Aid Special Use of the Medicae Skill, they also end the Blood Loss Condition if the Patient is suffering it.",
+    "category": "knowledge",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever character succeeds on a Test to use First Aid Special Use of the Medicae Skill, they also end the Blood Loss Condition if the Patient is suffering it.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Whenever character succeeds on a Test to use First Aid Special Use of the Medicae Skill, they also end the Blood Loss Condition if the Patient is suffering it.</p>",
     "aptitudes": [
       "Finesse",
       "Intelligence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Medicae",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,29 +1,39 @@
 {
   "name": "Helpless",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Attacks against helpless targets: Autohit",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Attacks against helpless targets: Autohit</p>"
-    },
-    "severity": 1,
+    "identifier": "helpless",
+    "nature": "harmful",
+    "effect": "<p>Attacks against helpless targets automatically hit. Helpless characters cannot take Actions or Reactions.</p>",
+    "removal": "<p>Removed when the target can act again (e.g., when no longer unconscious, bound, or immobilized).</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "target",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>Attacks against helpless targets automatically hit. Helpless characters cannot take Actions or Reactions.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "target"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "w4AfoJKYXQuJUshP"

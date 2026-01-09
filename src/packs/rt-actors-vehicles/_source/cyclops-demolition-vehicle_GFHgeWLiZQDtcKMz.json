@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "12m",
-    "tacticalSpeed": "42kph",
-    "cruisingSpeed": "-10",
-    "maneuverability": "10",
-    "frontArmour": "Average (+0)",
-    "sideArmour": "Front 10\nSide 10\nRear 8",
-    "rearArmour": "None (Remote Controlled)",
-    "structuralIntegrity": "None",
-    "crew": "Cyclops Demolition Charge: (4d10+10 X, Pen 8, Blast(1d10+10), Concussive(5))",
-    "passengers": "Traits: Enclosed, Extremely Volatile, Ponderous, Tracked Vehicle\nSpecial Rules: Remote Controlled Little Boy! Controller uses 1kg device and requires Trained Tech-Use. Has operating range of 200m, reduced by 1m+ walls and bad weather. Split Actions between self and control device. Detonating requires Half Action (Attack/Concentration). Detonates if suffering Righteous Fury, If it explodes by any means, uses Demolition Charge Profile. Takes up space of ~5 Guardsman for transport purposes. max 1 on Valkyrie.",
-    "cargo": "Scarce",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": 5,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "scarce"
   },
   "effects": [],
   "items": [],

@@ -1,0 +1,28 @@
+{
+  "name": "Mastermind (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "unique",
+    "requirements": "Colchite Servo-Master Alternative Advance (Innate), 500xp. Int 30, WP 30, Implanted Colchite Device",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>This Talent can be taken multiple times (max 5). Each time it is taken, the Character gains the ability to control one additional servitor using their mind. Up to a maximum number of Servitors equal to every full 10 points of their Intelligence Characteristic, or 5 Servitors, whichever is smaller. The range of control is 20m x Character's Willpower Bonus. Servitors that go beyond this range or whose psychic link is broken such as due to an Untouchable's presence or Character losing concentration revert back to their normal routines or perform the last command given to them. Servitors must be fitted with Colchite Implants in order to be psychically controlled. Maintaining control over any number of servitors requires a Half Action each turn.</p>"
+    },
+    "benefit": "<p>This Talent can be taken multiple times (max 5). Each time it is taken, the Character gains the ability to control one additional servitor using their mind. Up to a maximum number of Servitors equal to every full 10 points of their Intelligence Characteristic, or 5 Servitors, whichever is smaller. The range of control is 20m x Character's Willpower Bonus. Servitors that go beyond this range or whose psychic link is broken such as due to an Untouchable's presence or Character losing concentration revert back to their normal routines or perform the last command given to them. Servitors must be fitted with Colchite Implants in order to be psychically controlled. Maintaining control over any number of servitors requires a Half Action each turn.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ngscQdLku2Q12Fgh"
+}

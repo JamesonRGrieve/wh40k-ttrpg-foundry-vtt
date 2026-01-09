@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau, Bonding Ritual, Command +10",
-    "effect": "The Tau gains the \"Follow my Lead\" Special Action if they do not already have it. If they did, the bonus it provides increases to +20.\nFollow my Lead: Half Action, Concentration: Until the beginning of their next turn, each allied Tau within 10 metres who takes the same Half Action the character takes after performing this one gain +10 to any tests associated with that action.",
+    "category": "general",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The Tau gains the \"Follow my Lead\" Special Action if they do not already have it. If they did, the bonus it provides increases to +20.\nFollow my Lead: Half Action, Concentration: Until the beginning of their next turn, each allied Tau within 10 metres who takes the same Half Action the character takes after performing this one gain +10 to any tests associated with that action.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Tau gains the \"Follow my Lead\" Special Action if they do not already have it. If they did, the bonus it provides increases to +20.\nFollow my Lead: Half Action, Concentration: Until the beginning of their next turn, each allied Tau within 10 metres who takes the same Half Action the character takes after performing this one gain +10 to any tests associated with that action.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau, Bonding Ritual, Command +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

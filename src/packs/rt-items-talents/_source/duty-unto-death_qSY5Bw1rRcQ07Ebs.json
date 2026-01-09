@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Sister Oblatia Alternative Advance, 300xp, WP 45",
-    "effect": "Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.",
+    "category": "combat",
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Sister Oblatia Alternative Advance, 300xp, WP 45",
+      "characteristics": {
+        "wp": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

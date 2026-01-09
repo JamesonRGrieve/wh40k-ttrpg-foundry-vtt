@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Perception 35 \nAptitudes: Offence, Perception",
-    "effect": "When using the Overwatch Action, character can use Perception Characteristic instead of Agility Characteristic to determine whether they or their target takes an action first, as well as for any Opposed Agility Tests that Overwatch calls for them to take.",
+    "category": "general",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When using the Overwatch Action, character can use Perception Characteristic instead of Agility Characteristic to determine whether they or their target takes an action first, as well as for any Opposed Agility Tests that Overwatch calls for them to take.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When using the Overwatch Action, character can use Perception Characteristic instead of Agility Characteristic to determine whether they or their target takes an action first, as well as for any Opposed Agility Tests that Overwatch calls for them to take.</p>",
     "aptitudes": [
       "Offence",
       "Perception"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Perception 35",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

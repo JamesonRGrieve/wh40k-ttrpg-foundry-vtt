@@ -1,29 +1,39 @@
 {
   "name": "Concealed",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Shooting at a concealed target: -30",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Shooting at a concealed target: -30</p>"
-    },
-    "severity": 1,
+    "identifier": "concealed",
+    "nature": "harmful",
+    "effect": "<p>Attacks against concealed targets suffer a -20 penalty.</p>",
+    "removal": "<p>Removed when the target is no longer obscured or hidden from view.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "target",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>Attacks against concealed targets suffer a -20 penalty.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "target"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "QqoNdgRcW3haCt0J"

@@ -1,0 +1,29 @@
+{
+  "name": "Repulsor Shield",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Void Shield",
+    "hullType": "All Ships",
+    "powerUsage": 6,
+    "spaceUsage": 1,
+    "spCost": 0,
+    "effect": "Provides one void shield, absorbing one attack from any ship firing on this one. This Vessel does not suffer penalties to Manoevure actions when travelling through Nebulas, Ice Rings, Plasma Clouds, or other celestial phenomena consisting primarily of small particles.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Provides one void shield, absorbing one attack from any ship firing on this one. This Vessel does not suffer penalties to Manoevure actions when travelling through Nebulas, Ice Rings, Plasma Clouds, or other celestial phenomena consisting primarily of small particles.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bztJtJYNIuDEsRmR"
+}

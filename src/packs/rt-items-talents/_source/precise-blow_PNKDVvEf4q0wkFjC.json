@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Weapon Skill 40, Sure Strike\nAptitudes: Weapon Skill, Finesse, Slaanesh",
-    "effect": "When making a Called Shot melee attack, the character reduces the penalty by 10 (-20 to -10, or to +0 if combined with Sure Strike)",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When making a Called Shot melee attack, the character reduces the penalty by 10 (-20 to -10, or to +0 if combined with Sure Strike)</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When making a Called Shot melee attack, the character reduces the penalty by 10 (-20 to -10, or to +0 if combined with Sure Strike)</p>",
     "aptitudes": [
       "Weapon Skill",
       "Finesse",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 40, Sure Strike",
+      "characteristics": {
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

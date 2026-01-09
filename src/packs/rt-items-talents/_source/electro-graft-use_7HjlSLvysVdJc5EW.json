@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "Can use Electro Graft to access data ports, +10 to Common Lore, Inquiry, or Tech-Use when connected to a data port.",
+    "category": "knowledge",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Electro Graft to access data ports, +10 to Common Lore, Inquiry, or Tech-Use when connected to a data port.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can use Electro Graft to access data ports, +10 to Common Lore, Inquiry, or Tech-Use when connected to a data port.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

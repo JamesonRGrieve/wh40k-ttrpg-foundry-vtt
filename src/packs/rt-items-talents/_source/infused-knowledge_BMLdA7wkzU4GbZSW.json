@@ -3,28 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Intelligence 40, Lore(any one)\nAptitudes: Intelligence, Knowledge, Tzeentch",
-    "effect": "Character counts as having all Common Lore and Scholastic Lore Skills at Rank 1 (Basic/Known), they also add One Degree of Success to any successful Common or Scholastic Lore Tests.\nIf later purchasing Lore Skill advances, they must still start at rank 1.",
+    "category": "knowledge",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character counts as having all Common Lore and Scholastic Lore Skills at Rank 1 (Basic/Known), they also add One Degree of Success to any successful Common or Scholastic Lore Tests.\nIf later purchasing Lore Skill advances, they must still start at rank 1.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Character counts as having all Common Lore and Scholastic Lore Skills at Rank 1 (Basic/Known), they also add One Degree of Success to any successful Common or Scholastic Lore Tests.\nIf later purchasing Lore Skill advances, they must still start at rank 1.</p>",
     "aptitudes": [
       "Intelligence",
       "Knowledge",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Intelligence 40, Lore(any one)",
+      "characteristics": {
+        "int": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

@@ -3,28 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Willpower 40\nAptitudes: Willpower, Defence, Nurgle",
-    "effect": "Whenever Suffering Blood Loss, only test to avoid death every five rounds, instead of every round.\nDH 2E: Whenever character would suffer Fatigue due to Blood Loss can make a +0 Willpower Test, if successful they do not suffer Fatigue. (note, Blood Loss doesn't kill in DH 2E)",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Whenever Suffering Blood Loss, only test to avoid death every five rounds, instead of every round.\nDH 2E: Whenever character would suffer Fatigue due to Blood Loss can make a +0 Willpower Test, if successful they do not suffer Fatigue. (note, Blood Loss doesn't kill in DH 2E)</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Whenever Suffering Blood Loss, only test to avoid death every five rounds, instead of every round.\nDH 2E: Whenever character would suffer Fatigue due to Blood Loss can make a +0 Willpower Test, if successful they do not suffer Fatigue. (note, Blood Loss doesn't kill in DH 2E)</p>",
     "aptitudes": [
       "Willpower",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Willpower 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

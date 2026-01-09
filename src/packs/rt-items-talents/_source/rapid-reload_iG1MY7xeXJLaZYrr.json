@@ -3,28 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: Agility, Fieldcraft, Slaanesh",
-    "effect": "Halve reload time of all weapons, rounding down. Halving a Half Action reload makes it a Free Action.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Halve reload time of all weapons, rounding down. Halving a Half Action reload makes it a Free Action.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": false,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>Halve reload time of all weapons, rounding down. Halving a Half Action reload makes it a Free Action.</p>",
     "aptitudes": [
       "Agility",
       "Fieldcraft",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Ballistic Skill 45 or Weapon Skill 45\nAptitudes: Perception, Finesse",
-    "effect": "Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.",
+    "category": "combat",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.</p>",
     "aptitudes": [
       "Perception",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 45 or Weapon Skill 45",
+      "characteristics": {
+        "bs": 45,
+        "ws": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

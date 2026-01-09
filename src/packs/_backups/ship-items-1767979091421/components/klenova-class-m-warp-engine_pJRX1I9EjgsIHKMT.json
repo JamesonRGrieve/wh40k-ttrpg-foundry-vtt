@@ -1,0 +1,29 @@
+{
+  "name": "Klenova Class M Warp Engine",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Warp Engine",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 10,
+    "spaceUsage": 10,
+    "spCost": 0,
+    "effect": "Can make warp jumps without a Navigator. But can only make Calculated Jumps, can't make warp assessments, must make Daily tests on Warp Travel Encounter table, and has no way to interface a Navigator or any other component that modifies warp travel. The Navis Nobilite dislike the existence of this item, and those that use it.",
+    "availability": "scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Can make warp jumps without a Navigator. But can only make Calculated Jumps, can't make warp assessments, must make Daily tests on Warp Travel Encounter table, and has no way to interface a Navigator or any other component that modifies warp travel. The Navis Nobilite dislike the existence of this item, and those that use it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pJRX1I9EjgsIHKMT"
+}

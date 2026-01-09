@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Bulkwark Advanced Specialty (400xp)",
-    "effect": "Whilst the Character is in a Frenzy, whenever an enemy inflicts Critical Damage on an ally or hits a comrade within 10 metres of the Character, they can increase their Unnatural Strength and Toughness Traits by +1 until the end of the encounter. These traits cannot exceed +8 each.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whilst the Character is in a Frenzy, whenever an enemy inflicts Critical Damage on an ally or hits a comrade within 10 metres of the Character, they can increase their Unnatural Strength and Toughness Traits by +1 until the end of the encounter. These traits cannot exceed +8 each.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whilst the Character is in a Frenzy, whenever an enemy inflicts Critical Damage on an ally or hits a comrade within 10 metres of the Character, they can increase their Unnatural Strength and Toughness Traits by +1 until the end of the encounter. These traits cannot exceed +8 each.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Bulkwark Advanced Specialty (400xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

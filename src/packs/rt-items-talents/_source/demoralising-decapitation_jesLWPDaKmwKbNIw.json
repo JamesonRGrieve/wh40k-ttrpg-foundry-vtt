@@ -3,27 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; WS 40, Fel 35, Combat Master\nAptitudes: Social, Weapon Skill\nVeteran Talent Requirement Fulfilled ",
-    "effect": "Veteran Talent Requirement: Character fights an Elite-Level or Master-Level Foe in hand-to-hand combat during a mission unaided and wins.\nOnce per Encounter when the character kills an Elite or Master Level foe who is in charge of a group or formation of enemies, all subordinates of the slain foe who witness them die must make a -20 Willpower Test (Orks do not apply their Mob Rule Trait to this test), any that fail suffers -10 to all Tests for the remainder of the encounter, shaken by the death of their leader.",
+    "category": "psychic",
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character fights an Elite-Level or Master-Level Foe in hand-to-hand combat during a mission unaided and wins.\nOnce per Encounter when the character kills an Elite or Master Level foe who is in charge of a group or formation of enemies, all subordinates of the slain foe who witness them die must make a -20 Willpower Test (Orks do not apply their Mob Rule Trait to this test), any that fail suffers -10 to all Tests for the remainder of the encounter, shaken by the death of their leader.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Veteran Talent Requirement: Character fights an Elite-Level or Master-Level Foe in hand-to-hand combat during a mission unaided and wins.\nOnce per Encounter when the character kills an Elite or Master Level foe who is in charge of a group or formation of enemies, all subordinates of the slain foe who witness them die must make a -20 Willpower Test (Orks do not apply their Mob Rule Trait to this test), any that fail suffers -10 to all Tests for the remainder of the encounter, shaken by the death of their leader.</p>",
     "aptitudes": [
       "Social",
       "Weapon Skill\nVeteran Talent Requirement Fulfilled"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WS 40, Fel 35, Combat Master",
+      "characteristics": {
+        "ws": 40,
+        "fel": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

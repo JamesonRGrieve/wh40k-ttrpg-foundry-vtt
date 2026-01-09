@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Fellowship 45, Infamy 50\nAptitudes:",
-    "effect": "The Character gains a Horde Minion. They are created in thet same way as a Lesser Minion, however act as a Horde.",
+    "category": "general",
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character gains a Horde Minion. They are created in thet same way as a Lesser Minion, however act as a Horde.</p>"
     },
     "tier": 3,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character gains a Horde Minion. They are created in thet same way as a Lesser Minion, however act as a Horde.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fellowship 45, Infamy 50",
+      "characteristics": {
+        "fel": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

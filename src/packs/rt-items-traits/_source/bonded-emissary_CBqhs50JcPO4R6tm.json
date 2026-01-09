@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Adept or Tech-Priest Career, DH Rank 4+. Intelligence 30+, Fellowship 30+",
-    "descriptionText": "",
-    "effects": "",
     "source": "DH: Inquisitor's Handbook (Page 56)",
     "description": {
       "value": "<p>Liars and Dissasemblers, those who read the ebb and flow of a noble court, who can sense the taint of madness beneath a facaade, the rot of corruption beneath words of piety. These individuals are cornerstones of covert investigations, rarely revealing themselves to any.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Bonded Emissary</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Bonded Emissary",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Liars and Dissasemblers, those who read the ebb and flow of a noble court, who can sense the taint of madness beneath a facaade, the rot of corruption beneath words of piety. These individuals are cornerstones of covert investigations, rarely revealing themselves to any.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Bonded Emissary</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

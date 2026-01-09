@@ -3,20 +3,26 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Flak, Carapace, or Power",
     "effect": "Any Melee Hits against wearer cause attacker to suffer 1d5+1 R Damage (can be dodged/parried), if spikes are on arms, wearer counts as having a Knife. Decrease Armour Availability by 1 ",
-    "weight": "+1kg",
     "availability": "Special",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Any Melee Hits against wearer cause attacker to suffer 1d5+1 R Damage (can be dodged/parried), if spikes are on arms, wearer counts as having a Knife. Decrease Armour Availability by 1 </p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 1
+    },
+    "restrictions": {
+      "armourTypes": [
+        "flak",
+        "carapace",
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

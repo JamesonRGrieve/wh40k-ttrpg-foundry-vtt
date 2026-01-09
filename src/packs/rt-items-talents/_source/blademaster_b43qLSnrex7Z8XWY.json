@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; WS 30, Weapon Training (any Melee)\nAptitudes: Weapon Skill, Finesse, Khorne",
-    "effect": "Once per Round, may reroll a missed attack with a bladed weapon, (sword, chainaxe, power sword, etc)",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Once per Round, may reroll a missed attack with a bladed weapon, (sword, chainaxe, power sword, etc)</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Once per Round, may reroll a missed attack with a bladed weapon, (sword, chainaxe, power sword, etc)</p>",
     "aptitudes": [
       "Weapon Skill",
       "Finesse",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WS 30, Weapon Training (any Melee)",
+      "characteristics": {
+        "ws": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,28 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Strength 45\nAptitudes: Strength, Offence, Nurgle",
-    "effect": "Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>",
     "aptitudes": [
       "Strength",
       "Offence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Strength 45",
+      "characteristics": {
+        "s": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

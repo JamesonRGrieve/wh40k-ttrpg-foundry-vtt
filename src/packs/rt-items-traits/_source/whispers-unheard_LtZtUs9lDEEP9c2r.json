@@ -1,0 +1,28 @@
+{
+  "name": "Whispers Unheard",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "elite",
+    "requirements": "15+ Insanity Points, Elite Advance",
+    "source": "RT: The Navis Primer",
+    "description": {
+      "value": "<p>As a Half Action, character makes Intelligence Test to attempt to access stranded, tattered memories that haunt their mind. If they pass the test and their roll is lower than their Insanity Points, until the end of their next turn, they can treat any Intelligence based skill as a Basic Skill. and add a bonus equal to half their Insanity Points (rounded up) to any Intelligence-based tests they make. They also gain 1d5-2 (min 0) Insanity Points per successful Intelligence-based Test they make during this time.</p>"
+    },
+    "benefit": "<p>As a Half Action, character makes Intelligence Test to attempt to access stranded, tattered memories that haunt their mind. If they pass the test and their roll is lower than their Insanity Points, until the end of their next turn, they can treat any Intelligence based skill as a Basic Skill. and add a bonus equal to half their Insanity Points (rounded up) to any Intelligence-based tests they make. They also gain 1d5-2 (min 0) Insanity Points per successful Intelligence-based Test they make during this time.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LtZtUs9lDEEP9c2r"
+}

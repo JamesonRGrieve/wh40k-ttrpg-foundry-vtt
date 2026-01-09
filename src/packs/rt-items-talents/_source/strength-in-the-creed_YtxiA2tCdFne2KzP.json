@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; is a Ministorum Priest or 10+ Insanity \nAptitudes: Willpower, Offence",
-    "effect": "Whenever this character spends a Fate Point to gain a +10 Bonus to a Test before Rolling, they gain +30 Instead.",
+    "category": "general",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever this character spends a Fate Point to gain a +10 Bonus to a Test before Rolling, they gain +30 Instead.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Whenever this character spends a Fate Point to gain a +10 Bonus to a Test before Rolling, they gain +30 Instead.</p>",
     "aptitudes": [
       "Willpower",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "is a Ministorum Priest or 10+ Insanity",
+      "characteristics": {
+        "or": 10
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

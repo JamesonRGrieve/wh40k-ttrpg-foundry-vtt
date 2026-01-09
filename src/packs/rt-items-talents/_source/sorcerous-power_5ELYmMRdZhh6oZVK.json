@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent  (Elite)",
-    "requirements": "Sorcerer, Cost of power + 250xp",
-    "effect": "Gain a new psychic power as long as all prerequisites are met.",
+    "category": "psychic",
     "source": "RT: Edge of the Abyss",
     "description": {
       "value": "<p>Gain a new psychic power as long as all prerequisites are met.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Gain a new psychic power as long as all prerequisites are met.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Sorcerer, Cost of power + 250xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,29 @@
+{
+  "name": "The XED1.11178E \"Ubertas\" Device",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Relic)",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 1,
+    "spCost": 0,
+    "effect": "A massive machine allowing plant life inside it to grow up to a hundred times faster. Ship crew never suffer starvation or malnturition effects, also gain permenant +5 Morale, and +10 Bonus to Medicae Tests to diagnose and contain shipboard sickness. Requires one day and -20 Forbidden Lore (Archeotech) Test to install on a ship. This component is a one of a kind relic, it cannot be acquired, and must be earned. Last seen in a deadly jungle of its own making...",
+    "availability": "unique",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>A massive machine allowing plant life inside it to grow up to a hundred times faster. Ship crew never suffer starvation or malnturition effects, also gain permenant +5 Morale, and +10 Bonus to Medicae Tests to diagnose and contain shipboard sickness. Requires one day and -20 Forbidden Lore (Archeotech) Test to install on a ship. This component is a one of a kind relic, it cannot be acquired, and must be earned. Last seen in a deadly jungle of its own making...</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6a02nXr3GIY6pvXp"
+}

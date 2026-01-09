@@ -1,0 +1,27 @@
+{
+  "name": "First Officer",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 2,
+    "purpose": "Right hand of the Lord-Captain and acts with their Authority.",
+    "careerPreferences": "Any except Astropath Transcendent",
+    "subordinates": "Senior Bridge Officers, Deck foremen, Mechanicus Emmisaries",
+    "importantSkills": "Command, Secret Tongue (Rogue Trader), Intimidation",
+    "effect": "Treats Command as a Trained Basic Skill when dealing with the crew. +5 to all Command Tests made aboard the ship if they have the Command Skill.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Right hand of the Lord-Captain and acts with their Authority.</p><p><b>Effect:</b> Treats Command as a Trained Basic Skill when dealing with the crew. +5 to all Command Tests made aboard the ship if they have the Command Skill.</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QHWNL4bBFOmvwmPj"
+}

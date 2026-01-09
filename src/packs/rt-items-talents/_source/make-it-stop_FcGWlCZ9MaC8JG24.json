@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork Weirdboy, Da Power of Waaagh!",
-    "effect": "As a Full Action, Character Clutches their head or performs some other pained, forceful action to themselves. For that round, and Willpower Bonus Rounds afterwards, the Character does not gain any Psy Rating from others nearby.",
+    "category": "psychic",
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>As a Full Action, Character Clutches their head or performs some other pained, forceful action to themselves. For that round, and Willpower Bonus Rounds afterwards, the Character does not gain any Psy Rating from others nearby.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>As a Full Action, Character Clutches their head or performs some other pained, forceful action to themselves. For that round, and Willpower Bonus Rounds afterwards, the Character does not gain any Psy Rating from others nearby.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Weirdboy, Da Power of Waaagh!",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

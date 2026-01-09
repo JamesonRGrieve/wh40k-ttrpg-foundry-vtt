@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Weapon Training (Las), BS 40\nAptitudes: Ballistic Skill, Offence",
-    "effect": "When firing any kind of Las Weapon on Semi or Full Auto, the character gains one additional Degree of Success on any successful test if they did not take a Move Action on their turn.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When firing any kind of Las Weapon on Semi or Full Auto, the character gains one additional Degree of Success on any successful test if they did not take a Move Action on their turn.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When firing any kind of Las Weapon on Semi or Full Auto, the character gains one additional Degree of Success on any successful test if they did not take a Move Action on their turn.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Weapon Training (Las), BS 40",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

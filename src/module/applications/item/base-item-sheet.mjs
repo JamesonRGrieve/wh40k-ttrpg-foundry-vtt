@@ -5,6 +5,7 @@
 
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
+import ROGUE_TRADER from "../../config.mjs";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -96,7 +97,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
             fields: this.item.system.schema?.fields ?? {},
             effects: this.item.getEmbeddedCollection("ActiveEffect").contents,
             flags: this.item.flags,
-            dh: CONFIG.rt,
+            dh: CONFIG.rt || ROGUE_TRADER,
             isEditable: this.isEditable,
             rollableClass: this.isEditable ? "rollable" : "",
             // Tab state

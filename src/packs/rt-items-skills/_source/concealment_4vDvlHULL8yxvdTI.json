@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "agility",
     "descriptor": "Hiding things, from small objects, to starships, to people, either somewhere or someplace. Requires appropriate environment to hide.",
     "uses": "Opposed Test vs Awareness/Scrutiny/Search to hide thing/person. +10 to test if the thing/person remains perfectly still",
     "useTime": "Half Action",
     "description": {
       "value": "<p>Hiding things, from small objects, to starships, to people, either somewhere or someplace. Requires appropriate environment to hide.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Agility",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

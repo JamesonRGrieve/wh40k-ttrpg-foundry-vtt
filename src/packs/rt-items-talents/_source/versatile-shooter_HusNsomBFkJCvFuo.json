@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Sharp Shooter, Target Selection \nAptitudes: Ballistic Skill, Finesse",
-    "effect": "When Firing a Single Shot from a Pistol, Heavy, or Vehicle Weapon with the Accurate Quality whilst Benefiting from the Aim Action, character treats weapon as if it were a Basic Weapon (AKA, +1d10 Damage per Two Degrees of Success, up to 2d10, can't generate Righteous Fury)",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When Firing a Single Shot from a Pistol, Heavy, or Vehicle Weapon with the Accurate Quality whilst Benefiting from the Aim Action, character treats weapon as if it were a Basic Weapon (AKA, +1d10 Damage per Two Degrees of Success, up to 2d10, can't generate Righteous Fury)</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When Firing a Single Shot from a Pistol, Heavy, or Vehicle Weapon with the Accurate Quality whilst Benefiting from the Aim Action, character treats weapon as if it were a Basic Weapon (AKA, +1d10 Damage per Two Degrees of Success, up to 2d10, can't generate Righteous Fury)</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Sharp Shooter, Target Selection",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

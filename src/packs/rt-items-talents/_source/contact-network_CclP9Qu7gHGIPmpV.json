@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Cover-Up, Intelligence 35\nAptitudes: Fellowship, Leadership",
-    "effect": "Character can use their Fellowship Characteristic in place of their Influence when making Requisition Tests.",
+    "category": "social",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Character can use their Fellowship Characteristic in place of their Influence when making Requisition Tests.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can use their Fellowship Characteristic in place of their Influence when making Requisition Tests.</p>",
     "aptitudes": [
       "Fellowship",
       "Leadership"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Cover-Up, Intelligence 35",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

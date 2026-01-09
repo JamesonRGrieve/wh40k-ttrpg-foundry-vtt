@@ -1,0 +1,29 @@
+{
+  "name": "Command Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Raiders, Frigates",
+    "powerUsage": 2,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Where characters command the ship. As long as this component is undamaged, gain +5 to Command Tests made by the Captain, as well as BS Tests to fire ship weapons. If damaged roll 1d10, becomes unpowered on 3 or higher.",
+    "availability": "rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Where characters command the ship. As long as this component is undamaged, gain +5 to Command Tests made by the Captain, as well as BS Tests to fire ship weapons. If damaged roll 1d10, becomes unpowered on 3 or higher.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4ynPCXpRg3CCRUrP"
+}

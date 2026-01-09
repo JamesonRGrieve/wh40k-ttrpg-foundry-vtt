@@ -3,22 +3,24 @@
   "type": "vehicleUpgrade",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "type": "Integral",
-    "allowedVehicles": "Any Enclosed Vehicle",
-    "difficulty": "-30",
     "descriptionText": "Whenever this Vehicle suffers Critical Damage to the Weapon Systems or Turret, reduce Damage the crew would suffer by 10.",
-    "availability": "extremely-rare",
-    "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever this Vehicle suffers Critical Damage to the Weapon Systems or Turret, reduce Damage the crew would suffer by 10.</p>"
     },
+    "availability": "extremely-rare",
+    "source": "OW: Shield of Humanity",
     "installCost": 0,
     "modifiers": {
       "speed": 0,
       "manoeuvrability": 0,
       "armour": 0,
       "integrity": 0
-    }
+    },
+    "upgradeType": "integral",
+    "difficulty": -30,
+    "allowedVehicles": "Any Enclosed Vehicle",
+    "identifier": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

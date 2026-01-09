@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Strength 45, Bulging Biceps \nAptitudes: Ballistic Skill, Offence",
-    "effect": "Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": false,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Strength 45, Bulging Biceps",
+      "characteristics": {
+        "s": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

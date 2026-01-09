@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Resistance (Fear), Jaded \nAptitudes: Defence, Willpower",
-    "effect": "Character can reroll a failed Fear or Pinning Test with a -10 Modifier.",
+    "category": "general",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character can reroll a failed Fear or Pinning Test with a -10 Modifier.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can reroll a failed Fear or Pinning Test with a -10 Modifier.</p>",
     "aptitudes": [
       "Defence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Resistance (Fear), Jaded",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

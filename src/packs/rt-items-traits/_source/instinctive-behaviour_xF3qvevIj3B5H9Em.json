@@ -1,0 +1,28 @@
+{
+  "name": "Instinctive Behaviour",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Tyranid",
+    "source": "BC: Binding Contracts",
+    "description": {
+      "value": "<p>If not within 20m of a Tyranid Creature with the Synapse Creature Trait, the creature will act in an instintual way. This may be through Lurking in the shadows and fleeing direct combat, or devolving into a maddened berzerker state, or something else. Regardless, they cannot be directly to perform complex behaviours by the Hive Mind.</p>"
+    },
+    "benefit": "<p>If not within 20m of a Tyranid Creature with the Synapse Creature Trait, the creature will act in an instintual way. This may be through Lurking in the shadows and fleeing direct combat, or devolving into a maddened berzerker state, or something else. Regardless, they cannot be directly to perform complex behaviours by the Hive Mind.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xF3qvevIj3B5H9Em"
+}

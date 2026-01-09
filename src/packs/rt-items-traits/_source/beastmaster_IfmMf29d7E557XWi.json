@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any Career, RT Rank 3+, Agility 35+, Intelligence 35+. Must have tamed a wild creature in the past without being fatally mauled in the process.",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Faith and Coin\n(Page 68)",
     "description": {
       "value": "<p>Beastmasters are those inclined towards the keeping, training, and commanding a menagerie of exotic creatures. Such creatures could aid in battle and perform acts their owners and companions could not.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Beastmaster\nAllows for the purchasing of the Unique Talents Bestial Minion and Coordinated Strike. </p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Beastmaster\nAllows for the purchasing of the Unique Talents Bestial Minion and Coordinated Strike. ",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Beastmasters are those inclined towards the keeping, training, and commanding a menagerie of exotic creatures. Such creatures could aid in battle and perform acts their owners and companions could not.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Beastmaster\nAllows for the purchasing of the Unique Talents Bestial Minion and Coordinated Strike. </p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; None\nAptitudes: Fellowship, Social",
-    "effect": "Character increases the Squad's Logistics Rating by +5 permenantly, this bonus is not removed even if the character who purchased it dies or moves on.\nIn addition to its base cost, this Talent has an additional XP cost equal to the Squad's Current Logistics Rating x 5.",
+    "category": "general",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character increases the Squad's Logistics Rating by +5 permenantly, this bonus is not removed even if the character who purchased it dies or moves on.\nIn addition to its base cost, this Talent has an additional XP cost equal to the Squad's Current Logistics Rating x 5.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character increases the Squad's Logistics Rating by +5 permenantly, this bonus is not removed even if the character who purchased it dies or moves on.\nIn addition to its base cost, this Talent has an additional XP cost equal to the Squad's Current Logistics Rating x 5.</p>",
     "aptitudes": [
       "Fellowship",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

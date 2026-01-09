@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; None\nAptitudes: Willpower, Defence, Nurgle",
-    "effect": "Character can Reroll failed Willpower Tests to avoid or recover from Pinning. They also gain +10 to Willpower Tests to resist the effects of enemy intimidation effects.\nIn a Social Conflict, if the character's opponent's uses Intimidate, the character gains +20 to the Opposed Test.",
+    "category": "social",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can Reroll failed Willpower Tests to avoid or recover from Pinning. They also gain +10 to Willpower Tests to resist the effects of enemy intimidation effects.\nIn a Social Conflict, if the character's opponent's uses Intimidate, the character gains +20 to the Opposed Test.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can Reroll failed Willpower Tests to avoid or recover from Pinning. They also gain +10 to Willpower Tests to resist the effects of enemy intimidation effects.\nIn a Social Conflict, if the character's opponent's uses Intimidate, the character gains +20 to the Opposed Test.</p>",
     "aptitudes": [
       "Willpower",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

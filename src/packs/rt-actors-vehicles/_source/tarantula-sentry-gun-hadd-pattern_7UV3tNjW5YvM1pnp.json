@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Gun Platform",
-    "size": "N/A",
-    "tacticalSpeed": "N/A",
-    "cruisingSpeed": "+0",
-    "maneuverability": "12",
-    "frontArmour": "Hulking (+10)",
-    "sideArmour": "Front 12\nSide 10\nRear 10",
-    "rearArmour": "None (Remote Controlled)",
-    "structuralIntegrity": "None",
-    "crew": "Turret, one of: Twin-Linked Heavy Bolter, Twin-Linked Lascannon, Twin-Linked Multi-Lasers, Twin-Linked Plasma Cannons, or Twin-Linked Multi-Meltas\n---\nTwin-linked lascannon (300m; S/–/–; 5d10+10 E; Pen 10; Clip 80; Reload 2 Full; Proven [3], Twin-Linked)\nTwin-linked heavy bolter (150m; –/–/6; 1D10+8 X; Pen 5; Clip 240; Reload Full; Tearing, Twin-Linked)\nTwin-linked multi-lasers (150m; –/–/5; 1D10+10 E; Pen 2; Clip 120; Reload 2 Full; Reliable, Twin-Linked)\nTwin-linked plasma cannons (120m; S/–/–; 2d10+10 E; Pen 8; Clip 48; Reload 5 Full; Blast [1], Maximal, Overheat, Twin-Linked)\nTwin-linked multi-meltas (60m; S/–/–; 2d10+16 E; Pen 12; Clip 24; Reload Full; Blast [1], Melta, Twin-Linked)",
-    "passengers": "Traits: Immobile, Enclosed\nSpecial Rules: Has Preysense Sight (Ignore Penalties and +20 Perception in Darkness) and Targeter (Reduce Test Difficulty by 1 step). Controller uses 1kg device and requires Trained Tech-Use. Has operating range of 200m, reduced by 1m+ walls and bad weather. Split Actions between self and control device.",
-    "cargo": "Very Rare",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "veryrare"
   },
   "effects": [],
   "items": [],

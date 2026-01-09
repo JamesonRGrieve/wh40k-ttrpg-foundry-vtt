@@ -1,0 +1,29 @@
+{
+  "name": "Crack Crew",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew",
+    "hullType": "All Ships",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 5,
+    "effect": "Crew Rating of 40, harder to find than Competent Crew (Suggestion: 3 Degrees Harder, Common-->Rare)",
+    "availability": "Special",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Crew Rating of 40, harder to find than Competent Crew (Suggestion: 3 Degrees Harder, Common-->Rare)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aiC8vDObuxenSveV"
+}

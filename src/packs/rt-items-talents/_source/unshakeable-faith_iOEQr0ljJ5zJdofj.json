@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Willpower 35\nAptitudes: Willpower, Defence",
-    "effect": "Character can Re-Roll failed Willpower Tests to avoid the effects of Fear.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear.</p>",
     "aptitudes": [
       "Willpower",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Willpower 35",
+      "characteristics": {
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

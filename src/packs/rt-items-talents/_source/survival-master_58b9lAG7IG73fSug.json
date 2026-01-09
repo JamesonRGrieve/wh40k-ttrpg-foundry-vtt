@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Torchbearer Alternate Advance, 500xp\nToughness 40+",
-    "effect": "The Character can re-roll all failed Survival, Tracking, and Wrangling Skill Tests, but must keep the new result.",
+    "category": "general",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Character can re-roll all failed Survival, Tracking, and Wrangling Skill Tests, but must keep the new result.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character can re-roll all failed Survival, Tracking, and Wrangling Skill Tests, but must keep the new result.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Torchbearer Alternate Advance, 500xp",
+      "characteristics": {
+        "t": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

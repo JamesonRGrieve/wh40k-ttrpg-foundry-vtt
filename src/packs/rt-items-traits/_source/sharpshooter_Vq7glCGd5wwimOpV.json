@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
-    "descriptionText": "",
-    "effects": "",
     "source": "OW: Hammer of the Emperor (Page 82)",
     "description": {
       "value": "<p>The Sharpshooter seeks absolute precision, to put a hole through a Gretchin at 500 metres is trivial, to pierce the weakpoint of an enemy walker is expected, and to do this quickly, precisely, and consistantly is their bread and butter.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Sharpshooter. Apt: Agility, Ballistic Skill, Fellowship, Finesse, Offence, Perception \nAdd. Equipment: Good Triplex Lasgun or Good Long-Las or Good Missile Launcher+4 Krak Missiles. Gain Talents: Heightened Senses(Sight)+Deadeye Shot or Lasgun Volley. Can Purchase Unique Talent: Spotter and Basic Order: Pinpoint Guidance </p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Sharpshooter. Apt: Agility, Ballistic Skill, Fellowship, Finesse, Offence, Perception \nAdd. Equipment: Good Triplex Lasgun or Good Long-Las or Good Missile Launcher+4 Krak Missiles. Gain Talents: Heightened Senses(Sight)+Deadeye Shot or Lasgun Volley. Can Purchase Unique Talent: Spotter and Basic Order: Pinpoint Guidance ",
-    "level": null
+    "level": 0,
+    "benefit": "<p>The Sharpshooter seeks absolute precision, to put a hole through a Gretchin at 500 metres is trivial, to pierce the weakpoint of an enemy walker is expected, and to do this quickly, precisely, and consistantly is their bread and butter.</p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Sharpshooter. Apt: Agility, Ballistic Skill, Fellowship, Finesse, Offence, Perception \nAdd. Equipment: Good Triplex Lasgun or Good Long-Las or Good Missile Launcher+4 Krak Missiles. Gain Talents: Heightened Senses(Sight)+Deadeye Shot or Lasgun Volley. Can Purchase Unique Talent: Spotter and Basic Order: Pinpoint Guidance </p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

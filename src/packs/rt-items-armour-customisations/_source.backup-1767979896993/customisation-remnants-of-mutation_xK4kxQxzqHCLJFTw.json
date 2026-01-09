@@ -1,0 +1,24 @@
+{
+  "name": "Customisation: Remnants of Mutation",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour",
+    "effect": "Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.",
+    "weight": "+0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xK4kxQxzqHCLJFTw"
+}

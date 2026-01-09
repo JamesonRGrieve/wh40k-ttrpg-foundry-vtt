@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Traitor Legion Power Armour",
     "effect": "If a Chaos Space Marine not aligned to a Chaos God, gain +1 AP.",
-    "weight": "+0kg",
     "availability": "Special",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>If a Chaos Space Marine not aligned to a Chaos God, gain +1 AP.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 1,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

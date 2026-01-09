@@ -1,0 +1,27 @@
+{
+  "name": "Lathe-Pattern Grav-culverin Broadside",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 5,
+    "spaceUsage": 5,
+    "spCost": 1,
+    "damage": "1d10+3",
+    "strength": 6,
+    "critRating": 6,
+    "range": 5,
+    "availability": "scarce",
+    "notes": "Must Occupy Port or Starboard slots. Can choose to increase range by 2 VU's, at the cost of decreasing damage to 1d10+1",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> Must Occupy Port or Starboard slots. Can choose to increase range by 2 VU's, at the cost of decreasing damage to 1d10+1</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v3Z9zmPUyLf5OIdQ"
+}

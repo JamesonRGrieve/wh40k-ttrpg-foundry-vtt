@@ -1,0 +1,54 @@
+{
+  "name": "Hephaestus Ore Seeker",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 3,
+    "sizeDescriptor": "5m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 45,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 50,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 45,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -30,
+      "tactical": 40,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "3 Drivers, Foreman, 6 Enginseers, 20 Miners"
+    },
+    "passengers": 0,
+    "manoeuverability": 65,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 20,
+      "value": 20,
+      "critical": 0
+    },
+    "weapons": "<p>Heavy Mining Drill (Front, Melee, 5d10 R, Pen 15, Tearing, Unwieldy)</p>\n<p>Mining Laser (Front, 100m, Heavy, S/-/-, 4d10+5 E, Pen 10, Inaccurate, Overheats, Recharge)</p>\n<p>Digging Arms (Front, Melee, 2d10+10, Pen 4, Unwieldy)</p>",
+    "specialRules": "<p>Has enough Air, Fuel, Water, and Provisions to last a full crew complement 1 Month in hostile environments. Weapons may be used by any of the crew, but have -30 when attacking anything of Average Size or Smaller. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.</p>",
+    "traitsText": "Has enough Air, Fuel, Water, and Provisions to last a full crew complement 1 Month in hostile environments. Weapons may be used by any of the crew, but have -30 when attacking anything of Average Size or Smaller. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.",
+    "availability": "nearunique",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MGWjl50GkLYPMFcS"
+}

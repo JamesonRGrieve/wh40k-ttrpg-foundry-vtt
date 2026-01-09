@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Fellowship 30\nAptitudes: General, Social",
-    "effect": "Once per day, character can re-roll a test made to gather information from a group of people.",
+    "category": "general",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Once per day, character can re-roll a test made to gather information from a group of people.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Once per day, character can re-roll a test made to gather information from a group of people.</p>",
     "aptitudes": [
       "General",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fellowship 30",
+      "characteristics": {
+        "fel": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

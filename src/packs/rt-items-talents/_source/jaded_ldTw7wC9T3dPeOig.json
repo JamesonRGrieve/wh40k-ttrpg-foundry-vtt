@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Willpower 40\nAptitudes: Willpower, Defence, Nurgle",
-    "effect": "Mundane Traumatic events, such as horrifically brutal deaths or xenos abominations do not force the character to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect them as normal.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Mundane Traumatic events, such as horrifically brutal deaths or xenos abominations do not force the character to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect them as normal.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Mundane Traumatic events, such as horrifically brutal deaths or xenos abominations do not force the character to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect them as normal.</p>",
     "aptitudes": [
       "Willpower",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Willpower 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

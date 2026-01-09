@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Trade (Cook) +10 \nAptitudes: Fieldcraft, General",
-    "effect": "Once per game session, character can make +0 Trade (Cook) Test, taking several minutes and with GM Discretion gaining a bonus to the test for acquiring certain ingrediences to enhance the meal. If successful, Squad Members gain +5 to Willpower Tests to resist the effects of Fear and Pinning until the end of the nextencounter. If the character suceeds by 5+ Degrees of Success, the first time each squad member uses a Fate Point before the end of the next encounter, they roll 1d10, on a 10 the Fate Point is Refunded.",
+    "category": "psychic",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per game session, character can make +0 Trade (Cook) Test, taking several minutes and with GM Discretion gaining a bonus to the test for acquiring certain ingrediences to enhance the meal. If successful, Squad Members gain +5 to Willpower Tests to resist the effects of Fear and Pinning until the end of the nextencounter. If the character suceeds by 5+ Degrees of Success, the first time each squad member uses a Fate Point before the end of the next encounter, they roll 1d10, on a 10 the Fate Point is Refunded.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Once per game session, character can make +0 Trade (Cook) Test, taking several minutes and with GM Discretion gaining a bonus to the test for acquiring certain ingrediences to enhance the meal. If successful, Squad Members gain +5 to Willpower Tests to resist the effects of Fear and Pinning until the end of the nextencounter. If the character suceeds by 5+ Degrees of Success, the first time each squad member uses a Fate Point before the end of the next encounter, they roll 1d10, on a 10 the Fate Point is Refunded.</p>",
     "aptitudes": [
       "Fieldcraft",
       "General"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Trade (Cook) +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

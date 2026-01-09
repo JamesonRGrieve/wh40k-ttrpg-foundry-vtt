@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork",
-    "effect": "The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

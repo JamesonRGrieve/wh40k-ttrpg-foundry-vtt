@@ -1,0 +1,27 @@
+{
+  "name": "Plasma Torpedo",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Topedo Warhead",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "damage": "2d10+14",
+    "strength": "-",
+    "critRating": 10,
+    "range": 60,
+    "availability": "rare",
+    "notes": "Reroll (3). Refer to Torpedo Rules block.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 2d10+14</p><p><b>Notes:</b> Reroll (3). Refer to Torpedo Rules block.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YhamGmUuvCqdQpra"
+}

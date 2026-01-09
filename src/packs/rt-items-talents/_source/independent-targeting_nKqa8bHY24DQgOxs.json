@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Ballistic Skill 40\nAptitudes: Ballistic Skill, Finesse, Unaligned",
-    "effect": "When Firing two weapons as part of a single action, the targets do not need to be within 10 metres",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 40",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

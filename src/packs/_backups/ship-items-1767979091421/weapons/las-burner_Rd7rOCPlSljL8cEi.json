@@ -1,0 +1,27 @@
+{
+  "name": "Las-Burner",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Lance",
+    "hullType": "All Ships",
+    "powerUsage": 7,
+    "spaceUsage": 3,
+    "spCost": 2,
+    "damage": "1d5+1",
+    "strength": 2,
+    "critRating": 3,
+    "range": 3,
+    "availability": "rare",
+    "notes": "May be installed in Dorsal or Keel weapon slots on ships of frigate size or smaller, unlike other lances. +5 to Opposed command tests to resolve boarding actions. Lance weapons ignore armour.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d5+1</p><p><b>Notes:</b> May be installed in Dorsal or Keel weapon slots on ships of frigate size or smaller, unlike other lances. +5 to Opposed command tests to resolve boarding actions. Lance weapons ignore armour.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rd7rOCPlSljL8cEi"
+}

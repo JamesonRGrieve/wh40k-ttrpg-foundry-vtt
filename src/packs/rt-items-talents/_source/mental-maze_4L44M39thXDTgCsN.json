@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Intelligence 35, Strong Minded \nAptitudes: Defence, Intelligence",
-    "effect": "When Character succeeds on an Opposed Willpower Test as part of a Psychic Power (either against an opponent or their own), they can spend a Fate Point to gain +Int Bonus Degrees of Success on the Opposed Test.",
+    "category": "psychic",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When Character succeeds on an Opposed Willpower Test as part of a Psychic Power (either against an opponent or their own), they can spend a Fate Point to gain +Int Bonus Degrees of Success on the Opposed Test.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When Character succeeds on an Opposed Willpower Test as part of a Psychic Power (either against an opponent or their own), they can spend a Fate Point to gain +Int Bonus Degrees of Success on the Opposed Test.</p>",
     "aptitudes": [
       "Defence",
       "Intelligence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Intelligence 35, Strong Minded",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

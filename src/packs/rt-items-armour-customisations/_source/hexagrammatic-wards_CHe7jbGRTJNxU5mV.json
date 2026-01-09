@@ -3,20 +3,25 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Carapace or Power Armour",
     "effect": "Provides +20 to tests made to resist Psychic attacks or manipulations. Double armour AP vs Psychic Attacks that directly deal damage. \nProvides Wards such that armour retains its AP vs Warp Weapon attacks. ",
-    "weight": "0kg",
     "availability": "extremely-rare",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Provides +20 to tests made to resist Psychic attacks or manipulations. Double armour AP vs Psychic Attacks that directly deal damage. \nProvides Wards such that armour retains its AP vs Warp Weapon attacks. </p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "carapace",
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Fixer Advanced Specialty (500xp)",
-    "effect": "The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.",
+    "category": "social",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fixer Advanced Specialty (500xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

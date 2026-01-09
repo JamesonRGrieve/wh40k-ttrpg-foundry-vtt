@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Ambidextrous, Weapon Skill 40 \nAptitudes: Defence, Weapon Skill",
-    "effect": "When character is armed with a shield, they can re-roll one failed Evasion test to Parry per round.",
+    "category": "defense",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>When character is armed with a shield, they can re-roll one failed Evasion test to Parry per round.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>When character is armed with a shield, they can re-roll one failed Evasion test to Parry per round.</p>",
     "aptitudes": [
       "Defence",
       "Weapon Skill"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Ambidextrous, Weapon Skill 40",
+      "characteristics": {
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

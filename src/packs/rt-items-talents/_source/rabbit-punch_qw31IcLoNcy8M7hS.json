@@ -3,19 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Agility 35, Weapon Skill 35 \nAptitudes: Agility, Finesse",
-    "effect": "Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.</p>",
     "aptitudes": [
       "Agility",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility 35, Weapon Skill 35",
+      "characteristics": {
+        "ag": 35,
+        "ws": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

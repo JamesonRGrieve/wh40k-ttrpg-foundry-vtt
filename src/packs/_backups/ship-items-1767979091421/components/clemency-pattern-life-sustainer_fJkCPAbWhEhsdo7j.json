@@ -1,0 +1,29 @@
+{
+  "name": "Clemency-pattern Life Sustainer",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Life Sustainer",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 4,
+    "spaceUsage": 4,
+    "spCost": 0,
+    "effect": "Recycles air and water. Reduce Crew Population and Morale loss from Depressurisation by 4, to a minimum of 0. +1 Morale Permenantly.",
+    "availability": "scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Recycles air and water. Reduce Crew Population and Morale loss from Depressurisation by 4, to a minimum of 0. +1 Morale Permenantly.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fJkCPAbWhEhsdo7j"
+}

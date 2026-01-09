@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "AG 40, Two-Weapon Wielder (Melee)",
-    "effect": "When wielding two melee weapons, can attack with both as Full Action, make one WS Test, on success, target's Ap coutns as normal, but toughness only counts once against the combined damage roll. A successful Dodge/Parry avoids attack.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When wielding two melee weapons, can attack with both as Full Action, make one WS Test, on success, target's Ap coutns as normal, but toughness only counts once against the combined damage roll. A successful Dodge/Parry avoids attack.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When wielding two melee weapons, can attack with both as Full Action, make one WS Test, on success, target's Ap coutns as normal, but toughness only counts once against the combined damage roll. A successful Dodge/Parry avoids attack.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "AG 40, Two-Weapon Wielder (Melee)",
+      "characteristics": {
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

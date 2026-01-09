@@ -3,16 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Feral Warrior Alternative Advance, 200xp, WS 35, BS 35",
-    "effect": "Whenever scoring a Critical Effect against a Creature of Hulking Size or Larger, add +3 Damage. Does not apply to servitors, Daemons, or entities with the From Beyond Trait.",
+    "category": "combat",
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Whenever scoring a Critical Effect against a Creature of Hulking Size or Larger, add +3 Damage. Does not apply to servitors, Daemons, or entities with the From Beyond Trait.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever scoring a Critical Effect against a Creature of Hulking Size or Larger, add +3 Damage. Does not apply to servitors, Daemons, or entities with the From Beyond Trait.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Feral Warrior Alternative Advance, 200xp, WS 35, BS 35",
+      "characteristics": {
+        "ws": 35,
+        "bs": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

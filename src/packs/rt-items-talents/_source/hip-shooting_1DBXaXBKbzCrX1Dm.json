@@ -3,20 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; BS 40, Agility 40\nAptitudes: Ballistic Skill, Finesse, Unaligned",
-    "effect": "As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 40, Agility 40",
+      "characteristics": {
+        "bs": 40,
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

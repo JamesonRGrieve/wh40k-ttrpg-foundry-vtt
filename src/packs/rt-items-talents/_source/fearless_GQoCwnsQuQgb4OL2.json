@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Nerves of Steel\nAptitudes: Willpower, Defence, Nurgle",
-    "effect": "Immune to Fear and Pinning. Disengaging or backing down from combat requires Willpower Test.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Immune to Fear and Pinning. Disengaging or backing down from combat requires Willpower Test.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Immune to Fear and Pinning. Disengaging or backing down from combat requires Willpower Test.</p>",
     "aptitudes": [
       "Willpower",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Nerves of Steel",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

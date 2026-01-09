@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Pure Faith",
-    "effect": "Can spend a Fate Point to grant you and a WP Bonus Allies immunity to Fear and Pinning, and - 10 to be hit by ranged or melee attacks for the duration fo the encounter. Can Burn a Fate point to allow an ally to resist a single attack and take no damage, must be burnt after hit but prior to damage roll.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can spend a Fate Point to grant you and a WP Bonus Allies immunity to Fear and Pinning, and - 10 to be hit by ranged or melee attacks for the duration fo the encounter. Can Burn a Fate point to allow an ally to resist a single attack and take no damage, must be burnt after hit but prior to damage roll.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can spend a Fate Point to grant you and a WP Bonus Allies immunity to Fear and Pinning, and - 10 to be hit by ranged or melee attacks for the duration fo the encounter. Can Burn a Fate point to allow an ally to resist a single attack and take no damage, must be burnt after hit but prior to damage roll.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Pure Faith",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

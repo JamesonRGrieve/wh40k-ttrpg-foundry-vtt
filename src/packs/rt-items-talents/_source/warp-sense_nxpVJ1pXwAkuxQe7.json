@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Psy Rating, Psyniscience, Perception 30\nAptitudes: Perception, Psyker, Tzeentch",
-    "effect": "Character can use Psyniscience as a Free Action instead of a Half Action. Additionally, the character can passively detect psychic effects and entities as opposed to actively.\nEffectively, whenever they would be able to detect a warp signature, the GM may allow them to make a Psyniscience Skill Test to detect it, in the same way they might use Awareness.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use Psyniscience as a Free Action instead of a Half Action. Additionally, the character can passively detect psychic effects and entities as opposed to actively.\nEffectively, whenever they would be able to detect a warp signature, the GM may allow them to make a Psyniscience Skill Test to detect it, in the same way they might use Awareness.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character can use Psyniscience as a Free Action instead of a Half Action. Additionally, the character can passively detect psychic effects and entities as opposed to actively.\nEffectively, whenever they would be able to detect a warp signature, the GM may allow them to make a Psyniscience Skill Test to detect it, in the same way they might use Awareness.</p>",
     "aptitudes": [
       "Perception",
       "Psyker",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Psy Rating, Psyniscience, Perception 30",
+      "characteristics": {
+        "per": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

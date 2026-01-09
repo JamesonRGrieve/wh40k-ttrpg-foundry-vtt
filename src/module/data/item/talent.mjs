@@ -231,4 +231,48 @@ export default class TalentData extends ItemDataModel.mixin(
       cost: `${this.cost} XP`
     };
   }
+
+  /* -------------------------------------------- */
+  /*  Vocalization                                */
+  /* -------------------------------------------- */
+
+  /**
+   * Post this talent to chat with rich formatting.
+   * @returns {Promise<ChatMessage>}
+   */
+  async toChat() {
+    const templateData = {
+      talent: {
+        id: this.parent.id,
+        name: this.parent.name,
+        img: this.parent.img,
+        type: "Talent",
+        tier: this.tier,
+        tierLabel: this.tierLabel,
+        category: this.categoryLabel,
+        aptitudes: this.aptitudes,
+        aptitudesLabel: this.aptitudes.length > 0 ? this.aptitudes.join(", ") : "—",
+        hasPrerequisites: this.hasPrerequisites,
+        prerequisitesLabel: this.prerequisitesLabel,
+        benefit: this.benefit || this.parent.system.description?.value || "",
+        cost: this.cost,
+        costLabel: this.cost > 0 ? `${this.cost} XP` : "—",
+        isPassive: this.isPassive,
+        specialization: this.specialization,
+        rank: this.rank,
+        stackable: this.stackable
+      },
+      timestamp: new Date().toLocaleString()
+    };
+    
+    const html = await renderTemplate(
+      "systems/rogue-trader/templates/chat/talent-card.hbs",
+      templateData
+    );
+    
+    return ChatMessage.create({
+      content: html,
+      speaker: ChatMessage.getSpeaker({ actor: this.parent.actor })
+    });
+  }
 }

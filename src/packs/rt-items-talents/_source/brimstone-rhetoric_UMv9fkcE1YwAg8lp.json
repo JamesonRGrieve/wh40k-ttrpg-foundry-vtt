@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Incinerant Priest Advanced Specialty(400xp)",
-    "effect": "Whenever the Character or an Ally in Cohesion with the Character inflicts Righteous Fury on an enemy, and that attack causes damage, roll 1d5 for Critical damage twice and discard the lower result.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever the Character or an Ally in Cohesion with the Character inflicts Righteous Fury on an enemy, and that attack causes damage, roll 1d5 for Critical damage twice and discard the lower result.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever the Character or an Ally in Cohesion with the Character inflicts Righteous Fury on an enemy, and that attack causes damage, roll 1d5 for Critical damage twice and discard the lower result.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Incinerant Priest Advanced Specialty(400xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

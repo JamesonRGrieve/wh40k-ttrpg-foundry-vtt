@@ -1,0 +1,54 @@
+{
+  "name": "XV8-02 Iridium Crisis Battlesuit",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "-",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 10,
+        "descriptor": "Enormous (+20)"
+      },
+      "side": {
+        "value": 15,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": "Wearer"
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Wearer"
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>3 Hardpoints for Weapons and/or Support Systems</p>\n<p>Recommended Loadout: Twin-Linked Fusion Blaster/Twin-Linked Plasma Rifle, Burst Cannon or Flamer, Shield Generator or Stimulant Injectors.</p>",
+    "specialRules": "<p>Battle Suit Strength: 55</p>\n<p>Primary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker</p>",
+    "traitsText": "Battle Suit Strength: 55\nPrimary Systems: Blacksun Filter, Enhanced Motive Systems, Environmental Seal, Jet Pack, Multi-Tracker",
+    "availability": "unique",
+    "source": "RT: Tau Character Guide"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fMDx1VleKqmQ0nW3"
+}

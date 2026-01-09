@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Legion/Astartes Power Armour",
     "effect": "Allows wearer to fire Basic Weapons one-handed, although not in melee.",
-    "weight": "0kg",
     "availability": "Special",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Allows wearer to fire Basic Weapons one-handed, although not in melee.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

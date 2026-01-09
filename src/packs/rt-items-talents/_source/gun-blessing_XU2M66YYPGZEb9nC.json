@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius",
+    "category": "knowledge",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

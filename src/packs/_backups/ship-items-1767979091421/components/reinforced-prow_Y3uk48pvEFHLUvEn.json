@@ -1,0 +1,29 @@
+{
+  "name": "Reinforced Prow",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 0,
+    "spaceUsage": 2,
+    "spCost": 1,
+    "effect": "+2 Armour the front of the ship, +1d5 damage when ramming. Only one per vessel.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>+2 Armour the front of the ship, +1d5 damage when ramming. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Y3uk48pvEFHLUvEn"
+}

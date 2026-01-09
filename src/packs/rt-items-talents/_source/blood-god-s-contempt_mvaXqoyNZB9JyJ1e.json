@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Frenzy, Willpower 40\nAptitudes: Khorne",
-    "effect": "Character may spend an Infamy Point to perform a one-hour Ritual of Contempt, after its completion for the rest of the session whenever the character is affectd by a Psychic, Daemonic, or other Warp-Basedf power or effect that either directly targets them or that they are in the area of effect of (can't use against indirect effects such as telekinetically fired rocks), they can make a Willpower Test prior to it affecting them. if they succeed they ignore its effects, if they fail the power affects them as normal and they immediately enter a Frenzy. Powers from friendlies must be resisted in the same manner.",
+    "category": "psychic",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character may spend an Infamy Point to perform a one-hour Ritual of Contempt, after its completion for the rest of the session whenever the character is affectd by a Psychic, Daemonic, or other Warp-Basedf power or effect that either directly targets them or that they are in the area of effect of (can't use against indirect effects such as telekinetically fired rocks), they can make a Willpower Test prior to it affecting them. if they succeed they ignore its effects, if they fail the power affects them as normal and they immediately enter a Frenzy. Powers from friendlies must be resisted in the same manner.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character may spend an Infamy Point to perform a one-hour Ritual of Contempt, after its completion for the rest of the session whenever the character is affectd by a Psychic, Daemonic, or other Warp-Basedf power or effect that either directly targets them or that they are in the area of effect of (can't use against indirect effects such as telekinetically fired rocks), they can make a Willpower Test prior to it affecting them. if they succeed they ignore its effects, if they fail the power affects them as normal and they immediately enter a Frenzy. Powers from friendlies must be resisted in the same manner.</p>",
     "aptitudes": [
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Frenzy, Willpower 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

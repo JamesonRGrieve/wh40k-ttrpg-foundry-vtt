@@ -3,26 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Bane of the Daemon, Willpower 50, Untouchable Elite Advance\nAptitudes: Willpower",
-    "effect": "Whenever a creature with the Warp Instability Trait makes a successful attack against the character, it must immediately test for Warp Instability after resolving the attack.",
+    "category": "combat",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Whenever a creature with the Warp Instability Trait makes a successful attack against the character, it must immediately test for Warp Instability after resolving the attack.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Whenever a creature with the Warp Instability Trait makes a successful attack against the character, it must immediately test for Warp Instability after resolving the attack.</p>",
     "aptitudes": [
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Bane of the Daemon, Willpower 50, Untouchable Elite Advance",
+      "characteristics": {
+        "wp": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

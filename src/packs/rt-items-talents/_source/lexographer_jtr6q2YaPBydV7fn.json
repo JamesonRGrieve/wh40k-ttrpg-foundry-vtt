@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Linguistics (Any) +20\nAptitudes: Intelligence, Knowledge",
-    "effect": "Character can attempt any Linguistics Skill they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test).",
+    "category": "general",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character can attempt any Linguistics Skill they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test).</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can attempt any Linguistics Skill they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test).</p>",
     "aptitudes": [
       "Intelligence",
       "Knowledge"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Linguistics (Any) +20",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

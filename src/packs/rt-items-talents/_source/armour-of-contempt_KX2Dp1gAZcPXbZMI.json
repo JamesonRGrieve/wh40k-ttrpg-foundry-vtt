@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "WP 40",
-    "effect": "Any time corruption points are gained, reduce value by 1 (min 0). May make a Free Action to ignore accumulated effects of corruption points for 1 Round.",
+    "category": "general",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Any time corruption points are gained, reduce value by 1 (min 0). May make a Free Action to ignore accumulated effects of corruption points for 1 Round.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Any time corruption points are gained, reduce value by 1 (min 0). May make a Free Action to ignore accumulated effects of corruption points for 1 Round.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "WP 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

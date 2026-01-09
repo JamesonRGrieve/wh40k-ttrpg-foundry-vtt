@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork Weirdboy, Da Power of Waaagh!, Runtz",
-    "effect": "The Character has a small swarm of Mutant Buzzer Squigs that follow them everywhere. As a Free Action, the character can kill them all to absorb their Waaagh! Energy, adding +20 to their next focus Power Test. A New Swarm spawns after 2d5 Days. Whilst accompanied by the Swarm, the Character's Melee Attacks gain the Shocking Quality.",
+    "category": "combat",
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>The Character has a small swarm of Mutant Buzzer Squigs that follow them everywhere. As a Free Action, the character can kill them all to absorb their Waaagh! Energy, adding +20 to their next focus Power Test. A New Swarm spawns after 2d5 Days. Whilst accompanied by the Swarm, the Character's Melee Attacks gain the Shocking Quality.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": false,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character has a small swarm of Mutant Buzzer Squigs that follow them everywhere. As a Free Action, the character can kill them all to absorb their Waaagh! Energy, adding +20 to their next focus Power Test. A New Swarm spawns after 2d5 Days. Whilst accompanied by the Swarm, the Character's Melee Attacks gain the Shocking Quality.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Weirdboy, Da Power of Waaagh!, Runtz",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Weapon Skill 30\nAptitudes: Weapon Skill, Offence, Khorne",
-    "effect": "Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 30",
+      "characteristics": {
+        "ws": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

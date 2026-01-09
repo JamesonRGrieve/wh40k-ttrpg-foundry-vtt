@@ -1,0 +1,29 @@
+{
+  "name": "Bilge-Rat Quarters (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 3,
+    "spCost": 0,
+    "effect": "Where the regular crew live. Reduce Crew Population Losses from Depressurisation by 2, to a minimum of 0, -3 Morale Permenantly from bad conditions.",
+    "availability": "scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Where the regular crew live. Reduce Crew Population Losses from Depressurisation by 2, to a minimum of 0, -3 Morale Permenantly from bad conditions.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sI9uPCTI3LuN9rGO"
+}

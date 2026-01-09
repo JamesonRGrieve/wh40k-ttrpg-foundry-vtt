@@ -1,29 +1,39 @@
 {
   "name": "Grappled",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Hitting a target engaged in a grapple: +20",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Hitting a target engaged in a grapple: +20</p>"
-    },
-    "severity": 1,
+    "identifier": "grappled",
+    "nature": "harmful",
+    "effect": "<p>Attacks against targets engaged in a grapple gain a +20 bonus. The grappled character cannot move.</p>",
+    "removal": "<p>Removed when the grapple ends via Opposed Strength Test or when one party is rendered helpless.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "target",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>Attacks against targets engaged in a grapple gain a +20 bonus. The grappled character cannot move.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "247",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "target"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "YXbbdp31kNz8uPcL"

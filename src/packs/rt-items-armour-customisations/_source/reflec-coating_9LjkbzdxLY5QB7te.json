@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Any Armour",
     "effect": "Gives +2 AP vs Las Weapons",
-    "weight": "+0kg",
     "availability": "rare",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Gives +2 AP vs Las Weapons</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 2,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,54 @@
+{
+  "name": "Stormlord",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "9m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 45,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 38,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 30,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -30,
+      "tactical": 30,
+      "notes": ""
+    },
+    "crew": {
+      "required": 3,
+      "notes": "1 Commander (Raised Structure), 1 Driver, 5 Gunners"
+    },
+    "passengers": 0,
+    "manoeuverability": 120,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 40,
+      "value": 40,
+      "critical": 0
+    },
+    "weapons": "<p>Hull (Front): Vulcan Mega-Bolter (500m; -/-/20; 3d10+5 X; Pen 6; Clip 3000; Storm, Tearing)</p>\n<p>Twin Heavy Bolters (150m; -/-/6; 1d10+8 X; Pen 5; Clip 200; Rld Full; Tearing- Twin-Linked)</p>\n<p>Turret: 2x Lascannons (300m; S/-/-; 5d10+10 E; Pen 10; Clip 80; Rld 2 Full; Proven (3))</p>\n<p>Sponsons (Side + Front Facing): Left and Right Mounted Twin Heavy Flamers</p>\n<p>Sponsons (Side Facing): Left and Right Passenger-Fired Heavy Stubbers</p>\n<p>Pintle (Optional): Heavy Stubber or Storm Bolter</p>\n<p>---</p>\n<p>Twin Heavy Flamers (30m; S/–/–; 1d10+5 E; Pen 4; Clip 80; Rld 2 Full; Flame, Spray, Twin-Linked)</p>\n<p>Heavy Stubbers (100m; –/–/8; 1d10+4 I; Pen 3; Clip 200; Rld 2 Full) (Clip 80 if pintle)</p>\n<p>Storm Bolter (90m; S/2/4; 1d10+5 X; Pen 4; Clip 60; Rld Full; Storm, Tearing)</p>",
+    "specialRules": "<p>Traits: Command and Control, Damage Control, Enclosed, Ponderous, Reinforced Armour, Super-Heavy,TrackedVehicle</p>\n<p>If Vehicle does not move, driver can spend Full Action and make +10 Tech-Use Test. If successful add +2 hits per Degree of Success on Mega-Bolter's Attacks for 1 round (which is then doubled by Storm Quality).</p>\n<p>Vehicle has Fighting Platform which up to 20 passengers can fire from without obstruction. Treat as AP 30 Cover for Body and Leg locations. Two passengers can operate the passenger-operated Heavy Stubbers.</p>",
+    "traitsText": "Traits: Command and Control, Damage Control, Enclosed, Ponderous, Reinforced Armour, Super-Heavy,TrackedVehicle\nIf Vehicle does not move, driver can spend Full Action and make +10 Tech-Use Test. If successful add +2 hits per Degree of Success on Mega-Bolter's Attacks for 1 round (which is then doubled by Storm Quality).\nVehicle has Fighting Platform which up to 20 passengers can fire from without obstruction. Treat as AP 30 Cover for Body and Leg locations. Two passengers can operate the passenger-operated Heavy Stubbers.",
+    "availability": "nearunique",
+    "source": "OW: No Surrender"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "bzB4HyNykHP1I4HS"
+}

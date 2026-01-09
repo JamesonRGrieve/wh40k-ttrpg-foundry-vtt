@@ -3,22 +3,24 @@
   "type": "vehicleUpgrade",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "type": "Standard",
-    "allowedVehicles": "Any Tracked Vehicle",
-    "difficulty": "-10",
     "descriptionText": "Whenever this vehicle would trigger a planted explosive, the Driver can make a +20 Perception Test as a Reaction. If Successful the vehicle may back up 5 metres immediately, +1m per Degree of Success. If this is enough to avoid the explosion, the vehicle suffers no damage from it. Any Critical Damage, including Righteous Fury, that damages the front of the vehicle damages the Mine Sweeper, rendering nonfunctional until repaired. Mutually Exclusive with Dozer Blade.",
-    "availability": "rare",
-    "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Whenever this vehicle would trigger a planted explosive, the Driver can make a +20 Perception Test as a Reaction. If Successful the vehicle may back up 5 metres immediately, +1m per Degree of Success. If this is enough to avoid the explosion, the vehicle suffers no damage from it. Any Critical Damage, including Righteous Fury, that damages the front of the vehicle damages the Mine Sweeper, rendering nonfunctional until repaired. Mutually Exclusive with Dozer Blade.</p>"
     },
+    "availability": "rare",
+    "source": "OW: Shield of Humanity",
     "installCost": 0,
     "modifiers": {
       "speed": 0,
       "manoeuvrability": 0,
       "armour": 0,
       "integrity": 0
-    }
+    },
+    "upgradeType": "standard",
+    "difficulty": -10,
+    "allowedVehicles": "Any Tracked Vehicle",
+    "identifier": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

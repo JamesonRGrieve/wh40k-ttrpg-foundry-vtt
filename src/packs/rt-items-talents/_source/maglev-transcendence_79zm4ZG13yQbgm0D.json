@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Maglev Coils, Mechanicus Implants\nAptitudes: Intelligence, Tech, Unaligned",
-    "effect": "Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).</p>",
     "aptitudes": [
       "Intelligence",
       "Tech",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Maglev Coils, Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

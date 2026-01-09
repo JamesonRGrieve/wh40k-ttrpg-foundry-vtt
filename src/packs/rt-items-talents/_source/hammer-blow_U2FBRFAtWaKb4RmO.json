@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Crushing Blow\nAptitudes: Strength, Offence, Khorne",
-    "effect": "Whenever a character makes an All Out Attack Action to make a single melee attack. They may add half their Strength Bonus to the weapon's Penetration value, additionally, the attack counts as having Concussive(2) Special Quality.\nConcussive(2): Target makes -20 Toughness Test, failiure stuns for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Whenever a character makes an All Out Attack Action to make a single melee attack. They may add half their Strength Bonus to the weapon's Penetration value, additionally, the attack counts as having Concussive(2) Special Quality.\nConcussive(2): Target makes -20 Toughness Test, failiure stuns for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Whenever a character makes an All Out Attack Action to make a single melee attack. They may add half their Strength Bonus to the weapon's Penetration value, additionally, the attack counts as having Concussive(2) Special Quality.\nConcussive(2): Target makes -20 Toughness Test, failiure stuns for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone.</p>",
     "aptitudes": [
       "Strength",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Crushing Blow",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

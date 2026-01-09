@@ -23,10 +23,10 @@
                             {{item.name}}
                         </button>
                     </div>
-                    <div class="table-cell">{{item.system.location}}</div>
-                    <div class="table-cell">{{item.system.strength}}</div>
+                    <div class="table-cell">{{item.system.locationLabel}}</div>
+                    <div class="table-cell">{{displayStrength item.system.strength}}</div>
                     <div class="table-cell">{{item.system.damage}}</div>
-                    <div class="table-cell">{{item.system.critRating}}</div>
+                    <div class="table-cell">{{displayCrit item.system.crit}}</div>
                     <div class="table-cell">{{item.system.range}}</div>
                     <div class="table-cell--last">
                         <label class="rt-control-button rt-ship-weapon-fire" data-item-id="{{item.id}}" title="Fire Weapon">

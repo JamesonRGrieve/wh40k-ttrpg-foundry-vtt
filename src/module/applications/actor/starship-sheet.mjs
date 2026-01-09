@@ -4,6 +4,7 @@
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
+import ROGUE_TRADER from "../../config.mjs";
 
 /**
  * Actor sheet for Starship type actors.
@@ -91,7 +92,7 @@ export default class StarshipSheet extends BaseActorSheet {
         await HandlebarManager.loadActorSheetTemplates("starship");
         
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.rt;
+        context.dh = CONFIG.rt || ROGUE_TRADER;
 
         // Prepare ship-specific data
         this._prepareShipData(context);
@@ -115,34 +116,28 @@ export default class StarshipSheet extends BaseActorSheet {
         context.shipUpgrades = items.filter(item => item.type === "shipUpgrade");
         context.shipRoles = items.filter(item => item.type === "shipRole");
 
-        // Calculate power and space usage
+        // Calculate power and space usage (use DataModel fields)
         context.powerGenerated = 0;
         context.powerUsed = 0;
         context.spaceUsed = 0;
 
         for (const component of context.shipComponents) {
-            const power = component.system.powerUsage || 0;
-            if (power > 0) {
-                context.powerGenerated += power;
-            } else {
-                context.powerUsed += Math.abs(power);
+            if (component.system.condition === 'functional') {
+                context.powerGenerated += component.system.power?.generated || 0;
+                context.powerUsed += component.system.power?.used || 0;
+                context.spaceUsed += component.system.space || 0;
             }
-            context.spaceUsed += component.system.spaceUsage || 0;
         }
 
         for (const weapon of context.shipWeapons) {
-            context.powerUsed += weapon.system.powerUsage || 0;
-            context.spaceUsed += weapon.system.spaceUsage || 0;
+            context.powerUsed += weapon.system.power || 0;
+            context.spaceUsed += weapon.system.space || 0;
         }
 
         for (const upgrade of context.shipUpgrades) {
-            const power = upgrade.system.powerUsage || 0;
-            if (power > 0) {
-                context.powerGenerated += power;
-            } else {
-                context.powerUsed += Math.abs(power);
-            }
-            context.spaceUsed += upgrade.system.spaceUsage || 0;
+            context.powerGenerated += upgrade.system.power?.generated || 0;
+            context.powerUsed += upgrade.system.power?.used || 0;
+            context.spaceUsed += upgrade.system.space || 0;
         }
 
         context.powerAvailable = context.powerGenerated - context.powerUsed;

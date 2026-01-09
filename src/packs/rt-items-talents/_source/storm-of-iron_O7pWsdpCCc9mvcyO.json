@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; BS 45, Weapon Training (Any Ranged)\nAptitudes: Ballistic Skill, Offence, Khorne",
-    "effect": "When the character deals damage to a target using Semi or Full Auto Bursts, the character can allocate extra hits to any other target within 5 metres of the original target, instead of the normal 2 metres.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When the character deals damage to a target using Semi or Full Auto Bursts, the character can allocate extra hits to any other target within 5 metres of the original target, instead of the normal 2 metres.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When the character deals damage to a target using Semi or Full Auto Bursts, the character can allocate extra hits to any other target within 5 metres of the original target, instead of the normal 2 metres.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 45, Weapon Training (Any Ranged)",
+      "characteristics": {
+        "bs": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

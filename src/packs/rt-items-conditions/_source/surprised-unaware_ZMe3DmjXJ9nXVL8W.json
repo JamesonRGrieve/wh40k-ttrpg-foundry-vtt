@@ -1,29 +1,39 @@
 {
   "name": "Surprised / Unaware",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Attacks against surprised/unaware targets: +30",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Attacks against surprised/unaware targets: +30</p>"
-    },
-    "severity": 1,
+    "identifier": "surprised-unaware",
+    "nature": "harmful",
+    "effect": "<p>Surprised characters cannot take Reactions and cannot Dodge or Parry. They act last in the first round of combat.</p>",
+    "removal": "<p>Removed at the end of the first round of combat.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 1,
+      "units": "rounds"
+    },
+    "description": {
+      "value": "<p>Surprised characters cannot take Reactions and cannot Dodge or Parry. They act last in the first round of combat.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "target"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "ZMe3DmjXJ9nXVL8W"

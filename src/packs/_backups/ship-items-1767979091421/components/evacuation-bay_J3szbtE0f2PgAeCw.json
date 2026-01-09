@@ -1,0 +1,29 @@
+{
+  "name": "Evacuation Bay",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Cargo/Passengers",
+    "hullType": "Raiders, Frigates, Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 4,
+    "spCost": 1,
+    "effect": "As a Free Action, a crewmember on the bridge can open the cargo hatches and forcibly eject its contents into the void. +75 Achievement Points towards Trade Objectives. One per Vessel.",
+    "availability": "scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>As a Free Action, a crewmember on the bridge can open the cargo hatches and forcibly eject its contents into the void. +75 Achievement Points towards Trade Objectives. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J3szbtE0f2PgAeCw"
+}

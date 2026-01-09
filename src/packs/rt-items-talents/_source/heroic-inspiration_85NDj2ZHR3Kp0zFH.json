@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Fellowship 35, Command \nAptitudes: Leadership, Social",
-    "effect": "Once per Turn, the character can use the Inspire Special Use of the Command Skill as a Half Action instead of as a Full Action.",
+    "category": "social",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per Turn, the character can use the Inspire Special Use of the Command Skill as a Half Action instead of as a Full Action.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Once per Turn, the character can use the Inspire Special Use of the Command Skill as a Half Action instead of as a Full Action.</p>",
     "aptitudes": [
       "Leadership",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fellowship 35, Command",
+      "characteristics": {
+        "fel": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Hatred",
-    "effect": "As a Full Action can make a Charm test, on success extends the bonus of the Hatred Talent (+10 to WS against relevent Group(s)) to Allies",
+    "category": "social",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>As a Full Action can make a Charm test, on success extends the bonus of the Hatred Talent (+10 to WS against relevent Group(s)) to Allies</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>As a Full Action can make a Charm test, on success extends the bonus of the Hatred Talent (+10 to WS against relevent Group(s)) to Allies</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Hatred",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Inq) (T3)",
-    "requirements": "Tier 3: Inquisitor E.Adv, Inspired Intuition, Shield of Contempt, Strength through Conviction. Aptitudes: Knowledge, Willpower",
-    "effect": "Inquisitor permenantly increase their Fate Point maximum by 1.",
+    "category": "general",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Inquisitor permenantly increase their Fate Point maximum by 1.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Inquisitor permenantly increase their Fate Point maximum by 1.</p>",
     "aptitudes": [
       "Knowledge",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Inquisitor E.Adv, Inspired Intuition, Shield of Contempt, Strength through Conviction.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,27 @@
+{
+  "name": "Enginseer Prime",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 2,
+    "purpose": "Leads Mechanicus Contingent, directs vessel maintenance.",
+    "careerPreferences": "Usually Explorator, any but Missionary/Void-Master.",
+    "subordinates": "Ship Tech-Priests, Arch-Magi, and Lesser Enginseers.",
+    "importantSkills": "Tech-Use, Chem-Use, Common Lore (Mechine Cult), Forbidden Lore (Mechanicus)",
+    "effect": "+10 to Emergency Repairs Extended Actions",
+    "description": {
+      "value": "<p><b>Purpose:</b> Leads Mechanicus Contingent, directs vessel maintenance.</p><p><b>Effect:</b> +10 to Emergency Repairs Extended Actions</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7LQjVi57qJtOo1Oa"
+}

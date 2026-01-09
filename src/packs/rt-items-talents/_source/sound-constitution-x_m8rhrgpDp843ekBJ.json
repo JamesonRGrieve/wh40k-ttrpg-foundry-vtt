@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: Toughness, General, Nurgle",
-    "effect": "Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.",
+    "category": "defense",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>",
     "aptitudes": [
       "Toughness",
       "General",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

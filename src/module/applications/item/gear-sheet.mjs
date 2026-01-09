@@ -47,6 +47,20 @@ export default class GearSheet extends BaseItemSheet {
     };
 
     /* -------------------------------------------- */
+    /*  Rendering                                   */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        
+        // Add CONFIG reference for template helpers
+        context.dh = CONFIG.rt || {};
+        
+        return context;
+    }
+
+    /* -------------------------------------------- */
     /*  Actions                                     */
     /* -------------------------------------------- */
 

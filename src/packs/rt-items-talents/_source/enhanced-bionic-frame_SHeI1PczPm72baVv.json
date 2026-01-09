@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Machinator Array",
-    "effect": "Explorer gains Auto-Stabilised Trait.",
+    "category": "knowledge",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Explorer gains Auto-Stabilised Trait.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Explorer gains Auto-Stabilised Trait.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Machinator Array",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

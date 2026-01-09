@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Exotic Weapon Training (Any)\nAptitudes: Intelligence, Finesse",
-    "effect": "Character reduces penalty for using a weapon without proper training by 10.",
+    "category": "combat",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character reduces penalty for using a weapon without proper training by 10.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character reduces penalty for using a weapon without proper training by 10.</p>",
     "aptitudes": [
       "Intelligence",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Exotic Weapon Training (Any)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

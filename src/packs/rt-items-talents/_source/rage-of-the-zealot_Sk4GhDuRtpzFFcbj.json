@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Red Consecrator Alternative Advance, 600xp\nHatred (Any One)",
-    "effect": "When dealing damage to a foe that the Character has the appropriate Hatred Talent for, the Character inflicts Righteous Fury on a 9 or 10 damage roll.",
+    "category": "combat",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>When dealing damage to a foe that the Character has the appropriate Hatred Talent for, the Character inflicts Righteous Fury on a 9 or 10 damage roll.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When dealing damage to a foe that the Character has the appropriate Hatred Talent for, the Character inflicts Righteous Fury on a 9 or 10 damage roll.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Red Consecrator Alternative Advance, 600xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

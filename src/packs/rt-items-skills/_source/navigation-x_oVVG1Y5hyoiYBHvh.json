@@ -3,7 +3,6 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "intelligence",
     "descriptor": "Plot a Course between two points, be it across a continent or through the Warp. Successful test provides estimated navigation time, cosmography, conditions, weather, warp tides, and so on. Often makes use of maps, charts, or Innate Abilities.",
     "uses": "Skill Test: Spend 1 Minute to Find Current Position or location as long as not in the warp. Difficulty varies on map quality, landmarks, etc.\nSkill Test: Spend Several hours plotting a course via plotting maps, calculating trajectories, and so on. Difficulty varies on map quality, landmarks, etc.\nSkill Groups: Surface, Steller, Warp (Note: Warp Navigation is done by Navigators, needed for ship to find its way in the warp, has special rules)",
@@ -11,14 +10,11 @@
     "description": {
       "value": "<p>Plot a Course between two points, be it across a continent or through the Warp. Successful test provides estimated navigation time, cosmography, conditions, weather, warp tides, and so on. Often makes use of maps, charts, or Innate Abilities.</p>"
     },
-    "rollConfig": {
-      "characteristic": "Intelligence",
-      "modifier": 0
-    },
     "isBasic": true,
     "skillType": "specialist",
     "aptitudes": [],
-    "source": ""
+    "source": "",
+    "specializations": []
   },
   "effects": [],
   "flags": {},

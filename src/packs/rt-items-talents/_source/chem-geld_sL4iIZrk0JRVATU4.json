@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.",
+    "category": "social",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

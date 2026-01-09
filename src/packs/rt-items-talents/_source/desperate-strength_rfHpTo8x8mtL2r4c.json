@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Toughness 50, Frenzy \nAptitudes: Toughness, Defence",
-    "effect": "When Character is Heavily Damaged (Suffered more than 2x Toughness Bonus Wounds), they gain Unnatural Strength (1) and Unnatural Toughness (1) (or increases these traits by 1). When character is suffering Critical Damage, they increase the value of these Traits by an additional +1. Character Still Determines damage threshold based off of original Toughness Bonus before this Trait is applied.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Character is Heavily Damaged (Suffered more than 2x Toughness Bonus Wounds), they gain Unnatural Strength (1) and Unnatural Toughness (1) (or increases these traits by 1). When character is suffering Critical Damage, they increase the value of these Traits by an additional +1. Character Still Determines damage threshold based off of original Toughness Bonus before this Trait is applied.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When Character is Heavily Damaged (Suffered more than 2x Toughness Bonus Wounds), they gain Unnatural Strength (1) and Unnatural Toughness (1) (or increases these traits by 1). When character is suffering Critical Damage, they increase the value of these Traits by an additional +1. Character Still Determines damage threshold based off of original Toughness Bonus before this Trait is applied.</p>",
     "aptitudes": [
       "Toughness",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Toughness 50, Frenzy",
+      "characteristics": {
+        "t": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

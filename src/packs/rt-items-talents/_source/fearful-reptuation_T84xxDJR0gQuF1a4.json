@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Headhunter Alternative Advance, 1500xp\nGood Reputation(Underworld), Intimidate +20",
-    "effect": "This Trait requires prerequisites that are not meant to be just gained through XP, instead through play. It is something to be earned through forging a reputation worthy of Fear. It is not an easy feat.\nIf the prerequistes are earned to a satisfactory degree they may purchase this talent. The character gains the Fear(1) Trait.",
+    "category": "general",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>This Trait requires prerequisites that are not meant to be just gained through XP, instead through play. It is something to be earned through forging a reputation worthy of Fear. It is not an easy feat.\nIf the prerequistes are earned to a satisfactory degree they may purchase this talent. The character gains the Fear(1) Trait.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>This Trait requires prerequisites that are not meant to be just gained through XP, instead through play. It is something to be earned through forging a reputation worthy of Fear. It is not an easy feat.\nIf the prerequistes are earned to a satisfactory degree they may purchase this talent. The character gains the Fear(1) Trait.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Headhunter Alternative Advance, 1500xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

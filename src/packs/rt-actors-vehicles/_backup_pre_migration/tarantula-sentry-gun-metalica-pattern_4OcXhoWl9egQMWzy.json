@@ -1,0 +1,54 @@
+{
+  "name": "Tarantula Sentry Gun (Metalica-Pattern)",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "N/A",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 12,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 10,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 10,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "None (Automated)\nHas BS 35, Ag 40, Per 30, and Awareness +10"
+    },
+    "passengers": 0,
+    "manoeuverability": 12,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret, one of: Twin-Linked Heavy Bolter, or Twin-Linked Lascannon</p>\n<p>Twin-linked lascannon (300m; S/–/–; 5d10+10 E; Pen 10; Clip 80; Reload 2 Full; Proven [3], Twin-Linked)</p>\n<p>Twin-linked heavy bolter (150m; –/–/6; 1D10+8 X; Pen 5; Clip 240; Reload Full; Tearing, Twin-Linked)</p>",
+    "specialRules": "<p>Traits: Immobile, Enclosed, Sentry</p>\n<p>Special Rules: Has Preysense Sight (Ignore Penalties and +20 Perception in Darkness) and Targeter (Reduce Test Difficulty by 1 step). Controller Swaps Sentry mode with +10 Tech-Use, fail jams but loses no ammo.</p>\n<p>Point Defence Mode: Functions as Permenant Overwatch with 90 Fire Arc.</p>\n<p>Sentry Mode: Area of Infleunce up to half weapon range. Can Fire in any direction and rolls for initiative as if an NPC.</p>",
+    "traitsText": "Traits: Immobile, Enclosed, Sentry\nSpecial Rules: Has Preysense Sight (Ignore Penalties and +20 Perception in Darkness) and Targeter (Reduce Test Difficulty by 1 step). Controller Swaps Sentry mode with +10 Tech-Use, fail jams but loses no ammo.\nPoint Defence Mode: Functions as Permenant Overwatch with 90 Fire Arc.\nSentry Mode: Area of Infleunce up to half weapon range. Can Fire in any direction and rolls for initiative as if an NPC.",
+    "availability": "veryrare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "4OcXhoWl9egQMWzy"
+}

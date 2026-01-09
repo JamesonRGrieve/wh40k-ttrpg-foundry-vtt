@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "intelligence",
     "descriptor": "Understanding Trade, Value, and Exchange. Bartering for the best deals and acquiring contraband. Understanding how valuable something is, and who would value it the most.",
     "uses": "Uses: When used against an opponent, is an Opposed Test vs target's Commerce or Willpower. Can be used to gian a bonus to Logistics Tests, Tracking down a rare item in a market, figuring out the worth of a thing.\nSpecial Use: Evaluate: Determine the Worth of an Item, rolled in secret and modified based on availability of item or commodity. Successful Test tells character the availability of the item, failiure tells nothing. 3+ Degrees of Failiure gives false Availability. (From Prior Editions: Includes Barter, Commerce, and Evaluate)",
     "useTime": "1 Minute or more.",
     "description": {
       "value": "<p>Understanding Trade, Value, and Exchange. Bartering for the best deals and acquiring contraband. Understanding how valuable something is, and who would value it the most.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Intelligence",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

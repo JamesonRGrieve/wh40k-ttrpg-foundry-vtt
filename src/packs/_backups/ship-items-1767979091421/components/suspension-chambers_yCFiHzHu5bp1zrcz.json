@@ -1,0 +1,29 @@
+{
+  "name": "Suspension Chambers",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Archeotech",
+    "hullType": "Tranports, Raiders, Frigates",
+    "powerUsage": 2,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "When active, decrease crew population by 50 and Morale by 5 as they are put into cold suspension. When deactivated, recovers crew population by 50 points, but morale doesn't recover. Takes a few days to awaken the crew. When in use, doubles time that can be spent in the void without suffering population or morale loss. (unless you go and get more crew)",
+    "availability": "extremely-rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>When active, decrease crew population by 50 and Morale by 5 as they are put into cold suspension. When deactivated, recovers crew population by 50 points, but morale doesn't recover. Takes a few days to awaken the crew. When in use, doubles time that can be spent in the void without suffering population or morale loss. (unless you go and get more crew)</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yCFiHzHu5bp1zrcz"
+}

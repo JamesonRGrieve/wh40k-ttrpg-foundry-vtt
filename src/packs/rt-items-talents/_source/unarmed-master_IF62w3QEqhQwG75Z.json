@@ -3,20 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; WS 45, Agility 40, Unarmed Warrior\nAptitudes: Strength, Offence, Khorne",
-    "effect": "Character counts as having the Deadly Natural Weapons Trait applied to their unarmed capabilities.\nDeadly Natural Weapons: Natural weapons no longer have Primitive(7), doing a flat 1d10+Strength Bonus Damage.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character counts as having the Deadly Natural Weapons Trait applied to their unarmed capabilities.\nDeadly Natural Weapons: Natural weapons no longer have Primitive(7), doing a flat 1d10+Strength Bonus Damage.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character counts as having the Deadly Natural Weapons Trait applied to their unarmed capabilities.\nDeadly Natural Weapons: Natural weapons no longer have Primitive(7), doing a flat 1d10+Strength Bonus Damage.</p>",
     "aptitudes": [
       "Strength",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WS 45, Agility 40, Unarmed Warrior",
+      "characteristics": {
+        "ws": 45,
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

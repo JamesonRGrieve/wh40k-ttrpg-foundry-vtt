@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; BS 30, Weapon Training (Las)\nAptitudes: Ballistic Skill, General",
-    "effect": "For each Comrade who is part of any Ranged Volley order this character issues, characted deals +1 additional damage, up to +3 with any ranged attack made with a las weapon for that Round, in addition to the normal benefits.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>For each Comrade who is part of any Ranged Volley order this character issues, characted deals +1 additional damage, up to +3 with any ranged attack made with a las weapon for that Round, in addition to the normal benefits.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>For each Comrade who is part of any Ranged Volley order this character issues, characted deals +1 additional damage, up to +3 with any ranged attack made with a las weapon for that Round, in addition to the normal benefits.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "General"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 30, Weapon Training (Las)",
+      "characteristics": {
+        "bs": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

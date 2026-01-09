@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Intelligence 35\nAptitudes: Perception, Social",
-    "effect": "When character fails an Awareness Test, character can reroll it with a -10 Modifier.",
+    "category": "general",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When character fails an Awareness Test, character can reroll it with a -10 Modifier.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When character fails an Awareness Test, character can reroll it with a -10 Modifier.</p>",
     "aptitudes": [
       "Perception",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Intelligence 35",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

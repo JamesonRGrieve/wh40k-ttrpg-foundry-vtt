@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Medic Specialty\n250xp",
-    "effect": " Comrade counts as an assistant trained in Medicae during Extended Care Medicae Tests. Medicae Tests suffer no penalty for additional patients.",
+    "category": "knowledge",
     "source": "Only War Core",
     "description": {
       "value": "<p> Comrade counts as an assistant trained in Medicae during Extended Care Medicae Tests. Medicae Tests suffer no penalty for additional patients.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p> Comrade counts as an assistant trained in Medicae during Extended Care Medicae Tests. Medicae Tests suffer no penalty for additional patients.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Medic Specialty",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

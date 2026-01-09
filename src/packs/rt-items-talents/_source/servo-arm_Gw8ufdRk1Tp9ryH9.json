@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tech-Priest Enginseer Speciality\n250xp",
-    "effect": "When Assisted by their Servitor Comrade, Character gains +10 to all Tech-Use Tests to make Repairs, and halves the time needed to do them.",
+    "category": "knowledge",
     "source": "Only War Core",
     "description": {
       "value": "<p>When Assisted by their Servitor Comrade, Character gains +10 to all Tech-Use Tests to make Repairs, and halves the time needed to do them.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When Assisted by their Servitor Comrade, Character gains +10 to all Tech-Use Tests to make Repairs, and halves the time needed to do them.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tech-Priest Enginseer Speciality",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,29 @@
+{
+  "name": "Arboretum",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 2,
+    "spaceUsage": 2,
+    "spCost": 1,
+    "effect": "Gardens to grow food in and relax. Double Time ship can remain in the void without suffering Population or Morale Loss. Increase Crew Population by +2 Permenantly. Only one per vessel.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Gardens to grow food in and relax. Double Time ship can remain in the void without suffering Population or Morale Loss. Increase Crew Population by +2 Permenantly. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "COHLadsoxOzNOnFQ"
+}

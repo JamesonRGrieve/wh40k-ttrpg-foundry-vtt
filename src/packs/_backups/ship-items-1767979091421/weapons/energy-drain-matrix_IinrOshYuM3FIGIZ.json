@@ -1,0 +1,27 @@
+{
+  "name": "Energy Drain Matrix",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon (Xenotech)",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "damage": "-",
+    "strength": 4,
+    "critRating": "-",
+    "range": 4,
+    "availability": "near-unique",
+    "notes": "Vessels struck by this weapon (and not stopped by void shields), have their speed reduced by 1 and Manoeuvrability reduced by 5 per successful attack. Effects remain for 2 Strategic Turns. Weapon doesn't cause critical hits or reduce hull integrity.",
+    "source": null,
+    "description": {
+      "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Vessels struck by this weapon (and not stopped by void shields), have their speed reduced by 1 and Manoeuvrability reduced by 5 per successful attack. Effects remain for 2 Strategic Turns. Weapon doesn't cause critical hits or reduce hull integrity.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IinrOshYuM3FIGIZ"
+}

@@ -3,18 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Strength 35, Willpower 35\nAptitudes: Khorne",
-    "effect": "Character gains +10 to Command, Commerce, Deception, and Intimidation Skill Tests against those with a lower Strength or Willpower Characteristic than themselves. They also suffer -10 to Charm Skills with such individuals.\nThese effects also apply in Social Conflicts.",
+    "category": "social",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character gains +10 to Command, Commerce, Deception, and Intimidation Skill Tests against those with a lower Strength or Willpower Characteristic than themselves. They also suffer -10 to Charm Skills with such individuals.\nThese effects also apply in Social Conflicts.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character gains +10 to Command, Commerce, Deception, and Intimidation Skill Tests against those with a lower Strength or Willpower Characteristic than themselves. They also suffer -10 to Charm Skills with such individuals.\nThese effects also apply in Social Conflicts.</p>",
     "aptitudes": [
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Strength 35, Willpower 35",
+      "characteristics": {
+        "s": 35,
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

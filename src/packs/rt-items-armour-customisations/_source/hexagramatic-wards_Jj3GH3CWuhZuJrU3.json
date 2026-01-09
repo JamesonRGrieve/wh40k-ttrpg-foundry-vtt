@@ -3,20 +3,25 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Power Armour, Carapace Breastplate, Full Carapace Armour",
     "effect": "Provides +20 to tests made to resist Psychic attacks or manipulations. Double armour AP vs Psychic Attacks that directly deal damage. Provides Wards such that armour retains its AP vs Warp Weapon attacks. 2500 Throne Cost.",
-    "weight": "+0kg",
     "availability": "very-rare",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Provides +20 to tests made to resist Psychic attacks or manipulations. Double armour AP vs Psychic Attacks that directly deal damage. Provides Wards such that armour retains its AP vs Warp Weapon attacks. 2500 Throne Cost.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "carapace",
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Agility 45, Ratling \nAptitudes: Agility, Social",
-    "effect": "When making a Requistion, character can spend a Fate Point to automatically \"acquire\" a single small item roughly the size of a laspistol or smaller and of Rare Availability or less that might reasonably held within regimental stores. \nLarger items may be stolen with a reasonable plan or Agility Test at GM Discretion. If caught, punishments are significant, although quartermasters rarely perform full inventories and most authority figures don't care enough to question in detail.\nIf for whatever reason the character wishes to discreetly return the item, it is as easy/difficult as it was \"acquiring\" it.",
+    "category": "general",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When making a Requistion, character can spend a Fate Point to automatically \"acquire\" a single small item roughly the size of a laspistol or smaller and of Rare Availability or less that might reasonably held within regimental stores. \nLarger items may be stolen with a reasonable plan or Agility Test at GM Discretion. If caught, punishments are significant, although quartermasters rarely perform full inventories and most authority figures don't care enough to question in detail.\nIf for whatever reason the character wishes to discreetly return the item, it is as easy/difficult as it was \"acquiring\" it.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When making a Requistion, character can spend a Fate Point to automatically \"acquire\" a single small item roughly the size of a laspistol or smaller and of Rare Availability or less that might reasonably held within regimental stores. \nLarger items may be stolen with a reasonable plan or Agility Test at GM Discretion. If caught, punishments are significant, although quartermasters rarely perform full inventories and most authority figures don't care enough to question in detail.\nIf for whatever reason the character wishes to discreetly return the item, it is as easy/difficult as it was \"acquiring\" it.</p>",
     "aptitudes": [
       "Agility",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility 45, Ratling",
+      "characteristics": {
+        "ag": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "20m",
-    "tacticalSpeed": "100kph",
-    "cruisingSpeed": "+10",
-    "maneuverability": "35",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 30\nSide 18\nRear 16",
-    "rearArmour": "Commander, Driver, Comms Op, Gunner",
-    "structuralIntegrity": "None",
-    "crew": "Fixed: Front Facing Autocannon (Front Facing; 300m; S/3/–; 3d10+8 I; Pen 6; Clip 200; Reload 2 Full; Ogryn-Proof, Reliable)\nHull, one of: Front Facing Heavy Bolter, Heavy Flamer\n---\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)",
-    "passengers": "Traits: Amphibious, Enhanced Motive Systems, Open-Topped, Tracked Vehicle\nNot strictly designed for full on combat. Good for scouting and covering terrain quickly.",
-    "cargo": "Scarce",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": 6,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "scarce"
   },
   "effects": [],
   "items": [],

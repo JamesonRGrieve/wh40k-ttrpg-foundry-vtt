@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Operate (Any) +10 \nAptitudes: Agility, Tech",
-    "effect": "When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus",
+    "category": "technical",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
     "aptitudes": [
       "Agility",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Operate (Any) +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

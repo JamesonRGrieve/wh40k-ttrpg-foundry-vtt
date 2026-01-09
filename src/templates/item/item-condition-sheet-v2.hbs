@@ -1,0 +1,229 @@
+{{!-- Modern Condition Sheet --}}
+<form class="rt-item-sheet rt-condition-sheet" autocomplete="off">
+  
+  {{!-- Header with Image and Title --}}
+  <div class="rt-item-sheet__header">
+    <div class="rt-item-sheet__image-wrapper">
+      <img class="rt-item-sheet__image" 
+           src="{{item.img}}" 
+           data-edit="img" 
+           alt="{{item.name}}" 
+           title="{{item.name}}" />
+      <i class="fas {{item.system.natureIcon}} rt-nature-icon"></i>
+    </div>
+    
+    <div class="rt-item-sheet__title-area">
+      <input class="rt-item-sheet__name-input" 
+             name="name" 
+             type="text" 
+             value="{{item.name}}" 
+             placeholder="Condition Name" />
+      
+      <div class="rt-condition-badges">
+        <span class="rt-badge rt-badge--{{item.system.natureClass}}">
+          <i class="fas {{item.system.natureIcon}}"></i> {{item.system.natureLabel}}
+        </span>
+        <span class="rt-badge rt-badge--applies-{{item.system.appliesTo}}">
+          <i class="fas {{item.system.appliesToIcon}}"></i> {{item.system.appliesToLabel}}
+        </span>
+        {{#if item.system.stackable}}
+        <span class="rt-badge rt-badge--stacks">
+          ×{{item.system.stacks}}
+        </span>
+        {{/if}}
+        {{#if item.system.isTemporary}}
+        <span class="rt-badge rt-badge--duration">
+          <i class="fas fa-clock"></i> {{item.system.durationDisplay}}
+        </span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  
+  {{!-- Main Panel - Condition Details --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-condition-grid">
+      
+      {{!-- Nature --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas {{item.system.natureIcon}}"></i>
+          {{localize "RT.Condition.Nature.Label"}}
+        </label>
+        <select class="rt-field__select" name="system.nature" data-dtype="String">
+          {{#select item.system.nature}}
+          <option value="beneficial">{{localize "RT.Condition.Nature.Beneficial"}}</option>
+          <option value="harmful">{{localize "RT.Condition.Nature.Harmful"}}</option>
+          <option value="neutral">{{localize "RT.Condition.Nature.Neutral"}}</option>
+          {{/select}}
+        </select>
+      </div>
+      
+      {{!-- AppliesTo --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas {{item.system.appliesToIcon}}"></i>
+          {{localize "RT.Condition.AppliesTo.Label"}}
+        </label>
+        <select class="rt-field__select" name="system.appliesTo" data-dtype="String">
+          {{#select item.system.appliesTo}}
+          <option value="self">{{localize "RT.Condition.AppliesTo.Self"}}</option>
+          <option value="target">{{localize "RT.Condition.AppliesTo.Target"}}</option>
+          <option value="both">{{localize "RT.Condition.AppliesTo.Both"}}</option>
+          <option value="area">{{localize "RT.Condition.AppliesTo.Area"}}</option>
+          {{/select}}
+        </select>
+      </div>
+      
+      {{!-- Stackable Checkbox --}}
+      <div class="rt-field rt-field--checkbox">
+        <label class="rt-field__label">
+          <input type="checkbox" 
+                 name="system.stackable" 
+                 {{checked item.system.stackable}} />
+          <span>{{localize "RT.Condition.Stackable.Label"}}</span>
+        </label>
+      </div>
+      
+      {{!-- Stacks (conditional display) --}}
+      {{#if item.system.stackable}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-layer-group"></i>
+          {{localize "RT.Condition.Stacks.Label"}}
+        </label>
+        <input class="rt-field__input" 
+               type="number" 
+               name="system.stacks" 
+               value="{{item.system.stacks}}" 
+               min="1"
+               data-dtype="Number" />
+      </div>
+      {{/if}}
+      
+      {{!-- Duration Value --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-clock"></i>
+          {{localize "RT.Condition.Duration.Value"}}
+        </label>
+        <input class="rt-field__input" 
+               type="number" 
+               name="system.duration.value" 
+               value="{{item.system.duration.value}}" 
+               min="0"
+               data-dtype="Number" />
+      </div>
+      
+      {{!-- Duration Units --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          {{localize "RT.Condition.Duration.Units"}}
+        </label>
+        <select class="rt-field__select" name="system.duration.units" data-dtype="String">
+          {{#select item.system.duration.units}}
+          <option value="permanent">{{localize "RT.Condition.Duration.Permanent"}}</option>
+          <option value="rounds">{{localize "RT.Condition.Duration.Rounds"}}</option>
+          <option value="minutes">{{localize "RT.Condition.Duration.Minutes"}}</option>
+          <option value="hours">{{localize "RT.Condition.Duration.Hours"}}</option>
+          <option value="days">{{localize "RT.Condition.Duration.Days"}}</option>
+          {{/select}}
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  {{!-- Effect Description (Rich HTML) --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-bolt"></i>
+        {{localize "RT.Condition.Effect.Label"}}
+      </label>
+      {{editor item.system.effect 
+               target="system.effect" 
+               button=true 
+               editable=isEditable 
+               engine="prosemirror"
+               placeholder=(localize "RT.Condition.Effect.Placeholder")}}
+    </div>
+  </div>
+  
+  {{!-- Removal Instructions (Rich HTML) --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-eraser"></i>
+        {{localize "RT.Condition.Removal.Label"}}
+      </label>
+      {{editor item.system.removal 
+               target="system.removal" 
+               button=true 
+               editable=isEditable 
+               engine="prosemirror"
+               placeholder=(localize "RT.Condition.Removal.Placeholder")}}
+    </div>
+  </div>
+  
+  {{!-- Notes Field --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-sticky-note"></i>
+        {{localize "RT.Condition.Notes.Label"}}
+      </label>
+      <textarea class="rt-field__textarea" 
+                name="system.notes" 
+                rows="3"
+                placeholder="{{localize "RT.Condition.Notes.Placeholder"}}">{{item.system.notes}}</textarea>
+    </div>
+  </div>
+  
+  {{!-- Source Reference --}}
+  <div class="rt-item-sheet__panel rt-source-panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-book"></i>
+        Source Book
+      </label>
+      <input class="rt-field__input" 
+             name="system.description.source.book" 
+             type="text" 
+             value="{{item.system.description.source.book}}" 
+             placeholder="Rogue Trader Core" />
+    </div>
+    
+    <div class="rt-field">
+      <label class="rt-field__label">Page</label>
+      <input class="rt-field__input rt-field__input--short" 
+             name="system.description.source.page" 
+             type="text" 
+             value="{{item.system.description.source.page}}" 
+             placeholder="249" />
+    </div>
+    
+    <div class="rt-field">
+      <label class="rt-field__label">Custom Reference</label>
+      <input class="rt-field__input" 
+             name="system.description.source.custom" 
+             type="text" 
+             value="{{item.system.description.source.custom}}" 
+             placeholder="Homebrew / Variant" />
+    </div>
+  </div>
+  
+  {{!-- Description (for chat display) --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-align-left"></i>
+        Description (for chat)
+      </label>
+      {{editor item.system.description.value 
+               target="system.description.value" 
+               button=true 
+               editable=isEditable 
+               engine="prosemirror"}}
+    </div>
+  </div>
+</form>

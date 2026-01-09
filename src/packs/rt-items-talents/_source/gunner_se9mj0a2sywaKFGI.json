@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Operator Specialty\n250xp",
-    "effect": "If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action. ",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action. </p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action. </p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Operator Specialty",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

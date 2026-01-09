@@ -1,0 +1,28 @@
+{
+  "name": "For the Greater Good!",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Tau (Innate)",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>Once per encounter, the Tau may gain +10 to a Test made while following an order from another Tau Character.  Additionally, if this order places the character in substantial danger for the benefit of the group as a whole, the bonus increases to +30 (GM Discretion).</p>"
+    },
+    "benefit": "<p>Once per encounter, the Tau may gain +10 to a Test made while following an order from another Tau Character.  Additionally, if this order places the character in substantial danger for the benefit of the group as a whole, the bonus increases to +30 (GM Discretion).</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JOmWy72b723Qs6wJ"
+}

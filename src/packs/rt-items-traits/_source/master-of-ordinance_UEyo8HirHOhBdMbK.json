@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in.",
-    "descriptionText": "",
-    "effects": "",
     "source": "OW: Hammer of the Emperor (Page 70)",
     "description": {
       "value": "<p>The many Officers of the Imperial Guard may, if able, request the use of Artillery Fire. The Master of Ordinance however simply Orders it usage, his word is absolute, lighting fields ablaze, shattering bastions, and crippling foes beneath a wave of detonating shells.  </p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Master of Ordinance. Apt: Agility, Fellowship, Intelligence, Leadership, Offence, Perception\nAdd. Equipment: Good Mortar + 6 Frag Rounds, Deadspace Earpiece, Hand-Held Targeter. Gain Talents: Air of Authority+Combat Sense or Calculated Barrage\nCan Purchase Basic Orders: Mortar Strike and Artillery Signal</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace Current Specialty's Aptitudes and Equipment with that of the Master of Ordinance. Apt: Agility, Fellowship, Intelligence, Leadership, Offence, Perception\nAdd. Equipment: Good Mortar + 6 Frag Rounds, Deadspace Earpiece, Hand-Held Targeter. Gain Talents: Air of Authority+Combat Sense or Calculated Barrage\nCan Purchase Basic Orders: Mortar Strike and Artillery Signal",
-    "level": null
+    "level": 0,
+    "benefit": "<p>The many Officers of the Imperial Guard may, if able, request the use of Artillery Fire. The Master of Ordinance however simply Orders it usage, his word is absolute, lighting fields ablaze, shattering bastions, and crippling foes beneath a wave of detonating shells.  </p><p><b>Effects:</b> Replace Current Specialty's Aptitudes and Equipment with that of the Master of Ordinance. Apt: Agility, Fellowship, Intelligence, Leadership, Offence, Perception\nAdd. Equipment: Good Mortar + 6 Frag Rounds, Deadspace Earpiece, Hand-Held Targeter. Gain Talents: Air of Authority+Combat Sense or Calculated Barrage\nCan Purchase Basic Orders: Mortar Strike and Artillery Signal</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

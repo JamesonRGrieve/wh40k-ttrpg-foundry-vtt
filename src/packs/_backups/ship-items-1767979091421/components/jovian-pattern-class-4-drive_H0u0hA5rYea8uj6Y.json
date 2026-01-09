@@ -1,0 +1,29 @@
+{
+  "name": "Jovian Pattern Class 4 Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive",
+    "hullType": "Cruisers",
+    "powerUsage": -75,
+    "spaceUsage": 14,
+    "spCost": 0,
+    "effect": "Generates power rather than using it.",
+    "availability": "scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Generates power rather than using it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H0u0hA5rYea8uj6Y"
+}

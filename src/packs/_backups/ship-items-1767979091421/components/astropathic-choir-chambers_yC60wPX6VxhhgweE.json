@@ -1,0 +1,29 @@
+{
+  "name": "Astropathic Choir-chambers",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "When Performing Astro-Telepathy inside this component, Astropaths gain +10 to Focus Power Tests and Astropath Psychic powers increase their range to 5 VU's. Only one per vessel.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>When Performing Astro-Telepathy inside this component, Astropaths gain +10 to Focus Power Tests and Astropath Psychic powers increase their range to 5 VU's. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yC60wPX6VxhhgweE"
+}

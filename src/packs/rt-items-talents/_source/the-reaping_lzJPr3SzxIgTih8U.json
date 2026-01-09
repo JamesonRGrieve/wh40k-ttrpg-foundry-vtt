@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Moritat Reaper Alternative Advance, 300xp, WS 40, Combat Master Talent.",
-    "effect": "Can spend a Full Action whilst wielding a sword or other edged weapon to perform a single melee attack against every enemy within close combat range of the character, moving in a clockwise or counter-clockwise direction. Test Weapon Skill and apply damage to each enemy seperately. these attacks can be dodged or parried as normaly but if any enemy successfully parries one of these attacks the action ends prematurely.",
+    "category": "combat",
     "source": "DH: Inquisitor's Handbook",
     "description": {
       "value": "<p>Can spend a Full Action whilst wielding a sword or other edged weapon to perform a single melee attack against every enemy within close combat range of the character, moving in a clockwise or counter-clockwise direction. Test Weapon Skill and apply damage to each enemy seperately. these attacks can be dodged or parried as normaly but if any enemy successfully parries one of these attacks the action ends prematurely.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can spend a Full Action whilst wielding a sword or other edged weapon to perform a single melee attack against every enemy within close combat range of the character, moving in a clockwise or counter-clockwise direction. Test Weapon Skill and apply damage to each enemy seperately. these attacks can be dodged or parried as normaly but if any enemy successfully parries one of these attacks the action ends prematurely.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Moritat Reaper Alternative Advance, 300xp, WS 40, Combat Master Talent.",
+      "characteristics": {
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

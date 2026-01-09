@@ -3,19 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Fel 35, WP 35, is a Ministorum Priest. Aptitudes: Fellowship, Leadership ",
-    "effect": "When a character within the squad spends XP to remove Insanity Points, they can remove one additional Insanity Point per 100xp Spent. \nThis still doesn't allow a squad member to reduce Insanity Below a Degree of Madness.",
+    "category": "general",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When a character within the squad spends XP to remove Insanity Points, they can remove one additional Insanity Point per 100xp Spent. \nThis still doesn't allow a squad member to reduce Insanity Below a Degree of Madness.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When a character within the squad spends XP to remove Insanity Points, they can remove one additional Insanity Point per 100xp Spent. \nThis still doesn't allow a squad member to reduce Insanity Below a Degree of Madness.</p>",
     "aptitudes": [
       "Fellowship",
       "Leadership"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fel 35, WP 35, is a Ministorum Priest.",
+      "characteristics": {
+        "fel": 35,
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Ast) (T2)",
-    "requirements": "Tier 2: Astropath E.Adv, Perception 35\nAptitudes: Perception, Willpower",
-    "effect": "The Astropath's Unnatural Senses Trait increases to twice their Willpower Characteristic.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>The Astropath's Unnatural Senses Trait increases to twice their Willpower Characteristic.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>The Astropath's Unnatural Senses Trait increases to twice their Willpower Characteristic.</p>",
     "aptitudes": [
       "Perception",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Astropath E.Adv, Perception 35",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

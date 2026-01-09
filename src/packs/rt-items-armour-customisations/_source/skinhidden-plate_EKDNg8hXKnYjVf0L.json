@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Any Armour",
     "effect": "Heretically melds armour with users flesh, making it unremovable, adds + Corruption Bonus AP to all locations applied, and Permenant -1d5 Fellowship per added AP. Become immune to Blood Loss. Must be aligned to Khorne to gain these benefits.",
-    "weight": "+8kg",
     "availability": "extremely-rare",
     "source": "BC: Tome of Blood",
     "description": {
       "value": "<p>Heretically melds armour with users flesh, making it unremovable, adds + Corruption Bonus AP to all locations applied, and Permenant -1d5 Fellowship per added AP. Become immune to Blood Loss. Must be aligned to Khorne to gain these benefits.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 8
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

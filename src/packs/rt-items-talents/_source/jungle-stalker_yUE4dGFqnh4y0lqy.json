@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Per 35, T 35, Survival +10\nAptitudes: Fieldcraft, Perception\nVeteran Talent Requirement Fulfilled",
-    "effect": "Veteran Talent Requirement: Character catches at least three foes unaware in a forest, jungle, or similar area over the course of a single mission\nCharacter treats any cover provided by Dense Foliage, Wooded Forests, and other similar natural environments as having an additional +2 AP to themselves and any allies within 5 metres.\nDense Foliage Cover: Probably 4AP, Trees: 8AP",
+    "category": "general",
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character catches at least three foes unaware in a forest, jungle, or similar area over the course of a single mission\nCharacter treats any cover provided by Dense Foliage, Wooded Forests, and other similar natural environments as having an additional +2 AP to themselves and any allies within 5 metres.\nDense Foliage Cover: Probably 4AP, Trees: 8AP</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Veteran Talent Requirement: Character catches at least three foes unaware in a forest, jungle, or similar area over the course of a single mission\nCharacter treats any cover provided by Dense Foliage, Wooded Forests, and other similar natural environments as having an additional +2 AP to themselves and any allies within 5 metres.\nDense Foliage Cover: Probably 4AP, Trees: 8AP</p>",
     "aptitudes": [
       "Fieldcraft",
       "Perception\nVeteran Talent Requirement Fulfilled"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Per 35, T 35, Survival +10",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

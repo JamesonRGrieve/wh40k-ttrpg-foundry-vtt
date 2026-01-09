@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Fellowship 30, Charm or Inquiry\nAptitudes: Unaligned",
-    "effect": "In a Social Conflict, if Character uses Charm or Inquiry in an Opposed Test, any spent infamy is returned to them if they win against the opponent.",
+    "category": "social",
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>In a Social Conflict, if Character uses Charm or Inquiry in an Opposed Test, any spent infamy is returned to them if they win against the opponent.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>In a Social Conflict, if Character uses Charm or Inquiry in an Opposed Test, any spent infamy is returned to them if they win against the opponent.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Fellowship 30, Charm or Inquiry",
+      "characteristics": {
+        "fel": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

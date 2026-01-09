@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: Willpower, Knowledge, Tzeentch",
-    "effect": "Character can spend 10 minutes in a meditative state without interruption to make a Willpower Test, on success they remove one level of Fatigue.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can spend 10 minutes in a meditative state without interruption to make a Willpower Test, on success they remove one level of Fatigue.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character can spend 10 minutes in a meditative state without interruption to make a Willpower Test, on success they remove one level of Fatigue.</p>",
     "aptitudes": [
       "Willpower",
       "Knowledge",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

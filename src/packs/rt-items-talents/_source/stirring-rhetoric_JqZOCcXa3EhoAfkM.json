@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Fellowship 45, Heroic Inspiration \nAptitudes: Fellowship, Social",
-    "effect": "Once per game session when the character uses the Inspire Special Use of Command Skill and Spends a Fate Point, each character affected by the command Test gains +5 to their next Skill or Characteristic Test per Degree of Success (up to +30)",
+    "category": "social",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per game session when the character uses the Inspire Special Use of Command Skill and Spends a Fate Point, each character affected by the command Test gains +5 to their next Skill or Characteristic Test per Degree of Success (up to +30)</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Once per game session when the character uses the Inspire Special Use of Command Skill and Spends a Fate Point, each character affected by the command Test gains +5 to their next Skill or Characteristic Test per Degree of Success (up to +30)</p>",
     "aptitudes": [
       "Fellowship",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fellowship 45, Heroic Inspiration",
+      "characteristics": {
+        "fel": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

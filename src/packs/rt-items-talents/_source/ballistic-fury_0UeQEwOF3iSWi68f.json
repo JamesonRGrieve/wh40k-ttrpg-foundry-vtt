@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Gun Lugger Advanced Specialty (300xp)",
-    "effect": "This Character can wield Heavy Ranged weapons that do not have the Ogryn-Proof Quality as if they did not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>This Character can wield Heavy Ranged weapons that do not have the Ogryn-Proof Quality as if they did not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>This Character can wield Heavy Ranged weapons that do not have the Ogryn-Proof Quality as if they did not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Gun Lugger Advanced Specialty (300xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

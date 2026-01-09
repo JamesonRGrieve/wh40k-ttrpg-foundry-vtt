@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork Weirdboy, Da Power of Waaagh!, Psyniscience +10",
-    "effect": "The Character can attempt to guide a vessel through the Warp using the normal rules for doing so. However they cannot estimate the journey dduration (counting as failed by 1 DoF), and cannot locate the Astronomicon (suffering -20 to all tests to Navigate the Warp), finally they do not use Navigate(Warp) whenever required to do so, instead making Survival Tests.",
+    "category": "psychic",
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>The Character can attempt to guide a vessel through the Warp using the normal rules for doing so. However they cannot estimate the journey dduration (counting as failed by 1 DoF), and cannot locate the Astronomicon (suffering -20 to all tests to Navigate the Warp), finally they do not use Navigate(Warp) whenever required to do so, instead making Survival Tests.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character can attempt to guide a vessel through the Warp using the normal rules for doing so. However they cannot estimate the journey dduration (counting as failed by 1 DoF), and cannot locate the Astronomicon (suffering -20 to all tests to Navigate the Warp), finally they do not use Navigate(Warp) whenever required to do so, instead making Survival Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Weirdboy, Da Power of Waaagh!, Psyniscience +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork",
-    "effect": "Followed by X number of Lesser Greenskins (1 Squig, 1 Gretchin, or 2 Snotlings per level of Runtz, see Character Creation tab for stats of Gretchin and Squigs, Snotlings are minor, mostly harmless, and die in one hit). Any of these runts that die from battle or mistreatment are replaced whenever is deemed appropriate, the runts follow commands to the best of their ability and are subject to the Might Makes Right Trait. Replacement times may include: returning to the ship, staying on a planet's surface for a few hours, etc.",
+    "category": "social",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Followed by X number of Lesser Greenskins (1 Squig, 1 Gretchin, or 2 Snotlings per level of Runtz, see Character Creation tab for stats of Gretchin and Squigs, Snotlings are minor, mostly harmless, and die in one hit). Any of these runts that die from battle or mistreatment are replaced whenever is deemed appropriate, the runts follow commands to the best of their ability and are subject to the Might Makes Right Trait. Replacement times may include: returning to the ship, staying on a planet's surface for a few hours, etc.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Followed by X number of Lesser Greenskins (1 Squig, 1 Gretchin, or 2 Snotlings per level of Runtz, see Character Creation tab for stats of Gretchin and Squigs, Snotlings are minor, mostly harmless, and die in one hit). Any of these runts that die from battle or mistreatment are replaced whenever is deemed appropriate, the runts follow commands to the best of their ability and are subject to the Might Makes Right Trait. Replacement times may include: returning to the ship, staying on a planet's surface for a few hours, etc.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

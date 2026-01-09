@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Order of the Hammer Initiate Alternative Advance, 750xp. ComLore(Any One), Schol. Lore(Any One), Trade(Any One), Total Recall",
-    "effect": "The Character can use their Intelligence Characteristic in place of their Fellowship Characteristics for Charm, Command, Blather, and Performer(Storyteller) Tests",
+    "category": "social",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>The Character can use their Intelligence Characteristic in place of their Fellowship Characteristics for Charm, Command, Blather, and Performer(Storyteller) Tests</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character can use their Intelligence Characteristic in place of their Fellowship Characteristics for Charm, Command, Blather, and Performer(Storyteller) Tests</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Order of the Hammer Initiate Alternative Advance, 750xp. ComLore(Any One), Schol. Lore(Any One), Trade(Any One), Total Recall",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

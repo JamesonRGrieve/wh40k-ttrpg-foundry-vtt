@@ -1,0 +1,29 @@
+{
+  "name": "Salvage Systems",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "Transports, Light Cruisers, Cruisers",
+    "powerUsage": 5,
+    "spaceUsage": 3,
+    "spCost": 3,
+    "effect": "Can attach to a space hulked ship and for each week make -10 Tech-Use Test to remove known component from hulk (Focused Augury Test to identify components). On success component extracted, on fail destroyed. Components can be sold or retrofitted to the ship as if acquired. Component causes -5 Manoeuvrability. One per Vessel.",
+    "availability": "very-rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Can attach to a space hulked ship and for each week make -10 Tech-Use Test to remove known component from hulk (Focused Augury Test to identify components). On success component extracted, on fail destroyed. Components can be sold or retrofitted to the ship as if acquired. Component causes -5 Manoeuvrability. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LrbaTvww2TAx6MPY"
+}

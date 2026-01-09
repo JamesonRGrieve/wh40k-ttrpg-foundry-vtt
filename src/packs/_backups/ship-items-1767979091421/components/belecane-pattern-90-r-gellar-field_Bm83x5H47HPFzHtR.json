@@ -1,0 +1,29 @@
+{
+  "name": "Belecane-Pattern 90.r Gellar Field",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Gellar Field",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 0,
+    "spCost": 0,
+    "effect": "Protects the ship during warp travel. +10 to Navigation Tests to pilot the ship through the warp. But -20 to results of rolls made on Warp Travel Encounter Table. Gellar field is known to flicker during prolonged use.",
+    "availability": "scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Protects the ship during warp travel. +10 to Navigation Tests to pilot the ship through the warp. But -20 to results of rolls made on Warp Travel Encounter Table. Gellar field is known to flicker during prolonged use.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bm83x5H47HPFzHtR"
+}

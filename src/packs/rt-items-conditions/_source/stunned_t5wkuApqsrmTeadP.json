@@ -1,29 +1,39 @@
 {
   "name": "Stunned",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Attacks against stunned targets: +20",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Attacks against stunned targets: +20</p>"
-    },
-    "severity": 1,
+    "identifier": "stunned",
+    "nature": "harmful",
+    "effect": "<p>A stunned character loses their next Action. Attacks against stunned targets gain a +20 bonus.</p>",
+    "removal": "<p>Automatically removed at the start of the character's next turn.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "target",
+    "duration": {
+      "value": 1,
+      "units": "rounds"
+    },
+    "description": {
+      "value": "<p>A stunned character loses their next Action. Attacks against stunned targets gain a +20 bonus.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "target"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "t5wkuApqsrmTeadP"

@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "House Operative Alternate Advance, 750xp\nWP 30",
-    "effect": "Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.",
+    "category": "social",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "House Operative Alternate Advance, 750xp",
+      "characteristics": {
+        "wp": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

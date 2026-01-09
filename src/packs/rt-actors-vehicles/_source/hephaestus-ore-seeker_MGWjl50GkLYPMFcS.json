@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Ground Vehicle",
-    "size": "5m",
-    "tacticalSpeed": "40kph",
-    "cruisingSpeed": "-30",
-    "maneuverability": "65",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 45,\nSide 50, \nRear 45",
-    "rearArmour": "3 Drivers, Foreman, 6 Enginseers, 20 Miners",
-    "structuralIntegrity": "20 Add. Crew, 750 Tonnes Processed Ore, Hanger for 1 Massive/2 Hulking Vehicle",
-    "crew": "Heavy Mining Drill (Front, Melee, 5d10 R, Pen 15, Tearing, Unwieldy)\nMining Laser (Front, 100m, Heavy, S/-/-, 4d10+5 E, Pen 10, Inaccurate, Overheats, Recharge)\nDigging Arms (Front, Melee, 2d10+10, Pen 4, Unwieldy)",
-    "passengers": "Has enough Air, Fuel, Water, and Provisions to last a full crew complement 1 Month in hostile environments. Weapons may be used by any of the crew, but have -30 when attacking anything of Average Size or Smaller. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.",
-    "cargo": "Near Unique",
-    "availability": "RT: Into the Storm",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 3,
+    "sizeDescriptor": 3,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "nearunique"
   },
   "effects": [],
   "items": [],

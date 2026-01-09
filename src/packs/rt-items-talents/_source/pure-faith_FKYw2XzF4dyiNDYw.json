@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

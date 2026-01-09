@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Forbidden Lore (Daemonology), Willpower 40. Aptitudes: Offence, Willpower",
-    "effect": "Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.",
+    "category": "combat",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.</p>",
     "aptitudes": [
       "Offence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Forbidden Lore (Daemonology), Willpower 40.",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

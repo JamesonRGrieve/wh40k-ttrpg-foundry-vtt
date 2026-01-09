@@ -3,28 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Toughness 40\nAptitudes: Toughness, Defence, Nurgle",
-    "effect": "If the Character is Stunned, they can make a +0 Toughness Test as a Free Action to ignore the effects.",
+    "category": "defense",
     "source": "Only War Core",
     "description": {
       "value": "<p>If the Character is Stunned, they can make a +0 Toughness Test as a Free Action to ignore the effects.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": false,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>If the Character is Stunned, they can make a +0 Toughness Test as a Free Action to ignore the effects.</p>",
     "aptitudes": [
       "Toughness",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Toughness 40",
+      "characteristics": {
+        "t": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

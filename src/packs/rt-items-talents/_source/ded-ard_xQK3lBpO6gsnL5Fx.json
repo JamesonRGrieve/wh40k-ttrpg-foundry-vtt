@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork, 'Ard, Toughness 50",
-    "effect": "Whenever suffering Blood Loss, only test to avoid death every five rounds, instead of every round. Additionally, can reroll any Toguhness Test to avoid instantly dying due to Critical Damage.",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Whenever suffering Blood Loss, only test to avoid death every five rounds, instead of every round. Additionally, can reroll any Toguhness Test to avoid instantly dying due to Critical Damage.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever suffering Blood Loss, only test to avoid death every five rounds, instead of every round. Additionally, can reroll any Toguhness Test to avoid instantly dying due to Critical Damage.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork, 'Ard, Toughness 50",
+      "characteristics": {
+        "t": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

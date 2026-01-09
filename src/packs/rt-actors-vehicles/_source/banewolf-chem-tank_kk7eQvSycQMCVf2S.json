@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "18m",
-    "tacticalSpeed": "70kph",
-    "cruisingSpeed": "+10",
-    "maneuverability": "30",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 30\nSide 28\nRear 18",
-    "rearArmour": "Commander, Driver, Gunner",
-    "structuralIntegrity": "None",
-    "crew": "Turret: Chem Cannon  (40m; S/–/–; 2d10+5 E; Pen 9; Clip 100; Reload Full; Crippling [2], Felling [2], Spray, Toxic [4]). Creates 1d5 Metre Radius Toxic Cloud after firing, those who end turn inside are hit again and suffocate. Lasts 1d5 Turns.\nHull, one of: Front Facing Heavy Bolter, Heavy Flamer\nPintle (Optional), one of: Heavy Stubber, Storm Bolter\n---\nHeavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nHeavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)\nStorm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)",
-    "passengers": "Traits: Enclosed, Extremely Volatile, Enhanced Motive Systems, Reinforced Armour, Tracked Vehicle\nSpecial Rules: If this vehicle explodes, replace flames with Toxic(3) Special Quality, Toxic Cloud lasts 1d5 Rounds, those who end their turn within suffer another hit and suffocate.",
-    "cargo": "Very Rare",
-    "availability": "OW: Shield of Humanity",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": 6,
+    "faction": "",
+    "subfaction": "",
+    "type": "tank",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "veryrare"
   },
   "effects": [],
   "items": [],

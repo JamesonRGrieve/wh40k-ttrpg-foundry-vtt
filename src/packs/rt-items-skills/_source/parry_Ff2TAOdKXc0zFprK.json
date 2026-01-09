@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "weaponskill",
     "descriptor": "Using a Melee Weapon to avoid being struck by a Melee Attack.",
     "uses": "Block one Melee strike per Degree of Success on Parry Test.",
     "useTime": "Reaction",
     "description": {
       "value": "<p>Using a Melee Weapon to avoid being struck by a Melee Attack.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Weapon Skill",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

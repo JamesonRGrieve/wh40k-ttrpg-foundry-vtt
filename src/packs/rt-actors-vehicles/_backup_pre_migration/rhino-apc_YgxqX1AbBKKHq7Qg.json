@@ -1,0 +1,54 @@
+{
+  "name": "Rhino APC",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "15m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 24,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 24,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 20,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 70,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "Driver, Gunner"
+    },
+    "passengers": 0,
+    "manoeuverability": 25,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 10,
+      "value": 10,
+      "critical": 0
+    },
+    "weapons": "<p>Pintle-Mounted Storm Bolter (Facing All, Range 90m, Basic, -/-/6, 1d10+5 X, Pen 4, Clip 120, Reload Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Tech-Use Tests to repair or restore the vehicle have +20. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.</p>",
+    "traitsText": "Tech-Use Tests to repair or restore the vehicle have +20. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.",
+    "availability": "rare",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "YgxqX1AbBKKHq7Qg"
+}

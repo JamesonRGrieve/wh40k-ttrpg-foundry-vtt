@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Agility 30\nAptitudes: Weapon Skill, Defence, Unaligned",
-    "effect": "If in close combat, may use Full Action to make opposed WS test against foe, if test is won, opponents weapon is dropped, if won by 3 or more degrees of success, opponent's weapon is taken by character.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>If in close combat, may use Full Action to make opposed WS test against foe, if test is won, opponents weapon is dropped, if won by 3 or more degrees of success, opponent's weapon is taken by character.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>If in close combat, may use Full Action to make opposed WS test against foe, if test is won, opponents weapon is dropped, if won by 3 or more degrees of success, opponent's weapon is taken by character.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Defence",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility 30",
+      "characteristics": {
+        "ag": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

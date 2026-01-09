@@ -1,0 +1,29 @@
+{
+  "name": "Cherubim Aerie",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
+    "effect": "Horrifying Servitor babies used to perform menial tasks. Permenant -1 Morale but +1d10+10 Achievement Points once per objective. Poor: -2 Morale, Good: 1d5+15 Achievement Points, Best: 20 Achievement Points. Only One per Vessel.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Horrifying Servitor babies used to perform menial tasks. Permenant -1 Morale but +1d10+10 Achievement Points once per objective. Poor: -2 Morale, Good: 1d5+15 Achievement Points, Best: 20 Achievement Points. Only One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZgiOdurYMRrK19QD"
+}

@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any career, RT Rank 2+, Has one of the Barter, Commerce, or Forbidden Lore (Xenos). Has particpated in the trade of xenos artifacts.",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Hostile Acquisitions \n(Page 34)",
     "description": {
       "value": "<p>Cold Trade Brokers are those that ply the stars, taking, smuggling, and selling forbidden xenos artifacts while posessing the guile and wit to avoid the many institutions that would see such people dead. It is a risky career, for the merciless and subtle, but comes with great potential reward.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Cold Trade Broker\nAutomatically Gain Unique Trait: Cold Trader and Enemy (Inqusition) Talent</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Cold Trade Broker\nAutomatically Gain Unique Trait: Cold Trader and Enemy (Inqusition) Talent",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Cold Trade Brokers are those that ply the stars, taking, smuggling, and selling forbidden xenos artifacts while posessing the guile and wit to avoid the many institutions that would see such people dead. It is a risky career, for the merciless and subtle, but comes with great potential reward.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Cold Trade Broker\nAutomatically Gain Unique Trait: Cold Trader and Enemy (Inqusition) Talent</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

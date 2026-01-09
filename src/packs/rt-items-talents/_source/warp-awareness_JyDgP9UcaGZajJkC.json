@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Ast) (T2)",
-    "requirements": "Tier 2: Astropath E.Adv, Warp Sense\nAptitudes: Perception, Psyker",
-    "effect": "Astropath can use Psyniscience Skill in place of Awareness skill for Awareness Tests.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Astropath can use Psyniscience Skill in place of Awareness skill for Awareness Tests.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Astropath can use Psyniscience Skill in place of Awareness skill for Awareness Tests.</p>",
     "aptitudes": [
       "Perception",
       "Psyker"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Astropath E.Adv, Warp Sense",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "When Activating recite terrifying litanies for the next two minutes all Humans in 50 Metres make WP Test or take -10 penalty to next skill test. Cannot Communicate or talk with others while active. Affects even those who can't hear, although they will not know it is you who is speaking.",
+    "category": "general",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When Activating recite terrifying litanies for the next two minutes all Humans in 50 Metres make WP Test or take -10 penalty to next skill test. Cannot Communicate or talk with others while active. Affects even those who can't hear, although they will not know it is you who is speaking.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When Activating recite terrifying litanies for the next two minutes all Humans in 50 Metres make WP Test or take -10 penalty to next skill test. Cannot Communicate or talk with others while active. Affects even those who can't hear, although they will not know it is you who is speaking.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

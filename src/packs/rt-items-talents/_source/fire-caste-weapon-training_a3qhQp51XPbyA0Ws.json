@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau",
-    "effect": "The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

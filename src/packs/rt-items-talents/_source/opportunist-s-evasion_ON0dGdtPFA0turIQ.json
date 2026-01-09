@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tau Pathfinder Alternative Advance, 600xp\nAgility 45, Hard Target",
-    "effect": "Whenever Character succeeds on a Dodge or Parry Test to avoid an attack made from an enemy within 20m, their allies gain +20 to Weapon Skill and Ballistic Skill tests made against that foe until the beginning of the character's next turn.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whenever Character succeeds on a Dodge or Parry Test to avoid an attack made from an enemy within 20m, their allies gain +20 to Weapon Skill and Ballistic Skill tests made against that foe until the beginning of the character's next turn.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever Character succeeds on a Dodge or Parry Test to avoid an attack made from an enemy within 20m, their allies gain +20 to Weapon Skill and Ballistic Skill tests made against that foe until the beginning of the character's next turn.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau Pathfinder Alternative Advance, 600xp",
+      "characteristics": {
+        "ag": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

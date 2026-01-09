@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Inq) (T2)",
-    "requirements": "Tier 2: Inquisitor E.Adv, Willpower 50\nAptitudes: Defence, Toughness",
-    "effect": "Whenever the Inquisitor would gain any amount of Corruption Points, they can spend a Fate Point to gain 0 instead.",
+    "category": "general",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Whenever the Inquisitor would gain any amount of Corruption Points, they can spend a Fate Point to gain 0 instead.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Whenever the Inquisitor would gain any amount of Corruption Points, they can spend a Fate Point to gain 0 instead.</p>",
     "aptitudes": [
       "Defence",
       "Toughness"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Inquisitor E.Adv, Willpower 50",
+      "characteristics": {
+        "wp": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

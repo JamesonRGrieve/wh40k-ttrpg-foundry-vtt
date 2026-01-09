@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Legend of the Expanse Alternate Advance, 500xp. Awareness, Light Sleeper, Paranoia, Perception 40+",
-    "effect": "You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Legend of the Expanse Alternate Advance, 500xp. Awareness, Light Sleeper, Paranoia, Perception 40+",
+      "characteristics": {
+        "per": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,28 @@
+{
+  "name": "Toxic (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Creature is poisonous, Enemies that hit this creature make a -10*X Toughness test. On failiure they suffer effects of poison of the same damage type as the weapon that inflicted the hit that ignores Armour and Toughness. Some Creatures may have toxins with additional effects. If no X value, default to X = 0.</p>"
+    },
+    "benefit": "<p>The Creature is poisonous, Enemies that hit this creature make a -10*X Toughness test. On failiure they suffer effects of poison of the same damage type as the weapon that inflicted the hit that ignores Armour and Toughness. Some Creatures may have toxins with additional effects. If no X value, default to X = 0.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q2JuFNhhtcfNBdtF"
+}

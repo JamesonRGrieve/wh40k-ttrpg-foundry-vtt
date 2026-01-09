@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Unt) (T3)",
-    "requirements": "Tier 3: Untouchable E.Adv, Warp Disruption, Willpower 55. Aptitudes: Willpower",
-    "effect": "The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.",
+    "category": "psychic",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>",
     "aptitudes": [
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Untouchable E.Adv, Warp Disruption, Willpower 55.",
+      "characteristics": {
+        "wp": 55
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

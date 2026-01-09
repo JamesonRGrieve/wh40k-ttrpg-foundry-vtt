@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Spacecraft",
-    "size": "18m/ 12AU's",
-    "tacticalSpeed": "2,200kph / 7VU's",
-    "cruisingSpeed": "-5",
-    "maneuverability": "40",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 32\nSide 32\nRear 30",
-    "rearArmour": "Pilot, Co-Pilot,    3 Gun Slaves, Heretek",
-    "structuralIntegrity": "30 Melta-Missiles or 25 Troops or Eqv. Cargo",
-    "crew": "Co-Pilot: Long-Barrelled Lascannon (Front, Range 900m (9 AU), Heavy, S/-/-, 5d10+10 E, Pen 10, Clip 200, Reload -, Accurate)\nGun Slaves: 3 Heavy Autocannon Turrets (Front/Left, Front/Right, or Rear, Range 450m (5 AU), Heavy, S/2/5, 4d10+11, Pen 4, Clip 200, Reload 2 Full).",
-    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. Bomb Payloads can't accurately hit small targets like individuals or vehicles, estimate damage of 4d10+8 E, Pen 12, Blast 8. Has Craft Rating of +0 and squadron size of 15 for Attack Craft Purposes.  +1 to Squadron Losses, or -5 to Upkeep Tests. Can only acquire if allied with Chaos Reavers. ",
-    "cargo": "Extremely Rare",
-    "availability": "RT: Battlefleet Koronus",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "extremelyrare"
   },
   "effects": [],
   "items": [],

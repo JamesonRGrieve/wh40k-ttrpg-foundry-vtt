@@ -1,0 +1,28 @@
+{
+  "name": "But it Dark in Dere!",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Ogryn (Innate)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character is Scared of the Dark and Confined spaces. Will not enter sufficiently confined caves, basements, ruins, infantry fighting vehicles, or even smaller than average buildings of their own free will. Requires an Order from a Superior (-10 Command Test). Whilst inside such confined spaces, Character suffers -10 to all skill tests.</p>"
+    },
+    "benefit": "<p>Character is Scared of the Dark and Confined spaces. Will not enter sufficiently confined caves, basements, ruins, infantry fighting vehicles, or even smaller than average buildings of their own free will. Requires an Order from a Superior (-10 Command Test). Whilst inside such confined spaces, Character suffers -10 to all skill tests.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hb7JnEbPYdvrFqpa"
+}

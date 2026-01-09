@@ -1,0 +1,29 @@
+{
+  "name": "Crew Reclamation Facility",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "Recycles the heavily wounded into Servitors. Reduce Crew Losses by 3, to a minimum of 1. Increase all Morale Losses by 1. Only one per vessel.",
+    "availability": "scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Recycles the heavily wounded into Servitors. Reduce Crew Losses by 3, to a minimum of 1. Increase all Morale Losses by 1. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "frPW05cgBhKO4RGv"
+}

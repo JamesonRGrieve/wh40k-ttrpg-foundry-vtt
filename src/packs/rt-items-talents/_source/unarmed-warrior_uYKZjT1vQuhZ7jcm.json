@@ -3,28 +3,30 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; WS 35, Ag 35\nAptitudes: Strength, Offence, Khorne",
-    "effect": "Character counts as having the Natural Weapons Trait applied to their unarmed capabilities.\nNatural Weapons: Natural Weapon does 1d10 + Strength Bonus Damage with Primitive (7), cannot parry with natural weapons, nor be disarmed except through literal disarming. ",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character counts as having the Natural Weapons Trait applied to their unarmed capabilities.\nNatural Weapons: Natural Weapon does 1d10 + Strength Bonus Damage with Primitive (7), cannot parry with natural weapons, nor be disarmed except through literal disarming. </p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": true,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>Character counts as having the Natural Weapons Trait applied to their unarmed capabilities.\nNatural Weapons: Natural Weapon does 1d10 + Strength Bonus Damage with Primitive (7), cannot parry with natural weapons, nor be disarmed except through literal disarming. </p>",
     "aptitudes": [
       "Strength",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WS 35, Ag 35",
+      "characteristics": {
+        "ws": 35,
+        "ag": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

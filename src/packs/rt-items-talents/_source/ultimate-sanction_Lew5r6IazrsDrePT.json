@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Sanctioned Psyker Specialty\n250xp",
-    "effect": "If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Sanctioned Psyker Specialty",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

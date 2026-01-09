@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Strength 45, Berserk Charge \nAptitudes: Strength, Offence",
-    "effect": "When Character makes a Charge Action against a Target with a Size Trait Smaller than their own, they can make a +0 Opposed Strength Test against the target as a Free Action. If successful the target suffers -30 to Dodge or Parry the attack.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Character makes a Charge Action against a Target with a Size Trait Smaller than their own, they can make a +0 Opposed Strength Test against the target as a Free Action. If successful the target suffers -30 to Dodge or Parry the attack.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When Character makes a Charge Action against a Target with a Size Trait Smaller than their own, they can make a +0 Opposed Strength Test against the target as a Free Action. If successful the target suffers -30 to Dodge or Parry the attack.</p>",
     "aptitudes": [
       "Strength",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Strength 45, Berserk Charge",
+      "characteristics": {
+        "s": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

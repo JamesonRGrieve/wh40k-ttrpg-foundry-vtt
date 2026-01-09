@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Power Armour",
     "effect": "Unarmed Attacks vs Wearer causes attackers that fail their Weapon Skill Test to suffer 1d5 damager per Degree of Failiure.",
-    "weight": "+0.5kg",
     "availability": "Special",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Unarmed Attacks vs Wearer causes attackers that fail their Weapon Skill Test to suffer 1d5 damager per Degree of Failiure.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0.5
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Command +10,Scholastic Lore (Imperial Creed). Aptitudes: Fellowship, Social ",
-    "effect": "Character gains +10 bonus whenever rerolling a Test with a Fate Point after failing the initial attempt. They may spend a Reaction to pass this beenfit to any ally spending Fate Points to re-roll a Test as long as the Ally is within Line of Sight and Communication Range.",
+    "category": "general",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character gains +10 bonus whenever rerolling a Test with a Fate Point after failing the initial attempt. They may spend a Reaction to pass this beenfit to any ally spending Fate Points to re-roll a Test as long as the Ally is within Line of Sight and Communication Range.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character gains +10 bonus whenever rerolling a Test with a Fate Point after failing the initial attempt. They may spend a Reaction to pass this beenfit to any ally spending Fate Points to re-roll a Test as long as the Ally is within Line of Sight and Communication Range.</p>",
     "aptitudes": [
       "Fellowship",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Command +10,Scholastic Lore (Imperial Creed).",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

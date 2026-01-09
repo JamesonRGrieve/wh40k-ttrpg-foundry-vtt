@@ -3,7 +3,6 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "",
     "descriptor": "",
     "uses": "Sets of Skills, Talents, and Abilities to diversify one's character. Taken only with GM Permission and if requirements are met, cost XP.",
@@ -12,8 +11,7 @@
       "value": ""
     },
     "rollConfig": {
-      "characteristic": null,
-      "modifier": 0
+      "characteristic": null
     },
     "isBasic": true,
     "skillType": "basic",

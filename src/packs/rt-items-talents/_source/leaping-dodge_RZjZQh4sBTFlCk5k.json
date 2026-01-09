@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Agility 35, Dodge +10\nAptitudes: Agility, Defence",
-    "effect": "Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.",
+    "category": "combat",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>",
     "aptitudes": [
       "Agility",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Agility 35, Dodge +10",
+      "characteristics": {
+        "ag": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

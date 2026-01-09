@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "Can cause loud screech, unprotected creatures in 30 metre radius that can hear must make Willpower Test or lose a half action on their next turn.",
+    "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can cause loud screech, unprotected creatures in 30 metre radius that can hear must make Willpower Test or lose a half action on their next turn.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can cause loud screech, unprotected creatures in 30 metre radius that can hear must make Willpower Test or lose a half action on their next turn.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

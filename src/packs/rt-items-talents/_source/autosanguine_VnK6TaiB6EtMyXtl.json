@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

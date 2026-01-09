@@ -1,0 +1,29 @@
+{
+  "name": "Observation Dome",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility",
+    "hullType": "All Ships",
+    "powerUsage": 0,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "A dome that looks out into the void. +50 Achievement Points towards Exloraton Objectives, and +1 Morale. Only one per vessel.",
+    "availability": "scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>A dome that looks out into the void. +50 Achievement Points towards Exloraton Objectives, and +1 Morale. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AoEgZvPvDubrVeBx"
+}

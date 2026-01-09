@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Bone 'Ead Advanced Specialty (300xp)",
-    "effect": "The Ogryn can wield Basic and Thrown Ranged Weapons, as well as Melee Weapons that do not have the Ogryn-Proof Trait as if they did not have the Clumsy Trait. Any of these weapons that would require Two Hands do not when wielded by this Ogryn.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Ogryn can wield Basic and Thrown Ranged Weapons, as well as Melee Weapons that do not have the Ogryn-Proof Trait as if they did not have the Clumsy Trait. Any of these weapons that would require Two Hands do not when wielded by this Ogryn.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Ogryn can wield Basic and Thrown Ranged Weapons, as well as Melee Weapons that do not have the Ogryn-Proof Trait as if they did not have the Clumsy Trait. Any of these weapons that would require Two Hands do not when wielded by this Ogryn.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Bone 'Ead Advanced Specialty (300xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

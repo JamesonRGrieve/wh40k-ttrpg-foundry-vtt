@@ -1,32 +1,46 @@
 <div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
-    <h1 class="rt-panel-header">{{localize "RT.Vehicle.Upgrades.Header"}}</h1>
+    <h1 class="rt-panel-header">
+        <i class="fas fa-cogs"></i>
+        {{localize "RT.Vehicle.Upgrades.Header"}}
+    </h1>
     <div class="rt-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "RT.Vehicle.Upgrades.Name"}}</div>
-            <div class="table-cell--span3">{{localize "RT.Vehicle.Upgrades.Effect"}}</div>
+            <div class="table-cell">{{localize "RT.VehicleUpgrade.Type"}}</div>
+            <div class="table-cell">{{localize "RT.VehicleUpgrade.Difficulty"}}</div>
+            <div class="table-cell--span2">{{localize "RT.Vehicle.Upgrades.Modifiers"}}</div>
             <div class="table-cell--last">
-                <label class="rt-control-button item-create" data-type="vehicleUpgrade">
-                    <span class="rt-control-button__span material-icons">add_circle</span>
-                </label>
+                <button class="rt-control-button item-create" data-type="vehicleUpgrade">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
         </div>
-        {{#each actor.items as |item|}}
-            {{#if item.isVehicleUpgrade}}
-                <div class="table-row">
-                    <div class="table-cell--span2">
-                        <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
-                            <img class="rt-item-img" src="{{item.img}}" alt="{{item.name}}" />
-                            {{item.name}}
-                        </button>
-                    </div>
-                    <div class="table-cell--span3 rt-effect-text">{{item.system.effect}}</div>
-                    <div class="table-cell--last">
-                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="rt-control-button__span material-icons">delete</span>
-                        </label>
-                    </div>
-                </div>
-            {{/if}}
+        {{#each upgrades as |item|}}
+        <div class="table-row">
+            <div class="table-cell--span2">
+                <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
+                    <img class="rt-item-img" src="{{item.img}}" alt="{{item.name}}" />
+                    {{item.name}}
+                </button>
+            </div>
+            <div class="table-cell">{{item.system.upgradeTypeLabel}}</div>
+            <div class="table-cell">{{item.system.difficultyFormatted}}</div>
+            <div class="table-cell--span2 rt-modifier-list">
+                {{#each item.system.modifiersList as |mod|}}
+                <span class="rt-modifier {{#if (lt mod.value 0)}}negative{{else}}positive{{/if}}">
+                    {{mod.label}}: {{mod.formatted}}
+                </span>
+                {{/each}}
+                {{#unless item.system.hasModifiers}}
+                <em class="rt-text-muted">No stat modifiers</em>
+                {{/unless}}
+            </div>
+            <div class="table-cell--last">
+                <button class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
         {{/each}}
     </div>
 </div>

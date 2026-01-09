@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Shared Destiny, Shield of Contempt, Hatred (any). Aptitudes: Defence, Leadership",
-    "effect": "Whenever Character or Ally within 10m gains Corruption, reduce amount gained by 1 (min 0). Allies within 10m can spend a Fate Point to automatically gain 0 Corruption. \nEffects don't stack if multiple characters with this talent overlap their ranges.",
+    "category": "general",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Whenever Character or Ally within 10m gains Corruption, reduce amount gained by 1 (min 0). Allies within 10m can spend a Fate Point to automatically gain 0 Corruption. \nEffects don't stack if multiple characters with this talent overlap their ranges.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Whenever Character or Ally within 10m gains Corruption, reduce amount gained by 1 (min 0). Allies within 10m can spend a Fate Point to automatically gain 0 Corruption. \nEffects don't stack if multiple characters with this talent overlap their ranges.</p>",
     "aptitudes": [
       "Defence",
       "Leadership"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Shared Destiny, Shield of Contempt, Hatred (any).",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

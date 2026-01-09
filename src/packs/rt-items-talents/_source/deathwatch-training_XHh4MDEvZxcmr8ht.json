@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Astartes, Deathwatch member.",
-    "effect": "Righteous Fury is automatically confirmed against alien enemies without requiring Ballistic Skill Tests or Weapon Skill Tests.",
+    "category": "combat",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Righteous Fury is automatically confirmed against alien enemies without requiring Ballistic Skill Tests or Weapon Skill Tests.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Righteous Fury is automatically confirmed against alien enemies without requiring Ballistic Skill Tests or Weapon Skill Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Astartes, Deathwatch member.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

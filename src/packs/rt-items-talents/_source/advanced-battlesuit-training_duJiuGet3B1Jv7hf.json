@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tau Battlesuit Pilot Alternative Advance, 300xp\nAgility 40+, Pilot(Personal) +10",
-    "effect": "The Character's Increased Size whilst piloting a Battlesuit provides no bonus to enemies attempting to hit them.",
+    "category": "leadership",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The Character's Increased Size whilst piloting a Battlesuit provides no bonus to enemies attempting to hit them.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character's Increased Size whilst piloting a Battlesuit provides no bonus to enemies attempting to hit them.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau Battlesuit Pilot Alternative Advance, 300xp",
+      "characteristics": {
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Unt) (T3)",
-    "requirements": "Tier 3: Untouchable E.Adv, Psychic Null, Willpower 50. Aptitudes: Willpower",
-    "effect": "The effects of the Psychic Null Talent apply to everyone within Willpower Bonus metres of the Untouchable.",
+    "category": "psychic",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>The effects of the Psychic Null Talent apply to everyone within Willpower Bonus metres of the Untouchable.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>The effects of the Psychic Null Talent apply to everyone within Willpower Bonus metres of the Untouchable.</p>",
     "aptitudes": [
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Untouchable E.Adv, Psychic Null, Willpower 50.",
+      "characteristics": {
+        "wp": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

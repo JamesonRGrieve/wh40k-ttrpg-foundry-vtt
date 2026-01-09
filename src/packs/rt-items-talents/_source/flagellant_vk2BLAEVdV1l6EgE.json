@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Willpower 30 \nAptitudes: Offence, Toughness",
-    "effect": "As a Full Action, character can inflict a suitable punishment on their own body (self mutilation, whipping, etc), suffering 1d5-2 Fatigue (min 1). For 1 Hour, or until the end of the current encounter, they gain +10 to Willpower Tests to Resist Fear, Pinning or Psychic Powers, as well as resisting Corruption. If Character possesses the Frenzy Talent, they can enter the Frenzied State as a Free Action whilst under the effects of this talent.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As a Full Action, character can inflict a suitable punishment on their own body (self mutilation, whipping, etc), suffering 1d5-2 Fatigue (min 1). For 1 Hour, or until the end of the current encounter, they gain +10 to Willpower Tests to Resist Fear, Pinning or Psychic Powers, as well as resisting Corruption. If Character possesses the Frenzy Talent, they can enter the Frenzied State as a Free Action whilst under the effects of this talent.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>As a Full Action, character can inflict a suitable punishment on their own body (self mutilation, whipping, etc), suffering 1d5-2 Fatigue (min 1). For 1 Hour, or until the end of the current encounter, they gain +10 to Willpower Tests to Resist Fear, Pinning or Psychic Powers, as well as resisting Corruption. If Character possesses the Frenzy Talent, they can enter the Frenzied State as a Free Action whilst under the effects of this talent.</p>",
     "aptitudes": [
       "Offence",
       "Toughness"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Willpower 30",
+      "characteristics": {
+        "wp": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

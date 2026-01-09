@@ -102,6 +102,94 @@
         "Fatal": "Fatal (10)"
       }
     },
+    "Condition": {
+      "Label": "Condition",
+      "Type": "Condition",
+      "Description": "Status effect that modifies gameplay",
+      "Nature": {
+        "Label": "Nature",
+        "Beneficial": "Beneficial",
+        "Harmful": "Harmful",
+        "Neutral": "Neutral",
+        "Description": "Is this condition helpful or harmful?"
+      },
+      "Effect": {
+        "Label": "Effect",
+        "Placeholder": "Describe the mechanical effect...",
+        "Description": "What does this condition do?"
+      },
+      "Removal": {
+        "Label": "Removal",
+        "Placeholder": "How is this condition removed?",
+        "Description": "Conditions for removal"
+      },
+      "Stackable": {
+        "Label": "Stackable",
+        "Description": "Can this condition stack multiple times?"
+      },
+      "Stacks": {
+        "Label": "Stacks",
+        "Current": "Current Stacks",
+        "Description": "How many times is this condition applied?"
+      },
+      "AppliesTo": {
+        "Label": "Applies To",
+        "Self": "Self",
+        "Target": "Target",
+        "Both": "Both",
+        "Area": "Area",
+        "Description": "Who is affected by this condition?"
+      },
+      "Duration": {
+        "Label": "Duration",
+        "Value": "Value",
+        "Units": "Units",
+        "Permanent": "Permanent",
+        "Rounds": "Rounds",
+        "Minutes": "Minutes",
+        "Hours": "Hours",
+        "Days": "Days",
+        "Description": "How long does this last?"
+      },
+      "Notes": {
+        "Label": "Notes",
+        "Placeholder": "Additional notes..."
+      },
+      "Chat": {
+        "Applied": "{name} applied to {target}",
+        "Removed": "{name} removed from {target}",
+        "Stacked": "{name} stacked on {target} (×{stacks})"
+      }
+    },
+    "Sheet": {
+      "Acolyte": "Character Sheet",
+      "AcolyteSidebar": "Character Sheet (Sidebar)",
+      "NPC": "NPC Sheet",
+      "Vehicle": "Vehicle Sheet",
+      "Starship": "Starship Sheet",
+      "Item": "Item Sheet",
+      "Weapon": "Weapon Sheet",
+      "Armour": "Armour Sheet",
+      "Talent": "Talent Sheet",
+      "Trait": "Trait Sheet",
+      "Gear": "Gear Sheet",
+      "Ammunition": "Ammunition Sheet",
+      "PsychicPower": "Psychic Power Sheet",
+      "Skill": "Skill Sheet",
+      "Cybernetic": "Cybernetic Sheet",
+      "ForceField": "Force Field Sheet",
+      "CriticalInjury": "Critical Injury Sheet",
+      "Condition": "Condition Sheet",
+      "StorageLocation": "Storage Location Sheet",
+      "PeerEnemy": "Peer/Enemy Sheet",
+      "JournalEntry": "Journal Entry Sheet",
+      "WeaponModification": "Weapon Modification Sheet",
+      "ArmourModification": "Armour Modification Sheet",
+      "AttackSpecial": "Attack Special Sheet",
+      "ShipComponent": "Ship Component Sheet",
+      "ShipWeapon": "Ship Weapon Sheet",
+      "ShipUpgrade": "Ship Upgrade Sheet"
+    },
     "OriginPath": {
       "Header": "Origin Path",
       "Description": "Drag origin path items from the compendium to define your character's background. Each step grants unique abilities and bonuses.",
@@ -365,6 +453,82 @@
         "PastHistory": "Past History",
         "Complications": "Complications",
         "Notes": "Notes"
+      }
+    },
+    "ShipComponent": {
+      "Type": {
+        "Essential": "Essential",
+        "Supplemental": "Supplemental",
+        "Weapons": "Weapons",
+        "Auger": "Auger Array",
+        "GellarField": "Gellar Field",
+        "VoidShields": "Void Shields",
+        "WarpDrive": "Warp Drive",
+        "LifeSupport": "Life Support",
+        "Quarters": "Crew Quarters",
+        "Bridge": "Bridge",
+        "Generatorum": "Generatorum",
+        "PlasmaDrive": "Plasma Drive",
+        "Augment": "Augmentation",
+        "Archeotech": "Archeotech",
+        "Xenotech": "Xenotech"
+      },
+      "Condition": {
+        "Functional": "Functional",
+        "Damaged": "Damaged",
+        "Unpowered": "Unpowered",
+        "Destroyed": "Destroyed"
+      },
+      "Essential": "Essential Component",
+      "Power": "Power",
+      "Space": "Space",
+      "ShipPoints": "SP"
+    },
+    "ShipWeapon": {
+      "Type": {
+        "Macrobattery": "Macrobattery",
+        "Lance": "Lance Weapon",
+        "NovaCannon": "Nova Cannon",
+        "Torpedo": "Torpedo Tubes",
+        "BombardmentCannon": "Bombardment Cannon",
+        "LandingBay": "Landing Bay",
+        "AttackCraft": "Attack Craft"
+      }
+    },
+    "ShipLocation": {
+      "Prow": "Prow",
+      "Dorsal": "Dorsal",
+      "Port": "Port",
+      "Starboard": "Starboard",
+      "Keel": "Keel"
+    },
+    "HullType": {
+      "All": "All Ships",
+      "Transport": "Transport",
+      "Raider": "Raider",
+      "Frigate": "Frigate",
+      "LightCruiser": "Light Cruiser",
+      "Cruiser": "Cruiser",
+      "Battlecruiser": "Battlecruiser",
+      "GrandCruiser": "Grand Cruiser"
+    },
+    "Availability": {
+      "Ubiquitous": "Ubiquitous",
+      "Abundant": "Abundant",
+      "Plentiful": "Plentiful",
+      "Common": "Common",
+      "Average": "Average",
+      "Scarce": "Scarce",
+      "Rare": "Rare",
+      "VeryRare": "Very Rare",
+      "ExtremelyRare": "Extremely Rare",
+      "NearUnique": "Near Unique",
+      "Unique": "Unique"
+    },
+    "Item": {
+      "Tabs": {
+        "Details": "Details",
+        "Effects": "Effects"
       }
     },
     "NPC": {

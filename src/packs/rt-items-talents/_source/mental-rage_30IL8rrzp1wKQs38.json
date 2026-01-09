@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Frenzy, Psy Rating",
-    "effect": "Can use Psychic Powers whilst Frenzied",
+    "category": "psychic",
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>Can use Psychic Powers whilst Frenzied</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can use Psychic Powers whilst Frenzied</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Frenzy, Psy Rating",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

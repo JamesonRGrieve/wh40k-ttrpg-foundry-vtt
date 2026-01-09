@@ -1,0 +1,27 @@
+{
+  "name": "Chief Bosun",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 4,
+    "purpose": "Enforces Discipline, manages crew drills.",
+    "careerPreferences": "Arch-Militants, Missionaries, Seneschals, and Void-Masters.",
+    "subordinates": "Watch Leaders, Shipwrights, and armsmen commanders.",
+    "importantSkills": "Command, Intimidate, Trade (Shipwright)",
+    "effect": "+5 to Ship Crew Rating. As long as you are aboard, Command Tests involving crew suffer no penalties due to morale.",
+    "description": {
+      "value": "<p><b>Purpose:</b> Enforces Discipline, manages crew drills.</p><p><b>Effect:</b> +5 to Ship Crew Rating. As long as you are aboard, Command Tests involving crew suffer no penalties due to morale.</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6tIb6NYAUvlbH5as"
+}

@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Charm, Fellowship 40\nAptitudes: Slaanesh",
-    "effect": "The Character's minions are incredibly devoted to them, increasing their Loyalty by +10.",
+    "category": "general",
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Character's minions are incredibly devoted to them, increasing their Loyalty by +10.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>The Character's minions are incredibly devoted to them, increasing their Loyalty by +10.</p>",
     "aptitudes": [
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Charm, Fellowship 40",
+      "characteristics": {
+        "fel": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

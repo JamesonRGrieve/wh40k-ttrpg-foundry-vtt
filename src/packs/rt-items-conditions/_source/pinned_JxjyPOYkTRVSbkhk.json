@@ -1,29 +1,39 @@
 {
   "name": "Pinned",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Shooting while pinned: -20",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Shooting while pinned: -20</p>"
-    },
-    "severity": 1,
+    "identifier": "pinned",
+    "nature": "harmful",
+    "effect": "<p>Attacks against pinned targets gain a +20 bonus. Pinned characters cannot move and suffer -20 to all Tests.</p>",
+    "removal": "<p>Removed by going Prone, breaking line of sight, or when suppression ends.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "target",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>Attacks against pinned targets gain a +20 bonus. Pinned characters cannot move and suffer -20 to all Tests.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "self"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "JxjyPOYkTRVSbkhk"

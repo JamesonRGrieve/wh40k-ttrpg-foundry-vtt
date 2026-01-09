@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Character has a Comrade \nAptitudes: General, Leadership",
-    "effect": "Character Selects one of their Comrades, that Comrade grants an additional +5 to Ballistic Skill Tests from the Ranged Volley Order, and an additional +5 to Weapon Skill Tests when participating in the Close Quarters Order. They can also be given Veteren Orders. If the original Comrade for whom this talent was purchased for dies, its effects can be applied to a new Comrade when the character has a chance to request reinforcements.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character Selects one of their Comrades, that Comrade grants an additional +5 to Ballistic Skill Tests from the Ranged Volley Order, and an additional +5 to Weapon Skill Tests when participating in the Close Quarters Order. They can also be given Veteren Orders. If the original Comrade for whom this talent was purchased for dies, its effects can be applied to a new Comrade when the character has a chance to request reinforcements.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character Selects one of their Comrades, that Comrade grants an additional +5 to Ballistic Skill Tests from the Ranged Volley Order, and an additional +5 to Weapon Skill Tests when participating in the Close Quarters Order. They can also be given Veteren Orders. If the original Comrade for whom this talent was purchased for dies, its effects can be applied to a new Comrade when the character has a chance to request reinforcements.</p>",
     "aptitudes": [
       "General",
       "Leadership"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Character has a Comrade",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Superior Minion of Chaos\nAptitudes: Unaligned",
-    "effect": "The Minion gains 500xp to spend on Advancements, and is spent as a player would. This talent can be bought multiple times but the total XP spent by the  Superior Minion cannot exceed 50% of the player's spent XP.",
+    "category": "general",
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>The Minion gains 500xp to spend on Advancements, and is spent as a player would. This talent can be bought multiple times but the total XP spent by the  Superior Minion cannot exceed 50% of the player's spent XP.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>The Minion gains 500xp to spend on Advancements, and is spent as a player would. This talent can be bought multiple times but the total XP spent by the  Superior Minion cannot exceed 50% of the player's spent XP.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Superior Minion of Chaos",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

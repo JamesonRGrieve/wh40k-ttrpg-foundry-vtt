@@ -1,0 +1,40 @@
+{
+  "name": "Deafened",
+  "type": "condition",
+  "img": "icons/svg/deaf.svg",
+  "system": {
+    "identifier": "deafened",
+    "nature": "harmful",
+    "effect": "<p>A deafened character automatically fails all Tests based on hearing (Awareness to hear, etc.). Opposed Social Skill Tests suffer a -10 penalty due to difficulty in communication.</p>",
+    "removal": "<p>Removed when hearing is restored through medical attention or when the deafening effect ends.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>A deafened character automatically fails all Tests based on hearing (Awareness to hear, etc.). Opposed Social Skill Tests suffer a -10 penalty due to difficulty in communication.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "CqsCCFzaMV8GXzAD"
+}

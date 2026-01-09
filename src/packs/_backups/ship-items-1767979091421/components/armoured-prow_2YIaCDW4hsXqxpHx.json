@@ -1,0 +1,29 @@
+{
+  "name": "Armoured Prow",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Cruisers",
+    "powerUsage": 0,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "effect": "20 Metre Thick ship bow, +4 Armour on fore arc, and +1d10 damage when ramming. Cannot have Prow Macrobatteries or Lances. Only one per vessel.",
+    "availability": "rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>20 Metre Thick ship bow, +4 Armour on fore arc, and +1d10 damage when ramming. Cannot have Prow Macrobatteries or Lances. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2YIaCDW4hsXqxpHx"
+}

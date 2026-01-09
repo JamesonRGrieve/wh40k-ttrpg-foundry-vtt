@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "35m",
-    "tacticalSpeed": "90kph",
-    "cruisingSpeed": "+20",
-    "maneuverability": "10",
-    "frontArmour": "Hulking (+10)",
-    "sideArmour": "Front 8\nSide 8\nRear 8",
-    "rearArmour": "Driver",
-    "structuralIntegrity": "1 Passenger\n(Note: Decreases Manoeuvrability to +10 with passenger)",
-    "crew": "Hull (Front) (Optional): Autogun (100m, S/3/-, 1d10+3 I, Pen 0, Clip 30, Rld 1 Full)",
-    "passengers": "Traits: Bike, Wheeled\nVersions that can be armed are Scarce Availability.",
-    "cargo": "Average",
-    "availability": "Dark Heresy 2E: Core",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 8,
+    "sizeDescriptor": 8,
+    "faction": "",
+    "subfaction": "",
+    "type": "bike",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "average"
   },
   "effects": [],
   "items": [],

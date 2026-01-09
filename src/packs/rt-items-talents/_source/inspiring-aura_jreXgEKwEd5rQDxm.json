@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2: Halo of Command\nAptitudes: Leadership, Willpower",
-    "effect": "Character can affect allies of any kind, not just subordinates, with the Terrfy Special Use of the Command Skill. This doesn't need to represent threats and intimidation (but it can) but instead inspiring words, encouragement, or steadfastness in the face of foes.",
+    "category": "social",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character can affect allies of any kind, not just subordinates, with the Terrfy Special Use of the Command Skill. This doesn't need to represent threats and intimidation (but it can) but instead inspiring words, encouragement, or steadfastness in the face of foes.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can affect allies of any kind, not just subordinates, with the Terrfy Special Use of the Command Skill. This doesn't need to represent threats and intimidation (but it can) but instead inspiring words, encouragement, or steadfastness in the face of foes.</p>",
     "aptitudes": [
       "Leadership",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Halo of Command",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

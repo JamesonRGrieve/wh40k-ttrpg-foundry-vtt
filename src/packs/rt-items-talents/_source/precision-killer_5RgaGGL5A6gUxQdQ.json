@@ -3,19 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Ballistic Skill 40, Weapon Skill 40\nAptitudes: Ballistic Skill or Weapon Skill, Finesse",
-    "effect": "When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.",
+    "category": "combat",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.</p>",
     "aptitudes": [
       "Ballistic Skill or Weapon Skill",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 40, Weapon Skill 40",
+      "characteristics": {
+        "bs": 40,
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

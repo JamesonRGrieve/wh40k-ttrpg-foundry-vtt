@@ -1,0 +1,29 @@
+{
+  "name": "Empyrean Mantle (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 5,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "Helps to cloak the ship. -20 to all tests to detect the vessel while it runs on Silent Running. Only one per vessel.",
+    "availability": "rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Helps to cloak the ship. -20 to all tests to detect the vessel while it runs on Silent Running. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EKMo2CATg1gEzNvN"
+}

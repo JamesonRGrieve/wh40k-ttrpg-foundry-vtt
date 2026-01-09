@@ -1,0 +1,29 @@
+{
+  "name": "Slave Quarters (Large)",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Crew Quarters",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 1,
+    "spaceUsage": 2,
+    "spCost": 0,
+    "effect": "Grim and squalid living spaces for crew (although the officer's quarters are still luxurious). Permenantly decrease Morale by 5.",
+    "availability": "scarce",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Grim and squalid living spaces for crew (although the officer's quarters are still luxurious). Permenantly decrease Morale by 5.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vybvUxsUNdGoQbx1"
+}

@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Spacecraft",
-    "size": "20m/ 9AUs",
-    "tacticalSpeed": "1400kph / 4VU's",
-    "cruisingSpeed": "-20",
-    "maneuverability": "40",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 28,\nSide 24,\nRear 24",
-    "rearArmour": "Pilot, Co-Pilot",
-    "structuralIntegrity": "40 People, 40 Metric Tonnes of Cargo",
-    "crew": "None",
-    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere.",
-    "cargo": "Scarce",
-    "availability": "RT: Into the Storm",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "scarce"
   },
   "effects": [],
   "items": [],

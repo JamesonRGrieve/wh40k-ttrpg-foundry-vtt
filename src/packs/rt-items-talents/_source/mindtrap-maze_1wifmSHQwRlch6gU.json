@@ -3,16 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Bonetrader Alternative Advance, 500xp\nWP 40+, Int 40+",
-    "effect": "The Character can add twice their Intelligence Bonus to any Opposed Willpower Tests that make to resist another character's Psychic Powers. If they win this Opposed Test the attacking Psyker gains one level of Fatigue,",
+    "category": "combat",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>The Character can add twice their Intelligence Bonus to any Opposed Willpower Tests that make to resist another character's Psychic Powers. If they win this Opposed Test the attacking Psyker gains one level of Fatigue,</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character can add twice their Intelligence Bonus to any Opposed Willpower Tests that make to resist another character's Psychic Powers. If they win this Opposed Test the attacking Psyker gains one level of Fatigue,</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Bonetrader Alternative Advance, 500xp",
+      "characteristics": {
+        "wp": 40,
+        "int": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

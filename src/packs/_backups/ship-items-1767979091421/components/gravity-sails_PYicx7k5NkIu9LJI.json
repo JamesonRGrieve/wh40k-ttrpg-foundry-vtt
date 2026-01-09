@@ -1,0 +1,29 @@
+{
+  "name": "Gravity Sails",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "Transports, Raiders, Frigates",
+    "powerUsage": 3,
+    "spaceUsage": 0,
+    "spCost": 3,
+    "effect": "Long, Blade-like fins that aid in Manoeurvering. Gain +1 Speed and +5 Manoeuvrability. Component  Can't be Damaged or Destroyed Except from a Critical Hit.",
+    "availability": "near-unique",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Long, Blade-like fins that aid in Manoeurvering. Gain +1 Speed and +5 Manoeuvrability. Component  Can't be Damaged or Destroyed Except from a Critical Hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PYicx7k5NkIu9LJI"
+}

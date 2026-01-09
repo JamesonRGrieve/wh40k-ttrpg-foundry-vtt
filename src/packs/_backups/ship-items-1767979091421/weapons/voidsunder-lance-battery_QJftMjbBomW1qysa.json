@@ -1,0 +1,27 @@
+{
+  "name": "Voidsunder Lance Battery",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Lance",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 15,
+    "spaceUsage": 8,
+    "spCost": 3,
+    "damage": "1d10+4",
+    "strength": 1,
+    "critRating": 3,
+    "range": 6,
+    "availability": "very-rare",
+    "notes": "Unless ship is Grand Cruiser size or Larger can only mount lance as \"Prow\" Weapon. If in prow slot, can only fire forwards. Lance Weapons Ignore Armour.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+4</p><p><b>Notes:</b> Unless ship is Grand Cruiser size or Larger can only mount lance as \"Prow\" Weapon. If in prow slot, can only fire forwards. Lance Weapons Ignore Armour.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QJftMjbBomW1qysa"
+}

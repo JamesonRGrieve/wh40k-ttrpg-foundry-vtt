@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Int 35",
-    "effect": "+10 to BS Tests for firing Starship weapons.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+10 to BS Tests for firing Starship weapons.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>+10 to BS Tests for firing Starship weapons.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Int 35",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

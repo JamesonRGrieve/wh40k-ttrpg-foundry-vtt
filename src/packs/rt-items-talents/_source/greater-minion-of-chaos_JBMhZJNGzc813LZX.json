@@ -3,18 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Fellowship 55, Infamy 50\nAptitudes: Unaligned",
-    "effect": "Character acquires a Greater Minion of Chaos, such as a Space Marine, Heretic Sorcerer, Mutant Monstrosity, etc. Talent can be taken more than once, each time adding another Greater minion.",
+    "category": "general",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>Character acquires a Greater Minion of Chaos, such as a Space Marine, Heretic Sorcerer, Mutant Monstrosity, etc. Talent can be taken more than once, each time adding another Greater minion.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character acquires a Greater Minion of Chaos, such as a Space Marine, Heretic Sorcerer, Mutant Monstrosity, etc. Talent can be taken more than once, each time adding another Greater minion.</p>",
     "aptitudes": [
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Fellowship 55, Infamy 50",
+      "characteristics": {
+        "fel": 55
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

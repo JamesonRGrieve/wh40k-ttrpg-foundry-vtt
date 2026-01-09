@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Tech-Use +20, Mechanicus Implants\nAptitudes: Intelligence, Tech, Unaligned",
-    "effect": "Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.\nAt GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.",
+    "category": "knowledge",
     "source": "Only War Core",
     "description": {
       "value": "<p>Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.\nAt GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.\nAt GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>",
     "aptitudes": [
       "Intelligence",
       "Tech",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tech-Use +20, Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

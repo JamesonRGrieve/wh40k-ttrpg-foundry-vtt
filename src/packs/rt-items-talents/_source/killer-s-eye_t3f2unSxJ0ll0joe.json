@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Headhunter Alternative Advance, 500xp\nPerception 35+, Sure Strike or Deadeye Shot",
-    "effect": "When the Character makes a Called Shot Action and achieves more Degrees of Success than the Target's Agility Bonus, they immediately inflict 1d5 Critical Damage on the location hit.",
+    "category": "combat",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>When the Character makes a Called Shot Action and achieves more Degrees of Success than the Target's Agility Bonus, they immediately inflict 1d5 Critical Damage on the location hit.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When the Character makes a Called Shot Action and achieves more Degrees of Success than the Target's Agility Bonus, they immediately inflict 1d5 Critical Damage on the location hit.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Headhunter Alternative Advance, 500xp",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

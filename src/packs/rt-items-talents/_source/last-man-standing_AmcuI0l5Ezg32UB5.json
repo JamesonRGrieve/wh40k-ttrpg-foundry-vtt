@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Nerves of Steel",
-    "effect": "Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Nerves of Steel",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Intelligence 35\nAptitudes: Ballistic Skill, Knowledge",
-    "effect": "Whenever character or their Comrade fire a weapon with the indirect quality, if at least on hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Whenever character or their Comrade fire a weapon with the indirect quality, if at least on hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Whenever character or their Comrade fire a weapon with the indirect quality, if at least on hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Knowledge"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Intelligence 35",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

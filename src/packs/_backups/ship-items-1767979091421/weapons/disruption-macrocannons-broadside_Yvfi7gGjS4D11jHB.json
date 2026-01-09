@@ -1,0 +1,27 @@
+{
+  "name": "Disruption Macrocannons Broadside",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 6,
+    "spaceUsage": 5,
+    "spCost": 2,
+    "damage": "1d10+1",
+    "strength": 6,
+    "critRating": "-",
+    "range": 5,
+    "availability": "rare",
+    "notes": "For every 5 damage that would be done to the ship, one random component of target ship is unpowered. This weapon ignores armour, but doesn't actually do hull damage, and cannot crit. Can only combine damage with other disruption macrocannons and vice versa. Must Occupy Port or Starboard Slots.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> For every 5 damage that would be done to the ship, one random component of target ship is unpowered. This weapon ignores armour, but doesn't actually do hull damage, and cannot crit. Can only combine damage with other disruption macrocannons and vice versa. Must Occupy Port or Starboard Slots.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Yvfi7gGjS4D11jHB"
+}

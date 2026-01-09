@@ -3,19 +3,29 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Agility 45, Ambidextrious, BS 40 or WS 40, Two Weapon Wielder (Melee, Ranged)\nAptitudes: Finesse, Offence",
-    "effect": "When armed with two single-handed weapons (such as pistols or one-handed melee weapons), they ignore the -20 penalty for Two-Weapon Fighting",
+    "category": "combat",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When armed with two single-handed weapons (such as pistols or one-handed melee weapons), they ignore the -20 penalty for Two-Weapon Fighting</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When armed with two single-handed weapons (such as pistols or one-handed melee weapons), they ignore the -20 penalty for Two-Weapon Fighting</p>",
     "aptitudes": [
       "Finesse",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility 45, Ambidextrious, BS 40 or WS 40, Two Weapon Wielder (Melee, Ranged)",
+      "characteristics": {
+        "ag": 45,
+        "bs": 40,
+        "ws": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

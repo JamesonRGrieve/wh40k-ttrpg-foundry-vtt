@@ -1,0 +1,27 @@
+{
+  "name": "Sunhammer Lance",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Lance",
+    "hullType": "All Ships",
+    "powerUsage": 9,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "damage": "1d10+3",
+    "strength": 1,
+    "critRating": 3,
+    "range": 9,
+    "availability": "rare",
+    "notes": "If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "T35816ZfZAoH4eMS"
+}

@@ -1,29 +1,39 @@
 {
   "name": "Prone",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Attacking prone target with melee weapon: +10\nShooting at prone target: -10\nDodging while prone: -20",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Attacking prone target with melee weapon: +10<br>Shooting at prone target: -10<br>Dodging while prone: -20</p>"
-    },
-    "severity": 1,
+    "identifier": "prone",
+    "nature": "harmful",
+    "effect": "<p>Melee attacks against prone targets gain +10. Ranged attacks against prone targets suffer -10. Dodging while prone suffers -20 penalty.</p>",
+    "removal": "<p>Removed by standing up as a Half Action.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "both",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>Melee attacks against prone targets gain +10. Ranged attacks against prone targets suffer -10. Dodging while prone suffers -20 penalty.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "self/target"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "6TAh3wRSkTHVS2zh"

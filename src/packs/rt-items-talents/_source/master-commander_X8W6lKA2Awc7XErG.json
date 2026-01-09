@@ -3,16 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Int 35, Fel 35",
-    "effect": "Can use Half Action in Combat to direct allies, such that none of them suffer penalties for ganging up until your next turn. If defending against a boarding action, Can use a Half Action to give +10 in combat to armsmen.",
+    "category": "social",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Half Action in Combat to direct allies, such that none of them suffer penalties for ganging up until your next turn. If defending against a boarding action, Can use a Half Action to give +10 in combat to armsmen.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can use Half Action in Combat to direct allies, such that none of them suffer penalties for ganging up until your next turn. If defending against a boarding action, Can use a Half Action to give +10 in combat to armsmen.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Int 35, Fel 35",
+      "characteristics": {
+        "int": 35,
+        "fel": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

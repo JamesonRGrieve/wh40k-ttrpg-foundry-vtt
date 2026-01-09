@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Tech-Priest Career, DH Rank 4+. Weapon Skill 35+, Ballistic Skill 35+, at least four Weapon Training Talents.",
-    "descriptionText": "",
-    "effects": "",
     "source": "DH: Inquisitor's Handbook (Page 68)",
     "description": {
       "value": "<p>Towering masses of sinew, steel, and mechadendrites. The Secutor is a walking tank of firepower fascinated by the challenges of warfare and obssessed with arming themselves and reshaping their body such as best to perform it.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Mechanicus Secutor\nAllows for the purchasing of the Unique Talent Machinator Array</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Mechanicus Secutor\nAllows for the purchasing of the Unique Talent Machinator Array",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Towering masses of sinew, steel, and mechadendrites. The Secutor is a walking tank of firepower fascinated by the challenges of warfare and obssessed with arming themselves and reshaping their body such as best to perform it.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Mechanicus Secutor\nAllows for the purchasing of the Unique Talent Machinator Array</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

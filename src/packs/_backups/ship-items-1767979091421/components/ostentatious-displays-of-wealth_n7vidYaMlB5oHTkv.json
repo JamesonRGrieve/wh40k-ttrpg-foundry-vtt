@@ -1,0 +1,29 @@
+{
+  "name": "Ostentatious Displays of Wealth",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
+    "effect": "Exactly what it says. +10 to any social skill test to influence visitors aboar vessel, and +25 Achievement Points for Trade/Criminal Objective. Poor: -10 Social Test due to bad impressions, Good: +15 to Social Tests, Best: +20 to Social Tests (instead of the +10). One Per Vessel.",
+    "availability": "very-rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Exactly what it says. +10 to any social skill test to influence visitors aboar vessel, and +25 Achievement Points for Trade/Criminal Objective. Poor: -10 Social Test due to bad impressions, Good: +15 to Social Tests, Best: +20 to Social Tests (instead of the +10). One Per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n7vidYaMlB5oHTkv"
+}

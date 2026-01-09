@@ -3,28 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Swift Attack\nAptitudes: Weapon Skill, Finesse, Khorne",
-    "effect": "The Character can make Lightning Attack Combat Actions.\nLightning Attack: Half Action, Attack, Make a -10 Weapon Skill Test with one melee weapon, if successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character can make Lightning Attack Combat Actions.\nLightning Attack: Half Action, Attack, Make a -10 Weapon Skill Test with one melee weapon, if successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": false,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>The Character can make Lightning Attack Combat Actions.\nLightning Attack: Half Action, Attack, Make a -10 Weapon Skill Test with one melee weapon, if successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Finesse",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Swift Attack",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

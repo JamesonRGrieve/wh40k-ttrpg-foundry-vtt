@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Pure Faith",
-    "effect": "Can Spend a Fate Point to: Repel Daemon 2x WP Bonus Metres for 2d5 Rounds (Half Action, Opposed WP Test) or Exorcise possessed person, daemon appears next to them and cannot posess host for 2xWP Bonus Hours (Full Action, Opposed WP Test). \nCan Burn Fate Point to make WP Test, and deal WP Bonus damage + WP Bonus for each Degree of Success to warp entity you can see. Dmaage ignores armour and toughness (Full Action).",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can Spend a Fate Point to: Repel Daemon 2x WP Bonus Metres for 2d5 Rounds (Half Action, Opposed WP Test) or Exorcise possessed person, daemon appears next to them and cannot posess host for 2xWP Bonus Hours (Full Action, Opposed WP Test). \nCan Burn Fate Point to make WP Test, and deal WP Bonus damage + WP Bonus for each Degree of Success to warp entity you can see. Dmaage ignores armour and toughness (Full Action).</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can Spend a Fate Point to: Repel Daemon 2x WP Bonus Metres for 2d5 Rounds (Half Action, Opposed WP Test) or Exorcise possessed person, daemon appears next to them and cannot posess host for 2xWP Bonus Hours (Full Action, Opposed WP Test). \nCan Burn Fate Point to make WP Test, and deal WP Bonus damage + WP Bonus for each Degree of Success to warp entity you can see. Dmaage ignores armour and toughness (Full Action).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Pure Faith",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

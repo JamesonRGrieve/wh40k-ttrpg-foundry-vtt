@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Fel 45, Air of Authority, Deadeye Shot \nAptitudes: Ballistic Skill, Leadership",
-    "effect": "Once per Combat Encounter, after killing a target with a Ranged Attack (Ally or Enemy), character can spend a Fate Point and make a +0 Command Test. If successful, each of their allies within 10 metres gain +5xDoS to their next Ballistic Skill or Weapon Skill Test made before the end of the encounter, meanwhile each enemy within 10 metres suffers a -5xDoS penalty to their next Ballistic Skill or Weapon Skil Test made before the end of the encounter.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per Combat Encounter, after killing a target with a Ranged Attack (Ally or Enemy), character can spend a Fate Point and make a +0 Command Test. If successful, each of their allies within 10 metres gain +5xDoS to their next Ballistic Skill or Weapon Skill Test made before the end of the encounter, meanwhile each enemy within 10 metres suffers a -5xDoS penalty to their next Ballistic Skill or Weapon Skil Test made before the end of the encounter.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Once per Combat Encounter, after killing a target with a Ranged Attack (Ally or Enemy), character can spend a Fate Point and make a +0 Command Test. If successful, each of their allies within 10 metres gain +5xDoS to their next Ballistic Skill or Weapon Skill Test made before the end of the encounter, meanwhile each enemy within 10 metres suffers a -5xDoS penalty to their next Ballistic Skill or Weapon Skil Test made before the end of the encounter.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Leadership"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fel 45, Air of Authority, Deadeye Shot",
+      "characteristics": {
+        "fel": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

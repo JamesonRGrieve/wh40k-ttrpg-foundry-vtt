@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Headhunter Alternative Advance, 750xp\nPerception 35+, Sure Strike or Deadeye Shot",
-    "effect": "When Character makes a Called Shot against an enemy, they can reduce the damage they inflict after reduction from target's Armour and Toughness by up to a number equal to their Perception Bonus, and inflict a level of Fatigue for each point of damage reduced in this way. Additionally, Attacks the character makes with Shocking Weapons gain no bonuses to resist from armour, and all attacks with Snare weapons suffer an additional -10 to avoid or escape the snaring effect.\nNote: Later versions of the game don't have armour affect shocking test. So instead, let's say this talent applies an additional -10 to resist Shocking Weapons.",
+    "category": "combat",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>When Character makes a Called Shot against an enemy, they can reduce the damage they inflict after reduction from target's Armour and Toughness by up to a number equal to their Perception Bonus, and inflict a level of Fatigue for each point of damage reduced in this way. Additionally, Attacks the character makes with Shocking Weapons gain no bonuses to resist from armour, and all attacks with Snare weapons suffer an additional -10 to avoid or escape the snaring effect.\nNote: Later versions of the game don't have armour affect shocking test. So instead, let's say this talent applies an additional -10 to resist Shocking Weapons.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When Character makes a Called Shot against an enemy, they can reduce the damage they inflict after reduction from target's Armour and Toughness by up to a number equal to their Perception Bonus, and inflict a level of Fatigue for each point of damage reduced in this way. Additionally, Attacks the character makes with Shocking Weapons gain no bonuses to resist from armour, and all attacks with Snare weapons suffer an additional -10 to avoid or escape the snaring effect.\nNote: Later versions of the game don't have armour affect shocking test. So instead, let's say this talent applies an additional -10 to resist Shocking Weapons.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Headhunter Alternative Advance, 750xp",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

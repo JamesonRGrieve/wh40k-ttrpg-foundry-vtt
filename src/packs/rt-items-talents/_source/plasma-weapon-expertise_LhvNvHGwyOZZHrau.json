@@ -3,27 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; BS 40, Weapon Training (Plasma) \nAptitudes: Ballistic Skill, Tech",
-    "effect": "When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
+    "benefit": "<p>When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 40, Weapon Training (Plasma)",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600
   },
   "effects": [],
   "flags": {},

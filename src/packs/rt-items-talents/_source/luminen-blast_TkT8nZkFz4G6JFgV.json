@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Luminen Shock/Capacitors, Mechanicus Implants. Aptitudes: Ballistic Skill, Tech, Unaligned",
-    "effect": "Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Tech",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Luminen Shock/Capacitors, Mechanicus Implants.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

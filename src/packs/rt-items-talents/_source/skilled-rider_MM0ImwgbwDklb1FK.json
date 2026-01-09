@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Survival +10 \nAptitudes: Agility, Fieldcraft",
-    "effect": "If the character would be thrown from their Mount for any reason, they can make a +10 Survival Test, if successful they either remain on their Mount or fall safely to the ground, landing on their feet.\nAdditionally, they can Mount/Dismount as a Half Action",
+    "category": "general",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>If the character would be thrown from their Mount for any reason, they can make a +10 Survival Test, if successful they either remain on their Mount or fall safely to the ground, landing on their feet.\nAdditionally, they can Mount/Dismount as a Half Action</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>If the character would be thrown from their Mount for any reason, they can make a +10 Survival Test, if successful they either remain on their Mount or fall safely to the ground, landing on their feet.\nAdditionally, they can Mount/Dismount as a Half Action</p>",
     "aptitudes": [
       "Agility",
       "Fieldcraft"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Survival +10",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,28 @@
+{
+  "name": "Feared and Loathed",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "unique",
+    "requirements": "Chaliced Commissariat Alternative Advance (Innate)",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Gain +10 to Inquiry and Intimidate Tests against members of the Imperial Guard or PDF. Suffer -10 to Charm or Command Tests with the same groups.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true,
+    "benefit": "<p>Gain +10 to Inquiry and Intimidate Tests against members of the Imperial Guard or PDF. Suffer -10 to Charm or Command Tests with the same groups.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vGYSNS4d4mwuDV3U"
+}

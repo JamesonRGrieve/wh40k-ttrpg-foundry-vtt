@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Walker",
-    "size": "10m",
-    "tacticalSpeed": "45kph",
-    "cruisingSpeed": "+10",
-    "maneuverability": "20",
-    "frontArmour": "Enormous (+20)",
-    "sideArmour": "Front 25,\nSide 15,\nRear 15",
-    "rearArmour": "Driver",
-    "structuralIntegrity": "None",
-    "crew": "One of: Multi-Laser, Heavy Flamer, Autocannon, Lascannon\nServo-Arm (Optional): Chainblade (Melee, 2d10+4 R, Pen 4, Tearing, Unwieldy)\n---\nMulti-Laser(150m; –/–/5; 2d10+10 E; Pen 2; Clip 100; Reload 2 Full; Reliable)\nHeavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)\nAutocannon (300m; S/3/–; 3d10+8 I; Pen 6; Clip 40; Reload 2 Full; Reliable)\nLascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))",
-    "passengers": "Vehicle Traits: Enhanced Motive Systems, Open-Topped, Walker\nSpecial Rules: Optional Melee Weapon does not gain Strength Bonus. Can replace Enhanced Motive Systems with Reinforced Armour and/or Enclosed Vehicle Traits (which also replaces Open-Topped). Very Rarely, Sentinels can be equipped with Orbital Grav Chutes.",
-    "cargo": "Scarce",
-    "availability": "Only War Core",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "walker",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "scarce"
   },
   "effects": [],
   "items": [],

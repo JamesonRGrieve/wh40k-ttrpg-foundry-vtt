@@ -3,27 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Iron Resolve \nAptitudes: Defence, Willpower",
-    "effect": "Character is immune to the effects of the Baneful Presence Trait.",
+    "category": "willpower",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 3,
     "isPassive": true,
     "isRollable": false,
-    "benefit": "",
+    "benefit": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
     "aptitudes": [
       "Defence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Iron Resolve",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900
   },
   "effects": [],
   "flags": {},

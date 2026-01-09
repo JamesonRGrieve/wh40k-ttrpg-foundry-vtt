@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Clues from the Crowds, Fellowship 35\nAptitudes: Fellowship, Social",
-    "effect": "When employing the Shadowing special use of the Stealth Skill, Character can use their Fellowship Characteristic instead of Agility.",
+    "category": "social",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When employing the Shadowing special use of the Stealth Skill, Character can use their Fellowship Characteristic instead of Agility.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When employing the Shadowing special use of the Stealth Skill, Character can use their Fellowship Characteristic instead of Agility.</p>",
     "aptitudes": [
       "Fellowship",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Clues from the Crowds, Fellowship 35",
+      "characteristics": {
+        "fel": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

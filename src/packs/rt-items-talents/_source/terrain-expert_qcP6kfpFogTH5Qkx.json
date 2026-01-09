@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Scout Advanced Speciality\n300xp",
-    "effect": "As long as the Character's Comrade is in Cohesion, the Character gains +10 to Stealth and Survival Tests andimposes an additional -20 on anyone attemptint to use the Tracking Special Use of Survival to follow them.",
+    "category": "general",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>As long as the Character's Comrade is in Cohesion, the Character gains +10 to Stealth and Survival Tests andimposes an additional -20 on anyone attemptint to use the Tracking Special Use of Survival to follow them.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>As long as the Character's Comrade is in Cohesion, the Character gains +10 to Stealth and Survival Tests andimposes an additional -20 on anyone attemptint to use the Tracking Special Use of Survival to follow them.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Scout Advanced Speciality",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

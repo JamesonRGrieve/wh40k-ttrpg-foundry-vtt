@@ -3,18 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1: Weapon Training (Chain)\nAptitudes: Khorne",
-    "effect": "When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.",
+    "category": "combat",
     "source": "Black Crusade Core",
     "description": {
       "value": "<p>When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.</p>",
     "aptitudes": [
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 1: Weapon Training (Chain)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

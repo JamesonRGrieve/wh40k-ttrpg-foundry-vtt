@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Commerce, Perception 30 \nAptitudes: Perception, Social",
-    "effect": "Character has learned where to make discreet inquiries to get involved within black markget trades, and gains +20 to Commerce Tests to Trade or Barter Excess Gear. \nAdditionally, they gain +10 to Deceive Tests to avoid or deflect notice about such dealings.",
+    "category": "social",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character has learned where to make discreet inquiries to get involved within black markget trades, and gains +20 to Commerce Tests to Trade or Barter Excess Gear. \nAdditionally, they gain +10 to Deceive Tests to avoid or deflect notice about such dealings.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character has learned where to make discreet inquiries to get involved within black markget trades, and gains +20 to Commerce Tests to Trade or Barter Excess Gear. \nAdditionally, they gain +10 to Deceive Tests to avoid or deflect notice about such dealings.</p>",
     "aptitudes": [
       "Perception",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Commerce, Perception 30",
+      "characteristics": {
+        "per": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

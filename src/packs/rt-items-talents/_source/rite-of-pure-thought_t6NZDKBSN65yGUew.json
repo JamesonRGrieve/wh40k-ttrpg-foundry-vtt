@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Mechanicus Implants",
-    "effect": "Remove the creative, emotional part of the brain. Become immune to fear, pinning, and any effect as a result of emotional disturbance including relevent mental disorders (which are replaced with new ones of equal severity). ",
+    "category": "leadership",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Remove the creative, emotional part of the brain. Become immune to fear, pinning, and any effect as a result of emotional disturbance including relevent mental disorders (which are replaced with new ones of equal severity). </p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Remove the creative, emotional part of the brain. Become immune to fear, pinning, and any effect as a result of emotional disturbance including relevent mental disorders (which are replaced with new ones of equal severity). </p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

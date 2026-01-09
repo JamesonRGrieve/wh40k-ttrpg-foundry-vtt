@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Any Human, RT Rank 1+. Fellowship 35+, Willpower 35+, Must have spent time studying the teachings of Nadine Aleynikov and minstering to the afflicted of the Koronus Expanse.",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Faith and Coin\n(Page 74)",
     "description": {
       "value": "<p>Those who spread the message of famed missionary Nadine Aleynikov, known for their trails and tribulations to cure a plague that ultimately claimed them. Those of the faith perservere to learn fieldcraft and medicine, honing research skills such they may to cure others.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Adherent of Aleynikov\nAllows for the purchasing of the Unique Talent Faith Healing</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Adherent of Aleynikov\nAllows for the purchasing of the Unique Talent Faith Healing",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Those who spread the message of famed missionary Nadine Aleynikov, known for their trails and tribulations to cure a plague that ultimately claimed them. Those of the faith perservere to learn fieldcraft and medicine, honing research skills such they may to cure others.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Adherent of Aleynikov\nAllows for the purchasing of the Unique Talent Faith Healing</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

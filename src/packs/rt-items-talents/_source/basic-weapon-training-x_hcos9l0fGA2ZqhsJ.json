@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "May use Basic Weapon group without -20 penalty to WS/BS. Groups: Universal (All non exotic)), Bolt, Las, Launcher, Melta, Plasma, and SP.",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>May use Basic Weapon group without -20 penalty to WS/BS. Groups: Universal (All non exotic)), Bolt, Las, Launcher, Melta, Plasma, and SP.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>May use Basic Weapon group without -20 penalty to WS/BS. Groups: Universal (All non exotic)), Bolt, Las, Launcher, Melta, Plasma, and SP.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

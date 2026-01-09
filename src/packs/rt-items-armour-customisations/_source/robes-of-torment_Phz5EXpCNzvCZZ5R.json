@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Any Armour",
     "effect": "Only functions if Dedicated to Slaanesh. First time character takes damage each round, suffers +1 damage, but gains +10 to the next Test made before the end of next turn. Can intentionally take 1 Damage (ignoring all forms of Protection) to gain the benefit.",
-    "weight": "+6kg",
     "availability": "rare",
     "source": "BC: Tome of Excess",
     "description": {
       "value": "<p>Only functions if Dedicated to Slaanesh. First time character takes damage each round, suffers +1 damage, but gains +10 to the next Test made before the end of next turn. Can intentionally take 1 Damage (ignoring all forms of Protection) to gain the benefit.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 6
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

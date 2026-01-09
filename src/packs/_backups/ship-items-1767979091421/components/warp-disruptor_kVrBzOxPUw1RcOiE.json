@@ -1,0 +1,29 @@
+{
+  "name": "Warp Disruptor",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 3,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "Disrupts all psychic communication in the region by emitting a wave of agony. A Psyker using this component takes 2d5 Damage to the body, reduced by Toughness but not armour, and taking 1d5-1 Fatigue, They then make -10 Focus Power Test. If successful all attempts at warp communication in the system suffer -10 per 3 DoS",
+    "availability": "near-unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Disrupts all psychic communication in the region by emitting a wave of agony. A Psyker using this component takes 2d5 Damage to the body, reduced by Toughness but not armour, and taking 1d5-1 Fatigue, They then make -10 Focus Power Test. If successful all attempts at warp communication in the system suffer -10 per 3 DoS</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kVrBzOxPUw1RcOiE"
+}

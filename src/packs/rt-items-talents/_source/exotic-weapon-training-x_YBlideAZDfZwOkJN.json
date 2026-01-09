@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; None\nAptitudes:  Intelligence, Finesse, Unaligned",
-    "effect": "Character is trained in the use of a Single Exotic Weapon (EG: Harlequinn's Kiss) or Exotic Weapon Type (EG: Needle/Digital Weapons), and can use it without the -20 Penalty. Talent can be taken multiple times for different weapons.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character is trained in the use of a Single Exotic Weapon (EG: Harlequinn's Kiss) or Exotic Weapon Type (EG: Needle/Digital Weapons), and can use it without the -20 Penalty. Talent can be taken multiple times for different weapons.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character is trained in the use of a Single Exotic Weapon (EG: Harlequinn's Kiss) or Exotic Weapon Type (EG: Needle/Digital Weapons), and can use it without the -20 Penalty. Talent can be taken multiple times for different weapons.</p>",
     "aptitudes": [
       "Intelligence",
       "Finesse",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent  (Elite)",
-    "requirements": "Elite Advance, Intelligence 35, Forbidden Lore (Warp/Daemonology), Scholastic Lore (Occult), Not Untouchable",
-    "effect": "Gain One Psychic Technique of 200xp or less for free as long as prerequisites met. Gain \"Psy Rating\"  equal to Half Unmodified INT Bonus (no effect from Unnatural Intelligence). Psychic Power related Focus Power Tests and Opposed Willpower Tests use the character's Intelligence instead of Willpower. When rolling Psychic Phenomena/Perils of the Warp, add Corruption Point total to the roll before any other modifiers. Abilities or Effects that would affect a psyker don't affect a sorcerer. Use Renegade Psykers and Sorcerers method of determining Psychic Strength for Fettered/Unfettered/Push Strength power usage.",
+    "category": "knowledge",
     "source": "RT: Edge of the Abyss",
     "description": {
       "value": "<p>Gain One Psychic Technique of 200xp or less for free as long as prerequisites met. Gain \"Psy Rating\"  equal to Half Unmodified INT Bonus (no effect from Unnatural Intelligence). Psychic Power related Focus Power Tests and Opposed Willpower Tests use the character's Intelligence instead of Willpower. When rolling Psychic Phenomena/Perils of the Warp, add Corruption Point total to the roll before any other modifiers. Abilities or Effects that would affect a psyker don't affect a sorcerer. Use Renegade Psykers and Sorcerers method of determining Psychic Strength for Fettered/Unfettered/Push Strength power usage.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Gain One Psychic Technique of 200xp or less for free as long as prerequisites met. Gain \"Psy Rating\"  equal to Half Unmodified INT Bonus (no effect from Unnatural Intelligence). Psychic Power related Focus Power Tests and Opposed Willpower Tests use the character's Intelligence instead of Willpower. When rolling Psychic Phenomena/Perils of the Warp, add Corruption Point total to the roll before any other modifiers. Abilities or Effects that would affect a psyker don't affect a sorcerer. Use Renegade Psykers and Sorcerers method of determining Psychic Strength for Fettered/Unfettered/Push Strength power usage.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Elite Advance, Intelligence 35, Forbidden Lore (Warp/Daemonology), Scholastic Lore (Occult), Not Untouchable",
+      "characteristics": {
+        "int": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -198,7 +198,17 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('arrayIncludes', function(field, array) {
-        return array.includes(field);
+        if (!array) return false;
+        if (Array.isArray(array)) return array.includes(field);
+        if (array instanceof Set) return array.has(field);
+        return false;
+    });
+
+    Handlebars.registerHelper('includes', function(array, value) {
+        if (!array) return false;
+        if (Array.isArray(array)) return array.includes(value);
+        if (array instanceof Set) return array.has(value);
+        return false;
     });
 
     Handlebars.registerHelper('any', function(list, prop) {
@@ -587,4 +597,389 @@ export function registerHandlebarsHelpers() {
         if (!Array.isArray(array)) return String(array);
         return array.filter(Boolean).join(separator || ', ');
     });
+
+    /**
+     * Get skill icon path by skill key
+     * Usage: {{skillIcon "acrobatics"}}
+     * Falls back to default book icon if no custom icon found
+     */
+    Handlebars.registerHelper('skillIcon', function(skillKey) {
+        // Map of skill keys to custom icons
+        const customIcons = {
+            // Combat skills
+            dodge: 'icons/svg/combat.svg',
+            parry: 'icons/svg/sword.svg',
+            
+            // Movement skills
+            acrobatics: 'icons/svg/direction.svg',
+            athletics: 'icons/svg/muscle.svg',
+            climb: 'icons/svg/mountain.svg',
+            swim: 'icons/svg/water.svg',
+            
+            // Social skills
+            charm: 'icons/svg/angel.svg',
+            command: 'icons/svg/horn-call.svg',
+            deceive: 'icons/svg/mystery-man.svg',
+            intimidate: 'icons/svg/terror.svg',
+            
+            // Perception skills
+            awareness: 'icons/svg/eye.svg',
+            scrutiny: 'icons/svg/eye.svg',
+            search: 'icons/svg/ruins.svg',
+            
+            // Technical skills
+            techUse: 'icons/svg/upgrade.svg',
+            medicae: 'icons/svg/heal.svg',
+            security: 'icons/svg/padlock.svg',
+            
+            // Lore skills (use book icon)
+            commonLore: 'icons/svg/book.svg',
+            forbiddenLore: 'icons/svg/book.svg',
+            scholasticLore: 'icons/svg/book.svg',
+            
+            // Psychic
+            psyniscience: 'icons/svg/unconscious.svg',
+            invocation: 'icons/svg/daze.svg'
+        };
+        
+        // Return custom icon or fallback
+        return customIcons[skillKey] || 'icons/svg/book.svg';
+    });
+    
+    /**
+     * Get icon for talent category.
+     * Usage: {{talentIcon category}}
+     * @param {string} category - Talent category
+     * @returns {string} Font Awesome icon class
+     */
+    Handlebars.registerHelper("talentIcon", function(category) {
+        const icons = {
+            combat: "fa-sword",
+            social: "fa-users",
+            knowledge: "fa-book",
+            leadership: "fa-crown",
+            psychic: "fa-brain",
+            technical: "fa-cog",
+            defense: "fa-shield-alt",
+            willpower: "fa-fist-raised",
+            movement: "fa-running",
+            unique: "fa-star",
+            general: "fa-circle"
+        };
+        return icons[category] || icons.general;
+    });
+
+    /**
+     * Get CSS class for talent tier color.
+     * Usage: {{tierColor tier}}
+     * @param {number} tier - Talent tier (0-3)
+     * @returns {string} CSS class name
+     */
+    Handlebars.registerHelper("tierColor", function(tier) {
+        const colors = {
+            1: "tier-bronze",
+            2: "tier-silver",
+            3: "tier-gold",
+            0: "tier-none"
+        };
+        return colors[tier] || colors[0];
+    });
+
+    /**
+     * Format prerequisites object as readable string.
+     * Usage: {{formatPrerequisites prerequisites}}
+     * @param {Object} prereqs - Prerequisites object
+     * @returns {string} Formatted string
+     */
+    Handlebars.registerHelper("formatPrerequisites", function(prereqs) {
+        if (!prereqs) return "";
+        if (prereqs.text) return prereqs.text;
+        
+        const parts = [];
+        
+        // Characteristics
+        for (const [char, value] of Object.entries(prereqs.characteristics || {})) {
+            parts.push(`${char.toUpperCase()} ${value}+`);
+        }
+        
+        // Skills
+        if (prereqs.skills && prereqs.skills.length > 0) {
+            parts.push(...prereqs.skills);
+        }
+        
+        // Talents
+        if (prereqs.talents && prereqs.talents.length > 0) {
+            parts.push(...prereqs.talents);
+        }
+        
+        return parts.join(", ");
+    });
+
+    /**
+     * Get icon for trait category.
+     * @param {string} category  Trait category
+     * @returns {string} Font Awesome icon class
+     */
+    Handlebars.registerHelper("traitIcon", function(category) {
+        const icons = {
+            creature: "fa-paw",
+            character: "fa-user-shield",
+            elite: "fa-star",
+            unique: "fa-gem",
+            origin: "fa-route",
+            general: "fa-shield-alt"
+        };
+        return icons[category] || "fa-shield-alt";
+    });
+
+    /**
+     * Get color class for trait category.
+     * @param {string} category  Trait category
+     * @returns {string} CSS class
+     */
+    Handlebars.registerHelper("traitCategoryColor", function(category) {
+        const colors = {
+            creature: "trait-creature",
+            character: "trait-character",
+            elite: "trait-elite",
+            unique: "trait-unique",
+            origin: "trait-origin",
+            general: "trait-general"
+        };
+        return colors[category] || "trait-general";
+    });
+
+    /**
+     * Format trait name with level (if present).
+     * @param {string} name  Trait name
+     * @param {number} level  Trait level
+     * @returns {string} Formatted name
+     */
+    Handlebars.registerHelper("formatTraitName", function(name, level) {
+        if (level && level > 0) {
+            return `${name} (${level})`;
+        }
+        return name;
+    });
+
+    /**
+     * Convert special Set to rich quality objects with lookups.
+     * @param {Set<string>} specialSet    Set of quality identifiers
+     * @returns {object[]}                Array of quality definition objects
+     */
+    Handlebars.registerHelper('specialQualities', function(specialSet) {
+      if (!specialSet) return [];
+      
+      // Convert to array if it's a Set
+      const qualityIds = Array.isArray(specialSet) ? specialSet : Array.from(specialSet);
+      if (!qualityIds.length) return [];
+      
+      const rtConfig = CONFIG?.rt;
+      if (!rtConfig?.weaponQualities) {
+        console.warn("RT | CONFIG.rt.weaponQualities not available");
+        return [];
+      }
+      
+      const qualities = [];
+      
+      for (const identifier of qualityIds) {
+        // Parse identifier (e.g., "blast-3" → base="blast", level=3)
+        const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
+        const baseId = levelMatch ? levelMatch[1] : identifier;
+        const level = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2])) : null;
+        
+        // Look up definition
+        const def = rtConfig.weaponQualities[baseId];
+        if (!def) {
+          // Unknown quality, show raw identifier
+          qualities.push({
+            identifier: identifier,
+            baseIdentifier: baseId,
+            label: identifier,
+            description: "Unknown quality",
+            hasLevel: false,
+            level: null
+          });
+          continue;
+        }
+        
+        // Build rich quality object
+        let label = game.i18n.localize(def.label);
+        if (def.hasLevel && level !== null) {
+          label += ` (${level})`;
+        } else if (def.hasLevel) {
+          label += ` (X)`;
+        }
+        
+        qualities.push({
+          identifier: identifier,
+          baseIdentifier: baseId,
+          label: label,
+          description: game.i18n.localize(def.description),
+          hasLevel: def.hasLevel,
+          level: level
+        });
+      }
+      
+      return qualities;
+    });
+
+    /**
+     * Get qualities added by craftsmanship.
+     * @param {object} weaponSystem    Weapon system data
+     * @returns {object[]}             Array of quality objects
+     */
+    Handlebars.registerHelper('craftsmanshipQualities', function(weaponSystem) {
+      const rtConfig = CONFIG?.rt;
+      if (!rtConfig?.weaponQualities) {
+        console.warn("RT | CONFIG.rt.weaponQualities not available");
+        return [];
+      }
+      
+      const qualities = [];
+      const craft = weaponSystem.craftsmanship;
+      const isMelee = weaponSystem.melee;
+      
+      if (isMelee) {
+        // Melee weapons don't get quality changes, only stat mods
+        return [];
+      }
+      
+      // Ranged weapons get reliability qualities
+      if (craft === 'poor') {
+        const def = rtConfig.weaponQualities['unreliable-2'];
+        if (def) {
+          qualities.push({
+            identifier: 'unreliable-2',
+            label: game.i18n.localize(def.label),
+            description: game.i18n.localize(def.description),
+            hasLevel: false,
+            level: null
+          });
+        }
+      } else if (craft === 'cheap') {
+        const def = rtConfig.weaponQualities['unreliable'];
+        if (def) {
+          qualities.push({
+            identifier: 'unreliable',
+            label: game.i18n.localize(def.label),
+            description: game.i18n.localize(def.description),
+            hasLevel: false,
+            level: null
+          });
+        }
+      } else if (craft === 'good') {
+        const def = rtConfig.weaponQualities['reliable'];
+        if (def) {
+          qualities.push({
+            identifier: 'reliable',
+            label: game.i18n.localize(def.label),
+            description: game.i18n.localize(def.description),
+            hasLevel: false,
+            level: null
+          });
+        }
+      } else if (['best', 'master-crafted'].includes(craft)) {
+        const def = rtConfig.weaponQualities['never-jam'];
+        if (def) {
+          qualities.push({
+            identifier: 'never-jam',
+            label: game.i18n.localize(def.label),
+            description: game.i18n.localize(def.description),
+            hasLevel: false,
+            level: null
+          });
+        }
+      }
+      
+      return qualities;
+    });
+
+    /**
+     * Check if weapon has craftsmanship-derived qualities.
+     * @param {object} weaponSystem    Weapon system data
+     * @returns {boolean}
+     */
+    Handlebars.registerHelper('hasCraftsmanshipQualities', function(weaponSystem) {
+      const craft = weaponSystem.craftsmanship;
+      const isMelee = weaponSystem.melee;
+      
+      if (isMelee) return false;  // Melee only gets stat mods
+      
+      return ['poor', 'cheap', 'good', 'best', 'master-crafted'].includes(craft);
+    });
+
+    /**
+     * Check if item has embedded quality items.
+     * @param {object[]} items    Array of embedded items
+     * @returns {boolean}
+     */
+    Handlebars.registerHelper('hasEmbeddedQualities', function(items) {
+      if (!items || !items.length) return false;
+      return items.some(item => item.type === 'attackSpecial');
+    });
+
+    /**
+     * Look up quality definition and return rich object.
+     * @param {string} identifier    Quality identifier
+     * @returns {object}
+     */
+    Handlebars.registerHelper('qualityLookup', function(identifier) {
+      const rtConfig = CONFIG?.rt;
+      if (!rtConfig?.weaponQualities) {
+        console.warn("RT | CONFIG.rt.weaponQualities not available");
+        return {
+          identifier,
+          label: identifier,
+          description: "Unknown quality"
+        };
+      }
+      
+      const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
+      const baseId = levelMatch ? levelMatch[1] : identifier;
+      const level = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2])) : null;
+      
+      const def = rtConfig.weaponQualities[baseId];
+      if (!def) {
+        return {
+          identifier,
+          label: identifier,
+          description: "Unknown quality"
+        };
+      }
+      
+      let label = game.i18n.localize(def.label);
+      if (def.hasLevel && level !== null) {
+        label += ` (${level})`;
+      } else if (def.hasLevel) {
+        label += ` (X)`;
+      }
+      
+      return {
+        identifier,
+        baseIdentifier: baseId,
+        label,
+        description: game.i18n.localize(def.description),
+        hasLevel: def.hasLevel,
+        level
+      };
+    });
+}
+
+/**
+ * Display ship weapon strength (shows "-" for 0)
+ * @param {number} strength - Weapon strength value
+ * @returns {string} Display string
+ */
+export function displayStrength(strength) {
+    return (strength && strength > 0) ? strength : '-';
+}
+
+/**
+ * Display ship weapon crit rating (shows "-" for 0, appends "+" for non-zero)
+ * @param {number} crit - Crit rating value
+ * @returns {string} Display string
+ */
+export function displayCrit(crit) {
+    return (crit && crit > 0) ? `${crit}+` : '-';
 }

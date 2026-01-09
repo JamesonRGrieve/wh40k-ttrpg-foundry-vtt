@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Perception 35, Dodge +10 or Parry +10\nAptitudes: Perception, Finesse\nVeteran Talent Requirement Fulfilled",
-    "effect": "Veteran Talent Requirement: Character successfully Evades three consecutive attacks without being struck whilst on a mission.\nWhen Character makes a successful Evasion Test against an attack, they impose -10 to Ballistic and Weapon Skill Attacks to hit them until the start of their next turn.",
+    "category": "combat",
     "source": "OW: Enemies of the Imperium",
     "description": {
       "value": "<p>Veteran Talent Requirement: Character successfully Evades three consecutive attacks without being struck whilst on a mission.\nWhen Character makes a successful Evasion Test against an attack, they impose -10 to Ballistic and Weapon Skill Attacks to hit them until the start of their next turn.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Veteran Talent Requirement: Character successfully Evades three consecutive attacks without being struck whilst on a mission.\nWhen Character makes a successful Evasion Test against an attack, they impose -10 to Ballistic and Weapon Skill Attacks to hit them until the start of their next turn.</p>",
     "aptitudes": [
       "Perception",
       "Finesse\nVeteran Talent Requirement Fulfilled"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Perception 35, Dodge +10 or Parry +10",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

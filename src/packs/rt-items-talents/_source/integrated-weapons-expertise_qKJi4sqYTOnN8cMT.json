@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; BS 40, Implanted Potentia Coil or Mechanicus Implants. \nAptitudes: Ballistic Skill, Defence",
-    "effect": "When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Defence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 40, Implanted Potentia Coil or Mechanicus Implants.",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

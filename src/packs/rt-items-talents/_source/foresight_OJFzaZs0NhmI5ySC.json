@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Intelligence 30\nAptitudes: Intelligence, Knowledge, Tzeentch",
-    "effect": "Character can spend 10 minutes studying or analysing a problem to gain +10 to the next Intelligence Test or Intelligence-Based Skill Test they make relating to it.",
+    "category": "knowledge",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can spend 10 minutes studying or analysing a problem to gain +10 to the next Intelligence Test or Intelligence-Based Skill Test they make relating to it.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can spend 10 minutes studying or analysing a problem to gain +10 to the next Intelligence Test or Intelligence-Based Skill Test they make relating to it.</p>",
     "aptitudes": [
       "Intelligence",
       "Knowledge",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Intelligence 30",
+      "characteristics": {
+        "int": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

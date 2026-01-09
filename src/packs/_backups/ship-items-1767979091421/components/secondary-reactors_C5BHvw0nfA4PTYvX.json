@@ -1,0 +1,29 @@
+{
+  "name": "Secondary Reactors",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Upgrade",
+    "hullType": "All Ships",
+    "powerUsage": 0,
+    "spaceUsage": 0,
+    "spCost": 0,
+    "effect": "Can make -10 Tech-Use test to increase speed by 2 for a turn, but reduced by 1 on following turn. Failing test causes -1 speed immediately, 3 DoF or more halves speed until Emergency Repairs are made.  Poor Craftsmanship imposes -10 to Test, Good extends speed for 2 turns, Best also increases speed by 3. Only one per vessel. Space usage is 1 for Raiders/Frigates, 2 for Transports, 3 for Light Cruisers/Cruisers, and 4 for larger.",
+    "availability": "rare",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Can make -10 Tech-Use test to increase speed by 2 for a turn, but reduced by 1 on following turn. Failing test causes -1 speed immediately, 3 DoF or more halves speed until Emergency Repairs are made.  Poor Craftsmanship imposes -10 to Test, Good extends speed for 2 turns, Best also increases speed by 3. Only one per vessel. Space usage is 1 for Raiders/Frigates, 2 for Transports, 3 for Light Cruisers/Cruisers, and 4 for larger.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C5BHvw0nfA4PTYvX"
+}

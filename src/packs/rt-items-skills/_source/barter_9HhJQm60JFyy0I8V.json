@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "fellowship",
     "descriptor": "Negotiating better prices or exchanging goods and services. Could alter the Acquisition Modifier for an item without a set price.",
     "uses": "Opposed Test vs Barter, etc to secure better deals or possibly alter Acquisition Test. May require multiple tests for extended dealings.",
     "useTime": "~5 Minutes or more",
     "description": {
       "value": "<p>Negotiating better prices or exchanging goods and services. Could alter the Acquisition Modifier for an item without a set price.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Fellowship",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

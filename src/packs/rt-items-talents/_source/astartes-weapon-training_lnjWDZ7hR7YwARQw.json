@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Astartes",
-    "effect": "Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.",
+    "category": "combat",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Astartes",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

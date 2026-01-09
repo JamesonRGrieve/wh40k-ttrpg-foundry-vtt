@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Assassin or Scum Career, DH Rank 1+. Ballistic Skill 30+, must originate from Gunmetal City. ",
-    "descriptionText": "",
-    "effects": "",
     "source": "DH: Inquisitor's Handbook (Page 72)",
     "description": {
       "value": "<p>Gunslingers seek perfection in the art of the gun, be it through advanced cybernetics, mastercrafted weaponry, utter dedication and training, and so much more. Those above the rest are defined however by far darker things, those who have lived too long, killed too many, and who have nothing left but the pistol in their grip.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the \nAutomatically gain Unique Trait Knave of Pistols</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the \nAutomatically gain Unique Trait Knave of Pistols",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Gunslingers seek perfection in the art of the gun, be it through advanced cybernetics, mastercrafted weaponry, utter dedication and training, and so much more. Those above the rest are defined however by far darker things, those who have lived too long, killed too many, and who have nothing left but the pistol in their grip.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the \nAutomatically gain Unique Trait Knave of Pistols</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

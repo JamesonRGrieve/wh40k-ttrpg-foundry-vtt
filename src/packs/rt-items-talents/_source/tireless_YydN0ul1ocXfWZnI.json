@@ -3,19 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Toughness 40, Willpower 35 \nAptitudes: Defence, Willpower",
-    "effect": "Character ignores -10 Penalty to all Tests as a result of Fatigue, they still suffer any other effects from Fatigue as Normal.",
+    "category": "general",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Character ignores -10 Penalty to all Tests as a result of Fatigue, they still suffer any other effects from Fatigue as Normal.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character ignores -10 Penalty to all Tests as a result of Fatigue, they still suffer any other effects from Fatigue as Normal.</p>",
     "aptitudes": [
       "Defence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Toughness 40, Willpower 35",
+      "characteristics": {
+        "t": 40,
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

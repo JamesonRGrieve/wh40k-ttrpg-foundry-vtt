@@ -1,0 +1,27 @@
+{
+  "name": "Melta Torpedo",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Topedo Warhead",
+    "hullType": "All Ships",
+    "powerUsage": "-",
+    "spaceUsage": "-",
+    "spCost": "-",
+    "damage": "2d10+15",
+    "strength": "-",
+    "critRating": "9+",
+    "range": 60,
+    "availability": "extremely-rare",
+    "notes": "Reroll (4). Causes \"Fire!\" Critical result on hit. If torpedo tube destroyed, sets additional component on fire. Refer to Torpedo Rules block.",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p><b>Damage:</b> 2d10+15</p><p><b>Notes:</b> Reroll (4). Causes \"Fire!\" Critical result on hit. If torpedo tube destroyed, sets additional component on fire. Refer to Torpedo Rules block.</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dCbn9WAq6LMMSIj3"
+}

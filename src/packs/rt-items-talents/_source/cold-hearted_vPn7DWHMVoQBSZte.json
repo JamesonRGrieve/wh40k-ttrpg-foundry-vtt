@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: Willpower, Defence, Unaligned",
-    "effect": "Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.",
+    "category": "social",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>",
     "aptitudes": [
       "Willpower",
       "Defence",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

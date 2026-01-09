@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Weapon Skill 50\nAptitudes: Weapon Skill, Offence, Khorne",
-    "effect": "The Character can spend a Fate Point to make All Melee Attacks they make that round unavoidable by Parry or Dodge Skills. Other methods of stopping attacks, such as Shadow or Displacement Fields are unaffected.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>The Character can spend a Fate Point to make All Melee Attacks they make that round unavoidable by Parry or Dodge Skills. Other methods of stopping attacks, such as Shadow or Displacement Fields are unaffected.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>The Character can spend a Fate Point to make All Melee Attacks they make that round unavoidable by Parry or Dodge Skills. Other methods of stopping attacks, such as Shadow or Displacement Fields are unaffected.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence",
       "Khorne"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 50",
+      "characteristics": {
+        "ws": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

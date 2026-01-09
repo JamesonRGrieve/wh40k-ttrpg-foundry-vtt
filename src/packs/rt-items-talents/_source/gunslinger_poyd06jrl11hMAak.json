@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; BS 40, Two-Weapon Wielder (Ranged)\nAptitudes: Ballistic Skill, Finesse, Unaligned",
-    "effect": "Reduce Two-Weapon Fighting Penalty to -10 when wielding two one-handed pistols. If character also has Ambidextrous Talent, reduce penalty to +0.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Reduce Two-Weapon Fighting Penalty to -10 when wielding two one-handed pistols. If character also has Ambidextrous Talent, reduce penalty to +0.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Reduce Two-Weapon Fighting Penalty to -10 when wielding two one-handed pistols. If character also has Ambidextrous Talent, reduce penalty to +0.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 40, Two-Weapon Wielder (Ranged)",
+      "characteristics": {
+        "bs": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

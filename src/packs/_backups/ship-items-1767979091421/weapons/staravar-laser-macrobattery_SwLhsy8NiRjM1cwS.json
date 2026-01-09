@@ -1,0 +1,27 @@
+{
+  "name": "Staravar Laser Macrobattery",
+  "type": "shipWeapon",
+  "img": "icons/svg/energy.svg",
+  "system": {
+    "type": "Macrocannon (Archeotech)",
+    "hullType": "All Ships",
+    "powerUsage": 4,
+    "spaceUsage": 4,
+    "spCost": 2,
+    "damage": "1d10+2",
+    "strength": 4,
+    "critRating": 4,
+    "range": 12,
+    "availability": "extremely-rare",
+    "notes": null,
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Damage:</b> 1d10+2</p>"
+    },
+    "location": "Dorsal",
+    "weaponType": "Macrobattery"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SwLhsy8NiRjM1cwS"
+}

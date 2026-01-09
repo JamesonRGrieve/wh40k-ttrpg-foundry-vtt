@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork Weirdboy, Da Power of Waaagh!, Willpower 40",
-    "effect": "Character can choose to use this talent at the start of combat after rolling intiative. If Activated, the radius of their Power of Da Waaagh! Talent becomes 5*Willpower Bonus Metres.",
+    "category": "psychic",
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>Character can choose to use this talent at the start of combat after rolling intiative. If Activated, the radius of their Power of Da Waaagh! Talent becomes 5*Willpower Bonus Metres.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character can choose to use this talent at the start of combat after rolling intiative. If Activated, the radius of their Power of Da Waaagh! Talent becomes 5*Willpower Bonus Metres.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Weirdboy, Da Power of Waaagh!, Willpower 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

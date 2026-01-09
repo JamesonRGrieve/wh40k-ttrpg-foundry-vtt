@@ -3,20 +3,25 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Any Non-Primitive Armour",
     "effect": "Gives +2 AP vs Impact damage",
-    "weight": "+0.5kg",
     "availability": "rare",
     "source": "RT: Hostile Acq.",
     "description": {
       "value": "<p>Gives +2 AP vs Impact damage</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 2,
+      "maxAgility": 0,
+      "weight": 0.5
+    },
+    "restrictions": {
+      "armourTypes": [
+        "primitive",
+        "non-primitive"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

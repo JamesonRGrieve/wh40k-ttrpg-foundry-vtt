@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Kroot, Shamanic Powers",
-    "effect": "The Kroot can ener a trance during their normal sleep cycle, receiving a vision of the future. They may reroll one failed Test during the next 24 hours. The vision may also (GM Dependant) be described or give hints or clues as to significant events that may occur to the Shaper or those they are closely connected to anywhere from within the next week to even years from now.",
+    "category": "general",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The Kroot can ener a trance during their normal sleep cycle, receiving a vision of the future. They may reroll one failed Test during the next 24 hours. The vision may also (GM Dependant) be described or give hints or clues as to significant events that may occur to the Shaper or those they are closely connected to anywhere from within the next week to even years from now.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Kroot can ener a trance during their normal sleep cycle, receiving a vision of the future. They may reroll one failed Test during the next 24 hours. The vision may also (GM Dependant) be described or give hints or clues as to significant events that may occur to the Shaper or those they are closely connected to anywhere from within the next week to even years from now.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Kroot, Shamanic Powers",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

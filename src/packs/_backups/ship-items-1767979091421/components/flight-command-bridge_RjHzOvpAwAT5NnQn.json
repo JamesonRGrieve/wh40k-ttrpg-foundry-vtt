@@ -1,0 +1,29 @@
+{
+  "name": "Flight Command Bridge",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Bridge",
+    "hullType": "Light Cruisers, Cruisers",
+    "powerUsage": 2,
+    "spaceUsage": 2,
+    "spCost": 0,
+    "effect": "Where Characters command the ship. As long as this component is undamaged, +5 to Command Tests to deal with Attack Craft, and Auto-pass tests to ready new squadrons. Also +25 to Trade Objectives involving ground-to-orbit or small craft operations.",
+    "availability": "scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Where Characters command the ship. As long as this component is undamaged, +5 to Command Tests to deal with Attack Craft, and Auto-pass tests to ready new squadrons. Also +25 to Trade Objectives involving ground-to-orbit or small craft operations.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RjHzOvpAwAT5NnQn"
+}

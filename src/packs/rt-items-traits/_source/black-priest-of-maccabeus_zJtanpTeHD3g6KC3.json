@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Cleric Career, DH Rank 4+. <10 Corruptio when career is taken, must originate or have spent time training on Maccabeus Quintus. Cannot have Mind Cleansed Background.",
-    "descriptionText": "",
-    "effects": "",
     "source": "DH: Inquisitor's Handbook (Page 54)",
     "description": {
       "value": "<p>Those of strong will, faith, and who have survived confrontation with the arch-enemy. Each are traine in the esoteric lore of the Ordo Malleus, taught to focus their mind to deny the daemon, and undergo ancient rights to be forever changed. Dressed in pyre-ash black and dour in demeanour, they are cold, humourless, and merciless.</p><p><b>Effects:</b> Must be taken during downtime to receive intial training\nReplace new Rank's Advances with that of the Black Priest of Maccabeus\nAllows for the purchasing of the Unique Talent Encarta Maleficarum</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Must be taken during downtime to receive intial training\nReplace new Rank's Advances with that of the Black Priest of Maccabeus\nAllows for the purchasing of the Unique Talent Encarta Maleficarum",
-    "level": null
+    "level": 0,
+    "benefit": "<p>Those of strong will, faith, and who have survived confrontation with the arch-enemy. Each are traine in the esoteric lore of the Ordo Malleus, taught to focus their mind to deny the daemon, and undergo ancient rights to be forever changed. Dressed in pyre-ash black and dour in demeanour, they are cold, humourless, and merciless.</p><p><b>Effects:</b> Must be taken during downtime to receive intial training\nReplace new Rank's Advances with that of the Black Priest of Maccabeus\nAllows for the purchasing of the Unique Talent Encarta Maleficarum</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

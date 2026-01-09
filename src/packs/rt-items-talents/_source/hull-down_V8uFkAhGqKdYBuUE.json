@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Survival +10 or Operate (Any)\nAptitudes: Agility, Fieldcraft ",
-    "effect": "When character takes a vehicle combat action with the movement subtype, their vehicle or steed counts its size as one lower for purposes of attack modifiers and the benefit of cover until the start of their next turn.\nIn other words, they treat their vehicle/mount as smaller than it actually is, therefore the modifier to hit is lower.",
+    "category": "combat",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>When character takes a vehicle combat action with the movement subtype, their vehicle or steed counts its size as one lower for purposes of attack modifiers and the benefit of cover until the start of their next turn.\nIn other words, they treat their vehicle/mount as smaller than it actually is, therefore the modifier to hit is lower.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When character takes a vehicle combat action with the movement subtype, their vehicle or steed counts its size as one lower for purposes of attack modifiers and the benefit of cover until the start of their next turn.\nIn other words, they treat their vehicle/mount as smaller than it actually is, therefore the modifier to hit is lower.</p>",
     "aptitudes": [
       "Agility",
       "Fieldcraft"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Survival +10 or Operate (Any)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

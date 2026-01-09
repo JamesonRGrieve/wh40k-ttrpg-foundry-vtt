@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; WP 35, Weapon Training (Flame) \nAptitudes: Offence, Willpower",
-    "effect": "Targets of Weapons with the Flame Quality made by Character, suffer -20 to their Agility Test to avoid setting on fire.\nAdditionally, whenever the character inflicts Righteous Fury with a weapon with the Flame Quality, the target is automatically set on fire.\n(DW) When used Horde enemies, increases number of hits to the Horde by 1d5.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Targets of Weapons with the Flame Quality made by Character, suffer -20 to their Agility Test to avoid setting on fire.\nAdditionally, whenever the character inflicts Righteous Fury with a weapon with the Flame Quality, the target is automatically set on fire.\n(DW) When used Horde enemies, increases number of hits to the Horde by 1d5.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Targets of Weapons with the Flame Quality made by Character, suffer -20 to their Agility Test to avoid setting on fire.\nAdditionally, whenever the character inflicts Righteous Fury with a weapon with the Flame Quality, the target is automatically set on fire.\n(DW) When used Horde enemies, increases number of hits to the Horde by 1d5.</p>",
     "aptitudes": [
       "Offence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WP 35, Weapon Training (Flame)",
+      "characteristics": {
+        "wp": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Street Fighting \nAptitudes: Intelligence, Offence",
-    "effect": "When this character attacks with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced)",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When this character attacks with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced)</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When this character attacks with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced)</p>",
     "aptitudes": [
       "Intelligence",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Street Fighting",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

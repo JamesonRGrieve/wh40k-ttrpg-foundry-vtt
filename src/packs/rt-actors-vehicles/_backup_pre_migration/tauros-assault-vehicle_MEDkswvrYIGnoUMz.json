@@ -1,0 +1,54 @@
+{
+  "name": "Tauros Assault Vehicle",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "20m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 16,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 14,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 14,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 15,
+      "tactical": 120,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "Driver, Gunner"
+    },
+    "passengers": 0,
+    "manoeuverability": 20,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Pintle: Heavy Flamer or Tauros Grenade Launcher</p>\n<p>Heavy flamer (30m; S/–/–; 1d10+5 E; Pen 4; Clip 20; Reload 2 Full; Flame, Spray)</p>\n<p>Tauros grenade launcher (90m; S/2/–; Clip 20; Reload 2 Full; Damage and Pen vary with grenade fired)</p>",
+    "specialRules": "<p>Traits: Enhanced Motive Systems, Open-Topped, Rugged, Wheeled Vehicle</p>\n<p>Special Rules: Treat as Tracked Vehicle for purposes of Tests involving Difficult Terrain and how much slower the vehicle gets when suffering critical damage. Ignore Penalties to Operate/Drive Tests that Wheeled Vehicles suffer when taking Motive System Damaged Condition.</p>",
+    "traitsText": "Traits: Enhanced Motive Systems, Open-Topped, Rugged, Wheeled Vehicle\nSpecial Rules: Treat as Tracked Vehicle for purposes of Tests involving Difficult Terrain and how much slower the vehicle gets when suffering critical damage. Ignore Penalties to Operate/Drive Tests that Wheeled Vehicles suffer when taking Motive System Damaged Condition.",
+    "availability": "scarce",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MEDkswvrYIGnoUMz"
+}

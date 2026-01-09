@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Toughness 40\nAptitudes: Toughness, Defence, Nurgle",
-    "effect": "Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.</p>",
     "aptitudes": [
       "Toughness",
       "Defence",
       "Nurgle"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Toughness 40",
+      "characteristics": {
+        "t": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork Weirdboy, Da Power of Waaagh!, Runtz",
-    "effect": "After making a Roll on the 'Eadbang Table, the Character can spend a Fate Point to immediately kill a single Gretchin, Squig, or Snotling that they have gained via the Runtz Talent. In doing so, they do not suffer the rolled result of the 'Eadbang Table.\nThe creature detonates in a shower of gore and green sparks.",
+    "category": "general",
     "source": "RT: The Navis Primer",
     "description": {
       "value": "<p>After making a Roll on the 'Eadbang Table, the Character can spend a Fate Point to immediately kill a single Gretchin, Squig, or Snotling that they have gained via the Runtz Talent. In doing so, they do not suffer the rolled result of the 'Eadbang Table.\nThe creature detonates in a shower of gore and green sparks.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>After making a Roll on the 'Eadbang Table, the Character can spend a Fate Point to immediately kill a single Gretchin, Squig, or Snotling that they have gained via the Runtz Talent. In doing so, they do not suffer the rolled result of the 'Eadbang Table.\nThe creature detonates in a shower of gore and green sparks.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork Weirdboy, Da Power of Waaagh!, Runtz",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

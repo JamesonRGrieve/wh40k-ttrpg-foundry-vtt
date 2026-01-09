@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Witchfinder Alternative Advance, 600xp\nPsyniscience",
-    "effect": "The Character can spend a Fate Point to automatically succeed on a Psyniscience Test with Perception Bonus Degrees of Success.",
+    "category": "psychic",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>The Character can spend a Fate Point to automatically succeed on a Psyniscience Test with Perception Bonus Degrees of Success.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character can spend a Fate Point to automatically succeed on a Psyniscience Test with Perception Bonus Degrees of Success.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Witchfinder Alternative Advance, 600xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

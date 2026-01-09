@@ -1,0 +1,54 @@
+{
+  "name": "Arvus Lighter",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "20m/ 10AU's",
+    "faction": "",
+    "subfaction": "",
+    "type": "skimmer",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 24,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 22,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 22,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -15,
+      "tactical": 1,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "1 Pilot, \n1 Co-pilot"
+    },
+    "passengers": 0,
+    "manoeuverability": 30,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 12,
+      "value": 12,
+      "critical": 0
+    },
+    "weapons": "<p>None</p>",
+    "specialRules": "<p>Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere.</p>",
+    "traitsText": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere.",
+    "availability": "average",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "4IsLXJCEJBVOUBMI"
+}

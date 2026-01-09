@@ -1,29 +1,39 @@
 {
   "name": "Fatigued",
-  "type": "trait",
+  "type": "condition",
   "img": "icons/svg/aura.svg",
   "system": {
-    "requirements": "-",
-    "descriptionText": "Any test while fatigued: -10",
-    "effects": "",
-    "source": "Character Actions and Rules (sheet)",
-    "description": {
-      "value": "<p>Any test while fatigued: -10</p>"
-    },
-    "severity": 1,
+    "identifier": "fatigued",
+    "nature": "harmful",
+    "effect": "<p>All Tests suffer a -10 penalty while fatigued. This penalty does not stack with multiple levels of fatigue.</p>",
+    "removal": "<p>Removed after 1 hour of rest. Eight consecutive hours of rest removes all fatigue levels.</p>",
     "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>All Tests suffer a -10 penalty while fatigued. This penalty does not stack with multiple levels of fatigue.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "232",
+        "custom": ""
+      }
+    },
     "modifiers": {
       "characteristics": {},
       "skills": {},
       "combat": {}
     },
-    "autoRemove": false
+    "notes": ""
   },
   "effects": [],
   "flags": {
     "rt": {
-      "kind": "condition",
-      "appliesTo": "self"
+      "generated": true,
+      "version": "2.0"
     }
   },
   "_id": "1Hl4rLyG2M80WJiC"

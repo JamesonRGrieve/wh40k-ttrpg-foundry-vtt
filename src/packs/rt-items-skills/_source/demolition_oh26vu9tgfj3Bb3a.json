@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "intelligence",
     "descriptor": "Safely employing explosives to achieve a desired effect, such as cutting through bulkheads, destroying targets without collatoral damage, etc. Diffusing Explosives left by others, and manufacturing explosives, fuses, and blasting caps from component materials.",
     "uses": "Use: Manufacture Explosives. Extended Skill Test, Make explosives from components. Difficulty varies on materials and complexity.\nUse: Place Explosives. Full Action/Extended Test, place explosives and relevent detonation methods. 4+ DoF accidental explosion. DoS increase difficulty of diffusing. Use: Defuse Explosive. Opposed Skill Test vs Opponent's Demolition Test of setter. Win defuses, fail doesn't, 4+ DoF detonates device. May be extended test for multiple charges.",
     "useTime": "Full Action or More",
     "description": {
       "value": "<p>Safely employing explosives to achieve a desired effect, such as cutting through bulkheads, destroying targets without collatoral damage, etc. Diffusing Explosives left by others, and manufacturing explosives, fuses, and blasting caps from component materials.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Intelligence",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "advanced",

@@ -1,0 +1,29 @@
+{
+  "name": "Flak Turrets",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Augment",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 1,
+    "effect": "At the start of a Strategic turn, as a Free Action can choose to activate Flak Turrets. Provide +1 to Turret Rating, but -10 to Detection due to the sheer volume of ammunition fired. One per Vessel",
+    "availability": "scarce",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>At the start of a Strategic turn, as a Free Action can choose to activate Flak Turrets. Provide +1 to Turret Rating, but -10 to Detection due to the sheer volume of ammunition fired. One per Vessel</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mLfFba3HpzmRS1Hk"
+}

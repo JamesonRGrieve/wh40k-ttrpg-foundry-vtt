@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Daemonologist, Favoured by the Warp, Willpower 50. Aptitudes: Psyker, Willpower",
-    "effect": "When character triggers Psychic Phenomena when manifesting a power of the Sanctic Daemonology Disicpline, they can spend a Fate Point to entirely negate the result.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>When character triggers Psychic Phenomena when manifesting a power of the Sanctic Daemonology Disicpline, they can spend a Fate Point to entirely negate the result.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When character triggers Psychic Phenomena when manifesting a power of the Sanctic Daemonology Disicpline, they can spend a Fate Point to entirely negate the result.</p>",
     "aptitudes": [
       "Psyker",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Daemonologist, Favoured by the Warp, Willpower 50.",
+      "characteristics": {
+        "wp": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

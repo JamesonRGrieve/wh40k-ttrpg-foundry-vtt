@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Elite - Unt) (T2)",
-    "requirements": "Tier 2: Untouchable E.Adv, Willpower 40\nAptitudes: Defence, Willpower",
-    "effect": "Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.",
+    "category": "psychic",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.</p>",
     "aptitudes": [
       "Defence",
       "Willpower"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Untouchable E.Adv, Willpower 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

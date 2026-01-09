@@ -1,0 +1,29 @@
+{
+  "name": "Ghost Field",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 8,
+    "spaceUsage": 4,
+    "spCost": 3,
+    "effect": "A Mysterious Eldar Device, creating phantom copies of the ship. Ships firing at this one have -20 to BS Tests, or -30 if a lance weapon. Piloting Tests to Perform Hit and Run attacks have -30. Must choose to use either this or Void Shields at start of combat.",
+    "availability": "near-unique",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>A Mysterious Eldar Device, creating phantom copies of the ship. Ships firing at this one have -20 to BS Tests, or -30 if a lance weapon. Piloting Tests to Perform Hit and Run attacks have -30. Must choose to use either this or Void Shields at start of combat.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YwowehEbtr023fKo"
+}

@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Spacecraft",
-    "size": "18m/ 18AU's",
-    "tacticalSpeed": "2,200kph / 9VU's",
-    "cruisingSpeed": "-5",
-    "maneuverability": "40",
-    "frontArmour": "Massive (+30)",
-    "sideArmour": "Front 40,\nSide 30,\nRear 25",
-    "rearArmour": "Unknown",
-    "structuralIntegrity": "20 Heavily Armed Xenos",
-    "crew": "1 Radcannon (Front, Range 150m (2 AU), S/-/-, 3d10+10 E, Pen 10, Clip 100, Reload 2 Full, Unreliable)\n2 Flechette Cannons (Front/Left/Rear or Front/Right/Rear, Range 300m (3 AU), S/4/-, 3d10+10 R, Pen 3, Clip 500, Reload 2 Full) +10 to hit vehicles, dealing 3d10+20 damage at short range.",
-    "passengers": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. Pilot can make +0 Pilot (Space Craft) Test to affix to a Spacecraft, taking 5 Full Rounds to drill through. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can be launched as either Assault Craft or Fighter, has Craft Rating of +8 (Assault Craft) or +4 (Fighter) and squadron size of 15 for Attack Craft Purposes.",
-    "cargo": "Special",
-    "availability": "RT: Battlefleet Koronus",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "special"
   },
   "effects": [],
   "items": [],

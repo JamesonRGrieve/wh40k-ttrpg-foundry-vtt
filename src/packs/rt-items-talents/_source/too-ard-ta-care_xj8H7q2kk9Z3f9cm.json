@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Ork, Toughness 50",
-    "effect": "Gain +20 to Toughness Tests to resist Heat, Cold, Vacuum, Suffocation, Disease, Poision, and any other Adverse Environmental Conditions that would require a Toughness Test.",
+    "category": "defense",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>Gain +20 to Toughness Tests to resist Heat, Cold, Vacuum, Suffocation, Disease, Poision, and any other Adverse Environmental Conditions that would require a Toughness Test.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Gain +20 to Toughness Tests to resist Heat, Cold, Vacuum, Suffocation, Disease, Poision, and any other Adverse Environmental Conditions that would require a Toughness Test.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Ork, Toughness 50",
+      "characteristics": {
+        "t": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

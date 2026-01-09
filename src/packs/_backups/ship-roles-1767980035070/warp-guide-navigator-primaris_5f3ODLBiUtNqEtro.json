@@ -1,0 +1,27 @@
+{
+  "name": "Warp Guide/Navigator Primaris",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Guides the Vessel Through the Warp, avoiding its dangers.",
+    "careerPreferences": "Only Navigator",
+    "subordinates": "Lesser Navigators, bodyguards and assassins, Navigator Emmisaries",
+    "importantSkills": "Navigation (Warp), Trade (Astrographer), Scholastic Lore (Astromancy), Forbbiden Lore (Warp)",
+    "effect": "+5 to Navigation (Stellar) Skill when steering the ship through the warp",
+    "description": {
+      "value": "<p><b>Purpose:</b> Guides the Vessel Through the Warp, avoiding its dangers.</p><p><b>Effect:</b> +5 to Navigation (Stellar) Skill when steering the ship through the warp</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5f3ODLBiUtNqEtro"
+}

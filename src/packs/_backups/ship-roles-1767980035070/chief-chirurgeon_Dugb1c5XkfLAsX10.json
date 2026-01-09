@@ -1,0 +1,27 @@
+{
+  "name": "Chief Chirurgeon",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 3,
+    "purpose": "Oversees and Maintains Crew Health",
+    "careerPreferences": "Missionary, Explorator, or Seneschal.",
+    "subordinates": "Biologis Tech-Adepts, medicae and doctors",
+    "importantSkills": "Medicae, Chem-se, Scholastic Lore (Chymistry), Tech-Use, Trade (Technomat)",
+    "effect": "+10 to Triage Extended Action (Chief Chirurgeon Talent)",
+    "description": {
+      "value": "<p><b>Purpose:</b> Oversees and Maintains Crew Health</p><p><b>Effect:</b> +10 to Triage Extended Action (Chief Chirurgeon Talent)</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dugb1c5XkfLAsX10"
+}

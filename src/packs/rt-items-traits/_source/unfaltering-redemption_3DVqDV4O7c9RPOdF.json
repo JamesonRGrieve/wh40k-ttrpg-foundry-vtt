@@ -1,0 +1,28 @@
+{
+  "name": "Unfaltering Redemption",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "unique",
+    "requirements": "Defender of the Fourth Cipher Alternative Advance (Innate), WP 30",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>When the Sister spends a Fate Point to reroll Weapon Skill, Ballistic Skill, or Opposed Willpower Tests against a Psyker, they add +5xWP Bonus to the result of the reroll (up to +30)</p>"
+    },
+    "benefit": "<p>When the Sister spends a Fate Point to reroll Weapon Skill, Ballistic Skill, or Opposed Willpower Tests against a Psyker, they add +5xWP Bonus to the result of the reroll (up to +30)</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3DVqDV4O7c9RPOdF"
+}

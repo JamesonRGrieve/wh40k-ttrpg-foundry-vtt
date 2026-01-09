@@ -3,24 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tau Drone Handler Alternative Advance, 800xp, Intelligence 45+, Trade(Technomat)",
-    "effect": "Whenever the Character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.",
+    "category": "knowledge",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whenever the Character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": false,
     "isRollable": false,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever the Character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau Drone Handler Alternative Advance, 800xp, Intelligence 45+, Trade(Technomat)",
+      "characteristics": {
+        "int": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

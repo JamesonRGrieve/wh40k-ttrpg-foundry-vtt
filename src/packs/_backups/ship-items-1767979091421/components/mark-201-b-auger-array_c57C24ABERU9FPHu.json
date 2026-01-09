@@ -1,0 +1,29 @@
+{
+  "name": "Mark 201.b Auger Array",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Augurs",
+    "hullType": "All Ships",
+    "powerUsage": 5,
+    "spaceUsage": 0,
+    "spCost": 0,
+    "effect": "The eyes and ears of the ship. Adds +5 to Ship's Detection. Can only be damaged/destroyed by a critical hit despite being external.",
+    "availability": "scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>The eyes and ears of the ship. Adds +5 to Ship's Detection. Can only be damaged/destroyed by a critical hit despite being external.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c57C24ABERU9FPHu"
+}

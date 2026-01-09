@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Hatred (any one), is a Ministorum Priest or 20+ Insanity. Aptitudes: Willpower, Offence ",
-    "effect": "When Attacking an Enemy or a Vehicle/Structure/Object crafted by them that the Characted has the Hatred Talent for, they increase the Penetration of All Attacks made by their Willpower Bonus.\nIf Possessing the Inspire Wrath Talent, they pass this benefit along with any Hatred Talents whilst using it, other characters gaining increased Penetration of the character's Willpower Bonus rather than their own.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When Attacking an Enemy or a Vehicle/Structure/Object crafted by them that the Characted has the Hatred Talent for, they increase the Penetration of All Attacks made by their Willpower Bonus.\nIf Possessing the Inspire Wrath Talent, they pass this benefit along with any Hatred Talents whilst using it, other characters gaining increased Penetration of the character's Willpower Bonus rather than their own.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When Attacking an Enemy or a Vehicle/Structure/Object crafted by them that the Characted has the Hatred Talent for, they increase the Penetration of All Attacks made by their Willpower Bonus.\nIf Possessing the Inspire Wrath Talent, they pass this benefit along with any Hatred Talents whilst using it, other characters gaining increased Penetration of the character's Willpower Bonus rather than their own.</p>",
     "aptitudes": [
       "Willpower",
       "Offence"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Hatred (any one), is a Ministorum Priest or 20+ Insanity.",
+      "characteristics": {
+        "or": 20
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

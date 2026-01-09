@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "perception",
     "descriptor": "Enduring long periods of time in unusal, alien, and dangerous environments. Finding, hunting, and determining if food is safe to eat, constructing shelters, improvising substances or tools, etc. Can apply to natural or man-made environments.",
     "uses": "Uses: Finding Food/Water in hostile environment, starting a fire with no tools. Special Use: Crafting: Creating simple cloaks, buildings, spears, and traps. Time taken varies with materials, complexity, resources. \nTracking: Follow Obvious Tracks, or make Tests if they are obscured such as via darkness, or Opposed Test vs target's Stealth if deliberately hidden.\nWrangling: Taming, Training, and Riding Animals as Extended Tests. Half Action to Issue Commands to tamed animals.  As Full Action can change disposition of hostile or wild animal by 1 per 2 DoS (max 3 levels).",
     "useTime": "Full Action",
     "description": {
       "value": "<p>Enduring long periods of time in unusal, alien, and dangerous environments. Finding, hunting, and determining if food is safe to eat, constructing shelters, improvising substances or tools, etc. Can apply to natural or man-made environments.</p>"
-    },
-    "rollConfig": {
-      "characteristic": "Perception",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "basic",

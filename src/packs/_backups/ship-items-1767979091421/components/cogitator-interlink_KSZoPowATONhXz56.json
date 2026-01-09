@@ -1,0 +1,29 @@
+{
+  "name": "Cogitator Interlink",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Archeotech)",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 1,
+    "spCost": 2,
+    "effect": "Cogitators improve ship operations. +5 to Ship's Crew Rating. Only one per vessel.",
+    "availability": "extremely-rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Cogitators improve ship operations. +5 to Ship's Crew Rating. Only one per vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KSZoPowATONhXz56"
+}

@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "-",
-    "effect": "Can use Reaction to make Tech-Use Test, on success make +10 to WS and BS Skill until the start of next turn",
+    "category": "knowledge",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can use Reaction to make Tech-Use Test, on success make +10 to WS and BS Skill until the start of next turn</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can use Reaction to make Tech-Use Test, on success make +10 to WS and BS Skill until the start of next turn</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

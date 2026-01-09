@@ -1,0 +1,29 @@
+{
+  "name": "Shadowfield",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Xenotech",
+    "hullType": "All Ships",
+    "powerUsage": 8,
+    "spaceUsage": 4,
+    "spCost": 4,
+    "effect": "Sometimes found on Eldar Vessels, conceals vessels in fog. Grants +20 to Silent Running, and any Active or Focused Augury Tests have -20 penalty. Ships firing on the vessel while component is active -20 to BS Tests and -30 to Hit and Run attacks. Ship must choose to use either this or void shields, can't use both.",
+    "availability": "near-unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Sometimes found on Eldar Vessels, conceals vessels in fog. Grants +20 to Silent Running, and any Active or Focused Augury Tests have -20 penalty. Ships firing on the vessel while component is active -20 to BS Tests and -30 to Hit and Run attacks. Ship must choose to use either this or void shields, can't use both.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eWf79eS3AAhUdpVW"
+}

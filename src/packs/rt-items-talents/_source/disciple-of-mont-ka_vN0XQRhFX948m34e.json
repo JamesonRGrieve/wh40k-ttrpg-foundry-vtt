@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau, Agility 40, Silent Move +10",
-    "effect": "Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau, Agility 40, Silent Move +10",
+      "characteristics": {
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

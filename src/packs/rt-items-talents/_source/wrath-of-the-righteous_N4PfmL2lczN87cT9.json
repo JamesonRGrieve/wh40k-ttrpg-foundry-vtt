@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Pure Faith",
-    "effect": "When making an attack can spend a fate point to add 1d5 Damage. \nCan burn a fate point to automatically trigger Righteous Fury on one attack, and automatically deal max damage + 1d10, this can lead to further righteous furies..",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When making an attack can spend a fate point to add 1d5 Damage. \nCan burn a fate point to automatically trigger Righteous Fury on one attack, and automatically deal max damage + 1d10, this can lead to further righteous furies..</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": false,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When making an attack can spend a fate point to add 1d5 Damage. \nCan burn a fate point to automatically trigger Righteous Fury on one attack, and automatically deal max damage + 1d10, this can lead to further righteous furies..</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Pure Faith",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

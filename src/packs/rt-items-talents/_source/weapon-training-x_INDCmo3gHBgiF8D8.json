@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; None\nAptitudes: General, Finesse, Unaligned",
-    "effect": "Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select wihtout the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select wihtout the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select wihtout the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy</p>",
     "aptitudes": [
       "General",
       "Finesse",
       "Unaligned"
-    ]
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

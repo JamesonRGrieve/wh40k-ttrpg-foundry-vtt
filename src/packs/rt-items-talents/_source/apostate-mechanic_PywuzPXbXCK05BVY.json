@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Arch-Heretek Alternate Advance, 1000xp\nTech-Use +10",
-    "effect": "The Character counts as having Mechanicus Implants Trait, although does not gain its normal effects, as they have devised the implants themselves and so many instead of other equivalent devices of their own making.",
+    "category": "general",
     "source": "RT: Hostile Acquisitions",
     "description": {
       "value": "<p>The Character counts as having Mechanicus Implants Trait, although does not gain its normal effects, as they have devised the implants themselves and so many instead of other equivalent devices of their own making.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character counts as having Mechanicus Implants Trait, although does not gain its normal effects, as they have devised the implants themselves and so many instead of other equivalent devices of their own making.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Arch-Heretek Alternate Advance, 1000xp",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

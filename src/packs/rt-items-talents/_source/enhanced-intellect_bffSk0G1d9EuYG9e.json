@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Bone 'Ead Advanced Specialty (300xp)",
-    "effect": "The Character gains an additional +10 to Tests to give Orders to their Comrade.",
+    "category": "leadership",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>The Character gains an additional +10 to Tests to give Orders to their Comrade.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Character gains an additional +10 to Tests to give Orders to their Comrade.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Bone 'Ead Advanced Specialty (300xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

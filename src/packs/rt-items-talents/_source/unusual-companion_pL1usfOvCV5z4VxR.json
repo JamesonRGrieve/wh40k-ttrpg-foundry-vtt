@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Fellowship 30 \nAptitudes: General, Social",
-    "effect": "When the Character receives a Comrade, they can choose for it to be an Ogryn, Ratling, or Servitor as opposed to a Human.\nOther requirements for acquiring a Servitor Comrade apply as usual.",
+    "category": "general",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>When the Character receives a Comrade, they can choose for it to be an Ogryn, Ratling, or Servitor as opposed to a Human.\nOther requirements for acquiring a Servitor Comrade apply as usual.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>When the Character receives a Comrade, they can choose for it to be an Ogryn, Ratling, or Servitor as opposed to a Human.\nOther requirements for acquiring a Servitor Comrade apply as usual.</p>",
     "aptitudes": [
       "General",
       "Social"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Fellowship 30",
+      "characteristics": {
+        "fel": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

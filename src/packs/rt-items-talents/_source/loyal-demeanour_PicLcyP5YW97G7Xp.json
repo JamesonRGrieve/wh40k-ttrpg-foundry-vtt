@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; is an Ogryn \nAptitudes: Fellowship, Leadership",
-    "effect": "Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.",
+    "category": "social",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.</p>",
     "aptitudes": [
       "Fellowship",
       "Leadership"
-    ]
+    ],
+    "prerequisites": {
+      "text": "is an Ogryn",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

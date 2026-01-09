@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; BS 45, Solid Projectile Weapon Mastery \nAptitudes: Ballistic Skill, Finesse",
-    "effect": "When Character fires a Solid Projectile Weapon, it gains Proven(Ballistic Skill Bonus/2), rounded up.",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>When Character fires a Solid Projectile Weapon, it gains Proven(Ballistic Skill Bonus/2), rounded up.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When Character fires a Solid Projectile Weapon, it gains Proven(Ballistic Skill Bonus/2), rounded up.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse"
-    ]
+    ],
+    "prerequisites": {
+      "text": "BS 45, Solid Projectile Weapon Mastery",
+      "characteristics": {
+        "bs": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

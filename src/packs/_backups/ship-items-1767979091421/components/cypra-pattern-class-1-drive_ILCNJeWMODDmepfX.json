@@ -1,0 +1,29 @@
+{
+  "name": "Cypra-Pattern Class 1 Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Plasma Drive (Archeotech)",
+    "hullType": "Transports",
+    "powerUsage": -30,
+    "spaceUsage": 10,
+    "spCost": 2,
+    "effect": "Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).",
+    "availability": "extremely-rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ILCNJeWMODDmepfX"
+}

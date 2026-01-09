@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Agility 40, Acrobatics Skill\nAptitudes; Weapon Skill. Fieldcraft, Slaanesh",
-    "effect": "Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.</p>"
     },
     "tier": 3,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Agility 40, Acrobatics Skill",
+      "characteristics": {
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

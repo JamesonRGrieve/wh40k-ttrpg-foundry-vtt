@@ -1,21 +1,47 @@
-<div class="rt-panel spacer rt-grid-col-2">
-    <h1 class="rt-panel-header">Movement</h1>
+<div class="rt-panel spacer rt-grid-col-3">
+    <h1 class="rt-panel-header">
+        <i class="fas fa-tachometer-alt"></i>
+        {{localize "RT.Vehicle.Movement"}}
+    </h1>
     <div class="rt-field__wrapper">
-        <span class="rt-field__header">Size</span>
+        <span class="rt-field__header">{{localize "RT.Vehicle.Size"}}</span>
         <select class="rt-field__input" name="system.size">
-            {{selectOptions dh.sizes selected=actor.system.size}}
+            {{selectOptions dh.vehicleSizes selected=actor.system.size labelAttr="label" valueAttr="@key"}}
         </select>
+        <small class="rt-field__hint">{{actor.system.sizeLabel}} ({{actor.system.sizeDescriptor}})</small>
     </div>
     <div class="rt-field__wrapper">
-        <span class="rt-field__header">Cruising Speed</span>
-        <input type="number" data-dtype="Number" class="rt-field__input" name="system.speed.cruising" value="{{actor.system.speed.cruising}}" />
+        <span class="rt-field__header">{{localize "RT.Vehicle.SizeDescriptor"}}</span>
+        <input type="text" class="rt-field__input" name="system.sizeDescriptor" 
+               value="{{actor.system.sizeDescriptor}}" placeholder="e.g., 20m" />
     </div>
     <div class="rt-field__wrapper">
-        <span class="rt-field__header">Tactical Speed</span>
-        <input type="number" data-dtype="Number" class="rt-field__input" name="system.speed.tactical" value="{{actor.system.speed.tactical}}" />
+        <span class="rt-field__header">{{localize "RT.Vehicle.Speed.Cruising"}}</span>
+        <div class="rt-input-with-unit">
+            <input type="number" data-dtype="Number" class="rt-field__input" 
+                   name="system.speed.cruising" value="{{actor.system.speed.cruising}}" />
+            <span class="rt-unit">kph</span>
+        </div>
     </div>
     <div class="rt-field__wrapper">
-        <span class="rt-field__header">Manoeuverability</span>
-        <input type="number" data-dtype="Number" class="rt-field__input" name="system.manoeuverability" value="{{actor.system.manoeuverability}}" />
+        <span class="rt-field__header">{{localize "RT.Vehicle.Speed.Tactical"}}</span>
+        <div class="rt-input-with-unit">
+            <input type="number" data-dtype="Number" class="rt-field__input" 
+                   name="system.speed.tactical" value="{{actor.system.speed.tactical}}" />
+            <span class="rt-unit">m</span>
+        </div>
+    </div>
+    <div class="rt-field__wrapper">
+        <span class="rt-field__header">{{localize "RT.Vehicle.Manoeuverability"}}</span>
+        <input type="number" data-dtype="Number" class="rt-field__input" 
+               name="system.manoeuverability" value="{{actor.system.manoeuverability}}" />
+    </div>
+    <div class="rt-field__wrapper rt-field__full">
+        <span class="rt-field__header">{{localize "RT.Vehicle.Speed.Notes"}}</span>
+        <input type="text" class="rt-field__input" name="system.speed.notes" 
+               value="{{actor.system.speed.notes}}" placeholder="Speed modifiers, special rules..." />
+    </div>
+    <div class="rt-movement-summary">
+        <strong>{{localize "RT.Vehicle.Speed.Summary"}}:</strong> {{actor.system.speedSummary}}
     </div>
 </div>

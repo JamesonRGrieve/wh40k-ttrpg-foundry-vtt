@@ -171,4 +171,32 @@ export default class SkillData extends ItemDataModel.mixin(
       type: this.skillTypeLabel
     };
   }
+
+  /* -------------------------------------------- */
+  /*  Methods                                     */
+  /* -------------------------------------------- */
+
+  /**
+   * Post this skill to chat.
+   * @returns {Promise<ChatMessage|null>}
+   */
+  async toChat() {
+    const messageData = {
+      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+      speaker: ChatMessage.getSpeaker(),
+      content: await renderTemplate(
+        'systems/rogue-trader/templates/chat/skill-card.hbs',
+        { skill: this.parent }
+      ),
+      flags: {
+        'rogue-trader': {
+          skillId: this.parent.id,
+          skillName: this.parent.name,
+          type: 'skill-card'
+        }
+      }
+    };
+    
+    return ChatMessage.create(messageData);
+  }
 }

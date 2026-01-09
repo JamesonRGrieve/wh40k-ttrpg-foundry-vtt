@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Tau, WP 40",
-    "effect": "The Tau was at some point blessed by the Ethererals for a worthy feat. When suffering Critical Damage, they are immune to Fear and Pinning, but must make a +0 Willpower Test to disengage or back down from combat unless receiving a direct order from a superior to do so.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>The Tau was at some point blessed by the Ethererals for a worthy feat. When suffering Critical Damage, they are immune to Fear and Pinning, but must make a +0 Willpower Test to disengage or back down from combat unless receiving a direct order from a superior to do so.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The Tau was at some point blessed by the Ethererals for a worthy feat. When suffering Critical Damage, they are immune to Fear and Pinning, but must make a +0 Willpower Test to disengage or back down from combat unless receiving a direct order from a superior to do so.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau, WP 40",
+      "characteristics": {
+        "wp": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

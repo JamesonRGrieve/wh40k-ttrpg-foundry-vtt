@@ -3,24 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Fellowship 30\nAptitudes; Fellowship, Leadership, Slaanesh",
-    "effect": "When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.",
+    "category": "social",
     "source": "Only War Core",
     "description": {
       "value": "<p>When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "tier": 1,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fellowship 30",
+      "characteristics": {
+        "fel": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

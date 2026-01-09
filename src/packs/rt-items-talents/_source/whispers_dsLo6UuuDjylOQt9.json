@@ -3,16 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Int 40, Fel 30",
-    "effect": "Has a network of invisible informants. +10 to Skill Tests for Investigation or the \"Interview\" special use of the Inquiry Skill.",
+    "category": "general",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Has a network of invisible informants. +10 to Skill Tests for Investigation or the \"Interview\" special use of the Inquiry Skill.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Has a network of invisible informants. +10 to Skill Tests for Investigation or the \"Interview\" special use of the Inquiry Skill.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Int 40, Fel 30",
+      "characteristics": {
+        "int": 40,
+        "fel": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

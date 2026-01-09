@@ -3,19 +3,25 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T1)",
-    "requirements": "Tier 1; Operate(Aeronautica)\nAptitudes: Agility, Tech",
-    "effect": "The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.",
+    "category": "technical",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.</p>"
     },
     "tier": 1,
-    "benefit": "",
+    "benefit": "<p>The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.</p>",
     "aptitudes": [
       "Agility",
       "Tech"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Operate(Aeronautica)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

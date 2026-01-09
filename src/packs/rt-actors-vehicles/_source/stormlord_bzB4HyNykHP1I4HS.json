@@ -3,20 +3,49 @@
   "type": "vehicle",
   "img": "icons/svg/car.svg",
   "system": {
-    "class": "Land Vehicle",
-    "size": "9m",
-    "tacticalSpeed": "30kph",
-    "cruisingSpeed": "-30",
-    "maneuverability": "120",
-    "frontArmour": "Monumental (+50)",
-    "sideArmour": "Front 45\nSide 38\nRear 30",
-    "rearArmour": "1 Commander (Raised Structure), 1 Driver, 5 Gunners",
-    "structuralIntegrity": "40 Soldiers + Gear",
-    "crew": "Hull (Front): Vulcan Mega-Bolter (500m; -/-/20; 3d10+5 X; Pen 6; Clip 3000; Storm, Tearing)\nTwin Heavy Bolters (150m; -/-/6; 1d10+8 X; Pen 5; Clip 200; Rld Full; Tearing- Twin-Linked)\nTurret: 2x Lascannons (300m; S/-/-; 5d10+10 E; Pen 10; Clip 80; Rld 2 Full; Proven (3))\nSponsons (Side + Front Facing): Left and Right Mounted Twin Heavy Flamers\nSponsons (Side Facing): Left and Right Passenger-Fired Heavy Stubbers\nPintle (Optional): Heavy Stubber or Storm Bolter\n---\nTwin Heavy Flamers (30m; S/–/–; 1d10+5 E; Pen 4; Clip 80; Rld 2 Full; Flame, Spray, Twin-Linked)\nHeavy Stubbers (100m; –/–/8; 1d10+4 I; Pen 3; Clip 200; Rld 2 Full) (Clip 80 if pintle)\nStorm Bolter (90m; S/2/4; 1d10+5 X; Pen 4; Clip 60; Rld Full; Storm, Tearing)\n",
-    "passengers": "Traits: Command and Control, Damage Control, Enclosed, Ponderous, Reinforced Armour, Super-Heavy,TrackedVehicle\nIf Vehicle does not move, driver can spend Full Action and make +10 Tech-Use Test. If successful add +2 hits per Degree of Success on Mega-Bolter's Attacks for 1 round (which is then doubled by Storm Quality).\nVehicle has Fighting Platform which up to 20 passengers can fire from without obstruction. Treat as AP 30 Cover for Body and Leg locations. Two passengers can operate the passenger-operated Heavy Stubbers.",
-    "cargo": "Near Unique",
-    "availability": "OW: No Surrender",
-    "source": null
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": 4,
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 0,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": ""
+    },
+    "passengers": 0,
+    "manoeuverability": 0,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>[object Object]</p>",
+    "specialRules": "",
+    "traitsText": "",
+    "availability": "common",
+    "source": "nearunique"
   },
   "effects": [],
   "items": [],

@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Warp Sense",
-    "effect": "Can make Psynscience Skill as a Free Action",
+    "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>Can make Psynscience Skill as a Free Action</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": false,
     "isRollable": false,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Can make Psynscience Skill as a Free Action</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Warp Sense",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

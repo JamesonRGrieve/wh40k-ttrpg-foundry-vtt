@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3: Forbidden Lore (Psykers) +10, WP 45.\nAptitudes: Knowledge, Perception",
-    "effect": "Character counts as possessing Psyniscience as a known skill (+0) even though they are not a psyker. They cannot spend experience to gain additional ranks.",
+    "category": "psychic",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Character counts as possessing Psyniscience as a known skill (+0) even though they are not a psyker. They cannot spend experience to gain additional ranks.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Character counts as possessing Psyniscience as a known skill (+0) even though they are not a psyker. They cannot spend experience to gain additional ranks.</p>",
     "aptitudes": [
       "Knowledge",
       "Perception"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Forbidden Lore (Psykers) +10, WP 45.",
+      "characteristics": {
+        "wp": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

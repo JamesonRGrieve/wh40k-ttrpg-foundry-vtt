@@ -1,0 +1,29 @@
+{
+  "name": "Chameleon Hull",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "Additional Facility (Xenotech)",
+    "hullType": "All Ships",
+    "powerUsage": 1,
+    "spaceUsage": 0,
+    "spCost": 2,
+    "effect": "Can make -10 Tech-Use Test to change hull colours, markings, registry markings, name, and distinctive patterns in order to try and disguise itself. Can't change shape though. Programming in additional patterns requires -20 Tech-Use Test. Component cannot be damaged or destroyed except via a critical hit. One per Vessel.",
+    "availability": "near-unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Can make -10 Tech-Use Test to change hull colours, markings, registry markings, name, and distinctive patterns in order to try and disguise itself. Can't change shape though. Programming in additional patterns requires -20 Tech-Use Test. Component cannot be damaged or destroyed except via a critical hit. One per Vessel.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tUng4rBEjl7254hc"
+}

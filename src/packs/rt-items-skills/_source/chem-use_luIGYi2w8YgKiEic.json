@@ -3,17 +3,12 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "type": "",
     "characteristic": "intelligence",
     "descriptor": "Identifying, Handling, and preparing of Chemicals, Toxins, Poisons, and Drugs. (Does not cover creating or combining them, that would be Trade (Chymist). ",
     "uses": "Skill Test to do relevent activity. Success means chemical is applied, identified, administered, etc, correctly. Failiure means dose is wasted without effect. Halve use time of administering if applied via injector or other such delivery method.",
     "useTime": "Full Action or Extended for complex.",
     "description": {
       "value": "<p>Identifying, Handling, and preparing of Chemicals, Toxins, Poisons, and Drugs. (Does not cover creating or combining them, that would be Trade (Chymist). </p>"
-    },
-    "rollConfig": {
-      "characteristic": "Intelligence",
-      "modifier": 0
     },
     "isBasic": true,
     "skillType": "advanced",

@@ -1,0 +1,28 @@
+{
+  "name": "Kroot Physiology",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Kroot (Innate)",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Kroot prefer light armour. If they wear armour that provides more than 3 AP, they lose the benefit of Unnatural Perception (if they have it) and Fieldcraft Traits.</p>"
+    },
+    "benefit": "<p>Kroot prefer light armour. If they wear armour that provides more than 3 AP, they lose the benefit of Unnatural Perception (if they have it) and Fieldcraft Traits.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aIQbzkT4NTdVsFAb"
+}

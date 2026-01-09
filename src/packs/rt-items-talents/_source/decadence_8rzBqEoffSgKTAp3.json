@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "T 30",
-    "effect": "When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.",
+    "category": "defense",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "T 30",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

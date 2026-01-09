@@ -3,20 +3,24 @@
   "type": "armourModification",
   "img": "icons/svg/upgrade.svg",
   "system": {
-    "armourTypes": "Power Armour",
     "effect": "As long as helmet is worn, wearer gains +5 to Ballistic Skill and +10 to all Awareness Tests based off of Sight and Hearing.",
-    "weight": "2kg",
     "availability": "very-rare",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>As long as helmet is worn, wearer gains +5 to Ballistic Skill and +10 to all Awareness Tests based off of Sight and Hearing.</p>"
     },
-    "armourModifier": 0,
-    "maxDexBonus": 0,
     "modifiers": {
-      "characteristics": {},
-      "skills": {}
-    }
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 2
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
   },
   "effects": [],
   "flags": {},

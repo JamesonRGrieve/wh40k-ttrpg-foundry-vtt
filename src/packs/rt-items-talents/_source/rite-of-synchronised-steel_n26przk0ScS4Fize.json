@@ -3,16 +3,22 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Architectus Magna Advanced Specialty (300xp)",
-    "effect": "Character can link to a vehicle via their Mind Impulse Unit, and in so doing be able to use their Intelligence Characteristic in place of Agility for Operate(Surface, Aeronautica, and Voidship) Tests. \nWhenever a vehicle suffers Critical damage whilst the character is linked in this way, they gain 1 Fatigue from the associated mental strain.",
+    "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Character can link to a vehicle via their Mind Impulse Unit, and in so doing be able to use their Intelligence Characteristic in place of Agility for Operate(Surface, Aeronautica, and Voidship) Tests. \nWhenever a vehicle suffers Critical damage whilst the character is linked in this way, they gain 1 Fatigue from the associated mental strain.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Character can link to a vehicle via their Mind Impulse Unit, and in so doing be able to use their Intelligence Characteristic in place of Agility for Operate(Surface, Aeronautica, and Voidship) Tests. \nWhenever a vehicle suffers Critical damage whilst the character is linked in this way, they gain 1 Fatigue from the associated mental strain.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Architectus Magna Advanced Specialty (300xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

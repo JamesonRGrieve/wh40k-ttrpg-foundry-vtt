@@ -3,19 +3,27 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Contact Network, Coordinated Interrogation, Intelligence 40.\nAptitudes: Perception, Knowledge",
-    "effect": "When stuck in an Investigation, character can spend a Fate Point to reveal a single clue or lead to aid in the progression of his efforts.",
+    "category": "general",
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": "<p>When stuck in an Investigation, character can spend a Fate Point to reveal a single clue or lead to aid in the progression of his efforts.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>When stuck in an Investigation, character can spend a Fate Point to reveal a single clue or lead to aid in the progression of his efforts.</p>",
     "aptitudes": [
       "Perception",
       "Knowledge"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Contact Network, Coordinated Interrogation, Intelligence 40.",
+      "characteristics": {
+        "int": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

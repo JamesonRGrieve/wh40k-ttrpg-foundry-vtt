@@ -3,24 +3,23 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent",
-    "requirements": "Kroot, Mercenary Trait",
-    "effect": "The character can reroll any failed Willpower Test to avoid Fear and Pinning",
+    "category": "psychic",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>The character can reroll any failed Willpower Test to avoid Fear and Pinning</p>"
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
     "isPassive": true,
     "isRollable": true,
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>The character can reroll any failed Willpower Test to avoid Fear and Pinning</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Kroot, Mercenary Trait",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300
   },
   "effects": [],
   "flags": {},

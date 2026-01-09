@@ -106,6 +106,13 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             context.hasArmourFilters = true;
         }
 
+        // Add armour modification filters if filtering armour mods
+        const hasArmourMods = context.results.some(r => r.type === "armourModification");
+        if (hasArmourMods) {
+            context.hasArmourModFilters = true;
+            context.armourTypesForMods = CONFIG.ROGUE_TRADER?.armourTypes || {};
+        }
+
         return context;
     }
 
@@ -122,6 +129,16 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         this.element.querySelector(".filter-source")?.addEventListener("change", this._onFilterSource.bind(this));
         this.element.querySelector(".filter-category")?.addEventListener("change", this._onFilterCategory.bind(this));
         this.element.querySelector(".filter-group-by")?.addEventListener("change", this._onGroupBy.bind(this));
+        
+        // Armour-specific filters
+        this.element.querySelector(".filter-armour-type")?.addEventListener("change", this._onFilterArmourType.bind(this));
+        this.element.querySelector(".filter-min-ap")?.addEventListener("input", this._onFilterMinAP.bind(this));
+        this.element.querySelector(".filter-coverage")?.addEventListener("change", this._onFilterCoverage.bind(this));
+
+        // Armour modification filters
+        this.element.querySelector(".filter-mod-type")?.addEventListener("change", this._onFilterModType.bind(this));
+        this.element.querySelector(".filter-has-modifiers")?.addEventListener("change", this._onFilterHasModifiers.bind(this));
+        this.element.querySelector(".filter-has-properties")?.addEventListener("change", this._onFilterHasProperties.bind(this));
 
         // Set up drag handlers for compendium items
         this.element.querySelectorAll(".compendium-item").forEach(el => {
@@ -176,7 +193,11 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
                     'system.source', 'system.category', 'flags',
                     // Armour-specific fields
                     'system.type', 'system.armourPoints', 'system.coverage', 
-                    'system.maxAgility', 'system.properties'
+                    'system.maxAgility', 'system.properties',
+                    // Armour modification fields
+                    'system.restrictions.armourTypes', 'system.modifiers.armourPoints',
+                    'system.modifiers.maxAgility', 'system.modifiers.weight',
+                    'system.addedProperties', 'system.removedProperties'
                 ] 
             });
             
@@ -198,6 +219,16 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
                 // Add armour-specific metadata
                 if (entry.type === "armour" && entry.system) {
                     result.armourData = this._prepareArmourData(entry.system);
+                }
+                
+                // Add armour modification metadata
+                if (entry.type === "armourModification" && entry.system) {
+                    result.armourModData = this._prepareArmourModData(entry.system);
+                }
+                
+                // Add weapon quality metadata
+                if (entry.type === "weaponQuality" && entry.system) {
+                    result.qualityData = this._prepareQualityData(entry.system);
                 }
                 
                 results.push(result);
@@ -264,6 +295,136 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         };
     }
 
+    /**
+     * Prepare armour modification-specific display data.
+     * @param {object} system  The armour modification system data
+     * @returns {object}       Prepared armour mod data
+     */
+    _prepareArmourModData(system) {
+        const restrictions = system.restrictions || {};
+        const modifiers = system.modifiers || {};
+        
+        // Restriction summary
+        const armourTypes = restrictions.armourTypes || [];
+        let restrictionLabel = game.i18n.localize("RT.Modification.AnyArmour");
+        if (armourTypes.length && !armourTypes.includes('any')) {
+            const labels = armourTypes.map(type => {
+                const config = CONFIG.ROGUE_TRADER?.armourTypes?.[type];
+                return config ? game.i18n.localize(config.label) : type;
+            });
+            restrictionLabel = labels.join(", ");
+        }
+        
+        // Modifier badges
+        const modifierBadges = [];
+        if (modifiers.armourPoints !== undefined && modifiers.armourPoints !== 0) {
+            modifierBadges.push({
+                type: 'ap',
+                label: `AP ${modifiers.armourPoints >= 0 ? '+' : ''}${modifiers.armourPoints}`,
+                positive: modifiers.armourPoints > 0
+            });
+        }
+        if (modifiers.maxAgility !== undefined && modifiers.maxAgility !== 0) {
+            modifierBadges.push({
+                type: 'agility',
+                label: `Ag ${modifiers.maxAgility >= 0 ? '+' : ''}${modifiers.maxAgility}`,
+                positive: modifiers.maxAgility > 0
+            });
+        }
+        if (modifiers.weight !== undefined && modifiers.weight !== 0) {
+            modifierBadges.push({
+                type: 'weight',
+                label: `${modifiers.weight >= 0 ? '+' : ''}${modifiers.weight}kg`,
+                positive: modifiers.weight <= 0 // Lighter is better
+            });
+        }
+        
+        // Properties summary
+        const addedCount = system.addedProperties?.length || 0;
+        const removedCount = system.removedProperties?.length || 0;
+        let propertiesSummary = "";
+        if (addedCount || removedCount) {
+            const parts = [];
+            if (addedCount) parts.push(`+${addedCount}`);
+            if (removedCount) parts.push(`-${removedCount}`);
+            propertiesSummary = parts.join(" ") + " props";
+        }
+        
+        return {
+            restrictionLabel,
+            modifierBadges,
+            propertiesSummary,
+            hasModifiers: modifierBadges.length > 0,
+            hasProperties: addedCount + removedCount > 0
+        };
+    }
+
+    /**
+     * Prepare weapon quality display data.
+     * @param {object} system  The weapon quality system data
+     * @returns {object}       Prepared quality data
+     */
+    _prepareQualityData(system) {
+        // Access CONFIG.rt (set during init hook)
+        const rtConfig = CONFIG?.rt;
+        
+        if (!rtConfig) {
+            console.warn("RT | CONFIG.rt not available in compendium browser");
+            return {
+                identifier: system.identifier || "",
+                label: system.name || "Unknown Quality",
+                description: ""
+            };
+        }
+        
+        // Try to get quality definition from CONFIG
+        const identifier = system.identifier || "";
+        const def = rtConfig.weaponQualities?.[identifier];
+        
+        // Get localized label
+        let label;
+        if (def) {
+            label = game.i18n.localize(def.label);
+        } else {
+            // Fallback to system name
+            label = system.name || "Unknown Quality";
+        }
+        
+        // Get description (truncated for browser display)
+        let description;
+        if (def) {
+            description = game.i18n.localize(def.description);
+        } else if (system.effect) {
+            // Legacy: system.effect might be HTML or page number
+            if (typeof system.effect === 'string' && !system.effect.match(/^\d+$/)) {
+                description = system.effect.replace(/<[^>]*>/g, ''); // Strip HTML
+            } else {
+                description = `See rulebook page ${system.effect}`;
+            }
+        } else {
+            description = "No description available";
+        }
+        
+        // Truncate description for list view
+        const maxLength = 120;
+        if (description.length > maxLength) {
+            description = description.substring(0, maxLength) + '...';
+        }
+        
+        // Check if quality has level parameter
+        const hasLevel = def?.hasLevel || system.hasLevel || false;
+        const level = system.level || null;
+        
+        return {
+            identifier,
+            label,
+            description,
+            hasLevel,
+            level,
+            effectText: system.effect
+        };
+    }
+
     _getGroupByOptions() {
         return [
             { value: 'source', label: 'Source' },
@@ -322,17 +483,76 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     }
 
     _passesFilters(entry, pack) {
+        // Search filter
         if (this._filters.search) {
             const searchLower = this._filters.search.toLowerCase();
             if (!entry.name.toLowerCase().includes(searchLower)) return false;
         }
         
+        // Source filter
         if (this._filters.source !== 'all') {
             if (this._getEntrySource(entry) !== this._filters.source) return false;
         }
         
+        // Category filter
         if (this._filters.category !== "all") {
             if (this._getEntryCategory(entry) !== this._filters.category) return false;
+        }
+        
+        // Armour-specific filters
+        if (entry.type === "armour" && entry.system) {
+            // Armour type filter
+            if (this._filters.armourType && this._filters.armourType !== "all") {
+                if (entry.system.type !== this._filters.armourType) return false;
+            }
+            
+            // Minimum AP filter
+            if (this._filters.minAP && this._filters.minAP > 0) {
+                const ap = entry.system.armourPoints || {};
+                const maxAP = Math.max(
+                    ap.head || 0, ap.body || 0, 
+                    ap.leftArm || 0, ap.rightArm || 0, 
+                    ap.leftLeg || 0, ap.rightLeg || 0
+                );
+                if (maxAP < this._filters.minAP) return false;
+            }
+            
+            // Coverage filter
+            if (this._filters.coverage && this._filters.coverage !== "all") {
+                const coverage = entry.system.coverage || [];
+                if (this._filters.coverage === "full") {
+                    if (!coverage.includes("all")) return false;
+                } else if (this._filters.coverage === "partial") {
+                    if (coverage.includes("all")) return false;
+                }
+            }
+        }
+        
+        // Armour modification filters
+        if (entry.type === "armourModification" && entry.system) {
+            // Filter by applicable armour type
+            if (this._filters.modType && this._filters.modType !== 'all') {
+                const types = entry.system?.restrictions?.armourTypes || [];
+                if (!types.includes('any') && !types.includes(this._filters.modType)) {
+                    return false;
+                }
+            }
+            
+            // Filter by has modifiers
+            if (this._filters.hasModifiers) {
+                const mods = entry.system?.modifiers || {};
+                const hasAny = (mods.armourPoints !== undefined && mods.armourPoints !== 0) || 
+                              (mods.maxAgility !== undefined && mods.maxAgility !== 0) || 
+                              (mods.weight !== undefined && mods.weight !== 0);
+                if (!hasAny) return false;
+            }
+            
+            // Filter by has properties
+            if (this._filters.hasProperties) {
+                const added = entry.system?.addedProperties?.length || 0;
+                const removed = entry.system?.removedProperties?.length || 0;
+                if (added === 0 && removed === 0) return false;
+            }
         }
         
         return true;
@@ -359,6 +579,36 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     _onGroupBy(event) {
         this._filters.groupBy = event.target.value;
+        this.render();
+    }
+
+    _onFilterArmourType(event) {
+        this._filters.armourType = event.target.value;
+        this.render();
+    }
+
+    _onFilterMinAP(event) {
+        this._filters.minAP = parseInt(event.target.value) || 0;
+        this.render();
+    }
+
+    _onFilterCoverage(event) {
+        this._filters.coverage = event.target.value;
+        this.render();
+    }
+
+    _onFilterModType(event) {
+        this._filters.modType = event.target.value;
+        this.render();
+    }
+
+    _onFilterHasModifiers(event) {
+        this._filters.hasModifiers = event.target.checked;
+        this.render();
+    }
+
+    _onFilterHasProperties(event) {
+        this._filters.hasProperties = event.target.checked;
         this.render();
     }
 

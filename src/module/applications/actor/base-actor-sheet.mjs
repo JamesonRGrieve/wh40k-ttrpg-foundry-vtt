@@ -412,99 +412,467 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @protected
      */
     async _prepareSkills(context) {
-        const skills = Object.entries(this.actor.skills ?? {});
-        const visibleSkills = skills.filter(([, data]) => !data.hidden);
-        
-        const getSkillLabel = (key, data) => {
-            if (data?.label) return String(data.label);
-            if (data?.name) return String(data.name);
-            if (key) return String(key);
-            return "";
-        };
-        
-        visibleSkills.sort((a, b) => {
-            const labelA = getSkillLabel(a[0], a[1]);
-            const labelB = getSkillLabel(b[0], b[1]);
-            return labelA.localeCompare(labelB);
-        });
+        this._prepareSkillsContext(context);
+    }
 
-        const trainingLevel = (skill) => {
-            if (skill.plus20) return 3;
-            if (skill.plus10) return 2;
-            if (skill.trained) return 1;
-            return 0;
-        };
-
-        context.skillLists = {
-            standard: visibleSkills.filter(([, data]) => !Array.isArray(data.entries)),
-            specialist: visibleSkills.filter(([, data]) => Array.isArray(data.entries))
-        };
-
-        // Add characteristic short names
-        const characteristicShorts = {};
-        Object.entries(this.actor.characteristics ?? {}).forEach(([key, value]) => {
-            if (value?.short) characteristicShorts[key] = value.short;
-        });
-
-        // Add training info and tooltip data to standard skills
+    /**
+     * Prepare skills context for rendering.
+     * @param {object} context  Context being prepared.
+     * @protected
+     */
+    _prepareSkillsContext(context) {
+        const skills = this.actor.skills ?? {};
         const characteristics = this.actor.characteristics ?? {};
-        context.skillLists.standard.forEach(([key, data]) => {
-            data.trainingLevel = trainingLevel(data);
-            data.charShort = characteristicShorts[data.characteristic] ?? data.characteristic ?? "";
-            data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
+        
+        // Apply filters
+        const filters = this._skillsFilter;
+        let visibleSkills = Object.entries(skills).filter(([key, data]) => {
+            if (data.hidden) return false;
             
-            // Calculate breakdown for tooltip
-            const char = characteristics[data.characteristic];
-            const charTotal = char?.total ?? 0;
-            const level = data.trainingLevel;
-            const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
-            const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
-            const bonus = data.bonus || 0;
-            
-            let breakdownParts = [];
-            if (level > 0) {
-                breakdownParts.push(`${char?.short || data.characteristic}: ${charTotal}`);
-            } else {
-                breakdownParts.push(`${char?.short || data.characteristic}: ${charTotal}/2 = ${baseValue}`);
+            // Search filter
+            if (filters.search) {
+                const searchLower = filters.search.toLowerCase();
+                const label = (data.label || key).toLowerCase();
+                if (!label.includes(searchLower)) return false;
             }
-            if (trainingBonus > 0) breakdownParts.push(`Training: +${trainingBonus}`);
-            if (bonus !== 0) breakdownParts.push(`Bonus: ${bonus >= 0 ? '+' : ''}${bonus}`);
-            data.breakdown = breakdownParts.join(', ');
+            
+            // Characteristic filter
+            if (filters.characteristic && data.characteristic !== filters.characteristic) {
+                return false;
+            }
+            
+            // Training filter
+            if (filters.training) {
+                const level = this._getTrainingLevel(data);
+                if (filters.training === 'trained' && level < 1) return false;
+                if (filters.training === 'untrained' && level > 0) return false;
+            }
+            
+            return true;
         });
-
-        // Split standard skills into columns
-        const standardSkills = context.skillLists.standard;
-        const splitIndex = Math.ceil(standardSkills.length / 2);
-        context.skillLists.standardColumns = [
-            standardSkills.slice(0, splitIndex),
-            standardSkills.slice(splitIndex)
+        
+        // Sort by label
+        visibleSkills.sort((a, b) => {
+            const labelA = a[1].label || a[0];
+            const labelB = b[1].label || b[0];
+            return labelA.localeCompare(labelB, game.i18n.lang);
+        });
+        
+        // Split into categories
+        const standard = [];
+        const specialist = [];
+        
+        for (const [key, data] of visibleSkills) {
+            // Augment with computed properties
+            this._augmentSkillData(key, data, characteristics);
+            
+            if (Array.isArray(data.entries)) {
+                // Specialist skill - process entries
+                data.entries.forEach(entry => {
+                    this._augmentSkillData(key, entry, characteristics, data);
+                });
+                
+                // Get suggested specializations from compendium for autocomplete
+                data.suggestedSpecializations = this._getSkillSuggestions(key);
+                
+                specialist.push([key, data]);
+            } else {
+                // Standard skill
+                standard.push([key, data]);
+            }
+        }
+        
+        // Split standard into columns
+        const splitIndex = Math.ceil(standard.length / 2);
+        const standardColumns = [
+            standard.slice(0, splitIndex),
+            standard.slice(splitIndex)
         ];
+        
+        context.skillLists = { standard, specialist, standardColumns };
+    }
 
-        // Add training info and tooltip data to specialist skills
-        context.skillLists.specialist.forEach(([key, data]) => {
-            data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
-            data.entries?.forEach((entry) => {
-                entry.trainingLevel = trainingLevel(entry);
-                
-                // Calculate breakdown for specialist entries
-                const entryChar = entry.characteristic ? characteristics[entry.characteristic] : characteristics[data.characteristic];
-                const entryCharTotal = entryChar?.total ?? 0;
-                const entryLevel = entry.trainingLevel;
-                const entryBaseValue = entryLevel > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
-                const entryTrainingBonus = entryLevel >= 3 ? 20 : entryLevel >= 2 ? 10 : 0;
-                const entryBonus = entry.bonus || 0;
-                
-                let entryBreakdownParts = [];
-                if (entryLevel > 0) {
-                    entryBreakdownParts.push(`${entryChar?.short || entry.characteristic || data.characteristic}: ${entryCharTotal}`);
-                } else {
-                    entryBreakdownParts.push(`${entryChar?.short || entry.characteristic || data.characteristic}: ${entryCharTotal}/2 = ${entryBaseValue}`);
-                }
-                if (entryTrainingBonus > 0) entryBreakdownParts.push(`Training: +${entryTrainingBonus}`);
-                if (entryBonus !== 0) entryBreakdownParts.push(`Bonus: ${entryBonus >= 0 ? '+' : ''}${entryBonus}`);
-                entry.breakdown = entryBreakdownParts.join(', ');
-            });
-        });
+    /**
+     * Augment skill data with computed display properties.
+     * @param {string} key  Skill key
+     * @param {object} data  Skill or entry data
+     * @param {object} characteristics  Actor characteristics
+     * @param {object} [parentSkill]  Parent skill for specialist entries
+     * @protected
+     */
+    _augmentSkillData(key, data, characteristics, parentSkill = null) {
+        const charKey = data.characteristic || parentSkill?.characteristic || 'strength';
+        const char = characteristics[charKey];
+        
+        // Training level (0-3)
+        data.trainingLevel = this._getTrainingLevel(data);
+        
+        // Characteristic short name
+        data.charShort = char?.short || charKey;
+        
+        // Breakdown string for tooltip/title
+        data.breakdown = this._getSkillBreakdown(data, char);
+        
+        // Tooltip data (JSON string)
+        data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
+    }
+
+    /**
+     * Get training level from skill data.
+     * @param {object} skill  Skill or entry data
+     * @returns {number}  Training level (0-3)
+     * @protected
+     */
+    _getTrainingLevel(skill) {
+        if (skill.plus20) return 3;
+        if (skill.plus10) return 2;
+        if (skill.trained) return 1;
+        return 0;
+    }
+
+    /**
+     * Get skill breakdown string for display.
+     * @param {object} skill  Skill data
+     * @param {object} char  Characteristic data
+     * @returns {string}  Breakdown string
+     * @protected
+     */
+    _getSkillBreakdown(skill, char) {
+        const charTotal = char?.total ?? 0;
+        const level = this._getTrainingLevel(skill);
+        const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
+        const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
+        const bonus = skill.bonus || 0;
+        
+        const parts = [];
+        if (level > 0) {
+            parts.push(`${char?.short || skill.characteristic}: ${charTotal}`);
+        } else {
+            parts.push(`${char?.short || skill.characteristic}: ${charTotal}/2 = ${baseValue}`);
+        }
+        if (trainingBonus > 0) parts.push(`Training: +${trainingBonus}`);
+        if (bonus !== 0) parts.push(`Bonus: ${bonus >= 0 ? '+' : ''}${bonus}`);
+        
+        return parts.join(', ');
+    }
+
+    /**
+     * Get suggested specializations for a skill from the compendium.
+     * @param {string} skillKey  Skill key (e.g., "commonLore", "trade")
+     * @returns {string[]}  Array of suggested specialization names
+     * @protected
+     */
+    _getSkillSuggestions(skillKey) {
+        // Access the tooltip system's cached skill descriptions
+        const tooltips = game.rt?.tooltips;
+        if (!tooltips) return [];
+        
+        // Get skill description from compendium cache
+        const skillDesc = tooltips.getSkillDescription(skillKey);
+        if (!skillDesc) return [];
+        
+        // Return specializations array if it exists
+        return skillDesc.specializations || [];
+    }
+
+    /* -------------------------------------------- */
+    /*  Talents Preparation                         */
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare talents context for rendering.
+     * @returns {Object} Talents data with filtering and grouping
+     * @protected
+     */
+    _prepareTalentsContext() {
+        const talents = this.actor.items.filter(i => i.type === "talent");
+        const traits = this.actor.items.filter(i => i.type === "trait");
+        
+        // Get filter state (if exists)
+        const filter = this._talentsFilter || {};
+        
+        // Apply filters
+        let filteredTalents = talents;
+        if (filter.search) {
+            const search = filter.search.toLowerCase();
+            filteredTalents = filteredTalents.filter(t => 
+                t.name.toLowerCase().includes(search)
+            );
+        }
+        if (filter.category && filter.category !== "") {
+            filteredTalents = filteredTalents.filter(t => 
+                t.system.category === filter.category
+            );
+        }
+        if (filter.tier && filter.tier !== "") {
+            const tierNum = parseInt(filter.tier);
+            filteredTalents = filteredTalents.filter(t => 
+                t.system.tier === tierNum
+            );
+        }
+        
+        // Augment with display properties
+        const augmentedTalents = filteredTalents.map(t => this._augmentTalentData(t));
+        const augmentedTraits = traits.map(t => this._augmentTraitData(t));
+        
+        // Group by tier
+        const groupedByTier = this._groupTalentsByTier(augmentedTalents);
+        
+        // Extract unique categories
+        const categories = this._getTalentCategories(talents);
+        
+        return {
+            talents: augmentedTalents,
+            traits: augmentedTraits,
+            groupedByTier,
+            categories,
+            tiers: [1, 2, 3],
+            talentsCount: talents.length,
+            traitsCount: traits.length,
+            filter
+        };
+    }
+
+    /**
+     * Augment talent with display properties.
+     * @param {Item} talent  Talent item
+     * @returns {Object} Augmented talent data
+     * @protected
+     */
+    _augmentTalentData(talent) {
+        return {
+            ...talent,
+            tierLabel: talent.system.tierLabel,
+            categoryLabel: talent.system.categoryLabel,
+            fullName: talent.system.fullName,
+            aptitudesLabel: this._formatAptitudes(talent.system.aptitudes),
+            prerequisitesLabel: talent.system.prerequisitesLabel,
+            hasPrerequisites: talent.system.hasPrerequisites,
+            costLabel: talent.system.cost > 0 ? `${talent.system.cost} XP` : "—"
+        };
+    }
+
+    /**
+     * Augment trait with display properties.
+     * @param {Item} trait  Trait item
+     * @returns {Object} Augmented trait data
+     * @protected
+     */
+    _augmentTraitData(trait) {
+        return {
+            ...trait,
+            fullName: trait.system.fullName,
+            categoryLabel: trait.system.categoryLabel,
+            hasLevel: trait.system.hasLevel,
+            levelLabel: trait.system.level > 0 ? `(${trait.system.level})` : "",
+            isVariable: trait.system.isVariable,
+            categoryIcon: this._getTraitIcon(trait.system.category),
+            categoryColor: this._getTraitCategoryColor(trait.system.category)
+        };
+    }
+
+    /**
+     * Group talents by tier for display.
+     * @param {Object[]} talents  Array of talent objects
+     * @returns {Object[]} Array of tier groups
+     * @protected
+     */
+    _groupTalentsByTier(talents) {
+        const groups = {};
+        
+        for (const talent of talents) {
+            const tier = talent.system.tier || 0;
+            groups[tier] ??= {
+                tier,
+                tierLabel: talent.tierLabel || `Tier ${tier}`,
+                talents: []
+            };
+            groups[tier].talents.push(talent);
+        }
+        
+        // Convert to sorted array
+        return Object.values(groups).sort((a, b) => a.tier - b.tier);
+    }
+
+    /**
+     * Extract unique categories from talents.
+     * @param {Item[]} talents  Array of talent items
+     * @returns {string[]} Sorted unique categories
+     * @protected
+     */
+    _getTalentCategories(talents) {
+        const categories = new Set();
+        for (const talent of talents) {
+            if (talent.system.category) {
+                categories.add(talent.system.category);
+            }
+        }
+        return Array.from(categories).sort();
+    }
+
+    /**
+     * Format aptitudes array as readable string.
+     * @param {string[]} aptitudes  Array of aptitude names
+     * @returns {string} Formatted string
+     * @protected
+     */
+    _formatAptitudes(aptitudes) {
+        if (!aptitudes || aptitudes.length === 0) return "—";
+        return aptitudes.join(", ");
+    }
+
+    /* -------------------------------------------- */
+    /*  Traits Preparation Methods                  */
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare context data for traits tab/panel.
+     * @param {object} context  Base context
+     * @returns {object} Augmented context with traits data
+     * @protected
+     */
+    _prepareTraitsContext(context) {
+        const traits = context.items.filter(i => i.type === "trait");
+        
+        // Apply filters if present
+        let filteredTraits = traits;
+        const filter = this._traitsFilter || {};
+        
+        if (filter.search) {
+            const search = filter.search.toLowerCase();
+            filteredTraits = filteredTraits.filter(t => 
+                t.name.toLowerCase().includes(search)
+            );
+        }
+        
+        if (filter.category && filter.category !== "all") {
+            filteredTraits = filteredTraits.filter(t => 
+                t.system.category === filter.category
+            );
+        }
+        
+        if (filter.hasLevel) {
+            filteredTraits = filteredTraits.filter(t => t.system.hasLevel);
+        }
+        
+        // Augment with display properties
+        const augmentedTraits = filteredTraits.map(t => this._augmentTraitData(t));
+        
+        // Group by category
+        const groupedByCategory = this._groupTraitsByCategory(augmentedTraits);
+        
+        // Extract unique categories
+        const categories = this._getTraitCategories(traits);
+        
+        return {
+            ...context,
+            traits: augmentedTraits,
+            groupedByCategory,
+            categories,
+            traitsCount: traits.length,
+            filter: filter
+        };
+    }
+
+    /**
+     * Group traits by category for display.
+     * @param {Object[]} traits  Array of trait objects
+     * @returns {Object[]} Array of category groups
+     * @protected
+     */
+    _groupTraitsByCategory(traits) {
+        const groups = {
+            creature: { category: "creature", categoryLabel: "Creature", traits: [] },
+            character: { category: "character", categoryLabel: "Character", traits: [] },
+            elite: { category: "elite", categoryLabel: "Elite", traits: [] },
+            unique: { category: "unique", categoryLabel: "Unique", traits: [] },
+            origin: { category: "origin", categoryLabel: "Origin Path", traits: [] },
+            general: { category: "general", categoryLabel: "General", traits: [] }
+        };
+        
+        for (const trait of traits) {
+            const category = trait.system.category || "general";
+            if (groups[category]) {
+                groups[category].traits.push(trait);
+            } else {
+                groups.general.traits.push(trait);
+            }
+        }
+        
+        // Convert to array and filter out empty groups
+        return Object.values(groups).filter(group => group.traits.length > 0);
+    }
+
+    /**
+     * Get unique trait categories from traits list.
+     * @param {Array<Item>} traits  Trait items
+     * @returns {Array<Object>} Category options
+     * @protected
+     */
+    _getTraitCategories(traits) {
+        const categories = new Set();
+        for (const trait of traits) {
+            categories.add(trait.system.category || "general");
+        }
+        
+        return Array.from(categories).sort().map(cat => ({
+            value: cat,
+            label: this._getCategoryLabel(cat)
+        }));
+    }
+
+    /**
+     * Get icon for trait category.
+     * @param {string} category  Trait category
+     * @returns {string} Font Awesome icon class
+     * @protected
+     */
+    _getTraitIcon(category) {
+        const icons = {
+            creature: "fa-paw",
+            character: "fa-user-shield",
+            elite: "fa-star",
+            unique: "fa-gem",
+            origin: "fa-route",
+            general: "fa-shield-alt"
+        };
+        return icons[category] || "fa-shield-alt";
+    }
+
+    /**
+     * Get color class for trait category.
+     * @param {string} category  Trait category
+     * @returns {string} CSS class
+     * @protected
+     */
+    _getTraitCategoryColor(category) {
+        const colors = {
+            creature: "trait-creature",
+            character: "trait-character",
+            elite: "trait-elite",
+            unique: "trait-unique",
+            origin: "trait-origin",
+            general: "trait-general"
+        };
+        return colors[category] || "trait-general";
+    }
+
+    /**
+     * Get label for category.
+     * @param {string} category  Category key
+     * @returns {string} Human-readable label
+     * @protected
+     */
+    _getCategoryLabel(category) {
+        const labels = {
+            creature: "Creature",
+            character: "Character",
+            elite: "Elite",
+            unique: "Unique",
+            origin: "Origin Path",
+            general: "General"
+        };
+        return labels[category] || "General";
     }
 
     /* -------------------------------------------- */
@@ -1080,13 +1448,59 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             return;
         }
 
-        // Import and call the specialist skill prompt
-        const { prepareCreateSpecialistSkillPrompt } = await import("../prompts/specialist-skill-dialog.mjs");
-        await prepareCreateSpecialistSkillPrompt({
-            actor: this.actor,
-            skill: skill,
-            skillName: skillKey
+        // Check if skill is specialist type
+        if (!Array.isArray(skill.entries)) {
+            ui.notifications.error(`${skill.label} is not a specialist skill.`);
+            return;
+        }
+
+        // Get name from dropdown value or prompt user
+        let name = '';
+        if (target.tagName === 'SELECT') {
+            name = target.value;
+            if (!name) return; // "-- Add Specialization --" selected
+            
+            // Reset dropdown
+            target.selectedIndex = 0;
+        } else {
+            // Use the existing specialist skill dialog
+            const { prepareCreateSpecialistSkillPrompt } = await import("../prompts/specialist-skill-dialog.mjs");
+            await prepareCreateSpecialistSkillPrompt({
+                actor: this.actor,
+                skill: skill,
+                skillName: skillKey
+            });
+            return;
+        }
+
+        // For dropdown selection, add directly
+        // Check if specialization already exists
+        const existing = skill.entries.find(e => e.name.toLowerCase() === name.toLowerCase());
+        if (existing) {
+            ui.notifications.warn(`${skill.label} (${name}) already exists.`);
+            return;
+        }
+
+        // Add new entry
+        const entries = foundry.utils.deepClone(skill.entries);
+        entries.push({
+            name: name,
+            slug: name.slugify(),
+            characteristic: skill.characteristic,
+            trained: false,
+            plus10: false,
+            plus20: false,
+            bonus: 0,
+            notes: '',
+            cost: 0,
+            current: 0
         });
+
+        await this.actor.update({
+            [`system.skills.${skillKey}.entries`]: entries
+        });
+
+        ui.notifications.info(`Added ${skill.label} (${name}) specialization.`);
     }
 
     /* -------------------------------------------- */

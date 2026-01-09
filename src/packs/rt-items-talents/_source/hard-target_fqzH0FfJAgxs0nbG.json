@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Agility 40\nAptitudes: Agility, Defence, Slaanesh",
-    "effect": "When character performs a Charge or Run Action, opponents suffer -20 penalty to Ballistic Skill Tests to hit the character with a ranged weapon until the start of the character's next turn.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>When character performs a Charge or Run Action, opponents suffer -20 penalty to Ballistic Skill Tests to hit the character with a ranged weapon until the start of the character's next turn.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>When character performs a Charge or Run Action, opponents suffer -20 penalty to Ballistic Skill Tests to hit the character with a ranged weapon until the start of the character's next turn.</p>",
     "aptitudes": [
       "Agility",
       "Defence",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility 40",
+      "characteristics": {
+        "ag": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

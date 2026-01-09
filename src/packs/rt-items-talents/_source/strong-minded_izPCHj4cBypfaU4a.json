@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; WP 30, Resistance (Psychic Powers)\nAptitudes: Willpower, Defence, Tzeentch",
-    "effect": "Character can Reroll failed Willpower Tests to resist Psychic Powers that affect their mind. Psychic powers that have physical effects are unaffected by this talent.",
+    "category": "psychic",
     "source": "Only War Core",
     "description": {
       "value": "<p>Character can Reroll failed Willpower Tests to resist Psychic Powers that affect their mind. Psychic powers that have physical effects are unaffected by this talent.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Character can Reroll failed Willpower Tests to resist Psychic Powers that affect their mind. Psychic powers that have physical effects are unaffected by this talent.</p>",
     "aptitudes": [
       "Willpower",
       "Defence",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "WP 30, Resistance (Psychic Powers)",
+      "characteristics": {
+        "wp": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

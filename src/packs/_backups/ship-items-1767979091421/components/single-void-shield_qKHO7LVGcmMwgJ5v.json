@@ -1,0 +1,29 @@
+{
+  "name": "Single Void Shield",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "type": "(es.) Void Shield",
+    "hullType": "All Ships",
+    "powerUsage": 5,
+    "spaceUsage": 1,
+    "spCost": 0,
+    "effect": "Provides 1 Void Shield, absorbing one attack from any ship firing on this one.",
+    "availability": "scarce",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Provides 1 Void Shield, absorbing one attack from any ship firing on this one.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qKHO7LVGcmMwgJ5v"
+}

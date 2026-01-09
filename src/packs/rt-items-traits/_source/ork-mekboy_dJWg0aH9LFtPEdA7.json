@@ -4,8 +4,6 @@
   "img": "icons/svg/aura.svg",
   "system": {
     "requirements": "Ork, RT Rank 4+, Intelligence 30+, Trained Tech-Use Skill, 2+ Exotic Weapon Proficiencies.",
-    "descriptionText": "",
-    "effects": "",
     "source": "RT: Into the Storm \n(Page 94)",
     "description": {
       "value": "<p>The Ork unlocks a previously dormant instinct for technology that was always present within them. Giving rise to ever maddening boughts of experimentation with technology to create new and often unstable wargear, vehicles, and explosions.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Ork Mekboy\nAllows for the purchasing of the Unique Talent Worky Gubbinz'</p>"
@@ -18,8 +16,10 @@
     },
     "isPassive": true,
     "category": "creature",
-    "effect": "Replace new Rank's Advances with that of the Ork Mekboy\nAllows for the purchasing of the Unique Talent Worky Gubbinz'",
-    "level": null
+    "level": 0,
+    "benefit": "<p>The Ork unlocks a previously dormant instinct for technology that was always present within them. Giving rise to ever maddening boughts of experimentation with technology to create new and often unstable wargear, vehicles, and explosions.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Ork Mekboy\nAllows for the purchasing of the Unique Talent Worky Gubbinz'</p>",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

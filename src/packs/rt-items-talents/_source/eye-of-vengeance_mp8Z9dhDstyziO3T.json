@@ -3,20 +3,28 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T3)",
-    "requirements": "Tier 3; Ballistic Skill 50\nAptitudes: Ballistic Skill, Offence, Tzeentch",
-    "effect": "Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.",
+    "category": "combat",
     "source": "Only War Core",
     "description": {
       "value": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>"
     },
     "tier": 3,
-    "benefit": "",
+    "benefit": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence",
       "Tzeentch"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 50",
+      "characteristics": {
+        "bs": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

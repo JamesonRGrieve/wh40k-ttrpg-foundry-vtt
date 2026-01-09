@@ -3,20 +3,26 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (T2)",
-    "requirements": "Tier 2; Agility Test\nAptitudes: Agility, Fieldcraft, Slaanesh",
-    "effect": "Can make an Agility Test when Surprised or Ambushed, if passed, Character is not Surprised and can act normally.",
+    "category": "general",
     "source": "Only War Core",
     "description": {
       "value": "<p>Can make an Agility Test when Surprised or Ambushed, if passed, Character is not Surprised and can act normally.</p>"
     },
     "tier": 2,
-    "benefit": "",
+    "benefit": "<p>Can make an Agility Test when Surprised or Ambushed, if passed, Character is not Surprised and can act normally.</p>",
     "aptitudes": [
       "Agility",
       "Fieldcraft",
       "Slaanesh"
-    ]
+    ],
+    "prerequisites": {
+      "text": "Agility Test",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},

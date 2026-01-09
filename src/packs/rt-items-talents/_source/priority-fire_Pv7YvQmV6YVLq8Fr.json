@@ -3,16 +3,24 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "Talent (Unique)",
-    "requirements": "Tau Drone Handler Alternative Advance, 300xp. Perception 35+, Quick Draw",
-    "effect": "Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.",
+    "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.</p>"
     },
     "tier": 1,
-    "benefit": "",
-    "aptitudes": []
+    "benefit": "<p>Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tau Drone Handler Alternative Advance, 300xp. Perception 35+, Quick Draw",
+      "characteristics": {
+        "per": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true
   },
   "effects": [],
   "flags": {},
