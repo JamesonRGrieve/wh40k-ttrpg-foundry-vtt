@@ -4,13 +4,13 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Lance",
-    "hullType": "Battlecruisers, Grand Cruisers",
-    "powerUsage": 9,
-    "spaceUsage": 4,
-    "spCost": 3,
+    "hullType": [
+      "battlecruiser",
+      "grand-cruiser",
+      "cruiser"
+    ],
     "damage": "1d10+2",
     "strength": 1,
-    "critRating": 3,
     "range": 12,
     "availability": "very-rare",
     "notes": "When firing at targets over 20 VU's, damage decreases to 1d10. Lance Weapons ignore armour.",
@@ -19,7 +19,13 @@
       "value": "<p><b>Damage:</b> 1d10+2</p><p><b>Notes:</b> When firing at targets over 20 VU's, damage decreases to 1d10. Lance Weapons ignore armour.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 9,
+    "space": 4,
+    "shipPoints": 3,
+    "crit": 3,
+    "special": [],
+    "identifier": "godsbane-lance"
   },
   "effects": [],
   "flags": {},

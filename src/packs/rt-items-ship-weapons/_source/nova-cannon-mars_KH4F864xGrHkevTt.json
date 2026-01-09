@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Nova Cannon",
-    "hullType": "Cruisers",
-    "powerUsage": 3,
-    "spaceUsage": 7,
-    "spCost": 3,
+    "hullType": [
+      "cruiser"
+    ],
     "damage": "2d5+4",
     "strength": "-",
-    "critRating": "-",
     "range": "6-40",
     "availability": "very-rare",
     "notes": "Standard Nova Cannon, Check separate Nova Cannon Rules Block.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 2d5+4</p><p><b>Notes:</b> Standard Nova Cannon, Check separate Nova Cannon Rules Block.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 3,
+    "space": 7,
+    "shipPoints": 3,
+    "crit": "-",
+    "special": [],
+    "identifier": "nova-cannon-mars-"
   },
   "effects": [],
   "flags": {},

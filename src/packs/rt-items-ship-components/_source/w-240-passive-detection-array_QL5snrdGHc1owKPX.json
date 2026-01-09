@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Augurs",
-    "hullType": "All Ships",
-    "powerUsage": 3,
-    "spaceUsage": 0,
-    "spCost": 1,
+    "hullType": [
+      "all"
+    ],
     "effect": "While on Silent Running, Vessel can perform Detection Actions without Penalty. Component cannot be damaged or destroyed except via a critical hit.",
     "availability": "rare",
     "source": "RT: Hostile Acquisitions",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": true,
+    "power": {
+      "used": 3,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "w-240-passive-detection-array"
   },
   "effects": [],
   "flags": {},

@@ -3,11 +3,11 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Upgrade",
-    "hullType": "Transports, Raiders, Frigates",
-    "powerUsage": 0,
-    "spaceUsage": 0,
-    "spCost": 0,
+    "hullType": [
+      "transport",
+      "raider",
+      "frigate"
+    ],
     "effect": "To Activate, bridge crew make opposed +20 Tech-Use Test vs Opponents +0 Detection+Scrutiny Test. To try to pretend to be a larger ship to sensors. Replicating specific ship signature incurs -20 penalty to test. Visual Inspection clearly identifes the vessel. Poor Versions can't replicate specific vessels, Good provides +10 to Test, Best also has two specific vessels programmed in that can be replicated without penalty. Only one per vessel.",
     "availability": "very-rare",
     "source": "RT: Hostile Acquisitions",
@@ -20,8 +20,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 0,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "mimic-drive"
   },
   "effects": [],
   "flags": {},

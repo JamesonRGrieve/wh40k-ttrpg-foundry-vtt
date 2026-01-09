@@ -3,11 +3,10 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Bridge",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 4,
-    "spaceUsage": 2,
-    "spCost": 1,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "effect": "Where Characters command the ship. +5 Detection while using Active Augury, +50 Achievement Points towards Exploration Objectives.",
     "availability": "rare",
     "source": "RT: Into the Storm",
@@ -20,8 +19,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "bridge",
+    "essential": true,
+    "power": {
+      "used": 4,
+      "generated": 0
+    },
+    "space": 2,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "exploration-bridge-large-"
   },
   "effects": [],
   "flags": {},

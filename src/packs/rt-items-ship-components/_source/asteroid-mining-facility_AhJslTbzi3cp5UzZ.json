@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Additional Facility",
-    "hullType": "All Ships",
-    "powerUsage": 6,
-    "spaceUsage": 10,
-    "spCost": 3,
+    "hullType": [
+      "all"
+    ],
     "effect": "Allows Vessel to conduct mining operations in an asteroid field or similar location, and can construct Trade Endeavours around such operations. +200 Achievement Points towards a Trade Endeavour involving asteroid mining. Only one per vessel.",
     "availability": "very-rare",
     "source": "RT: Into the Storm",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 6,
+      "generated": 0
+    },
+    "space": 10,
+    "shipPoints": 3,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "asteroid-mining-facility"
   },
   "effects": [],
   "flags": {},

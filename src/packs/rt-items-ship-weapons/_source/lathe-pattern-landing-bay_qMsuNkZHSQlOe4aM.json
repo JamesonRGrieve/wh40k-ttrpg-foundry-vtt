@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Landing Bay",
-    "hullType": "Cruisers",
-    "powerUsage": 1,
-    "spaceUsage": 5,
-    "spCost": 2,
+    "hullType": [
+      "cruiser"
+    ],
     "damage": "-",
     "strength": 2,
-    "critRating": "-",
     "range": "-",
     "availability": "rare",
     "notes": "Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time. If component is ever unpowered, becomes depressurised. Engages large security hatches when travelling through the warp.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time. If component is ever unpowered, becomes depressurised. Engages large security hatches when travelling through the warp.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 1,
+    "space": 5,
+    "shipPoints": 2,
+    "crit": "-",
+    "special": [],
+    "identifier": "lathe-pattern-landing-bay"
   },
   "effects": [],
   "flags": {},

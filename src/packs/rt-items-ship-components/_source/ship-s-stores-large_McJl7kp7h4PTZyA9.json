@@ -3,11 +3,11 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Cargo/Passengers",
-    "hullType": "Transports, Grand Cruisers",
-    "powerUsage": 1,
-    "spaceUsage": 10,
-    "spCost": 2,
+    "hullType": [
+      "transport",
+      "grand-cruiser",
+      "cruiser"
+    ],
     "effect": "Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.",
     "availability": "rare",
     "source": "RT: BF Koronus",
@@ -20,8 +20,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 10,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "ship-s-stores-large-"
   },
   "effects": [],
   "flags": {},

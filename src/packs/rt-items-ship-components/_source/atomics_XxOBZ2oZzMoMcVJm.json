@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Upgrade",
-    "hullType": "All Ships",
-    "powerUsage": 0,
-    "spaceUsage": 0,
-    "spCost": 0,
+    "hullType": [
+      "all"
+    ],
     "effect": "A Nuclear Weapon. ~2.5-5km destruction radius. Can be fired from a projectile-firing macrocannon, doing 1d5+4 hits of 1d10+6 damage (always combine damage totals into single hit salvo). Might destroy a ship or station if detonated inside. Poor: 1d5+2 hits, Good: 1d5+5, Best: 10.",
     "availability": "near-unique",
     "source": "RT: Into the Storm",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 0,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "atomics"
   },
   "effects": [],
   "flags": {},

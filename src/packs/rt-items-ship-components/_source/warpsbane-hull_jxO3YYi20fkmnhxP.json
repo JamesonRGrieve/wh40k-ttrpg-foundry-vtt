@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Gellar Field",
-    "hullType": "All Ships",
-    "powerUsage": 1,
-    "spaceUsage": 0,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "effect": "Protects the vessel while in the immaterium. Hexagramic wards provide +10 to any Navigation Tests to pilot the ship while in the warp. When rolling warp encounters, roll twice, Navigator chooses result.",
     "availability": "very-rare",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "gellarField",
+    "essential": true,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "warpsbane-hull"
   },
   "effects": [],
   "flags": {},

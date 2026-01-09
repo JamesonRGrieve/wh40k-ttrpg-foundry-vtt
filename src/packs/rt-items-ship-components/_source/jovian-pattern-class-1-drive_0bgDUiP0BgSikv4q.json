@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Plasma Drive",
-    "hullType": "Transports",
-    "powerUsage": -35,
-    "spaceUsage": 8,
-    "spCost": 0,
+    "hullType": [
+      "transport"
+    ],
     "effect": "Generates power rather than using it.",
     "availability": "scarce",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "plasmaDrive",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 35
+    },
+    "space": 8,
+    "shipPoints": 0,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "jovian-pattern-class-1-drive"
   },
   "effects": [],
   "flags": {},

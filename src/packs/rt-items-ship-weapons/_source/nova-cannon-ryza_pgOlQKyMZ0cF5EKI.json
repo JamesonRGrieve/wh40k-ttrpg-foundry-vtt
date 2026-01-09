@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Nova Cannon",
-    "hullType": "Cruisers",
-    "powerUsage": 4,
-    "spaceUsage": 7,
-    "spCost": 4,
+    "hullType": [
+      "cruiser"
+    ],
     "damage": "2d5+5",
     "strength": "-",
-    "critRating": "-",
     "range": "6-36",
     "availability": "extremely-rare",
     "notes": "Check Separate Nova Cannon Rules Block. Additionally, on 5 Degrees of Failiure of BS Test to fire causes crit on firer's ship, target component always Nova Cannon.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 2d5+5</p><p><b>Notes:</b> Check Separate Nova Cannon Rules Block. Additionally, on 5 Degrees of Failiure of BS Test to fire causes crit on firer's ship, target component always Nova Cannon.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 4,
+    "space": 7,
+    "shipPoints": 4,
+    "crit": "-",
+    "special": [],
+    "identifier": "nova-cannon-ryza-"
   },
   "effects": [],
   "flags": {},

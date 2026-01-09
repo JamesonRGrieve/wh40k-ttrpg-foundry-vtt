@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Additional Facility",
-    "hullType": "All Ships",
-    "powerUsage": 1,
-    "spaceUsage": 1,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "effect": "Space Brothel. Allows crew to select from various pleasures and satisfy their desires. Often looked down on by Imperial Bureaucracies. Permenant +2 Morale and +10 to all Charm and Commerce tests conducted on the vessel if the Sensorium is used. One per Vessel.",
     "availability": "scarce",
     "source": "RT: Hostile Acquisitions",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 1,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "sensorium"
   },
   "effects": [],
   "flags": {},

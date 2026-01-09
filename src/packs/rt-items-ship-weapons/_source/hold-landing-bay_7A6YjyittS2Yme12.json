@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Landing Bay",
-    "hullType": "Transports",
-    "powerUsage": 1,
-    "spaceUsage": "-",
-    "spCost": 2,
+    "hullType": [
+      "transport"
+    ],
     "damage": "-",
     "strength": 2,
-    "critRating": "-",
     "range": "-",
     "availability": "rare",
     "notes": "Retrofits \"Main Cargo Hold\", -5 Hull and Manoeuvrability. Holds up to 6 squadrons only 2 can be launched at a time. Squadrons have -2 VU on first turn. In combat make +10 Piloting+Manoeuvrability Test to land. 3DoF requires new attempt, 4DoF damages craft. For squadrons, one damaged craft per DoF. Out of Combat, Squadron Landing takes 30mins.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Retrofits \"Main Cargo Hold\", -5 Hull and Manoeuvrability. Holds up to 6 squadrons only 2 can be launched at a time. Squadrons have -2 VU on first turn. In combat make +10 Piloting+Manoeuvrability Test to land. 3DoF requires new attempt, 4DoF damages craft. For squadrons, one damaged craft per DoF. Out of Combat, Squadron Landing takes 30mins.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 1,
+    "space": "-",
+    "shipPoints": 2,
+    "crit": "-",
+    "special": [],
+    "identifier": "hold-landing-bay"
   },
   "effects": [],
   "flags": {},

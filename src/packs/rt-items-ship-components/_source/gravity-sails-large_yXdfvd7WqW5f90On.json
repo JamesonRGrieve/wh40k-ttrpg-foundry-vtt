@@ -3,11 +3,10 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Xenotech",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 5,
-    "spaceUsage": 0,
-    "spCost": 3,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "effect": "Long, Blade-like fins that aid in Manoeurvering. Gain +1 Speed and +5 Manoeuvrability. Component  Can't be Damaged or Destroyed Except from a Critical Hit.",
     "availability": "near-unique",
     "source": "Rogue Trader Core",
@@ -20,8 +19,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "xenotech",
+    "essential": false,
+    "power": {
+      "used": 5,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 3,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "gravity-sails-large-"
   },
   "effects": [],
   "flags": {},

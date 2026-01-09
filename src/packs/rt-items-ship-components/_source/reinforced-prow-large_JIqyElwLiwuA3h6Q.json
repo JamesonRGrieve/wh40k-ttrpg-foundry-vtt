@@ -3,11 +3,10 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Augment",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 0,
-    "spaceUsage": 3,
-    "spCost": 1,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "effect": "+2 Armour the front of the ship, +1d5 damage when ramming. Only one per vessel.",
     "availability": "scarce",
     "source": "RT: Into the Storm",
@@ -20,8 +19,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "augment",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": 3,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "reinforced-prow-large-"
   },
   "effects": [],
   "flags": {},

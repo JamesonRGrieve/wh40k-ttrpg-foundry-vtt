@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Augment",
-    "hullType": "All Ships",
-    "powerUsage": -10,
-    "spaceUsage": 2,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "effect": "Large Sheets of solar-collecting foil. Only generate power when vessel is stationary, taking 2 hours to deploy and 10 to retract. Generates 10 Power and provides +1 to the DoS for any Extended Repairs tech-use checks. Counts as exposed when deployed, being destroyed if the ship has to move or takes damage.",
     "availability": "rare",
     "source": "RT: BF Koronus",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "augment",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 10
+    },
+    "space": 2,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "lux-net"
   },
   "effects": [],
   "flags": {},

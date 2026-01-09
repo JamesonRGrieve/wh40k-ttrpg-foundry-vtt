@@ -4,13 +4,12 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Lance",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 13,
-    "spaceUsage": 6,
-    "spCost": 2,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "damage": "1d10+3",
     "strength": 2,
-    "critRating": 3,
     "range": 9,
     "availability": "rare",
     "notes": "Lance Weapons Ignore Armour.",
@@ -19,7 +18,13 @@
       "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> Lance Weapons Ignore Armour.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 13,
+    "space": 6,
+    "shipPoints": 2,
+    "crit": 3,
+    "special": [],
+    "identifier": "sunhammer-lance-battery"
   },
   "effects": [],
   "flags": {},

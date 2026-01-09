@@ -4,13 +4,12 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Lance",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 13,
-    "spaceUsage": 6,
-    "spCost": 3,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "damage": "1d10+5",
     "strength": 2,
-    "critRating": 4,
     "range": 4,
     "availability": "very-rare",
     "notes": "Lance Weapons ignore armour.",
@@ -19,7 +18,13 @@
       "value": "<p><b>Damage:</b> 1d10+5</p><p><b>Notes:</b> Lance Weapons ignore armour.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 13,
+    "space": 6,
+    "shipPoints": 3,
+    "crit": 4,
+    "special": [],
+    "identifier": "mezoa-pattern-lance-battery"
   },
   "effects": [],
   "flags": {},

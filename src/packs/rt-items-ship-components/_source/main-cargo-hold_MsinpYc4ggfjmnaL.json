@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Cargo/Passengers",
-    "hullType": "Transports",
-    "powerUsage": 2,
-    "spaceUsage": 4,
-    "spCost": 1,
+    "hullType": [
+      "transport"
+    ],
     "effect": "+125 Achievement Points towards Trade Objectives. Stores Massive amounts of Cargo and Cargo Shuttles. Transports tend to have some built-in.",
     "availability": "scarce",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 4,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "main-cargo-hold"
   },
   "effects": [],
   "flags": {},

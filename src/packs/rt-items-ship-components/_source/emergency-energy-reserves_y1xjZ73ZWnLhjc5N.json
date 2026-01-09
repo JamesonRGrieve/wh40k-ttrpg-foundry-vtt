@@ -3,11 +3,11 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Additional Facility (Archeotech)",
-    "hullType": "Transports, Raiders, Frigates",
-    "powerUsage": 2,
-    "spaceUsage": 1,
-    "spCost": 2,
+    "hullType": [
+      "transport",
+      "raider",
+      "frigate"
+    ],
     "effect": "When Ship is Crippled, Captain can choose to have either the ship's speed or Weapon Components Unaffected by the usual penalties for a Crippled Ship. Whenever this component is damaged, it has a 25% chance to explode, destroying it and dealing 1d5 hull damage, and setting another component of DM's choice on fire.",
     "availability": "extremely-rare",
     "source": "RT: Hostile Acquisitions",
@@ -20,8 +20,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 1,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "emergency-energy-reserves"
   },
   "effects": [],
   "flags": {},

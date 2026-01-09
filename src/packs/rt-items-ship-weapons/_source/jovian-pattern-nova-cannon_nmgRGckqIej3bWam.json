@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Nova Cannon (Archeotech)",
-    "hullType": "Cruisers",
-    "powerUsage": 6,
-    "spaceUsage": 7,
-    "spCost": 5,
+    "hullType": [
+      "cruiser"
+    ],
     "damage": "2d5+7",
     "strength": "-",
-    "critRating": "-",
     "range": "6-35",
     "availability": "extremely-rare",
     "notes": "Check Separate Nova Cannon Rules Block. Additionally, this Nova Cannon fires Vortex Warheads, vessels shot by (but not neccisarily damaged by) this weapon take 1d5 Morale Damage. If this weapon is damaged, it is instead Destroyed, its ammo explodes doing 1d10 Hull Damage to firer's ship, ignoring armour and void shields.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 2d5+7</p><p><b>Notes:</b> Check Separate Nova Cannon Rules Block. Additionally, this Nova Cannon fires Vortex Warheads, vessels shot by (but not neccisarily damaged by) this weapon take 1d5 Morale Damage. If this weapon is damaged, it is instead Destroyed, its ammo explodes doing 1d10 Hull Damage to firer's ship, ignoring armour and void shields.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 6,
+    "space": 7,
+    "shipPoints": 5,
+    "crit": "-",
+    "special": [],
+    "identifier": "jovian-pattern-nova-cannon"
   },
   "effects": [],
   "flags": {},

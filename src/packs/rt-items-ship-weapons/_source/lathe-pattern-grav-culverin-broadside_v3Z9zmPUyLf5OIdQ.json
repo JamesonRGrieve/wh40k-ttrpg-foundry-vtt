@@ -4,13 +4,12 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Macrocannon",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 5,
-    "spaceUsage": 5,
-    "spCost": 1,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "damage": "1d10+3",
     "strength": 6,
-    "critRating": 6,
     "range": 5,
     "availability": "scarce",
     "notes": "Must Occupy Port or Starboard slots. Can choose to increase range by 2 VU's, at the cost of decreasing damage to 1d10+1",
@@ -19,7 +18,13 @@
       "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> Must Occupy Port or Starboard slots. Can choose to increase range by 2 VU's, at the cost of decreasing damage to 1d10+1</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 5,
+    "space": 5,
+    "shipPoints": 1,
+    "crit": 6,
+    "special": [],
+    "identifier": "lathe-pattern-grav-culverin-broadside"
   },
   "effects": [],
   "flags": {},

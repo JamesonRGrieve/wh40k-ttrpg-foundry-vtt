@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Plasma Drive (Archeotech)",
-    "hullType": "All Ships",
-    "powerUsage": 0,
-    "spaceUsage": -4,
-    "spCost": 3,
+    "hullType": [
+      "all"
+    ],
     "effect": "Reduces Size of Plasma Drive by 4 (noted in size column), Increases Ship Speed by 1.",
     "availability": "extremely-rare",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": -4,
+    "shipPoints": 3,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "modified-plasma-drive"
   },
   "effects": [],
   "flags": {},

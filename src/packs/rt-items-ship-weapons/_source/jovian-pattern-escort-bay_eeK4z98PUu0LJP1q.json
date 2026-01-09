@@ -4,13 +4,12 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Landing Bay",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 1,
-    "spaceUsage": 4,
-    "spCost": 1,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "damage": "-",
     "strength": 1,
-    "critRating": "-",
     "range": "-",
     "availability": "scarce",
     "notes": "Must mount on Port/Starboard. Holds up to 3 squadrons although only 1 can be prepared to launch at any one time. ",
@@ -19,7 +18,13 @@
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 3 squadrons although only 1 can be prepared to launch at any one time. </p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 1,
+    "space": 4,
+    "shipPoints": 1,
+    "crit": "-",
+    "special": [],
+    "identifier": "jovian-pattern-escort-bay"
   },
   "effects": [],
   "flags": {},

@@ -3,11 +3,12 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Cargo/Passengers",
-    "hullType": "Raiders, Frigates, Light Cruisers, Cruisers",
-    "powerUsage": 2,
-    "spaceUsage": 5,
-    "spCost": 1,
+    "hullType": [
+      "raider",
+      "frigate",
+      "light-cruiser",
+      "cruiser"
+    ],
     "effect": "+100 Achievement Points towards Trade objectives. Stores Large amounts of Cargo and Cargo Shuttles.",
     "availability": "scarce",
     "source": "Rogue Trader Core",
@@ -20,8 +21,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 5,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "compartmentalised-cargo-hold"
   },
   "effects": [],
   "flags": {},

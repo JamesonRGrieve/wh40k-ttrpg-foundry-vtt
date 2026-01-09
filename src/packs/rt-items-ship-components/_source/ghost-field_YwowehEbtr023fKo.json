@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Xenotech",
-    "hullType": "All Ships",
-    "powerUsage": 8,
-    "spaceUsage": 4,
-    "spCost": 3,
+    "hullType": [
+      "all"
+    ],
     "effect": "A Mysterious Eldar Device, creating phantom copies of the ship. Ships firing at this one have -20 to BS Tests, or -30 if a lance weapon. Piloting Tests to Perform Hit and Run attacks have -30. Must choose to use either this or Void Shields at start of combat.",
     "availability": "near-unique",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "xenotech",
+    "essential": false,
+    "power": {
+      "used": 8,
+      "generated": 0
+    },
+    "space": 4,
+    "shipPoints": 3,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "ghost-field"
   },
   "effects": [],
   "flags": {},

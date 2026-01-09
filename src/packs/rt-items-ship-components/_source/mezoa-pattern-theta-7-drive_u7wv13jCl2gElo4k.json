@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Plasma Drive",
-    "hullType": "Transports",
-    "powerUsage": -44,
-    "spaceUsage": 18,
-    "spCost": 1,
+    "hullType": [
+      "transport"
+    ],
     "effect": "Generates Power rather than using it. +2 Speed and +5 Manoeuvrability. If ship suffers \"Thrusters Damaged\" or \"Engines Crippled\" Critical Hit, Subsequent Dice roll to determine Severity is always a 10. (Ship can't turn/Ship movement set to 1)",
     "availability": "rare",
     "source": "RT: BF Koronus",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "plasmaDrive",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 44
+    },
+    "space": 18,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "mezoa-pattern-theta-7-drive"
   },
   "effects": [],
   "flags": {},

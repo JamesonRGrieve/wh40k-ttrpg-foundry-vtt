@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Macrocannon (Xenotech)",
-    "hullType": "All Ships",
-    "powerUsage": 3,
-    "spaceUsage": 2,
-    "spCost": 3,
+    "hullType": [
+      "all"
+    ],
     "damage": "1d10+1",
     "strength": 3,
-    "critRating": 6,
     "range": 6,
     "availability": "near-unique",
     "notes": "Impacts cause clouds of fog. Vessels struck by this weapon have -15 to BS Tests for the following Strategic turn. Weapon doesn't seem to use ammo.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> Impacts cause clouds of fog. Vessels struck by this weapon have -15 to BS Tests for the following Strategic turn. Weapon doesn't seem to use ammo.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 3,
+    "space": 2,
+    "shipPoints": 3,
+    "crit": 6,
+    "special": [],
+    "identifier": "dark-cannon"
   },
   "effects": [],
   "flags": {},

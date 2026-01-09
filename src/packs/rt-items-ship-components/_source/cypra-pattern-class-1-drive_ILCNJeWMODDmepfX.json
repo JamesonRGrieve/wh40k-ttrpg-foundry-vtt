@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Plasma Drive (Archeotech)",
-    "hullType": "Transports",
-    "powerUsage": -30,
-    "spaceUsage": 10,
-    "spCost": 2,
+    "hullType": [
+      "transport"
+    ],
     "effect": "Generates Power rather than using it. +15 to Silent Running Manoeuvers. -15 to Attempts to detect this vessel (actions that use ship Detection, such as Active Augury).",
     "availability": "extremely-rare",
     "source": "RT: BF Koronus",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 30
+    },
+    "space": 10,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "cypra-pattern-class-1-drive"
   },
   "effects": [],
   "flags": {},

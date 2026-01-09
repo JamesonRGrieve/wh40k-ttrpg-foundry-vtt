@@ -4,13 +4,12 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Lance (Archeotech)",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 12,
-    "spaceUsage": 6,
-    "spCost": 3,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "damage": "1d10+3",
     "strength": 3,
-    "critRating": 3,
     "range": 7,
     "availability": "extremely-rare",
     "notes": "Gains additional hits per two degrees of success, rather than three. Lance Weapons Ignore Armour.",
@@ -19,7 +18,13 @@
       "value": "<p><b>Damage:</b> 1d10+3</p><p><b>Notes:</b> Gains additional hits per two degrees of success, rather than three. Lance Weapons Ignore Armour.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 12,
+    "space": 6,
+    "shipPoints": 3,
+    "crit": 3,
+    "special": [],
+    "identifier": "star-flare-lance"
   },
   "effects": [],
   "flags": {},

@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Void Shield (Archeotech)",
-    "hullType": "Cruisers",
-    "powerUsage": 7,
-    "spaceUsage": 2,
-    "spCost": 2,
+    "hullType": [
+      "cruiser"
+    ],
     "effect": "Counts as two void shields, absorbing two attacks from any attacking ship. Once during Opponent's turn, Enginseer Prime can make -10 Tech-Use Check to double Void Shields for that opponent's turn. Doesn't count as Extended Action. If component selected, must be used as Ship's Void Shield.",
     "availability": "extremely-rare",
     "source": "RT: Into the Storm",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": true,
+    "power": {
+      "used": 7,
+      "generated": 0
+    },
+    "space": 2,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "castellan-shield-array"
   },
   "effects": [],
   "flags": {},

@@ -3,11 +3,11 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Additional Facility",
-    "hullType": "Transports, Raiders, Frigates",
-    "powerUsage": 2,
-    "spaceUsage": 3,
-    "spCost": 2,
+    "hullType": [
+      "transport",
+      "raider",
+      "frigate"
+    ],
     "effect": "Large Weapon and Ammo Stockpile. +25 Achievement Points towards Military Objectives and all Macrobatteries have +1 Damage. If component is damaged, it explodes, doing 2d5 Hull Integrity damage, another component of GM's choice is set on fire. Only one per vessel.",
     "availability": "rare",
     "source": "Rogue Trader Core",
@@ -20,8 +20,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 3,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "munitorum"
   },
   "effects": [],
   "flags": {},

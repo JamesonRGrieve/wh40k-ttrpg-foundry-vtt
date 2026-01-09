@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Macrocannon",
-    "hullType": "All Ships",
-    "powerUsage": 4,
-    "spaceUsage": 3,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "damage": "1d10+4",
     "strength": 3,
-    "critRating": 4,
     "range": 4,
     "availability": "rare",
     "notes": "All inflicted Critical Hits are automatically \"Fire!\" Critical Hits",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 1d10+4</p><p><b>Notes:</b> All inflicted Critical Hits are automatically \"Fire!\" Critical Hits</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 4,
+    "space": 3,
+    "shipPoints": 2,
+    "crit": 4,
+    "special": [],
+    "identifier": "pyros-melta-cannons"
   },
   "effects": [],
   "flags": {},

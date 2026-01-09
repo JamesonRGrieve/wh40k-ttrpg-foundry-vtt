@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Bridge",
-    "hullType": "Transports",
-    "powerUsage": 1,
-    "spaceUsage": 1,
-    "spCost": 0,
+    "hullType": [
+      "transport"
+    ],
     "effect": "Where characters command the ship. +50 Achievement Points towards completing Trade Objectives. Overviews the quick loading and unloading of cargo.",
     "availability": "scarce",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "bridge",
+    "essential": true,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 1,
+    "shipPoints": 0,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "commerce-bridge"
   },
   "effects": [],
   "flags": {},

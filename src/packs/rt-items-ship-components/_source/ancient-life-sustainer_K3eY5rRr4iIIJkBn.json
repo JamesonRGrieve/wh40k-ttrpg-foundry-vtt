@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Life Sustainer (Archeotech)",
-    "hullType": "All Ships",
-    "powerUsage": 2,
-    "spaceUsage": 2,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "effect": "Permenantly Increases Morale by 2, reduces Crew Population Loss from non-combat sources by 1. Can be used as the Ship's Life Sustainer.",
     "availability": "extremely-rare",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": true,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 2,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "ancient-life-sustainer"
   },
   "effects": [],
   "flags": {},

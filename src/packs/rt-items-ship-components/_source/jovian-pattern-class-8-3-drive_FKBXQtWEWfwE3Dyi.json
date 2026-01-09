@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Plasma Drive",
-    "hullType": "Cruisers",
-    "powerUsage": -74,
-    "spaceUsage": 15,
-    "spCost": 1,
+    "hullType": [
+      "cruiser"
+    ],
     "effect": "Generates Power rather than using it.  On being Damaged, Depressurised, or suffering Critical Hit (even ones targeting drive/engines), roll 1d10, on 4 or higher, effect is ignored.",
     "availability": "rare",
     "source": "RT: BF Koronus",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "plasmaDrive",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 74
+    },
+    "space": 15,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "jovian-pattern-class-8-3-drive"
   },
   "effects": [],
   "flags": {},

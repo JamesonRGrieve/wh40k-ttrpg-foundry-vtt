@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Void Shield",
-    "hullType": "All Ships",
-    "powerUsage": 3,
-    "spaceUsage": 1,
-    "spCost": 0,
+    "hullType": [
+      "all"
+    ],
     "effect": "Provides 1 Void Shield, absorbing 1 attack from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.",
     "availability": "scarce",
     "source": "RT: BF Koronus",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "voidShields",
+    "essential": true,
+    "power": {
+      "used": 3,
+      "generated": 0
+    },
+    "space": 1,
+    "shipPoints": 0,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "voss-glimmer-pattern-void-shield-array"
   },
   "effects": [],
   "flags": {},

@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Macrocannon",
-    "hullType": "All Ships",
-    "powerUsage": 3,
-    "spaceUsage": 1,
-    "spCost": 1,
+    "hullType": [
+      "all"
+    ],
     "damage": "1d10+1",
     "strength": 5,
-    "critRating": 6,
     "range": 6,
     "availability": "scarce",
     "notes": "Can only fire every other turn",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 1d10+1</p><p><b>Notes:</b> Can only fire every other turn</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 3,
+    "space": 1,
+    "shipPoints": 1,
+    "crit": 6,
+    "special": [],
+    "identifier": "jovian-pattern-missile-battery"
   },
   "effects": [],
   "flags": {},

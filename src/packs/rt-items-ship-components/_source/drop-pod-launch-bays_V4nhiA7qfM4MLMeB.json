@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Augment",
-    "hullType": "All Ships",
-    "powerUsage": 1,
-    "spaceUsage": 3,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "effect": "Stores 20 \"Storm\" Drop Pods, can launch 10 per 30 minutes (1 strategic turn) to a planet. Pods need to be recovered to be reused. +50 Points towards Military Endeavours. Drop Pod holds 10 (req. power armour or drop cocoons to not die from impact). ",
     "availability": "rare",
     "source": "RT: Into the Storm",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "augment",
+    "essential": false,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 3,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "drop-pod-launch-bays"
   },
   "effects": [],
   "flags": {},

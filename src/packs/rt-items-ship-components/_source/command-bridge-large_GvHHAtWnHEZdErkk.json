@@ -3,11 +3,10 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Bridge",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 3,
-    "spaceUsage": 2,
-    "spCost": 1,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "effect": "Where characters command the ship. As long as this component is undamaged, gain +5 to Command Tests made by the Captain, as well as BS Tests to fire ship weapons. If damaged roll 1d10, becomes unpowered on 3 or higher.",
     "availability": "rare",
     "source": "Rogue Trader Core",
@@ -20,8 +19,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "bridge",
+    "essential": true,
+    "power": {
+      "used": 3,
+      "generated": 0
+    },
+    "space": 2,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "command-bridge-large-"
   },
   "effects": [],
   "flags": {},

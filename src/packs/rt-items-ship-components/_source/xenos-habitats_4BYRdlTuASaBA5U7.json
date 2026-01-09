@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Cargo/Passengers",
-    "hullType": "All Ships",
-    "powerUsage": 2,
-    "spaceUsage": 1,
-    "spCost": 1,
+    "hullType": [
+      "all"
+    ],
     "effect": "Quarters designed to simulate alien environments. +10 to Charm/Inquiry Tests made towards Xenos aboard the vessel. +50 Achievement Points towards Objectives involving Non-Hostile interactings with Xenos. Permenant -2 Morale due to Crew Suspicion",
     "availability": "scarce",
     "source": "RT: Into the Storm",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 1,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "xenos-habitats"
   },
   "effects": [],
   "flags": {},

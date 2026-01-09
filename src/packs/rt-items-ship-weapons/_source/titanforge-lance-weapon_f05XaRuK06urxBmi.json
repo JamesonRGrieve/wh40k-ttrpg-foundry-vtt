@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Lance",
-    "hullType": "All Ships",
-    "powerUsage": 9,
-    "spaceUsage": 4,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "damage": "1d10+4",
     "strength": 1,
-    "critRating": 3,
     "range": 6,
     "availability": "rare",
     "notes": "If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 1d10+4</p><p><b>Notes:</b> If ship is Frigate or smaller and can only mount lance as \"Prow\" Weapon. Lance Weapons Ignore Armour.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 9,
+    "space": 4,
+    "shipPoints": 2,
+    "crit": 3,
+    "special": [],
+    "identifier": "titanforge-lance-weapon"
   },
   "effects": [],
   "flags": {},

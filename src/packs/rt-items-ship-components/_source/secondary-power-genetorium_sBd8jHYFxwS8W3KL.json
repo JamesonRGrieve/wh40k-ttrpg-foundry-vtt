@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Additional Facility (Unique)",
-    "hullType": "Special",
-    "powerUsage": -10,
-    "spaceUsage": 0,
-    "spCost": 0,
+    "hullType": [
+      "all"
+    ],
     "effect": "\"Universe-Class Mass Conveyer\" Unique Component. Generates +10 Power in addition to that provided by the ship's plasma drive. One per vessel, designed only for its listed ship.",
     "availability": "unique",
     "source": "RT: BF Koronus",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 10
+    },
+    "space": 0,
+    "shipPoints": 0,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "secondary-power-genetorium"
   },
   "effects": [],
   "flags": {},

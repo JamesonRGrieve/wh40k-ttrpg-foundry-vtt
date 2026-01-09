@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Topedo Warhead",
-    "hullType": "All Ships",
-    "powerUsage": "-",
-    "spaceUsage": "-",
-    "spCost": "-",
+    "hullType": [
+      "all"
+    ],
     "damage": "2d10+11",
     "strength": "-",
-    "critRating": "-",
     "range": 60,
     "availability": "very-rare",
     "notes": "Reroll (2).  Counts as Guided. If damage roll exceeds armour, performs \"Hit and Run\" attack instead of damaging. Refer to Torpedo Rules block.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 2d10+11</p><p><b>Notes:</b> Reroll (2).  Counts as Guided. If damage roll exceeds armour, performs \"Hit and Run\" attack instead of damaging. Refer to Torpedo Rules block.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": "-",
+    "space": "-",
+    "shipPoints": "-",
+    "crit": "-",
+    "special": [],
+    "identifier": "boarding-torpedo"
   },
   "effects": [],
   "flags": {},

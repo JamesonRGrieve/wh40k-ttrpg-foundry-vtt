@@ -3,11 +3,10 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Augment",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 0,
-    "spaceUsage": 2,
-    "spCost": 2,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "effect": "+1 Armour, -2 Manoeuvrability, only one per vessel",
     "availability": "rare",
     "source": "Rogue Trader Core",
@@ -20,8 +19,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "augment",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": 2,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "armour-plating-large-"
   },
   "effects": [],
   "flags": {},

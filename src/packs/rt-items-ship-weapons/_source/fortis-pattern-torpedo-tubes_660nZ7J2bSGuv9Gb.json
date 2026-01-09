@@ -4,13 +4,12 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Torpedo Tubes",
-    "hullType": "Light Cruisers, Cruisers",
-    "powerUsage": 2,
-    "spaceUsage": 8,
-    "spCost": 3,
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
     "damage": "-",
     "strength": 6,
-    "critRating": "-",
     "range": "-",
     "availability": "very-rare",
     "notes": "Must mount on Prow or Keel. Can fire 6 torpedos per salvo, can store 42 (+6 in tubes). If component is damaged/destroyed but not unpowered/depressurised while torpedos are loaded, roll 1d10, on a 0, component explodes, destroying it and doing 2d5 Hull Damage. +2VU speed to torpedo on turn launched.",
@@ -19,7 +18,13 @@
       "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Prow or Keel. Can fire 6 torpedos per salvo, can store 42 (+6 in tubes). If component is damaged/destroyed but not unpowered/depressurised while torpedos are loaded, roll 1d10, on a 0, component explodes, destroying it and doing 2d5 Hull Damage. +2VU speed to torpedo on turn launched.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 2,
+    "space": 8,
+    "shipPoints": 3,
+    "crit": "-",
+    "special": [],
+    "identifier": "fortis-pattern-torpedo-tubes"
   },
   "effects": [],
   "flags": {},

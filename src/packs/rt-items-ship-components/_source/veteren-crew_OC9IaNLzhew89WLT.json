@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "(es.) Crew",
-    "hullType": "All Ships",
-    "powerUsage": 0,
-    "spaceUsage": 0,
-    "spCost": 15,
+    "hullType": [
+      "all"
+    ],
     "effect": "Crew Rating of 50, much harder to find than Competent Crew (Suggestion: 6 Degrees Harder, Common-->Near Unique)",
     "availability": "Special",
     "source": "Rogue Trader Core",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 15,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "veteren-crew"
   },
   "effects": [],
   "flags": {},

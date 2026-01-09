@@ -4,13 +4,11 @@
   "img": "icons/svg/energy.svg",
   "system": {
     "type": "Lance",
-    "hullType": "All Ships",
-    "powerUsage": 7,
-    "spaceUsage": 3,
-    "spCost": 2,
+    "hullType": [
+      "all"
+    ],
     "damage": "1d5+1",
     "strength": 2,
-    "critRating": 3,
     "range": 3,
     "availability": "rare",
     "notes": "May be installed in Dorsal or Keel weapon slots on ships of frigate size or smaller, unlike other lances. +5 to Opposed command tests to resolve boarding actions. Lance weapons ignore armour.",
@@ -19,7 +17,13 @@
       "value": "<p><b>Damage:</b> 1d5+1</p><p><b>Notes:</b> May be installed in Dorsal or Keel weapon slots on ships of frigate size or smaller, unlike other lances. +5 to Opposed command tests to resolve boarding actions. Lance weapons ignore armour.</p>"
     },
     "location": "Dorsal",
-    "weaponType": "Macrobattery"
+    "weaponType": "macrobattery",
+    "power": 7,
+    "space": 3,
+    "shipPoints": 2,
+    "crit": 3,
+    "special": [],
+    "identifier": "las-burner"
   },
   "effects": [],
   "flags": {},

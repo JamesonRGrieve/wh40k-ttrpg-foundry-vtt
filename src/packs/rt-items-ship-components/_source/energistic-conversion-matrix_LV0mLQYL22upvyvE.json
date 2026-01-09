@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Additional Facility (Archeotech)",
-    "hullType": "All Ships",
-    "powerUsage": 1,
-    "spaceUsage": 1,
-    "spCost": 1,
+    "hullType": [
+      "all"
+    ],
     "effect": "As Free Action, captain can decrease generated power (P) to increase speed (S). Frigate/Raider: (3P-->1S), Light cruiser: (4P-->1S), Cruiser/Transport (5P-->1S). Can divert as much power as you have, included from other components, which depowers them. One per vessel.",
     "availability": "extremely-rare",
     "source": "RT: Into the Storm",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "supplemental",
+    "essential": false,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 1,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "energistic-conversion-matrix"
   },
   "effects": [],
   "flags": {},

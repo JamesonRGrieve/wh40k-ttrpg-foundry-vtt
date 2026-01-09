@@ -3,11 +3,9 @@
   "type": "shipComponent",
   "img": "icons/svg/gears.svg",
   "system": {
-    "type": "Archeotech",
-    "hullType": "All Ships",
-    "powerUsage": 1,
-    "spaceUsage": 2,
-    "spCost": 1,
+    "hullType": [
+      "all"
+    ],
     "effect": "Allows Transporting of up to 100 psykers in solitary confinement cells. When secured in a cell, a psyker has -60 to all Focus Power Tests to activate psychic abilities, or any other test involving warp powers. +50 Achievement Points towards Criminal Endeavours. -3 Morale while bay is in use.",
     "availability": "extremely-rare",
     "source": "RT: Hostile Acquisitions",
@@ -20,8 +18,22 @@
       "detection": 0,
       "armour": 0,
       "hullIntegrity": 0,
-      "turretRating": 0
-    }
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "archeotech",
+    "essential": false,
+    "power": {
+      "used": 1,
+      "generated": 0
+    },
+    "space": 2,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "null-bay"
   },
   "effects": [],
   "flags": {},
