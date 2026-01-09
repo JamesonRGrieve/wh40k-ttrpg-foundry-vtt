@@ -71,6 +71,89 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate legacy pack data to V13 schema.
+   * @param {object} source  Candidate source data
+   * @returns {object}       Migrated data
+   */
+  static migrateData(source) {
+    const migrated = super.migrateData?.(source) ?? source;
+    
+    // Handle legacy powerUsage field
+    if ('powerUsage' in migrated && migrated.power === undefined) {
+      migrated.power = migrated.powerUsage;
+      delete migrated.powerUsage;
+    }
+    
+    // Handle legacy spaceUsage field
+    if ('spaceUsage' in migrated && migrated.space === undefined) {
+      migrated.space = migrated.spaceUsage;
+      delete migrated.spaceUsage;
+    }
+    
+    // Handle legacy spCost field
+    if ('spCost' in migrated && migrated.shipPoints === undefined) {
+      migrated.shipPoints = migrated.spCost;
+      delete migrated.spCost;
+    }
+    
+    // Handle legacy critRating field
+    if ('critRating' in migrated && migrated.crit === undefined) {
+      migrated.crit = migrated.critRating;
+      delete migrated.critRating;
+    }
+    
+    // Handle legacy type field
+    if ('type' in migrated && !migrated.weaponType) {
+      migrated.weaponType = migrated.type.toLowerCase().replace(/\s+/g, '-');
+      delete migrated.type;
+    }
+    
+    // Parse hullType string to array
+    if (typeof migrated.hullType === 'string') {
+      const types = migrated.hullType.toLowerCase()
+        .replace(/all ships?/i, 'all')
+        .split(/[,\s]+/)
+        .map(s => s.trim().replace(/\s+/g, '-'))
+        .filter(Boolean);
+      migrated.hullType = types.length ? types : ['all'];
+    }
+    
+    return migrated;
+  }
+
+  /**
+   * Clean data to ensure proper types.
+   * @param {object} source  Candidate source data
+   * @param {object} options Cleaning options
+   * @returns {object}       Cleaned data
+   */
+  static cleanData(source, options) {
+    // Ensure hullType is array
+    if (source.hullType && !Array.isArray(source.hullType)) {
+      if (typeof source.hullType === 'string') {
+        source.hullType = [source.hullType];
+      } else if (source.hullType instanceof Set) {
+        source.hullType = Array.from(source.hullType);
+      }
+    }
+    
+    // Ensure special is array
+    if (source.special && !Array.isArray(source.special)) {
+      if (typeof source.special === 'string') {
+        source.special = source.special.split(',').map(s => s.trim());
+      } else if (source.special instanceof Set) {
+        source.special = Array.from(source.special);
+      }
+    }
+    
+    return super.cleanData?.(source, options) ?? source;
+  }
+
+  /* -------------------------------------------- */
   /*  Properties                                  */
   /* -------------------------------------------- */
 
