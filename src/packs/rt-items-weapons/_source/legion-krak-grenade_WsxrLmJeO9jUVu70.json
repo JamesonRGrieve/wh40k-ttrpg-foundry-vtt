@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "legion-krak-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10+8",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 8,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": " SM Wep",
-    "weight": "0.7kg",
+    "weight": 0.7,
     "availability": "rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b>  SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
     },
-    "damageFormula": "2d10+8",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Chaos Legionary Weapon. Dangerous to own.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

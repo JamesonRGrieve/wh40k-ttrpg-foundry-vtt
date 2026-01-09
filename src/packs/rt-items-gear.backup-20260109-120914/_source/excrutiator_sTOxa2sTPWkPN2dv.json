@@ -1,0 +1,30 @@
+{
+  "name": "Excrutiator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "2kg",
+    "availability": "Grants +20 to Interrogation Tests, and it being present gains +30 to Intimidate Tests. If used on a subject, they suffer -20 to Deceive Tests while being interrogated.",
+    "cost": "Inflicts horrific pain without leaving permenant damage. Often used by Inquisitors.",
+    "effects": "Very Rare",
+    "notes": "375 T",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 375 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sTOxa2sTPWkPN2dv"
+}

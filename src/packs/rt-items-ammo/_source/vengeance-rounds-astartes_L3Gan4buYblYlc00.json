@@ -3,19 +3,48 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Bolt: Any Astartes",
-    "damageOrEffect": "Gain Felling(4) Quality, increase Penetration to 9. Rounds detonate Prematurely on attack roll of 91-100, causing firer to suffer damage instead to their arm (with Pen 5 instead of 9), weapon then Jams. Cannot avoid damage by dropping weapon.",
-    "qualities": null,
-    "weight": "10% wep",
-    "availability": "Famed",
-    "cost": "25 R / Clip",
-    "source": "Deathwatch: Core",
+    "identifier": "vengeance-rounds-astartes",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "felling-4",
+      "increase-penetration-to-9"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Felling(4) Quality, increase Penetration to 9. Rounds detonate Prematurely on attack roll of 91-100, causing firer to suffer damage instead to their arm (with Pen 5 instead of 9), weapon then Jams. Cannot avoid damage by dropping weapon.</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Felling(4) Quality, increase Penetration to 9. Rounds detonate Prematurely on attack roll of 91-100, causing firer to suffer damage instead to their arm (with Pen 5 instead of 9), weapon then Jams. Cannot avoid damage by dropping weapon.</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

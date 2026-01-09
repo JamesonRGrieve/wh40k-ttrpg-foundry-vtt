@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Arm Critical 2",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_arm_2",
+    "damageType": "explosive",
+    "bodyPart": "arm",
+    "severity": 2,
+    "effect": "<p>The force of the blast snaps the bones of the arm in half. The target drops anything held in that hand and must pass a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Arm (Severity 2)</strong></p><p>The force of the blast snaps the bones of the arm in half. The target drops anything held in that hand and must pass a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+      "chat": "",
+      "summary": "Explosive Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "QVhOkYXIBArC6xfa"
+}

@@ -3,30 +3,64 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "lash-of-torment",
     "class": "melee",
     "type": "primitive",
-    "range": "6m",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Rending",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 6,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 4
+    },
+    "special": [
+      "daemon-wep",
+      "concussive-2",
+      "flexible",
+      "gyro-stabilised",
+      "snare-2",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Concussive (2), Flexible, Gyro-Stabilised, Snare (2), Tearing",
-    "weight": "7kg",
+    "weight": 7,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Excess",
-    "note": "Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Concussive (2), Flexible, Gyro-Stabilised, Snare (2), Tearing</p><p><b>Note:</b> Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.</p>"
     },
-    "damageFormula": "1d10+6",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.",
+    "source": "BC: Tome of Excess"
   },
   "effects": [],
   "flags": {},

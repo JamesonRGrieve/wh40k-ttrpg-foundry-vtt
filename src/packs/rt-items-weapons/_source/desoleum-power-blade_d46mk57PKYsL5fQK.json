@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "desoleum-power-blade",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+3",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 5
+    },
+    "special": [
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

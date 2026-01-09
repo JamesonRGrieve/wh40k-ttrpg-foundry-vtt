@@ -3,19 +3,55 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP/Primitive: Bows, Crossbows, Shotguns",
-    "damageOrEffect": "Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.",
-    "qualities": "Blast (lose), Flame, Unreliable",
-    "weight": "10% wep",
+    "identifier": "incendiary-rounds-heretics-match",
+    "weaponTypes": [
+      "solid-projectile",
+      "primitive"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "flame",
+      "unreliable",
+      "lose-blast-if-weapon-has-it"
+    ],
+    "removedQualities": [
+      "blast",
+      "blast-if-weapon-has-it"
+    ],
+    "clipModifier": 0,
+    "effect": "<p>Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "scarce",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Shells or Arrowheads filled with promethium. Gain Flame and Unreliable Quality, Lose Blast if weapon has it.</p><p><b>Qualities:</b> Blast (lose), Flame, Unreliable</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH 2E: Enemies Within",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "2kg",
-    "availability": "To the surprise of some, the Inquisition does recognise that torture is an bad method of getting good answers. That doesn't mean they don't sometimes do it anyway. This item takes an hour to set up, requires Tech-Use and Medicae to use, and provides +20 to Interrogation Tests for the questioner and a -10 to Deceive Tests for the subject. Fearless/From Beyond subjects are immune.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "10000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 2,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 10000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 10000 T</p>"
+      "value": "<p>To the surprise of some, the Inquisition does recognise that torture is an bad method of getting good answers. That doesn't mean they don't sometimes do it anyway. This item takes an hour to set up, requires Tech-Use and Medicae to use, and provides +20 to Interrogation Tests for the questioner and a -10 to Deceive Tests for the subject. Fearless/From Beyond subjects are immune.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 10000 T</p>",
+      "chat": "",
+      "summary": "To the surprise of some, the Inquisition does recognise that torture is an bad method of getting good answers. That doesn't mean they don't sometimes do it anyway. This item takes an hour to set up, r"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "To the surprise of some, the Inquisition does recognise that torture is an bad method of getting good answers. That doesn't mean they don't sometimes do it anyway. This item takes an hour to set up, requires Tech-Use and Medicae to use, and provides +20 to Interrogation Tests for the questioner and a -10 to Deceive Tests for the subject. Fearless/From Beyond subjects are immune.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

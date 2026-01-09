@@ -1,0 +1,30 @@
+{
+  "name": "Multicompass",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "4kg",
+    "availability": "+10 to Survival and Navigation (Land) Tests. Some can be +20.",
+    "cost": null,
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iLPsfUO9FARD3g2E"
+}

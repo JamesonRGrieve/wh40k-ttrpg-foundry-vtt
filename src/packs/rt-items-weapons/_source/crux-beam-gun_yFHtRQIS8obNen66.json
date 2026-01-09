@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "crux-beam-gun",
     "class": "basic",
     "type": "exotic",
-    "range": "80m",
-    "rof": "S/3/-",
-    "damage": "2d10+5",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 25,
-    "reload": "4 Full",
-    "special": "Scatter",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "scatter"
+    ],
+    "clip": {
+      "max": 25,
+      "value": 25,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 4,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "Rogue Trader: Core",
-    "note": "Can use las ammo packs, but burns them out.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Can use las ammo packs, but burns them out.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can use las ammo packs, but burns them out.",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

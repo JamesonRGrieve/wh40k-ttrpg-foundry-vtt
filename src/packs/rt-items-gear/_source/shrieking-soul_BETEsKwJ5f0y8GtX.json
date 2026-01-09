@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "-",
-    "availability": "A Character with this ignores effects of Fatigue, Stunning, Critical damage that does not cause Death, Limb Loss, or Blindness, and the non-damaging effects fire effects. Each time Character kills someone trinket consumes any soul they had, up to six. Once per session as Full Action, character can release stored soul energy as Psychic Attack of Num of Souls * 1d10 metre radius shockwave. All not dedicated to Slaanesh make -20 Willpower Test or are stunned for 1d5 Rounds and suffer 1d10 Permenant Willpower Damage.",
-    "cost": "Must have Mark of Slaanesh to use. Heretical",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "tools",
+    "weight": 0,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Character with this ignores effects of Fatigue, Stunning, Critical damage that does not cause Death, Limb Loss, or Blindness, and the non-damaging effects fire effects. Each time Character kills someone trinket consumes any soul they had, up to six. Once per session as Full Action, character can release stored soul energy as Psychic Attack of Num of Souls * 1d10 metre radius shockwave. All not dedicated to Slaanesh make -20 Willpower Test or are stunned for 1d5 Rounds and suffer 1d10 Permenant Willpower Damage.</p>\n<h3>Requirements</h3><p>Must have Mark of Slaanesh to use. Heretical</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Character with this ignores effects of Fatigue, Stunning, Critical damage that does not cause Death, Limb Loss, or Blindness, and the non-damaging effects fire effects. Each time Character kills som"
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Character with this ignores effects of Fatigue, Stunning, Critical damage that does not cause Death, Limb Loss, or Blindness, and the non-damaging effects fire effects. Each time Character kills someone trinket consumes any soul they had, up to six. Once per session as Full Action, character can release stored soul energy as Psychic Attack of Num of Souls * 1d10 metre radius shockwave. All not dedicated to Slaanesh make -20 Willpower Test or are stunned for 1d5 Rounds and suffer 1d10 Permenant Willpower Damage.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

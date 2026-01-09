@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "auto-launcher",
     "class": "heavy",
     "type": "launcher",
-    "range": "15m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 3,
-    "reload": "3 Full",
-    "special": null,
-    "weight": "30kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 30,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Can be triggered Remotely, preloaded with either frag or smoke grenades. Shoots a pair of grenades in a 45 degree arc in front of it.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Can be triggered Remotely, preloaded with either frag or smoke grenades. Shoots a pair of grenades in a 45 degree arc in front of it.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be triggered Remotely, preloaded with either frag or smoke grenades. Shoots a pair of grenades in a 45 degree arc in front of it.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Can influence creature up to Willpower Bonus Klometres away. See DW: Rites of Battle, Page 147. WS 40, BS -, S 16, T 35, Ag 48, Int 20, Per 45, WP 30, Fel -. Movement 2/4/6/12, Wounds 5.\nSkills: Awareness +20, Concealment +10, Dodge. Talents: Fearless, Swift Attack. Traits: Bestial, Dark Sight, Flier 12, Natural Weapons (Claws), Size (Puny). Weapons: Claws (1d10+1 R, Pen 2).",
-    "cost": "Popular with Space Marine Librarians",
-    "effects": "Famed",
-    "notes": "20 R",
-    "source": "DW: Rites of Battle",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 20 R</p>"
+      "value": "<p>Can influence creature up to Willpower Bonus Klometres away. See DW: Rites of Battle, Page 147. WS 40, BS -, S 16, T 35, Ag 48, Int 20, Per 45, WP 30, Fel -. Movement 2/4/6/12, Wounds 5.\nSkills: Awareness +20, Concealment +10, Dodge. Talents: Fearless, Swift Attack. Traits: Bestial, Dark Sight, Flier 12, Natural Weapons (Claws), Size (Puny). Weapons: Claws (1d10+1 R, Pen 2).</p>\n<h3>Requirements</h3><p>Popular with Space Marine Librarians</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 20 R</p>",
+      "chat": "",
+      "summary": "Can influence creature up to Willpower Bonus Klometres away. See DW: Rites of Battle, Page 147. WS 40, BS -, S 16, T 35, Ag 48, Int 20, Per 45, WP 30, Fel -. Movement 2/4/6/12, Wounds 5.\nSkills: Aware"
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Can influence creature up to Willpower Bonus Klometres away. See DW: Rites of Battle, Page 147. WS 40, BS -, S 16, T 35, Ag 48, Int 20, Per 45, WP 30, Fel -. Movement 2/4/6/12, Wounds 5.\nSkills: Awareness +20, Concealment +10, Dodge. Talents: Fearless, Swift Attack. Traits: Bestial, Dark Sight, Flier 12, Natural Weapons (Claws), Size (Puny). Weapons: Claws (1d10+1 R, Pen 2).",
+    "duration": "",
+    "notes": "20 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

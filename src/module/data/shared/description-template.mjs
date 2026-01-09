@@ -11,37 +11,21 @@ export default class DescriptionTemplate extends SystemDataModel {
     const fields = foundry.data.fields;
     return {
       description: new fields.SchemaField({
-        value: new fields.HTMLField({ required: true, blank: true, initial: "" }),
-        chat: new fields.HTMLField({ required: false, blank: true }),
-        summary: new fields.StringField({ required: false, blank: true })
+        value: new fields.HTMLField({ required: true, initial: "" }),
+        chat: new fields.HTMLField({ required: false, initial: "" }),
+        summary: new fields.StringField({ required: false, blank: true, initial: "" })
       }),
       source: new fields.SchemaField({
-        book: new fields.StringField({ required: false, blank: true }),
-        page: new fields.StringField({ required: false, blank: true }),
-        custom: new fields.StringField({ required: false, blank: true })
+        book: new fields.StringField({ required: false, blank: true, initial: "" }),
+        page: new fields.StringField({ required: false, blank: true, initial: "" }),
+        custom: new fields.StringField({ required: false, blank: true, initial: "" })
       })
     };
   }
 
-  /* -------------------------------------------- */
-
-  /**
-   * Migrate legacy flat description/source fields to new structure.
-   * @inheritdoc
-   */
-  static migrateData(source) {
-    // Migrate flat description string to object
-    if ( typeof source.description === "string" ) {
-      source.description = { value: source.description, chat: "", summary: "" };
-    }
-    
-    // Migrate flat source string to object
-    if ( typeof source.source === "string" ) {
-      source.source = { book: "", page: "", custom: source.source };
-    }
-    
-    return super.migrateData(source);
-  }
+  // NOTE: migrateData for description/source is handled in ItemDataModel.migrateData()
+  // to avoid duplication. The mixin pattern copies methods but not migrateData since
+  // it already exists on ItemDataModel.
 
   /* -------------------------------------------- */
 

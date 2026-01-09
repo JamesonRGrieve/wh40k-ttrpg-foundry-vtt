@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tyranid-venom-cannon-alt",
     "class": "heavy",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/-/-",
-    "damage": "2d10+10",
-    "damageType": "Impact",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 10,
+      "penetration": 6
+    },
+    "special": [
+      "living-ammunition",
+      "toxic",
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Living Ammunition, Toxic (1d10), Blast (5)",
-    "weight": "-",
-    "availability": "Special",
-    "cost": "-",
-    "source": "Deathwatch: Core",
-    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Living Ammunition, Toxic (1d10), Blast (5)</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

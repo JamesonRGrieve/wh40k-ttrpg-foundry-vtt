@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "-",
-    "availability": "A Phosporescent fungus found in the Black Holds and Underdecks of some void ships, and likely other similar locations with the toxic sludge it thrives on. Provides 5m of dim light. \nProbably not safe to be around, doesn't stop some using it as body paint.",
-    "cost": null,
-    "effects": "Abundant",
-    "notes": "0 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 0 T</p>"
+      "value": "<p>A Phosporescent fungus found in the Black Holds and Underdecks of some void ships, and likely other similar locations with the toxic sludge it thrives on. Provides 5m of dim light. \nProbably not safe to be around, doesn't stop some using it as body paint.</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 0 T</p>",
+      "chat": "",
+      "summary": "A Phosporescent fungus found in the Black Holds and Underdecks of some void ships, and likely other similar locations with the toxic sludge it thrives on. Provides 5m of dim light. \nProbably not safe "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Phosporescent fungus found in the Black Holds and Underdecks of some void ships, and likely other similar locations with the toxic sludge it thrives on. Provides 5m of dim light. \nProbably not safe to be around, doesn't stop some using it as body paint.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -12,6 +12,7 @@ import CollapsiblePanelMixin from "../api/collapsible-panel-mixin.mjs";
 import ContextMenuMixin from "../api/context-menu-mixin.mjs";
 import EnhancedDragDropMixin from "../api/drag-drop-visual-mixin.mjs";
 import WhatIfMixin from "../api/what-if-mixin.mjs";
+import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -36,6 +37,7 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             itemRoll: BaseActorSheet.#itemRoll,
             itemEdit: BaseActorSheet.#itemEdit,
             itemDelete: BaseActorSheet.#itemDelete,
+            itemVocalize: BaseActorSheet.#itemVocalize,
             itemCreate: BaseActorSheet.#itemCreate,
             effectCreate: BaseActorSheet.#effectCreate,
             effectEdit: BaseActorSheet.#effectEdit,
@@ -215,6 +217,12 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         if (this._clickOutsideHandler) {
             document.removeEventListener("click", this._clickOutsideHandler);
             this._clickOutsideHandler = null;
+        }
+
+        // Clean up resize observer
+        if (this._resizeObserver) {
+            this._resizeObserver.disconnect();
+            this._resizeObserver = null;
         }
     }
 
@@ -586,6 +594,29 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             }
         });
 
+        // Legacy item action handlers for V1 templates
+        // These use .item-edit, .item-delete, .item-vocalize classes
+        this.element.querySelectorAll(".item-edit").forEach(el => {
+            el.addEventListener("click", (event) => {
+                const itemId = event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
+                if (itemId) BaseActorSheet.#itemEdit.call(this, event, event.currentTarget);
+            });
+        });
+
+        this.element.querySelectorAll(".item-delete").forEach(el => {
+            el.addEventListener("click", (event) => {
+                const itemId = event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
+                if (itemId) BaseActorSheet.#itemDelete.call(this, event, event.currentTarget);
+            });
+        });
+
+        this.element.querySelectorAll(".item-vocalize").forEach(el => {
+            el.addEventListener("click", (event) => {
+                const itemId = event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
+                if (itemId) BaseActorSheet.#itemVocalize.call(this, event, event.currentTarget);
+            });
+        });
+
         // Legacy panel toggle handlers for V1 templates
         // These use .sheet-control__hide-control class with data-toggle attribute
         this.element.querySelectorAll(".sheet-control__hide-control").forEach(el => {
@@ -594,6 +625,31 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
 
         // Click-outside handler to close characteristic HUD dropdowns
         this._setupClickOutsideHandler();
+
+        // Setup responsive column management via ResizeObserver
+        this._setupResponsiveColumns();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Setup responsive column management using ResizeObserver.
+     * Adjusts --rt-columns CSS variable based on sheet width.
+     * @protected
+     */
+    _setupResponsiveColumns() {
+        // Only setup once per sheet instance
+        if (this._resizeObserver) return;
+
+        this._resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                const width = entry.contentRect.width;
+                const columns = width < 700 ? 1 : width < 900 ? 2 : 3;
+                this.element.style.setProperty("--rt-columns", columns);
+            }
+        });
+
+        this._resizeObserver.observe(this.element);
     }
 
     /* -------------------------------------------- */
@@ -691,16 +747,25 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
 
     /**
      * Handle input changes to numeric form fields, allowing them to accept delta-typed inputs.
+     * Supports +N (add), -N (subtract), =N (set absolute value) notation.
      * @param {Event} event  Triggering event.
      * @protected
      */
     _onChangeInputDelta(event) {
         const input = event.target;
-        const value = input.value;
-        if (["+", "-"].includes(value[0])) {
+        const value = input.value.trim();
+        if (!value) return;
+
+        const firstChar = value[0];
+        if (firstChar === "=") {
+            // Set absolute value
+            const absolute = parseFloat(value.slice(1));
+            if (!isNaN(absolute)) input.value = absolute;
+        } else if (["+", "-"].includes(firstChar)) {
+            // Add or subtract delta
             const current = foundry.utils.getProperty(this.actor, input.name) ?? 0;
             const delta = parseFloat(value);
-            input.value = current + delta;
+            if (!isNaN(delta)) input.value = current + delta;
         }
     }
 
@@ -810,14 +875,31 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         const itemId = target.closest("[data-item-id]")?.dataset.itemId;
         if (!itemId) return;
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: "Confirm Delete",
-            content: "<p>Are you sure you would like to delete this?</p>",
-            defaultYes: false
+            content: "Are you sure you would like to delete this?",
+            confirmLabel: "Delete",
+            cancelLabel: "Cancel"
         });
         
         if (confirmed) {
             await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle sending an item to chat (vocalize/display).
+     * @this {BaseActorSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #itemVocalize(event, target) {
+        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (item) {
+            await item.displayCard();
         }
     }
 
@@ -999,7 +1081,7 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         }
 
         // Import and call the specialist skill prompt
-        const { prepareCreateSpecialistSkillPrompt } = await import("../../prompts/simple-prompt.mjs");
+        const { prepareCreateSpecialistSkillPrompt } = await import("../prompts/specialist-skill-dialog.mjs");
         await prepareCreateSpecialistSkillPrompt({
             actor: this.actor,
             skill: skill,
@@ -1025,10 +1107,11 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         const entries = [...skill.entries];
         const deletedName = entries[index]?.name || "this specialization";
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: "Delete Specialization",
-            content: `<p>Delete "${deletedName}"?</p>`,
-            defaultYes: false
+            content: `Delete "${deletedName}"?`,
+            confirmLabel: "Delete",
+            cancelLabel: "Cancel"
         });
 
         if (confirmed) {
@@ -1169,13 +1252,12 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         }
         
         // Confirm spending
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: `Advance ${char.label}?`,
             content: `<p>Spend <strong>${cost} XP</strong> to advance ${char.label} from ${char.total} to ${char.total + 5}?</p>
                      <p><em>Available XP: ${available}</em></p>`,
-            yes: () => true,
-            no: () => false,
-            defaultYes: true
+            confirmLabel: "Advance",
+            cancelLabel: "Cancel"
         });
         
         if (!confirmed) return;
@@ -1369,7 +1451,11 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
                 rolls: [roll],
-                type: CONST.CHAT_MESSAGE_STYLES.ROLL
+                flags: {
+                    "rogue-trader": {
+                        type: "hitLocation"
+                    }
+                }
             });
 
             // Flash highlight the hit location on the sheet

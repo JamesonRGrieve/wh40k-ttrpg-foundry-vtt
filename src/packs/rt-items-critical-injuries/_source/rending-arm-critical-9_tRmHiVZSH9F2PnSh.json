@@ -1,0 +1,32 @@
+{
+  "name": "Rending Arm Critical 9",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_arm_9",
+    "damageType": "rending",
+    "bodyPart": "arm",
+    "severity": 9,
+    "effect": "<p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Arm (Severity 9)</strong></p><p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground.</p>",
+      "chat": "",
+      "summary": "Rending Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "tRmHiVZSH9F2PnSh"
+}

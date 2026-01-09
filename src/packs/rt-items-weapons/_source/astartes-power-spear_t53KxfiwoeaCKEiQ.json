@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-power-spear",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Power Field",
-    "weight": "8kg",
-    "availability": "Distinguished",
-    "cost": "15 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. \nTwo Handed.",
+    "weight": 8,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Power Field</p><p><b>Note:</b> Space Marines Only, not easily acquirable. \nTwo Handed.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. \nTwo Handed.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

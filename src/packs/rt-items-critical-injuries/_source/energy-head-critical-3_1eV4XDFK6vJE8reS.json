@@ -1,0 +1,32 @@
+{
+  "name": "Energy Head Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_head_3",
+    "damageType": "energy",
+    "bodyPart": "head",
+    "severity": 3,
+    "effect": "<p>The attack cooks off the target's ear, leaving him with a partially burned stump of cartilage. He is Deafened for [[1d5]] hours (or until he receives medical attention).</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Head (Severity 3)</strong></p><p>The attack cooks off the target's ear, leaving him with a partially burned stump of cartilage. He is Deafened for [[1d5]] hours (or until he receives medical attention).</p>",
+      "chat": "",
+      "summary": "Energy Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "1eV4XDFK6vJE8reS"
+}

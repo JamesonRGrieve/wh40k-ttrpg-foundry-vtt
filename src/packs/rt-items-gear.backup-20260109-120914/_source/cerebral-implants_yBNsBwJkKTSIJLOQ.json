@@ -1,0 +1,30 @@
+{
+  "name": "Cerebral Implants",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Common Craftsmanship Restores Paralysed or brain damaged users, but causes 1d10 permenant damage to user's Weapon Skill, Ballistic Skill, Agility, Intelligence, and Fellowship. Poor versions effectively lobotomise the user. Good Versions are Near Unique Availability, but give Unnatural Intelligence(+2) and +20 to Logic and Lore Tests.",
+    "cost": "As Poor Versions destroy the personality and memories of the subject (rendering them little better than a servitor), they are not appropriate for Player Characters.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yBNsBwJkKTSIJLOQ"
+}

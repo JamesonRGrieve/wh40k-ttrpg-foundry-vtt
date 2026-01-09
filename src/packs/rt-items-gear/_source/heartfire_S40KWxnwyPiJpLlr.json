@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "xenos",
-    "weight": "0.1kg",
-    "availability": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Failing Toughness test, if target takes Impact/Explosive damage, runs, falls, or is knocked prone, makes -10 Toughness Test or take 1d10 E Damage to body (ignores armour/toughness). Lasts forever, or until medical treatment to cleanse/replace blood.",
-    "cost": "Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "RT: The Soul Reaver",
+    "category": "luxury",
+    "weight": 0.1,
+    "availability": "unique",
+    "craftsmanship": "good",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Failing Toughness test, if target takes Impact/Explosive damage, runs, falls, or is knocked prone, makes -10 Toughness Test or take 1d10 E Damage to body (ignores armour/toughness). Lasts forever, or until medical treatment to cleanse/replace blood.</p>\n<h3>Requirements</h3><p>Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.</p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Failing Toughness test, if target takes Impact/Explosive damage, runs, falls, or is knocked prone, makes"
     },
+    "source": {
+      "book": "RT: The Soul Reaver",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Failing Toughness test, if target takes Impact/Explosive damage, runs, falls, or is knocked prone, makes -10 Toughness Test or take 1d10 E Damage to body (ignores armour/toughness). Lasts forever, or until medical treatment to cleanse/replace blood.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

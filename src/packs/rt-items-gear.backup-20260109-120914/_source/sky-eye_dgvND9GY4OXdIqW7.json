@@ -1,0 +1,30 @@
+{
+  "name": "Sky Eye",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "4kg",
+    "availability": "A Miniscule-Sized Hovering Sphere that comes with a 4kg case that contains a docking station and various holo-displays. The Sphere can scout up to 15km from its docking station, once it returns it produces a 3D holomap of the scouted area, downloadable to standard data-slates. Sphere has Flyer 8, 1 Wound, and No AP/T. Attempting to detect it by sight or hearing has -30.",
+    "cost": "Rumoured Inqusititorial versions incorporate active camoflage and ultra quiet dampeners to scout room interiors and buildings unnoticed.",
+    "effects": "Very Rare",
+    "notes": "1500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 1500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dgvND9GY4OXdIqW7"
+}

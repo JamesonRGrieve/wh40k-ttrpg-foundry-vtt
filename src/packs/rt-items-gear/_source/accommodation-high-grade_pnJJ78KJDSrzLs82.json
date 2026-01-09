@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "A Single Night's Accomodation in a Grand Hall or Luxurious Quarters, a place safe, warm, and comfortable.",
-    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
-    "effects": "Scarce",
-    "notes": "100 T",
-    "source": "Dark Heresy: Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>"
+      "value": "<p>A Single Night's Accomodation in a Grand Hall or Luxurious Quarters, a place safe, warm, and comfortable.</p>\n<h3>Requirements</h3><p>Cost of service may vary with location and the honesty/charitability of those that offer it.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "A Single Night's Accomodation in a Grand Hall or Luxurious Quarters, a place safe, warm, and comfortable."
     },
+    "source": {
+      "book": "Dark Heresy: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Single Night's Accomodation in a Grand Hall or Luxurious Quarters, a place safe, warm, and comfortable.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

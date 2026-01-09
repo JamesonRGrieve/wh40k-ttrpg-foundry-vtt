@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "stryxis-aether-whip",
     "class": "melee",
     "type": "exotic",
-    "range": "4m",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 4,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "flexible"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Flexible",
-    "weight": "2.5kg",
+    "weight": 2.5,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: Koronus Bestiary",
-    "note": "Ignores Armour, but does no damage to Non-living targets, machines (Machine 5+ trait), and Daemons. Contact with psychic shields, wards, or untouchables disables the weapon for 1d10 days. One step easier to obtain if offered by a Stryxis Merchant.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flexible</p><p><b>Note:</b> Ignores Armour, but does no damage to Non-living targets, machines (Machine 5+ trait), and Daemons. Contact with psychic shields, wards, or untouchables disables the weapon for 1d10 days. One step easier to obtain if offered by a Stryxis Merchant.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Ignores Armour, but does no damage to Non-living targets, machines (Machine 5+ trait), and Daemons. Contact with psychic shields, wards, or untouchables disables the weapon for 1d10 days. One step easier to obtain if offered by a Stryxis Merchant.",
+    "source": "RT: Koronus Bestiary"
   },
   "effects": [],
   "flags": {},

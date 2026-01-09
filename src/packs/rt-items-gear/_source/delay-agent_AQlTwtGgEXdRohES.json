@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Poison",
-    "weight": "-",
-    "availability": "Does nothing by itself, but if mixed with other poisons or drugs, it will cause the effect of the poison/drug to occur 1d5 hours after it was adminsitered rather than immediately.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "6 R",
-    "source": "Deathwatch: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 6 R</p>"
+      "value": "<p>Does nothing by itself, but if mixed with other poisons or drugs, it will cause the effect of the poison/drug to occur 1d5 hours after it was adminsitered rather than immediately.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 6 R</p>",
+      "chat": "",
+      "summary": "Does nothing by itself, but if mixed with other poisons or drugs, it will cause the effect of the poison/drug to occur 1d5 hours after it was adminsitered rather than immediately."
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Does nothing by itself, but if mixed with other poisons or drugs, it will cause the effect of the poison/drug to occur 1d5 hours after it was adminsitered rather than immediately.",
+    "duration": "",
+    "notes": "6 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

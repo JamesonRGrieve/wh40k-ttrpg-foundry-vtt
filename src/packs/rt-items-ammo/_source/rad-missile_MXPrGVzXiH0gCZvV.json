@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Missile Launcher",
-    "damageOrEffect": "1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.",
-    "qualities": "Blast(4), Irradiated(4)",
-    "weight": "2kg",
+    "identifier": "rad-missile",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-4",
+      "irradiated-4"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.</p>",
+    "notes": "",
+    "weight": 2,
     "availability": "extremely-rare",
-    "cost": null,
-    "source": "BC: Tome of Decay",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 1d10+4 Energy Damage, Pen 2. Blast(4), Irradiated(4).\nHeretical.</p><p><b>Qualities:</b> Blast(4), Irradiated(4)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "BC: Tome of Decay",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Infantry Gear",
-    "weight": "4kg",
-    "availability": "Somewhat Comfortable, comes with heavy blankets.",
-    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
-    "effects": "Plentiful",
-    "notes": "8 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "survival",
+    "weight": 4,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 8,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 8 T</p>"
+      "value": "<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 8 T</p>",
+      "chat": "",
+      "summary": "Somewhat Comfortable, comes with heavy blankets."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Infantry Gear",
-    "weight": "1kg",
-    "availability": "Light weight storage packs for ammunition, sidearms, and grenades. Often take the form of Hip Packs, Holsters, Bandoliers, and Vests. Worn over armour for quick access. Can hold up to 15kg of Small Items. Varies between regiments.",
-    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
-    "effects": "Common",
-    "notes": "5 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "survival",
+    "weight": 1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+      "value": "<p>Light weight storage packs for ammunition, sidearms, and grenades. Often take the form of Hip Packs, Holsters, Bandoliers, and Vests. Worn over armour for quick access. Can hold up to 15kg of Small Items. Varies between regiments.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>",
+      "chat": "",
+      "summary": "Light weight storage packs for ammunition, sidearms, and grenades. Often take the form of Hip Packs, Holsters, Bandoliers, and Vests. Worn over armour for quick access. Can hold up to 15kg of Small It"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Light weight storage packs for ammunition, sidearms, and grenades. Often take the form of Hip Packs, Holsters, Bandoliers, and Vests. Worn over armour for quick access. Can hold up to 15kg of Small Items. Varies between regiments.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

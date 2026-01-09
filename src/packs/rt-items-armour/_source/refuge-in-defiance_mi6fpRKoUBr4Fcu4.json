@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.35,
-    "maxAg": "-",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "Hero",
-    "cost": "50 R",
-    "notes": "Master Crafted Relic Astartes Combat Shield of the Brazen Claws Chapter. Overload 01. Weapons wielded by the bearer gain +10 to hit against foes who have previously had their attacks stopped by the Force Field.",
+    "notes": "Master Crafted Relic Astartes Combat Shield of the Brazen Claws Chapter. Overload 01. Weapons wielded by the bearer gain +10 to hit against foes who have previously had their attacks stopped by the Force Field. [AP: 35%]",
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Combat Shield of the Brazen Claws Chapter. Overload 01. Weapons wielded by the bearer gain +10 to hit against foes who have previously had their attacks stopped by the Force Field.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.35,
-      "body": 0.35,
-      "leftArm": 0.35,
-      "rightArm": 0.35,
-      "leftLeg": 0.35,
-      "rightLeg": 0.35
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

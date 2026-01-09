@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "6kg",
-    "availability": "Master Crafted Relic Tome of the Genesis Chapter. Consulting this tome prior to a mission grants +20 to all Common Lore (War), Scholastic Lore (Codex Astartes), and Tactis (any) Tests for the duration of the Mission. If consulted in reference to a specific situation, provides +30 instead and adds a degree of success to any successful tests.",
-    "cost": null,
-    "effects": "Hero",
-    "notes": "35 R",
-    "source": "DW: Honour the Chapter",
+    "category": "luxury",
+    "weight": 6,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 35 R</p>"
+      "value": "<p>Master Crafted Relic Tome of the Genesis Chapter. Consulting this tome prior to a mission grants +20 to all Common Lore (War), Scholastic Lore (Codex Astartes), and Tactis (any) Tests for the duration of the Mission. If consulted in reference to a specific situation, provides +30 instead and adds a degree of success to any successful tests.</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Tome of the Genesis Chapter. Consulting this tome prior to a mission grants +20 to all Common Lore (War), Scholastic Lore (Codex Astartes), and Tactis (any) Tests for the duration"
     },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Master Crafted Relic Tome of the Genesis Chapter. Consulting this tome prior to a mission grants +20 to all Common Lore (War), Scholastic Lore (Codex Astartes), and Tactis (any) Tests for the duration of the Mission. If consulted in reference to a specific situation, provides +30 instead and adds a degree of success to any successful tests.",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "5kg",
-    "availability": "Mounted to Astartes Armour, broadcasts tactical readings to Squad Members allowing them to benefit from it. Whilst Character is in Squad Mode, all other characters in Squad Mode receive +5 to BS Tests. Character can spend a Full Action to make a +0 Tech-Use Test to increase this to +10 for one round. Effects of multiple Signum's are not cumulative.",
-    "cost": null,
-    "effects": "Distinguished",
-    "notes": "35 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>"
+      "value": "<p>Mounted to Astartes Armour, broadcasts tactical readings to Squad Members allowing them to benefit from it. Whilst Character is in Squad Mode, all other characters in Squad Mode receive +5 to BS Tests. Character can spend a Full Action to make a +0 Tech-Use Test to increase this to +10 for one round. Effects of multiple Signum's are not cumulative.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Mounted to Astartes Armour, broadcasts tactical readings to Squad Members allowing them to benefit from it. Whilst Character is in Squad Mode, all other characters in Squad Mode receive +5 to BS Tests"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Mounted to Astartes Armour, broadcasts tactical readings to Squad Members allowing them to benefit from it. Whilst Character is in Squad Mode, all other characters in Squad Mode receive +5 to BS Tests. Character can spend a Full Action to make a +0 Tech-Use Test to increase this to +10 for one round. Effects of multiple Signum's are not cumulative.",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

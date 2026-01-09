@@ -1,0 +1,32 @@
+{
+  "name": "Impact Body Critical 8",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body_8",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 8,
+    "effect": "<p>The force of the attack ruptures several of the target's organs and knocks him down, gasping in wretched pain. The target suffers Blood Loss. Permanently reduce his Toughness characteristic by 1d10.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Body (Severity 8)</strong></p><p>The force of the attack ruptures several of the target's organs and knocks him down, gasping in wretched pain. The target suffers Blood Loss. Permanently reduce his Toughness characteristic by 1d10.</p>",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "MJs4vAyR3LNk7d6N"
+}

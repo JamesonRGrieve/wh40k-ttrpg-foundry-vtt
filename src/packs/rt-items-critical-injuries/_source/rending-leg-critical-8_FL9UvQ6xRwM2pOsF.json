@@ -1,0 +1,32 @@
+{
+  "name": "Rending Leg Critical 8",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_leg_8",
+    "damageType": "rending",
+    "bodyPart": "leg",
+    "severity": 8,
+    "effect": "<p>In a single bloody hack the target's leg is lopped off, spurting its vital fluids across the ground. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He suffers the Lost Leg condition (see page 243).</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Leg (Severity 8)</strong></p><p>In a single bloody hack the target's leg is lopped off, spurting its vital fluids across the ground. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He suffers the Lost Leg condition (see page 243).</p>",
+      "chat": "",
+      "summary": "Rending Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "FL9UvQ6xRwM2pOsF"
+}

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "0.02kg",
-    "availability": "A subtle monocole that can either be a Motion Predictor, Photo Sight, Preysense Sight, or Telescopic Sight (determined when acquired). Requires -30 Scrutiny Test to notice monocole is special. Must be linked to weapon (such as via vox connection) and counts as weapon's sight.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "clothing",
+    "weight": 0.02,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A subtle monocole that can either be a Motion Predictor, Photo Sight, Preysense Sight, or Telescopic Sight (determined when acquired). Requires -30 Scrutiny Test to notice monocole is special. Must be linked to weapon (such as via vox connection) and counts as weapon's sight.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A subtle monocole that can either be a Motion Predictor, Photo Sight, Preysense Sight, or Telescopic Sight (determined when acquired). Requires -30 Scrutiny Test to notice monocole is special. Must be"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A subtle monocole that can either be a Motion Predictor, Photo Sight, Preysense Sight, or Telescopic Sight (determined when acquired). Requires -30 Scrutiny Test to notice monocole is special. Must be linked to weapon (such as via vox connection) and counts as weapon's sight.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

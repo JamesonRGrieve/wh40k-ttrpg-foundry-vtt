@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-storm-bolter",
     "class": "basic",
     "type": "bolt",
-    "range": "100m",
-    "rof": "S/2/4",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 60,
-    "reload": "2 Full",
-    "special": "SM Wep, Storm, Tearing",
-    "weight": "26kg",
-    "availability": "Respected",
-    "cost": "20 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "storm",
+      "tearing"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 26,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

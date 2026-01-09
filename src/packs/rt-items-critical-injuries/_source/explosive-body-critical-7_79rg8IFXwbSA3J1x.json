@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Body Critical 7",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_body_7",
+    "damageType": "explosive",
+    "bodyPart": "body",
+    "severity": 7,
+    "effect": "<p>The explosive force of the attack ruptures the target's flesh and scrambles his nervous system, knocking him to the ground. The target is Stunned for [[1d10]] rounds and is knocked Prone He also suffers Blood Loss, and must make a Challenging (+0) Toughness test or fall Unconscious.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Body (Severity 7)</strong></p><p>The explosive force of the attack ruptures the target's flesh and scrambles his nervous system, knocking him to the ground. The target is Stunned for [[1d10]] rounds and is knocked Prone He also suffers Blood Loss, and must make a Challenging (+0) Toughness test or fall Unconscious.</p>",
+      "chat": "",
+      "summary": "Explosive Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "79rg8IFXwbSA3J1x"
+}

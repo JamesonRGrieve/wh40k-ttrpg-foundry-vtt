@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "krak-grenade-guard",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10+4",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 4,
+      "penetration": 6
+    },
+    "special": [
+      "concussive-0"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (0)",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "rare",
-    "cost": "50 T",
-    "source": "Only War: Core",
-    "note": "Triggers Righteous Fury on a 9 or 10 damage roll",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (0)</p><p><b>Note:</b> Triggers Righteous Fury on a 9 or 10 damage roll</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Triggers Righteous Fury on a 9 or 10 damage roll",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

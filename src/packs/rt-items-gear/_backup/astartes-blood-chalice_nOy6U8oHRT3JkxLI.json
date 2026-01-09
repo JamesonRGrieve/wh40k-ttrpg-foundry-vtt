@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Blood Chalice",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "-",
+    "availability": "User can spend a Fate Point to drink from the Chalice as a Full Action. In so doing, they return to Full Wounds and remove all Fatigue. Doesn't restore lost limbs or permenant injuries.",
+    "cost": "Blood Angels Sanguinary Priests Only.",
+    "effects": "Famed",
+    "notes": "25 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 25 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nOy6U8oHRT3JkxLI"
+}

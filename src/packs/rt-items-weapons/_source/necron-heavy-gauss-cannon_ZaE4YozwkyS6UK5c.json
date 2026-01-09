@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-heavy-gauss-cannon",
     "class": "heavy",
     "type": "exotic",
-    "range": "200m",
-    "rof": "S/-/-",
-    "damage": "4d10+10",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "necron-wep",
+      "gauss",
+      "proven-4"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Necron Wep, Gauss, Proven (4)",
-    "weight": "50kg",
+    "weight": 50,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Necron Wep, Gauss, Proven (4)</p><p><b>Note:</b> Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

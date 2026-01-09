@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "All (H/B/A/L)",
-    "ap": "8/14/10/10",
-    "maxAg": null,
-    "weight": "400kg",
+    "weight": 400,
     "availability": "unique",
-    "cost": "-",
     "notes": "Must be Hulking Sized Ork to Wear. +10 to Strength Characteristic, +1 Size. Environmentally sealed with 6 hours of air, has inbuilt Best Quality Advanced Helmet Systems. Power lasts 18 Hours before needing Recharge. (Thermal Vision, +20 Perception in Darkness, Dark Sight+Heightened Senses (Sight), Free Action Awareness to Spot Hidden enemies)",
     "source": "HB",
     "description": {
       "value": "<p>Must be Hulking Sized Ork to Wear. +10 to Strength Characteristic, +1 Size. Environmentally sealed with 6 hours of air, has inbuilt Best Quality Advanced Helmet Systems. Power lasts 18 Hours before needing Recharge. (Thermal Vision, +20 Perception in Darkness, Dark Sight+Heightened Senses (Sight), Free Action Awareness to Spot Hidden enemies)</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 10
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

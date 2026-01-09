@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "razor-web",
     "class": "basic",
     "type": "exotic",
-    "range": "50m",
-    "rof": "S/-/-",
-    "damage": "1d10+2",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "Blast (2), Crippling (3), Snare (1)",
-    "weight": "12kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "blast-2",
+      "crippling-3",
+      "snare-1"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 12,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Razor Bladed Webber",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (2), Crippling (3), Snare (1)</p><p><b>Note:</b> Razor Bladed Webber</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Razor Bladed Webber",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

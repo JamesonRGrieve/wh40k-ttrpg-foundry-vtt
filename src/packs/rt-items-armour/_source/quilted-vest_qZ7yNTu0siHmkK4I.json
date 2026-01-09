@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "primitive",
-    "locations": "Body",
-    "ap": 2,
-    "maxAg": null,
-    "weight": "2kg",
+    "weight": 2,
     "availability": "common",
-    "cost": "10 T",
     "notes": "Halve primitive armour AP vs non primitive weapons",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 2,
       "body": 2,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftArm": 2,
+      "rightArm": 2,
+      "leftLeg": 2,
+      "rightLeg": 2
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

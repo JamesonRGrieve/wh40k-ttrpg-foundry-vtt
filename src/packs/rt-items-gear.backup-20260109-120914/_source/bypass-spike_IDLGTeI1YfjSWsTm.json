@@ -1,0 +1,30 @@
+{
+  "name": "Bypass Spike",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "Attempts to bypass cogitators or electronic devices it is embedded into, giving limited control over them. Gives +20 to Tech-Use Tests for the \"Security Systems\" Special Use of the skill. If succeeding on the test, reduce time required by one minute per DoS (minimum of 10 seconds).",
+    "cost": "\"Limited Control\" could mean disabling security systems, accessing stored data, etc.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IDLGTeI1YfjSWsTm"
+}

@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "m31-plasma-cannon",
     "class": "heavy",
     "type": "plasma",
-    "range": "150m",
-    "rof": "S/-/-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": 20,
-    "reload": "5 Full",
-    "special": "Blast (1), Overheats, Maximal",
-    "weight": "45kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "blast-1",
+      "overheats",
+      "maximal"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 45,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "Can choose between firing normally or maximally",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (1), Overheats, Maximal</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can choose between firing normally or maximally",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

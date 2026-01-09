@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "-",
-    "availability": "Ancient Torture device, used for self-penitence. Used in Downtime after a mission is complete, though must be acquired using the requisition for a mission. Entering the Pain Glove allows the character to spend Experience Points to remove Insanity or Corruption, and lose an additional 1d5 Insanity and 1 Corruption when doing so.",
-    "cost": "Imperial Fists Only.",
-    "effects": "Rare",
-    "notes": "15 R",
-    "source": "DW: First Founding",
+    "category": "tools",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Ancient Torture device, used for self-penitence. Used in Downtime after a mission is complete, though must be acquired using the requisition for a mission. Entering the Pain Glove allows the character to spend Experience Points to remove Insanity or Corruption, and lose an additional 1d5 Insanity and 1 Corruption when doing so.</p>\n<h3>Requirements</h3><p>Imperial Fists Only.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Ancient Torture device, used for self-penitence. Used in Downtime after a mission is complete, though must be acquired using the requisition for a mission. Entering the Pain Glove allows the character"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Ancient Torture device, used for self-penitence. Used in Downtime after a mission is complete, though must be acquired using the requisition for a mission. Entering the Pain Glove allows the character to spend Experience Points to remove Insanity or Corruption, and lose an additional 1d5 Insanity and 1 Corruption when doing so.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

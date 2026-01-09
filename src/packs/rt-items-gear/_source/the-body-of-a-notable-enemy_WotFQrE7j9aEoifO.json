@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "The Head of an enemy, the skull of a Saint, the skin of a Sinner, etc. Can be used both in the rituals of dark gods and Imperial Holy Relics, depending on the presentation.",
-    "cost": "Either Heretical or not depending on the body in question.",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>The Head of an enemy, the skull of a Saint, the skin of a Sinner, etc. Can be used both in the rituals of dark gods and Imperial Holy Relics, depending on the presentation.</p>\n<h3>Requirements</h3><p>Either Heretical or not depending on the body in question.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "The Head of an enemy, the skull of a Saint, the skin of a Sinner, etc. Can be used both in the rituals of dark gods and Imperial Holy Relics, depending on the presentation."
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Head of an enemy, the skull of a Saint, the skin of a Sinner, etc. Can be used both in the rituals of dark gods and Imperial Holy Relics, depending on the presentation.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,48 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Vehicle: Manticore Vehicle",
-    "damageOrEffect": "4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive (5)",
-    "qualities": "Blast(15+1d10), Concussive (5)",
-    "weight": "4000kg",
+    "identifier": "manticore-missile",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast",
+      "concussive-5"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive (5)</p>",
+    "notes": "",
+    "weight": 4000,
     "availability": "rare",
-    "cost": null,
-    "source": "OW: Shield of Humanity",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive (5)</p><p><b>Qualities:</b> Blast(15+1d10), Concussive (5)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "OW: Shield of Humanity",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

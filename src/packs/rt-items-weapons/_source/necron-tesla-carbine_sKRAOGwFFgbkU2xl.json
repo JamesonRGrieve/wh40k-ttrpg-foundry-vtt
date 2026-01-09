@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-tesla-carbine",
     "class": "basic",
     "type": "exotic",
-    "range": "75m",
-    "rof": "S/-/-",
-    "damage": "2d10+3",
-    "damageType": "Energy",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 75,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 3
+    },
+    "special": [
+      "necron-wep",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Necron Wep, Shocking",
-    "weight": "20kg",
+    "weight": 20,
     "availability": "unique",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "Always Best Quality. On Damage roll of 9/10, or when killing/incapacitating enemy, random target within 15m of first is autohit in body by one shot of weapon, effect can repeat. If Retrofitted, needs external power backpack, gains Overheats Q. from backpack, good for 3d10 Shots.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Necron Wep, Shocking</p><p><b>Note:</b> Always Best Quality. On Damage roll of 9/10, or when killing/incapacitating enemy, random target within 15m of first is autohit in body by one shot of weapon, effect can repeat. If Retrofitted, needs external power backpack, gains Overheats Q. from backpack, good for 3d10 Shots.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. On Damage roll of 9/10, or when killing/incapacitating enemy, random target within 15m of first is autohit in body by one shot of weapon, effect can repeat. If Retrofitted, needs external power backpack, gains Overheats Q. from backpack, good for 3d10 Shots.",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

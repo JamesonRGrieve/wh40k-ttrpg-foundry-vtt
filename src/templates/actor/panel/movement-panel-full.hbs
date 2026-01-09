@@ -1,140 +1,121 @@
-{{!-- Movement & Physical Panel - Modern Dynamic Design --}}
+{{!-- Mobility Panel - Clean, Modern Design --}}
 
-<div class="rt-panel rt-panel-movement-full">
-    <div class="rt-panel-header">
-        <span class="rt-panel-title"><i class="fas fa-bolt"></i> Mobility</span>
+<div class="rt-panel rt-panel-mobility">
+    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+         data-toggle="mobility_details"
+         title="Click to {{#if (isExpanded 'mobility_details' actor)}}collapse{{else}}expand{{/if}}">
+        <span class="rt-panel-title">
+            <i class="fas fa-person-running"></i> Mobility
+        </span>
+        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'mobility_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
     </div>
+
     <div class="rt-panel-body">
         
-        {{!-- Speed Gauge - Hero Display --}}
-        <div class="rt-speed-hero">
-            <div class="rt-speed-gauge">
-                <svg class="rt-gauge-ring" viewBox="0 0 120 120">
-                    <circle class="rt-gauge-bg" cx="60" cy="60" r="52" />
-                    <circle class="rt-gauge-fill" cx="60" cy="60" r="52" 
-                            style="--gauge-percent: {{actor.movement.run}}" />
-                </svg>
-                <div class="rt-gauge-center">
-                    <span class="rt-gauge-value">{{actor.movement.run}}</span>
-                    <span class="rt-gauge-unit">m/rnd</span>
-                    <span class="rt-gauge-label">Sprint</span>
+        {{!-- Movement Speeds - Always Visible --}}
+        <div class="rt-mobility-speeds">
+            <div class="rt-speed-box rt-speed-half">
+                <i class="fas fa-walking"></i>
+                <div class="rt-speed-data">
+                    <span class="rt-speed-value">{{system.movement.half}}</span>
+                    <span class="rt-speed-unit">m</span>
                 </div>
+                <span class="rt-speed-label">Half</span>
             </div>
             
-            {{!-- Speed Tiers --}}
-            <div class="rt-speed-tiers">
-                <div class="rt-speed-tier rt-tier-walk" title="Half Action Movement">
-                    <div class="rt-tier-bar">
-                        <div class="rt-tier-fill" style="width: {{multiply (divide actor.movement.half actor.movement.run) 100}}%"></div>
-                    </div>
-                    <span class="rt-tier-value">{{actor.movement.half}}m</span>
-                    <span class="rt-tier-label">Walk</span>
+            <div class="rt-speed-box rt-speed-full">
+                <i class="fas fa-shoe-prints"></i>
+                <div class="rt-speed-data">
+                    <span class="rt-speed-value">{{system.movement.full}}</span>
+                    <span class="rt-speed-unit">m</span>
                 </div>
-                <div class="rt-speed-tier rt-tier-move" title="Full Action Movement">
-                    <div class="rt-tier-bar">
-                        <div class="rt-tier-fill" style="width: {{multiply (divide actor.movement.full actor.movement.run) 100}}%"></div>
-                    </div>
-                    <span class="rt-tier-value">{{actor.movement.full}}m</span>
-                    <span class="rt-tier-label">Move</span>
-                </div>
-                <div class="rt-speed-tier rt-tier-charge" title="Charge Action">
-                    <div class="rt-tier-bar">
-                        <div class="rt-tier-fill" style="width: {{multiply (divide actor.movement.charge actor.movement.run) 100}}%"></div>
-                    </div>
-                    <span class="rt-tier-value">{{actor.movement.charge}}m</span>
-                    <span class="rt-tier-label">Charge</span>
-                </div>
-                <div class="rt-speed-tier rt-tier-run" title="Run Action (Full Round)">
-                    <div class="rt-tier-bar">
-                        <div class="rt-tier-fill" style="width: 100%"></div>
-                    </div>
-                    <span class="rt-tier-value">{{actor.movement.run}}m</span>
-                    <span class="rt-tier-label">Run</span>
-                </div>
-            </div>
-        </div>
-        
-        {{!-- Athletics & Carry - Dual Column --}}
-        <div class="rt-physical-grid">
-            
-            {{!-- Athletics Column --}}
-            <div class="rt-physical-column rt-athletics-col">
-                <div class="rt-column-header">
-                    <i class="fas fa-person-running"></i>
-                    <span>Athletics</span>
-                </div>
-                <div class="rt-metric-row">
-                    <div class="rt-metric rt-metric-leap">
-                        <i class="fas fa-arrow-up"></i>
-                        <div class="rt-metric-data">
-                            <span class="rt-metric-value">{{actor.movement.leapVertical}}m</span>
-                            <span class="rt-metric-label">Leap Up</span>
-                        </div>
-                    </div>
-                    <div class="rt-metric rt-metric-leap">
-                        <i class="fas fa-arrows-left-right"></i>
-                        <div class="rt-metric-data">
-                            <span class="rt-metric-value">{{actor.movement.leapHorizontal}}m</span>
-                            <span class="rt-metric-label">Leap Across</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="rt-metric-row">
-                    <div class="rt-metric rt-metric-jump">
-                        <i class="fas fa-arrows-up-down"></i>
-                        <div class="rt-metric-data">
-                            <span class="rt-metric-value">{{actor.movement.jump}}cm</span>
-                            <span class="rt-metric-label">Jump Height</span>
-                        </div>
-                    </div>
-                </div>
+                <span class="rt-speed-label">Full</span>
             </div>
             
-            {{!-- Carrying Column --}}
-            <div class="rt-physical-column rt-carrying-col">
-                <div class="rt-column-header">
-                    <i class="fas fa-weight-hanging"></i>
-                    <span>Carrying</span>
+            <div class="rt-speed-box rt-speed-charge">
+                <i class="fas fa-running"></i>
+                <div class="rt-speed-data">
+                    <span class="rt-speed-value">{{system.movement.charge}}</span>
+                    <span class="rt-speed-unit">m</span>
                 </div>
-                <div class="rt-carry-metrics">
-                    <div class="rt-carry-item" title="Normal carrying capacity">
-                        <span class="rt-carry-value">{{actor.lifting.carry}}</span>
-                        <span class="rt-carry-unit">kg</span>
-                        <span class="rt-carry-label">Carry</span>
-                    </div>
-                    <div class="rt-carry-item" title="Maximum lift capacity">
-                        <span class="rt-carry-value">{{actor.lifting.lift}}</span>
-                        <span class="rt-carry-unit">kg</span>
-                        <span class="rt-carry-label">Lift</span>
-                    </div>
-                    <div class="rt-carry-item" title="Push/drag capacity">
-                        <span class="rt-carry-value">{{actor.lifting.push}}</span>
-                        <span class="rt-carry-unit">kg</span>
-                        <span class="rt-carry-label">Push</span>
-                    </div>
-                </div>
-                
-                {{!-- Encumbrance Bar --}}
-                <div class="rt-encumbrance-display {{#if actor.encumbrance.encumbered}}rt-over{{/if}}">
-                    <div class="rt-enc-header">
-                        <span class="rt-enc-current">{{actor.encumbrance.current}}</span>
-                        <span class="rt-enc-separator">/</span>
-                        <span class="rt-enc-max">{{actor.encumbrance.max}} kg</span>
-                    </div>
-                    <div class="rt-enc-track">
-                        <div class="rt-enc-progress" style="width: {{encumbrancePercent}}%">
-                            <div class="rt-enc-glow"></div>
-                        </div>
-                        <div class="rt-enc-markers">
-                            <span class="rt-enc-mark" style="left: 50%"></span>
-                            <span class="rt-enc-mark" style="left: 75%"></span>
-                            <span class="rt-enc-mark rt-mark-danger" style="left: 100%"></span>
-                        </div>
-                    </div>
-                </div>
+                <span class="rt-speed-label">Charge</span>
             </div>
             
+            <div class="rt-speed-box rt-speed-run">
+                <i class="fas fa-wind"></i>
+                <div class="rt-speed-data">
+                    <span class="rt-speed-value">{{system.movement.run}}</span>
+                    <span class="rt-speed-unit">m</span>
+                </div>
+                <span class="rt-speed-label">Run</span>
+            </div>
         </div>
 
+        {{!-- Expanded Details --}}
+        <div class="rt-panel-details mobility_details" {{hideIfNot (isExpanded 'mobility_details' actor)}}>
+            
+            {{!-- Athletics Section --}}
+            <div class="rt-mobility-section">
+                <div class="rt-section-header">
+                    <i class="fas fa-person-hiking"></i>
+                    <span>Athletics</span>
+                </div>
+                <div class="rt-athletics-grid">
+                    <div class="rt-athletic-stat">
+                        <span class="rt-athletic-label">Leap Vertical</span>
+                        <span class="rt-athletic-value">{{system.movement.leapVertical}}m</span>
+                    </div>
+                    <div class="rt-athletic-stat">
+                        <span class="rt-athletic-label">Leap Horizontal</span>
+                        <span class="rt-athletic-value">{{system.movement.leapHorizontal}}m</span>
+                    </div>
+                    <div class="rt-athletic-stat">
+                        <span class="rt-athletic-label">Jump Height</span>
+                        <span class="rt-athletic-value">{{system.movement.jump}}cm</span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Carrying Capacity Section --}}
+            <div class="rt-mobility-section">
+                <div class="rt-section-header">
+                    <i class="fas fa-weight-hanging"></i>
+                    <span>Carrying Capacity</span>
+                </div>
+                <div class="rt-carrying-grid">
+                    <div class="rt-carry-stat">
+                        <span class="rt-carry-label">Lift</span>
+                        <span class="rt-carry-value">{{system.lifting.lift}}<span class="rt-carry-unit">kg</span></span>
+                    </div>
+                    <div class="rt-carry-stat">
+                        <span class="rt-carry-label">Carry</span>
+                        <span class="rt-carry-value">{{system.lifting.carry}}<span class="rt-carry-unit">kg</span></span>
+                    </div>
+                    <div class="rt-carry-stat">
+                        <span class="rt-carry-label">Push/Drag</span>
+                        <span class="rt-carry-value">{{system.lifting.push}}<span class="rt-carry-unit">kg</span></span>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Size --}}
+            <div class="rt-mobility-section rt-size-section">
+                <div class="rt-section-header">
+                    <i class="fas fa-arrows-alt"></i>
+                    <span>Size</span>
+                </div>
+                <select name="system.size" data-dtype="String" class="rt-size-select">
+                    <option value="miniscule" {{#if (eq system.size "miniscule")}}selected{{/if}}>Miniscule</option>
+                    <option value="puny" {{#if (eq system.size "puny")}}selected{{/if}}>Puny</option>
+                    <option value="scrawny" {{#if (eq system.size "scrawny")}}selected{{/if}}>Scrawny</option>
+                    <option value="average" {{#if (eq system.size "average")}}selected{{/if}}>Average</option>
+                    <option value="hulking" {{#if (eq system.size "hulking")}}selected{{/if}}>Hulking</option>
+                    <option value="enormous" {{#if (eq system.size "enormous")}}selected{{/if}}>Enormous</option>
+                    <option value="massive" {{#if (eq system.size "massive")}}selected{{/if}}>Massive</option>
+                    <option value="immense" {{#if (eq system.size "immense")}}selected{{/if}}>Immense</option>
+                </select>
+            </div>
+
+        </div>
     </div>
 </div>

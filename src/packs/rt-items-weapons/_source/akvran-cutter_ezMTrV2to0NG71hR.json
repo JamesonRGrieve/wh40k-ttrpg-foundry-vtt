@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "akvran-cutter",
     "class": "thrown",
     "type": "exotic",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 1,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 6
+    },
+    "special": [
+      "blast-3",
+      "concussive-3",
+      "proven-4"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (3), Concussive (3), Proven (4)",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3), Concussive (3), Proven (4)</p><p><b>Note:</b> Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1.",
-    "cost": "Generally Mechanicus Only although available through illegal Heretek opeartions.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1.</p>\n<h3>Requirements</h3><p>Generally Mechanicus Only although available through illegal Heretek opeartions.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1."
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "3kg",
-    "availability": "When activated, triggers a pulse of energy that negates force fields, psychic protections, and other unnatural defences within 10 metres of it for 1d5 rounds. Once used, requires a day to recharge.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "tools",
+    "weight": 3,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When activated, triggers a pulse of energy that negates force fields, psychic protections, and other unnatural defences within 10 metres of it for 1d5 rounds. Once used, requires a day to recharge.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When activated, triggers a pulse of energy that negates force fields, psychic protections, and other unnatural defences within 10 metres of it for 1d5 rounds. Once used, requires a day to recharge."
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When activated, triggers a pulse of energy that negates force fields, psychic protections, and other unnatural defences within 10 metres of it for 1d5 rounds. Once used, requires a day to recharge.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

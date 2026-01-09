@@ -1,0 +1,30 @@
+{
+  "name": "Augury Malifica",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "1kg",
+    "availability": "Master-Crafted Relic Auspex of the Deathwatch. Works as regular Auspex but has +30 to Awareness Tests to detect Daemons and only +5 against other adversaries. Can also provide cryptic clues or hints of impending Daemonic Activity. ",
+    "cost": "Officially belongs to the Grey Knights, they think it lost, and would be annoyed to find the Deathwatch have it.",
+    "effects": "Hero",
+    "notes": "20 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0VyyLxWFo9fZHQir"
+}

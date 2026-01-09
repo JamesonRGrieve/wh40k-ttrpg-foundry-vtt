@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Concealed in the Body, internally synthesises up to three substances chosen at implantation (appropriate consumables/drugs). As a Half Action make +10 Toughness Test to self-adminster one of these substances via the gland. Failiure instead causes 1 Fatigue. 4+ Degrees of Failure also deals 1d10 nonpermenant Toughness Damage.",
-    "cost": "Cost does not include Drug Doses which must be acquired seperately.",
-    "effects": "Very Rare",
-    "notes": "5000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 5000 T</p>"
+      "value": "<p>Concealed in the Body, internally synthesises up to three substances chosen at implantation (appropriate consumables/drugs). As a Half Action make +10 Toughness Test to self-adminster one of these substances via the gland. Failiure instead causes 1 Fatigue. 4+ Degrees of Failure also deals 1d10 nonpermenant Toughness Damage.</p>\n<h3>Requirements</h3><p>Cost does not include Drug Doses which must be acquired seperately.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 5000 T</p>",
+      "chat": "",
+      "summary": "Concealed in the Body, internally synthesises up to three substances chosen at implantation (appropriate consumables/drugs). As a Half Action make +10 Toughness Test to self-adminster one of these sub"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Concealed in the Body, internally synthesises up to three substances chosen at implantation (appropriate consumables/drugs). As a Half Action make +10 Toughness Test to self-adminster one of these substances via the gland. Failiure instead causes 1 Fatigue. 4+ Degrees of Failure also deals 1d10 nonpermenant Toughness Damage.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

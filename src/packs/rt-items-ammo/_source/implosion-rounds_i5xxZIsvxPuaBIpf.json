@@ -3,19 +3,45 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Bolt: Any",
-    "damageOrEffect": "If target takes any damage, also suffers 1d5 nonpermenant Agility Damage.",
-    "qualities": null,
-    "weight": "10% wep",
-    "availability": "Respected",
-    "cost": "27 R / Clip",
-    "source": "Deathwatch: Core",
+    "identifier": "implosion-rounds",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>If target takes any damage, also suffers 1d5 nonpermenant Agility Damage.</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 27,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> If target takes any damage, also suffers 1d5 nonpermenant Agility Damage.</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

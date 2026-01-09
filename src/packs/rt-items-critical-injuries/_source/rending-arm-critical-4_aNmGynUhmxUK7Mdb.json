@@ -1,0 +1,32 @@
+{
+  "name": "Rending Arm Critical 4",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_arm_4",
+    "damageType": "rending",
+    "bodyPart": "arm",
+    "severity": 4,
+    "effect": "<p>The attack flays the skin from the limb, filling the air with blood and the sounds of his screaming. The target suffers 2 levels of Fatigue and falls Prone. The arm is Useless for [[1d10]] rounds.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Arm (Severity 4)</strong></p><p>The attack flays the skin from the limb, filling the air with blood and the sounds of his screaming. The target suffers 2 levels of Fatigue and falls Prone. The arm is Useless for [[1d10]] rounds.</p>",
+      "chat": "",
+      "summary": "Rending Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "aNmGynUhmxUK7Mdb"
+}

@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "scipios-regret",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Rending",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "razor-sharp",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Balanced, Razor Sharp, Tearing",
-    "weight": "5kg",
-    "availability": "Hero",
-    "cost": "30 R",
-    "source": "DW: Honour the Chapter",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Chainsword of the Angels Vermillion Chapter. Grants +20 to Fellowship Tests to impress or awe others when wielded or properly displayed.",
+    "weight": 5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Balanced, Razor Sharp, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Chainsword of the Angels Vermillion Chapter. Grants +20 to Fellowship Tests to impress or awe others when wielded or properly displayed.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Chainsword of the Angels Vermillion Chapter. Grants +20 to Fellowship Tests to impress or awe others when wielded or properly displayed.",
+    "source": "DW: Honour the Chapter"
   },
   "effects": [],
   "flags": {},

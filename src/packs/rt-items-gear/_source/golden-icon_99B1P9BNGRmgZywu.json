@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing (Astartes)",
-    "weight": "-",
-    "availability": "Gilded Icons hanging on armour or belts. Can be Icons of Inspiration (+3 to Command Tests), Wings of Wrath (+1 Damage to Charge Attacks), or Purity Focus (Reduce Gained Corruption by 1, min 1).",
-    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Blood Angels",
-    "effects": "Initiated",
-    "notes": "-",
-    "source": "Deathwatch: Core",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Gilded Icons hanging on armour or belts. Can be Icons of Inspiration (+3 to Command Tests), Wings of Wrath (+1 Damage to Charge Attacks), or Purity Focus (Reduce Gained Corruption by 1, min 1).</p>\n<h3>Requirements</h3><p>Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Blood Angels</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Gilded Icons hanging on armour or belts. Can be Icons of Inspiration (+3 to Command Tests), Wings of Wrath (+1 Damage to Charge Attacks), or Purity Focus (Reduce Gained Corruption by 1, min 1)."
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Gilded Icons hanging on armour or belts. Can be Icons of Inspiration (+3 to Command Tests), Wings of Wrath (+1 Damage to Charge Attacks), or Purity Focus (Reduce Gained Corruption by 1, min 1).",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "frag-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-4"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (4)",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "common",
-    "cost": "10 T",
-    "source": "Rogue Trader: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (4)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

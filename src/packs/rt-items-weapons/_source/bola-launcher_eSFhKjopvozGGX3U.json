@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "bola-launcher",
     "class": "basic",
     "type": "launcher",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "1d10",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 1,
-    "reload": "Full",
-    "special": "Primitive (8), Snare",
-    "weight": "8.75kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "snare"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8.75,
     "availability": "scarce",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Fires Bolas, can't use unusual ammo",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Snare</p><p><b>Note:</b> Fires Bolas, can't use unusual ammo</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires Bolas, can't use unusual ammo",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

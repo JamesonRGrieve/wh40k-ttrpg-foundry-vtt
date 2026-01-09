@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "argent-globe",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "blast-3",
+      "crippling-3",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (3), Crippling (3), Sanctified",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Beyond",
-    "note": "Perfect spheres of blessed silver that shreds through warpspawn",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3), Crippling (3), Sanctified</p><p><b>Note:</b> Perfect spheres of blessed silver that shreds through warpspawn</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Perfect spheres of blessed silver that shreds through warpspawn",
+    "source": "DH 2E: Enemies Beyond"
   },
   "effects": [],
   "flags": {},

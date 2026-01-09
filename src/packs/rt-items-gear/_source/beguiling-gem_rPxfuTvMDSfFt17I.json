@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "-",
-    "availability": "Individuals engaged in melee with the Character must pass a -10 Willpower Test before taking any actions on their turn, if they fail they can only make Reactions. Once passed, they do not suffer the effects of this item for the rest of the encounter.",
-    "cost": "Heretical",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "tools",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Individuals engaged in melee with the Character must pass a -10 Willpower Test before taking any actions on their turn, if they fail they can only make Reactions. Once passed, they do not suffer the effects of this item for the rest of the encounter.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Individuals engaged in melee with the Character must pass a -10 Willpower Test before taking any actions on their turn, if they fail they can only make Reactions. Once passed, they do not suffer the e"
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Individuals engaged in melee with the Character must pass a -10 Willpower Test before taking any actions on their turn, if they fail they can only make Reactions. Once passed, they do not suffer the effects of this item for the rest of the encounter.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

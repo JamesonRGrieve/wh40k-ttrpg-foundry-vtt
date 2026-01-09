@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Leg Critical 1",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_leg_1",
+    "damageType": "explosive",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effect": "<p>A glancing blast sends the character backwards one metre. The target must make a Challenging (+0) Toughness test or be knocked Prone.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Leg (Severity 1)</strong></p><p>A glancing blast sends the character backwards one metre. The target must make a Challenging (+0) Toughness test or be knocked Prone.</p>",
+      "chat": "",
+      "summary": "Explosive Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "ciAGze22eexmYQI8"
+}

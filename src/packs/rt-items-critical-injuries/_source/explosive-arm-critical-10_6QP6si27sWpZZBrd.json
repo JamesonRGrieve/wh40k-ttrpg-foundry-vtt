@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Arm Critical 10",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_arm_10",
+    "damageType": "explosive",
+    "bodyPart": "arm",
+    "severity": 10,
+    "effect": "<p>With a mighty bang the arm is blasted from the target's body, killing the target instantly in a rain of blood droplets. In addition, if the target was carrying a weapon with a power source in his hand (such as a power sword or chainsword), then it violently explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target to anyone within two metres. If the target is carrying any ammunition it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres (in addition to the hit noted above). If the target is carrying any grenades or missiles, these also detonate immediately with their normal effects.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Arm (Severity 10)</strong></p><p>With a mighty bang the arm is blasted from the target's body, killing the target instantly in a rain of blood droplets. In addition, if the target was carrying a weapon with a power source in his hand (such as a power sword or chainsword), then it violently explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target to anyone within two metres. If the target is carrying any ammunition it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres (in addition to the hit noted above). If the target is carrying any grenades or missiles, these also detonate immediately with their normal effects.</p>",
+      "chat": "",
+      "summary": "Explosive Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "6QP6si27sWpZZBrd"
+}

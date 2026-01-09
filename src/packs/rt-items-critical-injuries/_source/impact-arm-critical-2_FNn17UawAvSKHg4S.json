@@ -1,0 +1,32 @@
+{
+  "name": "Impact Arm Critical 2",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_arm_2",
+    "damageType": "impact",
+    "bodyPart": "arm",
+    "severity": 2,
+    "effect": "<p>The strike leaves a deep bruise, possibly causing minor fractures in the arm. The target suffers 1 level of Fatigue.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Arm (Severity 2)</strong></p><p>The strike leaves a deep bruise, possibly causing minor fractures in the arm. The target suffers 1 level of Fatigue.</p>",
+      "chat": "",
+      "summary": "Impact Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "FNn17UawAvSKHg4S"
+}

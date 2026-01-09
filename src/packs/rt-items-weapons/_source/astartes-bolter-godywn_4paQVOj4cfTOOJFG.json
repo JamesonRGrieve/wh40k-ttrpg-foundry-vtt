@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-bolter-godywn",
     "class": "basic",
     "type": "bolt",
-    "range": "100m",
-    "rof": "S/2/4",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 28,
-    "reload": "Full",
-    "special": "SM Wep, Tearing",
-    "weight": "18kg",
-    "availability": "Initiated",
-    "cost": "5 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 28,
+      "value": 28,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 18,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

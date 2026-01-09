@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-shuriken-pistol",
     "class": "pistol",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/3/-",
-    "damage": "1d10+4",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 60,
-    "reload": "Full",
-    "special": "Razor Sharp, Reliable",
-    "weight": "1.2kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "razor-sharp",
+      "reliable"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 1.2,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "A Somewhat common weapon amongst successful Cold Traders and other such Xenotech brokers as a status symbol.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> A Somewhat common weapon amongst successful Cold Traders and other such Xenotech brokers as a status symbol.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Somewhat common weapon amongst successful Cold Traders and other such Xenotech brokers as a status symbol.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

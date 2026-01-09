@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Exotic: Kroot Rifles",
-    "damageOrEffect": "Replaces RoF with S/-/-, increases damage to 1d10+7 E, and penetration to 5, weapon gains Accurate Quality. However, decreases Clip Size to 1. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
-    "qualities": "Accurate",
-    "weight": "0.1kg",
+    "identifier": "kroot-sniper-rounds",
+    "weaponTypes": [
+      "exotic"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "accurate"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Replaces RoF with S/-/-, increases damage to 1d10+7 E, and penetration to 5, weapon gains Accurate Quality. However, decreases Clip Size to 1. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>",
+    "notes": "",
+    "weight": 0.1,
     "availability": "extremely-rare",
-    "cost": null,
-    "source": "RT: Tau Char. Guide",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Replaces RoF with S/-/-, increases damage to 1d10+7 E, and penetration to 5, weapon gains Accurate Quality. However, decreases Clip Size to 1. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p><p><b>Qualities:</b> Accurate</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Tau Char. Guide",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

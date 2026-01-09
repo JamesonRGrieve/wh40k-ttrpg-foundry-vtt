@@ -1,0 +1,32 @@
+{
+  "name": "Impact Arm Critical 1",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_arm_1",
+    "damageType": "impact",
+    "bodyPart": "arm",
+    "severity": 1,
+    "effect": "<p>The attack strikes the target's limb with a powerful blow. He drops anything he was holding in that hand.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Arm (Severity 1)</strong></p><p>The attack strikes the target's limb with a powerful blow. He drops anything he was holding in that hand.</p>",
+      "chat": "",
+      "summary": "Impact Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "BB8ZI60cppp1ufUw"
+}

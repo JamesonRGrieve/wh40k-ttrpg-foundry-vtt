@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "vehicle",
+    "identifier": "chem-cannon",
+    "class": "melee",
     "type": "exotic",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "2d10+5",
-    "damageType": "Energy",
-    "penetration": 9,
-    "clip": 50,
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 9
+    },
+    "special": [
+      "crippling-2",
+      "felling-2",
+      "spray",
+      "toxic-4"
+    ],
+    "clip": {
+      "max": 50,
+      "value": 50,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Crippling (2), Felling (2), Spray, Toxic (4)",
-    "weight": "600kg",
+    "weight": 600,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "OW: Shield of Humanity",
-    "note": "After Firing, a Toxic Cloud of 1d5 Metres Radius lasts for 1d5 Rounds. Characters that end their turn within the cloud suffer as if they were hit by the weapon again and also begin to Suffocate.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Crippling (2), Felling (2), Spray, Toxic (4)</p><p><b>Note:</b> After Firing, a Toxic Cloud of 1d5 Metres Radius lasts for 1d5 Rounds. Characters that end their turn within the cloud suffer as if they were hit by the weapon again and also begin to Suffocate.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "After Firing, a Toxic Cloud of 1d5 Metres Radius lasts for 1d5 Rounds. Characters that end their turn within the cloud suffer as if they were hit by the weapon again and also begin to Suffocate.",
+    "source": "OW: Shield of Humanity"
   },
   "effects": [],
   "flags": {},

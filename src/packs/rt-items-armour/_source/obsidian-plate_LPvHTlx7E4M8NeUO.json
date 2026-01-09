@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Body",
-    "ap": 6,
-    "maxAg": 35,
-    "weight": "35kg",
+    "weight": 35,
     "availability": "very-rare",
-    "cost": "-",
     "notes": "Wearer gains Resistance (Psychic Powers) Talent, or an additional +10 to resist Psychic Powers if they already have it. Armour counts as Triple vs hits inflicted by Psychic Bolts. Wearer cannot push their own Psychic Powers and reduces their Psy Rating by 3 (min 1).",
     "source": "DH 2E: Enemies Beyond",
     "description": {
       "value": "<p>Wearer gains Resistance (Psychic Powers) Talent, or an additional +10 to resist Psychic Powers if they already have it. Armour counts as Triple vs hits inflicted by Psychic Bolts. Wearer cannot push their own Psychic Powers and reduces their Psy Rating by 3 (min 1).</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 6,
       "body": 6,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": 35
+    "maxAgility": 35,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "melta-drill",
     "class": "melee",
     "type": "melta",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 13,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 13
+    },
+    "special": [
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Unwieldy",
-    "weight": "15kg",
+    "weight": 15,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: Stars of Inequity",
-    "note": "Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.",
+    "source": "RT: Stars of Inequity"
   },
   "effects": [],
   "flags": {},

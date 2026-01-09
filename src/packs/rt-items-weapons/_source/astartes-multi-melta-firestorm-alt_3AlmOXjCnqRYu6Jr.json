@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-multi-melta-firestorm-alt",
     "class": "heavy",
     "type": "melta",
-    "range": "100m",
-    "rof": "S/2/-",
-    "damage": "2d10+20",
-    "damageType": "Energy",
-    "penetration": 14,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "SM Wep, Blast (2), Recharge, Volatile, Melta",
-    "weight": "70kg",
-    "availability": "Distinguished",
-    "cost": "65 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. ",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 20,
+      "penetration": 14
+    },
+    "special": [
+      "sm-wep",
+      "blast-2",
+      "recharge",
+      "volatile",
+      "melta"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 70,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 65,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (2), Recharge, Volatile, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

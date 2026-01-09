@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ripper-gun",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "30m",
-    "rof": "S/-/6",
-    "damage": "1d10+8",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 48,
-    "reload": "2 Full",
-    "special": "Ogryn-Proof, Scatter",
-    "weight": "35kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 0
+    },
+    "special": [
+      "ogryn-proof",
+      "scatter"
+    ],
+    "clip": {
+      "max": 48,
+      "value": 48,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 35,
     "availability": "common",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Designed for Ogyrns. Functions as a Warhammer in close combat.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Ogryn-Proof, Scatter</p><p><b>Note:</b> Designed for Ogyrns. Functions as a Warhammer in close combat.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Designed for Ogyrns. Functions as a Warhammer in close combat.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

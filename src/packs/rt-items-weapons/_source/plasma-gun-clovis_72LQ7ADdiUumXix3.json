@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "plasma-gun-clovis",
     "class": "basic",
     "type": "plasma",
-    "range": "60m",
-    "rof": "S/3/5",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 40,
-    "reload": "5 Full",
-    "special": "Overheats, Maximal",
-    "weight": "20kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "overheats",
+      "maximal"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 20,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Can only use Maximal Setting on single-shot or semi-automatic fire",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Overheats, Maximal</p><p><b>Note:</b> Can only use Maximal Setting on single-shot or semi-automatic fire</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only use Maximal Setting on single-shot or semi-automatic fire",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

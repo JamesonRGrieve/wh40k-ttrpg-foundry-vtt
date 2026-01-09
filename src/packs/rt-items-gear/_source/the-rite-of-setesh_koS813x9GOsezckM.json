@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "The Living Mummification of a dying body within an all encompassing exoskeleton. Considered borderline techno-heretical, it will keep one alive beyond near death. Character gains Machine (4) and the Regeneration Trait. Halve Weapon Skill, Ballistic Skill, and Agility (round down), and gain 2d10 Insanity Points, as well as adding +5 to any critical effects.",
-    "cost": "Can't be removed, becomes part of the character.",
-    "effects": "Near Unique",
-    "notes": "100000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 100000 T</p>"
+      "value": "<p>The Living Mummification of a dying body within an all encompassing exoskeleton. Considered borderline techno-heretical, it will keep one alive beyond near death. Character gains Machine (4) and the Regeneration Trait. Halve Weapon Skill, Ballistic Skill, and Agility (round down), and gain 2d10 Insanity Points, as well as adding +5 to any critical effects.</p>\n<h3>Requirements</h3><p>Can't be removed, becomes part of the character.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 100000 T</p>",
+      "chat": "",
+      "summary": "The Living Mummification of a dying body within an all encompassing exoskeleton. Considered borderline techno-heretical, it will keep one alive beyond near death. Character gains Machine (4) and the R"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Living Mummification of a dying body within an all encompassing exoskeleton. Considered borderline techno-heretical, it will keep one alive beyond near death. Character gains Machine (4) and the Regeneration Trait. Halve Weapon Skill, Ballistic Skill, and Agility (round down), and gain 2d10 Insanity Points, as well as adding +5 to any critical effects.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

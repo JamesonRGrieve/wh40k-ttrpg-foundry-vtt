@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-fusion-blade",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+8",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 12
+    },
+    "special": [
+      "unstable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Unstable",
-    "weight": "10kg",
+    "weight": 10,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Counts as Fusion Blade as long as functional. If failing weapon Skill Test with this weapon by more Degrees of Failiure than character's Weapon Skill Bonus, the weapon ceases to function until repaired.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Unstable</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Counts as Fusion Blade as long as functional. If failing weapon Skill Test with this weapon by more Degrees of Failiure than character's Weapon Skill Bonus, the weapon ceases to function until repaired.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Counts as Fusion Blade as long as functional. If failing weapon Skill Test with this weapon by more Degrees of Failiure than character's Weapon Skill Bonus, the weapon ceases to function until repaired.",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

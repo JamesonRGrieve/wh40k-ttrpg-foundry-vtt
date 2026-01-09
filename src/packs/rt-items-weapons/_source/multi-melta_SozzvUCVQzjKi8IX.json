@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "multi-melta",
     "class": "heavy",
     "type": "melta",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "4d10+12",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": 10,
-    "reload": "2 Full",
-    "special": "Blast (1)",
-    "weight": "55kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 12
+    },
+    "special": [
+      "blast-1"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
     "availability": "very-rare",
-    "cost": "8500 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 8500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (1)</p><p><b>Note:</b> Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

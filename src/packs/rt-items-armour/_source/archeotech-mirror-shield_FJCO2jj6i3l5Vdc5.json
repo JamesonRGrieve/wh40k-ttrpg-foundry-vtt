@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "Arm, Body",
-    "ap": "60%",
-    "maxAg": "-",
-    "weight": "1.5kg",
+    "weight": 1.5,
     "availability": "near-unique",
-    "cost": "-",
-    "notes": "If it successfully blocks a ranged attack dealing energy damage, can use Reaction to make +0 Agility Test, on success, shot is reflected back at at target of choice within the ranged of the fired weapon, doing full damage to them.",
+    "notes": "If it successfully blocks a ranged attack dealing energy damage, can use Reaction to make +0 Agility Test, on success, shot is reflected back at at target of choice within the ranged of the fired weapon, doing full damage to them. [AP: 60%]",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>If it successfully blocks a ranged attack dealing energy damage, can use Reaction to make +0 Agility Test, on success, shot is reflected back at at target of choice within the ranged of the fired weapon, doing full damage to them.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -31,7 +26,8 @@
       "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

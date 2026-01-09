@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "15kg",
-    "availability": "Space Hoverboard! Gives Flyer (15) Trait, must have Pilot (Personal) Skill. Charge lasts for a few hours, depends on speed and distance.",
-    "cost": "Black, featureless boards that float through strange anti-grav engines. Often painted gairish colours.",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 15,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Space Hoverboard! Gives Flyer (15) Trait, must have Pilot (Personal) Skill. Charge lasts for a few hours, depends on speed and distance.</p>\n<h3>Requirements</h3><p>Black, featureless boards that float through strange anti-grav engines. Often painted gairish colours.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Space Hoverboard! Gives Flyer (15) Trait, must have Pilot (Personal) Skill. Charge lasts for a few hours, depends on speed and distance."
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Hoverboard! Gives Flyer (15) Trait, must have Pilot (Personal) Skill. Charge lasts for a few hours, depends on speed and distance.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

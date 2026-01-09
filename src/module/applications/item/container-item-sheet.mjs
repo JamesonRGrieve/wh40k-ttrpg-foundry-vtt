@@ -4,6 +4,7 @@
  */
 
 import BaseItemSheet from "./base-item-sheet.mjs";
+import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
 
 /**
  * Item sheet for container-type items (weapons, armour, gear, etc.)
@@ -265,10 +266,11 @@ export default class ContainerItemSheet extends BaseItemSheet {
         const itemId = target.closest("[data-nested-item-id]")?.dataset.nestedItemId;
         if (!itemId) return;
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: "Confirm Delete",
-            content: "<p>Are you sure you would like to delete this?</p>",
-            defaultYes: false
+            content: "Are you sure you would like to delete this?",
+            confirmLabel: "Delete",
+            cancelLabel: "Cancel"
         });
 
         if (confirmed) {

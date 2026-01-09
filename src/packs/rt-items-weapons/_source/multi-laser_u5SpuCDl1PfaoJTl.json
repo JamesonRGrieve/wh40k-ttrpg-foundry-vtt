@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "multi-laser",
     "class": "heavy",
     "type": "las",
-    "range": "250m",
-    "rof": "-/-/10",
-    "damage": "3d10+3",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 60,
-    "reload": "3 Full",
-    "special": null,
-    "weight": "50kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 250,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 4
+    },
+    "special": [],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 50,
     "availability": "very-rare",
-    "cost": "2000 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 2000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": ""
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

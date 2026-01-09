@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing (Astartes)",
-    "weight": "-",
-    "availability": "Bearing Heraldry or Ornamental designs, usually worn below the waist but occasionally as full tabards. Can be Ornamental (+2 to Fellowship Tests), Deathwatch/Squad Heraldry (+1 Cohesion per achieved Primary Objective), or Chapter Heraldry (+1 Effective Rank when determining Solo Ability Effectiveness and -1 Squad Cohesion).",
-    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Black Templars",
-    "effects": "Initiated",
-    "notes": "-",
-    "source": "Deathwatch: Core",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Bearing Heraldry or Ornamental designs, usually worn below the waist but occasionally as full tabards. Can be Ornamental (+2 to Fellowship Tests), Deathwatch/Squad Heraldry (+1 Cohesion per achieved Primary Objective), or Chapter Heraldry (+1 Effective Rank when determining Solo Ability Effectiveness and -1 Squad Cohesion).</p>\n<h3>Requirements</h3><p>Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Black Templars</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Bearing Heraldry or Ornamental designs, usually worn below the waist but occasionally as full tabards. Can be Ornamental (+2 to Fellowship Tests), Deathwatch/Squad Heraldry (+1 Cohesion per achieved P"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Bearing Heraldry or Ornamental designs, usually worn below the waist but occasionally as full tabards. Can be Ornamental (+2 to Fellowship Tests), Deathwatch/Squad Heraldry (+1 Cohesion per achieved Primary Objective), or Chapter Heraldry (+1 Effective Rank when determining Solo Ability Effectiveness and -1 Squad Cohesion).",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "25kg",
-    "availability": "Requres Pilot (Personal) Skill, can guide fall, short jumps. Can also count as Flyer (12) for up to a minute, but after one hour of strenuous use needs replacing or repair.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "2000 T",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 25,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 2000 T</p>"
+      "value": "<p>Requres Pilot (Personal) Skill, can guide fall, short jumps. Can also count as Flyer (12) for up to a minute, but after one hour of strenuous use needs replacing or repair.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 2000 T</p>",
+      "chat": "",
+      "summary": "Requres Pilot (Personal) Skill, can guide fall, short jumps. Can also count as Flyer (12) for up to a minute, but after one hour of strenuous use needs replacing or repair."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Requres Pilot (Personal) Skill, can guide fall, short jumps. Can also count as Flyer (12) for up to a minute, but after one hour of strenuous use needs replacing or repair.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

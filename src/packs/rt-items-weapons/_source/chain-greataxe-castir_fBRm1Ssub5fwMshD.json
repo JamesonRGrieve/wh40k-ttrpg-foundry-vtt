@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "chain-greataxe-castir",
     "class": "melee",
     "type": "chain",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+5",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 3
+    },
+    "special": [
+      "felling-2",
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Felling (2), Tearing, Unwieldy",
-    "weight": "18kg",
+    "weight": 18,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Two Handed Weapon, requires Strength Bonus of 4+ to wield.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Felling (2), Tearing, Unwieldy</p><p><b>Note:</b> Two Handed Weapon, requires Strength Bonus of 4+ to wield.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two Handed Weapon, requires Strength Bonus of 4+ to wield.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

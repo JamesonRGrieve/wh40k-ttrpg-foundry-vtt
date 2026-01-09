@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "1.5kg",
-    "availability": "When ignited, creates a 30m radius explosion of white powder that inflames the eyes, nose, and throat, inducing nausia for several hours. Lasts for 2d10 rounds, a strong wind clears it in 1 round. Treat as a Thrown Weapon with 10m range and Smoke Quality, those within must make +0 Tougness Test or gain 1 Fatigue.",
-    "cost": "One use.",
-    "effects": "Scarce",
-    "notes": "17 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 17,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 17 T</p>"
+      "value": "<p>When ignited, creates a 30m radius explosion of white powder that inflames the eyes, nose, and throat, inducing nausia for several hours. Lasts for 2d10 rounds, a strong wind clears it in 1 round. Treat as a Thrown Weapon with 10m range and Smoke Quality, those within must make +0 Tougness Test or gain 1 Fatigue.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 17 T</p>",
+      "chat": "",
+      "summary": "When ignited, creates a 30m radius explosion of white powder that inflames the eyes, nose, and throat, inducing nausia for several hours. Lasts for 2d10 rounds, a strong wind clears it in 1 round. Tre"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When ignited, creates a 30m radius explosion of white powder that inflames the eyes, nose, and throat, inducing nausia for several hours. Lasts for 2d10 rounds, a strong wind clears it in 1 round. Treat as a Thrown Weapon with 10m range and Smoke Quality, those within must make +0 Tougness Test or gain 1 Fatigue.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

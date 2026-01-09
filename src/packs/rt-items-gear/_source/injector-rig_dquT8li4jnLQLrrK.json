@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "A Cruder Version of the Chem Gland, consists of ten doses of four separate substances chosen at implantation. As a Half Action one is injected and applied instantly. These can be triggered manually or remotely by someone else. If the user suffers a Critical Hit, the character must make a Toughness Test or suffer 2d10 damage ignoring armour as the injector malfunctions.",
-    "cost": "Commonly chosen drugs are Frenzon, Slaught, Stimm, and De-Tox\nCost does not include Drug Doses which must be acquired seperately.",
-    "effects": "Scarce",
-    "notes": "750 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 750,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 750 T</p>"
+      "value": "<p>A Cruder Version of the Chem Gland, consists of ten doses of four separate substances chosen at implantation. As a Half Action one is injected and applied instantly. These can be triggered manually or remotely by someone else. If the user suffers a Critical Hit, the character must make a Toughness Test or suffer 2d10 damage ignoring armour as the injector malfunctions.</p>\n<h3>Requirements</h3><p>Commonly chosen drugs are Frenzon, Slaught, Stimm, and De-Tox\nCost does not include Drug Doses which must be acquired seperately.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 750 T</p>",
+      "chat": "",
+      "summary": "A Cruder Version of the Chem Gland, consists of ten doses of four separate substances chosen at implantation. As a Half Action one is injected and applied instantly. These can be triggered manually or"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Cruder Version of the Chem Gland, consists of ten doses of four separate substances chosen at implantation. As a Half Action one is injected and applied instantly. These can be triggered manually or remotely by someone else. If the user suffers a Critical Hit, the character must make a Toughness Test or suffer 2d10 damage ignoring armour as the injector malfunctions.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "1.5kg",
-    "availability": "A User that possesses this tome gains +30 to Forbidden Lore (Daemonology, Heresy, Psykers, and The Warp) Tests, but if they fail that test by more degrees than their Willpower Bonus, they gain one Corruption Point.",
-    "cost": "A Tome containing forbidden knowledge surrounding servents of chaos, its words are useful, but can rot the minds of the weaker willed.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A User that possesses this tome gains +30 to Forbidden Lore (Daemonology, Heresy, Psykers, and The Warp) Tests, but if they fail that test by more degrees than their Willpower Bonus, they gain one Corruption Point.</p>\n<h3>Requirements</h3><p>A Tome containing forbidden knowledge surrounding servents of chaos, its words are useful, but can rot the minds of the weaker willed.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A User that possesses this tome gains +30 to Forbidden Lore (Daemonology, Heresy, Psykers, and The Warp) Tests, but if they fail that test by more degrees than their Willpower Bonus, they gain one Cor"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A User that possesses this tome gains +30 to Forbidden Lore (Daemonology, Heresy, Psykers, and The Warp) Tests, but if they fail that test by more degrees than their Willpower Bonus, they gain one Corruption Point.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

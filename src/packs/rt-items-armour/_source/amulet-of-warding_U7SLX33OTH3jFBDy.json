@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": "Special",
-    "maxAg": "-",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "very-rare",
-    "cost": "30000 T",
-    "notes": "Can be Activated for up to one hour (2 to recharge). Activate as Half Action, Reduce incoming damage by 3d10. If rolling double 1's do not reduce damage, if double 0's the forcefield blocks damage but overloads for 1d10 rounds. If overloading, roll 1d10, on a 10 the field breaks and cannot be used again. Creates visible ripples and static, -20 to Concealment.",
+    "notes": "Can be Activated for up to one hour (2 to recharge). Activate as Half Action, Reduce incoming damage by 3d10. If rolling double 1's do not reduce damage, if double 0's the forcefield blocks damage but overloads for 1d10 rounds. If overloading, roll 1d10, on a 10 the field breaks and cannot be used again. Creates visible ripples and static, -20 to Concealment. [AP: Special]",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Can be Activated for up to one hour (2 to recharge). Activate as Half Action, Reduce incoming damage by 3d10. If rolling double 1's do not reduce damage, if double 0's the forcefield blocks damage but overloads for 1d10 rounds. If overloading, roll 1d10, on a 10 the field breaks and cannot be used again. Creates visible ripples and static, -20 to Concealment.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

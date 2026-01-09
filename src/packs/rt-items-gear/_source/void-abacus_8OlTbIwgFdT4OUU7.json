@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "65kg",
-    "availability": "When integrated into a ship's Auspex and Propulsion, allows a ship to safely plot warp jumps of up to 5-10 days with +10 Navigation(Warp) Test without a Navigator. Disliked by the Navigator's Guild.",
-    "cost": "A Rare Archeotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 65,
+    "availability": "near-unique",
+    "craftsmanship": "good",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When integrated into a ship's Auspex and Propulsion, allows a ship to safely plot warp jumps of up to 5-10 days with +10 Navigation(Warp) Test without a Navigator. Disliked by the Navigator's Guild.</p>\n<h3>Requirements</h3><p>A Rare Archeotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When integrated into a ship's Auspex and Propulsion, allows a ship to safely plot warp jumps of up to 5-10 days with +10 Navigation(Warp) Test without a Navigator. Disliked by the Navigator's Guild."
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When integrated into a ship's Auspex and Propulsion, allows a ship to safely plot warp jumps of up to 5-10 days with +10 Navigation(Warp) Test without a Navigator. Disliked by the Navigator's Guild.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

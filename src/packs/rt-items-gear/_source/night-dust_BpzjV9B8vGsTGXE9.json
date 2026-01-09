@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Harvest from captured or slain creatures, burned as incense or dissolved in amasec. After a dose suffer -20 to all Tests, and after 2d10 minutes slip into a feverish slumber filled with violent and vivid dreams for 1d10 hours (or 4d10 hours if drunk in amasec). Afterwards wake up to make a +10 Willpower Test (or -10 if Drunk in Amasec) or gain 1d5 Insanity Points from the experience.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "250 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 250,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 250 T</p>"
+      "value": "<p>Harvest from captured or slain creatures, burned as incense or dissolved in amasec. After a dose suffer -20 to all Tests, and after 2d10 minutes slip into a feverish slumber filled with violent and vivid dreams for 1d10 hours (or 4d10 hours if drunk in amasec). Afterwards wake up to make a +10 Willpower Test (or -10 if Drunk in Amasec) or gain 1d5 Insanity Points from the experience.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 250 T</p>",
+      "chat": "",
+      "summary": "Harvest from captured or slain creatures, burned as incense or dissolved in amasec. After a dose suffer -20 to all Tests, and after 2d10 minutes slip into a feverish slumber filled with violent and vi"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Harvest from captured or slain creatures, burned as incense or dissolved in amasec. After a dose suffer -20 to all Tests, and after 2d10 minutes slip into a feverish slumber filled with violent and vivid dreams for 1d10 hours (or 4d10 hours if drunk in amasec). Afterwards wake up to make a +10 Willpower Test (or -10 if Drunk in Amasec) or gain 1d5 Insanity Points from the experience.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

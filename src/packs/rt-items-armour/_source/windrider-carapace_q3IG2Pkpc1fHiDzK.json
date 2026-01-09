@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "carapace",
-    "locations": "Body",
-    "ap": 6,
-    "maxAg": null,
-    "weight": "6kg",
+    "weight": 6,
     "availability": "scarce",
-    "cost": "800 T",
     "notes": "Makes wearer immune to powerful winds.",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Makes wearer immune to powerful winds.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 6,
       "body": 6,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

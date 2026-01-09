@@ -3,30 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tyranid-barbed-strangler",
     "class": "heavy",
     "type": "exotic",
-    "range": "80m",
-    "rof": "S/-/-",
-    "damage": "1d10+5",
-    "damageType": "Impact",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 3
+    },
+    "special": [
+      "blast-10",
+      "snare",
+      "devastating-2",
+      "tearing",
+      "living-ammunition"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (10), Snare, Devastating (2), Tearing, Living Ammunition",
-    "weight": "-",
-    "availability": "Special",
-    "cost": "-",
-    "source": "Deathwatch: Core",
-    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared.",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (10), Snare, Devastating (2), Tearing, Living Ammunition</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared.</p>"
     },
-    "damageFormula": "1d10+5",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

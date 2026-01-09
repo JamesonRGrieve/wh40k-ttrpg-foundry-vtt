@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Skull Familiar that can offer aid, can carry a weapon, pict recorders, surgical instruments, lights,loud hailers, etc, etc. (See Rogue Trader Page 375)",
-    "cost": null,
-    "effects": "Scarce / Distinguished",
-    "notes": "15 R",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce / Distinguished</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Skull Familiar that can offer aid, can carry a weapon, pict recorders, surgical instruments, lights,loud hailers, etc, etc. (See Rogue Trader Page 375)</p>\n<p><b>Effect:</b> Scarce / Distinguished</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Skull Familiar that can offer aid, can carry a weapon, pict recorders, surgical instruments, lights,loud hailers, etc, etc. (See Rogue Trader Page 375)"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Skull Familiar that can offer aid, can carry a weapon, pict recorders, surgical instruments, lights,loud hailers, etc, etc. (See Rogue Trader Page 375)",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

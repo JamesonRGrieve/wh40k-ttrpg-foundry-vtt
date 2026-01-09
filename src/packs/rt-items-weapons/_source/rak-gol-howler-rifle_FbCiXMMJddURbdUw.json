@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "rakgol-howler-rifle",
     "class": "basic",
     "type": "exotic",
-    "range": "30m",
-    "rof": "-/-/12",
-    "damage": "1d10+3",
-    "damageType": "Impact",
-    "penetration": 4,
-    "clip": 600,
-    "reload": "2 Full",
-    "special": "Storm",
-    "weight": "35kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 12
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 4
+    },
+    "special": [
+      "storm"
+    ],
+    "clip": {
+      "max": 600,
+      "value": 600,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 35,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Koronus Bestiary",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Storm</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "RT: Koronus Bestiary"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Replaces Lungs and Respiratory System, +20 to Toughness to resist airborne toxins and gases. Poor: -20 to Silent Move/Stealth Tests, -10 to any tests involving strenuous physical activity. \nGood: counts as full life support.",
-    "cost": null,
-    "effects": "Rare / Initiated",
-    "notes": "800 T\n10 R",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 800,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 800 T\n10 R</p>"
+      "value": "<p>Replaces Lungs and Respiratory System, +20 to Toughness to resist airborne toxins and gases. Poor: -20 to Silent Move/Stealth Tests, -10 to any tests involving strenuous physical activity. \nGood: counts as full life support.</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 800 T\n10 R</p>",
+      "chat": "",
+      "summary": "Replaces Lungs and Respiratory System, +20 to Toughness to resist airborne toxins and gases. Poor: -20 to Silent Move/Stealth Tests, -10 to any tests involving strenuous physical activity. \nGood: coun"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Replaces Lungs and Respiratory System, +20 to Toughness to resist airborne toxins and gases. Poor: -20 to Silent Move/Stealth Tests, -10 to any tests involving strenuous physical activity. \nGood: counts as full life support.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "50kg",
-    "availability": "Requires Pilot (Personal) Allows Guided Fall from any height and short jumps that double base movement speed in any direction whilst ignoring obstacles (must land at the end of the movement). Can also set to maximum thrust setting to gain Flyer(12) Trait for up to a minute, before requiring a minute for the turbines to cool off.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "15 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 50,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Requires Pilot (Personal) Allows Guided Fall from any height and short jumps that double base movement speed in any direction whilst ignoring obstacles (must land at the end of the movement). Can also set to maximum thrust setting to gain Flyer(12) Trait for up to a minute, before requiring a minute for the turbines to cool off.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Requires Pilot (Personal) Allows Guided Fall from any height and short jumps that double base movement speed in any direction whilst ignoring obstacles (must land at the end of the movement). Can also"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Requires Pilot (Personal) Allows Guided Fall from any height and short jumps that double base movement speed in any direction whilst ignoring obstacles (must land at the end of the movement). Can also set to maximum thrust setting to gain Flyer(12) Trait for up to a minute, before requiring a minute for the turbines to cool off.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-lightning-claw-alt",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "proven-4"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Power Field, Proven (4)",
-    "weight": "30kg",
-    "availability": "Distinguished",
-    "cost": "30 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. replaces one of the Power Armour's Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. Does +1 Damage per Degree of Success on attack roll, or +2 if dual wielded. Can be sheathed/unsheathed as ready action. If acquired as a pair, cost for the second one is halved (EG: 30 for 1, 45 for two).",
+    "weight": 30,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Power Field, Proven (4)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. replaces one of the Power Armour's Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. Does +1 Damage per Degree of Success on attack roll, or +2 if dual wielded. Can be sheathed/unsheathed as ready action. If acquired as a pair, cost for the second one is halved (EG: 30 for 1, 45 for two).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. replaces one of the Power Armour's Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. Does +1 Damage per Degree of Success on attack roll, or +2 if dual wielded. Can be sheathed/unsheathed as ready action. If acquired as a pair, cost for the second one is halved (EG: 30 for 1, 45 for two).",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

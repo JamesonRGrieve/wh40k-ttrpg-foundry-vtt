@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Extends 1.5 metres, has Strength of 75 and Unnatural Strength x2. Can anchor oneself to a suitable point as a Free Action using the limb. Can be used to attack as a Reaction or Standard Attack (can only make one attack per round), deals 2d10+14 I Damage with Pen 10. Exceptional Craftsmanship has 85 Strength and 2d10+16 Damage, and +10 to Grapple Tests.",
-    "cost": "Space Marine only, used by Techmarines",
-    "effects": "Initiated",
-    "notes": "30 R",
-    "source": "Deathwatch: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 30 R</p>"
+      "value": "<p>Extends 1.5 metres, has Strength of 75 and Unnatural Strength x2. Can anchor oneself to a suitable point as a Free Action using the limb. Can be used to attack as a Reaction or Standard Attack (can only make one attack per round), deals 2d10+14 I Damage with Pen 10. Exceptional Craftsmanship has 85 Strength and 2d10+16 Damage, and +10 to Grapple Tests.</p>\n<h3>Requirements</h3><p>Space Marine only, used by Techmarines</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 30 R</p>",
+      "chat": "",
+      "summary": "Extends 1.5 metres, has Strength of 75 and Unnatural Strength x2. Can anchor oneself to a suitable point as a Free Action using the limb. Can be used to attack as a Reaction or Standard Attack (can on"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Extends 1.5 metres, has Strength of 75 and Unnatural Strength x2. Can anchor oneself to a suitable point as a Free Action using the limb. Can be used to attack as a Reaction or Standard Attack (can only make one attack per round), deals 2d10+14 I Damage with Pen 10. Exceptional Craftsmanship has 85 Strength and 2d10+16 Damage, and +10 to Grapple Tests.",
+    "duration": "",
+    "notes": "30 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "octavios-burden",
     "class": "basic",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/2/4",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 28,
-    "reload": "Full",
-    "special": "SM Wep, Tearing",
-    "weight": "18kg",
-    "availability": "Distinguished",
-    "cost": "25 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Blood Angels. If the weapon has killed an enemy within the last 12 hours, fireer gains +10 to Willpower Tests to resist the Blood Angels' \"Bloodlust\" curse.If the bearer suffers from the Red Thirst, they also receive +15 to BS during this time. If the weapon has not killed within 12 hours, the bearer suffers -10 to resist the Bloodlust curse, -5 to all Fellowship Tests, and if they suffer the Red Thirst +10 to WS and -10 to BS.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 28,
+      "value": 28,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 18,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Blood Angels. If the weapon has killed an enemy within the last 12 hours, fireer gains +10 to Willpower Tests to resist the Blood Angels' \"Bloodlust\" curse.If the bearer suffers from the Red Thirst, they also receive +15 to BS during this time. If the weapon has not killed within 12 hours, the bearer suffers -10 to resist the Bloodlust curse, -5 to all Fellowship Tests, and if they suffer the Red Thirst +10 to WS and -10 to BS.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Blood Angels. If the weapon has killed an enemy within the last 12 hours, fireer gains +10 to Willpower Tests to resist the Blood Angels' \"Bloodlust\" curse.If the bearer suffers from the Red Thirst, they also receive +15 to BS during this time. If the weapon has not killed within 12 hours, the bearer suffers -10 to resist the Bloodlust curse, -5 to all Fellowship Tests, and if they suffer the Red Thirst +10 to WS and -10 to BS.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

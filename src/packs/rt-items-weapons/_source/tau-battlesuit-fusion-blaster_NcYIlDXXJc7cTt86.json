@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-fusion-blaster",
     "class": "basic",
     "type": "exotic",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "2d10+8",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": 8,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "7.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 12
+    },
+    "special": [],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 7.5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on Stealth Suits",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on Stealth Suits</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on Stealth Suits",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

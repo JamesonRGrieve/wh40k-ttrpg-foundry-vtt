@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Gain +1 AP to body (stacks with armour) and Sprint Talent.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "15 R",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Gain +1 AP to body (stacks with armour) and Sprint Talent.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Gain +1 AP to body (stacks with armour) and Sprint Talent."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Gain +1 AP to body (stacks with armour) and Sprint Talent.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

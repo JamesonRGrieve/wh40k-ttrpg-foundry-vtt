@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-rokkit-launcher",
     "class": "basic",
     "type": "exotic",
-    "range": "120m",
-    "rof": "S/-/-",
-    "damage": "3d10+5",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": 1,
-    "reload": "Half",
-    "special": "Inaccurate, Unreliable",
-    "weight": "15kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "inaccurate",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "half",
+    "weight": 15,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "For Orks, Scarce and not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> For Orks, Scarce and not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "For Orks, Scarce and not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "web-pistol",
     "class": "pistol",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": 1,
-    "reload": "Full",
-    "special": "Snare",
-    "weight": "3.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "snare"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3.5,
     "availability": "rare",
-    "cost": "1200 T",
-    "source": "RT: Into the Storm",
-    "note": "Fires a sticky mass of threads that encompass and immobilse the target(s)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1200,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Snare</p><p><b>Note:</b> Fires a sticky mass of threads that encompass and immobilse the target(s)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires a sticky mass of threads that encompass and immobilse the target(s)",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

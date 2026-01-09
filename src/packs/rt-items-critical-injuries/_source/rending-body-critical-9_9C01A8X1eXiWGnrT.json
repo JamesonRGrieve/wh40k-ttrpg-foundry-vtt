@@ -1,0 +1,32 @@
+{
+  "name": "Rending Body Critical 9",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_body_9",
+    "damageType": "rending",
+    "bodyPart": "body",
+    "severity": 9,
+    "effect": "<p>The powerful blow cleaves the target from gullet to groin, revealing his internal organs and spilling them on to the ground before him. The target is now quite dead.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Body (Severity 9)</strong></p><p>The powerful blow cleaves the target from gullet to groin, revealing his internal organs and spilling them on to the ground before him. The target is now quite dead.</p>",
+      "chat": "",
+      "summary": "Rending Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "9C01A8X1eXiWGnrT"
+}

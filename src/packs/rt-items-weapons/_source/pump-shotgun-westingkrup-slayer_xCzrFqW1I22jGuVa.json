@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "pump-shotgun-westingkrup-slayer",
     "class": "basic",
     "type": "solid-projectile",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 6,
-    "reload": "3 Full",
-    "special": "Scatter",
-    "weight": "3.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "scatter"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 3.5,
     "availability": "average",
-    "cost": "70 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 70,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Scatter</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

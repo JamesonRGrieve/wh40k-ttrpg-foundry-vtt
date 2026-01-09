@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "nurgles-breath",
     "class": "pistol",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10",
-    "damageType": "Energy",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "corrosive",
+      "spray",
+      "toxic-2"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Corrosive, Spray, Toxic (2)",
-    "weight": "-",
-    "availability": "Special",
-    "cost": "-",
-    "source": "BC: Tome of Decay",
-    "note": "Can't be Acquired. Instead gained by Contracting Nurgle's Breath Disease (see Gear). Any that fail Toxic Quality's Toughness Test also contract disease.\nIf rolling 2 7's on the Damage roll, instantly die. Explode, and hit everyone in 3d10m with weapon attack.",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Corrosive, Spray, Toxic (2)</p><p><b>Note:</b> Can't be Acquired. Instead gained by Contracting Nurgle's Breath Disease (see Gear). Any that fail Toxic Quality's Toughness Test also contract disease.\nIf rolling 2 7's on the Damage roll, instantly die. Explode, and hit everyone in 3d10m with weapon attack.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can't be Acquired. Instead gained by Contracting Nurgle's Breath Disease (see Gear). Any that fail Toxic Quality's Toughness Test also contract disease.\nIf rolling 2 7's on the Damage roll, instantly die. Explode, and hit everyone in 3d10m with weapon attack.",
+    "source": "BC: Tome of Decay"
   },
   "effects": [],
   "flags": {},

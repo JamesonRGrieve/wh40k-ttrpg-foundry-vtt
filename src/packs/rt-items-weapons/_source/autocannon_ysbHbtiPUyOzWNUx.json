@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autocannon",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "300m",
-    "rof": "S/2/5",
-    "damage": "4d10+5",
-    "damageType": "Impact",
-    "penetration": 4,
-    "clip": 20,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "55kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
     "availability": "very-rare",
-    "cost": "1000 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Requires a team of two to operate effecitvely (a firer and loaded). Uses cased, explosive rounds.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Requires a team of two to operate effecitvely (a firer and loaded). Uses cased, explosive rounds.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires a team of two to operate effecitvely (a firer and loaded). Uses cased, explosive rounds.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

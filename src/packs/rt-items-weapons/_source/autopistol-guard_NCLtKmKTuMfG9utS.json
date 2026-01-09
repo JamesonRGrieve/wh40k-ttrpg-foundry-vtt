@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autopistol-guard",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "30m",
-    "rof": "S/-/6",
-    "damage": "1d10+2",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 18,
-    "reload": "Full",
-    "special": null,
-    "weight": "1.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 1.5,
     "availability": "average",
-    "cost": "75 T",
-    "source": "Only War: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 75,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": ""
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

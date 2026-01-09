@@ -3,30 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "entropic-accelerator",
     "class": "basic",
     "type": "exotic",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "3d10+4",
-    "damageType": "Energy",
-    "penetration": 3,
-    "clip": 1,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "recharge",
+      "toxic"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Recharge, Toxic",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Recharge, Toxic</p><p><b>Note:</b> A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.</p>"
     },
-    "damageFormula": "3d10+4",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

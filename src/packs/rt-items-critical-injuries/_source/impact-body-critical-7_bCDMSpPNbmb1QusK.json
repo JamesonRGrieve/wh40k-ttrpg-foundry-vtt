@@ -1,0 +1,32 @@
+{
+  "name": "Impact Body Critical 7",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body_7",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 7,
+    "effect": "<p>With an audible crack, [[1d5]] of the target's ribs break. Permanently reduce the target's Toughness characteristic by 1d5. Until he receives medical attention, at the end of each round in which this character took an action, roll 1d10. On a result of 1 or 2, the character dies instantly as a shattered rib pierces a vital organ.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Body (Severity 7)</strong></p><p>With an audible crack, [[1d5]] of the target's ribs break. Permanently reduce the target's Toughness characteristic by 1d5. Until he receives medical attention, at the end of each round in which this character took an action, roll 1d10. On a result of 1 or 2, the character dies instantly as a shattered rib pierces a vital organ.</p>",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "bCDMSpPNbmb1QusK"
+}

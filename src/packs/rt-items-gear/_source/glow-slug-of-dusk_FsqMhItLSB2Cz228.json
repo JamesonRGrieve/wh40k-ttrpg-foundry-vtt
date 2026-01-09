@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "0.1kg",
-    "availability": "Each Slug provides 1 metre radius of light, this effect can be stacked by putting multiple slugs together. They may require occasional dead meat to feed on.",
-    "cost": "Native to the Planet of Dusk",
-    "effects": "Rare",
-    "notes": "8 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0.1,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 8,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 8 T</p>"
+      "value": "<p>Each Slug provides 1 metre radius of light, this effect can be stacked by putting multiple slugs together. They may require occasional dead meat to feed on.</p>\n<h3>Requirements</h3><p>Native to the Planet of Dusk</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 8 T</p>",
+      "chat": "",
+      "summary": "Each Slug provides 1 metre radius of light, this effect can be stacked by putting multiple slugs together. They may require occasional dead meat to feed on."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Each Slug provides 1 metre radius of light, this effect can be stacked by putting multiple slugs together. They may require occasional dead meat to feed on.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

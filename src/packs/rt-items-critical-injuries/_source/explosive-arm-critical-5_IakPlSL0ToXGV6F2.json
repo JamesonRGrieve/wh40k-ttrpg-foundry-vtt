@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Arm Critical 5",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_arm_5",
+    "damageType": "explosive",
+    "bodyPart": "arm",
+    "severity": 5,
+    "effect": "<p>Fragments from the explosion tear into the target's hand, ripping away flesh and muscle alike. He must immediately make an Ordinary (+10) Toughness test. If he succeeds, permanently reduce his Weapon Skill and Ballistic Skill characteristics by 1; if he fails, he suffers the Lost Hand condition (see page 242).</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Arm (Severity 5)</strong></p><p>Fragments from the explosion tear into the target's hand, ripping away flesh and muscle alike. He must immediately make an Ordinary (+10) Toughness test. If he succeeds, permanently reduce his Weapon Skill and Ballistic Skill characteristics by 1; if he fails, he suffers the Lost Hand condition (see page 242).</p>",
+      "chat": "",
+      "summary": "Explosive Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "IakPlSL0ToXGV6F2"
+}

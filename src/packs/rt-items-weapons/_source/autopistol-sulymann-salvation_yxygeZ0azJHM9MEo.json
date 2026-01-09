@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autopistol-sulymann-salvation",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "10m",
-    "rof": "S/3/-",
-    "damage": "1d10",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 7,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 7,
+      "value": 7,
+      "type": ""
+    },
     "reload": "-",
-    "special": null,
-    "weight": "0.75kg",
+    "weight": 0.75,
     "availability": "common",
-    "cost": "80 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Requires Partial Dissassembly to Reload, very compact.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 80,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Requires Partial Dissassembly to Reload, very compact.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires Partial Dissassembly to Reload, very compact.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

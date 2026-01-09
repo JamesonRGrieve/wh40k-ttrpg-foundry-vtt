@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "A Large structure of bells that appears without warning near towns or cities and always shrouded in clouds of green smog. The bells ring even in still air, their noise building until all are sent into an insanity of despair and madness. Every hour of exposure forces Willpower Test with -10 penalty for each day structure has been present, gaining 1 Insanity per DoF. Mental Disorders gained from this insanity are always Obsessions or Compulsions focused on cataloguing innocuous and unrelated items. Smog extends a 20m radius, increases by 5m per day and causes Suffocation to those inside after 30 minutes of exposure even to those in sealed armour. Rumoured to cause breaches in reality, tainted energies, Gellar Field faults, and so on. ",
-    "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic evacuate all nearby and wait/hope that it goes away after some time.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Beyond",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Large structure of bells that appears without warning near towns or cities and always shrouded in clouds of green smog. The bells ring even in still air, their noise building until all are sent into an insanity of despair and madness. Every hour of exposure forces Willpower Test with -10 penalty for each day structure has been present, gaining 1 Insanity per DoF. Mental Disorders gained from this insanity are always Obsessions or Compulsions focused on cataloguing innocuous and unrelated items. Smog extends a 20m radius, increases by 5m per day and causes Suffocation to those inside after 30 minutes of exposure even to those in sealed armour. Rumoured to cause breaches in reality, tainted energies, Gellar Field faults, and so on. </p>\n<h3>Requirements</h3><p>Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic evacuate all nearby and wait/hope that it goes away after some time.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Large structure of bells that appears without warning near towns or cities and always shrouded in clouds of green smog. The bells ring even in still air, their noise building until all are sent into"
     },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Large structure of bells that appears without warning near towns or cities and always shrouded in clouds of green smog. The bells ring even in still air, their noise building until all are sent into an insanity of despair and madness. Every hour of exposure forces Willpower Test with -10 penalty for each day structure has been present, gaining 1 Insanity per DoF. Mental Disorders gained from this insanity are always Obsessions or Compulsions focused on cataloguing innocuous and unrelated items. Smog extends a 20m radius, increases by 5m per day and causes Suffocation to those inside after 30 minutes of exposure even to those in sealed armour. Rumoured to cause breaches in reality, tainted energies, Gellar Field faults, and so on. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

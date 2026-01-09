@@ -1,5 +1,7 @@
 import SystemDataModel from "./system-data-model.mjs";
 
+const { NumberField } = foundry.data.fields;
+
 /**
  * Base data model for all Item types in Rogue Trader.
  * Provides shared functionality and schema patterns for items.
@@ -18,6 +20,54 @@ export default class ItemDataModel extends SystemDataModel {
     return {
       ...super.defineSchema()
     };
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean source data before validation.
+   * Coerces numeric string values to proper numbers for NumberFields.
+   * @param {object} source - The source data object
+   * @param {object} options - Additional options
+   * @returns {object} The cleaned source data
+   * @override
+   */
+  static cleanData(source = {}, options = {}) {
+    // Recursively clean numeric fields
+    this._cleanNumericFields(source, this.schema?.fields ?? {});
+    return super.cleanData(source, options);
+  }
+
+  /**
+   * Recursively clean numeric fields in source data.
+   * @param {object} source - The source data object
+   * @param {object} fields - The schema fields to check
+   * @private
+   */
+  static _cleanNumericFields(source, fields) {
+    if (!source || typeof source !== 'object') return;
+    
+    for (const [key, field] of Object.entries(fields)) {
+      if (!(key in source)) continue;
+      
+      const value = source[key];
+      
+      // Handle NumberField - coerce string to number
+      if (field instanceof NumberField) {
+        if (typeof value === "string") {
+          const num = Number(value);
+          if (!Number.isNaN(num)) {
+            source[key] = field.integer ? Math.floor(num) : num;
+          }
+        }
+      }
+      // Handle SchemaField - recurse into nested fields
+      else if (field?.fields && typeof value === 'object' && value !== null) {
+        this._cleanNumericFields(value, field.fields);
+      }
+    }
   }
 
   /* -------------------------------------------- */
@@ -41,6 +91,16 @@ export default class ItemDataModel extends SystemDataModel {
       };
     }
     
+    // Ensure description sub-fields are not null (V13 HTMLField strictness)
+    if ( source.description && typeof source.description === "object" ) {
+      if ( source.description.chat === null || source.description.chat === undefined ) {
+        source.description.chat = "";
+      }
+      if ( source.description.summary === null || source.description.summary === undefined ) {
+        source.description.summary = "";
+      }
+    }
+    
     // Migrate flat source string to object structure  
     if ( typeof source.source === "string" ) {
       source.source = { 
@@ -48,6 +108,29 @@ export default class ItemDataModel extends SystemDataModel {
         page: "", 
         custom: source.source 
       };
+    }
+    
+    // Ensure source sub-fields are not null
+    if ( source.source && typeof source.source === "object" ) {
+      if ( source.source.book === null || source.source.book === undefined ) {
+        source.source.book = "";
+      }
+      if ( source.source.page === null || source.source.page === undefined ) {
+        source.source.page = "";
+      }
+      if ( source.source.custom === null || source.source.custom === undefined ) {
+        source.source.custom = "";
+      }
+    }
+    
+    // V13: Migrate coverage Array to Set (for armour items)
+    if ( source.coverage && Array.isArray(source.coverage) ) {
+      source.coverage = new Set(source.coverage);
+    }
+    
+    // V13: Migrate properties Array to Set
+    if ( source.properties && Array.isArray(source.properties) ) {
+      source.properties = new Set(source.properties);
     }
     
     return super.migrateData(source);

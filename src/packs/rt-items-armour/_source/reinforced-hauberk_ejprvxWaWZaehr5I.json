@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Chest",
-    "ap": 4,
-    "maxAg": null,
-    "weight": "15kg",
+    "weight": 15,
     "availability": "Special",
-    "cost": "-",
     "notes": "Generated as Treasure from Treasure Generator.",
     "source": "RT: Stars of Inequity",
     "description": {
       "value": "<p>Generated as Treasure from Treasure Generator.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 4,
       "body": 4,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

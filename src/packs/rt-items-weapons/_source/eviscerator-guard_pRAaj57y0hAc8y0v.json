@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eviscerator-guard",
     "class": "melee",
     "type": "chain",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10",
-    "damageType": "Rending",
-    "penetration": 9,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 9
+    },
+    "special": [
+      "razor-sharp",
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Razor-Sharp, Tearing, Unwieldy",
-    "weight": "15kg",
+    "weight": 15,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Razor-Sharp, Tearing, Unwieldy</p><p><b>Note:</b> Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

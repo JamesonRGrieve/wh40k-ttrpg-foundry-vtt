@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "swordstick-cane",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (8), Balanced",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "scarce",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Looks like a cane until unsheathed",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Balanced</p><p><b>Note:</b> Looks like a cane until unsheathed</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Looks like a cane until unsheathed",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "pandemonium-stave",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+8",
-    "damageType": "Impact",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "balanced",
+      "felling-4"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Felling (4)",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "Weapon: Staff. Daemon WP 80 (Greater Daemon of Tzeentch), Bind Str 4. Att.: Accursed, Howling, Living Magic, Sorcerous Force\nTwo-Handed, Acts as Psy Focus, Requires Mark of Tzeentch to wield. Gain Fear(+1) on turn where attacked, Gain 2xDaemon's WP Bonus to Focus Power Tests, On dealing damage can make Opposed WP Test vs Target using Daemon's Willpower, each DoS deals 1d10 E Damage.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Felling (4)</p><p><b>Note:</b> Weapon: Staff. Daemon WP 80 (Greater Daemon of Tzeentch), Bind Str 4. Att.: Accursed, Howling, Living Magic, Sorcerous Force\nTwo-Handed, Acts as Psy Focus, Requires Mark of Tzeentch to wield. Gain Fear(+1) on turn where attacked, Gain 2xDaemon's WP Bonus to Focus Power Tests, On dealing damage can make Opposed WP Test vs Target using Daemon's Willpower, each DoS deals 1d10 E Damage.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Staff. Daemon WP 80 (Greater Daemon of Tzeentch), Bind Str 4. Att.: Accursed, Howling, Living Magic, Sorcerous Force\nTwo-Handed, Acts as Psy Focus, Requires Mark of Tzeentch to wield. Gain Fear(+1) on turn where attacked, Gain 2xDaemon's WP Bonus to Focus Power Tests, On dealing damage can make Opposed WP Test vs Target using Daemon's Willpower, each DoS deals 1d10 E Damage.",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

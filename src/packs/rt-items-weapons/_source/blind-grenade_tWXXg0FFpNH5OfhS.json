@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "blind-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "smoke"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Smoke",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "rare",
-    "cost": "25 T",
-    "source": "Rogue Trader: Core",
-    "note": "Blocks Advanced detection",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Smoke</p><p><b>Note:</b> Blocks Advanced detection</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Blocks Advanced detection",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

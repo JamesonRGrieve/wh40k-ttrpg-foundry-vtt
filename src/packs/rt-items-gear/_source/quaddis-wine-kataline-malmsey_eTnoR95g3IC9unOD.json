@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "-",
-    "availability": "Highly Regarded Wines, the most expensive, said to provide such pleasure as to be lethal to those over-indulgent to its dreamlike tastes.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "10000+ T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 10000+ T</p>"
+      "value": "<p>Highly Regarded Wines, the most expensive, said to provide such pleasure as to be lethal to those over-indulgent to its dreamlike tastes.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 10000+ T</p>",
+      "chat": "",
+      "summary": "Highly Regarded Wines, the most expensive, said to provide such pleasure as to be lethal to those over-indulgent to its dreamlike tastes."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Highly Regarded Wines, the most expensive, said to provide such pleasure as to be lethal to those over-indulgent to its dreamlike tastes.",
+    "duration": "",
+    "notes": "10000+ T",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

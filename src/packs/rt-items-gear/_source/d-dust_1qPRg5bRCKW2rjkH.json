@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "[Addictive] Lasts 2d5 Rounds. User makes -20 Willpower Test. If successful user gains the Daemonic Trait, on 2+ DoS they also gain the Phase Trait, on 3+ DoS they also gain the Warp Weapons Trait. If failing, they are Stunned for the drug's duration and gain 1 corruption point per round it lasts. If failing by 3+ DoF, also gain a Mutation.",
-    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>[Addictive] Lasts 2d5 Rounds. User makes -20 Willpower Test. If successful user gains the Daemonic Trait, on 2+ DoS they also gain the Phase Trait, on 3+ DoS they also gain the Warp Weapons Trait. If failing, they are Stunned for the drug's duration and gain 1 corruption point per round it lasts. If failing by 3+ DoF, also gain a Mutation.</p>\n<h3>Requirements</h3><p>Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.</p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "[Addictive] Lasts 2d5 Rounds. User makes -20 Willpower Test. If successful user gains the Daemonic Trait, on 2+ DoS they also gain the Phase Trait, on 3+ DoS they also gain the Warp Weapons Trait. If "
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "[Addictive] Lasts 2d5 Rounds. User makes -20 Willpower Test. If successful user gains the Daemonic Trait, on 2+ DoS they also gain the Phase Trait, on 3+ DoS they also gain the Warp Weapons Trait. If failing, they are Stunned for the drug's duration and gain 1 corruption point per round it lasts. If failing by 3+ DoF, also gain a Mutation.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

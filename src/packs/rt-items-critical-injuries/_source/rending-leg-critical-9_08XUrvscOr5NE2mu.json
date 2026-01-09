@@ -1,0 +1,32 @@
+{
+  "name": "Rending Leg Critical 9",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_leg_9",
+    "damageType": "rending",
+    "bodyPart": "leg",
+    "severity": 9,
+    "effect": "<p>With a meaty chop, the leg comes away at the hip. The target pitches to the ground howling in agony before dying.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Leg (Severity 9)</strong></p><p>With a meaty chop, the leg comes away at the hip. The target pitches to the ground howling in agony before dying.</p>",
+      "chat": "",
+      "summary": "Rending Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "08XUrvscOr5NE2mu"
+}

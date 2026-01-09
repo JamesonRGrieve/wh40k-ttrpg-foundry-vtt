@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "5kg",
-    "availability": "30cm metal rod that can telescopically extend up to 4 metres on pressing an activation button. Given reliable anchors it can hold 150kg without bending or stress. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg. In 30cm form, can be Melee Weapon",
-    "cost": "Weapon Stats: Melee;1d10 I; Pen 0\nEveryone needs a good stick.",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Stars of Inquity",
+    "category": "tools",
+    "weight": 5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>30cm metal rod that can telescopically extend up to 4 metres on pressing an activation button. Given reliable anchors it can hold 150kg without bending or stress. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg. In 30cm form, can be Melee Weapon</p>\n<h3>Requirements</h3><p>Weapon Stats: Melee;1d10 I; Pen 0\nEveryone needs a good stick.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "30cm metal rod that can telescopically extend up to 4 metres on pressing an activation button. Given reliable anchors it can hold 150kg without bending or stress. Good Craftsmanship: 5m, 175kg, Best: "
     },
+    "source": {
+      "book": "RT: Stars of Inquity",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "30cm metal rod that can telescopically extend up to 4 metres on pressing an activation button. Given reliable anchors it can hold 150kg without bending or stress. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg. In 30cm form, can be Melee Weapon",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

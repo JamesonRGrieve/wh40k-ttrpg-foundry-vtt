@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "User gains Bulging Biceps and Iron Jaw Talents, and gains +2 to Unarmed Attack Damage.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>User gains Bulging Biceps and Iron Jaw Talents, and gains +2 to Unarmed Attack Damage.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "User gains Bulging Biceps and Iron Jaw Talents, and gains +2 to Unarmed Attack Damage."
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "User gains Bulging Biceps and Iron Jaw Talents, and gains +2 to Unarmed Attack Damage.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

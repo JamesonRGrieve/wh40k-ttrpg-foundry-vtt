@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "Head",
-    "ap": 9,
-    "maxAg": null,
-    "weight": "4kg",
+    "weight": 4,
     "availability": "Initiated",
-    "cost": "-",
     "notes": "Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.",
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "head"
     ],
     "armourPoints": {
       "head": 9,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "body": 9,
+      "leftArm": 9,
+      "rightArm": 9,
+      "leftLeg": 9,
+      "rightLeg": 9
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

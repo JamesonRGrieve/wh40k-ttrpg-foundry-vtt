@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "mace-fist",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 1,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 1
+    },
+    "special": [
+      "concussive-2",
+      "inaccurate",
+      "ogryn-proof"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (2), Inaccurate, Ogryn-Proof",
-    "weight": "16kg",
+    "weight": 16,
     "availability": "average",
-    "cost": "-",
-    "source": "OW: Shield of Humanity",
-    "note": "Designed for Ogryns, looking roughly like giant knuckledusters.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (2), Inaccurate, Ogryn-Proof</p><p><b>Note:</b> Designed for Ogryns, looking roughly like giant knuckledusters.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Designed for Ogryns, looking roughly like giant knuckledusters.",
+    "source": "OW: Shield of Humanity"
   },
   "effects": [],
   "flags": {},

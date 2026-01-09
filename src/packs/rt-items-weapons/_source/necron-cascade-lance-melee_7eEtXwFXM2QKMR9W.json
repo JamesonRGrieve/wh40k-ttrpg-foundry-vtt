@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-cascade-lance-melee",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "concussive-1",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (1), Power Field",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (1), Power Field</p><p><b>Note:</b> An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

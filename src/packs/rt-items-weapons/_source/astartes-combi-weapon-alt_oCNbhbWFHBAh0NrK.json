@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-combi-weapon-alt",
     "class": "basic",
     "type": "bolt",
-    "range": "100m",
-    "rof": "S/4/-",
-    "damage": "1d10+9",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 28,
-    "reload": "Full",
-    "special": "SM Wep, Tearing",
-    "weight": "25kg",
-    "availability": "Respected",
-    "cost": "15 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. Represents Bolter Profile. Will have an undermounted Astartes Flamer, Meltagun, or Plasmagun with a clip of 1. \nCan only fire one of the weapons at a time.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 9,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 28,
+      "value": 28,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 25,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Represents Bolter Profile. Will have an undermounted Astartes Flamer, Meltagun, or Plasmagun with a clip of 1. \nCan only fire one of the weapons at a time.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Represents Bolter Profile. Will have an undermounted Astartes Flamer, Meltagun, or Plasmagun with a clip of 1. \nCan only fire one of the weapons at a time.",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

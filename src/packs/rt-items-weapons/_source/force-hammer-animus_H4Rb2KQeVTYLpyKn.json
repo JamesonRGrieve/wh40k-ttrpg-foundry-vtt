@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "force-hammer-animus",
     "class": "melee",
     "type": "force",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 4
+    },
+    "special": [
+      "daemonbane",
+      "force",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemonbane, Force, Power Field, Unwieldy",
-    "weight": "8kg",
+    "weight": 8,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "DH 2E: Enemies Beyond",
-    "note": "Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.",
+    "source": "DH 2E: Enemies Beyond"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "galthite-lacerator",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Rending",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Tearing",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Unknown Xenos Weapon. Worn over the hand as gauntlets with several short blades. Tarnishes into blue-green patterns when exposed to blood.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Unknown Xenos Weapon. Worn over the hand as gauntlets with several short blades. Tarnishes into blue-green patterns when exposed to blood.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Unknown Xenos Weapon. Worn over the hand as gauntlets with several short blades. Tarnishes into blue-green patterns when exposed to blood.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

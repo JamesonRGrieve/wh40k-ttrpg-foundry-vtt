@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "-",
-    "availability": "Space Tea/Coffee. Removes one level of Fatigue from the Character. If taking more than once in 24 hours, make cumulative -20 Toughness Test, if failed recaf has no effect for 24 hours.",
-    "cost": null,
-    "effects": "Abundant",
-    "notes": "5 T",
-    "source": "Rogue Trader Core",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 5 T</p>"
+      "value": "<p>Space Tea/Coffee. Removes one level of Fatigue from the Character. If taking more than once in 24 hours, make cumulative -20 Toughness Test, if failed recaf has no effect for 24 hours.</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 5 T</p>",
+      "chat": "",
+      "summary": "Space Tea/Coffee. Removes one level of Fatigue from the Character. If taking more than once in 24 hours, make cumulative -20 Toughness Test, if failed recaf has no effect for 24 hours."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Tea/Coffee. Removes one level of Fatigue from the Character. If taking more than once in 24 hours, make cumulative -20 Toughness Test, if failed recaf has no effect for 24 hours.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Specialised Bionic Eyes. Gives same benefits as Bionic Eye, but can be activated/deactivated as Half Action to gain Unnatural Ballistic Skill (+1) (or +2 if Best Craftsmanship), but suffer -20 to Awareness Tests. Can't benefit from any sight attached to gun while using this.",
-    "cost": "Bionc Eye: Poor: -20 to tests involving the sense, Good: gain relevent Heightened Senses Talent, and +20 to resists to resist attacks to that sense, such as blinding flashes.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "OW: Hammer of the Emperor",
+    "category": "tech",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Specialised Bionic Eyes. Gives same benefits as Bionic Eye, but can be activated/deactivated as Half Action to gain Unnatural Ballistic Skill (+1) (or +2 if Best Craftsmanship), but suffer -20 to Awareness Tests. Can't benefit from any sight attached to gun while using this.</p>\n<h3>Requirements</h3><p>Bionc Eye: Poor: -20 to tests involving the sense, Good: gain relevent Heightened Senses Talent, and +20 to resists to resist attacks to that sense, such as blinding flashes.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Specialised Bionic Eyes. Gives same benefits as Bionic Eye, but can be activated/deactivated as Half Action to gain Unnatural Ballistic Skill (+1) (or +2 if Best Craftsmanship), but suffer -20 to Awar"
     },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Specialised Bionic Eyes. Gives same benefits as Bionic Eye, but can be activated/deactivated as Half Action to gain Unnatural Ballistic Skill (+1) (or +2 if Best Craftsmanship), but suffer -20 to Awareness Tests. Can't benefit from any sight attached to gun while using this.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "searing-blade",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 7
+    },
+    "special": [
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Ignites in an intense heat whenever it strikes",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> Ignites in an intense heat whenever it strikes</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Ignites in an intense heat whenever it strikes",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

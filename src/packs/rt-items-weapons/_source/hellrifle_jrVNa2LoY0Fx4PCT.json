@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hellrifle",
     "class": "basic",
     "type": "exotic",
-    "range": "300m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Rending",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [
+      "felling-2"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Felling (2)",
-    "weight": "10kg",
+    "weight": 10,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Beyond",
-    "note": "Intricate rifles that fire sharp shards of unknown material speculated to be daemonic in nature.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Felling (2)</p><p><b>Note:</b> Intricate rifles that fire sharp shards of unknown material speculated to be daemonic in nature.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Intricate rifles that fire sharp shards of unknown material speculated to be daemonic in nature.",
+    "source": "DH 2E: Enemies Beyond"
   },
   "effects": [],
   "flags": {},

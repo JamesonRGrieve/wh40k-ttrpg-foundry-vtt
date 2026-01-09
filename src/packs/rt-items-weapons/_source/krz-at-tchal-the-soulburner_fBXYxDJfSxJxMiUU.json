@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "krzattchal-the-soulburner",
     "class": "basic",
     "type": "flame",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "1d10+8",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "flame",
+      "reliable",
+      "spray",
+      "warp-weapon",
+      "daemon-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Flame, Reliable, Spray, Warp Weapon, Daemon Wep",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Reliable, Spray, Warp Weapon, Daemon Wep</p><p><b>Note:</b> Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

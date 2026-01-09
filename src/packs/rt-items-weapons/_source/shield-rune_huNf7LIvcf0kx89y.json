@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "shield-rune",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "defensive",
+      "tainted",
+      "tearing",
+      "rune-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Defensive, Tainted, Tearing, Rune Wep",
-    "weight": "7kg",
+    "weight": 7,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Gives +1 + Corruption Bonus AP to Arm wielding it and Body. Once held the essence of a Daemon that has now vacated it.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Defensive, Tainted, Tearing, Rune Wep</p><p><b>Note:</b> Gives +1 + Corruption Bonus AP to Arm wielding it and Body. Once held the essence of a Daemon that has now vacated it.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Gives +1 + Corruption Bonus AP to Arm wielding it and Body. Once held the essence of a Daemon that has now vacated it.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

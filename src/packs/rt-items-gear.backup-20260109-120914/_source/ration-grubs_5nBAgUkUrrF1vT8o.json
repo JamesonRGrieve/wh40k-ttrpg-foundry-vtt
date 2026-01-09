@@ -1,0 +1,30 @@
+{
+  "name": "Ration Grubs",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Freeze-Dried Grubs roughly the size of an adult's thumb. Provides a Full Day's Nutrients. The taste is apparently horrible, and trace toxins within it make a bad long-term diet option.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "15 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 15 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5nBAgUkUrrF1vT8o"
+}

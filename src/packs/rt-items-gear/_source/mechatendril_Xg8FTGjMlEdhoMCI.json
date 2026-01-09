@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Mechadendrite Equipped with Mechatenril Weapon (Melee;1d10+5;Pen 0;Flexible). Requires Mechadendrite Use (Utility) to use or (Weapon) to attack with without penalty. Each Mechatendril grants +5 to Crafting Skill Tests.",
-    "cost": "Can have up to Toughness Bonus Mechadendrites. Requires Mechanicus Implants.\nHeretical. See Mechatendril in Weapons Tab",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "BC: Tome of Decay",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Mechadendrite Equipped with Mechatenril Weapon (Melee;1d10+5;Pen 0;Flexible). Requires Mechadendrite Use (Utility) to use or (Weapon) to attack with without penalty. Each Mechatendril grants +5 to Crafting Skill Tests.</p>\n<h3>Requirements</h3><p>Can have up to Toughness Bonus Mechadendrites. Requires Mechanicus Implants.\nHeretical. See Mechatendril in Weapons Tab</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Mechadendrite Equipped with Mechatenril Weapon (Melee;1d10+5;Pen 0;Flexible). Requires Mechadendrite Use (Utility) to use or (Weapon) to attack with without penalty. Each Mechatendril grants +5 to Cra"
     },
+    "source": {
+      "book": "BC: Tome of Decay",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Mechadendrite Equipped with Mechatenril Weapon (Melee;1d10+5;Pen 0;Flexible). Requires Mechadendrite Use (Utility) to use or (Weapon) to attack with without penalty. Each Mechatendril grants +5 to Crafting Skill Tests.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

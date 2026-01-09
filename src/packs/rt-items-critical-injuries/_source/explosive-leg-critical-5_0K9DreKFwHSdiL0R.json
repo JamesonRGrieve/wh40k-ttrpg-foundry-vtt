@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Leg Critical 5",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_leg_5",
+    "damageType": "explosive",
+    "bodyPart": "leg",
+    "severity": 5,
+    "effect": "<p>Explosive force removes part of the target's foot and scatters the ragged remnants over a wide area. The target must make a Difficult (-10) Toughness test or suffer [[1d5]] levels of Fatigue. Permanently reduce his Agility characteristic by 1d5.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Leg (Severity 5)</strong></p><p>Explosive force removes part of the target's foot and scatters the ragged remnants over a wide area. The target must make a Difficult (-10) Toughness test or suffer [[1d5]] levels of Fatigue. Permanently reduce his Agility characteristic by 1d5.</p>",
+      "chat": "",
+      "summary": "Explosive Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "0K9DreKFwHSdiL0R"
+}

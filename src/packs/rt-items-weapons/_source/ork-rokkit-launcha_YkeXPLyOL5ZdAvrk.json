@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-rokkit-launcha",
     "class": "basic",
     "type": "exotic",
-    "range": "150m",
-    "rof": "S/-/-",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": 1,
-    "reload": "Half",
-    "special": "Blast (2), Inaccurate, Unreliable",
-    "weight": "6kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "blast-2",
+      "inaccurate",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "half",
+    "weight": 6,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (2), Inaccurate, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

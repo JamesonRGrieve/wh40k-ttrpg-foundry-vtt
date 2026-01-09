@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "havatian-ringblade-melee",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "razor-sharp"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Razor Sharp",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Razor Sharp</p><p><b>Note:</b> Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

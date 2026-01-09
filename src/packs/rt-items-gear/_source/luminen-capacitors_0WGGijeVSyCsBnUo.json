@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Allows the recharging of various devices, requires one minute. Difficulty varies: +10, Power Cell, Illuminator. +0: Weapon Charge Pack, Data-Slate, Bridge Terminal. -10: Shuttle Electronics, Servo-Skull. -20: Lascannon Charge Pack, Bridge Hololith. -30: Cogitator Core, Reactor Machine Spirit, Xenos Technology.",
-    "cost": "Requires Mechanicus Implants to use. Poor gives -10 to all Toughness Tests made to use this, Best give +10.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Allows the recharging of various devices, requires one minute. Difficulty varies: +10, Power Cell, Illuminator. +0: Weapon Charge Pack, Data-Slate, Bridge Terminal. -10: Shuttle Electronics, Servo-Skull. -20: Lascannon Charge Pack, Bridge Hololith. -30: Cogitator Core, Reactor Machine Spirit, Xenos Technology.</p>\n<h3>Requirements</h3><p>Requires Mechanicus Implants to use. Poor gives -10 to all Toughness Tests made to use this, Best give +10.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows the recharging of various devices, requires one minute. Difficulty varies: +10, Power Cell, Illuminator. +0: Weapon Charge Pack, Data-Slate, Bridge Terminal. -10: Shuttle Electronics, Servo-Sku"
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows the recharging of various devices, requires one minute. Difficulty varies: +10, Power Cell, Illuminator. +0: Weapon Charge Pack, Data-Slate, Bridge Terminal. -10: Shuttle Electronics, Servo-Skull. -20: Lascannon Charge Pack, Bridge Hololith. -30: Cogitator Core, Reactor Machine Spirit, Xenos Technology.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

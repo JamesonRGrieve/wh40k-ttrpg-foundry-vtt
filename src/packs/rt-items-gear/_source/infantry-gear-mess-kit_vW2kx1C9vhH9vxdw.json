@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Infantry Gear",
-    "weight": "0.5kg",
-    "availability": "Contains a Spork, Knife, and Collapsible mug inside a Clamshell container that doubles as the tray. Meals are often placed in the container, tightly closed, and dropped into an open fire to cook.",
-    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
-    "effects": "Plentiful",
-    "notes": "5 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "survival",
+    "weight": 0.5,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>"
+      "value": "<p>Contains a Spork, Knife, and Collapsible mug inside a Clamshell container that doubles as the tray. Meals are often placed in the container, tightly closed, and dropped into an open fire to cook.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>",
+      "chat": "",
+      "summary": "Contains a Spork, Knife, and Collapsible mug inside a Clamshell container that doubles as the tray. Meals are often placed in the container, tightly closed, and dropped into an open fire to cook."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Contains a Spork, Knife, and Collapsible mug inside a Clamshell container that doubles as the tray. Meals are often placed in the container, tightly closed, and dropped into an open fire to cook.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

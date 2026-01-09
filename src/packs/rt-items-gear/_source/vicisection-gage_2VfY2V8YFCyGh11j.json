@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "-",
-    "availability": "Elbow-Length gauntlet of interlocking adamantine and ceramite plates, contains laser cutters, bio-solvents, injectors, shears, and flensing instruments. Used to Maintain servitors. \nGrants +10 to Medicae, Interrogation, and Intimidation Tests. Can also be used as a weapon (Melee; 1d5+5 R, Tearing, Toxic)",
-    "cost": "Used by Techmarines and Apothacarys",
-    "effects": "Distinguished",
-    "notes": "35 R",
-    "source": "DW: Rites of Battle",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>"
+      "value": "<p>Elbow-Length gauntlet of interlocking adamantine and ceramite plates, contains laser cutters, bio-solvents, injectors, shears, and flensing instruments. Used to Maintain servitors. \nGrants +10 to Medicae, Interrogation, and Intimidation Tests. Can also be used as a weapon (Melee; 1d5+5 R, Tearing, Toxic)</p>\n<h3>Requirements</h3><p>Used by Techmarines and Apothacarys</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Elbow-Length gauntlet of interlocking adamantine and ceramite plates, contains laser cutters, bio-solvents, injectors, shears, and flensing instruments. Used to Maintain servitors. \nGrants +10 to Medi"
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Elbow-Length gauntlet of interlocking adamantine and ceramite plates, contains laser cutters, bio-solvents, injectors, shears, and flensing instruments. Used to Maintain servitors. \nGrants +10 to Medicae, Interrogation, and Intimidation Tests. Can also be used as a weapon (Melee; 1d5+5 R, Tearing, Toxic)",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

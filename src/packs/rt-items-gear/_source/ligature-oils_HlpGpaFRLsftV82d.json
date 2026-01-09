@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "-",
-    "availability": "If applied to a weapon as a Full Aciton, it becomes Immune to jamming for one game session. Extracted from ritually sacrificed captives and brewed by renegade technomats and techpriests.",
-    "cost": "Heretical",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>If applied to a weapon as a Full Aciton, it becomes Immune to jamming for one game session. Extracted from ritually sacrificed captives and brewed by renegade technomats and techpriests.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "If applied to a weapon as a Full Aciton, it becomes Immune to jamming for one game session. Extracted from ritually sacrificed captives and brewed by renegade technomats and techpriests."
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "If applied to a weapon as a Full Aciton, it becomes Immune to jamming for one game session. Extracted from ritually sacrificed captives and brewed by renegade technomats and techpriests.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

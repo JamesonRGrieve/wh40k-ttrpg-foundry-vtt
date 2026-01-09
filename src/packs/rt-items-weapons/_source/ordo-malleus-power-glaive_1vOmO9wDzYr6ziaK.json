@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ordo-malleus-power-glaive",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+8",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 5
+    },
+    "special": [
+      "balanced",
+      "power-field",
+      "proven-4",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Power Field, Proven (4), Sanctified",
-    "weight": "4.5kg",
+    "weight": 4.5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Beyond",
-    "note": "Two-Handed Weapon. Grants additional +10 to Parry.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Power Field, Proven (4), Sanctified</p><p><b>Note:</b> Two-Handed Weapon. Grants additional +10 to Parry.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed Weapon. Grants additional +10 to Parry.",
+    "source": "DH 2E: Enemies Beyond"
   },
   "effects": [],
   "flags": {},

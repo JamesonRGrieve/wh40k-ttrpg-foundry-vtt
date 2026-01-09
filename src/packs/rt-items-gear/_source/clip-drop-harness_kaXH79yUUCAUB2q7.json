@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "2kg",
-    "availability": "Use to descend a vertical surface, gain +30 to Climb Tests, and don't fall if fail such tests.\nCommon Holds 150kg, Good holds 200kg.",
-    "cost": null,
-    "effects": "Common",
-    "notes": "25 T",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 2,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 25,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 25 T</p>"
+      "value": "<p>Use to descend a vertical surface, gain +30 to Climb Tests, and don't fall if fail such tests.\nCommon Holds 150kg, Good holds 200kg.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 25 T</p>",
+      "chat": "",
+      "summary": "Use to descend a vertical surface, gain +30 to Climb Tests, and don't fall if fail such tests.\nCommon Holds 150kg, Good holds 200kg."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Use to descend a vertical surface, gain +30 to Climb Tests, and don't fall if fail such tests.\nCommon Holds 150kg, Good holds 200kg.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

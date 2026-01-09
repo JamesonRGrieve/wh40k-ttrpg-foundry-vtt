@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "skybolt",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 8
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "felling-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Power Field, Felling (8)",
-    "weight": "15kg",
-    "availability": "Hero",
-    "cost": "50 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only. Relic Master-Crafted Astartes Power Spear of the Storm Wardens. Provides +15 Fellowship when dealing with other Storm Wardens Space Marines, due to the cultural significance of the weapon.",
+    "weight": 15,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Power Field, Felling (8)</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Spear of the Storm Wardens. Provides +15 Fellowship when dealing with other Storm Wardens Space Marines, due to the cultural significance of the weapon.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Relic Master-Crafted Astartes Power Spear of the Storm Wardens. Provides +15 Fellowship when dealing with other Storm Wardens Space Marines, due to the cultural significance of the weapon.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Energy Arm Critical 9",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_arm_9",
+    "damageType": "energy",
+    "bodyPart": "arm",
+    "severity": 9,
+    "effect": "<p>Fire consumes the target’s arm, burning the flesh to a crisp right down to the bone. The target must make an immediate Challenging (+0) Toughness test or die from shock. If he survives, the target suffers [[1d10]] levels of Fatigue and is Stunned for 1 round. The target now suffers from the Lost Arm condition.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Arm (Severity 9)</strong></p><p>Fire consumes the target’s arm, burning the flesh to a crisp right down to the bone. The target must make an immediate Challenging (+0) Toughness test or die from shock. If he survives, the target suffers [[1d10]] levels of Fatigue and is Stunned for 1 round. The target now suffers from the Lost Arm condition.</p>",
+      "chat": "",
+      "summary": "Energy Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "bZTIcDvlUAlELhgf"
+}

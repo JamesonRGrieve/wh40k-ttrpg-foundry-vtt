@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.4,
-    "maxAg": "-",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "Hero",
-    "cost": "50 R",
-    "notes": "Master Crafted Relic Force Field of the Iron Lords Chapter. Overload 01. Attacks not stopped by the Force Field reduce their damage by 3. Unarmed attacks against the user cause the attacker to suffer 1d5 damage that ignores Armour and Toughness.",
+    "notes": "Master Crafted Relic Force Field of the Iron Lords Chapter. Overload 01. Attacks not stopped by the Force Field reduce their damage by 3. Unarmed attacks against the user cause the attacker to suffer 1d5 damage that ignores Armour and Toughness. [AP: 40%]",
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Force Field of the Iron Lords Chapter. Overload 01. Attacks not stopped by the Force Field reduce their damage by 3. Unarmed attacks against the user cause the attacker to suffer 1d5 damage that ignores Armour and Toughness.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.4,
-      "body": 0.4,
-      "leftArm": 0.4,
-      "rightArm": 0.4,
-      "leftLeg": 0.4,
-      "rightLeg": 0.4
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

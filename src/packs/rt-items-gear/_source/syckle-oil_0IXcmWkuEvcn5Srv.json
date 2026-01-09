@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "0.5kg",
-    "availability": "An oil that when applied to a metal surface makes it almost frictionless, preventing rust and tarnishing. Can be used to lubricate simple mechanisms. If applied to a weapon, for the next 12 hours or 1d10+4 attacks, reroll any test that would result in a break or jam (must keep new result).",
-    "cost": "One use.",
-    "effects": "Scarce",
-    "notes": "12 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 12,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 12 T</p>"
+      "value": "<p>An oil that when applied to a metal surface makes it almost frictionless, preventing rust and tarnishing. Can be used to lubricate simple mechanisms. If applied to a weapon, for the next 12 hours or 1d10+4 attacks, reroll any test that would result in a break or jam (must keep new result).</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 12 T</p>",
+      "chat": "",
+      "summary": "An oil that when applied to a metal surface makes it almost frictionless, preventing rust and tarnishing. Can be used to lubricate simple mechanisms. If applied to a weapon, for the next 12 hours or 1"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "An oil that when applied to a metal surface makes it almost frictionless, preventing rust and tarnishing. Can be used to lubricate simple mechanisms. If applied to a weapon, for the next 12 hours or 1d10+4 attacks, reroll any test that would result in a break or jam (must keep new result).",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

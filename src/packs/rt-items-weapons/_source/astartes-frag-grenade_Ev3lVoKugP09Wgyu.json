@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-frag-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Blast (5)",
-    "weight": "0.8kg",
-    "availability": "Initiated",
-    "cost": "1 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable.",
+    "weight": 0.8,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

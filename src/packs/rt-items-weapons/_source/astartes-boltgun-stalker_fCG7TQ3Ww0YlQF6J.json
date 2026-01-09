@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-boltgun-stalker",
     "class": "basic",
     "type": "bolt",
-    "range": "200m",
-    "rof": "S/-/-",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 24,
-    "reload": "Full",
-    "special": "SM Wep, Accurate, Tearing",
-    "weight": "17kg",
-    "availability": "Respected",
-    "cost": "15 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable. Reduced sound and no muzzle flash, Awareness Tests to hear shots have -30, and can only be attempted at half normal distance. Can be combined with Stalker Bolt Rounds unusual ammo.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "accurate",
+      "tearing"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 17,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Accurate, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Reduced sound and no muzzle flash, Awareness Tests to hear shots have -30, and can only be attempted at half normal distance. Can be combined with Stalker Bolt Rounds unusual ammo.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Reduced sound and no muzzle flash, Awareness Tests to hear shots have -30, and can only be attempted at half normal distance. Can be combined with Stalker Bolt Rounds unusual ammo.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

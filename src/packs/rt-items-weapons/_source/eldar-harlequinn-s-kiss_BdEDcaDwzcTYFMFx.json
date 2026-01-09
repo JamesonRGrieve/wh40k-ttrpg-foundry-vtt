@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-harlequinns-kiss",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+8",
-    "damageType": "Rending",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 8,
+      "penetration": 10
+    },
+    "special": [
+      "felling-4",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Felling (4), Tearing",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Felling (4), Tearing</p><p><b>Note:</b> Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

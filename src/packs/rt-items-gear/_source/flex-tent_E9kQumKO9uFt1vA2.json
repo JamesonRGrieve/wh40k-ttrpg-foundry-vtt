@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "2kg",
-    "availability": "Thin rolled up fabric, when unrolled and given electric charge it hardens into strong shelter until uncharged (where it then collapses again). Common Craftsmansihp fits two people, Good fits three, and Best fits four.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 2,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Thin rolled up fabric, when unrolled and given electric charge it hardens into strong shelter until uncharged (where it then collapses again). Common Craftsmansihp fits two people, Good fits three, and Best fits four.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Thin rolled up fabric, when unrolled and given electric charge it hardens into strong shelter until uncharged (where it then collapses again). Common Craftsmansihp fits two people, Good fits three, an"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Thin rolled up fabric, when unrolled and given electric charge it hardens into strong shelter until uncharged (where it then collapses again). Common Craftsmansihp fits two people, Good fits three, and Best fits four.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

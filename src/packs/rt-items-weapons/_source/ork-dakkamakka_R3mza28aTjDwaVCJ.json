@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-dakkamakka",
     "class": "heavy",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/3/5",
-    "damage": "1d10+5",
-    "damageType": "Impact",
-    "penetration": 3,
-    "clip": 60,
-    "reload": "Full",
-    "special": "Scatter, Unreliable",
-    "weight": "30kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 3
+    },
+    "special": [
+      "scatter",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 30,
     "availability": "rare",
-    "cost": "-",
-    "source": "ChatGPT",
-    "note": "When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Scatter, Unreliable</p><p><b>Note:</b> When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)",
+    "source": "ChatGPT"
   },
   "effects": [],
   "flags": {},

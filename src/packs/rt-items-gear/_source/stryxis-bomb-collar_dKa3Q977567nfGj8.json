@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "3kg",
-    "availability": "A Collar with a small explosive device, to enforce compliance. Can be blown up remotely.",
-    "cost": "Xenotech. One step easier to obtain if offered by a stryxis merchant.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "RT: Koronus Bestiary",
+    "category": "tools",
+    "weight": 3,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Collar with a small explosive device, to enforce compliance. Can be blown up remotely.</p>\n<h3>Requirements</h3><p>Xenotech. One step easier to obtain if offered by a stryxis merchant.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Collar with a small explosive device, to enforce compliance. Can be blown up remotely."
     },
+    "source": {
+      "book": "RT: Koronus Bestiary",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Collar with a small explosive device, to enforce compliance. Can be blown up remotely.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Rending Leg Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_leg_3",
+    "damageType": "rending",
+    "bodyPart": "leg",
+    "severity": 3,
+    "effect": "<p>The attack rips a length of flesh from the leg. The target suffers Blood Loss and suffers [[1d5]] Agility damage.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Leg (Severity 3)</strong></p><p>The attack rips a length of flesh from the leg. The target suffers Blood Loss and suffers [[1d5]] Agility damage.</p>",
+      "chat": "",
+      "summary": "Rending Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "Sn4SJDVRFhwZpWme"
+}

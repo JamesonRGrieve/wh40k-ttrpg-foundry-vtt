@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "boarding-pike-anoxis",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "S/-/-",
-    "damage": "1d10+3",
-    "damageType": "Explosive",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 3,
+      "penetration": 2
+    },
+    "special": [
+      "primitive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "common",
-    "cost": "30 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Two-Handed Weapon. Has an explosive tip that can be detonated to do listed damage. Takes some time to reload so cannot be done in combat. If not detonated, or already detonated, weapon has the profile of a Club  (Melee, 1d10+2 I, Pen 0, Primitive)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> Two-Handed Weapon. Has an explosive tip that can be detonated to do listed damage. Takes some time to reload so cannot be done in combat. If not detonated, or already detonated, weapon has the profile of a Club  (Melee, 1d10+2 I, Pen 0, Primitive)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed Weapon. Has an explosive tip that can be detonated to do listed damage. Takes some time to reload so cannot be done in combat. If not detonated, or already detonated, weapon has the profile of a Club  (Melee, 1d10+2 I, Pen 0, Primitive)",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

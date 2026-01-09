@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "8kg",
-    "availability": "Protects user against vacuum. Provides 12 hours of air, but imposes -10 to Agility Tests. Poor Versions have six hours. Good/Best have no Agility Penalty. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "clothing",
+    "weight": 8,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Protects user against vacuum. Provides 12 hours of air, but imposes -10 to Agility Tests. Poor Versions have six hours. Good/Best have no Agility Penalty. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Protects user against vacuum. Provides 12 hours of air, but imposes -10 to Agility Tests. Poor Versions have six hours. Good/Best have no Agility Penalty. Whenever taking Rending or Explosive Damage, "
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Protects user against vacuum. Provides 12 hours of air, but imposes -10 to Agility Tests. Poor Versions have six hours. Good/Best have no Agility Penalty. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

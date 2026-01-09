@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Allows user to load a single dose of a drug into a skin-mounted port. As a Half Action can make a +20 Willpower Test to activate it, automatically administering the drug. If failed, the injector malfunctions and a +0 Tech-Use Test is neccisary to fix it. If implanted multiple times, each implant gives a new port that supplies a single drug dose (doesn't need to be same drug).",
-    "cost": "After use, can be refilled at a later date.",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Allows user to load a single dose of a drug into a skin-mounted port. As a Half Action can make a +20 Willpower Test to activate it, automatically administering the drug. If failed, the injector malfunctions and a +0 Tech-Use Test is neccisary to fix it. If implanted multiple times, each implant gives a new port that supplies a single drug dose (doesn't need to be same drug).</p>\n<h3>Requirements</h3><p>After use, can be refilled at a later date.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows user to load a single dose of a drug into a skin-mounted port. As a Half Action can make a +20 Willpower Test to activate it, automatically administering the drug. If failed, the injector malfu"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows user to load a single dose of a drug into a skin-mounted port. As a Half Action can make a +20 Willpower Test to activate it, automatically administering the drug. If failed, the injector malfunctions and a +0 Tech-Use Test is neccisary to fix it. If implanted multiple times, each implant gives a new port that supplies a single drug dose (doesn't need to be same drug).",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

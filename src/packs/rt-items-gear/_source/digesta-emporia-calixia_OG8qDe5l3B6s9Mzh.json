@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "1.5kg",
-    "availability": "A Character who possesses or who has access to this book gains +10 to Commerce Tests, and may spend a Fate Point to pass any Scrutiny Tests made during Financial Negotiations with 1d5 Degrees of Success.",
-    "cost": "A Tome that contains thousands of legal rulings and opinions of Jurists, Scholars, and magisters pertaining to trade.",
-    "effects": "Average",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Character who possesses or who has access to this book gains +10 to Commerce Tests, and may spend a Fate Point to pass any Scrutiny Tests made during Financial Negotiations with 1d5 Degrees of Success.</p>\n<h3>Requirements</h3><p>A Tome that contains thousands of legal rulings and opinions of Jurists, Scholars, and magisters pertaining to trade.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Character who possesses or who has access to this book gains +10 to Commerce Tests, and may spend a Fate Point to pass any Scrutiny Tests made during Financial Negotiations with 1d5 Degrees of Succe"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Character who possesses or who has access to this book gains +10 to Commerce Tests, and may spend a Fate Point to pass any Scrutiny Tests made during Financial Negotiations with 1d5 Degrees of Success.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

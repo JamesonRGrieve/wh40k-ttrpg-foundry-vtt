@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "velklir-rapier",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+7",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 7
+    },
+    "special": [
+      "balanced",
+      "flexible",
+      "razor-sharp"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Flexible, Razor-Sharp",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "After using this weapon to kill an opponent, make +0 Toughness Test or suffer one Fatigue.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Flexible, Razor-Sharp</p><p><b>Note:</b> After using this weapon to kill an opponent, make +0 Toughness Test or suffer one Fatigue.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "After using this weapon to kill an opponent, make +0 Toughness Test or suffer one Fatigue.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

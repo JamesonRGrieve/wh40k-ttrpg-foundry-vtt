@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "All",
-    "ap": 4,
-    "maxAg": 50,
-    "weight": "11kg",
+    "weight": 11,
     "availability": "scarce",
-    "cost": "300 T",
     "notes": "+1 AP against Blast Weapons if not at centre of blast.",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 4
     },
     "modifications": [],
-    "maxAgility": 50
+    "maxAgility": 50,
+    "properties": []
   },
   "effects": [],
   "flags": {},

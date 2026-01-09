@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.5,
-    "maxAg": "-",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "Hero",
-    "cost": "40 R",
-    "notes": "Always Master-Crafted",
+    "notes": "Always Master-Crafted [AP: 50%]",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Always Master-Crafted</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.5,
-      "body": 0.5,
-      "leftArm": 0.5,
-      "rightArm": 0.5,
-      "leftLeg": 0.5,
-      "rightLeg": 0.5
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

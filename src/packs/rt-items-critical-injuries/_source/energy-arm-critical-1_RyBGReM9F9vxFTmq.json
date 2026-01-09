@@ -1,0 +1,32 @@
+{
+  "name": "Energy Arm Critical 1",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_arm_1",
+    "damageType": "energy",
+    "bodyPart": "arm",
+    "severity": 1,
+    "effect": "<p>The attack grazes the target’s arm, causing it to spasm uncontrollably with pain. All tests involving that arm suffer a –30 penalty for [[1d5]] rounds</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Arm (Severity 1)</strong></p><p>The attack grazes the target’s arm, causing it to spasm uncontrollably with pain. All tests involving that arm suffer a –30 penalty for [[1d5]] rounds</p>",
+      "chat": "",
+      "summary": "Energy Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "RyBGReM9F9vxFTmq"
+}

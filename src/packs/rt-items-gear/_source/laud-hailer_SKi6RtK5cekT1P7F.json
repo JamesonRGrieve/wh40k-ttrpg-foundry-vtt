@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "4kg",
-    "availability": "Space Megaphone. A user wearing one may activate it as a Half Action to gain Fear (1) for 1d5 rounds by blasting righteous vitriol, additionally anyone in 5 metres, including the user, must make a +20 Toughness test or be deafened for 1d5 rounds.",
-    "cost": "Often attached to servo-skulls or servitors that can play pre-recorded messages. ",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 4,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Space Megaphone. A user wearing one may activate it as a Half Action to gain Fear (1) for 1d5 rounds by blasting righteous vitriol, additionally anyone in 5 metres, including the user, must make a +20 Toughness test or be deafened for 1d5 rounds.</p>\n<h3>Requirements</h3><p>Often attached to servo-skulls or servitors that can play pre-recorded messages. </p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Space Megaphone. A user wearing one may activate it as a Half Action to gain Fear (1) for 1d5 rounds by blasting righteous vitriol, additionally anyone in 5 metres, including the user, must make a +20"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Megaphone. A user wearing one may activate it as a Half Action to gain Fear (1) for 1d5 rounds by blasting righteous vitriol, additionally anyone in 5 metres, including the user, must make a +20 Toughness test or be deafened for 1d5 rounds.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

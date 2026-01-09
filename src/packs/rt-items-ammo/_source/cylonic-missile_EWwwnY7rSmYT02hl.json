@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Missile Launcher",
-    "damageOrEffect": "5d10+10 X, Pen 1, Blast (15). Make -10 Agility Test or catch on fire. Anythin in 10 metres of edge takes no damage, but must make +0 Agility test or catch on fire.",
-    "qualities": "Blast (15)",
-    "weight": "1kg",
+    "identifier": "cylonic-missile",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-15"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>5d10+10 X, Pen 1, Blast (15). Make -10 Agility Test or catch on fire. Anythin in 10 metres of edge takes no damage, but must make +0 Agility test or catch on fire.</p>",
+    "notes": "",
+    "weight": 1,
     "availability": "near-unique",
-    "cost": null,
-    "source": "RT: Faith and Coin",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 5d10+10 X, Pen 1, Blast (15). Make -10 Agility Test or catch on fire. Anythin in 10 metres of edge takes no damage, but must make +0 Agility test or catch on fire.</p><p><b>Qualities:</b> Blast (15)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Faith and Coin",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "xenarch-death-arc",
     "class": "basic",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/3/6",
-    "damage": "1d10+3",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 90,
-    "reload": "Full",
-    "special": "Inaccurate, Shocking",
-    "weight": "10kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "shocking"
+    ],
+    "clip": {
+      "max": 90,
+      "value": 90,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 10,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Fires Crackling bolts of energy. When a character wielding the weapon would inflict multiple hits from a single attack of thie weapon, they instead resolve all of them as one single hit, combining damage (EG: 2 hits, 2d10+6 E damage)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Shocking</p><p><b>Note:</b> Fires Crackling bolts of energy. When a character wielding the weapon would inflict multiple hits from a single attack of thie weapon, they instead resolve all of them as one single hit, combining damage (EG: 2 hits, 2d10+6 E damage)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires Crackling bolts of energy. When a character wielding the weapon would inflict multiple hits from a single attack of thie weapon, they instead resolve all of them as one single hit, combining damage (EG: 2 hits, 2d10+6 E damage)",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

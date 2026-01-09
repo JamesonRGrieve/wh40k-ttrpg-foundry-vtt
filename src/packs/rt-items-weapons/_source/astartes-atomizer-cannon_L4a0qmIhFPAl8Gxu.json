@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-atomizer-cannon",
     "class": "heavy",
     "type": "exotic",
-    "range": "50m",
-    "rof": "S/-/-",
-    "damage": "4d10+4",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": 25,
-    "reload": "3 Full",
-    "special": "SM Wep, Blast (5), Devastating (4), Volatile, Toxic",
-    "weight": "80kg",
-    "availability": "Famed",
-    "cost": "50 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. Toxic Special Quality represents radioactive effects. Therefore Toxin resistance/immunity would do nothing.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 8
+    },
+    "special": [
+      "sm-wep",
+      "blast-5",
+      "devastating-4",
+      "volatile",
+      "toxic"
+    ],
+    "clip": {
+      "max": 25,
+      "value": 25,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 80,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (5), Devastating (4), Volatile, Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Toxic Special Quality represents radioactive effects. Therefore Toxin resistance/immunity would do nothing.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Toxic Special Quality represents radioactive effects. Therefore Toxin resistance/immunity would do nothing.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

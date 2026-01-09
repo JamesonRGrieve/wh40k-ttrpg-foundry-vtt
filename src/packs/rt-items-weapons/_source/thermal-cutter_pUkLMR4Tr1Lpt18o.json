@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "thermal-cutter",
     "class": "basic",
     "type": "exotic",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "2d10+6",
-    "damageType": "Impact",
-    "penetration": 10,
-    "clip": 5,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "40kg",
-    "availability": "Special",
-    "cost": "-",
-    "source": "RT: Stars of Inequity",
-    "note": "Found as Treasure via book's Treasure Generator.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 6,
+      "penetration": 10
+    },
+    "special": [],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 40,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity"
   },
   "effects": [],
   "flags": {},

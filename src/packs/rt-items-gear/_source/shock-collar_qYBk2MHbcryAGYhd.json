@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "1.5kg",
-    "availability": "Wrangling Tests to influence a creature with a shock collar gain +20, however if the Wrangling Test is failed by 4 or more DoF, the creature enters a Frenzy (As with the Frenzy Talent), and tries to attack the wrangler, who must make a -30 Wrangling Test as a Full Action to bring the beast back under control.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "clothing",
+    "weight": 1.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Wrangling Tests to influence a creature with a shock collar gain +20, however if the Wrangling Test is failed by 4 or more DoF, the creature enters a Frenzy (As with the Frenzy Talent), and tries to attack the wrangler, who must make a -30 Wrangling Test as a Full Action to bring the beast back under control.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Wrangling Tests to influence a creature with a shock collar gain +20, however if the Wrangling Test is failed by 4 or more DoF, the creature enters a Frenzy (As with the Frenzy Talent), and tries to a"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Wrangling Tests to influence a creature with a shock collar gain +20, however if the Wrangling Test is failed by 4 or more DoF, the creature enters a Frenzy (As with the Frenzy Talent), and tries to attack the wrangler, who must make a -30 Wrangling Test as a Full Action to bring the beast back under control.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

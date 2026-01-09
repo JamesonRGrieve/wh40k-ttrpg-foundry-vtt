@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Improves any Exceptional Craftsmanship Cybernetic, increasing the bonus the bionic provides by +10 (EG: Bionic arms provide +20 to dextrious movements and strength instead of +10).\nIf a bionic does not provide a bonus, it now provides +10 to Characteristic Tests that directly relate to its use. (GM Discretion).",
-    "cost": "Iron Hands Chapter and Deathwatch Forgemasters only.",
-    "effects": "Famed",
-    "notes": "40 R",
-    "source": "DW: First Founding",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 40 R</p>"
+      "value": "<p>Improves any Exceptional Craftsmanship Cybernetic, increasing the bonus the bionic provides by +10 (EG: Bionic arms provide +20 to dextrious movements and strength instead of +10).\nIf a bionic does not provide a bonus, it now provides +10 to Characteristic Tests that directly relate to its use. (GM Discretion).</p>\n<h3>Requirements</h3><p>Iron Hands Chapter and Deathwatch Forgemasters only.</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 40 R</p>",
+      "chat": "",
+      "summary": "Improves any Exceptional Craftsmanship Cybernetic, increasing the bonus the bionic provides by +10 (EG: Bionic arms provide +20 to dextrious movements and strength instead of +10).\nIf a bionic does no"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Improves any Exceptional Craftsmanship Cybernetic, increasing the bonus the bionic provides by +10 (EG: Bionic arms provide +20 to dextrious movements and strength instead of +10).\nIf a bionic does not provide a bonus, it now provides +10 to Characteristic Tests that directly relate to its use. (GM Discretion).",
+    "duration": "",
+    "notes": "40 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,47 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP: Stubbers, hand cannons, autopistols, autoguns",
-    "damageOrEffect": "+3 Damage to Biological Targets",
-    "qualities": "-",
-    "weight": "10% wep",
+    "identifier": "bleeder-round",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 3,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>+3 Damage to Biological Targets</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "rare",
-    "cost": null,
-    "source": "Rogue Trader Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> +3 Damage to Biological Targets</p><p><b>Qualities:</b> -</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Rogue Trader Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

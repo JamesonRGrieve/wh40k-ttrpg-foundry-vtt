@@ -34,14 +34,13 @@ export async function sendActiveEffectMessage(activeContext) {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
     };
     if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
         chatData.whisper = ChatMessage.getWhisperRecipients('GM');
     } else if (chatData.rollMode === 'selfroll') {
         chatData.whisper = [game.user];
     }
-    ChatMessage.create(chatData);
+    await ChatMessage.create(chatData);
 }
 
 /* -------------------------------------------- */

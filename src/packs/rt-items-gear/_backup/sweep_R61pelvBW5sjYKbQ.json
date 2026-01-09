@@ -1,0 +1,30 @@
+{
+  "name": "Sweep",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Character removes any Addictions they are currently suffering from, doesn't eliminate any of the other side effects. Character suffers -10 to all Agility and Perception Tests for 1d5 Hours, Addictions to this drug are twice as hard to remove, and cannot be cured by this drug.",
+    "cost": "Very Addictive.",
+    "effects": "Average",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R61pelvBW5sjYKbQ"
+}

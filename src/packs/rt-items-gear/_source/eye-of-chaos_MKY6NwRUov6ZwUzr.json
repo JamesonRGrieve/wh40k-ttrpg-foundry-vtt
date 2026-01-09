@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "An Icon of the Dark Gods, an eight-sided arrangement of spiked metal with a flesh, closed eye at its centre. The eye is claimed to open once proper sacrifices and profane rituals are performed, and in so dong reveal a spark of the Warp itself, those that draw upon it may achieve absolute power. Must first perform the correct rituals (-30 Forbidden Lore (Daemonology), gaining 2 Corruption per Degree of Success, or two Insanity per Degree of Failiure. Once the eye opens, the Warp Rushes through the user for 1d10 rounds, any psychic powers manifested during this time count as having twice the effective psy rating and always generate Psychic Phenomena with 2x Psy Rating added to the rolls.",
-    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>An Icon of the Dark Gods, an eight-sided arrangement of spiked metal with a flesh, closed eye at its centre. The eye is claimed to open once proper sacrifices and profane rituals are performed, and in so dong reveal a spark of the Warp itself, those that draw upon it may achieve absolute power. Must first perform the correct rituals (-30 Forbidden Lore (Daemonology), gaining 2 Corruption per Degree of Success, or two Insanity per Degree of Failiure. Once the eye opens, the Warp Rushes through the user for 1d10 rounds, any psychic powers manifested during this time count as having twice the effective psy rating and always generate Psychic Phenomena with 2x Psy Rating added to the rolls.</p>\n<h3>Requirements</h3><p>A Profane Object of Legend. It cannot be acquired, it must be earned or found. </p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "An Icon of the Dark Gods, an eight-sided arrangement of spiked metal with a flesh, closed eye at its centre. The eye is claimed to open once proper sacrifices and profane rituals are performed, and in"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "An Icon of the Dark Gods, an eight-sided arrangement of spiked metal with a flesh, closed eye at its centre. The eye is claimed to open once proper sacrifices and profane rituals are performed, and in so dong reveal a spark of the Warp itself, those that draw upon it may achieve absolute power. Must first perform the correct rituals (-30 Forbidden Lore (Daemonology), gaining 2 Corruption per Degree of Success, or two Insanity per Degree of Failiure. Once the eye opens, the Warp Rushes through the user for 1d10 rounds, any psychic powers manifested during this time count as having twice the effective psy rating and always generate Psychic Phenomena with 2x Psy Rating added to the rolls.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

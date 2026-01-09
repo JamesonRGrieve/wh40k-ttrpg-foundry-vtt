@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "0.5kg",
-    "availability": "If user has Common Lore (Machine Cult), can bear this symbol to gain +10 to Fellowsihp Tests with Tech-Priests and Followers of the Machine God.\nThe Greater Symbol also contains a set of Multikeys and grants +10 to Security Tests to disablealarms and commune with machine spirits.",
-    "cost": "Tech Priests Only",
-    "effects": "Near Unique",
-    "notes": "12000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 12000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 12000 T</p>"
+      "value": "<p>If user has Common Lore (Machine Cult), can bear this symbol to gain +10 to Fellowsihp Tests with Tech-Priests and Followers of the Machine God.\nThe Greater Symbol also contains a set of Multikeys and grants +10 to Security Tests to disablealarms and commune with machine spirits.</p>\n<h3>Requirements</h3><p>Tech Priests Only</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 12000 T</p>",
+      "chat": "",
+      "summary": "If user has Common Lore (Machine Cult), can bear this symbol to gain +10 to Fellowsihp Tests with Tech-Priests and Followers of the Machine God.\nThe Greater Symbol also contains a set of Multikeys and"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "If user has Common Lore (Machine Cult), can bear this symbol to gain +10 to Fellowsihp Tests with Tech-Priests and Followers of the Machine God.\nThe Greater Symbol also contains a set of Multikeys and grants +10 to Security Tests to disablealarms and commune with machine spirits.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Impact Body Critical 4",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body_4",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 4,
+    "effect": "<p>The blow batters the target, shattering a rib. The target suffers [[1d10]] Toughness damage and must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Body (Severity 4)</strong></p><p>The blow batters the target, shattering a rib. The target suffers [[1d10]] Toughness damage and must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "q6d6Tro5ErgqwRBN"
+}

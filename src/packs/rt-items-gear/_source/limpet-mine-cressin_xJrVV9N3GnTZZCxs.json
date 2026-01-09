@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "3kg",
-    "availability": "Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "55 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 3,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 55,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>"
+      "value": "<p>Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>",
+      "chat": "",
+      "summary": "Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

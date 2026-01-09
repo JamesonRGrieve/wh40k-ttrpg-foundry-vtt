@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "mesh",
-    "locations": "Arms, Body, Legs",
-    "ap": 3,
-    "maxAg": null,
-    "weight": "6kg",
+    "weight": 6,
     "availability": "Special",
-    "cost": "-",
     "notes": "Found as Treasure via book's Treasure Generator.",
     "source": "RT: Stars of Inequity",
     "description": {
       "value": "<p>Found as Treasure via book's Treasure Generator.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 3,
       "body": 3,
       "leftArm": 3,
       "rightArm": 3,
@@ -33,7 +28,8 @@
       "rightLeg": 3
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

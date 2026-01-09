@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "phased-plasma-rifle",
     "class": "basic",
     "type": "plasma",
-    "range": "100m",
-    "rof": "S/2/4",
-    "damage": "2d10",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 6
+    },
+    "special": [
+      "integrated-weapon"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Integrated Weapon",
-    "weight": "12kg",
+    "weight": 12,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "OW: Shield of Humanity",
-    "note": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.",
+    "source": "OW: Shield of Humanity"
   },
   "effects": [],
   "flags": {},

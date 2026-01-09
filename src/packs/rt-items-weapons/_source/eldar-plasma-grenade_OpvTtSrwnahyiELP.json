@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-plasma-grenade",
     "class": "thrown",
     "type": "exotic",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "1d10+8",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "blast-4",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (4), Shocking",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Highly valued by Cold Traders",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (4), Shocking</p><p><b>Note:</b> Highly valued by Cold Traders</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Highly valued by Cold Traders",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

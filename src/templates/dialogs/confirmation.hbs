@@ -1,0 +1,19 @@
+{{!-- Confirmation Dialog Template --}}
+{{!-- ApplicationV2 replacement for Dialog.confirm() --}}
+
+<div class="confirmation-dialog-content">
+    <div class="confirmation-message">
+        {{{content}}}
+    </div>
+    
+    <footer class="form-footer">
+        <button type="button" class="dialog-button cancel" data-action="cancel">
+            <i class="fas fa-times"></i>
+            {{cancelLabel}}
+        </button>
+        <button type="button" class="dialog-button confirm" data-action="confirm" autofocus>
+            <i class="fas fa-check"></i>
+            {{confirmLabel}}
+        </button>
+    </footer>
+</div>

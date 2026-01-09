@@ -3,30 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-agoniser-lash",
     "class": "melee",
     "type": "exotic",
-    "range": "3m",
-    "rof": "-",
-    "damage": "1d10+3",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 3,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 6
+    },
+    "special": [
+      "flexible",
+      "power-field",
+      "tearing",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Flexible, Power Field, Tearing, Shocking",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flexible, Power Field, Tearing, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.</p>"
     },
-    "damageFormula": "1d10+3",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

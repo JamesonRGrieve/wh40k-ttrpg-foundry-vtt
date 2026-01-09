@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Heavy Mortar",
-    "damageOrEffect": "2d10+6 X, Pen 10, Concussive (2), Blast(3)\nDoes 4d10+6 Damage at Pen 20 when hitting a Building",
-    "qualities": "Concussive (2), Blast(3)",
-    "weight": "3kg",
+    "identifier": "siege-shell",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 6,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "concussive-2",
+      "blast-3"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>2d10+6 X, Pen 10, Concussive (2), Blast(3)\nDoes 4d10+6 Damage at Pen 20 when hitting a Building</p>",
+    "notes": "",
+    "weight": 3,
     "availability": "very-rare",
-    "cost": null,
-    "source": "OW: Shield of Humanity",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10+6 X, Pen 10, Concussive (2), Blast(3)\nDoes 4d10+6 Damage at Pen 20 when hitting a Building</p><p><b>Qualities:</b> Concussive (2), Blast(3)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "OW: Shield of Humanity",
+    "damage": {
+      "formula": "4d10",
+      "bonus": 6,
+      "type": "impact",
+      "penetration": 10
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

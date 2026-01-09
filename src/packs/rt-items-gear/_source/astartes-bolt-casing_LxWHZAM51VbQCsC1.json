@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "0.1kg",
-    "availability": "Wearing one or more grants +5 to Willpower Tests to avoid Fear and Pinning",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "OW: Hammer of the Emperor",
+    "category": "clothing",
+    "weight": 0.1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Wearing one or more grants +5 to Willpower Tests to avoid Fear and Pinning</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Wearing one or more grants +5 to Willpower Tests to avoid Fear and Pinning"
     },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Wearing one or more grants +5 to Willpower Tests to avoid Fear and Pinning",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

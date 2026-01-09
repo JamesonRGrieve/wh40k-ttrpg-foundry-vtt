@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "argonite-whistler",
     "class": "pistol",
     "type": "exotic",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "3d10",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 8,
-    "reload": "2 Full",
-    "special": "Recharge",
-    "weight": "2kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 6
+    },
+    "special": [
+      "recharge"
+    ],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 2,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Recharge</p><p><b>Note:</b> Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

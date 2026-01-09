@@ -1,0 +1,30 @@
+{
+  "name": "Ship Passage: Passenger Ship",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Passage aboard a Void Craft, to another planet or star system. A Comfortable, more leasurely cruise that can get you where you want to go. Likely not a lot of room for cargo.",
+    "cost": "Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed",
+    "effects": "Scarce",
+    "notes": "2200 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 2200 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ySx8pEDDSMfAuLNK"
+}

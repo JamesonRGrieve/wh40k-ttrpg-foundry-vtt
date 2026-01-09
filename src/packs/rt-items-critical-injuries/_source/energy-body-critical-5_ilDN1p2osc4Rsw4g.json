@@ -1,0 +1,32 @@
+{
+  "name": "Energy Body Critical 5",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_body_5",
+    "damageType": "energy",
+    "bodyPart": "body",
+    "severity": 5,
+    "effect": "<p>The fury of the attack forces the target to the ground, helplessly covering his face and keening in agony. The target is knocked Prone and must make a Challenging (+0) Agility test or catch fire. The target must also make a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Body (Severity 5)</strong></p><p>The fury of the attack forces the target to the ground, helplessly covering his face and keening in agony. The target is knocked Prone and must make a Challenging (+0) Agility test or catch fire. The target must also make a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+      "chat": "",
+      "summary": "Energy Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "ilDN1p2osc4Rsw4g"
+}

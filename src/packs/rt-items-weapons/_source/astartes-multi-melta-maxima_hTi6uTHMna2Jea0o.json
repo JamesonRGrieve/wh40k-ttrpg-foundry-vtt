@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-multi-melta-maxima",
     "class": "heavy",
     "type": "melta",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "4d10+6",
-    "damageType": "Energy",
-    "penetration": 13,
-    "clip": 12,
-    "reload": "2 Full",
-    "special": "SM Wep, Melta, Blast (1)",
-    "weight": "72kg",
-    "availability": "Respected",
-    "cost": "35 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 13
+    },
+    "special": [
+      "sm-wep",
+      "melta",
+      "blast-1"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 72,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 35,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Melta, Blast (1)</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

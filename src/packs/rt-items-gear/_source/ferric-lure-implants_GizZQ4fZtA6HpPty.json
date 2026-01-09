@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand.",
-    "cost": "Requires Mechanicus Implants.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "Dark Heresy 2E: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand.</p>\n<h3>Requirements</h3><p>Requires Mechanicus Implants.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand."
     },
+    "source": {
+      "book": "Dark Heresy 2E: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

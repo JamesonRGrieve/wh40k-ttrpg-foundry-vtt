@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "All",
-    "ap": 6,
-    "maxAg": null,
-    "weight": "2kg",
+    "weight": 2,
     "availability": "unique",
-    "cost": "-",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement.  Also has a Built-in forcefield with Protection Rating 20 which overloads if wearer rolls doubles on a roll to deflect an attack using the field, as opposed to normal overload rules. Likely Human Wearable, if uncomfortable.",
     "source": "RT: The Soul Reaver",
     "description": {
       "value": "<p>Rare Availability if acquired from Dark Eldar Settlement.  Also has a Built-in forcefield with Protection Rating 20 which overloads if wearer rolls doubles on a roll to deflect an attack using the field, as opposed to normal overload rules. Likely Human Wearable, if uncomfortable.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

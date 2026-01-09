@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "1kg",
-    "availability": "A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of kg.",
-    "cost": "Effects are advised to taper off to prevent blowing up a planet with a few tonnes of the stuff.",
-    "effects": "Average",
-    "notes": "70 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 70,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 70 T</p>"
+      "value": "<p>A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of kg.</p>\n<h3>Requirements</h3><p>Effects are advised to taper off to prevent blowing up a planet with a few tonnes of the stuff.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 70 T</p>",
+      "chat": "",
+      "summary": "A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of kg.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

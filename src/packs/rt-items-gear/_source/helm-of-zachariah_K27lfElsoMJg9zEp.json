@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "A Xenos helmet clearly not designed for human physiology due to its weight and design. Freatures a series of twisted threatds that extend out and be connected to another individual as a part of an interrogation. Once active, the user gains the Terrify and Telepathic Link Psychic Powers at Psy Rating 4, that can only be used on the connected target. Focus Power tests using these powers cause 1 Insanity per Degree of Success or Failiure, but do not trigger Psychic Phenomena or other warp-based perils.",
-    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Xenos helmet clearly not designed for human physiology due to its weight and design. Freatures a series of twisted threatds that extend out and be connected to another individual as a part of an interrogation. Once active, the user gains the Terrify and Telepathic Link Psychic Powers at Psy Rating 4, that can only be used on the connected target. Focus Power tests using these powers cause 1 Insanity per Degree of Success or Failiure, but do not trigger Psychic Phenomena or other warp-based perils.</p>\n<h3>Requirements</h3><p>A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Xenos helmet clearly not designed for human physiology due to its weight and design. Freatures a series of twisted threatds that extend out and be connected to another individual as a part of an int"
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Xenos helmet clearly not designed for human physiology due to its weight and design. Freatures a series of twisted threatds that extend out and be connected to another individual as a part of an interrogation. Once active, the user gains the Terrify and Telepathic Link Psychic Powers at Psy Rating 4, that can only be used on the connected target. Focus Power tests using these powers cause 1 Insanity per Degree of Success or Failiure, but do not trigger Psychic Phenomena or other warp-based perils.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

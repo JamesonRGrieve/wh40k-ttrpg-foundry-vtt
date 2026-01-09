@@ -1,0 +1,30 @@
+{
+  "name": "Survival Suit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "-",
+    "availability": "+20 Toughness against extreme environments.\nGood and Best suits provide +25 and +30 Respectively. Poor only lasts for 3 Days before needing recharge in safer environment.",
+    "cost": "Maintains Body Temperature, \"reclaims\" drinking water. ",
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8o5fpgC6bc3EJa53"
+}

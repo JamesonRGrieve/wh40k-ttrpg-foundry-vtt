@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-airbursting-fragmentation-projector",
     "class": "heavy",
     "type": "exotic",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": 3,
-    "clip": 12,
-    "reload": "2 Full",
-    "special": "Blast (4)",
-    "weight": "20kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 3
+    },
+    "special": [
+      "blast-4"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 20,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Ignore AP Targets gain from cover.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (4)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Ignore AP Targets gain from cover.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Ignore AP Targets gain from cover.",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

@@ -83,6 +83,212 @@
   }
 }
 
+// ============================================
+// Mobility Panel - Clean Design
+// ============================================
+
+.rt-panel-mobility {
+  .rt-panel-body {
+    padding: $rt-space-md;
+  }
+}
+
+.rt-mobility-speeds {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $rt-space-sm;
+  margin-bottom: $rt-space-md;
+}
+
+.rt-speed-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: $rt-border-medium;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  i {
+    font-size: 1.2rem;
+    color: $rt-text-muted;
+    opacity: 0.7;
+  }
+}
+
+.rt-speed-data {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.rt-speed-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.rt-speed-unit {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: $rt-text-muted;
+}
+
+.rt-speed-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-text-muted;
+}
+
+// Speed-specific colors
+.rt-speed-half i { color: #27ae60; }
+.rt-speed-full i { color: #2980b9; }
+.rt-speed-charge i { color: #e67e22; }
+.rt-speed-run i { color: #c0392b; }
+
+// Expanded details sections
+.rt-mobility-section {
+  margin-bottom: $rt-space-md;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper-light;
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-section-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  margin-bottom: $rt-space-sm;
+  padding-bottom: $rt-space-xs;
+  border-bottom: 1px solid $rt-border-light;
+  
+  i {
+    font-size: 0.85rem;
+    color: $rt-accent-gold;
+  }
+  
+  span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $rt-text-muted;
+  }
+}
+
+.rt-athletics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $rt-space-sm;
+}
+
+.rt-athletic-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $rt-space-xs;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.rt-athletic-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: $rt-text-muted;
+  text-align: center;
+}
+
+.rt-athletic-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.rt-carrying-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $rt-space-sm;
+}
+
+.rt-carry-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $rt-space-xs;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.rt-carry-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: $rt-text-muted;
+  text-align: center;
+}
+
+.rt-carry-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.rt-carry-unit {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: $rt-text-muted;
+  margin-left: 2px;
+}
+
+.rt-size-section {
+  padding: $rt-space-md;
+}
+
+.rt-size-select {
+  width: 100%;
+  padding: $rt-space-xs $rt-space-sm;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid $rt-border-medium;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: $rt-accent-gold;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-accent-gold;
+    box-shadow: 0 0 0 3px rgba($rt-accent-gold, 0.15);
+  }
+}
+
 .rt-movement-grid {
   display: flex;
   flex-direction: column;

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "conversion-beamer-short-range",
     "class": "heavy",
     "type": "exotic",
-    "range": "150m",
-    "rof": "S/-/-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "Blast (1), Recharge",
-    "weight": "55kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 4
+    },
+    "special": [
+      "blast-1",
+      "recharge"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "Damage and Penetration vary with range. Use this profile for Short or Shorter Ranges. See Conversion Beamer [Med Range] and [Long Range]",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (1), Recharge</p><p><b>Note:</b> Damage and Penetration vary with range. Use this profile for Short or Shorter Ranges. See Conversion Beamer [Med Range] and [Long Range]</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Damage and Penetration vary with range. Use this profile for Short or Shorter Ranges. See Conversion Beamer [Med Range] and [Long Range]",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

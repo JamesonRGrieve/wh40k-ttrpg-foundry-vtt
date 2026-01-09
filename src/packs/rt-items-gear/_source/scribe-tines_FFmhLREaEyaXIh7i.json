@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Replaces hand and lower forearm, +10 to investigation-based skill tests. Liked by scholars and lexmechanics.\nAlternative: Gives +10 to Lore Skill Tests.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Replaces hand and lower forearm, +10 to investigation-based skill tests. Liked by scholars and lexmechanics.\nAlternative: Gives +10 to Lore Skill Tests.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Replaces hand and lower forearm, +10 to investigation-based skill tests. Liked by scholars and lexmechanics.\nAlternative: Gives +10 to Lore Skill Tests."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Replaces hand and lower forearm, +10 to investigation-based skill tests. Liked by scholars and lexmechanics.\nAlternative: Gives +10 to Lore Skill Tests.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

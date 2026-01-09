@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "0.5kg",
-    "availability": "As a Full Action, user may make a +20 BS Test to illuminate a target, if successful, target is marked until the beginning of the user's next turn. Any character making a ranged attack against the marked target counts as if they had spent a full action aiming, and gain the appropriate benefits.",
-    "cost": "Xenotech. +20 to Acquisition Tests for this item if acquired through Friendly Tau Settlement.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "RT: Tau Character Guide",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>As a Full Action, user may make a +20 BS Test to illuminate a target, if successful, target is marked until the beginning of the user's next turn. Any character making a ranged attack against the marked target counts as if they had spent a full action aiming, and gain the appropriate benefits.</p>\n<h3>Requirements</h3><p>Xenotech. +20 to Acquisition Tests for this item if acquired through Friendly Tau Settlement.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "As a Full Action, user may make a +20 BS Test to illuminate a target, if successful, target is marked until the beginning of the user's next turn. Any character making a ranged attack against the mark"
     },
+    "source": {
+      "book": "RT: Tau Character Guide",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "As a Full Action, user may make a +20 BS Test to illuminate a target, if successful, target is marked until the beginning of the user's next turn. Any character making a ranged attack against the marked target counts as if they had spent a full action aiming, and gain the appropriate benefits.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

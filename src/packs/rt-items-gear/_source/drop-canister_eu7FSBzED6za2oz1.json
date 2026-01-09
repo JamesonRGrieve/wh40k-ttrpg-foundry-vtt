@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "25kg",
-    "availability": "Canister large enough for a single Heavy Weapon + Bipod/Tripod and ammo, or a comparable amount of equipment. Equipped with Grav-chute and can be delivered by dropping it from an Aircraft. Requires +10 Operate(Aeronautica) or +0 Intelligence Test. If test failed, canister drop scatters DoFx10m away.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "-",
-    "source": "OW: Hammer of the Emperor",
+    "category": "tools",
+    "weight": 25,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Canister large enough for a single Heavy Weapon + Bipod/Tripod and ammo, or a comparable amount of equipment. Equipped with Grav-chute and can be delivered by dropping it from an Aircraft. Requires +10 Operate(Aeronautica) or +0 Intelligence Test. If test failed, canister drop scatters DoFx10m away.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Canister large enough for a single Heavy Weapon + Bipod/Tripod and ammo, or a comparable amount of equipment. Equipped with Grav-chute and can be delivered by dropping it from an Aircraft. Requires +1"
     },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Canister large enough for a single Heavy Weapon + Bipod/Tripod and ammo, or a comparable amount of equipment. Equipped with Grav-chute and can be delivered by dropping it from an Aircraft. Requires +10 Operate(Aeronautica) or +0 Intelligence Test. If test failed, canister drop scatters DoFx10m away.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

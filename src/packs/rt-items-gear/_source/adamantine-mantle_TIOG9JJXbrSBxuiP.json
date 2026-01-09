@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "15kg",
-    "availability": "Space Marines Only, Deathwatch Relic. Innately Master Crafted. Negates two points of Armour Penetration of any incoming attack. Wearer gains +10 to Opposed Weapon Skill Tests to Feint. When taking the Defensive Stance Action, foes suffer an additional -10 on Weapon Skill Tests to attach the wearer.",
-    "cost": null,
-    "effects": "Hero",
-    "notes": "50 R",
-    "source": "Deathwatch: Core",
+    "category": "luxury",
+    "weight": 15,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 50 R</p>"
+      "value": "<p>Space Marines Only, Deathwatch Relic. Innately Master Crafted. Negates two points of Armour Penetration of any incoming attack. Wearer gains +10 to Opposed Weapon Skill Tests to Feint. When taking the Defensive Stance Action, foes suffer an additional -10 on Weapon Skill Tests to attach the wearer.</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 50 R</p>",
+      "chat": "",
+      "summary": "Space Marines Only, Deathwatch Relic. Innately Master Crafted. Negates two points of Armour Penetration of any incoming attack. Wearer gains +10 to Opposed Weapon Skill Tests to Feint. When taking the"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Marines Only, Deathwatch Relic. Innately Master Crafted. Negates two points of Armour Penetration of any incoming attack. Wearer gains +10 to Opposed Weapon Skill Tests to Feint. When taking the Defensive Stance Action, foes suffer an additional -10 on Weapon Skill Tests to attach the wearer.",
+    "duration": "",
+    "notes": "50 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,30 @@
+{
+  "name": "Renumeration Engine",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "7kg",
+    "availability": "Others Attempting to cheat by Sleight of Hand or other such skills involving trade deals and the like have -30 penalty when this machine is used to process the relevent data.",
+    "cost": "Can be Temperamental. Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zduANH25ibmplMhB"
+}

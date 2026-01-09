@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "static-repeater",
     "class": "basic",
     "type": "exotic",
-    "range": "80m",
-    "rof": "S/4/-",
-    "damage": "1d10+1",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 4,
-    "reload": "Full",
-    "special": "Haywire (1), Storm",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 1,
+      "penetration": 0
+    },
+    "special": [
+      "haywire-1",
+      "storm"
+    ],
+    "clip": {
+      "max": 4,
+      "value": 4,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Fires bolts of electromagnetic energy",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Haywire (1), Storm</p><p><b>Note:</b> Fires bolts of electromagnetic energy</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires bolts of electromagnetic energy",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

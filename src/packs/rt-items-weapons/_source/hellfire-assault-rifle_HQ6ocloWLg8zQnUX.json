@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hellfire-assault-rifle",
     "class": "basic",
     "type": "solid-projectile",
-    "range": "100m",
-    "rof": "S/3/-",
-    "damage": "1d10+5",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": 20,
-    "reload": "2 Full",
-    "special": "Tearing, Accurate",
-    "weight": "5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "tearing",
+      "accurate"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "ChatGPT",
-    "note": "Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Accurate</p><p><b>Note:</b> Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.",
+    "source": "ChatGPT"
   },
   "effects": [],
   "flags": {},

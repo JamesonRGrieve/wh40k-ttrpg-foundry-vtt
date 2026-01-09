@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0,
-    "maxAg": 40,
-    "weight": "10kg",
+    "weight": 10,
     "availability": "rare",
-    "cost": "-",
     "notes": "Wearer is immune to Mind-Mould, unless they are a  Psyker. Sealed, and Filtration Systems provide +40 to any Toughness Tests to resist harmful gases, and +10 to resist extreme temperatures and being set on fire. Contains separate Rebreather that lasts 5 hours before needing replacement. Cna be worn over armour. If taking 5+ damage in a singel round it becomes damaged and is no longer sealed.",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Wearer is immune to Mind-Mould, unless they are a  Psyker. Sealed, and Filtration Systems provide +40 to any Toughness Tests to resist harmful gases, and +10 to resist extreme temperatures and being set on fire. Contains separate Rebreather that lasts 5 hours before needing replacement. Cna be worn over armour. If taking 5+ damage in a singel round it becomes damaged and is no longer sealed.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": 40
+    "maxAgility": 40,
+    "properties": []
   },
   "effects": [],
   "flags": {},

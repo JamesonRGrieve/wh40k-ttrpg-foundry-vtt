@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-thunder-hammer-alt",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+5",
-    "damageType": "Energy",
-    "penetration": 9,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 9
+    },
+    "special": [
+      "sm-wep",
+      "concussive-1",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Concussive (1), Unwieldy",
-    "weight": "18kg",
-    "availability": "Distinguished",
-    "cost": "30 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3",
+    "weight": 18,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Concussive (1), Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

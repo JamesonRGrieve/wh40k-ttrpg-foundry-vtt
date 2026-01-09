@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.6,
-    "maxAg": "-",
-    "weight": "15kg",
+    "weight": 15,
     "availability": "Hero",
-    "cost": "70 R",
-    "notes": "Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01.",
+    "notes": "Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01. [AP: 60%]",
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Storm Shield of the Angels of Redemption Chapter. All attacks against the wearer suffer a -10 penalty whilst wielded.\nOverload 01.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.6,
-      "body": 0.6,
-      "leftArm": 0.6,
-      "rightArm": 0.6,
-      "leftLeg": 0.6,
-      "rightLeg": 0.6
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

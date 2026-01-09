@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Arms, Body, Legs",
-    "ap": 5,
-    "maxAg": null,
-    "weight": "15kg",
+    "weight": 15,
     "availability": "very-rare",
-    "cost": "-",
     "notes": "Additional +5 AP vs Energy Damage, but -30 to Concealment and Silent move tests due to armour conspicuousness.",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Additional +5 AP vs Energy Damage, but -30 to Concealment and Silent move tests due to armour conspicuousness.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 5,
       "body": 5,
       "leftArm": 5,
       "rightArm": 5,
@@ -33,7 +28,8 @@
       "rightLeg": 5
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

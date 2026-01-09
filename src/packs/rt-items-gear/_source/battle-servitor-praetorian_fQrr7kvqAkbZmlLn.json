@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "A Massive, heavily armed servitor mounted on tracks or other highly augmented chassis. An almost perfect body guard or instrument of war. Can be equipped with any two of: Breacher, Chain Axe, Electro-Flail, Flamer, Heavy Bolter, Heavy Stubber, Melta Gun, Missile Launcher (Krak/Frag), Plasma Gun, or Webber. (Cost not included, but acquisition is).",
-    "cost": "Does not include costs of weapons it uses. Only Acquirable by Tech Priests\nSee Bestiary/InqHandbook Pg 141.",
-    "effects": "Extremely Rare",
-    "notes": "35000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 35000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> 35000 T</p>"
+      "value": "<p>A Massive, heavily armed servitor mounted on tracks or other highly augmented chassis. An almost perfect body guard or instrument of war. Can be equipped with any two of: Breacher, Chain Axe, Electro-Flail, Flamer, Heavy Bolter, Heavy Stubber, Melta Gun, Missile Launcher (Krak/Frag), Plasma Gun, or Webber. (Cost not included, but acquisition is).</p>\n<h3>Requirements</h3><p>Does not include costs of weapons it uses. Only Acquirable by Tech Priests\nSee Bestiary/InqHandbook Pg 141.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> 35000 T</p>",
+      "chat": "",
+      "summary": "A Massive, heavily armed servitor mounted on tracks or other highly augmented chassis. An almost perfect body guard or instrument of war. Can be equipped with any two of: Breacher, Chain Axe, Electro-"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Massive, heavily armed servitor mounted on tracks or other highly augmented chassis. An almost perfect body guard or instrument of war. Can be equipped with any two of: Breacher, Chain Axe, Electro-Flail, Flamer, Heavy Bolter, Heavy Stubber, Melta Gun, Missile Launcher (Krak/Frag), Plasma Gun, or Webber. (Cost not included, but acquisition is).",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

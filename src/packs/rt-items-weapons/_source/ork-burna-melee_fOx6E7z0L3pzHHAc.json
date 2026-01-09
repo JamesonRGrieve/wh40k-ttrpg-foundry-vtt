@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-burna-melee",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Unwieldy",
-    "weight": "8kg",
+    "weight": 8,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

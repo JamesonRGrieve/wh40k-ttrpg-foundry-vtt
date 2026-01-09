@@ -1,0 +1,32 @@
+{
+  "name": "Energy Arm Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_arm_3",
+    "damageType": "energy",
+    "bodyPart": "arm",
+    "severity": 3,
+    "effect": "<p>The arm suffers superficial burns inflicting no small amount of pain on the target. The target suffers [[1d5]] levels of Fatigue, and can take only a Half Action during his next turn.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Arm (Severity 3)</strong></p><p>The arm suffers superficial burns inflicting no small amount of pain on the target. The target suffers [[1d5]] levels of Fatigue, and can take only a Half Action during his next turn.</p>",
+      "chat": "",
+      "summary": "Energy Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "cRr2dRnWPaMUFwP1"
+}

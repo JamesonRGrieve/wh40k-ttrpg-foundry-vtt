@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "-",
-    "availability": "Transmitters that connect to a Teleportarium that allows for highly accurate teleportation of a person or object to or from the area the Homer is activated in.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "10 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+      "value": "<p>Transmitters that connect to a Teleportarium that allows for highly accurate teleportation of a person or object to or from the area the Homer is activated in.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>",
+      "chat": "",
+      "summary": "Transmitters that connect to a Teleportarium that allows for highly accurate teleportation of a person or object to or from the area the Homer is activated in."
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Transmitters that connect to a Teleportarium that allows for highly accurate teleportation of a person or object to or from the area the Homer is activated in.",
+    "duration": "",
+    "notes": "10 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

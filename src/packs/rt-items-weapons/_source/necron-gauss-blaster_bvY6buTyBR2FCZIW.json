@@ -3,30 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-gauss-blaster",
     "class": "basic",
     "type": "exotic",
-    "range": "150m",
-    "rof": "S/3/-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": 20,
-    "reload": "Full",
-    "special": "Gauss, Necron Wep",
-    "weight": "5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 5
+    },
+    "special": [
+      "gauss",
+      "necron-wep"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 5,
     "availability": "unique",
-    "cost": "-",
-    "source": "ChatGPT",
-    "note": "Nearly Unchanged from ChatGPT description. Always Best Quality.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Gauss, Necron Wep</p><p><b>Note:</b> Nearly Unchanged from ChatGPT description. Always Best Quality.</p>"
     },
-    "damageFormula": "1d10+6",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Nearly Unchanged from ChatGPT description. Always Best Quality.",
+    "source": "ChatGPT"
   },
   "effects": [],
   "flags": {},

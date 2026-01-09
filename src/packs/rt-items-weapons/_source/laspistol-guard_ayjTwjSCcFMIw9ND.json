@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "laspistol-guard",
     "class": "pistol",
     "type": "las",
-    "range": "30m",
-    "rof": "S/2/-",
-    "damage": "1d10+2",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 30,
-    "reload": "Half",
-    "special": "Reliable",
-    "weight": "1.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "half",
+    "weight": 1.5,
     "availability": "common",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

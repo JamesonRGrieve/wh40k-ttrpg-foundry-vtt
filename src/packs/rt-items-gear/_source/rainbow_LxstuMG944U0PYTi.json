@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Immediately allows patients to reroll any failed Tests to resist disease or toxins and stops Blood Loss. However also must make a Toughness Test or take 1d5 Damage that ignores Armour and Toughness. An all in one injection of anti-baterials, blood-clotting agents, allergens, poison and radiation boosters, white blood cell stimulators, and a sedative.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "75 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 75,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 75 T</p>"
+      "value": "<p>Immediately allows patients to reroll any failed Tests to resist disease or toxins and stops Blood Loss. However also must make a Toughness Test or take 1d5 Damage that ignores Armour and Toughness. An all in one injection of anti-baterials, blood-clotting agents, allergens, poison and radiation boosters, white blood cell stimulators, and a sedative.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 75 T</p>",
+      "chat": "",
+      "summary": "Immediately allows patients to reroll any failed Tests to resist disease or toxins and stops Blood Loss. However also must make a Toughness Test or take 1d5 Damage that ignores Armour and Toughness. A"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Immediately allows patients to reroll any failed Tests to resist disease or toxins and stops Blood Loss. However also must make a Toughness Test or take 1d5 Damage that ignores Armour and Toughness. An all in one injection of anti-baterials, blood-clotting agents, allergens, poison and radiation boosters, white blood cell stimulators, and a sedative.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

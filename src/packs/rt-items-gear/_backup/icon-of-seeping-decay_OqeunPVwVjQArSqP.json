@@ -1,0 +1,30 @@
+{
+  "name": "Icon of Seeping Decay",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "7kg",
+    "availability": "All Nurgle Aligned Individuals within Character's Willpower Bonus add +1 to Agility Bonus and can make -10 Toughness Test at the start of each turn to remove 1 Fatigue. All other characters in this area suffer -1 to Agility Bonus and at the start of their turns must make +0 Willpower Test or suffer 1 Fatigue.",
+    "cost": "Must be Dedicated to Nurgle to use. Heretical",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OqeunPVwVjQArSqP"
+}

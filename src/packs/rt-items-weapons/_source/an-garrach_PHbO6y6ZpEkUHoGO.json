@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "angarrach",
     "class": "melee",
     "type": "chain",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Rending",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "balanced",
+      "tearing",
+      "daemon-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Tearing, Daemon Wep",
-    "weight": "10kg",
+    "weight": 10,
     "availability": "unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Base Weapon: Legion Chainsword. Daemon Willpower 28 (Several Nurglings), Bind Str 3. Attributes: Degeneration\nInflicts 1d10 Agility Damage with every Wounding Hit. Two-Handed for Non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Tearing, Daemon Wep</p><p><b>Note:</b> Base Weapon: Legion Chainsword. Daemon Willpower 28 (Several Nurglings), Bind Str 3. Attributes: Degeneration\nInflicts 1d10 Agility Damage with every Wounding Hit. Two-Handed for Non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Base Weapon: Legion Chainsword. Daemon Willpower 28 (Several Nurglings), Bind Str 3. Attributes: Degeneration\nInflicts 1d10 Agility Damage with every Wounding Hit. Two-Handed for Non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

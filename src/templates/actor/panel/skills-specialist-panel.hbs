@@ -9,7 +9,7 @@
         <div class="rt-specialist-header">
             <span class="rt-specialist-name">{{entry.[1].label}}</span>
             <span class="rt-specialist-char">{{entry.[1].characteristic}}</span>
-            <button type="button" class="rt-specialist-add add-skill" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
+            <button type="button" class="rt-specialist-add add-skill" data-action="addSpecialistSkill" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -48,12 +48,14 @@
                     <div class="rt-spec-total">{{spec.current}}</div>
                     <div class="rt-spec-actions">
                         <button type="button" class="rt-spec-roll roll-skill" 
-                                data-skill="{{../entry.[0]}}" 
+                                data-action="roll" data-roll-type="skill"
+                                data-roll-target="{{../entry.[0]}}" 
                                 data-specialty="{{idx}}" 
                                 title="Roll {{spec.name}}">
                             <i class="fas fa-dice-d20"></i>
                         </button>
                         <button type="button" class="rt-spec-delete delete-specialization" 
+                                data-action="deleteSpecialization"
                                 data-skill="{{../entry.[0]}}" 
                                 data-index="{{idx}}" 
                                 title="Delete">

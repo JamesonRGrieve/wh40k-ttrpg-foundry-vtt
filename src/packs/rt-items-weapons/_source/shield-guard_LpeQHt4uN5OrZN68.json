@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "shield-guard",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "defensive",
+      "primitive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Defensive, Primitive",
-    "weight": "2.5kg",
+    "weight": 2.5,
     "availability": "scarce",
-    "cost": "100 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Provides 6AP of Cover to arm and body, can completely conceal the user if desired.\nNote: As Cover AP, each time the shield is penetrated its AP is reduced by 1 until it is destroyed or repaired.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Defensive, Primitive</p><p><b>Note:</b> Provides 6AP of Cover to arm and body, can completely conceal the user if desired.\nNote: As Cover AP, each time the shield is penetrated its AP is reduced by 1 until it is destroyed or repaired.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Provides 6AP of Cover to arm and body, can completely conceal the user if desired.\nNote: As Cover AP, each time the shield is penetrated its AP is reduced by 1 until it is destroyed or repaired.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

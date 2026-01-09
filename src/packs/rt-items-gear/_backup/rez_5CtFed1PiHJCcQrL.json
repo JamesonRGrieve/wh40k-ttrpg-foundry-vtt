@@ -1,0 +1,30 @@
+{
+  "name": "Rez",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Made of the Ground Bones of powerful sorcerers consumed by daemons. Requires +30 Willpower Test after taking a dose. Lasts for number of Degrees of Success multiplied by 10. During this time, user subtracts 2d10 from any rolls on Psychic Phenomena or Perils of the Warp. Failling test immediately triggers Psychic Phenomena.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5CtFed1PiHJCcQrL"
+}

@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "teeth-of-the-blizzard",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+12",
-    "damageType": "Energy",
-    "penetration": 9,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 9
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "power-field",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Balanced, Power Field, Tearing",
-    "weight": "10kg",
-    "availability": "Hero",
-    "cost": "75 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only. Relic Master-Crafted Astartes Frost Blade of the Space Wolves. When wielded grants +10 Weapon Skill, and adds +5 to Critical Damage instead of +3.",
+    "weight": 10,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 75,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Frost Blade of the Space Wolves. When wielded grants +10 Weapon Skill, and adds +5 to Critical Damage instead of +3.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Relic Master-Crafted Astartes Frost Blade of the Space Wolves. When wielded grants +10 Weapon Skill, and adds +5 to Critical Damage instead of +3.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

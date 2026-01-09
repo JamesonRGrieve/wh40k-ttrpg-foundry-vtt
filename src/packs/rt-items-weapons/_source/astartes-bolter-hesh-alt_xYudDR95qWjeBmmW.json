@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-bolter-hesh-alt",
     "class": "basic",
     "type": "bolt",
-    "range": "50m",
-    "rof": "S/3/-",
-    "damage": "1d10+9",
-    "damageType": "Explosive",
-    "penetration": 4,
-    "clip": 28,
-    "reload": "Full",
-    "special": "SM Wep, Tearing, Accurate, Reliable",
-    "weight": "15kg",
-    "availability": "Special",
-    "cost": "-",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. Always Best Craftsmanship. Unique to Ultramarines within the Deathwatch and cannot be otherwise requisitioned.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 9,
+      "penetration": 4
+    },
+    "special": [
+      "sm-wep",
+      "tearing",
+      "accurate",
+      "reliable"
+    ],
+    "clip": {
+      "max": 28,
+      "value": 28,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 15,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing, Accurate, Reliable</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Always Best Craftsmanship. Unique to Ultramarines within the Deathwatch and cannot be otherwise requisitioned.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Always Best Craftsmanship. Unique to Ultramarines within the Deathwatch and cannot be otherwise requisitioned.",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

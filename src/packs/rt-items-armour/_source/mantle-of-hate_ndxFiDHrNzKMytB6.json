@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All (H/B/A/L)",
-    "ap": "8/10/8/8",
-    "maxAg": null,
-    "weight": "150kg",
+    "weight": 150,
     "availability": "near-unique",
-    "cost": "-",
     "notes": "Must be Dedicated to Khorne to Wear. Legion Power Armour with Enhanced Ceramite Plating, Osmatic Gill Life Sustainer, and Sustainable Power Source. Also has Chain Bandoliers. In melee Combat, wearer can make -10 Opposed WP Test vs target (or +10 if character has Hatred(Target), if passed target suffers -20 to WS, Dodge, and Parry for rest of combat. If character fails the Opposed Test by 2+ DoF, they gain a Disorder.",
     "source": "BC: Tome of Blood",
     "description": {
       "value": "<p>Must be Dedicated to Khorne to Wear. Legion Power Armour with Enhanced Ceramite Plating, Osmatic Gill Life Sustainer, and Sustainable Power Source. Also has Chain Bandoliers. In melee Combat, wearer can make -10 Opposed WP Test vs target (or +10 if character has Hatred(Target), if passed target suffers -20 to WS, Dodge, and Parry for rest of combat. If character fails the Opposed Test by 2+ DoF, they gain a Disorder.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 8
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "Requires free hand to use. As a Free Action, Character grips the eye's container and makes Willpower Test. For every degree of Success gain +10 to next Evasion or Opposed Stealth Test until the start of next turn.",
-    "cost": "The Fossilised eye of a Tzeentchian Daemon. Heretical.\nOnly functions for those dedicated to Tzeentch.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "BC: Tome of Fate",
+    "category": "tools",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Requires free hand to use. As a Free Action, Character grips the eye's container and makes Willpower Test. For every degree of Success gain +10 to next Evasion or Opposed Stealth Test until the start of next turn.</p>\n<h3>Requirements</h3><p>The Fossilised eye of a Tzeentchian Daemon. Heretical.\nOnly functions for those dedicated to Tzeentch.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Requires free hand to use. As a Free Action, Character grips the eye's container and makes Willpower Test. For every degree of Success gain +10 to next Evasion or Opposed Stealth Test until the start "
     },
+    "source": {
+      "book": "BC: Tome of Fate",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Requires free hand to use. As a Free Action, Character grips the eye's container and makes Willpower Test. For every degree of Success gain +10 to next Evasion or Opposed Stealth Test until the start of next turn.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

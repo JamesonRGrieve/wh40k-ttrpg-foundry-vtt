@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "A Metal Sigil of the Imperium that irremovably tarnished red as the ship it was upon travelled the warp, before the ship was lost. It is an omen of bad luck amongst those that sail the stars. If this item is within 3m of a Psychic Phenomena, Perils of the Warp are automatically triggered, if not caused by an  individual who ever is nearest becomes the target. Each character who witnessed it gains Corruption equal to the max number of Fate Threshold. Fate Points used by those of the Imperial Creed are weakened or sometimes twisted in its presence. Warp Translations of ships this item is aboard are often horrific events of flickering Gellar Fields and cracking hulls.",
-    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Metal Sigil of the Imperium that irremovably tarnished red as the ship it was upon travelled the warp, before the ship was lost. It is an omen of bad luck amongst those that sail the stars. If this item is within 3m of a Psychic Phenomena, Perils of the Warp are automatically triggered, if not caused by an  individual who ever is nearest becomes the target. Each character who witnessed it gains Corruption equal to the max number of Fate Threshold. Fate Points used by those of the Imperial Creed are weakened or sometimes twisted in its presence. Warp Translations of ships this item is aboard are often horrific events of flickering Gellar Fields and cracking hulls.</p>\n<h3>Requirements</h3><p>A Profane Object of Legend. It cannot be acquired, it must be earned or found. </p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Metal Sigil of the Imperium that irremovably tarnished red as the ship it was upon travelled the warp, before the ship was lost. It is an omen of bad luck amongst those that sail the stars. If this "
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Metal Sigil of the Imperium that irremovably tarnished red as the ship it was upon travelled the warp, before the ship was lost. It is an omen of bad luck amongst those that sail the stars. If this item is within 3m of a Psychic Phenomena, Perils of the Warp are automatically triggered, if not caused by an  individual who ever is nearest becomes the target. Each character who witnessed it gains Corruption equal to the max number of Fate Threshold. Fate Points used by those of the Imperial Creed are weakened or sometimes twisted in its presence. Warp Translations of ships this item is aboard are often horrific events of flickering Gellar Fields and cracking hulls.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

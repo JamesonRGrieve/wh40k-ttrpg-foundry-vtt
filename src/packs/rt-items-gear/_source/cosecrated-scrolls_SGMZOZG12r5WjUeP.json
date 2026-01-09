@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1kg",
-    "availability": "Before making a Focus Power test, user can burn one of these scrolls as a Free Action, destroying it. Should the user then have to roll for Psychic Phenomena they can re-roll the result.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "DH 2E: Enemies Beyond",
+    "category": "tools",
+    "weight": 1,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Before making a Focus Power test, user can burn one of these scrolls as a Free Action, destroying it. Should the user then have to roll for Psychic Phenomena they can re-roll the result.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Before making a Focus Power test, user can burn one of these scrolls as a Free Action, destroying it. Should the user then have to roll for Psychic Phenomena they can re-roll the result."
     },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Before making a Focus Power test, user can burn one of these scrolls as a Free Action, destroying it. Should the user then have to roll for Psychic Phenomena they can re-roll the result.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

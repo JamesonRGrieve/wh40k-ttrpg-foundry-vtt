@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-terrorfex",
     "class": "basic",
     "type": "exotic",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 1,
-    "reload": "Full",
-    "special": "Blast (5)",
-    "weight": "2kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 2,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

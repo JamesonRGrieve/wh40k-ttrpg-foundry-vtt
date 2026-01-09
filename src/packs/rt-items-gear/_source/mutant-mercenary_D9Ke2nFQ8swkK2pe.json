@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "A Tough and mutated warrior to fight alongside the characters or perform some violent act. Base hiring gets one, increase scale to hire more (-10 for ten or so, -40 for a company of them)",
-    "cost": "Mutants who live miserable lives of toil have little to lose. Because of this, they are an excellent choice for suicide missions and expendable shock troops if they can be won over.",
-    "effects": "Average",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Tough and mutated warrior to fight alongside the characters or perform some violent act. Base hiring gets one, increase scale to hire more (-10 for ten or so, -40 for a company of them)</p>\n<h3>Requirements</h3><p>Mutants who live miserable lives of toil have little to lose. Because of this, they are an excellent choice for suicide missions and expendable shock troops if they can be won over.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Tough and mutated warrior to fight alongside the characters or perform some violent act. Base hiring gets one, increase scale to hire more (-10 for ten or so, -40 for a company of them)"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Tough and mutated warrior to fight alongside the characters or perform some violent act. Base hiring gets one, increase scale to hire more (-10 for ten or so, -40 for a company of them)",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

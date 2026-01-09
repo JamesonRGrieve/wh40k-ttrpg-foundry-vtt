@@ -4,33 +4,29 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Arms",
-    "ap": 2,
-    "maxAg": "-",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "average",
-    "cost": "50 T",
     "notes": "+1 AP against Blast Weapons if not at centre of blast.",
     "source": "Only War Core",
     "description": {
       "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm"
     ],
     "armourPoints": {
-      "head": 0,
-      "body": 0,
+      "head": 2,
+      "body": 2,
       "leftArm": 2,
       "rightArm": 2,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftLeg": 2,
+      "rightLeg": 2
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

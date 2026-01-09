@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "mortar-locke",
     "class": "heavy",
     "type": "launcher",
-    "range": "50-300m",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": 3,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "Inaccurate, Blast (5), Indirect",
-    "weight": "48kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "50-300m"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 3
+    },
+    "special": [
+      "inaccurate",
+      "blast-5",
+      "indirect"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 48,
     "availability": "rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Blast (5), Indirect</p><p><b>Note:</b> Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

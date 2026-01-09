@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Servo-Skull designed to aid user in combat and defend them. Can either be a Combat Skull (Melee Specialty) or a Gun Skull (Ranged Focus)",
-    "cost": "See Bestiary or Inquisitor's Handbook Page 144\nCombat Skull: 1750, Gun Skull: 2000 (gun bought seperately)",
-    "effects": "Rare",
-    "notes": "Varies T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> Varies T</p>"
+      "value": "<p>Servo-Skull designed to aid user in combat and defend them. Can either be a Combat Skull (Melee Specialty) or a Gun Skull (Ranged Focus)</p>\n<h3>Requirements</h3><p>See Bestiary or Inquisitor's Handbook Page 144\nCombat Skull: 1750, Gun Skull: 2000 (gun bought seperately)</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> Varies T</p>",
+      "chat": "",
+      "summary": "Servo-Skull designed to aid user in combat and defend them. Can either be a Combat Skull (Melee Specialty) or a Gun Skull (Ranged Focus)"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Servo-Skull designed to aid user in combat and defend them. Can either be a Combat Skull (Melee Specialty) or a Gun Skull (Ranged Focus)",
+    "duration": "",
+    "notes": "Varies T",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

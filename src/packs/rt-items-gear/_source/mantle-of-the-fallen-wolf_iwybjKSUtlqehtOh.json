@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "2kg",
-    "availability": "Variant of the Wolf Pelt Chapter Trapping (Adds +2 to Intimidate Tests). Also provides 2d10 Requisition Points and reduces Renown restrictions of all weapons, armour, and gear (not relics or chapter specific items) by 10.",
-    "cost": "Space Wolves Chapter Only.",
-    "effects": "Distinguished",
-    "notes": "20 R",
-    "source": "DW: First Founding",
+    "category": "luxury",
+    "weight": 2,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 20 R</p>"
+      "value": "<p>Variant of the Wolf Pelt Chapter Trapping (Adds +2 to Intimidate Tests). Also provides 2d10 Requisition Points and reduces Renown restrictions of all weapons, armour, and gear (not relics or chapter specific items) by 10.</p>\n<h3>Requirements</h3><p>Space Wolves Chapter Only.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 20 R</p>",
+      "chat": "",
+      "summary": "Variant of the Wolf Pelt Chapter Trapping (Adds +2 to Intimidate Tests). Also provides 2d10 Requisition Points and reduces Renown restrictions of all weapons, armour, and gear (not relics or chapter s"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Variant of the Wolf Pelt Chapter Trapping (Adds +2 to Intimidate Tests). Also provides 2d10 Requisition Points and reduces Renown restrictions of all weapons, armour, and gear (not relics or chapter specific items) by 10.",
+    "duration": "",
+    "notes": "20 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

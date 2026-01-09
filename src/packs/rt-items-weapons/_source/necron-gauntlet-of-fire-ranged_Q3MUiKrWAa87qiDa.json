@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-gauntlet-of-fire-ranged",
     "class": "pistol",
     "type": "exotic",
-    "range": "15m",
-    "rof": "S/-/-",
-    "damage": "1d10+9",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 5
+    },
+    "special": [
+      "necron-wep",
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Necron Wep, Flame, Spray",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "unique",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Necron Wep, Flame, Spray</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

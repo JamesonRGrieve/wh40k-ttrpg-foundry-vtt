@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "All",
-    "ap": 0.3,
-    "maxAg": "-",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "near-unique",
-    "cost": "-",
-    "notes": "Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.",
+    "notes": "Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks. [AP: 30%]",
     "source": "DH 2E: Enemies Without",
     "description": {
       "value": "<p>Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.3,
-      "body": 0.3,
-      "leftArm": 0.3,
-      "rightArm": 0.3,
-      "leftLeg": 0.3,
-      "rightLeg": 0.3
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

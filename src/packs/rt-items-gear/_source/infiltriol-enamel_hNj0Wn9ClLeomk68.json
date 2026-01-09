@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "-",
-    "availability": "Special synthesised Tyranid pheremone that can be applied to Sealed Armour. When it is applied, for the next 1d10+10 hours afffected characters are effectivly \"invisible\" to all non Synapse Tyranid Creatures as long as they are further than 2 x Perception Bonus metres away from the Tyranid creature and do not make offensive actions against them. The presence of a Synapse Creature or violating the prior restrictions allows the Tyranids to make an Awareness Test (synapse creature has +20), if succeeded the Tyranidsbecome hostile.",
-    "cost": "Pheremone are Unique to a specific Hive Fleet. Item is usually provided if needed.",
-    "effects": "Distinguished",
-    "notes": "10 R",
-    "source": "DW: Rites of Battle",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 10 R</p>"
+      "value": "<p>Special synthesised Tyranid pheremone that can be applied to Sealed Armour. When it is applied, for the next 1d10+10 hours afffected characters are effectivly \"invisible\" to all non Synapse Tyranid Creatures as long as they are further than 2 x Perception Bonus metres away from the Tyranid creature and do not make offensive actions against them. The presence of a Synapse Creature or violating the prior restrictions allows the Tyranids to make an Awareness Test (synapse creature has +20), if succeeded the Tyranidsbecome hostile.</p>\n<h3>Requirements</h3><p>Pheremone are Unique to a specific Hive Fleet. Item is usually provided if needed.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 10 R</p>",
+      "chat": "",
+      "summary": "Special synthesised Tyranid pheremone that can be applied to Sealed Armour. When it is applied, for the next 1d10+10 hours afffected characters are effectivly \"invisible\" to all non Synapse Tyranid Cr"
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Special synthesised Tyranid pheremone that can be applied to Sealed Armour. When it is applied, for the next 1d10+10 hours afffected characters are effectivly \"invisible\" to all non Synapse Tyranid Creatures as long as they are further than 2 x Perception Bonus metres away from the Tyranid creature and do not make offensive actions against them. The presence of a Synapse Creature or violating the prior restrictions allows the Tyranids to make an Awareness Test (synapse creature has +20), if succeeded the Tyranidsbecome hostile.",
+    "duration": "",
+    "notes": "10 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

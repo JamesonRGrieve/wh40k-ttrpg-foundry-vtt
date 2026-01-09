@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": " Capable of predicting or forseeing the future to a limited degree. Information provided is often vague or open to interpretation, more Degrees of Success on Requisition increases specificity and usefulness of predictions. Receive one answer per Degree of Success. Failed tests may lead to false information. If used for an Inquest, each Degree of Success also grants +25 Investigation Points.",
-    "cost": "A Feral World Shaman, Daemon-speaking Seers, or ancient and forgotten cogitators forbidden by the Machine Cult.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "general",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p> Capable of predicting or forseeing the future to a limited degree. Information provided is often vague or open to interpretation, more Degrees of Success on Requisition increases specificity and usefulness of predictions. Receive one answer per Degree of Success. Failed tests may lead to false information. If used for an Inquest, each Degree of Success also grants +25 Investigation Points.</p>\n<h3>Requirements</h3><p>A Feral World Shaman, Daemon-speaking Seers, or ancient and forgotten cogitators forbidden by the Machine Cult.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": " Capable of predicting or forseeing the future to a limited degree. Information provided is often vague or open to interpretation, more Degrees of Success on Requisition increases specificity and usef"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": " Capable of predicting or forseeing the future to a limited degree. Information provided is often vague or open to interpretation, more Degrees of Success on Requisition increases specificity and usefulness of predictions. Receive one answer per Degree of Success. Failed tests may lead to false information. If used for an Inquest, each Degree of Success also grants +25 Investigation Points.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

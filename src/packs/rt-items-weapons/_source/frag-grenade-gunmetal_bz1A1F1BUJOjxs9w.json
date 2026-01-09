@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "frag-grenade-gunmetal",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (5)",
-    "weight": "0.8kg",
+    "weight": 0.8,
     "availability": "scarce",
-    "cost": "10 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Considered by some as a \"Trophy  Weapon\" acquired through combat.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Considered by some as a \"Trophy  Weapon\" acquired through combat.</p>"
     },
-    "damageFormula": "2d10",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Considered by some as a \"Trophy  Weapon\" acquired through combat.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

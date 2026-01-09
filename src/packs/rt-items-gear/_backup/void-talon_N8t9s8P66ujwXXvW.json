@@ -1,0 +1,30 @@
+{
+  "name": "Void Talon",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "The Severed claw of a daemon brought fourth through ancient forgotten rituals. Too delicate for combat, yet sharp enough to rend the veil of reality itself and open the door to the Immaterium. The Void Talon may be used to tear a hole into reality and open a direct gateway to the warp. Those near this opening must make a -60 Willpower Test every minute or gain 1d10 Insanity and Corruption per Degree of Failiure. The tear lasts 6 minutes, in which time the warp itself spews out into the materium unabated bringing chaos in its wake. Expect corruption, daemons (especially Slaanesh for unknown reasons), psychic phenomena, and possessions.",
+    "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic one simply needs to destroy it, unfortunately the chaos it brings makes that difficult.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N8t9s8P66ujwXXvW"
+}

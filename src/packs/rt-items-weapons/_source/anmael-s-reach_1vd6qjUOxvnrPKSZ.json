@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "anmaels-reach",
     "class": "basic",
     "type": "exotic",
-    "range": "110m",
-    "rof": "S/4/-",
-    "damage": "1d10+11",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 60,
-    "reload": "2 Full",
-    "special": "SM Wep, Storm, Tearing",
-    "weight": "26kg",
-    "availability": "Hero",
-    "cost": "50 R",
-    "source": "DW: Honour the Chapter",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Storm Bolter of the Angels of Vengeance Chapter. Wielder is immune to fear however if they ever retreat from battle they suffer -10 to their Willpower Characteristic for the rest of the mission.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 110,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 11,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "storm",
+      "tearing"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 26,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Storm Bolter of the Angels of Vengeance Chapter. Wielder is immune to fear however if they ever retreat from battle they suffer -10 to their Willpower Characteristic for the rest of the mission.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Storm Bolter of the Angels of Vengeance Chapter. Wielder is immune to fear however if they ever retreat from battle they suffer -10 to their Willpower Characteristic for the rest of the mission.",
+    "source": "DW: Honour the Chapter"
   },
   "effects": [],
   "flags": {},

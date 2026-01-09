@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "death-of-steel",
     "class": "basic",
     "type": "exotic",
-    "range": "35m",
-    "rof": "S/-/-",
-    "damage": "2d10+16",
-    "damageType": "Energy",
-    "penetration": 14,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "SM Wep, Blast (1), Melta",
-    "weight": "15kg",
-    "availability": "Hero",
-    "cost": "55 R",
-    "source": "DW: Honour the Chapter",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Meltagun of the Doom Legion Chapter. Does +1d10 damage vs Vehicles.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 35,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 16,
+      "penetration": 14
+    },
+    "special": [
+      "sm-wep",
+      "blast-1",
+      "melta"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 15,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 55,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (1), Melta</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Meltagun of the Doom Legion Chapter. Does +1d10 damage vs Vehicles.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Meltagun of the Doom Legion Chapter. Does +1d10 damage vs Vehicles.",
+    "source": "DW: Honour the Chapter"
   },
   "effects": [],
   "flags": {},

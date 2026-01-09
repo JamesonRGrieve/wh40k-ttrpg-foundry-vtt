@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "primitive",
-    "locations": "Body",
-    "ap": 6,
-    "maxAg": 50,
-    "weight": "20kg",
+    "weight": 20,
     "availability": "very-rare",
-    "cost": "5000 T",
     "notes": "Heavy hides of animals found within the Imperium, repurposed as armour.",
     "source": "Dark Heresy: Core",
     "description": {
       "value": "<p>Heavy hides of animals found within the Imperium, repurposed as armour.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 6,
       "body": 6,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": 50
+    "maxAgility": 50,
+    "properties": []
   },
   "effects": [],
   "flags": {},

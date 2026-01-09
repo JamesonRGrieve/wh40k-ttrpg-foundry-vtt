@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tyranid-strangleweb",
     "class": "basic",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "1d10",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "living-ammunition",
+      "devastating-1",
+      "spray",
+      "snare"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Living Ammunition, Devastating (1), Spray, Snare",
-    "weight": "-",
-    "availability": "Special",
-    "cost": "-",
-    "source": "DW: Mark of the Xenos",
-    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared. Usually wielded by Termagaunts, replacing their Fleshborer.",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Living Ammunition, Devastating (1), Spray, Snare</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared. Usually wielded by Termagaunts, replacing their Fleshborer.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared. Usually wielded by Termagaunts, replacing their Fleshborer.",
+    "source": "DW: Mark of the Xenos"
   },
   "effects": [],
   "flags": {},

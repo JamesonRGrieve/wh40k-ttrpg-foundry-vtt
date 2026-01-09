@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "0.5kg",
-    "availability": "The Carefully cooked Progenoid Glands of a captured Loyalist Space Marine, glazed in rare oils and roasted within their dying presence. Insulting even to Chaos Space Marines but apparently quite delicious. Quences a hearty appetite, grants Regeneration(4) Trait for 1d10 Rounds. ",
-    "cost": "Heretical",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "consumable",
+    "weight": 0.5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>The Carefully cooked Progenoid Glands of a captured Loyalist Space Marine, glazed in rare oils and roasted within their dying presence. Insulting even to Chaos Space Marines but apparently quite delicious. Quences a hearty appetite, grants Regeneration(4) Trait for 1d10 Rounds. </p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "The Carefully cooked Progenoid Glands of a captured Loyalist Space Marine, glazed in rare oils and roasted within their dying presence. Insulting even to Chaos Space Marines but apparently quite delic"
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Carefully cooked Progenoid Glands of a captured Loyalist Space Marine, glazed in rare oils and roasted within their dying presence. Insulting even to Chaos Space Marines but apparently quite delicious. Quences a hearty appetite, grants Regeneration(4) Trait for 1d10 Rounds. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

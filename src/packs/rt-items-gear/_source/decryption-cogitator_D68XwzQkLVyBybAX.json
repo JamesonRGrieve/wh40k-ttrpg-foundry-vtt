@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "200kg",
-    "availability": "A Large machine useful for decoding ciphers or strange writings. A User in possession of one counts Ciphers, Literacy, Scholastic Lore (Cryptography), Secret Tongue, Speak Language, and Trade (Cryptographer) Skills as Basic Skills, and may use Tech-Use Skill in place of any of them if using this item, although it takes twice as long.",
-    "cost": "Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 200,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Large machine useful for decoding ciphers or strange writings. A User in possession of one counts Ciphers, Literacy, Scholastic Lore (Cryptography), Secret Tongue, Speak Language, and Trade (Cryptographer) Skills as Basic Skills, and may use Tech-Use Skill in place of any of them if using this item, although it takes twice as long.</p>\n<h3>Requirements</h3><p>Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Large machine useful for decoding ciphers or strange writings. A User in possession of one counts Ciphers, Literacy, Scholastic Lore (Cryptography), Secret Tongue, Speak Language, and Trade (Cryptog"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Large machine useful for decoding ciphers or strange writings. A User in possession of one counts Ciphers, Literacy, Scholastic Lore (Cryptography), Secret Tongue, Speak Language, and Trade (Cryptographer) Skills as Basic Skills, and may use Tech-Use Skill in place of any of them if using this item, although it takes twice as long.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

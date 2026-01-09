@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "combat-knife",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5+3",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "primitive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive",
-    "weight": "0.8kg",
+    "weight": 0.8,
     "availability": "average",
-    "cost": "40 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Can be affixed to most weapons as a bayonet",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> Can be affixed to most weapons as a bayonet</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be affixed to most weapons as a bayonet",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

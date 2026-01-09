@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "500kg",
-    "availability": "Normalises gravity when upon them to that of Holy Terra (1G). Alternatively can create much higher or lower gravity as required. Uses include securing cargo, creating high-G restraining cells, and so on.",
-    "cost": "Look like huge squares of metal that can be laid out.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 500,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Normalises gravity when upon them to that of Holy Terra (1G). Alternatively can create much higher or lower gravity as required. Uses include securing cargo, creating high-G restraining cells, and so on.</p>\n<h3>Requirements</h3><p>Look like huge squares of metal that can be laid out.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Normalises gravity when upon them to that of Holy Terra (1G). Alternatively can create much higher or lower gravity as required. Uses include securing cargo, creating high-G restraining cells, and so "
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Normalises gravity when upon them to that of Holy Terra (1G). Alternatively can create much higher or lower gravity as required. Uses include securing cargo, creating high-G restraining cells, and so on.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

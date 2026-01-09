@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "-",
-    "availability": "Brings Good luck, if something bad happens, it might not happen to you",
-    "cost": "Up to GM fiat. Note: Suggestion, on player with charm targeted by any random source of harm, roll 1d10, on a 1, randomly choose someone else if possible.",
-    "effects": "Average",
-    "notes": "Varies T\n6 R",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> Varies T\n6 R</p>"
+      "value": "<p>Brings Good luck, if something bad happens, it might not happen to you</p>\n<h3>Requirements</h3><p>Up to GM fiat. Note: Suggestion, on player with charm targeted by any random source of harm, roll 1d10, on a 1, randomly choose someone else if possible.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> Varies T\n6 R</p>",
+      "chat": "",
+      "summary": "Brings Good luck, if something bad happens, it might not happen to you"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Brings Good luck, if something bad happens, it might not happen to you",
+    "duration": "",
+    "notes": "Varies T\n6 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

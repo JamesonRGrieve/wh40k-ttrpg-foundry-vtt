@@ -1,0 +1,32 @@
+{
+  "name": "Rending Head Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_head_3",
+    "damageType": "rending",
+    "bodyPart": "head",
+    "severity": 3,
+    "effect": "<p>The attack rips open the target's face with a vicious shredding sound. He is Stunned for 1 round and suffers Blood Loss. If he is wearing a helmet, it is torn off.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Head (Severity 3)</strong></p><p>The attack rips open the target's face with a vicious shredding sound. He is Stunned for 1 round and suffers Blood Loss. If he is wearing a helmet, it is torn off.</p>",
+      "chat": "",
+      "summary": "Rending Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "YfRGzyDwimV3zJpX"
+}

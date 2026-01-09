@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Body Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_body_3",
+    "damageType": "explosive",
+    "bodyPart": "body",
+    "severity": 3,
+    "effect": "<p>The force of the blast sends the target sprawling to the ground. The target is knocked backwards [[1d5]] metres, Stunned for 1 round, and is knocked Prone.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Body (Severity 3)</strong></p><p>The force of the blast sends the target sprawling to the ground. The target is knocked backwards [[1d5]] metres, Stunned for 1 round, and is knocked Prone.</p>",
+      "chat": "",
+      "summary": "Explosive Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "fKNVkdzXq05uuOJ8"
+}

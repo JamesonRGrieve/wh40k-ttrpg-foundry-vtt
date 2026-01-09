@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "blight-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "toxic-2",
+      "blast-6"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Toxic (2), Blast (6)",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "scarce",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Heretical Weapon of Nurgle. Damage Ignores Armour if it is not Environmentally Sealed, produces a toxic cloud when it detonates that lasts for 1d10 Rounds. Anyone who enters the cloud takes 1d10 E Damage with Toxic Quality (also ignores non-sealed armour)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Toxic (2), Blast (6)</p><p><b>Note:</b> Heretical Weapon of Nurgle. Damage Ignores Armour if it is not Environmentally Sealed, produces a toxic cloud when it detonates that lasts for 1d10 Rounds. Anyone who enters the cloud takes 1d10 E Damage with Toxic Quality (also ignores non-sealed armour)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Heretical Weapon of Nurgle. Damage Ignores Armour if it is not Environmentally Sealed, produces a toxic cloud when it detonates that lasts for 1d10 Rounds. Anyone who enters the cloud takes 1d10 E Damage with Toxic Quality (also ignores non-sealed armour)",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

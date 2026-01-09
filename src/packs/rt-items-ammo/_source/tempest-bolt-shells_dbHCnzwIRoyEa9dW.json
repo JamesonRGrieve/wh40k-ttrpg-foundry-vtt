@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Bolt Pistols, Bolters, Heavy Bolters",
-    "damageOrEffect": "+3 Damage against targets with Machine trait, Energy Damage Type, weapon gains Shock Quality.",
-    "qualities": "Shock",
-    "weight": "10% wep",
+    "identifier": "tempest-bolt-shells",
+    "weaponTypes": [
+      "bolt"
+    ],
+    "modifiers": {
+      "damage": 3,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "shock"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>+3 Damage against targets with Machine trait, Energy Damage Type, weapon gains Shock Quality.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "near-unique",
-    "cost": "250T each",
-    "source": "Rogue Trader Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 250,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> +3 Damage against targets with Machine trait, Energy Damage Type, weapon gains Shock Quality.</p><p><b>Qualities:</b> Shock</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Rogue Trader Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

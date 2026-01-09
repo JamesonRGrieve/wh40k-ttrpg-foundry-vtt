@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "the-shadow-in-the-sky",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Balanced, Power Field",
-    "weight": "6kg",
-    "availability": "Respected",
-    "cost": "20 R",
-    "source": "DW: First Founding",
-    "note": "Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.",
+    "weight": 6,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.",
+    "source": "DW: First Founding"
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Impact Head Critical 4",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_head_4",
+    "damageType": "impact",
+    "bodyPart": "head",
+    "severity": 4,
+    "effect": "<p>The concussive strike staggers the target. The target must make a Challenging (+0) Toughness test or be Stunned for 1 round and knocked Prone.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Head (Severity 4)</strong></p><p>The concussive strike staggers the target. The target must make a Challenging (+0) Toughness test or be Stunned for 1 round and knocked Prone.</p>",
+      "chat": "",
+      "summary": "Impact Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "icWiGOOuDYjTqTa4"
+}

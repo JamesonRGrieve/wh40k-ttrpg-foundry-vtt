@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Crude Bionic Arm with no hand and so cannot be used for fine manipulation or holding things. Instead has tool, such as buzz-saw, hammer, drill, shears, chainsaw, etc. acts as Melee Weapon doing 1d10+4 I/R, Pen 2, Tearing, Unbalanced.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Hostile Acquisitions",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Crude Bionic Arm with no hand and so cannot be used for fine manipulation or holding things. Instead has tool, such as buzz-saw, hammer, drill, shears, chainsaw, etc. acts as Melee Weapon doing 1d10+4 I/R, Pen 2, Tearing, Unbalanced.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Crude Bionic Arm with no hand and so cannot be used for fine manipulation or holding things. Instead has tool, such as buzz-saw, hammer, drill, shears, chainsaw, etc. acts as Melee Weapon doing 1d10+4"
     },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Crude Bionic Arm with no hand and so cannot be used for fine manipulation or holding things. Instead has tool, such as buzz-saw, hammer, drill, shears, chainsaw, etc. acts as Melee Weapon doing 1d10+4 I/R, Pen 2, Tearing, Unbalanced.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

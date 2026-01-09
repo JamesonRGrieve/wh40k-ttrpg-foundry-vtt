@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.6,
-    "maxAg": "-",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "near-unique",
-    "cost": "-",
-    "notes": "If ever overloads, attack responsible for overload takes 2d10 Energy Damage reduced by their Willpower Bonus rather than Toughness or Armour. Only Functions when wearer has the Mark of Tzeentch",
+    "notes": "If ever overloads, attack responsible for overload takes 2d10 Energy Damage reduced by their Willpower Bonus rather than Toughness or Armour. Only Functions when wearer has the Mark of Tzeentch [AP: 60%]",
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p>If ever overloads, attack responsible for overload takes 2d10 Energy Damage reduced by their Willpower Bonus rather than Toughness or Armour. Only Functions when wearer has the Mark of Tzeentch</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.6,
-      "body": 0.6,
-      "leftArm": 0.6,
-      "rightArm": 0.6,
-      "leftLeg": 0.6,
-      "rightLeg": 0.6
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

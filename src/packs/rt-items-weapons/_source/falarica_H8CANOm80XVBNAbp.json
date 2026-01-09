@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "falarica",
     "class": "thrown",
     "type": "primitive",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "1d10+1",
-    "damageType": "Rending",
-    "penetration": 1,
-    "clip": 1,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 1,
+      "penetration": 1
+    },
+    "special": [
+      "primitive-8",
+      "tearing"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (8), Tearing",
-    "weight": "2.5kg",
+    "weight": 2.5,
     "availability": "scarce",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Tearing</p><p><b>Note:</b> A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

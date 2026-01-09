@@ -3,6 +3,7 @@
 // ============================================
 // Clean, sleek design matching Combat Tab style
 // Uses Foundry color system for theme adaptation
+// NOTE: Uses unified component system from _unified-components.scss
 
 // Vital Display Container
 .rt-vital-display {
@@ -20,40 +21,17 @@
   padding: $rt-space-xs 0;
 }
 
+// Vital button extends the unified control button
+// NOTE: Use .rt-btn-control for new code; this maintains backwards compatibility
 .rt-vital-btn {
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  color: var(--color-text-primary);
-  
-  &:hover {
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-highlight);
-    transform: scale(1.05);
-  }
-  
-  &:active {
-    transform: scale(0.95);
-  }
+  @extend .rt-btn-control;
   
   &.rt-btn-minus { 
-    color: $rt-accent-combat; 
-    &:hover { border-color: $rt-accent-combat; }
+    @extend .rt-btn-control--minus;
   }
   
   &.rt-btn-plus { 
-    color: $rt-color-success; 
-    &:hover { border-color: $rt-color-success; }
+    @extend .rt-btn-control--plus;
   }
 }
 
@@ -63,7 +41,7 @@
   color: var(--color-text-primary);
   min-width: 36px;
   text-align: center;
-  font-family: 'Modesto Condensed', serif;
+  font-family: var(--rt-font-display, 'Modesto Condensed', serif);
 }
 
 .rt-vital-sep {
@@ -196,7 +174,7 @@
 }
 
 .rt-edit-label {
-  font-size: 0.7rem;
+  font-size: var(--rt-text-tiny, 0.7rem);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -206,33 +184,21 @@
   gap: 4px;
 }
 
+// Vital input extends the unified numeric input
+// NOTE: Use .rt-input-numeric--styled for new code; this maintains backwards compatibility
 .rt-vital-input {
+  @extend .rt-input-numeric;
   width: 100%; // Full width within grid cell
   min-width: 50px; // Minimum readable size
   max-width: 150px; // Don't get too wide
   height: 36px;
-  padding: 0 $rt-space-sm;
-  border: 1px solid var(--color-border-secondary);
-  border-radius: 6px;
-  background: var(--color-bg-option);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text-primary);
-  text-align: center;
-  font-family: 'Modesto Condensed', serif;
-  transition: all 0.15s ease;
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-border-highlight);
-    background: var(--color-bg-tertiary);
-    box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
-  }
 }
 
 // Auto-calculation badge
 .rt-auto-badge {
-  font-size: 0.65rem;
+  font-size: var(--rt-text-micro, 0.65rem);
   font-weight: 700;
   padding: 2px 6px;
   background: rgba($rt-accent-gold, 0.15);
@@ -251,7 +217,7 @@
   background: rgba($rt-accent-gold, 0.08);
   border-left: 3px solid rgba($rt-accent-gold, 0.4);
   border-radius: 4px;
-  font-size: 0.7rem;
+  font-size: var(--rt-text-tiny, 0.7rem);
   color: var(--color-text-secondary);
   
   i { 
@@ -275,7 +241,7 @@
 }
 
 .rt-subsection-title {
-  font-size: 0.75rem;
+  font-size: var(--rt-text-small, 0.75rem);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -283,7 +249,7 @@
 }
 
 .rt-subsection-meta {
-  font-size: 0.7rem;
+  font-size: var(--rt-text-tiny, 0.7rem);
   color: var(--color-text-tertiary);
 }
 

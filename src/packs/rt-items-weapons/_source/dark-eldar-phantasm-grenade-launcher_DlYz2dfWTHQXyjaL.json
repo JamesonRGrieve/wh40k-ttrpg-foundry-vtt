@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-phantasm-grenade-launcher",
     "class": "basic",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/2/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 6,
-    "reload": "6 Full",
-    "special": null,
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 4,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Rare Availability if acquired from Dark Eldar Settlement. Back-Mounted, Fires special grenades. Anyone in 10 Metres of Impact Point must pass -10 Toughness Test or roll on Fear Shock Table with +10 per DoF. Can't use other grenade types. ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Back-Mounted, Fires special grenades. Anyone in 10 Metres of Impact Point must pass -10 Toughness Test or roll on Fear Shock Table with +10 per DoF. Can't use other grenade types. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement. Back-Mounted, Fires special grenades. Anyone in 10 Metres of Impact Point must pass -10 Toughness Test or roll on Fear Shock Table with +10 per DoF. Can't use other grenade types. ",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

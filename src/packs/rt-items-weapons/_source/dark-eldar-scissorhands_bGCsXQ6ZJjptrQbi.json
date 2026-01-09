@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-scissorhands",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "3d5",
-    "damageType": "Rending",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Tearing",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

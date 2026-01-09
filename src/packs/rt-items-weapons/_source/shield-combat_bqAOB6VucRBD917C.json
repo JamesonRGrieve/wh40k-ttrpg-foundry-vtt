@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "shield-combat",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "defensive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (8), Defensive",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "common",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "+3 AP to Arm and Body when wielded (stacks with armour). can be crafted out of Ceramite or Adamantium, is no longer Primitive (8), but is two steps rarer (by default Scarce).",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Defensive</p><p><b>Note:</b> +3 AP to Arm and Body when wielded (stacks with armour). can be crafted out of Ceramite or Adamantium, is no longer Primitive (8), but is two steps rarer (by default Scarce).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "+3 AP to Arm and Body when wielded (stacks with armour). can be crafted out of Ceramite or Adamantium, is no longer Primitive (8), but is two steps rarer (by default Scarce).",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

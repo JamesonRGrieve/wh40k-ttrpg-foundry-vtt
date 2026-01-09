@@ -3,30 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "inferno-pistol-mars",
     "class": "pistol",
     "type": "melta",
-    "range": "10m",
-    "rof": "S/–/–",
-    "damage": "2d10+8",
-    "damageType": "Energy",
-    "penetration": 13,
-    "clip": 3,
-    "reload": "Full",
-    "special": null,
-    "weight": "2.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": null,
+        "full": null
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 13
+    },
+    "special": [],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 2.5,
     "availability": "very-rare",
-    "cost": "7500 T",
-    "source": "Rogue Trader: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 7500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": ""
     },
-    "damageFormula": "2d10+8",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.25,
-    "maxAg": "-",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "Distinguished",
-    "cost": "20 R",
-    "notes": "Straps onto the arm. Acts as a Balanced weapon dealing 1d5+1 Impact Damage.",
+    "notes": "Straps onto the arm. Acts as a Balanced weapon dealing 1d5+1 Impact Damage. [AP: 25%]",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Straps onto the arm. Acts as a Balanced weapon dealing 1d5+1 Impact Damage.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.25,
-      "body": 0.25,
-      "leftArm": 0.25,
-      "rightArm": 0.25,
-      "leftLeg": 0.25,
-      "rightLeg": 0.25
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

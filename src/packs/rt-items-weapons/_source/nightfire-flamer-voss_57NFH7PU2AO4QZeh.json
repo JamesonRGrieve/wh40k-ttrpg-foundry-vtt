@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "nightfire-flamer-voss",
     "class": "basic",
     "type": "flame",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 2,
-    "clip": 3,
-    "reload": "2 Full",
-    "special": "Flame, Spray, Toxic",
-    "weight": "6kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "spray",
+      "toxic"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 6,
     "availability": "very-rare",
-    "cost": "400 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 400,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Spray, Toxic</p><p><b>Note:</b> Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

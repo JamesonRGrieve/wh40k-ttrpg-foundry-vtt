@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "heavy-stubber-volg-crank-cannon",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "70m",
-    "rof": "-/-/5",
-    "damage": "1d10+5",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 100,
-    "reload": "3 Full",
-    "special": "Unreliable",
-    "weight": "38kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 70,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 0
+    },
+    "special": [
+      "unreliable"
+    ],
+    "clip": {
+      "max": 100,
+      "value": 100,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 38,
     "availability": "average",
-    "cost": "500 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Unreliable</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

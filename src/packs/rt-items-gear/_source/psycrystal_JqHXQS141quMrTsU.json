@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "0.3kg",
-    "availability": "Give off a purple glow if a psychic power is being used, or targeting someone, within 5 metres. Gives of false indications and can cause mental distress when held by anyone capable of channeling the warp.",
-    "cost": "Found often on certain worlds that are devoid of life, they look quartzlike",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 0.3,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Give off a purple glow if a psychic power is being used, or targeting someone, within 5 metres. Gives of false indications and can cause mental distress when held by anyone capable of channeling the warp.</p>\n<h3>Requirements</h3><p>Found often on certain worlds that are devoid of life, they look quartzlike</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Give off a purple glow if a psychic power is being used, or targeting someone, within 5 metres. Gives of false indications and can cause mental distress when held by anyone capable of channeling the w"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Give off a purple glow if a psychic power is being used, or targeting someone, within 5 metres. Gives of false indications and can cause mental distress when held by anyone capable of channeling the warp.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "aetheme-blade",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5",
-    "damageType": "Rending",
-    "penetration": 1,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 1
+    },
+    "special": [],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": null,
-    "weight": "1kg",
+    "weight": 1,
     "availability": "rare",
-    "cost": "-",
-    "source": "BC: Tome of Excess",
-    "note": "Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.",
+    "source": "BC: Tome of Excess"
   },
   "effects": [],
   "flags": {},

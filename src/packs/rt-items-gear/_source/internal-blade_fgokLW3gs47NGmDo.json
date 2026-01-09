@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Acts as Mono-Knife Embedded and hidden in skin until activated. Good Craftsmanship has Toxic Quality, Best Craftsmanship has +2 Damage and PEN, and Power Field Quality.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Acts as Mono-Knife Embedded and hidden in skin until activated. Good Craftsmanship has Toxic Quality, Best Craftsmanship has +2 Damage and PEN, and Power Field Quality.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Acts as Mono-Knife Embedded and hidden in skin until activated. Good Craftsmanship has Toxic Quality, Best Craftsmanship has +2 Damage and PEN, and Power Field Quality."
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Acts as Mono-Knife Embedded and hidden in skin until activated. Good Craftsmanship has Toxic Quality, Best Craftsmanship has +2 Damage and PEN, and Power Field Quality.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

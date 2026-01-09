@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "0.5kg",
-    "availability": "Details Information on Imperial Guard weapons, supplies, and kits that are commonly utilised.",
-    "cost": "HB: Can spend Full Action to Identify an Imperial Guard Weapon, Vehicle, or other issuable item. Once per game session, can add +5 to a Logistics Test.",
-    "effects": "Plentiful",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Details Information on Imperial Guard weapons, supplies, and kits that are commonly utilised.</p>\n<h3>Requirements</h3><p>HB: Can spend Full Action to Identify an Imperial Guard Weapon, Vehicle, or other issuable item. Once per game session, can add +5 to a Logistics Test.</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Details Information on Imperial Guard weapons, supplies, and kits that are commonly utilised."
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Details Information on Imperial Guard weapons, supplies, and kits that are commonly utilised.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "Head",
-    "ap": 6,
-    "maxAg": null,
-    "weight": "1kg",
+    "weight": 1,
     "availability": "unique",
-    "cost": "-",
     "notes": "Often worn by Farseers. Wearers can make -30 Willpower Test to remain unaffected by results of Psychic Phenomena or Perils of the Warp. Doesn't prevent others being affected.",
     "source": "RT: Navis Primer",
     "description": {
       "value": "<p>Often worn by Farseers. Wearers can make -30 Willpower Test to remain unaffected by results of Psychic Phenomena or Perils of the Warp. Doesn't prevent others being affected.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "head"
     ],
     "armourPoints": {
       "head": 6,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

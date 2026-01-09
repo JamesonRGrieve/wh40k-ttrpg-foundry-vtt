@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "-",
-    "availability": "User can spend a Fate Point to drink from the Chalice as a Full Action. In so doing, they return to Full Wounds and remove all Fatigue. Doesn't restore lost limbs or permenant injuries.",
-    "cost": "Blood Angels Sanguinary Priests Only.",
-    "effects": "Famed",
-    "notes": "25 R",
-    "source": "DW: First Founding",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 25 R</p>"
+      "value": "<p>User can spend a Fate Point to drink from the Chalice as a Full Action. In so doing, they return to Full Wounds and remove all Fatigue. Doesn't restore lost limbs or permenant injuries.</p>\n<h3>Requirements</h3><p>Blood Angels Sanguinary Priests Only.</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 25 R</p>",
+      "chat": "",
+      "summary": "User can spend a Fate Point to drink from the Chalice as a Full Action. In so doing, they return to Full Wounds and remove all Fatigue. Doesn't restore lost limbs or permenant injuries."
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "User can spend a Fate Point to drink from the Chalice as a Full Action. In so doing, they return to Full Wounds and remove all Fatigue. Doesn't restore lost limbs or permenant injuries.",
+    "duration": "",
+    "notes": "25 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

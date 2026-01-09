@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "accursed-crozius-daemonic",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+6",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 7
+    },
+    "special": [
+      "daemon-wep",
+      "balanced",
+      "felling-4",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Balanced, Felling (4), Power Field",
-    "weight": "16kg",
+    "weight": 16,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Excess",
-    "note": "Weapon: Accursed Crozius. Daemon WP 50 (Slaaneshi Daemon), Bind Str 2 . Att.: Accursed, Commanding Presence, Impervious. Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands. Gain Prot 50 Force Field with no overcharge, but causes Psychic Phenomena if rolling doubles. Gain Unnatural Fellowship(3) whilst weapon is drawn.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Balanced, Felling (4), Power Field</p><p><b>Note:</b> Weapon: Accursed Crozius. Daemon WP 50 (Slaaneshi Daemon), Bind Str 2 . Att.: Accursed, Commanding Presence, Impervious. Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands. Gain Prot 50 Force Field with no overcharge, but causes Psychic Phenomena if rolling doubles. Gain Unnatural Fellowship(3) whilst weapon is drawn.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Accursed Crozius. Daemon WP 50 (Slaaneshi Daemon), Bind Str 2 . Att.: Accursed, Commanding Presence, Impervious. Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands. Gain Prot 50 Force Field with no overcharge, but causes Psychic Phenomena if rolling doubles. Gain Unnatural Fellowship(3) whilst weapon is drawn.",
+    "source": "BC: Tome of Excess"
   },
   "effects": [],
   "flags": {},

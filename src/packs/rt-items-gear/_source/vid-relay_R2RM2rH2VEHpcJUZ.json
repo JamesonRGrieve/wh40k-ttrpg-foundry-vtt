@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "1kg",
-    "availability": "Helmet or Shoulder mounted camera and receiver. Common Craftsmanship has 10km range, Good has 50km, Best can maintain connection between planet surface and orbital ship with minor delay. Effective range and video quality affected by intervening materials, environment, and so on. ",
-    "cost": "Usually Accompanied with Vox System.",
-    "effects": "Average",
-    "notes": "-",
-    "source": "OW: Hammer of the Emperor",
+    "category": "clothing",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Helmet or Shoulder mounted camera and receiver. Common Craftsmanship has 10km range, Good has 50km, Best can maintain connection between planet surface and orbital ship with minor delay. Effective range and video quality affected by intervening materials, environment, and so on. </p>\n<h3>Requirements</h3><p>Usually Accompanied with Vox System.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Helmet or Shoulder mounted camera and receiver. Common Craftsmanship has 10km range, Good has 50km, Best can maintain connection between planet surface and orbital ship with minor delay. Effective ran"
     },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Helmet or Shoulder mounted camera and receiver. Common Craftsmanship has 10km range, Good has 50km, Best can maintain connection between planet surface and orbital ship with minor delay. Effective range and video quality affected by intervening materials, environment, and so on. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-chainsword",
     "class": "melee",
     "type": "chain",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "balanced",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Tearing,",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. Unlike many chainswords it is almost silent.\nSimilar enough to regular chainswords that it doesn't need exotic weapons training.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Tearing,</p><p><b>Note:</b> Xenotech. Unlike many chainswords it is almost silent.\nSimilar enough to regular chainswords that it doesn't need exotic weapons training.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. Unlike many chainswords it is almost silent.\nSimilar enough to regular chainswords that it doesn't need exotic weapons training.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "4kg",
-    "availability": "Half a Dozen Small Clockwork Scorpions Data-Linked to a Screamer. The Screamer is buried on the edge of a camp. When triggered, it silently sends a message to these Camp Warders which act to frighten and cause mild but not damaging pain to herd away intruders. Creatures with the Bestial Trait make a -20 Willpower Test or flee.",
-    "cost": "Cost includes a Modified Screamer and 6 Camp Warders \n(Screamer: set via a Tech-Use Test, has perception 75, see profile for full info)",
-    "effects": "Rare",
-    "notes": "310 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 4,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 310,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 310 T</p>"
+      "value": "<p>Half a Dozen Small Clockwork Scorpions Data-Linked to a Screamer. The Screamer is buried on the edge of a camp. When triggered, it silently sends a message to these Camp Warders which act to frighten and cause mild but not damaging pain to herd away intruders. Creatures with the Bestial Trait make a -20 Willpower Test or flee.</p>\n<h3>Requirements</h3><p>Cost includes a Modified Screamer and 6 Camp Warders \n(Screamer: set via a Tech-Use Test, has perception 75, see profile for full info)</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 310 T</p>",
+      "chat": "",
+      "summary": "Half a Dozen Small Clockwork Scorpions Data-Linked to a Screamer. The Screamer is buried on the edge of a camp. When triggered, it silently sends a message to these Camp Warders which act to frighten "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Half a Dozen Small Clockwork Scorpions Data-Linked to a Screamer. The Screamer is buried on the edge of a camp. When triggered, it silently sends a message to these Camp Warders which act to frighten and cause mild but not damaging pain to herd away intruders. Creatures with the Bestial Trait make a -20 Willpower Test or flee.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

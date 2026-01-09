@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "15kg",
-    "availability": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Long Range Versions are the size of a backpack and have a range of 50km.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "3000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 15,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 3000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 3000 T</p>"
+      "value": "<p>Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Long Range Versions are the size of a backpack and have a range of 50km.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 3000 T</p>",
+      "chat": "",
+      "summary": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If the"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Long Range Versions are the size of a backpack and have a range of 50km.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

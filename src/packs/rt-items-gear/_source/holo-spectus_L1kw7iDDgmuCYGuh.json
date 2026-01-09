@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "6kg",
-    "availability": "A Pistol like mechanism with a Fist-Sized top that can be fired with a +0 Tech-Use Test. If successful the top can go up to 600m, typically straight up. Displays surroundings from vantage point. Provides +20 to Navigate (Surface), Survival (Tracking), and Scrutiny Tests. Can stay airborne for up to 5 hours before needing recharge. Can return to its base at any time, does so within one turn.",
-    "cost": "Device provides 3D Holographic display of area when active, can see Kilometres in all directions, turn with the user, and zoom/highlight selected locations",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "tools",
+    "weight": 6,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Pistol like mechanism with a Fist-Sized top that can be fired with a +0 Tech-Use Test. If successful the top can go up to 600m, typically straight up. Displays surroundings from vantage point. Provides +20 to Navigate (Surface), Survival (Tracking), and Scrutiny Tests. Can stay airborne for up to 5 hours before needing recharge. Can return to its base at any time, does so within one turn.</p>\n<h3>Requirements</h3><p>Device provides 3D Holographic display of area when active, can see Kilometres in all directions, turn with the user, and zoom/highlight selected locations</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Pistol like mechanism with a Fist-Sized top that can be fired with a +0 Tech-Use Test. If successful the top can go up to 600m, typically straight up. Displays surroundings from vantage point. Provi"
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Pistol like mechanism with a Fist-Sized top that can be fired with a +0 Tech-Use Test. If successful the top can go up to 600m, typically straight up. Displays surroundings from vantage point. Provides +20 to Navigate (Surface), Survival (Tracking), and Scrutiny Tests. Can stay airborne for up to 5 hours before needing recharge. Can return to its base at any time, does so within one turn.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

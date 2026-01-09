@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "linebreaker",
     "class": "basic",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/2/-",
-    "damage": "1d10+12",
-    "damageType": "Impact",
-    "penetration": 6,
-    "clip": 18,
-    "reload": "2 Full",
-    "special": "SM Wep, Felling (4), Scatter",
-    "weight": "12kg",
-    "availability": "Famed",
-    "cost": "30 R",
-    "source": "DW: Honour the Chapter",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Shotgun of the Marines Errant Chapter. Uses unique ammo that allows ranges up to 10m to count as Point Blank for purposes of extra hits from the Scatter Quality. Cannot use other shotgun ammo types. Comes with 3 clips, extra clips are 10 Requisition each.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 12,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "felling-4",
+      "scatter"
+    ],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 12,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Felling (4), Scatter</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Shotgun of the Marines Errant Chapter. Uses unique ammo that allows ranges up to 10m to count as Point Blank for purposes of extra hits from the Scatter Quality. Cannot use other shotgun ammo types. Comes with 3 clips, extra clips are 10 Requisition each.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Shotgun of the Marines Errant Chapter. Uses unique ammo that allows ranges up to 10m to count as Point Blank for purposes of extra hits from the Scatter Quality. Cannot use other shotgun ammo types. Comes with 3 clips, extra clips are 10 Requisition each.",
+    "source": "DW: Honour the Chapter"
   },
   "effects": [],
   "flags": {},

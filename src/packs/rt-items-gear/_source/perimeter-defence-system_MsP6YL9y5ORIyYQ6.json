@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "175kg",
-    "availability": "A Pylon that can form part of a network of pylons that when linked in a line form an invisible barrier around an installation. Requires a lot of power, but protects against basic threats. Does 2d10+6 E, Shocking Damage. Good and Best Quality does an additional 1d10.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 175,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Pylon that can form part of a network of pylons that when linked in a line form an invisible barrier around an installation. Requires a lot of power, but protects against basic threats. Does 2d10+6 E, Shocking Damage. Good and Best Quality does an additional 1d10.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Pylon that can form part of a network of pylons that when linked in a line form an invisible barrier around an installation. Requires a lot of power, but protects against basic threats. Does 2d10+6 "
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Pylon that can form part of a network of pylons that when linked in a line form an invisible barrier around an installation. Requires a lot of power, but protects against basic threats. Does 2d10+6 E, Shocking Damage. Good and Best Quality does an additional 1d10.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Energy Arm Critical 8",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_arm_8",
+    "damageType": "energy",
+    "bodyPart": "arm",
+    "severity": 8,
+    "effect": "<p>Energy ripples across the target’s arm, causing skin and muscle to slough disgustingly from the target’s limb, revealing a sticky red mess of sinew and bone. The target suffers [[1d10]] levels of Fatigue and must make a Challenging (+0) Toughness test or be Stunned for [[1d5]] rounds. He now suffers from the Lost Arm condition.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Arm (Severity 8)</strong></p><p>Energy ripples across the target’s arm, causing skin and muscle to slough disgustingly from the target’s limb, revealing a sticky red mess of sinew and bone. The target suffers [[1d10]] levels of Fatigue and must make a Challenging (+0) Toughness test or be Stunned for [[1d5]] rounds. He now suffers from the Lost Arm condition.</p>",
+      "chat": "",
+      "summary": "Energy Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "ZmleXmb1MEsTqChC"
+}

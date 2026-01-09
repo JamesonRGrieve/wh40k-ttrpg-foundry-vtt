@@ -1,0 +1,32 @@
+{
+  "name": "Energy Body Critical 7",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_body_7",
+    "damageType": "energy",
+    "bodyPart": "body",
+    "severity": 7,
+    "effect": "<p>The intense power of the energy attack cooks the target’s organs, burning his lungs and heart with intense heat. The target is Stunned for [[2d10]] rounds, and his Toughness characteristic is permanently reduced by [[1d10]].</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Body (Severity 7)</strong></p><p>The intense power of the energy attack cooks the target’s organs, burning his lungs and heart with intense heat. The target is Stunned for [[2d10]] rounds, and his Toughness characteristic is permanently reduced by [[1d10]].</p>",
+      "chat": "",
+      "summary": "Energy Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "RXs6nnt9eOtOQcs0"
+}

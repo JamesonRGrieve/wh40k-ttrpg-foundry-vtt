@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "kursian-slivernet",
     "class": "melee",
     "type": "exotic",
-    "range": "6m",
-    "rof": "-",
-    "damage": "1d5",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 6,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "crippling-2",
+      "flexible",
+      "inaccurate",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Crippling (2), Flexible, Inaccurate, Unwieldy",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "rare",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Crippling (2), Flexible, Inaccurate, Unwieldy</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

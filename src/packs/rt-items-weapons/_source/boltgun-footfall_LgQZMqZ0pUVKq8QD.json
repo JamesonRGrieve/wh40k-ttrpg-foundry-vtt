@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "boltgun-footfall",
     "class": "basic",
     "type": "bolt",
-    "range": "80m",
-    "rof": "S/3/-",
-    "damage": "1d10+4",
-    "damageType": "Explosive",
-    "penetration": 2,
-    "clip": 18,
-    "reload": "Full",
-    "special": "Tearing, Unreliable",
-    "weight": "8kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 4,
+      "penetration": 2
+    },
+    "special": [
+      "tearing",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
     "availability": "rare",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Can't use Unusual Ammunition. Debatably legal.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Can't use Unusual Ammunition. Debatably legal.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can't use Unusual Ammunition. Debatably legal.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Passage aboard a Void Craft, to another planet or in-system location. System Ships are Vessels that lack warp drives, civilized systems will likely have hundreds of such vessels to move cargo and people. The Default option for interplanetary travel.",
-    "cost": "Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed",
-    "effects": "Average",
-    "notes": "2500 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2500,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 2500 T</p>"
+      "value": "<p>Passage aboard a Void Craft, to another planet or in-system location. System Ships are Vessels that lack warp drives, civilized systems will likely have hundreds of such vessels to move cargo and people. The Default option for interplanetary travel.</p>\n<h3>Requirements</h3><p>Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 2500 T</p>",
+      "chat": "",
+      "summary": "Passage aboard a Void Craft, to another planet or in-system location. System Ships are Vessels that lack warp drives, civilized systems will likely have hundreds of such vessels to move cargo and peop"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Passage aboard a Void Craft, to another planet or in-system location. System Ships are Vessels that lack warp drives, civilized systems will likely have hundreds of such vessels to move cargo and people. The Default option for interplanetary travel.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

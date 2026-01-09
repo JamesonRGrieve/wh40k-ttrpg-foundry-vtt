@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Disease",
-    "weight": "-",
-    "availability": "Infected Character emits 7m diameter Green fog cloud, any entering cloud are exposed. Every 24 hours make +0 Toughness Test, if fail roll on Impact Critical Effect Table, with +1 per DoF beyond first. Cured with 1 week of constant rest and +0 Medicae Test. ",
-    "cost": "Acquired in batch of 5. Any exposed to disease must make +20 Toughness Test or catch it.\nNurgle Dedicated do not suffer Crit Effects that lead to Death or Blood Loss from disease.",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "BC: Tome of Decay",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Infected Character emits 7m diameter Green fog cloud, any entering cloud are exposed. Every 24 hours make +0 Toughness Test, if fail roll on Impact Critical Effect Table, with +1 per DoF beyond first. Cured with 1 week of constant rest and +0 Medicae Test. </p>\n<h3>Requirements</h3><p>Acquired in batch of 5. Any exposed to disease must make +20 Toughness Test or catch it.\nNurgle Dedicated do not suffer Crit Effects that lead to Death or Blood Loss from disease.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Infected Character emits 7m diameter Green fog cloud, any entering cloud are exposed. Every 24 hours make +0 Toughness Test, if fail roll on Impact Critical Effect Table, with +1 per DoF beyond first."
     },
+    "source": {
+      "book": "BC: Tome of Decay",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Infected Character emits 7m diameter Green fog cloud, any entering cloud are exposed. Every 24 hours make +0 Toughness Test, if fail roll on Impact Critical Effect Table, with +1 per DoF beyond first. Cured with 1 week of constant rest and +0 Medicae Test. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

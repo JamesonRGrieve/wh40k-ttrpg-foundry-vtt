@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "meltagun",
     "class": "basic",
     "type": "melta",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": 5,
-    "reload": "Full",
-    "special": "Melta",
-    "weight": "15kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 12
+    },
+    "special": [
+      "melta"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 15,
     "availability": "very-rare",
-    "cost": "4000 T",
-    "source": "Only War: Core",
-    "note": "Can be connected to backpack ammo via feedline, weighing 6kg. Doubles Clip Size.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 4000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Melta</p><p><b>Note:</b> Can be connected to backpack ammo via feedline, weighing 6kg. Doubles Clip Size.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be connected to backpack ammo via feedline, weighing 6kg. Doubles Clip Size.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

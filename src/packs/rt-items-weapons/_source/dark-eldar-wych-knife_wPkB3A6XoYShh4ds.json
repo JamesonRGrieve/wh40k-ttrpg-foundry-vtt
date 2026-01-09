@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-wych-knife",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 3
+    },
+    "special": [
+      "razor-sharp"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Razor-Sharp",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Knife if wielder is not trained to use it (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)).",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Knife if wielder is not trained to use it (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Knife if wielder is not trained to use it (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)).",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

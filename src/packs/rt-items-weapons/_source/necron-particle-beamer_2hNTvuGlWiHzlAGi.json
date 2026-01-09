@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-particle-beamer",
     "class": "heavy",
     "type": "exotic",
-    "range": "70m",
-    "rof": "S/-/-",
-    "damage": "3d10+8",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 70,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 8,
+      "penetration": 5
+    },
+    "special": [
+      "necron-wep",
+      "blast-4",
+      "concussive-3",
+      "reliable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Necron Wep, Blast (4), Concussive (3), Reliable",
-    "weight": "25kg",
+    "weight": 25,
     "availability": "unique",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "Always Best Quality",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Necron Wep, Blast (4), Concussive (3), Reliable</p><p><b>Note:</b> Always Best Quality</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

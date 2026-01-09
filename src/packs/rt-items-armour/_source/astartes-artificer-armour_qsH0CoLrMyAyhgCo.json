@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All",
-    "ap": 12,
-    "maxAg": null,
-    "weight": "100kg",
+    "weight": 100,
     "availability": "Hero",
-    "cost": "60 R",
     "notes": "Possesses all Power Armour Subsystems (See Armour Upgrades). +20 to Strength Characteristic. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet.\nIncreases Size to Hulking. Poor Manual Dexterity causes -10 to use equipment not designed for Space Marines, non-Astartes Ranged weapons need modification to work at all.\nRoll for Power Armour History twice. Always Master Crafted. Often incorporates an MIU in helmet, or other features such as automated repairing. Must be obtained as Signature Gear. Distinguished Renown Requirement if Techmarine.",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Possesses all Power Armour Subsystems (See Armour Upgrades). +20 to Strength Characteristic. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet.\nIncreases Size to Hulking. Poor Manual Dexterity causes -10 to use equipment not designed for Space Marines, non-Astartes Ranged weapons need modification to work at all.\nRoll for Power Armour History twice. Always Master Crafted. Often incorporates an MIU in helmet, or other features such as automated repairing. Must be obtained as Signature Gear. Distinguished Renown Requirement if Techmarine.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 12
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

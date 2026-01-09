@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Simpler MIU for weapons only. Can remotely operate one linked weapon, can fire an additional ranged weapon as free action using ballistic skill regardless of other actions taken. (Note, as only one attack action can be taken per turn, attacking with this counts towards that even though it's a free action)",
-    "cost": "Linked weapon could be attached to the shoulder. GM is final arbiter as to what weapons are allowed, and if any additional penalties are applied.",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Simpler MIU for weapons only. Can remotely operate one linked weapon, can fire an additional ranged weapon as free action using ballistic skill regardless of other actions taken. (Note, as only one attack action can be taken per turn, attacking with this counts towards that even though it's a free action)</p>\n<h3>Requirements</h3><p>Linked weapon could be attached to the shoulder. GM is final arbiter as to what weapons are allowed, and if any additional penalties are applied.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Simpler MIU for weapons only. Can remotely operate one linked weapon, can fire an additional ranged weapon as free action using ballistic skill regardless of other actions taken. (Note, as only one at"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Simpler MIU for weapons only. Can remotely operate one linked weapon, can fire an additional ranged weapon as free action using ballistic skill regardless of other actions taken. (Note, as only one attack action can be taken per turn, attacking with this counts towards that even though it's a free action)",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

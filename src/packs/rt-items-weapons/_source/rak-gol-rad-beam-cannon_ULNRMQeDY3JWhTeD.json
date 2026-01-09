@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "rakgol-rad-beam-cannon",
     "class": "heavy",
     "type": "exotic",
-    "range": "150m",
-    "rof": "S/-/-",
-    "damage": "4d10+5",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": 10,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "90kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 8
+    },
+    "special": [],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 90,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Koronus Bestiary",
-    "note": "Radioactive",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Radioactive</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Radioactive",
+    "source": "RT: Koronus Bestiary"
   },
   "effects": [],
   "flags": {},

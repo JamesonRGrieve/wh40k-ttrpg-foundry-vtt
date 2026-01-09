@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-infernus-pistol-conflagration-alt",
     "class": "pistol",
     "type": "melta",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "2d10+14",
-    "damageType": "Energy",
-    "penetration": 14,
-    "clip": 2,
-    "reload": "Full",
-    "special": "SM Wep, Melta",
-    "weight": "5kg",
-    "availability": "Distinguished",
-    "cost": "35 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. ",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 14,
+      "penetration": 14
+    },
+    "special": [
+      "sm-wep",
+      "melta"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 35,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

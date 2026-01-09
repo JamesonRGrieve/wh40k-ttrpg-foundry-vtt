@@ -2,4 +2,12 @@
  * @file Component exports for RT UI components
  */
 
-export { RTTooltip } from "./rt-tooltip.mjs";
+export { 
+    TooltipsRT, 
+    RTTooltip,
+    prepareCharacteristicTooltipData,
+    prepareSkillTooltipData,
+    prepareArmorTooltipData,
+    prepareWeaponTooltipData,
+    prepareModifierTooltipData
+} from "./rt-tooltip.mjs";

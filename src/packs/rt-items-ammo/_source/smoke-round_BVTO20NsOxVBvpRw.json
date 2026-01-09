@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher/Mortar",
-    "damageOrEffect": "Obscures basic eyesight and optical systems, but not more advanced sensors such as heat detection or visual bands outside of visual light",
-    "qualities": "Smoke (9)",
-    "weight": "1kg",
+    "identifier": "smoke-round",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "smoke-9"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Obscures basic eyesight and optical systems, but not more advanced sensors such as heat detection or visual bands outside of visual light</p>",
+    "notes": "",
+    "weight": 1,
     "availability": "scarce",
-    "cost": null,
-    "source": "Only War Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Obscures basic eyesight and optical systems, but not more advanced sensors such as heat detection or visual bands outside of visual light</p><p><b>Qualities:</b> Smoke (9)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Only War Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

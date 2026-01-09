@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-ion-accelerator",
     "class": "heavy",
     "type": "exotic",
-    "range": "200m",
-    "rof": "S/3/6",
-    "damage": "3d10+5",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": 90,
-    "reload": "2 Full",
-    "special": "Overcharge (8)",
-    "weight": "45kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 10
+    },
+    "special": [
+      "overcharge-8"
+    ],
+    "clip": {
+      "max": 90,
+      "value": 90,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 45,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Typically not mountable on anything smaller than an XV104 Riptide",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Overcharge (8)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Typically not mountable on anything smaller than an XV104 Riptide</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Typically not mountable on anything smaller than an XV104 Riptide",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "melta-bomb",
     "class": "thrown",
     "type": "explosive",
-    "range": "0m",
-    "rof": "S/-/-",
-    "damage": "6d10+7",
-    "damageType": "Energy",
-    "penetration": 15,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "6d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 15
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (5)",
-    "weight": "4kg",
-    "availability": "Initiated",
-    "cost": "12 R",
-    "source": "DW: Rites of Battle",
-    "note": "Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 12,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "-",
-    "availability": "Acts as Astartes Jump Pack (Requires Pilot (Personal), Can Fall from any height, doubles base movement speed whilst ignoring obstacles (must land at the end of the movement). Can engage full power and gain Flyer (12) for 1 minute before requiring 1 minute to cool down). Also gain Fear +1 and +10 to Command Tests. ",
-    "cost": "Blood Angels Sanguinary Guard Only.",
-    "effects": "Distinguished",
-    "notes": "25 R",
-    "source": "DW: First Founding",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+      "value": "<p>Acts as Astartes Jump Pack (Requires Pilot (Personal), Can Fall from any height, doubles base movement speed whilst ignoring obstacles (must land at the end of the movement). Can engage full power and gain Flyer (12) for 1 minute before requiring 1 minute to cool down). Also gain Fear +1 and +10 to Command Tests. </p>\n<h3>Requirements</h3><p>Blood Angels Sanguinary Guard Only.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>",
+      "chat": "",
+      "summary": "Acts as Astartes Jump Pack (Requires Pilot (Personal), Can Fall from any height, doubles base movement speed whilst ignoring obstacles (must land at the end of the movement). Can engage full power and"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Acts as Astartes Jump Pack (Requires Pilot (Personal), Can Fall from any height, doubles base movement speed whilst ignoring obstacles (must land at the end of the movement). Can engage full power and gain Flyer (12) for 1 minute before requiring 1 minute to cool down). Also gain Fear +1 and +10 to Command Tests. ",
+    "duration": "",
+    "notes": "25 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "techxorcism-gun",
     "class": "basic",
     "type": "exotic",
-    "range": "80m",
-    "rof": "S/3/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 30,
-    "reload": "Full",
-    "special": "Shocking",
-    "weight": "4kg",
-    "availability": "Respected",
-    "cost": "30 R",
-    "source": "DW: Rites of Battle",
-    "note": "Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [
+      "shocking"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.</p>"
     },
-    "damageFormula": "1d10+4",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

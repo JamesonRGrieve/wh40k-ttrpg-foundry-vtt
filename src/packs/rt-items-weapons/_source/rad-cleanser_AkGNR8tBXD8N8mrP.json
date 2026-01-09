@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "rad-cleanser",
     "class": "heavy",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "2d10+2",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": 20,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 7
+    },
+    "special": [
+      "blast-2",
+      "recharge",
+      "toxic"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (2), Recharge, Toxic",
-    "weight": "26kg",
+    "weight": 26,
     "availability": "very-rare",
-    "cost": "7000 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "\"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 7000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (2), Recharge, Toxic</p><p><b>Note:</b> \"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "\"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

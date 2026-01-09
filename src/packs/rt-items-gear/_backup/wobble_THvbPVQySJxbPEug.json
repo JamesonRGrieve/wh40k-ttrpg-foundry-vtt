@@ -1,0 +1,30 @@
+{
+  "name": "Wobble",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": " When consuming, make -10 Carouse Test to avoid gaining a level of fatigue from extreme drunkenness. Cheaply Fermented Ploin Juice. Named such as it is both what ploin fruit do when set upright and what most do after drinking it.",
+    "cost": null,
+    "effects": "Ubiquitous",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Ubiquitous</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "THvbPVQySJxbPEug"
+}

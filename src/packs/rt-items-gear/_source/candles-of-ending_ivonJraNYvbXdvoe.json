@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "8 Ivory coloured candles lit only after the wicks have been dipped in fresh blood or other profane rituals performed. They never diminish with use and no wax ever melts from them as their flames dance to invisible winds. Whilst lit, the barrier beween the materium and immaterium weakens. When lit aflame, user gains 1d10 Corruption, and 1d10 more if they were uncorrupted prior. When all 8 are lit, gain +30 to all activities within 9 metres of them that draw upon the warp for power. Creatures within range that have the Warp Instability Trait ignore it. The candles also increase the chances of Psychic Phenomena, and the power of Sanctified weapons weakens in their unholy light.",
-    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>8 Ivory coloured candles lit only after the wicks have been dipped in fresh blood or other profane rituals performed. They never diminish with use and no wax ever melts from them as their flames dance to invisible winds. Whilst lit, the barrier beween the materium and immaterium weakens. When lit aflame, user gains 1d10 Corruption, and 1d10 more if they were uncorrupted prior. When all 8 are lit, gain +30 to all activities within 9 metres of them that draw upon the warp for power. Creatures within range that have the Warp Instability Trait ignore it. The candles also increase the chances of Psychic Phenomena, and the power of Sanctified weapons weakens in their unholy light.</p>\n<h3>Requirements</h3><p>A Profane Object of Legend. It cannot be acquired, it must be earned or found. </p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "8 Ivory coloured candles lit only after the wicks have been dipped in fresh blood or other profane rituals performed. They never diminish with use and no wax ever melts from them as their flames dance"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "8 Ivory coloured candles lit only after the wicks have been dipped in fresh blood or other profane rituals performed. They never diminish with use and no wax ever melts from them as their flames dance to invisible winds. Whilst lit, the barrier beween the materium and immaterium weakens. When lit aflame, user gains 1d10 Corruption, and 1d10 more if they were uncorrupted prior. When all 8 are lit, gain +30 to all activities within 9 metres of them that draw upon the warp for power. Creatures within range that have the Warp Instability Trait ignore it. The candles also increase the chances of Psychic Phenomena, and the power of Sanctified weapons weakens in their unholy light.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

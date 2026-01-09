@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "power-maul-high",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "power-field",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Shocking",
-    "weight": "3.5kg",
+    "weight": 3.5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Can switch between [High] and [Low] Setting as Free Action. Gains Concussive (0) if wielded in two hands.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Shocking</p><p><b>Note:</b> Can switch between [High] and [Low] Setting as Free Action. Gains Concussive (0) if wielded in two hands.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can switch between [High] and [Low] Setting as Free Action. Gains Concussive (0) if wielded in two hands.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

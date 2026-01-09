@@ -1,0 +1,32 @@
+{
+  "name": "Energy Leg Critical 10",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_leg_10",
+    "damageType": "energy",
+    "bodyPart": "leg",
+    "severity": 10,
+    "effect": "<p>In a terrifying display of power, the leg immolates and thick fire consumes the target completely. He dies in a matter of agonizing seconds, his scorched corpse surrounded with smoke and flames.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Leg (Severity 10)</strong></p><p>In a terrifying display of power, the leg immolates and thick fire consumes the target completely. He dies in a matter of agonizing seconds, his scorched corpse surrounded with smoke and flames.</p>",
+      "chat": "",
+      "summary": "Energy Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "O12ASOcRqioyuKW5"
+}

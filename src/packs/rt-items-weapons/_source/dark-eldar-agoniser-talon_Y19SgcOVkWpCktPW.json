@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-agoniser-talon",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 7
+    },
+    "special": [
+      "power-field",
+      "tearing",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Tearing, Shocking",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Tearing, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

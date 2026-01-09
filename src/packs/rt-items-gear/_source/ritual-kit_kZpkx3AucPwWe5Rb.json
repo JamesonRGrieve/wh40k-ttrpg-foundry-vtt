@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "2kg",
-    "availability": "A Kit containing various carving knives, dried blood, skin parchments, and various other blasphemous components. Grants +20 to Focus Power Tests requiring Profane Symbols or the like, and +10 to any Tests required as part of a Ritual.",
-    "cost": "Heretical",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "tools",
+    "weight": 2,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Kit containing various carving knives, dried blood, skin parchments, and various other blasphemous components. Grants +20 to Focus Power Tests requiring Profane Symbols or the like, and +10 to any Tests required as part of a Ritual.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Kit containing various carving knives, dried blood, skin parchments, and various other blasphemous components. Grants +20 to Focus Power Tests requiring Profane Symbols or the like, and +10 to any T"
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Kit containing various carving knives, dried blood, skin parchments, and various other blasphemous components. Grants +20 to Focus Power Tests requiring Profane Symbols or the like, and +10 to any Tests required as part of a Ritual.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

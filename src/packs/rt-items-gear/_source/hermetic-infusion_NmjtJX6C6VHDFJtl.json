@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Gain +10 to Tests to resist Toxins, Disease, and Radiation, Gain Die Hard Talent. Good Craftsmanship: Gain +20 to tests instead of +10, gain Regeneration Trait.\nCauses a Greying of the Skin, and Tech-Priest's Blood is replaced, meaning normal Blood Transfusions will not work. Requiring Instead more of whatever serum goes through them.",
-    "cost": "Must be Tech-Prist with Autosanguine Talent/Implant\nGood Craftsmanship costs 17000",
-    "effects": "Special",
-    "notes": "3000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "good",
+    "cost": {
+      "value": 3000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> 3000 T</p>"
+      "value": "<p>Gain +10 to Tests to resist Toxins, Disease, and Radiation, Gain Die Hard Talent. Good Craftsmanship: Gain +20 to tests instead of +10, gain Regeneration Trait.\nCauses a Greying of the Skin, and Tech-Priest's Blood is replaced, meaning normal Blood Transfusions will not work. Requiring Instead more of whatever serum goes through them.</p>\n<h3>Requirements</h3><p>Must be Tech-Prist with Autosanguine Talent/Implant\nGood Craftsmanship costs 17000</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> 3000 T</p>",
+      "chat": "",
+      "summary": "Gain +10 to Tests to resist Toxins, Disease, and Radiation, Gain Die Hard Talent. Good Craftsmanship: Gain +20 to tests instead of +10, gain Regeneration Trait.\nCauses a Greying of the Skin, and Tech-"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Gain +10 to Tests to resist Toxins, Disease, and Radiation, Gain Die Hard Talent. Good Craftsmanship: Gain +20 to tests instead of +10, gain Regeneration Trait.\nCauses a Greying of the Skin, and Tech-Priest's Blood is replaced, meaning normal Blood Transfusions will not work. Requiring Instead more of whatever serum goes through them.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

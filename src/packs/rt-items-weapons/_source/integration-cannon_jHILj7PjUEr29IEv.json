@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "integration-cannon",
     "class": "heavy",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/-/-",
-    "damage": "4d10+4",
-    "damageType": "Impact",
-    "penetration": 8,
-    "clip": 6,
-    "reload": "3 Full",
-    "special": "Blast (5), Concussive (0), Inaccurate",
-    "weight": "65kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 8
+    },
+    "special": [
+      "blast-5",
+      "concussive-0",
+      "inaccurate"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 65,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Fires a pulsating orb of gravitic energy that shatters on contact, rapidly drawing everything within range and crushing it. Blast lasts 1d5 rounds, anyone that begins their turn inside the area must make a -20 Dodge (Strength) test, if failed they are immobilised until the end of their turn and are automatically hit by the weapon.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (5), Concussive (0), Inaccurate</p><p><b>Note:</b> Fires a pulsating orb of gravitic energy that shatters on contact, rapidly drawing everything within range and crushing it. Blast lasts 1d5 rounds, anyone that begins their turn inside the area must make a -20 Dodge (Strength) test, if failed they are immobilised until the end of their turn and are automatically hit by the weapon.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires a pulsating orb of gravitic energy that shatters on contact, rapidly drawing everything within range and crushing it. Blast lasts 1d5 rounds, anyone that begins their turn inside the area must make a -20 Dodge (Strength) test, if failed they are immobilised until the end of their turn and are automatically hit by the weapon.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

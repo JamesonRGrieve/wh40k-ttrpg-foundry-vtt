@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "vortex-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-3"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (3)",
-    "weight": "1.5kg",
+    "weight": 1.5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "Can't be used in a grenade launcher. Anyone in blast radius must make -10 Agility Test, on fail, get sucked into the warp (aka: Die). User gains 1 Corruption. At start of each turn roll 1d10 to see what vortex does. (1-4: Vortex Collapses, 5-7: unchanged, 8--9: Scatters 10 metres, destroys all in path, 10: 2x Radius).",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Can't be used in a grenade launcher. Anyone in blast radius must make -10 Agility Test, on fail, get sucked into the warp (aka: Die). User gains 1 Corruption. At start of each turn roll 1d10 to see what vortex does. (1-4: Vortex Collapses, 5-7: unchanged, 8--9: Scatters 10 metres, destroys all in path, 10: 2x Radius).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can't be used in a grenade launcher. Anyone in blast radius must make -10 Agility Test, on fail, get sucked into the warp (aka: Die). User gains 1 Corruption. At start of each turn roll 1d10 to see what vortex does. (1-4: Vortex Collapses, 5-7: unchanged, 8--9: Scatters 10 metres, destroys all in path, 10: 2x Radius).",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

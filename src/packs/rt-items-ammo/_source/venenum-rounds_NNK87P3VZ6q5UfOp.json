@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Exotic: Quillgun",
-    "damageOrEffect": "1d10+1 Impact Damage, Pen 3, Reliable, Toxic (4)",
-    "qualities": "Reliable, Toxic (4)",
-    "weight": "10% wep",
+    "identifier": "venenum-rounds",
+    "weaponTypes": [
+      "exotic"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "reliable",
+      "toxic-4"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>1d10+1 Impact Damage, Pen 3, Reliable, Toxic (4)</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "scarce",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 1d10+1 Impact Damage, Pen 3, Reliable, Toxic (4)</p><p><b>Qualities:</b> Reliable, Toxic (4)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH 2E: Enemies Without",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

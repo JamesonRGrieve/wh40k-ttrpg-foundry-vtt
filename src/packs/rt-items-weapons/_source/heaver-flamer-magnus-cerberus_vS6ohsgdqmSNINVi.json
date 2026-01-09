@@ -3,30 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "heaver-flamer-magnus-cerberus",
     "class": "heavy",
     "type": "flame",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 3,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "Flame, Reliable, Spray, Vengeful (9)",
-    "weight": "50kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 3
+    },
+    "special": [
+      "flame",
+      "reliable",
+      "spray",
+      "vengeful-9"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 50,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
-    "note": "Weight includes backpack fuel supply.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Reliable, Spray, Vengeful (9)</p><p><b>Note:</b> Weight includes backpack fuel supply.</p>"
     },
-    "damageFormula": "1d10+5",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weight includes backpack fuel supply.",
+    "source": "DH 2E: Enemies Within"
   },
   "effects": [],
   "flags": {},

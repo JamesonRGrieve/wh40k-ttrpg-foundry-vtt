@@ -4,33 +4,29 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Legs",
-    "ap": 3,
-    "maxAg": null,
-    "weight": "6kg",
+    "weight": 6,
     "availability": "rare",
-    "cost": "500 T",
     "notes": "Provides +10 to Agility Tests to maintain footing in treacherous or slick conditions. Is 6AP vs corrosive effects.",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Provides +10 to Agility Tests to maintain footing in treacherous or slick conditions. Is 6AP vs corrosive effects.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftLeg",
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
+      "head": 3,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
       "leftLeg": 3,
       "rightLeg": 3
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

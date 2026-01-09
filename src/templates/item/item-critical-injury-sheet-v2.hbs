@@ -1,0 +1,174 @@
+{{!-- Modern Critical Injury Sheet --}}
+<form class="rt-item-sheet rt-injury-sheet" autocomplete="off">
+  
+  {{!-- Header with Image and Title --}}
+  <div class="rt-item-sheet__header">
+    <div class="rt-item-sheet__image-wrapper">
+      <img class="rt-item-sheet__image" 
+           src="{{item.img}}" 
+           data-edit="img" 
+           alt="{{item.name}}" 
+           title="{{item.name}}" />
+      <i class="fas {{item.system.damageTypeIcon}} rt-damage-icon"></i>
+    </div>
+    
+    <div class="rt-item-sheet__title-area">
+      <input class="rt-item-sheet__name-input" 
+             name="name" 
+             type="text" 
+             value="{{item.name}}" 
+             placeholder="Injury Name" />
+      
+      <div class="rt-injury-badges">
+        <span class="rt-badge rt-badge--{{item.system.severityClass}}">
+          {{item.system.severityLabel}}
+        </span>
+        {{#if item.system.permanent}}
+        <span class="rt-badge rt-badge--permanent">
+          <i class="fas fa-infinity"></i> {{localize "RT.CriticalInjury.Permanent"}}
+        </span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  
+  {{!-- Main Panel - Injury Details --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-injury-grid">
+      
+      {{!-- Damage Type --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas {{item.system.damageTypeIcon}}"></i>
+          {{localize "RT.CriticalInjury.DamageType"}}
+        </label>
+        <select class="rt-field__select" name="system.damageType" data-dtype="String">
+          {{#select item.system.damageType}}
+          <option value="impact">{{localize "RT.DamageType.Impact"}}</option>
+          <option value="rending">{{localize "RT.DamageType.Rending"}}</option>
+          <option value="explosive">{{localize "RT.DamageType.Explosive"}}</option>
+          <option value="energy">{{localize "RT.DamageType.Energy"}}</option>
+          {{/select}}
+        </select>
+      </div>
+      
+      {{!-- Body Part --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas {{item.system.bodyPartIcon}}"></i>
+          {{localize "RT.CriticalInjury.BodyPart"}}
+        </label>
+        <select class="rt-field__select" name="system.bodyPart" data-dtype="String">
+          {{#select item.system.bodyPart}}
+          <option value="head">{{localize "RT.BodyPart.Head"}}</option>
+          <option value="arm">{{localize "RT.BodyPart.Arm"}}</option>
+          <option value="body">{{localize "RT.BodyPart.Body"}}</option>
+          <option value="leg">{{localize "RT.BodyPart.Leg"}}</option>
+          {{/select}}
+        </select>
+      </div>
+      
+      {{!-- Severity --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-chart-line"></i>
+          {{localize "RT.CriticalInjury.Severity"}}
+        </label>
+        <input class="rt-field__input" 
+               type="number" 
+               name="system.severity" 
+               value="{{item.system.severity}}" 
+               min="1" 
+               max="10"
+               data-dtype="Number" />
+      </div>
+      
+      {{!-- Permanent Checkbox --}}
+      <div class="rt-field rt-field--checkbox">
+        <label class="rt-field__label">
+          <input type="checkbox" 
+                 name="system.permanent" 
+                 {{checked item.system.permanent}} />
+          <span>{{localize "RT.CriticalInjury.Permanent"}}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  {{!-- Effect Description (Rich HTML) --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-file-medical"></i>
+        {{localize "RT.CriticalInjury.Effect"}}
+      </label>
+      {{editor item.system.effect 
+               target="system.effect" 
+               button=true 
+               editable=isEditable 
+               engine="prosemirror"}}
+    </div>
+  </div>
+  
+  {{!-- Notes Field --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-sticky-note"></i>
+        {{localize "RT.CriticalInjury.Notes"}}
+      </label>
+      <textarea class="rt-field__textarea" 
+                name="system.notes" 
+                rows="3"
+                placeholder="Additional notes...">{{item.system.notes}}</textarea>
+    </div>
+  </div>
+  
+  {{!-- Source Reference --}}
+  <div class="rt-item-sheet__panel rt-source-panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-book"></i>
+        Source Book
+      </label>
+      <input class="rt-field__input" 
+             name="system.source.book" 
+             type="text" 
+             value="{{item.system.source.book}}" 
+             placeholder="Rogue Trader Core" />
+    </div>
+    
+    <div class="rt-field">
+      <label class="rt-field__label">Page</label>
+      <input class="rt-field__input rt-field__input--short" 
+             name="system.source.page" 
+             type="text" 
+             value="{{item.system.source.page}}" 
+             placeholder="254" />
+    </div>
+    
+    <div class="rt-field">
+      <label class="rt-field__label">Custom Reference</label>
+      <input class="rt-field__input" 
+             name="system.source.custom" 
+             type="text" 
+             value="{{item.system.source.custom}}" 
+             placeholder="Homebrew / Variant" />
+    </div>
+  </div>
+  
+  {{!-- Description (Legacy field for chat display) --}}
+  <div class="rt-item-sheet__panel">
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-align-left"></i>
+        Description (for chat)
+      </label>
+      {{editor item.system.description.value 
+               target="system.description.value" 
+               button=true 
+               editable=isEditable 
+               engine="prosemirror"}}
+    </div>
+  </div>
+</form>

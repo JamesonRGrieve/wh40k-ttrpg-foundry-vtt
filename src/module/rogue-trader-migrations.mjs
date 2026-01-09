@@ -2,7 +2,7 @@ import { RogueTraderSettings } from './rogue-trader-settings.mjs';
 import { SYSTEM_ID } from './hooks-manager.mjs';
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 183;
+    const worldVersion = 184;
 
     const currentVersion = game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion);
     if (worldVersion !== currentVersion && game.user.isGM) {
@@ -112,6 +112,48 @@ export async function checkAndMigrateWorld() {
                 }
             }
         }
+
+        // V13 Compatibility Migration (v184)
+        if (version < 184) {
+            const updateData = {};
+            const system = item.system ?? {};
+
+            // Fix armour coverage (Array → Set is handled by DataModel.migrateData)
+            // But we still need to persist the change to the database
+            if (item.type === 'armour' && system.coverage) {
+                if (Array.isArray(system.coverage)) {
+                    // Update to trigger DataModel migration
+                    updateData['system.coverage'] = [...system.coverage];
+                }
+            }
+
+            // Fix HTMLField nulls in description
+            if (system.description) {
+                if (system.description.chat === null) {
+                    updateData['system.description.chat'] = '';
+                }
+                if (system.description.summary === null) {
+                    updateData['system.description.summary'] = '';
+                }
+            }
+
+            // Fix source field nulls
+            if (system.source) {
+                if (system.source.book === null) {
+                    updateData['system.source.book'] = '';
+                }
+                if (system.source.page === null) {
+                    updateData['system.source.page'] = '';
+                }
+                if (system.source.custom === null) {
+                    updateData['system.source.custom'] = '';
+                }
+            }
+
+            if (Object.keys(updateData).length) {
+                await item.update(updateData);
+            }
+        }
     }
 
     async function migrateActorData(actor, version) {
@@ -164,6 +206,49 @@ export async function checkAndMigrateWorld() {
                 };
 
                 await actor.update(updateData);
+            }
+        }
+
+        // V13 Compatibility Migration (v184)
+        // Migrate embedded items on actors
+        if (currentVersion < 184) {
+            for (const item of actor.items) {
+                const updateData = {};
+                const system = item.system ?? {};
+
+                // Fix armour coverage
+                if (item.type === 'armour' && system.coverage) {
+                    if (Array.isArray(system.coverage)) {
+                        updateData['system.coverage'] = [...system.coverage];
+                    }
+                }
+
+                // Fix HTMLField nulls
+                if (system.description) {
+                    if (system.description.chat === null) {
+                        updateData['system.description.chat'] = '';
+                    }
+                    if (system.description.summary === null) {
+                        updateData['system.description.summary'] = '';
+                    }
+                }
+
+                // Fix source field nulls
+                if (system.source) {
+                    if (system.source.book === null) {
+                        updateData['system.source.book'] = '';
+                    }
+                    if (system.source.page === null) {
+                        updateData['system.source.page'] = '';
+                    }
+                    if (system.source.custom === null) {
+                        updateData['system.source.custom'] = '';
+                    }
+                }
+
+                if (Object.keys(updateData).length) {
+                    await item.update(updateData);
+                }
             }
         }
     }
@@ -227,6 +312,17 @@ export async function checkAndMigrateWorld() {
                     notes: [
                         'Migrated legacy talent and trait fields into the modern item schema so compendium sheets show full details.',
                         'Inferred specialist/advanced skill types for legacy compendium skill entries.',
+                    ],
+                });
+                break;
+            case 184:
+                await releaseNotes({
+                    version: '1.8.4',
+                    notes: [
+                        'Foundry V13 compatibility migration.',
+                        'Fixed armour coverage field migration (Array to Set).',
+                        'Fixed null HTMLField values in item descriptions and sources.',
+                        'Consolidated duplicate migration logic in data models.',
                     ],
                 });
                 break;

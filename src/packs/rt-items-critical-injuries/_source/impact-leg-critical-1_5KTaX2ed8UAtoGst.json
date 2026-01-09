@@ -1,0 +1,32 @@
+{
+  "name": "Impact Leg Critical 1",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_leg_1",
+    "damageType": "impact",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effect": "<p>A blow to the leg results in deep bruises and teeth-clenching pain. The target suffers 1 level of Fatigue.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Leg (Severity 1)</strong></p><p>A blow to the leg results in deep bruises and teeth-clenching pain. The target suffers 1 level of Fatigue.</p>",
+      "chat": "",
+      "summary": "Impact Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "5KTaX2ed8UAtoGst"
+}

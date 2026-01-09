@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "Head",
-    "ap": 8,
-    "maxAg": null,
-    "weight": "4kg",
+    "weight": 4,
     "availability": "Respected",
-    "cost": "-",
     "notes": "Worn sometimes by Space Wolves, allows them to use their Wolf Senses Solo Mode ability and still gain the benefits of helmet Auto-Senses.",
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>Worn sometimes by Space Wolves, allows them to use their Wolf Senses Solo Mode ability and still gain the benefits of helmet Auto-Senses.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "head"
     ],
     "armourPoints": {
       "head": 8,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "body": 8,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

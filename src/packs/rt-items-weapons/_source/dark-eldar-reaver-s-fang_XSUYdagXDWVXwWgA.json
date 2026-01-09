@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-reavers-fang",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d5",
-    "damageType": "Rending",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "felling-4",
+      "tearing",
+      "toxic"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Felling (4), Tearing, Toxic",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Can be loaded with up to three poisons that replace its Toxic Quality. Only one poision can be applied at a time, of the wielder's choosing prior to making an attack.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Felling (4), Tearing, Toxic</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Can be loaded with up to three poisons that replace its Toxic Quality. Only one poision can be applied at a time, of the wielder's choosing prior to making an attack.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Can be loaded with up to three poisons that replace its Toxic Quality. Only one poision can be applied at a time, of the wielder's choosing prior to making an attack.",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Impact Leg Critical 4",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_leg_4",
+    "damageType": "impact",
+    "bodyPart": "leg",
+    "severity": 4,
+    "effect": "<p>A powerful impact causes micro-fractures in the target's bones, inflicting considerable agony. The target is knocked Prone and suffers [[2d10]] Agility damage.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Leg (Severity 4)</strong></p><p>A powerful impact causes micro-fractures in the target's bones, inflicting considerable agony. The target is knocked Prone and suffers [[2d10]] Agility damage.</p>",
+      "chat": "",
+      "summary": "Impact Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "W5Dc1EsxlQPV2pvw"
+}

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "stun-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-3",
+      "concussive-1"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (3), Concussive (1)",
-    "weight": "0.2kg",
+    "weight": 0.2,
     "availability": "scarce",
-    "cost": "40 T",
-    "source": "Rogue Trader: Core",
-    "note": "Make +0 Toughness Test or be stunned for 1d5 rounds, photo-visors/sealed armour give +20 to test",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3), Concussive (1)</p><p><b>Note:</b> Make +0 Toughness Test or be stunned for 1d5 rounds, photo-visors/sealed armour give +20 to test</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Make +0 Toughness Test or be stunned for 1d5 rounds, photo-visors/sealed armour give +20 to test",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "bastard-sword",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+1",
-    "damageType": "Rending",
-    "penetration": 1,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 1,
+      "penetration": 1
+    },
+    "special": [
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (8)",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "average",
-    "cost": "50 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "PEN Only applies to Primitive Armours",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "PEN Only applies to Primitive Armours",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing (Astartes)",
-    "weight": "5kg",
-    "availability": "Elaborate Banners worn sometimes by the Astartes that display Deathwatch Symbol and icons of Faith. Often as large as the Space marines themselves. When a Kill-Team's Leader spends a Fate Point to restore lose Cohesion, they restore one additional point if wearing this.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "15 R",
-    "source": "Deathwatch: Core",
+    "category": "clothing",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Elaborate Banners worn sometimes by the Astartes that display Deathwatch Symbol and icons of Faith. Often as large as the Space marines themselves. When a Kill-Team's Leader spends a Fate Point to restore lose Cohesion, they restore one additional point if wearing this.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Elaborate Banners worn sometimes by the Astartes that display Deathwatch Symbol and icons of Faith. Often as large as the Space marines themselves. When a Kill-Team's Leader spends a Fate Point to res"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Elaborate Banners worn sometimes by the Astartes that display Deathwatch Symbol and icons of Faith. Often as large as the Space marines themselves. When a Kill-Team's Leader spends a Fate Point to restore lose Cohesion, they restore one additional point if wearing this.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "-",
-    "availability": "Space Brandy. Well fermented Ploin Juice, has subtle taste and rich hues. Traders can make a small yet tidy profit from carrying barrels at special request to impatient buyers.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Space Brandy. Well fermented Ploin Juice, has subtle taste and rich hues. Traders can make a small yet tidy profit from carrying barrels at special request to impatient buyers.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Space Brandy. Well fermented Ploin Juice, has subtle taste and rich hues. Traders can make a small yet tidy profit from carrying barrels at special request to impatient buyers."
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Brandy. Well fermented Ploin Juice, has subtle taste and rich hues. Traders can make a small yet tidy profit from carrying barrels at special request to impatient buyers.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1.5kg",
-    "availability": "Also called Aetherscopes. Requires Tech-Use Skill to use. Awareness Tests made with these devices allow user to determine presence and strength of psychic forces, Dameons, lingering warp effects, etc. They have a detection range a few hundred metres, very powerful spikes can register from longer distances. Can be clouded by powerful energy fields or high psychic background noise.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "1000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 1000 T</p>"
+      "value": "<p>Also called Aetherscopes. Requires Tech-Use Skill to use. Awareness Tests made with these devices allow user to determine presence and strength of psychic forces, Dameons, lingering warp effects, etc. They have a detection range a few hundred metres, very powerful spikes can register from longer distances. Can be clouded by powerful energy fields or high psychic background noise.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 1000 T</p>",
+      "chat": "",
+      "summary": "Also called Aetherscopes. Requires Tech-Use Skill to use. Awareness Tests made with these devices allow user to determine presence and strength of psychic forces, Dameons, lingering warp effects, etc."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Also called Aetherscopes. Requires Tech-Use Skill to use. Awareness Tests made with these devices allow user to determine presence and strength of psychic forces, Dameons, lingering warp effects, etc. They have a detection range a few hundred metres, very powerful spikes can register from longer distances. Can be clouded by powerful energy fields or high psychic background noise.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "carapace",
-    "locations": "All",
-    "ap": 5,
-    "maxAg": null,
-    "weight": "15kg",
+    "weight": 15,
     "availability": "rare",
-    "cost": "575 T",
     "notes": "May consist of easily removable plates to help with repair. Some suits are sealed against the void.",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>May consist of easily removable plates to help with repair. Some suits are sealed against the void.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 5
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

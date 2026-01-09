@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tyranid-fleshborer-alt",
     "class": "basic",
     "type": "exotic",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "1d10+9",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 9,
+      "penetration": 3
+    },
+    "special": [
+      "living-ammunition",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Living Ammunition, Tearing",
-    "weight": "-",
-    "availability": "Special",
-    "cost": "-",
-    "source": "Deathwatch: Core",
-    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Living Ammunition, Tearing</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

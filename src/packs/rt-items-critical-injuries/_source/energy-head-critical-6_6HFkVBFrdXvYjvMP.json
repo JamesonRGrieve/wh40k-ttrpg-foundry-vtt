@@ -1,0 +1,32 @@
+{
+  "name": "Energy Head Critical 6",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_head_6",
+    "damageType": "energy",
+    "bodyPart": "head",
+    "severity": 6,
+    "effect": "<p>The attack cooks the target's face, melting his features and damaging his eyes. The target suffers [[1d5]] levels of Fatigue and is Blinded for [[1d10]] hours. Permanently reduce his Fellowship and Perception characteristics by [[1d5]].</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Head (Severity 6)</strong></p><p>The attack cooks the target's face, melting his features and damaging his eyes. The target suffers [[1d5]] levels of Fatigue and is Blinded for [[1d10]] hours. Permanently reduce his Fellowship and Perception characteristics by [[1d5]].</p>",
+      "chat": "",
+      "summary": "Energy Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "6HFkVBFrdXvYjvMP"
+}

@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Primitive: Crossbows",
-    "damageOrEffect": "Gain Shocking Quality. If target fails Toughness Test from Shocking Quality by 3+ DoF, they become Unconcious instead of Stunned for Degree of Failiure number of rounds.",
-    "qualities": "Shocking",
-    "weight": "10% wep",
+    "identifier": "shock-bolts-theta",
+    "weaponTypes": [
+      "primitive"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "shocking"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Shocking Quality. If target fails Toughness Test from Shocking Quality by 3+ DoF, they become Unconcious instead of Stunned for Degree of Failiure number of rounds.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Shocking Quality. If target fails Toughness Test from Shocking Quality by 3+ DoF, they become Unconcious instead of Stunned for Degree of Failiure number of rounds.</p><p><b>Qualities:</b> Shocking</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH 2E: Enemies Within",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

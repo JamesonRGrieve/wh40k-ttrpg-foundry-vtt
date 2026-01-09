@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hammer",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+1",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 1,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-9",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (9), Unbalanced",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "common",
-    "cost": "10 T",
-    "source": "Black Crusade: Core",
-    "note": "Can be carried openly without generating too much suspicion",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (9), Unbalanced</p><p><b>Note:</b> Can be carried openly without generating too much suspicion</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be carried openly without generating too much suspicion",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

@@ -20,7 +20,7 @@
             {{!-- Star Pip Display --}}
             <div class="rt-fate-pips-compact">
                 {{#if (gt system.fate.max 0)}}
-                    {{#each (range 1 (add system.fate.max 1)) as |index|}}
+                    {{#each (range 1 system.fate.max) as |index|}}
                         <button type="button"
                                 class="rt-fate-star {{#if (lte index ../system.fate.value)}}rt-fate-star--filled{{/if}}"
                                 data-action="setFateStar"
@@ -36,19 +36,6 @@
                     </div>
                 {{/if}}
             </div>
-
-            {{!-- Quick Actions --}}
-            {{#if (gt system.fate.max 0)}}
-            <div class="rt-fate-actions-compact">
-                <button type="button"
-                        class="rt-quick-action-btn"
-                        data-action="restoreFate"
-                        title="Restore all fate points">
-                    <i class="fas fa-redo"></i>
-                    <span>Restore All</span>
-                </button>
-            </div>
-            {{/if}}
 
         </div>
 

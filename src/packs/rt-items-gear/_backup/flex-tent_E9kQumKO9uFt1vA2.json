@@ -1,0 +1,30 @@
+{
+  "name": "Flex Tent",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "2kg",
+    "availability": "Thin rolled up fabric, when unrolled and given electric charge it hardens into strong shelter until uncharged (where it then collapses again). Common Craftsmansihp fits two people, Good fits three, and Best fits four.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E9kQumKO9uFt1vA2"
+}

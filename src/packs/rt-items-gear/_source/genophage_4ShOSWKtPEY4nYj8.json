@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Poison",
-    "weight": "-",
-    "availability": "Custom Made for a specific target individual. If target individual the Genophage is made for makes any amount of contact with it (if applied via weapon, must pierce armour but doesn't need to pierce toughness), Target makes -20 Toughness Test or takes 1d10+5 I Damage that ignores Armour+Toughness, Effect repeats each round until target passes test or dies. Just acts as generic toxin to anyone other than specific target.",
-    "cost": "can't be requisitioned, instead provided for specific missions.",
-    "effects": "Initiated",
-    "notes": "-",
-    "source": "Deathwatch: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Custom Made for a specific target individual. If target individual the Genophage is made for makes any amount of contact with it (if applied via weapon, must pierce armour but doesn't need to pierce toughness), Target makes -20 Toughness Test or takes 1d10+5 I Damage that ignores Armour+Toughness, Effect repeats each round until target passes test or dies. Just acts as generic toxin to anyone other than specific target.</p>\n<h3>Requirements</h3><p>can't be requisitioned, instead provided for specific missions.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Custom Made for a specific target individual. If target individual the Genophage is made for makes any amount of contact with it (if applied via weapon, must pierce armour but doesn't need to pierce t"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Custom Made for a specific target individual. If target individual the Genophage is made for makes any amount of contact with it (if applied via weapon, must pierce armour but doesn't need to pierce toughness), Target makes -20 Toughness Test or takes 1d10+5 I Damage that ignores Armour+Toughness, Effect repeats each round until target passes test or dies. Just acts as generic toxin to anyone other than specific target.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

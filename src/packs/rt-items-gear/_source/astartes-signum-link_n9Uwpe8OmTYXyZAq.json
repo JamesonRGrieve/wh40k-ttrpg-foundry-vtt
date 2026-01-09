@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "+0.5kg",
-    "availability": "Can be combined with an Astartes Signum, which at least one member of the squad must have. Characters with a Signum Link can then benefit from Ganging Up on an opponent regardless of whether they are engaged in melee or using ranged attacks on the target. With the benefits applying both to Weapon Skill and Ballistic Skill. Only works in Squad Mode.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "20 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 20 R</p>"
+      "value": "<p>Can be combined with an Astartes Signum, which at least one member of the squad must have. Characters with a Signum Link can then benefit from Ganging Up on an opponent regardless of whether they are engaged in melee or using ranged attacks on the target. With the benefits applying both to Weapon Skill and Ballistic Skill. Only works in Squad Mode.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 20 R</p>",
+      "chat": "",
+      "summary": "Can be combined with an Astartes Signum, which at least one member of the squad must have. Characters with a Signum Link can then benefit from Ganging Up on an opponent regardless of whether they are "
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Can be combined with an Astartes Signum, which at least one member of the squad must have. Characters with a Signum Link can then benefit from Ganging Up on an opponent regardless of whether they are engaged in melee or using ranged attacks on the target. With the benefits applying both to Weapon Skill and Ballistic Skill. Only works in Squad Mode.",
+    "duration": "",
+    "notes": "20 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

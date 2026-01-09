@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-lascannon",
     "class": "heavy",
     "type": "las",
-    "range": "300m",
-    "rof": "S/-/-",
-    "damage": "6d10+10",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "SM Wep",
-    "weight": "75kg",
-    "availability": "Respected",
-    "cost": "30 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "6d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 75,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

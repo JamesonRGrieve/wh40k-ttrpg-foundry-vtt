@@ -1,0 +1,30 @@
+{
+  "name": "Chronal Energiser",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "8kg",
+    "availability": "Allow one to temporaily speed up time for themselves. When activated, user can take two Full Actions in a single round (and can make two combat actions instead of one). But in the next round cannot take any actions, and suffers a level of fatigue. Doesn't stack with similar effects.",
+    "cost": "A Rare Archeotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "74gCZQ65ZPrtiT9p"
+}

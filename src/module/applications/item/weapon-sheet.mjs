@@ -46,6 +46,18 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        
+        // Add CONFIG reference for templates
+        context.CONFIG = CONFIG;
+        
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /** @override */
     _canAddItem(item) {
         if (!super._canAddItem(item)) return false;
 

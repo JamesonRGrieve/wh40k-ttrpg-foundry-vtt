@@ -48,7 +48,7 @@ export default class CyberneticData extends ItemDataModel.mixin(
             "leftLeg", "rightLeg", "spine", "internal"
           ]
         }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Provides armour points?

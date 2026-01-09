@@ -64,6 +64,30 @@ ROGUE_TRADER.craftsmanships = {
 };
 
 /* -------------------------------------------- */
+/*  Gear Categories                             */
+/* -------------------------------------------- */
+
+/**
+ * Gear item categories with icons and labels.
+ * @type {Object<string, {label: string, icon: string}>}
+ */
+ROGUE_TRADER.gearCategories = {
+  general: { label: "RT.GearCategory.General", icon: "fa-box" },
+  tools: { label: "RT.GearCategory.Tools", icon: "fa-wrench" },
+  drugs: { label: "RT.GearCategory.Drugs", icon: "fa-flask" },
+  consumable: { label: "RT.GearCategory.Consumable", icon: "fa-fire" },
+  clothing: { label: "RT.GearCategory.Clothing", icon: "fa-shirt" },
+  survival: { label: "RT.GearCategory.Survival", icon: "fa-tent" },
+  communications: { label: "RT.GearCategory.Communications", icon: "fa-satellite-dish" },
+  detection: { label: "RT.GearCategory.Detection", icon: "fa-radar" },
+  medical: { label: "RT.GearCategory.Medical", icon: "fa-briefcase-medical" },
+  tech: { label: "RT.GearCategory.Tech", icon: "fa-microchip" },
+  religious: { label: "RT.GearCategory.Religious", icon: "fa-cross" },
+  luxury: { label: "RT.GearCategory.Luxury", icon: "fa-gem" },
+  contraband: { label: "RT.GearCategory.Contraband", icon: "fa-skull-crossbones" }
+};
+
+/* -------------------------------------------- */
 /*  Damage Types                                */
 /* -------------------------------------------- */
 
@@ -135,9 +159,56 @@ ROGUE_TRADER.armourTypes = {
   carapace: { label: "RT.ArmourType.Carapace" },
   power: { label: "RT.ArmourType.Power" },
   "light-power": { label: "RT.ArmourType.LightPower" },
+  "storm-trooper": { label: "RT.ArmourType.StormTrooper" },
+  "feudal-world": { label: "RT.ArmourType.FeudalWorld" },
   primitive: { label: "RT.ArmourType.Primitive" },
   xenos: { label: "RT.ArmourType.Xenos" },
-  void: { label: "RT.ArmourType.Void" }
+  void: { label: "RT.ArmourType.Void" },
+  enforcer: { label: "RT.ArmourType.Enforcer" },
+  "hostile-environment": { label: "RT.ArmourType.HostileEnvironment" }
+};
+
+/**
+ * Armour special properties.
+ * @type {Object<string, {label: string, description: string}>}
+ */
+ROGUE_TRADER.armourProperties = {
+  sealed: { 
+    label: "RT.ArmourProperty.Sealed",
+    description: "RT.ArmourProperty.SealedDesc"
+  },
+  "auto-stabilized": { 
+    label: "RT.ArmourProperty.AutoStabilized",
+    description: "RT.ArmourProperty.AutoStabilizedDesc"
+  },
+  hexagrammic: { 
+    label: "RT.ArmourProperty.Hexagrammic",
+    description: "RT.ArmourProperty.HexagrammicDesc"
+  },
+  blessed: { 
+    label: "RT.ArmourProperty.Blessed",
+    description: "RT.ArmourProperty.BlessedDesc"
+  },
+  camouflage: { 
+    label: "RT.ArmourProperty.Camouflage",
+    description: "RT.ArmourProperty.CamouflageDesc"
+  },
+  lightweight: { 
+    label: "RT.ArmourProperty.Lightweight",
+    description: "RT.ArmourProperty.LightweightDesc"
+  },
+  reinforced: { 
+    label: "RT.ArmourProperty.Reinforced",
+    description: "RT.ArmourProperty.ReinforcedDesc"
+  },
+  "agility-bonus": { 
+    label: "RT.ArmourProperty.AgilityBonus",
+    description: "RT.ArmourProperty.AgilityBonusDesc"
+  },
+  "strength-bonus": { 
+    label: "RT.ArmourProperty.StrengthBonus",
+    description: "RT.ArmourProperty.StrengthBonusDesc"
+  }
 };
 
 /* -------------------------------------------- */
@@ -146,15 +217,15 @@ ROGUE_TRADER.armourTypes = {
 
 /**
  * Body hit locations.
- * @type {Object<string, {label: string, roll: string}>}
+ * @type {Object<string, {label: string, roll: string, icon: string}>}
  */
 ROGUE_TRADER.bodyLocations = {
-  head: { label: "RT.BodyLocation.Head", roll: "1-10" },
-  rightArm: { label: "RT.BodyLocation.RightArm", roll: "11-20" },
-  leftArm: { label: "RT.BodyLocation.LeftArm", roll: "21-30" },
-  body: { label: "RT.BodyLocation.Body", roll: "31-70" },
-  rightLeg: { label: "RT.BodyLocation.RightLeg", roll: "71-85" },
-  leftLeg: { label: "RT.BodyLocation.LeftLeg", roll: "86-100" }
+  head: { label: "RT.BodyLocation.Head", roll: "1-10", icon: "fa-head-side" },
+  rightArm: { label: "RT.BodyLocation.RightArm", roll: "11-20", icon: "fa-hand" },
+  leftArm: { label: "RT.BodyLocation.LeftArm", roll: "21-30", icon: "fa-hand" },
+  body: { label: "RT.BodyLocation.Body", roll: "31-70", icon: "fa-person" },
+  rightLeg: { label: "RT.BodyLocation.RightLeg", roll: "71-85", icon: "fa-socks" },
+  leftLeg: { label: "RT.BodyLocation.LeftLeg", roll: "86-100", icon: "fa-socks" }
 };
 
 /* -------------------------------------------- */

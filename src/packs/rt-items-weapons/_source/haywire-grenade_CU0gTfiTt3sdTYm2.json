@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "haywire-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 1,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 1
+    },
+    "special": [
+      "blast-2"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (2)",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

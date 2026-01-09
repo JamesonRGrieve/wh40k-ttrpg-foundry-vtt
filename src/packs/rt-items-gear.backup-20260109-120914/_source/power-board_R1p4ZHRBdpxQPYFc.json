@@ -1,0 +1,30 @@
+{
+  "name": "Power Board",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "15kg",
+    "availability": "Space Hoverboard! Gives Flyer (15) Trait, must have Pilot (Personal) Skill. Charge lasts for a few hours, depends on speed and distance.",
+    "cost": "Black, featureless boards that float through strange anti-grav engines. Often painted gairish colours.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R1p4ZHRBdpxQPYFc"
+}

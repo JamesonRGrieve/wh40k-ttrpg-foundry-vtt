@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "plasma-gun-mezoa",
     "class": "basic",
     "type": "plasma",
-    "range": "90m",
-    "rof": "S/2/-",
-    "damage": "1d10+7",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 40,
-    "reload": "5 Full",
-    "special": "Maximal, Overheats",
-    "weight": "18kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 90,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 6
+    },
+    "special": [
+      "maximal",
+      "overheats"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 18,
     "availability": "very-rare",
-    "cost": "3000 T",
-    "source": "Rogue Trader: Core",
-    "note": "Can choose between firing normally or maximally",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 3000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Maximal, Overheats</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can choose between firing normally or maximally",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

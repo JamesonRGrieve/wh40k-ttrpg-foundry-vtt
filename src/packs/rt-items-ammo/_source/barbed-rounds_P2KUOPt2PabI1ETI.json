@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP Weapon",
-    "damageOrEffect": "Gains Crippling(1) Quality",
-    "qualities": "Crippling(1)",
-    "weight": "10% wep",
+    "identifier": "barbed-rounds",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "crippling-1"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gains Crippling(1) Quality</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "scarce",
-    "cost": null,
-    "source": "Black Crusade: Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gains Crippling(1) Quality</p><p><b>Qualities:</b> Crippling(1)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Black Crusade: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

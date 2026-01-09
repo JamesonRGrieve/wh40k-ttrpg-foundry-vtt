@@ -3,19 +3,53 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Exotic: Dartcaster, Needle Pistol/Rifle",
-    "damageOrEffect": "Loses Toxic Quality, but +4 damage, gain Tearing Quality. Change damage type to Explosive",
-    "qualities": "Toxic (lose)",
-    "weight": "10% wep",
+    "identifier": "micro-blast-needles",
+    "weaponTypes": [
+      "exotic"
+    ],
+    "modifiers": {
+      "damage": 4,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "tearing"
+    ],
+    "removedQualities": [
+      "toxic",
+      "but-+4-damage",
+      "gain-tearing"
+    ],
+    "clipModifier": 0,
+    "effect": "<p>Loses Toxic Quality, but +4 damage, gain Tearing Quality. Change damage type to Explosive</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "extremely-rare",
-    "cost": null,
-    "source": "RT: Hostile Acquisitions",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Loses Toxic Quality, but +4 damage, gain Tearing Quality. Change damage type to Explosive</p><p><b>Qualities:</b> Toxic (lose)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Hostile Acquisitions",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

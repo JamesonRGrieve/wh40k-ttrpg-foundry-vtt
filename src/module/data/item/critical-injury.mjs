@@ -56,7 +56,8 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(
    * @type {string}
    */
   get damageTypeLabel() {
-    return game.i18n.localize(`RT.DamageType.${this.damageType.capitalize()}`);
+    const key = `RT.DamageType.${this.damageType.capitalize()}`;
+    return game.i18n.has(key) ? game.i18n.localize(key) : this.damageType.capitalize();
   }
 
   /**
@@ -64,7 +65,69 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(
    * @type {string}
    */
   get bodyPartLabel() {
-    return game.i18n.localize(`RT.BodyPart.${this.bodyPart.capitalize()}`);
+    const key = `RT.BodyPart.${this.bodyPart.capitalize()}`;
+    return game.i18n.has(key) ? game.i18n.localize(key) : this.bodyPart.capitalize();
+  }
+
+  /**
+   * Get the severity label.
+   * @type {string}
+   */
+  get severityLabel() {
+    const key = "RT.CriticalInjury.Severity";
+    const label = game.i18n.has(key) ? game.i18n.localize(key) : "Severity";
+    return `${label}: ${this.severity}`;
+  }
+
+  /**
+   * Get icon for damage type.
+   * @type {string}
+   */
+  get damageTypeIcon() {
+    const icons = {
+      impact: "fa-hammer",
+      rending: "fa-cut",
+      explosive: "fa-bomb",
+      energy: "fa-bolt"
+    };
+    return icons[this.damageType] || "fa-band-aid";
+  }
+
+  /**
+   * Get icon for body part.
+   * @type {string}
+   */
+  get bodyPartIcon() {
+    const icons = {
+      head: "fa-head-side-brain",
+      arm: "fa-hand-paper",
+      body: "fa-user",
+      leg: "fa-shoe-prints"
+    };
+    return icons[this.bodyPart] || "fa-user";
+  }
+
+  /**
+   * Get CSS class for severity level.
+   * @type {string}
+   */
+  get severityClass() {
+    if (this.severity <= 3) return "severity-minor";
+    if (this.severity <= 6) return "severity-moderate";
+    if (this.severity <= 9) return "severity-severe";
+    return "severity-fatal";
+  }
+
+  /**
+   * Get full injury description (combines effect + notes).
+   * @type {string}
+   */
+  get fullDescription() {
+    let desc = this.effect || "";
+    if (this.notes) {
+      desc += desc ? `\n\n<strong>Notes:</strong> ${this.notes}` : this.notes;
+    }
+    return desc;
   }
 
   /* -------------------------------------------- */
@@ -76,11 +139,12 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(
     const props = [
       this.damageTypeLabel,
       this.bodyPartLabel,
-      `Severity: ${this.severity}`
+      this.severityLabel
     ];
     
     if ( this.permanent ) {
-      props.push(game.i18n.localize("RT.CriticalInjury.Permanent"));
+      const key = "RT.CriticalInjury.Permanent";
+      props.push(game.i18n.has(key) ? game.i18n.localize(key) : "Permanent");
     }
     
     return props;
@@ -95,7 +159,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(
     return {
       type: this.damageTypeLabel,
       location: this.bodyPartLabel,
-      severity: this.severity
+      severity: `${this.severity}/10`
     };
   }
 }

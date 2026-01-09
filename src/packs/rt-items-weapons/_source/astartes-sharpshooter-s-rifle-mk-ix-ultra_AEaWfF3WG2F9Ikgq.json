@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-sharpshooters-rifle-mkix-ultra",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "250m",
-    "rof": "S/-/-",
-    "damage": "1d10+2",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": 5,
-    "reload": "Full",
-    "special": "SM Wep, Accurate, Felling (4), Toxic",
-    "weight": "50kg",
-    "availability": "Initiated",
-    "cost": "25 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 250,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "accurate",
+      "felling-4",
+      "toxic"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 50,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Accurate, Felling (4), Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

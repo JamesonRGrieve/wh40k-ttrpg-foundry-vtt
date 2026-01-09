@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Missile Launcher or Mortar",
-    "damageOrEffect": "Disperses micro-explosives doing 2d10 X, Pen 0, Blast (4) over a large area.",
-    "qualities": "Blast (4)",
-    "weight": "2kg",
+    "identifier": "scatter-missileround",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-4"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Disperses micro-explosives doing 2d10 X, Pen 0, Blast (4) over a large area.</p>",
+    "notes": "",
+    "weight": 2,
     "availability": "very-rare",
-    "cost": null,
-    "source": "RT: Into the Storm",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Disperses micro-explosives doing 2d10 X, Pen 0, Blast (4) over a large area.</p><p><b>Qualities:</b> Blast (4)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

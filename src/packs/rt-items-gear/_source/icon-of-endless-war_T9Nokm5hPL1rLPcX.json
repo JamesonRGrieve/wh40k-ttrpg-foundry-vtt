@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "8kg",
-    "availability": "A Large Banner or icon that must be carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can Enter a Frenzy as a Free Action if they have the talent, and gain +10 to WS and BS as long as it remains in their sight. ",
-    "cost": "Bearer must be Dedicated to Khorne for it to function. Heretical",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "BC: Tome of Blood",
+    "category": "tools",
+    "weight": 8,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Large Banner or icon that must be carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can Enter a Frenzy as a Free Action if they have the talent, and gain +10 to WS and BS as long as it remains in their sight. </p>\n<h3>Requirements</h3><p>Bearer must be Dedicated to Khorne for it to function. Heretical</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Large Banner or icon that must be carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can Enter a Frenzy as a Free Action if they have"
     },
+    "source": {
+      "book": "BC: Tome of Blood",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Large Banner or icon that must be carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can Enter a Frenzy as a Free Action if they have the talent, and gain +10 to WS and BS as long as it remains in their sight. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

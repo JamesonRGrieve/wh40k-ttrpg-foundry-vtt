@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "A Gelatine substance that can be smeered or stuck onto a surface. Once applied it activated by an electrical spark. Rapidly burns through hull plates without requiring oxygen. Comes in a Tube that can cover ~1m^2 or a thin line 5m long. Deals the same damage as a melta bomb (6d10, Pen 12) but over the course of a minute before burning out.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "200 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 200,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 200 T</p>"
+      "value": "<p>A Gelatine substance that can be smeered or stuck onto a surface. Once applied it activated by an electrical spark. Rapidly burns through hull plates without requiring oxygen. Comes in a Tube that can cover ~1m^2 or a thin line 5m long. Deals the same damage as a melta bomb (6d10, Pen 12) but over the course of a minute before burning out.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 200 T</p>",
+      "chat": "",
+      "summary": "A Gelatine substance that can be smeered or stuck onto a surface. Once applied it activated by an electrical spark. Rapidly burns through hull plates without requiring oxygen. Comes in a Tube that can"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Gelatine substance that can be smeered or stuck onto a surface. Once applied it activated by an electrical spark. Rapidly burns through hull plates without requiring oxygen. Comes in a Tube that can cover ~1m^2 or a thin line 5m long. Deals the same damage as a melta bomb (6d10, Pen 12) but over the course of a minute before burning out.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

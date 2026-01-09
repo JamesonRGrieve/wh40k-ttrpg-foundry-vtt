@@ -1,0 +1,32 @@
+{
+  "name": "Energy Head Critical 8",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_head_8",
+    "damageType": "energy",
+    "bodyPart": "head",
+    "severity": 8,
+    "effect": "<p>The target's head is destroyed in a conflagration of fiery death. He does not survive.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Head (Severity 8)</strong></p><p>The target's head is destroyed in a conflagration of fiery death. He does not survive.</p>",
+      "chat": "",
+      "summary": "Energy Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "KD05czJBHeO21saN"
+}

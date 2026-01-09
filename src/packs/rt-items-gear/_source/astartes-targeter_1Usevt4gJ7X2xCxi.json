@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "4kg",
-    "availability": "Attaches to the Shoulder or Backpack unit, provides all ranged weapons the user wields the benefits of a Red-Dot Laser Sight and Telescopic Sight as well as imposing -10 to Dodging Ranged Attacks made by the user.",
-    "cost": "Red-Dot Laser Sight: +10 to Single Shot Ranged Attacks\nTelescopic Sight: Full Action Aiming ignores penalties for firing at Long or Extreme Ranges.",
-    "effects": "Distinguished",
-    "notes": "25 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 4,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+      "value": "<p>Attaches to the Shoulder or Backpack unit, provides all ranged weapons the user wields the benefits of a Red-Dot Laser Sight and Telescopic Sight as well as imposing -10 to Dodging Ranged Attacks made by the user.</p>\n<h3>Requirements</h3><p>Red-Dot Laser Sight: +10 to Single Shot Ranged Attacks\nTelescopic Sight: Full Action Aiming ignores penalties for firing at Long or Extreme Ranges.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>",
+      "chat": "",
+      "summary": "Attaches to the Shoulder or Backpack unit, provides all ranged weapons the user wields the benefits of a Red-Dot Laser Sight and Telescopic Sight as well as imposing -10 to Dodging Ranged Attacks made"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Attaches to the Shoulder or Backpack unit, provides all ranged weapons the user wields the benefits of a Red-Dot Laser Sight and Telescopic Sight as well as imposing -10 to Dodging Ranged Attacks made by the user.",
+    "duration": "",
+    "notes": "25 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

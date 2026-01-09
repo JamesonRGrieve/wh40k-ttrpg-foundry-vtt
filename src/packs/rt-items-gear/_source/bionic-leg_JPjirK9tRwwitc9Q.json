@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Common Craftsmanship replaces a normal leg in all funcitonality. Poor reduces movement rate by 1 and user must make an Agility Test after Running or fall over. Good Craftsmanship grants user Sprint Talent and +20 to Athletics Tests to Jump or Leap.",
-    "cost": "Damage works as normal, although inappropriate effects like bleeding just render limb useless",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Common Craftsmanship replaces a normal leg in all funcitonality. Poor reduces movement rate by 1 and user must make an Agility Test after Running or fall over. Good Craftsmanship grants user Sprint Talent and +20 to Athletics Tests to Jump or Leap.</p>\n<h3>Requirements</h3><p>Damage works as normal, although inappropriate effects like bleeding just render limb useless</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Common Craftsmanship replaces a normal leg in all funcitonality. Poor reduces movement rate by 1 and user must make an Agility Test after Running or fall over. Good Craftsmanship grants user Sprint Ta"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Common Craftsmanship replaces a normal leg in all funcitonality. Poor reduces movement rate by 1 and user must make an Agility Test after Running or fall over. Good Craftsmanship grants user Sprint Talent and +20 to Athletics Tests to Jump or Leap.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

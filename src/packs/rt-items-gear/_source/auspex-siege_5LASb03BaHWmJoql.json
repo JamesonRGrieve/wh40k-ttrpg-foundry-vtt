@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "Powerful Scanner that can see through dense materials and find weakpoints, has a range of 20m, which may be reduced by energy fields, very thick bulkheads, etc.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "13 R",
-    "source": "DW: Rites of Battle",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 13 R</p>"
+      "value": "<p>Powerful Scanner that can see through dense materials and find weakpoints, has a range of 20m, which may be reduced by energy fields, very thick bulkheads, etc.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 13 R</p>",
+      "chat": "",
+      "summary": "Powerful Scanner that can see through dense materials and find weakpoints, has a range of 20m, which may be reduced by energy fields, very thick bulkheads, etc."
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Powerful Scanner that can see through dense materials and find weakpoints, has a range of 20m, which may be reduced by energy fields, very thick bulkheads, etc.",
+    "duration": "",
+    "notes": "13 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

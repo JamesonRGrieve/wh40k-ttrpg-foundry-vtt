@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Missile Launcher",
-    "damageOrEffect": "2d10+4 X, Pen 8, Blast (1). Must make -20 Tech-Use check prior to firing to awaken missile. If suceeds, gains +10 to BS Tests to hit with missile until end of encounter. Target must reroll dodge tests made against that attack.",
-    "qualities": "Blast (1)",
-    "weight": "1kg",
+    "identifier": "life-seeker-missile",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-1",
+      "+10-to-bs-tests-to-hit-with-missile-until-end-of-encounter"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>2d10+4 X, Pen 8, Blast (1). Must make -20 Tech-Use check prior to firing to awaken missile. If suceeds, gains +10 to BS Tests to hit with missile until end of encounter. Target must reroll dodge tests made against that attack.</p>",
+    "notes": "",
+    "weight": 1,
     "availability": "very-rare",
-    "cost": null,
-    "source": "RT: Faith and Coin",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10+4 X, Pen 8, Blast (1). Must make -20 Tech-Use check prior to firing to awaken missile. If suceeds, gains +10 to BS Tests to hit with missile until end of encounter. Target must reroll dodge tests made against that attack.</p><p><b>Qualities:</b> Blast (1)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Faith and Coin",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

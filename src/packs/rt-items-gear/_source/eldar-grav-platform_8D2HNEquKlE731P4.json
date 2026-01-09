@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "20kg",
-    "availability": "Heavy weapons mounted on these platforms always count as braced even if moved. Controlled by a control box, Can move 6 metres as a half action, requiring little effort from the user. Can't operate the weapon on the platform via control box unless it is an eldar one.",
-    "cost": "Xenotech. Counts as separate entity, with 15 AP. Any damage disables and immobilises it. No difference between Craftsmanship besides wear and tear.",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "RT: Hostile Acquisitions",
+    "category": "tools",
+    "weight": 20,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Heavy weapons mounted on these platforms always count as braced even if moved. Controlled by a control box, Can move 6 metres as a half action, requiring little effort from the user. Can't operate the weapon on the platform via control box unless it is an eldar one.</p>\n<h3>Requirements</h3><p>Xenotech. Counts as separate entity, with 15 AP. Any damage disables and immobilises it. No difference between Craftsmanship besides wear and tear.</p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Heavy weapons mounted on these platforms always count as braced even if moved. Controlled by a control box, Can move 6 metres as a half action, requiring little effort from the user. Can't operate the"
     },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Heavy weapons mounted on these platforms always count as braced even if moved. Controlled by a control box, Can move 6 metres as a half action, requiring little effort from the user. Can't operate the weapon on the platform via control box unless it is an eldar one.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-dragons-breath-flamer",
     "class": "basic",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "2d10+2",
-    "damageType": "Energy",
-    "penetration": 3,
-    "clip": 20,
-    "reload": "Full",
-    "special": "Flame, Spray",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

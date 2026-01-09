@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "0.5kg",
-    "availability": "+20 to Awareness Tests when used, can make Tech-Use Test to detect things such as gasses, bio-signs, and radiation. 50m range, blocked by 50cm wall or shielded material.\nGood provides +30 to Test, Poor can only penetrate 20cm of material.",
-    "cost": null,
-    "effects": "Scarce / Initiated",
-    "notes": "145 T\n12 R",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 145,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 145 T\n12 R</p>"
+      "value": "<p>+20 to Awareness Tests when used, can make Tech-Use Test to detect things such as gasses, bio-signs, and radiation. 50m range, blocked by 50cm wall or shielded material.\nGood provides +30 to Test, Poor can only penetrate 20cm of material.</p>\n<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 145 T\n12 R</p>",
+      "chat": "",
+      "summary": "+20 to Awareness Tests when used, can make Tech-Use Test to detect things such as gasses, bio-signs, and radiation. 50m range, blocked by 50cm wall or shielded material.\nGood provides +30 to Test, Poo"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+20 to Awareness Tests when used, can make Tech-Use Test to detect things such as gasses, bio-signs, and radiation. 50m range, blocked by 50cm wall or shielded material.\nGood provides +30 to Test, Poor can only penetrate 20cm of material.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

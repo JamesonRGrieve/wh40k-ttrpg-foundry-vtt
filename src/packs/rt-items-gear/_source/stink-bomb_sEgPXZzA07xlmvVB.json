@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1kg",
-    "availability": "When broken, creates an 4m radius puff of intolerable stench, all in range make a +0 Toughness Test or gain 1 Fatigue.",
-    "cost": "One use.",
-    "effects": "Scarce",
-    "notes": "6 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 1,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 6,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 6 T</p>"
+      "value": "<p>When broken, creates an 4m radius puff of intolerable stench, all in range make a +0 Toughness Test or gain 1 Fatigue.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 6 T</p>",
+      "chat": "",
+      "summary": "When broken, creates an 4m radius puff of intolerable stench, all in range make a +0 Toughness Test or gain 1 Fatigue."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When broken, creates an 4m radius puff of intolerable stench, all in range make a +0 Toughness Test or gain 1 Fatigue.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

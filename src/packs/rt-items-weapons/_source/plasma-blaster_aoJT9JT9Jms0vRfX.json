@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "plasma-blaster",
     "class": "basic",
     "type": "plasma",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "2d10+6",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "Overheats, Recharge, Unreliable",
-    "weight": "20kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "overheats",
+      "recharge",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 20,
     "availability": "very-rare",
-    "cost": "7500 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Effectively a Two plasma guns built into one, sharing one canister.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 7500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Overheats, Recharge, Unreliable</p><p><b>Note:</b> Effectively a Two plasma guns built into one, sharing one canister.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Effectively a Two plasma guns built into one, sharing one canister.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

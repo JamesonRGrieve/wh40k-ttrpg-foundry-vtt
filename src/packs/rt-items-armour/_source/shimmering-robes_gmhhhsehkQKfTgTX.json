@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": "Psy*9%",
-    "maxAg": "-",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "extremely-rare",
-    "cost": "-",
-    "notes": "Protection Rating is the wearer's Psy Rating multiplied by 9. Overload is equal to wearer's Psy Rating. Does nothing but look pretty if not a Psyker. \nIf it ever overloads, must at some point within a day spend one hour in devout meditation to reinvigorate its powers. If not done it crumbles to dust.",
+    "notes": "Protection Rating is the wearer's Psy Rating multiplied by 9. Overload is equal to wearer's Psy Rating. Does nothing but look pretty if not a Psyker. \nIf it ever overloads, must at some point within a day spend one hour in devout meditation to reinvigorate its powers. If not done it crumbles to dust. [AP: Psy*9%]",
     "source": "BC: Tome of Fate",
     "description": {
       "value": "<p>Protection Rating is the wearer's Psy Rating multiplied by 9. Overload is equal to wearer's Psy Rating. Does nothing but look pretty if not a Psyker. \nIf it ever overloads, must at some point within a day spend one hour in devout meditation to reinvigorate its powers. If not done it crumbles to dust.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

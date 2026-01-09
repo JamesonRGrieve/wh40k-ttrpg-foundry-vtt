@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-plasma-gun-barrage-alt",
     "class": "basic",
     "type": "plasma",
-    "range": "120m",
-    "rof": "S/3/5",
-    "damage": "1d10+8",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": 30,
-    "reload": "4 Full",
-    "special": "SM Wep, Overheats, Volatile, Maximal",
-    "weight": "30kg",
-    "availability": "Distinguished",
-    "cost": "28 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. ",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep",
+      "overheats",
+      "volatile",
+      "maximal"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 30,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 28,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Overheats, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

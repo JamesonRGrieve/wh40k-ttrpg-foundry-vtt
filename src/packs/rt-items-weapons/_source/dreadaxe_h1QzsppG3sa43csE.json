@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dreadaxe",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "daemon-wep",
+      "unbalanced",
+      "sanctified",
+      "warp-weapon."
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Unbalanced, Sanctified, Warp Weapon.",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Weapon: Axe. Daemon WP 30 (Unaligned Daemon), Bind Str 1. Att. : Howling, Impossibly Sharp. If Daemon ever escapes weapon, will always be hostile. Gain Fear(+1) whenever attacking with weapon. Must be Unaligned to Wield. Sanctified Weapon represents ability to destroy other Daemons.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Unbalanced, Sanctified, Warp Weapon.</p><p><b>Note:</b> Weapon: Axe. Daemon WP 30 (Unaligned Daemon), Bind Str 1. Att. : Howling, Impossibly Sharp. If Daemon ever escapes weapon, will always be hostile. Gain Fear(+1) whenever attacking with weapon. Must be Unaligned to Wield. Sanctified Weapon represents ability to destroy other Daemons.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Axe. Daemon WP 30 (Unaligned Daemon), Bind Str 1. Att. : Howling, Impossibly Sharp. If Daemon ever escapes weapon, will always be hostile. Gain Fear(+1) whenever attacking with weapon. Must be Unaligned to Wield. Sanctified Weapon represents ability to destroy other Daemons.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

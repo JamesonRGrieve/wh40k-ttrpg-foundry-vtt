@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "0.5kg",
-    "availability": "An Icon of the Ommnissiah, contains within it numerous ciphers and data-djinn that proclaim the worth of their owner to whomever has the capacity to listen to the electromagnetic choirs. Anyone with Common Lore (Machine Cult) can bear this symbol to gain +10 to Fellowship Tests with Tech-Priests and Followers of the Machine God",
-    "cost": "Tech Priests Only",
-    "effects": "Near Unique",
-    "notes": "1500 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1500,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 1500 T</p>"
+      "value": "<p>An Icon of the Ommnissiah, contains within it numerous ciphers and data-djinn that proclaim the worth of their owner to whomever has the capacity to listen to the electromagnetic choirs. Anyone with Common Lore (Machine Cult) can bear this symbol to gain +10 to Fellowship Tests with Tech-Priests and Followers of the Machine God</p>\n<h3>Requirements</h3><p>Tech Priests Only</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> 1500 T</p>",
+      "chat": "",
+      "summary": "An Icon of the Ommnissiah, contains within it numerous ciphers and data-djinn that proclaim the worth of their owner to whomever has the capacity to listen to the electromagnetic choirs. Anyone with C"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "An Icon of the Ommnissiah, contains within it numerous ciphers and data-djinn that proclaim the worth of their owner to whomever has the capacity to listen to the electromagnetic choirs. Anyone with Common Lore (Machine Cult) can bear this symbol to gain +10 to Fellowship Tests with Tech-Priests and Followers of the Machine God",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

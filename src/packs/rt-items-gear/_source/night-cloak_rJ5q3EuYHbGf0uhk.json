@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "2kg",
-    "availability": "Hide from infrared sensors, +30 to Concealment in the dark, but make +0 Toughness Test per hour or suffer 1 fatigue level due to heat buildup",
-    "cost": null,
-    "effects": "Average",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 2,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Hide from infrared sensors, +30 to Concealment in the dark, but make +0 Toughness Test per hour or suffer 1 fatigue level due to heat buildup</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Hide from infrared sensors, +30 to Concealment in the dark, but make +0 Toughness Test per hour or suffer 1 fatigue level due to heat buildup"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Hide from infrared sensors, +30 to Concealment in the dark, but make +0 Toughness Test per hour or suffer 1 fatigue level due to heat buildup",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

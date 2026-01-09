@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ripper-pistol",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "30m",
-    "rof": "S/2/-",
-    "damage": "1d10+3",
-    "damageType": "Impact",
-    "penetration": 7,
-    "clip": 8,
-    "reload": "Full",
-    "special": "Tearing, Toxic",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 7
+    },
+    "special": [
+      "tearing",
+      "toxic"
+    ],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Has its own specialised, venomous ammo, cannot use unusual ammo",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Has its own specialised, venomous ammo, cannot use unusual ammo</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has its own specialised, venomous ammo, cannot use unusual ammo",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

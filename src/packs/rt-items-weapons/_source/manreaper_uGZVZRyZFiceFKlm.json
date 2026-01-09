@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "manreaper",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+7",
-    "damageType": "Rending",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 7,
+      "penetration": 7
+    },
+    "special": [
+      "daemon-wep",
+      "felling-5",
+      "power-field",
+      "toxic-2",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Felling (5), Power Field, Toxic (2), Unbalanced",
-    "weight": "8kg",
+    "weight": 8,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Decay",
-    "note": "Weapon: Scyth?. Daemon WP 57 (Daemon of Nurgle), Bind Str 3. Att.: Accursed, Herald of Decay. Two-Handed, must be dedicate to Nurgle to wield. Best Craftsmanship version has Force Quality. When making charge/all out attack, can hit one additional enemy per 2 DoS on attack after first. Whilst drawn, all Explosive/Rending damage in 5m has Toxic(1) and Felling(1) Qualities. \n",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Felling (5), Power Field, Toxic (2), Unbalanced</p><p><b>Note:</b> Weapon: Scyth?. Daemon WP 57 (Daemon of Nurgle), Bind Str 3. Att.: Accursed, Herald of Decay. Two-Handed, must be dedicate to Nurgle to wield. Best Craftsmanship version has Force Quality. When making charge/all out attack, can hit one additional enemy per 2 DoS on attack after first. Whilst drawn, all Explosive/Rending damage in 5m has Toxic(1) and Felling(1) Qualities. \n</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Scyth?. Daemon WP 57 (Daemon of Nurgle), Bind Str 3. Att.: Accursed, Herald of Decay. Two-Handed, must be dedicate to Nurgle to wield. Best Craftsmanship version has Force Quality. When making charge/all out attack, can hit one additional enemy per 2 DoS on attack after first. Whilst drawn, all Explosive/Rending damage in 5m has Toxic(1) and Felling(1) Qualities. \n",
+    "source": "BC: Tome of Decay"
   },
   "effects": [],
   "flags": {},

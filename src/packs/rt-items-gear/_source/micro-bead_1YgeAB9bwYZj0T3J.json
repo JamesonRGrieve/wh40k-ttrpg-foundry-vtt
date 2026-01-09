@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "-",
-    "availability": "Space Comms, ~1km range, but varies with bad weather and dense terrain.",
-    "cost": "Usually attached to the ear and fits inside it",
-    "effects": "Average",
-    "notes": "20 T",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 20 T</p>"
+      "value": "<p>Space Comms, ~1km range, but varies with bad weather and dense terrain.</p>\n<h3>Requirements</h3><p>Usually attached to the ear and fits inside it</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "Space Comms, ~1km range, but varies with bad weather and dense terrain."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Comms, ~1km range, but varies with bad weather and dense terrain.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

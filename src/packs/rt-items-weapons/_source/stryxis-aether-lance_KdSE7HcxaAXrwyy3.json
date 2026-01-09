@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "stryxis-aether-lance",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d5",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d5",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Unwieldy",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Edge of the Abyss",
-    "note": "Extremely Rare when sold by Stryxis.D oesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. -10 to Parry.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Extremely Rare when sold by Stryxis.D oesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. -10 to Parry.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Extremely Rare when sold by Stryxis.D oesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. -10 to Parry.",
+    "source": "RT: Edge of the Abyss"
   },
   "effects": [],
   "flags": {},

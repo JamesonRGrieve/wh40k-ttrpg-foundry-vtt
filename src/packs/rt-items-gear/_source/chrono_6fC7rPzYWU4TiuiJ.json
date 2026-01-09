@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "-",
-    "availability": "Space Watch. Tells the time, may have other basic features like setting alarms, etc.",
-    "cost": null,
-    "effects": "Abundant",
-    "notes": "40 T\n1 R",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 40 T\n1 R</p>"
+      "value": "<p>Space Watch. Tells the time, may have other basic features like setting alarms, etc.</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 40 T\n1 R</p>",
+      "chat": "",
+      "summary": "Space Watch. Tells the time, may have other basic features like setting alarms, etc."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Watch. Tells the time, may have other basic features like setting alarms, etc.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

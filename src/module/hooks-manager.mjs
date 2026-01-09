@@ -4,6 +4,9 @@ import { RogueTrader } from './rules/config.mjs';
 // Import data models
 import * as dataModels from './data/_module.mjs';
 
+// Import dice/roll classes
+import * as dice from './dice/_module.mjs';
+
 // Import V2 Actor Sheets (ApplicationV2-based)
 import AcolyteSheet from './applications/actor/acolyte-sheet.mjs';
 import AcolyteSheetSidebar from './applications/actor/acolyte-sheet-sidebar.mjs';
@@ -50,6 +53,7 @@ import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
 import { checkAndMigrateWorld } from './rogue-trader-migrations.mjs';
 import { DHTourMain } from './tours/main-tour.mjs';
 import { RollTableUtils } from './utils/roll-table-utils.mjs';
+import { TooltipsRT } from './applications/components/_module.mjs';
 
 import * as documents from './documents/_module.mjs'
 
@@ -100,6 +104,10 @@ Enable Debug with: game.rt.debug = true
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
             // Compendium browser
             openCompendiumBrowser: (options) => RTCompendiumBrowser.open(options),
+            // Dice/Roll classes
+            dice: dice,
+            BasicRollRT: dice.BasicRollRT,
+            D100Roll: dice.D100Roll,
         };
 
         //CONFIG.debug.hooks = true;
@@ -120,6 +128,10 @@ Enable Debug with: game.rt.debug = true
         };
         CONFIG.Item.documentClass = RogueTraderItem;
         CONFIG.ActiveEffect.documentClass = documents.RogueTraderActiveEffect;
+        CONFIG.ChatMessage.documentClass = documents.ChatMessageRT;
+
+        // Register custom Roll classes for serialization/deserialization
+        CONFIG.Dice.rolls.push(dice.BasicRollRT, dice.D100Roll);
 
         // Register data models for actors
         // DataModels handle schema validation and data preparation
@@ -339,6 +351,10 @@ Enable Debug with: game.rt.debug = true
 
     static async ready() {
         await checkAndMigrateWorld();
+
+        // Initialize rich tooltip system
+        game.rt.tooltips = new TooltipsRT();
+        await game.rt.tooltips.initialize();
 
         game.tours.register(SYSTEM_ID, "main-tour", new DHTourMain());
 

@@ -1,0 +1,30 @@
+{
+  "name": "Upgrade: Berserker Chip",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Creature gains Frenzy Talent that can be acted instantly and remotely by a code word or signal from their master. Whilst active creature gains immunity to Characteristic Damage and Stunning until the chip is deactivated in the same way as it was activated. When deactivated creature takes 1d5 Fatigue and has 10% chance to remain frenzied until it dies after a few hours.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JquNwtl5lu1TG5dq"
+}

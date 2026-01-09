@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "1kg",
-    "availability": " A user in possession of it gains +10 to Command Tests, and once per game session may take a Full Action and make a -10 Scholastic Lore (Military Tactics) Test. On success allies in 20 metres can make a Delay Action as a Free Action until the user's next turn",
-    "cost": "A Tome that provides wisdom to the reader.",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 1,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p> A user in possession of it gains +10 to Command Tests, and once per game session may take a Full Action and make a -10 Scholastic Lore (Military Tactics) Test. On success allies in 20 metres can make a Delay Action as a Free Action until the user's next turn</p>\n<h3>Requirements</h3><p>A Tome that provides wisdom to the reader.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": " A user in possession of it gains +10 to Command Tests, and once per game session may take a Full Action and make a -10 Scholastic Lore (Military Tactics) Test. On success allies in 20 metres can make"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": " A user in possession of it gains +10 to Command Tests, and once per game session may take a Full Action and make a -10 Scholastic Lore (Military Tactics) Test. On success allies in 20 metres can make a Delay Action as a Free Action until the user's next turn",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

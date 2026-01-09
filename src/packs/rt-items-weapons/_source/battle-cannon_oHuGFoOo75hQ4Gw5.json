@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "vehicle",
+    "identifier": "battle-cannon",
+    "class": "melee",
     "type": "solid-projectile",
-    "range": "750m",
-    "rof": "S/-/-",
-    "damage": "3d10+10",
-    "damageType": "Explosive",
-    "penetration": 8,
-    "clip": 12,
-    "reload": "3 Full",
-    "special": "Blast (10), Concussive (3), Reliable",
-    "weight": "350kg",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 750,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "blast-10",
+      "concussive-3",
+      "reliable"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 350,
     "availability": "average",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (10), Concussive (3), Reliable</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

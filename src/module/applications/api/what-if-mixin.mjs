@@ -13,6 +13,8 @@
  * - Clear visual distinction from reality
  */
 
+import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
+
 /**
  * Mixin that adds "What-If" mode functionality to actor sheets
  * @param {typeof ApplicationV2} Base  The base class being mixed
@@ -467,10 +469,11 @@ export default function WhatIfMixin(Base) {
             const count = Object.keys(this._whatIfChanges).length;
             
             if (count > 0) {
-                const confirm = await Dialog.confirm({
+                const confirm = await ConfirmationDialog.confirm({
                     title: "Cancel What-If Mode",
-                    content: `<p>Discard ${count} pending change${count !== 1 ? 's' : ''}?</p>`,
-                    defaultYes: false
+                    content: `Discard ${count} pending change${count !== 1 ? 's' : ''}?`,
+                    confirmLabel: "Discard",
+                    cancelLabel: "Keep Editing"
                 });
 
                 if (!confirm) return;

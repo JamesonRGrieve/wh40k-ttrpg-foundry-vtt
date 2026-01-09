@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-grotwhip",
     "class": "melee",
     "type": "exotic",
-    "range": "3m",
-    "rof": "-",
-    "damage": "1d10+3",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 3,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "flexibile",
+      "tearing",
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Flexibile, Tearing, Primitive (8)",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "For Orks, Average, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flexibile, Tearing, Primitive (8)</p><p><b>Note:</b> For Orks, Average, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "For Orks, Average, no Tearing for non-Orks. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

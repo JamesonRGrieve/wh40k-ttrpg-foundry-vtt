@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "7.5kg",
-    "availability": "Greasy and nearly frictionless texture, fabric can be stitched into capes or vests. +10 when attempting to break free of grapples, and -10 to anyone attempting to grapple wearer.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "clothing",
+    "weight": 7.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Greasy and nearly frictionless texture, fabric can be stitched into capes or vests. +10 when attempting to break free of grapples, and -10 to anyone attempting to grapple wearer.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Greasy and nearly frictionless texture, fabric can be stitched into capes or vests. +10 when attempting to break free of grapples, and -10 to anyone attempting to grapple wearer."
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Greasy and nearly frictionless texture, fabric can be stitched into capes or vests. +10 when attempting to break free of grapples, and -10 to anyone attempting to grapple wearer.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

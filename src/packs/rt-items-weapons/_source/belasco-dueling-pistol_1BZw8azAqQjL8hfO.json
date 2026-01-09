@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "belasco-dueling-pistol",
     "class": "pistol",
     "type": "las",
-    "range": "45m",
-    "rof": "S/-/-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 1,
-    "reload": "Full",
-    "special": "Accurate",
-    "weight": "1.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 45,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 1.5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "Rogue Trader: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Accurate</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

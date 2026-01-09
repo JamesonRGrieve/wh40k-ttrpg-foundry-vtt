@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-high-yield-missile-pod",
     "class": "heavy",
     "type": "exotic",
-    "range": "200m",
-    "rof": "S/-/6",
-    "damage": "3d10+3",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": 72,
-    "reload": "2 Full",
-    "special": "Blast (3)",
-    "weight": "40kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 3,
+      "penetration": 6
+    },
+    "special": [
+      "blast-3"
+    ],
+    "clip": {
+      "max": 72,
+      "value": 72,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 40,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. ",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

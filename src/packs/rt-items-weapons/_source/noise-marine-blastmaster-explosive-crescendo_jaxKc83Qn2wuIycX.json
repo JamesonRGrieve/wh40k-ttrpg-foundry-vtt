@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "noise-marine-blastmaster-explosive-crescendo",
     "class": "heavy",
     "type": "exotic",
-    "range": "250m",
-    "rof": "S/-/-",
-    "damage": "3d10+10",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 250,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "blast-4",
+      "devastating-2"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (4), Devastating (2)",
-    "weight": "41kg",
+    "weight": 41,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (4), Devastating (2)</p><p><b>Note:</b> Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

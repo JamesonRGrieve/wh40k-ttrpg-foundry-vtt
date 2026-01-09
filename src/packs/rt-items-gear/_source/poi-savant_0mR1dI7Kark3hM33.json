@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "A Handheld device that can measure bio-chemical and toxin makeup of anything it analyses, clearing those safe for consumption as edible, if not always appetizing. Also very good at detecting poisoned food. Requires updating with new toxin data every now and then. Requires a +20 Tech-Use Test to use, failiure gives inconclusive readings, 3+ DoF gives incorrect readings.",
-    "cost": "Can be personalised and minaturised into rings, wands, etc. Used by nobility (assume one step rarer)",
-    "effects": "Rare",
-    "notes": "300 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 300 T</p>"
+      "value": "<p>A Handheld device that can measure bio-chemical and toxin makeup of anything it analyses, clearing those safe for consumption as edible, if not always appetizing. Also very good at detecting poisoned food. Requires updating with new toxin data every now and then. Requires a +20 Tech-Use Test to use, failiure gives inconclusive readings, 3+ DoF gives incorrect readings.</p>\n<h3>Requirements</h3><p>Can be personalised and minaturised into rings, wands, etc. Used by nobility (assume one step rarer)</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 300 T</p>",
+      "chat": "",
+      "summary": "A Handheld device that can measure bio-chemical and toxin makeup of anything it analyses, clearing those safe for consumption as edible, if not always appetizing. Also very good at detecting poisoned "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Handheld device that can measure bio-chemical and toxin makeup of anything it analyses, clearing those safe for consumption as edible, if not always appetizing. Also very good at detecting poisoned food. Requires updating with new toxin data every now and then. Requires a +20 Tech-Use Test to use, failiure gives inconclusive readings, 3+ DoF gives incorrect readings.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

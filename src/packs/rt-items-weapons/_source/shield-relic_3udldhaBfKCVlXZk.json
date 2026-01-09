@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "shield-relic",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5+2",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "defensive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Defensive",
-    "weight": "3kg",
-    "availability": "Special",
-    "cost": "-",
-    "source": "RT: Stars of Inequity",
-    "note": "Found as Treasure via book's Treasure Generator.",
+    "weight": 3,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Defensive</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity"
   },
   "effects": [],
   "flags": {},

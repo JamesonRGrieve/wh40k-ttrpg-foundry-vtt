@@ -1,41 +1,41 @@
-{{!-- Rogue Trader Add Speciality Prompt - Modern Design --}}
-<div class="dialog-content">
-    <form class="rt-prompt" autocomplete="off">
-        <div class="rt-prompt__panel">
-            <div class="rt-prompt__header">
-                <img class="rt-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                <div class="rt-prompt__title-group">
-                    <h2 class="rt-prompt__title">Create Specialisation</h2>
-                    <div class="rt-prompt__subtitle">{{this.skill.label}}</div>
-                </div>
-            </div>
-            
-            <div class="rt-prompt__section">
-                <div class="rt-prompt__field">
-                    <span class="rt-prompt__label">Skill</span>
-                    <span class="rt-prompt__value">{{this.skill.label}}</span>
-                </div>
-                <div class="rt-prompt__field" style="flex-direction: column; align-items: stretch;">
-                    <span class="rt-prompt__label" style="margin-bottom: 6px;">Specialisation</span>
-                    {{#if this.specializations}}
-                        <select class="rt-prompt__select" id="speciality-name">
-                            <option value="" disabled selected>-- Choose from list --</option>
-                            {{#each this.specializations}}
-                                <option value="{{this}}">{{this}}</option>
-                            {{/each}}
-                        </select>
-                        <input class="rt-prompt__input" type="text" id="custom-speciality-name" placeholder="Or enter custom..." style="margin-top: 8px;" />
-                    {{else}}
-                        <input class="rt-prompt__input" type="text" id="speciality-name" placeholder="Enter specialization name..." />
-                    {{/if}}
-                </div>
-                {{#if this.specializations}}
-                    <div class="rt-prompt__info">
-                        <span class="material-icons">info</span>
-                        <p>Common specializations are listed above. You can select one or enter a custom name.</p>
-                    </div>
-                {{/if}}
-            </div>
+{{!-- Rogue Trader Add Speciality Prompt - Simplified Layout --}}
+<form class="rt-prompt rt-specialist-prompt" autocomplete="off">
+    <div class="rt-specialist-prompt__header">
+        <img class="rt-specialist-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+        <div class="rt-specialist-prompt__info">
+            <div class="rt-specialist-prompt__skill">{{this.skill.label}}</div>
+            <div class="rt-specialist-prompt__label">Add Specialization</div>
         </div>
-    </form>
-</div>
+    </div>
+
+    <div class="rt-specialist-prompt__body">
+        {{#if this.specializations}}
+            <label class="rt-specialist-prompt__field-label">Choose from list</label>
+            <select class="rt-prompt__select" id="speciality-name">
+                <option value="">-- Select a specialization --</option>
+                {{#each this.specializations}}
+                    <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+
+            <div class="rt-specialist-prompt__divider">
+                <span>or</span>
+            </div>
+
+            <label class="rt-specialist-prompt__field-label">Enter custom name</label>
+            <input class="rt-prompt__input" type="text" id="custom-speciality-name" placeholder="e.g., Navigation (Stellar), Common Lore (Imperial Navy)" />
+        {{else}}
+            <label class="rt-specialist-prompt__field-label">Specialization Name</label>
+            <input class="rt-prompt__input" type="text" id="speciality-name" placeholder="Enter specialization name..." />
+        {{/if}}
+    </div>
+
+    <div class="dialog-buttons">
+        <button type="button" data-action="add" class="default">
+            <i class="fas fa-plus"></i> Add
+        </button>
+        <button type="button" data-action="cancel" data-button="cancel">
+            <i class="fas fa-times"></i> Cancel
+        </button>
+    </div>
+</form>

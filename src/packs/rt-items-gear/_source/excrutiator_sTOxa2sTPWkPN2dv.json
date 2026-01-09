@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "2kg",
-    "availability": "Grants +20 to Interrogation Tests, and it being present gains +30 to Intimidate Tests. If used on a subject, they suffer -20 to Deceive Tests while being interrogated.",
-    "cost": "Inflicts horrific pain without leaving permenant damage. Often used by Inquisitors.",
-    "effects": "Very Rare",
-    "notes": "375 T",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 2,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 375,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 375 T</p>"
+      "value": "<p>Grants +20 to Interrogation Tests, and it being present gains +30 to Intimidate Tests. If used on a subject, they suffer -20 to Deceive Tests while being interrogated.</p>\n<h3>Requirements</h3><p>Inflicts horrific pain without leaving permenant damage. Often used by Inquisitors.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 375 T</p>",
+      "chat": "",
+      "summary": "Grants +20 to Interrogation Tests, and it being present gains +30 to Intimidate Tests. If used on a subject, they suffer -20 to Deceive Tests while being interrogated."
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Grants +20 to Interrogation Tests, and it being present gains +30 to Intimidate Tests. If used on a subject, they suffer -20 to Deceive Tests while being interrogated.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

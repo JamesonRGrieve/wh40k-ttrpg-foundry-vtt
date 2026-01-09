@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.",
-    "cost": "Damage works as normal, although inappropriate effects like bleeding just render limb useless",
-    "effects": "Scarce / Initiated",
-    "notes": "1000 T",
-    "source": "Black Crusade: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1000 T</p>"
+      "value": "<p>Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.</p>\n<h3>Requirements</h3><p>Damage works as normal, although inappropriate effects like bleeding just render limb useless</p>\n<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1000 T</p>",
+      "chat": "",
+      "summary": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craf"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

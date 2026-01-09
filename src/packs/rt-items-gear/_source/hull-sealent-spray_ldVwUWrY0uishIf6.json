@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "Spray onto vents and bulkheads to seal, cover up to 20 10cm^2 holes.",
-    "cost": null,
-    "effects": "Common",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Spray onto vents and bulkheads to seal, cover up to 20 10cm^2 holes.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Spray onto vents and bulkheads to seal, cover up to 20 10cm^2 holes."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Spray onto vents and bulkheads to seal, cover up to 20 10cm^2 holes.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -11,9 +11,13 @@ export default class GearSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ["gear"],
+        actions: {
+            resetUses: GearSheet.#onResetUses,
+            consumeUse: GearSheet.#onConsumeUse
+        },
         position: {
-            width: 520,
-            height: 450
+            width: 600,
+            height: 700
         }
     };
 
@@ -32,7 +36,6 @@ export default class GearSheet extends BaseItemSheet {
     /** @override */
     static TABS = [
         { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" },
         { tab: "effects", group: "primary", label: "Effects" }
     ];
 
@@ -42,4 +45,26 @@ export default class GearSheet extends BaseItemSheet {
     tabGroups = {
         primary: "details"
     };
+
+    /* -------------------------------------------- */
+    /*  Actions                                     */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle reset uses action
+     * @param {Event} event
+     * @param {HTMLElement} target
+     */
+    static async #onResetUses(event, target) {
+        await this.item.system.resetUses();
+    }
+
+    /**
+     * Handle consume use action
+     * @param {Event} event
+     * @param {HTMLElement} target
+     */
+    static async #onConsumeUse(event, target) {
+        await this.item.system.consume();
+    }
 }

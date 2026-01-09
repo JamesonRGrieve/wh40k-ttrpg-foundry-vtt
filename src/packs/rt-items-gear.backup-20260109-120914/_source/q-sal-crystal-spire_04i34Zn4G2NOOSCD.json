@@ -1,0 +1,30 @@
+{
+  "name": "Q'Sal Crystal Spire",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "18kg",
+    "availability": "Activated as a Half Action, all Focus Power Tests, all Tests made as part of Rituals, and all Psychic Phenomena Rolls within 20m have +20, with an additional +10 per additional active spire also within 20m. If Perils of the Warp Occur, the closest spire explodes causing 1d10+5 E, Pen 5 Damage with Blast(5) and is destroyed.",
+    "cost": "A ~1m high blue crystal with a rune-encrusted mounting. Heretical",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "04i34Zn4G2NOOSCD"
+}

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "[Addictive] Under the effects of Halluncinogenics for 1d5 hours, when it wears off, depressed for 1d10 hours, unless another is taken",
-    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
-    "effects": "Rare",
-    "notes": "285 T",
-    "source": "Rogue Trader Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 285,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 285 T</p>"
+      "value": "<p>[Addictive] Under the effects of Halluncinogenics for 1d5 hours, when it wears off, depressed for 1d10 hours, unless another is taken</p>\n<h3>Requirements</h3><p>Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 285 T</p>",
+      "chat": "",
+      "summary": "[Addictive] Under the effects of Halluncinogenics for 1d5 hours, when it wears off, depressed for 1d10 hours, unless another is taken"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "[Addictive] Under the effects of Halluncinogenics for 1d5 hours, when it wears off, depressed for 1d10 hours, unless another is taken",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

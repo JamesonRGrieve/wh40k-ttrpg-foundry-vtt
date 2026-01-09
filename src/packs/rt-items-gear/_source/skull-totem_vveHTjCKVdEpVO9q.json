@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "5kg",
-    "availability": "A Large Icon carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can add their Willpower Bonus to their Charge Moves, and gain an additional +10 to Weapon Skill Tests when making a Charge Action.",
-    "cost": "Bearer must be Dedicated to Khorne for it to function. Heretical.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "BC: Tome of Blood",
+    "category": "tools",
+    "weight": 5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Large Icon carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can add their Willpower Bonus to their Charge Moves, and gain an additional +10 to Weapon Skill Tests when making a Charge Action.</p>\n<h3>Requirements</h3><p>Bearer must be Dedicated to Khorne for it to function. Heretical.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Large Icon carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can add their Willpower Bonus to their Charge Moves, and gain an additi"
     },
+    "source": {
+      "book": "BC: Tome of Blood",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Large Icon carried in one hand or affixed to a sturdy backpack. When held aloft any who are Dedicated to Khorne and can see it can add their Willpower Bonus to their Charge Moves, and gain an additional +10 to Weapon Skill Tests when making a Charge Action.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

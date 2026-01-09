@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hack-shotgun",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 1,
-    "reload": "2 Full",
-    "special": "Inaccurate, Scatter, Tearing",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "scatter",
+      "tearing"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 3,
     "availability": "common",
-    "cost": "60 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "A cutdown Double-Barreled Shotgun that fires both shots at once. If only loaded with a single shell deals 1d10+4 Damage without Tearing Quality.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 60,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Scatter, Tearing</p><p><b>Note:</b> A cutdown Double-Barreled Shotgun that fires both shots at once. If only loaded with a single shell deals 1d10+4 Damage without Tearing Quality.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A cutdown Double-Barreled Shotgun that fires both shots at once. If only loaded with a single shell deals 1d10+4 Damage without Tearing Quality.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

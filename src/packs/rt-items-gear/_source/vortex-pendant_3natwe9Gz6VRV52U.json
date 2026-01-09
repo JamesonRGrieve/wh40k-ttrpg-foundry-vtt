@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "-",
-    "availability": "Wearer must have Psyker Trait. Can target individual within line of Sight as Full Action with Ranged and Concentration subtypes, making -20 Willpower Test (or -30 if character not dedicated to Tzeentch). For each Degree of Success, target loses the ability to use one Psychic Power for the remainder of the encounter, chosen randomly.",
-    "cost": "Strange ever shifting pendants, worn as necklaces, wristbands, etc.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "BC: Tome of Fate",
+    "category": "tools",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Wearer must have Psyker Trait. Can target individual within line of Sight as Full Action with Ranged and Concentration subtypes, making -20 Willpower Test (or -30 if character not dedicated to Tzeentch). For each Degree of Success, target loses the ability to use one Psychic Power for the remainder of the encounter, chosen randomly.</p>\n<h3>Requirements</h3><p>Strange ever shifting pendants, worn as necklaces, wristbands, etc.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Wearer must have Psyker Trait. Can target individual within line of Sight as Full Action with Ranged and Concentration subtypes, making -20 Willpower Test (or -30 if character not dedicated to Tzeentc"
     },
+    "source": {
+      "book": "BC: Tome of Fate",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Wearer must have Psyker Trait. Can target individual within line of Sight as Full Action with Ranged and Concentration subtypes, making -20 Willpower Test (or -30 if character not dedicated to Tzeentch). For each Degree of Success, target loses the ability to use one Psychic Power for the remainder of the encounter, chosen randomly.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

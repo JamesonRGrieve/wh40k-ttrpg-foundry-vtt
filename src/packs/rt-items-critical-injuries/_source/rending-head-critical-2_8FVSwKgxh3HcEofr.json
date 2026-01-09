@@ -1,0 +1,32 @@
+{
+  "name": "Rending Head Critical 2",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_head_2",
+    "damageType": "rending",
+    "bodyPart": "head",
+    "severity": 2,
+    "effect": "<p>The attack slices open the target's scalp, which immediately begins to bleed profusely, spilling into his eyes. The target suffers a -10 penalty to Weapon Skill and Ballistic Skill tests for the next [[1d10]] rounds. He must pass a Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Head (Severity 2)</strong></p><p>The attack slices open the target's scalp, which immediately begins to bleed profusely, spilling into his eyes. The target suffers a -10 penalty to Weapon Skill and Ballistic Skill tests for the next [[1d10]] rounds. He must pass a Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+      "chat": "",
+      "summary": "Rending Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "8FVSwKgxh3HcEofr"
+}

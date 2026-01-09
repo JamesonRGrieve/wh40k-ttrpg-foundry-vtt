@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Lasts for 3 Days, during which provides +20 to Survival Tests made in Arid Environments, character only needs half the usual Water intake. However also suffer -10 to Strength and Perception Tests and -5 to Fellowship based tests. Not addictive, but can lead to systematic damage if used too much.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "200 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 200,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 200 T</p>"
+      "value": "<p>Lasts for 3 Days, during which provides +20 to Survival Tests made in Arid Environments, character only needs half the usual Water intake. However also suffer -10 to Strength and Perception Tests and -5 to Fellowship based tests. Not addictive, but can lead to systematic damage if used too much.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 200 T</p>",
+      "chat": "",
+      "summary": "Lasts for 3 Days, during which provides +20 to Survival Tests made in Arid Environments, character only needs half the usual Water intake. However also suffer -10 to Strength and Perception Tests and "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Lasts for 3 Days, during which provides +20 to Survival Tests made in Arid Environments, character only needs half the usual Water intake. However also suffer -10 to Strength and Perception Tests and -5 to Fellowship based tests. Not addictive, but can lead to systematic damage if used too much.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

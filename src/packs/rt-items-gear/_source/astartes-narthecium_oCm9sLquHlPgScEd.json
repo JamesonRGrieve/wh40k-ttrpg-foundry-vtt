@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "5kg",
-    "availability": "Provides +20 to Medicae Tests made on Space Marine Patients, raises threshold the patient is considered Lightly Wounded to 3x Toughness Bonus and doubles the damage healed by First Aid. Holds up to 10 doses of any one drug which must be acquired seperately.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "10 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+      "value": "<p>Provides +20 to Medicae Tests made on Space Marine Patients, raises threshold the patient is considered Lightly Wounded to 3x Toughness Bonus and doubles the damage healed by First Aid. Holds up to 10 doses of any one drug which must be acquired seperately.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>",
+      "chat": "",
+      "summary": "Provides +20 to Medicae Tests made on Space Marine Patients, raises threshold the patient is considered Lightly Wounded to 3x Toughness Bonus and doubles the damage healed by First Aid. Holds up to 10"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Provides +20 to Medicae Tests made on Space Marine Patients, raises threshold the patient is considered Lightly Wounded to 3x Toughness Bonus and doubles the damage healed by First Aid. Holds up to 10 doses of any one drug which must be acquired seperately.",
+    "duration": "",
+    "notes": "10 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

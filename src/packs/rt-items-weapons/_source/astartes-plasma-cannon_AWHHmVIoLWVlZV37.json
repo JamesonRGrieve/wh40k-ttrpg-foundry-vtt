@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-plasma-cannon",
     "class": "heavy",
     "type": "plasma",
-    "range": "150m",
-    "rof": "S/-/-",
-    "damage": "2d10+11",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": 16,
-    "reload": "5 Full",
-    "special": "SM Wep, Blast (1), Volatile, Maximal",
-    "weight": "70kg",
-    "availability": "Distinguished",
-    "cost": "30 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 11,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep",
+      "blast-1",
+      "volatile",
+      "maximal"
+    ],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 70,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (1), Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

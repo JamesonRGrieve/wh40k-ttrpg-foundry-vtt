@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "neural-catalyser",
     "class": "pistol",
     "type": "exotic",
-    "range": "35m",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Explosive",
-    "penetration": "-",
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 35,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "concussive-3",
+      "overheats"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (3), Overheats",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Damage ignores armour and is reduced by Willpower Bonus rather than Toughness bonus. Hits that cause Critical Damage inflict 1d5 nonpermenant Willpower Damage to target.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (3), Overheats</p><p><b>Note:</b> Damage ignores armour and is reduced by Willpower Bonus rather than Toughness bonus. Hits that cause Critical Damage inflict 1d5 nonpermenant Willpower Damage to target.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Damage ignores armour and is reduced by Willpower Bonus rather than Toughness bonus. Hits that cause Critical Damage inflict 1d5 nonpermenant Willpower Damage to target.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

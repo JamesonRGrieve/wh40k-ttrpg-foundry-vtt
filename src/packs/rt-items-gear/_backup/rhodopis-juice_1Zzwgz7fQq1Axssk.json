@@ -1,0 +1,30 @@
+{
+  "name": "Rhodopis Juice",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "After ingesting gain 2 additional Degrees of Success on successful Fellowship and Intelligence Tests for 1d5 hours. Afterwards make +0 Toughness Test or suffer -20 to Perception Tests for 1d5 hours, if failing by 3+ DoF, suffer additional -20 to Willpower tests for 1d5 hours, or until ingesting another dose.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1Zzwgz7fQq1Axssk"
+}

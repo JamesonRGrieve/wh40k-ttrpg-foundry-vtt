@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "-",
-    "availability": "Relic Staff of the White Scars. When used by a Stormseer, whenever they suffer Perils of the Warp they may adjust the roll by up to 10 (up or down) after the dice has been rolled.",
-    "cost": "White Scars Stormseers (Librarians) only.",
-    "effects": "Initiated",
-    "notes": "15 R",
-    "source": "DW: First Founding",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Relic Staff of the White Scars. When used by a Stormseer, whenever they suffer Perils of the Warp they may adjust the roll by up to 10 (up or down) after the dice has been rolled.</p>\n<h3>Requirements</h3><p>White Scars Stormseers (Librarians) only.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Relic Staff of the White Scars. When used by a Stormseer, whenever they suffer Perils of the Warp they may adjust the roll by up to 10 (up or down) after the dice has been rolled."
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Relic Staff of the White Scars. When used by a Stormseer, whenever they suffer Perils of the Warp they may adjust the roll by up to 10 (up or down) after the dice has been rolled.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

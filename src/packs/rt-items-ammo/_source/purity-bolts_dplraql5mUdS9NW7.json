@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Primitive: Crossbows",
-    "damageOrEffect": "Gain Haywire (2) Quality",
-    "qualities": "Haywire (2)",
-    "weight": "10% wep",
+    "identifier": "purity-bolts",
+    "weaponTypes": [
+      "primitive"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "haywire-2"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Haywire (2) Quality</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Haywire (2) Quality</p><p><b>Qualities:</b> Haywire (2)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH 2E: Enemies Within",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

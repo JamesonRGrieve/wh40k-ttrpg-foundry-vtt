@@ -3,19 +3,45 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Any Plasma, Melta, Las, Bolt, SP, Flame. No Heavy except Stubber/Bolter/Flamer",
-    "damageOrEffect": "Multiply weapon clip size by 5x and is linked to backpack. If weapon jams only use one clip's worth of ammo and don't need to reload.\nWeapon can't be reloaded during combat.",
-    "qualities": "-",
-    "weight": "15lg",
+    "identifier": "-default-backpack-ammopower-pack",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Multiply weapon clip size by 5x and is linked to backpack. If weapon jams only use one clip's worth of ammo and don't need to reload.\nWeapon can't be reloaded during combat.</p>",
+    "notes": "",
+    "weight": 15,
     "availability": "scarce",
-    "cost": "-",
-    "source": "Dark Heresy 2E: Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Multiply weapon clip size by 5x and is linked to backpack. If weapon jams only use one clip's worth of ammo and don't need to reload.\nWeapon can't be reloaded during combat.</p><p><b>Qualities:</b> -</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Dark Heresy 2E: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

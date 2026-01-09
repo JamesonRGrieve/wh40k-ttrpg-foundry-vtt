@@ -687,3 +687,318 @@
     transform: translateY(0);
   }
 }
+
+// ============================================
+// Profit Factor V2 - Visual Wealth Gauge
+// ============================================
+
+// Tier color variables
+$pf-tier-poor: #8b4513;
+$pf-tier-modest: #a8a8a8;
+$pf-tier-notable: #d4a520;
+$pf-tier-mighty: #ff8c00;
+$pf-tier-legendary: #ff1493;
+
+.rt-panel-profit-v2 {
+  .rt-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, rgba($rt-accent-dynasty, 0.15) 0%, transparent 100%);
+    
+    .rt-acquisition-btn {
+      background: var(--color-bg-option);
+      border: 1px solid rgba($rt-accent-dynasty, 0.3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: $rt-accent-dynasty;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: rgba($rt-accent-dynasty, 0.2);
+        border-color: rgba($rt-accent-dynasty, 0.6);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba($rt-accent-dynasty, 0.3);
+      }
+    }
+  }
+}
+
+// Hero PF display with large value
+.rt-pf-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rt-pf-value-display {
+  .rt-pf-value-input {
+    width: 100px;
+    padding: 12px 16px;
+    border: 3px solid $rt-accent-dynasty;
+    border-radius: 8px;
+    background: rgba($rt-accent-dynasty, 0.1);
+    font-family: 'Modesto Condensed', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: $rt-accent-dynasty;
+    box-shadow: 0 0 20px rgba($rt-accent-dynasty, 0.2);
+    transition: all 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      background: rgba($rt-accent-dynasty, 0.2);
+      box-shadow: 0 0 30px rgba($rt-accent-dynasty, 0.4);
+    }
+  }
+}
+
+.rt-pf-tier {
+  padding: 4px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  &.rt-pf-tier--poor {
+    background: rgba($pf-tier-poor, 0.2);
+    border: 1px solid rgba($pf-tier-poor, 0.4);
+    color: $pf-tier-poor;
+  }
+  
+  &.rt-pf-tier--modest {
+    background: rgba($pf-tier-modest, 0.2);
+    border: 1px solid rgba($pf-tier-modest, 0.4);
+    color: $pf-tier-modest;
+  }
+  
+  &.rt-pf-tier--notable {
+    background: rgba($pf-tier-notable, 0.2);
+    border: 1px solid rgba($pf-tier-notable, 0.4);
+    color: $pf-tier-notable;
+  }
+  
+  &.rt-pf-tier--mighty {
+    background: rgba($pf-tier-mighty, 0.2);
+    border: 1px solid rgba($pf-tier-mighty, 0.4);
+    color: $pf-tier-mighty;
+  }
+  
+  &.rt-pf-tier--legendary {
+    background: rgba($pf-tier-legendary, 0.2);
+    border: 1px solid rgba($pf-tier-legendary, 0.4);
+    color: $pf-tier-legendary;
+  }
+}
+
+// Visual wealth gauge
+.rt-pf-gauge {
+  margin-bottom: 16px;
+}
+
+.rt-pf-gauge-track {
+  position: relative;
+  height: 12px;
+  background: linear-gradient(to right,
+    $pf-tier-poor 0%,
+    $pf-tier-poor 25%,
+    $pf-tier-modest 25%,
+    $pf-tier-modest 50%,
+    $pf-tier-notable 50%,
+    $pf-tier-notable 75%,
+    $pf-tier-mighty 75%,
+    $pf-tier-mighty 100%
+  );
+  border-radius: 6px;
+  overflow: visible;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.rt-pf-gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px 0 0 6px;
+  pointer-events: none;
+}
+
+.rt-pf-gauge-marker {
+  position: absolute;
+  top: -8px;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 1.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: pf-marker-pulse 2s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes pf-marker-pulse {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-2px); }
+}
+
+.rt-pf-gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  
+  .rt-pf-tier-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    
+    &.rt-pf-tier--poor { color: $pf-tier-poor; }
+    &.rt-pf-tier--modest { color: $pf-tier-modest; }
+    &.rt-pf-tier--notable { color: $pf-tier-notable; }
+    &.rt-pf-tier--mighty { color: $pf-tier-mighty; }
+    &.rt-pf-tier--legendary { color: $pf-tier-legendary; }
+  }
+}
+
+// PF Breakdown section
+.rt-pf-breakdown {
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.rt-pf-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-border-tertiary);
+  }
+  
+  &.rt-pf-breakdown-row--total {
+    padding-top: 8px;
+    margin-top: 4px;
+    border-top: 2px solid rgba($rt-accent-dynasty, 0.3);
+    border-bottom: none;
+    
+    .rt-pf-breakdown-label {
+      font-weight: 700;
+      color: $rt-accent-dynasty;
+    }
+    
+    .rt-pf-breakdown-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $rt-accent-dynasty;
+    }
+  }
+}
+
+.rt-pf-breakdown-label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.rt-pf-breakdown-input {
+  width: 60px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-text-primary);
+  
+  &:focus {
+    outline: none;
+    border-color: rgba($rt-accent-dynasty, 0.5);
+  }
+}
+
+.rt-pf-breakdown-value {
+  font-family: 'Modesto Condensed', serif;
+  font-weight: 600;
+}
+
+// Misfortunes section
+.rt-pf-misfortunes {
+  margin-bottom: 12px;
+  
+  .rt-field-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    
+    i {
+      color: $rt-accent-combat;
+    }
+  }
+  
+  .rt-textarea {
+    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    resize: vertical;
+    min-height: 50px;
+    
+    &:focus {
+      outline: none;
+      border-color: rgba($rt-accent-dynasty, 0.4);
+    }
+  }
+}
+
+// Acquisition reference quick guide
+.rt-pf-acquisition-ref {
+  background: linear-gradient(135deg, rgba($rt-accent-dynasty, 0.08) 0%, transparent 100%);
+  border: 1px solid rgba($rt-accent-dynasty, 0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.rt-pf-ref-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $rt-accent-dynasty;
+  margin-bottom: 8px;
+  
+  i {
+    margin-right: 6px;
+  }
+}
+
+.rt-pf-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 12px;
+}
+
+.rt-pf-ref-item {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  
+  &.rt-pf-ref--positive {
+    color: $rt-color-success;
+    background: rgba($rt-color-success, 0.1);
+  }
+  
+  &.rt-pf-ref--negative {
+    color: $rt-accent-combat;
+    background: rgba($rt-accent-combat, 0.1);
+  }
+}

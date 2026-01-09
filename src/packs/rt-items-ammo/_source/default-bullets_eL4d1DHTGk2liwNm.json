@@ -3,19 +3,47 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP: Stubbers, Hand cannons, rifles, autopistol, autogun",
-    "damageOrEffect": "Bullets of one SP weapon type can only be used with weapons of that type (EG: Stub Revolver ammo could be used in Stub Automatics, but not in Autoguns)",
-    "qualities": "-",
-    "weight": "10% wep",
+    "identifier": "-default-bullets",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Bullets of one SP weapon type can only be used with weapons of that type (EG: Stub Revolver ammo could be used in Stub Automatics, but not in Autoguns)</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "plentiful",
-    "cost": "1/20 T",
-    "source": "Rogue Trader Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Bullets of one SP weapon type can only be used with weapons of that type (EG: Stub Revolver ammo could be used in Stub Automatics, but not in Autoguns)</p><p><b>Qualities:</b> -</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Rogue Trader Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

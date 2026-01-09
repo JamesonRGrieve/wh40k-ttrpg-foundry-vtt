@@ -3,30 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "legion-chainfist",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 10
+    },
+    "special": [
+      "power-field",
+      "tearing",
+      "unwieldy",
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Tearing, Unwieldy,  SM Wep",
-    "weight": "48kg",
+    "weight": 48,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Chaos Legionary Weapon. Dangerous to own. Can only be used whilst wearing Terminator Armour or some equally bulky equivilent. Doubles Strength Bonus. Attached to a bulky gauntlet which can only be used for basic manipulation (couldn't use a weapon or write, but could pick something up)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Tearing, Unwieldy,  SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own. Can only be used whilst wearing Terminator Armour or some equally bulky equivilent. Doubles Strength Bonus. Attached to a bulky gauntlet which can only be used for basic manipulation (couldn't use a weapon or write, but could pick something up)</p>"
     },
-    "damageFormula": "2d10",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Chaos Legionary Weapon. Dangerous to own. Can only be used whilst wearing Terminator Armour or some equally bulky equivilent. Doubles Strength Bonus. Attached to a bulky gauntlet which can only be used for basic manipulation (couldn't use a weapon or write, but could pick something up)",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

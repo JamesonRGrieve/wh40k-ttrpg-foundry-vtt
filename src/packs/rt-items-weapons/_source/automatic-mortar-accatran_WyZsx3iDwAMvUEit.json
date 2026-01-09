@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "automatic-mortar-accatran",
     "class": "heavy",
     "type": "launcher",
-    "range": "25-200m",
-    "rof": "S/-/5",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 5,
-    "reload": "4 Full",
-    "special": "Inaccurate, Indirect",
-    "weight": "50kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "25-200m"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "indirect"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 50,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "OW: Hammer of the Emperor",
-    "note": "Can be set up and then fired remotely. Remote Activator has ~100m range which can vary with vox inteference. User can act as their own Spotter, can be triggered to fire single or all 5 rounds at once.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Indirect</p><p><b>Note:</b> Can be set up and then fired remotely. Remote Activator has ~100m range which can vary with vox inteference. User can act as their own Spotter, can be triggered to fire single or all 5 rounds at once.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be set up and then fired remotely. Remote Activator has ~100m range which can vary with vox inteference. User can act as their own Spotter, can be triggered to fire single or all 5 rounds at once.",
+    "source": "OW: Hammer of the Emperor"
   },
   "effects": [],
   "flags": {},

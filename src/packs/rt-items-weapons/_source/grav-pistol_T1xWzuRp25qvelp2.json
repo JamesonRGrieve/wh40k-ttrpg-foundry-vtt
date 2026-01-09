@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "grav-pistol",
     "class": "pistol",
     "type": "exotic",
-    "range": "15m",
-    "rof": "S/-/-",
-    "damage": "1d10+3",
-    "damageType": "Impact",
-    "penetration": 6,
-    "clip": 6,
-    "reload": "Full",
-    "special": "Concussive (1), Graviton",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 6
+    },
+    "special": [
+      "concussive-1",
+      "graviton"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "Dark Heresy 2E: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (1), Graviton</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Dark Heresy 2E: Core"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "-",
-    "availability": "Count as Narthecium. ( +20 to Medicae Tests on Astartes, patient considered Lightly Wounded at 3x Toughness Bonus wounds, doubles damage healed by First Aid. Holds up to 10 doses of one drug  acquired seperately). Additionally when used to harvest the Gene-Seed of a fallen Blood Angel, character receives +5 Renown. Can be used as an Astartes Combat Knife.",
-    "cost": "Blood Angels Sanguinary Priests Only.",
-    "effects": "Initiated",
-    "notes": "15 R",
-    "source": "DW: First Founding",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+      "value": "<p>Count as Narthecium. ( +20 to Medicae Tests on Astartes, patient considered Lightly Wounded at 3x Toughness Bonus wounds, doubles damage healed by First Aid. Holds up to 10 doses of one drug  acquired seperately). Additionally when used to harvest the Gene-Seed of a fallen Blood Angel, character receives +5 Renown. Can be used as an Astartes Combat Knife.</p>\n<h3>Requirements</h3><p>Blood Angels Sanguinary Priests Only.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Count as Narthecium. ( +20 to Medicae Tests on Astartes, patient considered Lightly Wounded at 3x Toughness Bonus wounds, doubles damage healed by First Aid. Holds up to 10 doses of one drug  acquired"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Count as Narthecium. ( +20 to Medicae Tests on Astartes, patient considered Lightly Wounded at 3x Toughness Bonus wounds, doubles damage healed by First Aid. Holds up to 10 doses of one drug  acquired seperately). Additionally when used to harvest the Gene-Seed of a fallen Blood Angel, character receives +5 Renown. Can be used as an Astartes Combat Knife.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

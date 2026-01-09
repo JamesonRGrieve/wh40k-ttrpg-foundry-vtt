@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing (Astartes)",
-    "weight": "8kg",
-    "availability": "Fits over power armour, has a hooked magnetic clip that can be anchored to a variety of surfaces and then unspooled to aid in climbing or absailing.\nGrants +30 to Climb Tests, and character doesn't fall if they fail such tests.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "4 R",
-    "source": "Deathwatch: Core",
+    "category": "clothing",
+    "weight": 8,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 4 R</p>"
+      "value": "<p>Fits over power armour, has a hooked magnetic clip that can be anchored to a variety of surfaces and then unspooled to aid in climbing or absailing.\nGrants +30 to Climb Tests, and character doesn't fall if they fail such tests.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 4 R</p>",
+      "chat": "",
+      "summary": "Fits over power armour, has a hooked magnetic clip that can be anchored to a variety of surfaces and then unspooled to aid in climbing or absailing.\nGrants +30 to Climb Tests, and character doesn't fa"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Fits over power armour, has a hooked magnetic clip that can be anchored to a variety of surfaces and then unspooled to aid in climbing or absailing.\nGrants +30 to Climb Tests, and character doesn't fall if they fail such tests.",
+    "duration": "",
+    "notes": "4 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

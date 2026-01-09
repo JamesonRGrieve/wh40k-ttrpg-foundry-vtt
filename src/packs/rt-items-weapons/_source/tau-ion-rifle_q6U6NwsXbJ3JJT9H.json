@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-ion-rifle",
     "class": "basic",
     "type": "exotic",
-    "range": "110m",
-    "rof": "S/2/4",
-    "damage": "2d10+5",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": 24,
-    "reload": "Full",
-    "special": "Overcharge (6)",
-    "weight": "12kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 110,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "overcharge-6"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 12,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Overcharge (6)</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

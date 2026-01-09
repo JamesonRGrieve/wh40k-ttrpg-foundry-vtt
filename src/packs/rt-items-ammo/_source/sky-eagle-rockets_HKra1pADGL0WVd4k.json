@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Vehicle: Manticore Vehicle",
-    "damageOrEffect": "4d10+12 X Damage, Pen 12, Proven (4)\nCan't Fire Indirectly, suffer -30 if used against Ground Targets, vehicle gains Anti-Air (Advanced), when firing these missiles",
-    "qualities": "Proven (4)",
-    "weight": "4000kg",
+    "identifier": "sky-eagle-rockets",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "proven-4",
+      "anti-air",
+      "when-firing-these-missiles"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>4d10+12 X Damage, Pen 12, Proven (4)\nCan't Fire Indirectly, suffer -30 if used against Ground Targets, vehicle gains Anti-Air (Advanced), when firing these missiles</p>",
+    "notes": "",
+    "weight": 4000,
     "availability": "very-rare",
-    "cost": null,
-    "source": "OW: Shield of Humanity",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 4d10+12 X Damage, Pen 12, Proven (4)\nCan't Fire Indirectly, suffer -30 if used against Ground Targets, vehicle gains Anti-Air (Advanced), when firing these missiles</p><p><b>Qualities:</b> Proven (4)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "OW: Shield of Humanity",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

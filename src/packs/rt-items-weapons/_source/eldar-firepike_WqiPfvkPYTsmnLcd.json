@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-firepike",
     "class": "basic",
     "type": "exotic",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 13,
-    "clip": 20,
-    "reload": "4 Full",
-    "special": "Reliable",
-    "weight": "6kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 13
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 6,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. Eldar precision melta weapon.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Xenotech. Eldar precision melta weapon.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. Eldar precision melta weapon.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

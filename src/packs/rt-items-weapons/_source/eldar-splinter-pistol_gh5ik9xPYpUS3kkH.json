@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-splinter-pistol",
     "class": "pistol",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/3/-",
-    "damage": "1d10+2",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 120,
-    "reload": "2 Full",
-    "special": "Toxic (1)",
-    "weight": "1.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "toxic-1"
+    ],
+    "clip": {
+      "max": 120,
+      "value": 120,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 1.5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Toxic (1)</p><p><b>Note:</b> Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.</p>"
     },
-    "damageFormula": "1d10+2",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

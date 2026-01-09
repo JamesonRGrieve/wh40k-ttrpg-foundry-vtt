@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "graviton-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "1d10+7",
-    "damageType": "Impact",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 7,
+      "penetration": 7
+    },
+    "special": [
+      "blast-3",
+      "concussive-3",
+      "graviton"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (3), Concussive (3), Graviton",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Often only used by elite Mechanicus or powerful Inquisitors as a last resort against heavily armoured foes and vehicles.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3), Concussive (3), Graviton</p><p><b>Note:</b> Often only used by elite Mechanicus or powerful Inquisitors as a last resort against heavily armoured foes and vehicles.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Often only used by elite Mechanicus or powerful Inquisitors as a last resort against heavily armoured foes and vehicles.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

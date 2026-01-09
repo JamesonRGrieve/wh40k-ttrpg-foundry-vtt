@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "The Meals provided whilst aboard a Void Craft. Vatmeal Cakes, Grox Hash, Josian Ale. Suitable food for those with basic standards.",
-    "cost": "Cost is per day",
-    "effects": "Common",
-    "notes": "5 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "general",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+      "value": "<p>The Meals provided whilst aboard a Void Craft. Vatmeal Cakes, Grox Hash, Josian Ale. Suitable food for those with basic standards.</p>\n<h3>Requirements</h3><p>Cost is per day</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>",
+      "chat": "",
+      "summary": "The Meals provided whilst aboard a Void Craft. Vatmeal Cakes, Grox Hash, Josian Ale. Suitable food for those with basic standards."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Meals provided whilst aboard a Void Craft. Vatmeal Cakes, Grox Hash, Josian Ale. Suitable food for those with basic standards.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

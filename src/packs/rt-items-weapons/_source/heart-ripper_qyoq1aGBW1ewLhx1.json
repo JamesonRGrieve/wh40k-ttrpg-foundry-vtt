@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "heart-ripper",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "300m",
-    "rof": "S/4/-",
-    "damage": "3d10+13",
-    "damageType": "Impact",
-    "penetration": 11,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 13,
+      "penetration": 11
+    },
+    "special": [
+      "daemon-wep",
+      "reliable",
+      "tearing",
+      "twin-linked"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Reliable, Tearing, Twin-Linked",
-    "weight": "55kg",
+    "weight": 55,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Reliable, Tearing, Twin-Linked</p><p><b>Note:</b> Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  ",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

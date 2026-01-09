@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "The Desecrated Remains of the holy bones of Cardinal Cassille who died banishing a foul daemon, stolen and allegedly used as part of dark rituals. The bones call to each other, even small shards seemingly drawn to be together. If a bone of suitable shape is used in combat, it counts as a Power Axe (doesn't need weapon training), add 2xcorruption bonus to damage. Owner gains Enemy (Adeptus Ministorum)x5 Talent, members gain Hatred and Frenzy talents vs owner. Smaller bones can be used for dark rites, summonings, or bindings, or protection from holy weapons.",
-    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>The Desecrated Remains of the holy bones of Cardinal Cassille who died banishing a foul daemon, stolen and allegedly used as part of dark rituals. The bones call to each other, even small shards seemingly drawn to be together. If a bone of suitable shape is used in combat, it counts as a Power Axe (doesn't need weapon training), add 2xcorruption bonus to damage. Owner gains Enemy (Adeptus Ministorum)x5 Talent, members gain Hatred and Frenzy talents vs owner. Smaller bones can be used for dark rites, summonings, or bindings, or protection from holy weapons.</p>\n<h3>Requirements</h3><p>A Profane Object of Legend. It cannot be acquired, it must be earned or found. </p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "The Desecrated Remains of the holy bones of Cardinal Cassille who died banishing a foul daemon, stolen and allegedly used as part of dark rituals. The bones call to each other, even small shards seemi"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Desecrated Remains of the holy bones of Cardinal Cassille who died banishing a foul daemon, stolen and allegedly used as part of dark rituals. The bones call to each other, even small shards seemingly drawn to be together. If a bone of suitable shape is used in combat, it counts as a Power Axe (doesn't need weapon training), add 2xcorruption bonus to damage. Owner gains Enemy (Adeptus Ministorum)x5 Talent, members gain Hatred and Frenzy talents vs owner. Smaller bones can be used for dark rites, summonings, or bindings, or protection from holy weapons.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

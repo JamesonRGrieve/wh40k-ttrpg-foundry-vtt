@@ -1,0 +1,32 @@
+{
+  "name": "Rending Arm Critical 10",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_arm_10",
+    "damageType": "rending",
+    "bodyPart": "arm",
+    "severity": 10,
+    "effect": "<p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground. As the arm falls to the ground its fingers spasm uncontrollably, pulling the trigger of any held weapon. If the target was carrying a ranged weapon, roll 1d100. On a result of 96 or higher, a single randomly determined target within [[2d10]] metres is hit struck by a single hit from that weapon on a randomly determined Hit Location.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Arm (Severity 10)</strong></p><p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground. As the arm falls to the ground its fingers spasm uncontrollably, pulling the trigger of any held weapon. If the target was carrying a ranged weapon, roll 1d100. On a result of 96 or higher, a single randomly determined target within [[2d10]] metres is hit struck by a single hit from that weapon on a randomly determined Hit Location.</p>",
+      "chat": "",
+      "summary": "Rending Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "aaP6fVecFvb2DPbW"
+}

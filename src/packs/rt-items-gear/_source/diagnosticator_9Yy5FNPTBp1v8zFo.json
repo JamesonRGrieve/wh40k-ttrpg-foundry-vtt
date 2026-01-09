@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "Small handheld device that can plug into msot machines of human manufacture. Provides diagnostic information, detecftionof cracks or material fatigue, and other maintenance data. Provides +20 to Tech-Use Tests when diagnosing or repairing malfunctioning equipment.",
-    "cost": "Techmarine Only",
-    "effects": "Distinguished",
-    "notes": "25 R",
-    "source": "DW: Rites of Battle",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+      "value": "<p>Small handheld device that can plug into msot machines of human manufacture. Provides diagnostic information, detecftionof cracks or material fatigue, and other maintenance data. Provides +20 to Tech-Use Tests when diagnosing or repairing malfunctioning equipment.</p>\n<h3>Requirements</h3><p>Techmarine Only</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>",
+      "chat": "",
+      "summary": "Small handheld device that can plug into msot machines of human manufacture. Provides diagnostic information, detecftionof cracks or material fatigue, and other maintenance data. Provides +20 to Tech-"
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Small handheld device that can plug into msot machines of human manufacture. Provides diagnostic information, detecftionof cracks or material fatigue, and other maintenance data. Provides +20 to Tech-Use Tests when diagnosing or repairing malfunctioning equipment.",
+    "duration": "",
+    "notes": "25 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

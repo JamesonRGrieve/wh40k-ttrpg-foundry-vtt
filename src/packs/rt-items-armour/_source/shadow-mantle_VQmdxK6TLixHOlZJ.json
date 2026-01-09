@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "Body, Arms, Legs",
-    "ap": "0/7/7/5",
-    "maxAg": null,
-    "weight": "30kg",
+    "weight": 30,
     "availability": "Famed",
-    "cost": "40 R",
     "notes": "Master Crafted Relic Astartes Scout Armour of the Dark Hunters Chapter. Provides all other bonuses of Scout Armour. Awareness Tests to spot the wearer have -20, or -40 if the wearer is standing still. Armour has Built-in Auspex, if wearer makes a Half-Action or more Aim, Auspex allows attacks to treat target's AP as half prior to applying Penetration.",
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Scout Armour of the Dark Hunters Chapter. Provides all other bonuses of Scout Armour. Awareness Tests to spot the wearer have -20, or -40 if the wearer is standing still. Armour has Built-in Auspex, if wearer makes a Half-Action or more Aim, Auspex allows attacks to treat target's AP as half prior to applying Penetration.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body",
       "leftArm",
@@ -33,7 +28,8 @@
       "rightLeg": 5
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

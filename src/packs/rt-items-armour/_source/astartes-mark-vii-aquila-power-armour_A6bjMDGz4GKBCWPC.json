@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All",
-    "ap": "8/10/8/8",
-    "maxAg": null,
-    "weight": "180kg",
+    "weight": 180,
     "availability": "Initiated",
-    "cost": "-",
     "notes": "Possesses all Power Armour Subsystems (See Armour Upgrades). +20 to Strength Characteristic. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet.\nIncreases Size to Hulking. Poor Manual Dexterity causes -10 to use equipment not designed for Space Marines, non-Astartes Ranged weapons need modification to work at all.\nRoll once for Power Armour History.",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Possesses all Power Armour Subsystems (See Armour Upgrades). +20 to Strength Characteristic. 20 minutes to don/doff unaided, 5 mins aided, Half action to remove helmet.\nIncreases Size to Hulking. Poor Manual Dexterity causes -10 to use equipment not designed for Space Marines, non-Astartes Ranged weapons need modification to work at all.\nRoll once for Power Armour History.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 8
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

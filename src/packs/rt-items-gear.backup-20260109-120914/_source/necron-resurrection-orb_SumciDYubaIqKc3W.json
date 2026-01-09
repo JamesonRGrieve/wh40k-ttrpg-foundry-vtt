@@ -1,0 +1,30 @@
+{
+  "name": "Necron Resurrection Orb",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "When used by a Necron, all Necrons within 100m of a Resurrection Orb, including the user reroll all failed Toughness Tests and treat Regeneration Toughness Tests as +20.",
+    "cost": "Used by Necron Lords and Overlords\nAlways Best Quality. Xenotech.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SumciDYubaIqKc3W"
+}

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "deathwatch-graviton-cannon-focused",
     "class": "heavy",
     "type": "exotic",
-    "range": "45m",
-    "rof": "S/-/-",
-    "damage": "1d10",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": 5,
-    "reload": "3 Full",
-    "special": "SM Wep",
-    "weight": "65kg",
-    "availability": "Distinguished",
-    "cost": "45 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Focused] targets single enemy up to Enormous Size, forces -40 Strength Test to avoid being Knocked down and pinned, damaged each round, up to 2d10 rounds. Damage ignores armour. Attempting to move whilst affected requires Opposed Strength Test vs Strength 70 (Unnatural Strength x2)",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 45,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 65,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 45,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Focused] targets single enemy up to Enormous Size, forces -40 Strength Test to avoid being Knocked down and pinned, damaged each round, up to 2d10 rounds. Damage ignores armour. Attempting to move whilst affected requires Opposed Strength Test vs Strength 70 (Unnatural Strength x2)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Focused] targets single enemy up to Enormous Size, forces -40 Strength Test to avoid being Knocked down and pinned, damaged each round, up to 2d10 rounds. Damage ignores armour. Attempting to move whilst affected requires Opposed Strength Test vs Strength 70 (Unnatural Strength x2)",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

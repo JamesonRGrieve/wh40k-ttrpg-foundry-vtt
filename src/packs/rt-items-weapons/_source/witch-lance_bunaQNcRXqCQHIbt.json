@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "witch-lance",
     "class": "melee",
     "type": "power",
-    "range": "10m",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 6
+    },
+    "special": [
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "very-rare",
-    "cost": "2800 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 2800,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

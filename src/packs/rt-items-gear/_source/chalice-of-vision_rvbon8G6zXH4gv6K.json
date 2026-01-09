@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "5kg",
-    "availability": "Space Marines Only. Blood Angels Relic. Innately Master Crafted. Used as part of a Ritual of Vision by a Blood Angel. Often filled with Scarlet Sacramental Wine. When imbibed grants +10 to WS, BS, and Skill Tests, as well as Unnatural Perception x2 for 1 Hour. May also cause visions of the future. ",
-    "cost": "Excessive use has dire consequences.\nExclusive to the Blood Angels.",
-    "effects": "Hero",
-    "notes": "70 R",
-    "source": "Deathwatch: Core",
+    "category": "luxury",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 70 R</p>"
+      "value": "<p>Space Marines Only. Blood Angels Relic. Innately Master Crafted. Used as part of a Ritual of Vision by a Blood Angel. Often filled with Scarlet Sacramental Wine. When imbibed grants +10 to WS, BS, and Skill Tests, as well as Unnatural Perception x2 for 1 Hour. May also cause visions of the future. </p>\n<h3>Requirements</h3><p>Excessive use has dire consequences.\nExclusive to the Blood Angels.</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 70 R</p>",
+      "chat": "",
+      "summary": "Space Marines Only. Blood Angels Relic. Innately Master Crafted. Used as part of a Ritual of Vision by a Blood Angel. Often filled with Scarlet Sacramental Wine. When imbibed grants +10 to WS, BS, and"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Space Marines Only. Blood Angels Relic. Innately Master Crafted. Used as part of a Ritual of Vision by a Blood Angel. Often filled with Scarlet Sacramental Wine. When imbibed grants +10 to WS, BS, and Skill Tests, as well as Unnatural Perception x2 for 1 Hour. May also cause visions of the future. ",
+    "duration": "",
+    "notes": "70 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

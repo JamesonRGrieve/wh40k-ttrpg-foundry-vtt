@@ -2,17 +2,19 @@
 // Rogue Trader Item Cards - Modern Design System
 // ============================================
 // Elegant item displays for the grim darkness of the 41st millennium
+// Uses theme-aware CSS custom properties for light/dark mode support
 
 // ============================================
 // Item Card Base
 // ============================================
 
 .rt-item-card {
-  --rt-item-bg: linear-gradient(135deg, #f8f5ed 0%, #e8e4d9 100%);
-  --rt-item-border: #4a3728;
-  --rt-item-text: #2a1a0a;
-  --rt-item-muted: #6a5a4a;
-  --rt-item-accent: #8b4513;
+  // Local vars inherit from global theme vars
+  --rt-item-bg: var(--rt-panel-bg-solid);
+  --rt-item-border: var(--rt-bronze);
+  --rt-item-text: var(--rt-text-dark);
+  --rt-item-muted: var(--rt-text-muted);
+  --rt-item-accent: var(--rt-bronze-dark);
   
   position: relative;
   background: var(--rt-item-bg);
@@ -21,7 +23,7 @@
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
   color: var(--rt-item-text);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--rt-shadow-medium);
   
   // Parchment texture overlay
   &::before {
@@ -42,8 +44,8 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: linear-gradient(135deg, rgba(74, 55, 40, 0.1) 0%, transparent 100%);
-  border-bottom: 1px solid rgba(74, 55, 40, 0.2);
+  background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
+  border-bottom: 1px solid var(--rt-border-color);
 }
 
 .rt-item-card__image {
@@ -53,7 +55,7 @@
   border-radius: 4px;
   object-fit: cover;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px var(--rt-shadow-medium);
 }
 
 .rt-item-card__title-group {
@@ -68,7 +70,7 @@
   color: var(--rt-item-border);
   margin: 0;
   line-height: 1.2;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 0 var(--rt-text-shadow);
 }
 
 .rt-item-card__type {
@@ -96,8 +98,8 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(74, 55, 40, 0.3) 20%,
-    rgba(74, 55, 40, 0.3) 80%,
+    var(--rt-border-color) 20%,
+    var(--rt-border-color) 80%,
     transparent 100%
   );
   margin: 10px 0;
@@ -128,10 +130,10 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(74, 55, 40, 0.3) 30%,
+        var(--rt-border-color) 30%,
         transparent 48%,
         transparent 52%,
-        rgba(74, 55, 40, 0.3) 70%,
+        var(--rt-border-color) 70%,
         transparent 100%
       );
     }
@@ -174,9 +176,9 @@
   gap: 8px;
   padding: 10px;
   margin: 8px 0;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--rt-panel-bg-translucent);
   border-radius: 4px;
-  border: 1px solid rgba(74, 55, 40, 0.1);
+  border: 1px solid var(--rt-border-color-light);
 }
 
 .rt-item-card__stat {
@@ -210,9 +212,9 @@
 .rt-item-card__section {
   margin: 10px 0;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--rt-panel-bg);
   border-radius: 4px;
-  border: 1px solid rgba(74, 55, 40, 0.1);
+  border: 1px solid var(--rt-border-color-light);
 }
 
 .rt-item-card__section-title {
@@ -224,7 +226,7 @@
   letter-spacing: 0.08em;
   margin: 0 0 6px 0;
   padding-bottom: 4px;
-  border-bottom: 1px solid rgba(74, 55, 40, 0.15);
+  border-bottom: 1px solid var(--rt-border-color-light);
 }
 
 .rt-item-card__description {
@@ -247,7 +249,7 @@
 
 .rt-item-card__footer {
   padding: 8px 12px;
-  border-top: 1px solid rgba(74, 55, 40, 0.15);
+  border-top: 1px solid var(--rt-border-color-light);
   text-align: right;
 }
 
@@ -265,8 +267,8 @@
   display: flex;
   gap: 8px;
   padding: 10px 12px;
-  background: rgba(0, 0, 0, 0.03);
-  border-top: 1px solid rgba(74, 55, 40, 0.1);
+  background: var(--rt-panel-bg-translucent);
+  border-top: 1px solid var(--rt-border-color-light);
   justify-content: center;
 }
 
@@ -275,7 +277,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: linear-gradient(135deg, #f5f3ed 0%, #e0dcd0 100%);
+  background: var(--rt-btn-bg);
   border: 1px solid var(--rt-item-border);
   border-radius: 4px;
   color: var(--rt-item-border);
@@ -291,42 +293,58 @@
   }
   
   &:hover {
-    background: linear-gradient(135deg, #e0dcd0 0%, #d0ccc0 100%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background: var(--rt-btn-bg-hover);
+    box-shadow: 0 2px 8px var(--rt-shadow-medium);
     transform: translateY(-1px);
   }
   
   &--attack {
-    background: linear-gradient(135deg, #8b0000 0%, #660000 100%);
-    border-color: #4a0000;
+    background: linear-gradient(135deg, var(--rt-red) 0%, var(--rt-red-dark) 100%);
+    border-color: var(--rt-red-dark);
     color: #fff;
     
     &:hover {
-      background: linear-gradient(135deg, #a00000 0%, #800000 100%);
+      background: linear-gradient(135deg, var(--rt-red-bright) 0%, var(--rt-red) 100%);
       box-shadow: 0 2px 8px rgba(139, 0, 0, 0.4);
     }
   }
   
   &--damage {
-    background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
-    border-color: #8b6914;
+    background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
+    border-color: var(--rt-gold-dark);
     color: #fff;
     
     &:hover {
-      background: linear-gradient(135deg, #e6b825 0%, #c99410 100%);
+      background: linear-gradient(135deg, var(--rt-gold-bright) 0%, var(--rt-gold) 100%);
       box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
     }
   }
   
   &--roll {
-    background: linear-gradient(135deg, #2a7a9a 0%, #1a5a7a 100%);
-    border-color: #0a4a6a;
+    background: linear-gradient(135deg, var(--rt-skills-primary) 0%, var(--rt-skills-secondary) 100%);
+    border-color: var(--rt-skills-primary);
     color: #fff;
     
     &:hover {
-      background: linear-gradient(135deg, #3a8aaa 0%, #2a6a8a 100%);
+      background: linear-gradient(135deg, var(--rt-skills-secondary) 0%, var(--rt-skills-primary) 100%);
       box-shadow: 0 2px 8px rgba(42, 122, 154, 0.4);
     }
+  }
+  
+  &--use {
+    background: linear-gradient(135deg, var(--rt-powers-primary) 0%, var(--rt-powers-secondary) 100%);
+    border-color: var(--rt-powers-primary);
+    color: #fff;
+    
+    &:hover {
+      background: linear-gradient(135deg, var(--rt-powers-secondary) 0%, var(--rt-powers-primary) 100%);
+      box-shadow: 0 2px 8px rgba(106, 32, 144, 0.4);
+    }
+  }
+  
+  // Font Awesome icon support
+  i.fas, i.far, i.fab {
+    font-size: 12px;
   }
 }
 
@@ -337,39 +355,64 @@
 // Weapon Card
 .rt-item-card--weapon {
   .rt-item-card__header {
-    background: linear-gradient(135deg, rgba(139, 0, 0, 0.08) 0%, transparent 100%);
-    border-bottom-color: rgba(139, 0, 0, 0.15);
+    background: linear-gradient(135deg, var(--rt-wounds-bg) 0%, transparent 100%);
+    border-bottom-color: var(--rt-wounds-border);
   }
 }
 
 // Armour Card
 .rt-item-card--armour {
   .rt-item-card__header {
-    background: linear-gradient(135deg, rgba(70, 130, 180, 0.08) 0%, transparent 100%);
-    border-bottom-color: rgba(70, 130, 180, 0.15);
+    background: linear-gradient(135deg, var(--rt-skills-bg) 0%, transparent 100%);
+    border-bottom-color: var(--rt-skills-border);
   }
 }
 
 // Talent Card
 .rt-item-card--talent {
   .rt-item-card__header {
-    background: linear-gradient(135deg, rgba(201, 162, 39, 0.08) 0%, transparent 100%);
-    border-bottom-color: rgba(201, 162, 39, 0.15);
+    background: linear-gradient(135deg, var(--rt-talents-bg) 0%, transparent 100%);
+    border-bottom-color: var(--rt-talents-border);
   }
 }
 
 // Psychic Power Card
 .rt-item-card--power {
   .rt-item-card__header {
-    background: linear-gradient(135deg, rgba(106, 32, 144, 0.08) 0%, transparent 100%);
-    border-bottom-color: rgba(106, 32, 144, 0.15);
+    background: linear-gradient(135deg, var(--rt-powers-bg) 0%, transparent 100%);
+    border-bottom-color: var(--rt-powers-border);
   }
 }
 
 // Ship Component Card
 .rt-item-card--component {
   .rt-item-card__header {
-    background: linear-gradient(135deg, rgba(70, 70, 90, 0.08) 0%, transparent 100%);
-    border-bottom-color: rgba(70, 70, 90, 0.15);
+    background: linear-gradient(135deg, var(--rt-equipment-bg) 0%, transparent 100%);
+    border-bottom-color: var(--rt-equipment-border);
   }
+}
+
+// ============================================
+// Properties/Qualities Tags
+// ============================================
+
+.rt-item-card__properties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--rt-border-color-light);
+}
+
+.rt-item-card__property-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color);
+  border-radius: 3px;
+  color: var(--rt-item-border);
 }

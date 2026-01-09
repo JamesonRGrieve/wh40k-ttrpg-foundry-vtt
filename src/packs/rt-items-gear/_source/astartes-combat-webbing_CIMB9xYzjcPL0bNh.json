@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing (Astartes)",
-    "weight": "-",
-    "availability": "Fits over Astartes Scout Armour as well as most body sizes. Consists of sturdy web belts that consist of various pouches such as: Clip Pouches (Hold two clips), Medicae Pouch (contains patches, contraseptics, single-use injectors, Astartes Detox, Pain Suppressant, Morpha, Resuscitex, etc, providfes +20 to Medicae Tests), Vox Pouch (Astartes Vox Unit), Grenade Pouch (4 Krak/Frag Grenades), Knife Pouch (One Astartes Combat Knife), Shotgun Pouch (8 Astartes Shotgun Rounds), Sidearm Holster (one Astartes Sidearm), Drop Pouch (Holds Spare Mags, has a Draw String or Magnetic Lock).",
-    "cost": "Consists of various pouches, may have more than what is listed.\nUsed by Astartes Scouts.",
-    "effects": "Initiated",
-    "notes": "3 R",
-    "source": "DW: Rites of Battle",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 3 R</p>"
+      "value": "<p>Fits over Astartes Scout Armour as well as most body sizes. Consists of sturdy web belts that consist of various pouches such as: Clip Pouches (Hold two clips), Medicae Pouch (contains patches, contraseptics, single-use injectors, Astartes Detox, Pain Suppressant, Morpha, Resuscitex, etc, providfes +20 to Medicae Tests), Vox Pouch (Astartes Vox Unit), Grenade Pouch (4 Krak/Frag Grenades), Knife Pouch (One Astartes Combat Knife), Shotgun Pouch (8 Astartes Shotgun Rounds), Sidearm Holster (one Astartes Sidearm), Drop Pouch (Holds Spare Mags, has a Draw String or Magnetic Lock).</p>\n<h3>Requirements</h3><p>Consists of various pouches, may have more than what is listed.\nUsed by Astartes Scouts.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 3 R</p>",
+      "chat": "",
+      "summary": "Fits over Astartes Scout Armour as well as most body sizes. Consists of sturdy web belts that consist of various pouches such as: Clip Pouches (Hold two clips), Medicae Pouch (contains patches, contra"
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Fits over Astartes Scout Armour as well as most body sizes. Consists of sturdy web belts that consist of various pouches such as: Clip Pouches (Hold two clips), Medicae Pouch (contains patches, contraseptics, single-use injectors, Astartes Detox, Pain Suppressant, Morpha, Resuscitex, etc, providfes +20 to Medicae Tests), Vox Pouch (Astartes Vox Unit), Grenade Pouch (4 Krak/Frag Grenades), Knife Pouch (One Astartes Combat Knife), Shotgun Pouch (8 Astartes Shotgun Rounds), Sidearm Holster (one Astartes Sidearm), Drop Pouch (Holds Spare Mags, has a Draw String or Magnetic Lock).",
+    "duration": "",
+    "notes": "3 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

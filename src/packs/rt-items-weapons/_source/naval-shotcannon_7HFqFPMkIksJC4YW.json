@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "naval-shotcannon",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "2d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 24,
-    "reload": "2 Full",
-    "special": "Scatter, Unreliable",
-    "weight": "7kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "scatter",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 7,
     "availability": "average",
-    "cost": "-",
-    "source": "Rogue Trader: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Scatter, Unreliable</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "-",
-    "availability": "When used by a Necron, all Necrons within 100m of a Resurrection Orb, including the user reroll all failed Toughness Tests and treat Regeneration Toughness Tests as +20.",
-    "cost": "Used by Necron Lords and Overlords\nAlways Best Quality. Xenotech.",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "BC: Tome of Fate",
+    "category": "tools",
+    "weight": 0,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When used by a Necron, all Necrons within 100m of a Resurrection Orb, including the user reroll all failed Toughness Tests and treat Regeneration Toughness Tests as +20.</p>\n<h3>Requirements</h3><p>Used by Necron Lords and Overlords\nAlways Best Quality. Xenotech.</p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When used by a Necron, all Necrons within 100m of a Resurrection Orb, including the user reroll all failed Toughness Tests and treat Regeneration Toughness Tests as +20."
     },
+    "source": {
+      "book": "BC: Tome of Fate",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When used by a Necron, all Necrons within 100m of a Resurrection Orb, including the user reroll all failed Toughness Tests and treat Regeneration Toughness Tests as +20.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "primitive",
-    "locations": "Arms, Body, Legs",
-    "ap": 2,
-    "maxAg": null,
-    "weight": "12kg",
+    "weight": 12,
     "availability": "average",
-    "cost": "20 T",
     "notes": "Halve primitive armour AP vs non primitive weapons",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 2,
       "body": 2,
       "leftArm": 2,
       "rightArm": 2,
@@ -33,7 +28,8 @@
       "rightLeg": 2
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

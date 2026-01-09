@@ -215,12 +215,30 @@ export function registerHandlebarsHelpers() {
         return list.filter((item) => Boolean(item?.[prop])).length;
     });
 
+    /**
+     * Convert array or CONFIG object to simple key-value object for selectOptions
+     * Handles both arrays ["value1", "value2"] and CONFIG objects {key: {label: "..."}}
+     */
     Handlebars.registerHelper('arrayToObject', function(array) {
         const obj = {};
-        if (array == null || typeof array[Symbol.iterator] !== 'function') return obj;
-        for (let a of array) {
-            obj[a] = a;
+        if (array == null) return obj;
+        
+        // Handle CONFIG-style objects (already objects with label/data properties)
+        if (typeof array === 'object' && !Array.isArray(array) && typeof array[Symbol.iterator] !== 'function') {
+            // CONFIG object - extract keys for selectOptions
+            for (const key of Object.keys(array)) {
+                obj[key] = key;
+            }
+            return obj;
         }
+        
+        // Handle arrays and iterables
+        if (typeof array[Symbol.iterator] === 'function') {
+            for (let a of array) {
+                obj[a] = a;
+            }
+        }
+        
         return obj;
     });
 
@@ -346,6 +364,14 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('subtract', function(a, b) {
         return (a || 0) - (b || 0);
+    });
+
+    /**
+     * Floor a number
+     * Usage: {{floor value}}
+     */
+    Handlebars.registerHelper('floor', function(value) {
+        return Math.floor(Number(value) || 0);
     });
 
     Handlebars.registerHelper('eq', function(a, b) {

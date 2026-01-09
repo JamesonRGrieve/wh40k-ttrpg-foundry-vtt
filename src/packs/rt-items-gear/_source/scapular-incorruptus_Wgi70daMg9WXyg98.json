@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "1.5kg",
-    "availability": "A Wearer who has the Pure Faith Talent may spend a fate point to automatically pass a single Test to resist Poison, Disease, or Radiation with 1d5 Degrees of Success.",
-    "cost": "Kind of like a necklace or pendant.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "clothing",
+    "weight": 1.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Wearer who has the Pure Faith Talent may spend a fate point to automatically pass a single Test to resist Poison, Disease, or Radiation with 1d5 Degrees of Success.</p>\n<h3>Requirements</h3><p>Kind of like a necklace or pendant.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Wearer who has the Pure Faith Talent may spend a fate point to automatically pass a single Test to resist Poison, Disease, or Radiation with 1d5 Degrees of Success."
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Wearer who has the Pure Faith Talent may spend a fate point to automatically pass a single Test to resist Poison, Disease, or Radiation with 1d5 Degrees of Success.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

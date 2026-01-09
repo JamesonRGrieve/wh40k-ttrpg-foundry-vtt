@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "arquebus",
     "class": "basic",
     "type": "primitive",
-    "range": "45m",
-    "rof": "S/-/-",
-    "damage": "2d10",
-    "damageType": "Impact",
-    "penetration": 2,
-    "clip": 1,
-    "reload": "2 Full",
-    "special": "Concussive (1), Inaccurate, Unreliable, Smoke (1)",
-    "weight": "8kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 45,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "concussive-1",
+      "inaccurate",
+      "unreliable",
+      "smoke-1"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 8,
     "availability": "common",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
-    "note": "Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (1), Inaccurate, Unreliable, Smoke (1)</p><p><b>Note:</b> Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.",
+    "source": "DH 2E: Enemies Within"
   },
   "effects": [],
   "flags": {},

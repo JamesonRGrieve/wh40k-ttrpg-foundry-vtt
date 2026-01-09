@@ -1,0 +1,30 @@
+{
+  "name": "Pirate Band",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Void raiders and outlaws useful for providing space-services such as smuggling, guides, and piracy. Some make contact with xenos and so may aid in brokering deals, selling goods, or introductions to such aliens. For each degree of Success on Requisition Test, add +10 to character's next Requisition test for xenos services or equipment.",
+    "cost": "Pirates and Unsanctioned Traders amongst the stars, skilled in void warfare and often possessing many criminal contacts, some with xenos raiders they interact with.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OQOEr5vZdANFATib"
+}

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "fire-gauntlets-magnus",
     "class": "melee",
     "type": "flame",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Impact",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Flame, Unbalanced",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
-    "note": "A Set of two Metallic Gloves, allows wearer to safely coat their hands in fire. As a free action can be ignited, gives +20 to Intimidate Tests, fire lasts one encounter or 20 minutes of narrative time.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Unbalanced</p><p><b>Note:</b> A Set of two Metallic Gloves, allows wearer to safely coat their hands in fire. As a free action can be ignited, gives +20 to Intimidate Tests, fire lasts one encounter or 20 minutes of narrative time.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Set of two Metallic Gloves, allows wearer to safely coat their hands in fire. As a free action can be ignited, gives +20 to Intimidate Tests, fire lasts one encounter or 20 minutes of narrative time.",
+    "source": "DH 2E: Enemies Within"
   },
   "effects": [],
   "flags": {},

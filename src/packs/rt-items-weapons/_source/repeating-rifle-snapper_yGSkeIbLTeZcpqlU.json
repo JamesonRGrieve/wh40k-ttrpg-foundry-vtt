@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "repeating-rifle-snapper",
     "class": "basic",
     "type": "primitive",
-    "range": "50m",
-    "rof": "S/2/-",
-    "damage": "1d10+3",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 8,
-    "reload": "2 Full",
-    "special": "Inaccurate, Overheats, Primitive (8), Unreliable",
-    "weight": "45kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "overheats",
+      "primitive-8",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 45,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
-    "note": "An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Overheats, Primitive (8), Unreliable</p><p><b>Note:</b> An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.",
+    "source": "DH 2E: Enemies Within"
   },
   "effects": [],
   "flags": {},

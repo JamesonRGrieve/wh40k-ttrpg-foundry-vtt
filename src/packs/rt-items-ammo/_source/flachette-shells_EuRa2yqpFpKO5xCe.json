@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP: Shotguns",
-    "damageOrEffect": "Gain +10% Range and +2 PEN",
-    "qualities": null,
-    "weight": "10% wep",
+    "identifier": "flachette-shells",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 2,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "+10%-range",
+      "+2-pen"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain +10% Range and +2 PEN</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "rare",
-    "cost": null,
-    "source": "RT: Hostile Acquisitions",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain +10% Range and +2 PEN</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Hostile Acquisitions",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

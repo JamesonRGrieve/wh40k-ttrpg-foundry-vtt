@@ -1,0 +1,30 @@
+{
+  "name": "Chirurgeon's Tools",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "5kg",
+    "availability": "Once per game session, a user may re-roll a failed Medicae Test involving Surgery (Blood loss, saving/amputating limbs, attaching bionics, etc), or an Interrogation Test (Torture attempts).",
+    "cost": "A set of medical tools, useful for keeping people alive or making them wish they were dead.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rb28FrCKHuiNnSS8"
+}

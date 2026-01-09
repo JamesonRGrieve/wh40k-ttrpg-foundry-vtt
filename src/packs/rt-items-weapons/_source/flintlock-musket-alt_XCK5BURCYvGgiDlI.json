@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "flintlock-musket-alt",
     "class": "basic",
     "type": "primitive",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "1d10+3",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 1,
-    "reload": "5 Full",
-    "special": "Primitive (8), Inaccurate, Unreliable",
-    "weight": "7kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "inaccurate",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
     "availability": "common",
-    "cost": "30 T",
-    "source": "Only War: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Inaccurate, Unreliable</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

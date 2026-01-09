@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-fusion-cascade",
     "class": "heavy",
     "type": "exotic",
-    "range": "16m",
-    "rof": "-/3/6",
-    "damage": "1d10+12",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": 16,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "20kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 16,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 3,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 12
+    },
+    "special": [],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 20,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

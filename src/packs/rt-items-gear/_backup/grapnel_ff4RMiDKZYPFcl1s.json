@@ -1,0 +1,30 @@
+{
+  "name": "Grapnel",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "2kg",
+    "availability": "Fires hooked/magnetic grapple attached to 100m of wire. Can climb or use powered winch.",
+    "cost": "Also counts as 1-shot Crossbow.",
+    "effects": "Average",
+    "notes": "30 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 30 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ff4RMiDKZYPFcl1s"
+}

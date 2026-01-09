@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Omni-Tool",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "-",
+    "availability": "Improved Combi-Tool, provides +20 to Tech-use. As a Full Action can remove 1d5 damage from a servitor that has at least 1 Wound Remaining.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "25 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 25 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b5KsvJHHtnf21xrA"
+}

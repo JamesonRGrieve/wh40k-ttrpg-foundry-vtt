@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "[Addictive] Lasts ~1 Hour, grants +1 to user's Toughness Bonus, doesn't stack. Every dose past the first within 24 hours inflicts 1d10+10 Agility Damage as used is wracked with pain. User's skin turns a greyish green colour and crusts over for the duration.",
-    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>[Addictive] Lasts ~1 Hour, grants +1 to user's Toughness Bonus, doesn't stack. Every dose past the first within 24 hours inflicts 1d10+10 Agility Damage as used is wracked with pain. User's skin turns a greyish green colour and crusts over for the duration.</p>\n<h3>Requirements</h3><p>Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "[Addictive] Lasts ~1 Hour, grants +1 to user's Toughness Bonus, doesn't stack. Every dose past the first within 24 hours inflicts 1d10+10 Agility Damage as used is wracked with pain. User's skin turns"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "[Addictive] Lasts ~1 Hour, grants +1 to user's Toughness Bonus, doesn't stack. Every dose past the first within 24 hours inflicts 1d10+10 Agility Damage as used is wracked with pain. User's skin turns a greyish green colour and crusts over for the duration.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

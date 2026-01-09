@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "0.5kg",
-    "availability": "Worn directly over the face, not over a helmet or goggles. Wearer must have Psyker trait. Grants +20 to all Charm, Deceive, and Intimidate Tests. As Half Action wearer can make -10 Willpower Test to gain Fear(1) for WP Bonus Minutes, +1 per Degree of Success after first. Mask hides face.",
-    "cost": "A Mask that changes to give meaning to gestures and body language. Strange but not innately heretical",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "BC: Tome of Fate",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Worn directly over the face, not over a helmet or goggles. Wearer must have Psyker trait. Grants +20 to all Charm, Deceive, and Intimidate Tests. As Half Action wearer can make -10 Willpower Test to gain Fear(1) for WP Bonus Minutes, +1 per Degree of Success after first. Mask hides face.</p>\n<h3>Requirements</h3><p>A Mask that changes to give meaning to gestures and body language. Strange but not innately heretical</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Worn directly over the face, not over a helmet or goggles. Wearer must have Psyker trait. Grants +20 to all Charm, Deceive, and Intimidate Tests. As Half Action wearer can make -10 Willpower Test to g"
     },
+    "source": {
+      "book": "BC: Tome of Fate",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Worn directly over the face, not over a helmet or goggles. Wearer must have Psyker trait. Grants +20 to all Charm, Deceive, and Intimidate Tests. As Half Action wearer can make -10 Willpower Test to gain Fear(1) for WP Bonus Minutes, +1 per Degree of Success after first. Mask hides face.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

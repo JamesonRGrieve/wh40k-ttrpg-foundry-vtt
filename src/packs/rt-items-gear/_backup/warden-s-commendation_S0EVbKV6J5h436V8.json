@@ -1,0 +1,30 @@
+{
+  "name": "Warden's Commendation",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "When making a Toughness Test due to a Critical Effect, wearer can use Willpower Characteristic in place of Toughness.\nMedals can't be acquired, only earned. Looks Like a platinum cross with gold inlay.",
+    "cost": "Distinguished Service Medal: Slaying a Powerful Dark Eldar Warrior, such as an Archon, Succubus, Haemonculus, or Incubus in melee combat.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S0EVbKV6J5h436V8"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Pendant of Slaanesh",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "A Device that buries itself within the Character and attaches to their Heart. Each time the character is wounded the character is pulsed with agonising ecstasy and adrenaline, gaining +1d5 Temporary Agility, which may change their movement and initiative order, until the end of the encounter. At the end of combat suffer 1d5 Fatigue if this activated.",
+    "cost": "Must be Dedicated to Slaanesh to use. Once implanted cannot be removed without requiring a Bionic Heart Replacement. Xenotech.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PmueriSCWeqmv0Ws"
+}

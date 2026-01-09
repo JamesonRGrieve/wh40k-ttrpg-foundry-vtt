@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-rod-of-covenant-ranged",
     "class": "basic",
     "type": "exotic",
-    "range": "15m",
-    "rof": "S/-/-",
-    "damage": "1d10+12",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 10
+    },
+    "special": [
+      "necron-wep",
+      "proven-5",
+      "reliable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Necron Wep, Proven (5), Reliable",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "unique",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "Always Best Quality. Has [Ranged] and [Melee] Profile.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Necron Wep, Proven (5), Reliable</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. Has [Ranged] and [Melee] Profile.",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "cavalry-spear",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "proven-2",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Proven (2), Unbalanced",
-    "weight": "7kg",
+    "weight": 7,
     "availability": "scarce",
-    "cost": "-",
-    "source": "OW: Hammer of the Emperor",
-    "note": "Gains Proven(4) If used as part of a Mounted Charager's \"Crushing Charge\" Mounted Special Action",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Proven (2), Unbalanced</p><p><b>Note:</b> Gains Proven(4) If used as part of a Mounted Charager's \"Crushing Charge\" Mounted Special Action</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Gains Proven(4) If used as part of a Mounted Charager's \"Crushing Charge\" Mounted Special Action",
+    "source": "OW: Hammer of the Emperor"
   },
   "effects": [],
   "flags": {},

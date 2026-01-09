@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "carapace",
-    "locations": "All",
-    "ap": 5,
-    "maxAg": null,
-    "weight": "16kg",
+    "weight": 16,
     "availability": "rare",
-    "cost": "1100 T",
     "notes": "Built-In Respirator, Comm-Bead, and Photo-Visor",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Built-In Respirator, Comm-Bead, and Photo-Visor</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 5
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

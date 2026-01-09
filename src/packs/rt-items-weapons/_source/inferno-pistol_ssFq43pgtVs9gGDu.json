@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "inferno-pistol",
     "class": "pistol",
     "type": "melta",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": 3,
-    "reload": "Full",
-    "special": "Melta",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 12
+    },
+    "special": [
+      "melta"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
     "availability": "near-unique",
-    "cost": "7500 T",
-    "source": "Only War: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 7500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Melta</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

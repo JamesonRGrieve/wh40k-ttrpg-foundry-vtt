@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Allows user to exude an unseen chemical gas through modified sweat glands with a +20 Willpower Test. If successful Charm Tests gain +10 Bonus, rising to +20 if in an enclosed area with little or no strong air movement.",
-    "cost": "Those in sealed armour or suits may be immune to this.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Allows user to exude an unseen chemical gas through modified sweat glands with a +20 Willpower Test. If successful Charm Tests gain +10 Bonus, rising to +20 if in an enclosed area with little or no strong air movement.</p>\n<h3>Requirements</h3><p>Those in sealed armour or suits may be immune to this.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows user to exude an unseen chemical gas through modified sweat glands with a +20 Willpower Test. If successful Charm Tests gain +10 Bonus, rising to +20 if in an enclosed area with little or no st"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows user to exude an unseen chemical gas through modified sweat glands with a +20 Willpower Test. If successful Charm Tests gain +10 Bonus, rising to +20 if in an enclosed area with little or no strong air movement.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

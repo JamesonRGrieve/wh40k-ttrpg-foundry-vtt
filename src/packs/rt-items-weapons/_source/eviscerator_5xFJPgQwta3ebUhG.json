@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eviscerator",
     "class": "melee",
     "type": "chain",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+3",
-    "damageType": "Rending",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 5
+    },
+    "special": [
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Tearing, Unwieldy",
-    "weight": "12kg",
+    "weight": 12,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

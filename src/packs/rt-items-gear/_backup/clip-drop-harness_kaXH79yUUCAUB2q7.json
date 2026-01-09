@@ -1,0 +1,30 @@
+{
+  "name": "Clip/Drop Harness",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "2kg",
+    "availability": "Use to descend a vertical surface, gain +30 to Climb Tests, and don't fall if fail such tests.\nCommon Holds 150kg, Good holds 200kg.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "25 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 25 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kaXH79yUUCAUB2q7"
+}

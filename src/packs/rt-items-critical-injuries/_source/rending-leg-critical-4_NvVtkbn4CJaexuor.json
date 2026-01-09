@@ -1,0 +1,32 @@
+{
+  "name": "Rending Leg Critical 4",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_leg_4",
+    "damageType": "rending",
+    "bodyPart": "leg",
+    "severity": 4,
+    "effect": "<p>The attack rips the kneecap free from the target's leg, and he collapses to the ground. The target is knocked Prone and suffers [[1d10]] Agility Damage. His Movement values are halved (rounding up) until he receives medical attention.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Leg (Severity 4)</strong></p><p>The attack rips the kneecap free from the target's leg, and he collapses to the ground. The target is knocked Prone and suffers [[1d10]] Agility Damage. His Movement values are halved (rounding up) until he receives medical attention.</p>",
+      "chat": "",
+      "summary": "Rending Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "NvVtkbn4CJaexuor"
+}

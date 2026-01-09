@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-concussion-beamer",
     "class": "pistol",
     "type": "exotic",
-    "range": "30m",
-    "rof": "S/3/-",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "concussive-1",
+      "reliable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (1), Reliable",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (1), Reliable</p><p><b>Note:</b> Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

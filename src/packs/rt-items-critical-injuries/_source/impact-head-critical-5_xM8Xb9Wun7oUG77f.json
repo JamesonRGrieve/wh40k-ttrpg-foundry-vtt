@@ -1,0 +1,32 @@
+{
+  "name": "Impact Head Critical 5",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_head_5",
+    "damageType": "impact",
+    "bodyPart": "head",
+    "severity": 5,
+    "effect": "<p>The force of the blow sends the target reeling in pain. The target suffers 1 level of Fatigue, is Stunned for 1 round, and staggers backwards [[1d5]] metres. Permanently reduce his Intelligence characteristic by 1.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Head (Severity 5)</strong></p><p>The force of the blow sends the target reeling in pain. The target suffers 1 level of Fatigue, is Stunned for 1 round, and staggers backwards [[1d5]] metres. Permanently reduce his Intelligence characteristic by 1.</p>",
+      "chat": "",
+      "summary": "Impact Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "xM8Xb9Wun7oUG77f"
+}

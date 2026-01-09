@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": "65%",
-    "maxAg": "-",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "unique",
-    "cost": "-",
-    "notes": "Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. ",
+    "notes": "Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned.  [AP: 65%]",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Always Best Craftsmanship. To activate, must spend a fate point and pray to the Emperor for Protection, turning it on for 1d10+5 rounds. Relics cannot be acquired, they must be earned. </p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

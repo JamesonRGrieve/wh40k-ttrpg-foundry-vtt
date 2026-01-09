@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Luminescent panel implanted into the skin of the palm of the hand. Near-invisible until activated through squeezing the hand. Acts as a soft light that illuminates objects in a few centimetres, allowing for delicate tasks to be done  in the dark without giving away the user's presence.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Hostile Acquisitions",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Luminescent panel implanted into the skin of the palm of the hand. Near-invisible until activated through squeezing the hand. Acts as a soft light that illuminates objects in a few centimetres, allowing for delicate tasks to be done  in the dark without giving away the user's presence.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Luminescent panel implanted into the skin of the palm of the hand. Near-invisible until activated through squeezing the hand. Acts as a soft light that illuminates objects in a few centimetres, allowi"
     },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Luminescent panel implanted into the skin of the palm of the hand. Near-invisible until activated through squeezing the hand. Acts as a soft light that illuminates objects in a few centimetres, allowing for delicate tasks to be done  in the dark without giving away the user's presence.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

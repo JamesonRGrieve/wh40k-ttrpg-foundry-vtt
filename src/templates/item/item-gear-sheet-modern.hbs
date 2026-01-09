@@ -1,4 +1,4 @@
-<div class="rt-item-sheet">
+<div class="rt-item-sheet gear-sheet">
     <form autocomplete="off">
         <!-- Item Header -->
         <header class="rt-item-header">
@@ -7,25 +7,29 @@
             </div>
             
             <div class="rt-item-title">
-                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Gear Name" />
+                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" 
+                       placeholder="{{localize 'RT.Gear.NamePlaceholder'}}" />
                 <div class="rt-item-title__type">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Equipment</span>
+                    <i class="fas {{item.system.categoryIcon}}"></i>
+                    <span>{{item.system.categoryLabel}}</span>
                 </div>
                 <div class="rt-item-meta">
-                    {{#if item.system.craftsmanship}}
-                    <span class="rt-meta-badge rt-meta-badge--craft">
-                        <i class="fas fa-hammer"></i> {{item.system.craftsmanship}}
+                    {{#if item.system.consumable}}
+                    <span class="rt-meta-badge rt-meta-badge--consumable">
+                        <i class="fas fa-fire"></i> {{localize "RT.Gear.Consumable"}}
                     </span>
                     {{/if}}
-                    {{#if item.system.availability}}
+                    {{#if item.system.hasLimitedUses}}
+                    <span class="rt-meta-badge rt-meta-badge--uses {{#if item.system.usesExhausted}}exhausted{{/if}}">
+                        <i class="fas fa-battery-three-quarters"></i> {{item.system.usesDisplay}}
+                    </span>
+                    {{/if}}
                     <span class="rt-meta-badge rt-meta-badge--availability">
-                        <i class="fas fa-store"></i> {{item.system.availability}}
+                        <i class="fas fa-store"></i> {{item.system.availabilityLabel}}
                     </span>
-                    {{/if}}
-                    {{#if item.system.source}}
+                    {{#if item.system.source.book}}
                     <span class="rt-meta-badge rt-meta-badge--source">
-                        <i class="fas fa-book"></i> {{item.system.source}}
+                        <i class="fas fa-book"></i> {{item.system.sourceReference}}
                     </span>
                     {{/if}}
                 </div>
@@ -34,32 +38,41 @@
 
         <!-- Quick Stats Bar -->
         <div class="rt-quick-stats">
-            {{#if item.system.availability}}
+            <div class="rt-stat-badge">
+                <span class="rt-stat-badge__icon"><i class="fas {{item.system.categoryIcon}}"></i></span>
+                <span class="rt-stat-badge__label">{{localize "RT.Gear.Category"}}</span>
+                <span class="rt-stat-badge__value">{{item.system.categoryLabel}}</span>
+            </div>
+            
             <div class="rt-stat-badge">
                 <span class="rt-stat-badge__icon"><i class="fas fa-store"></i></span>
-                <span class="rt-stat-badge__label">AVAIL</span>
-                <span class="rt-stat-badge__value">{{item.system.availability}}</span>
+                <span class="rt-stat-badge__label">{{localize "RT.Availability.Label"}}</span>
+                <span class="rt-stat-badge__value">{{item.system.availabilityLabel}}</span>
             </div>
-            {{/if}}
             
-            {{#if item.system.craftsmanship}}
             <div class="rt-stat-badge">
                 <span class="rt-stat-badge__icon"><i class="fas fa-hammer"></i></span>
-                <span class="rt-stat-badge__label">CRAFT</span>
-                <span class="rt-stat-badge__value">{{item.system.craftsmanship}}</span>
+                <span class="rt-stat-badge__label">{{localize "RT.Craftsmanship.Label"}}</span>
+                <span class="rt-stat-badge__value">{{item.system.craftsmanshipLabel}}</span>
             </div>
-            {{/if}}
             
             <div class="rt-stat-badge">
                 <span class="rt-stat-badge__icon"><i class="fas fa-weight-hanging"></i></span>
-                <span class="rt-stat-badge__label">WT</span>
-                <span class="rt-stat-badge__value">{{item.system.weight}}</span>
+                <span class="rt-stat-badge__label">{{localize "RT.Weight"}}</span>
+                <span class="rt-stat-badge__value">{{item.system.weight}} kg</span>
             </div>
             
-            {{#if item.system.backpack.inBackpack}}
+            {{#if item.system.equipped}}
+            <div class="rt-stat-badge rt-stat-badge--active">
+                <span class="rt-stat-badge__icon"><i class="fas fa-check-circle"></i></span>
+                <span class="rt-stat-badge__value">{{localize "RT.Equipment.Equipped"}}</span>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.inBackpack}}
             <div class="rt-stat-badge rt-stat-badge--muted">
                 <span class="rt-stat-badge__icon"><i class="fas fa-suitcase"></i></span>
-                <span class="rt-stat-badge__value">STOWED</span>
+                <span class="rt-stat-badge__value">{{localize "RT.Equipment.Stowed"}}</span>
             </div>
             {{/if}}
         </div>
@@ -67,10 +80,10 @@
         <!-- Tab Navigation -->
         <nav class="rt-tabs" data-group="primary">
             <a class="rt-tab active" data-tab="details" data-group="primary">
-                <i class="fas fa-info-circle"></i> Details
+                <i class="fas fa-info-circle"></i> {{localize "RT.Details"}}
             </a>
             <a class="rt-tab" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> Effects
+                <i class="fas fa-magic"></i> {{localize "RT.Effects"}}
             </a>
         </nav>
 
@@ -78,50 +91,194 @@
         <section class="rt-tab-content">
             <!-- Details Tab -->
             <div class="tab active" data-tab="details" data-group="primary">
+                <!-- Properties Panel -->
                 <div class="rt-panel">
                     <div class="rt-panel__header">
-                        <h3><i class="fas fa-briefcase"></i> Item Properties</h3>
+                        <h3><i class="fas fa-cog"></i> {{localize "RT.Item.Properties"}}</h3>
                     </div>
                     <div class="rt-panel__content">
                         <div class="rt-field-grid rt-field-grid--4">
+                            <!-- Category -->
                             <div class="rt-field">
-                                <label class="rt-field__label">Availability</label>
+                                <label class="rt-field__label">{{localize "RT.Gear.Category"}}</label>
+                                <select class="rt-field__select" name="system.category">
+                                    <option value="general" {{#if (eq item.system.category "general")}}selected{{/if}}>{{localize "RT.GearCategory.General"}}</option>
+                                    <option value="tools" {{#if (eq item.system.category "tools")}}selected{{/if}}>{{localize "RT.GearCategory.Tools"}}</option>
+                                    <option value="drugs" {{#if (eq item.system.category "drugs")}}selected{{/if}}>{{localize "RT.GearCategory.Drugs"}}</option>
+                                    <option value="consumable" {{#if (eq item.system.category "consumable")}}selected{{/if}}>{{localize "RT.GearCategory.Consumable"}}</option>
+                                    <option value="clothing" {{#if (eq item.system.category "clothing")}}selected{{/if}}>{{localize "RT.GearCategory.Clothing"}}</option>
+                                    <option value="survival" {{#if (eq item.system.category "survival")}}selected{{/if}}>{{localize "RT.GearCategory.Survival"}}</option>
+                                    <option value="communications" {{#if (eq item.system.category "communications")}}selected{{/if}}>{{localize "RT.GearCategory.Communications"}}</option>
+                                    <option value="detection" {{#if (eq item.system.category "detection")}}selected{{/if}}>{{localize "RT.GearCategory.Detection"}}</option>
+                                    <option value="medical" {{#if (eq item.system.category "medical")}}selected{{/if}}>{{localize "RT.GearCategory.Medical"}}</option>
+                                    <option value="tech" {{#if (eq item.system.category "tech")}}selected{{/if}}>{{localize "RT.GearCategory.Tech"}}</option>
+                                    <option value="religious" {{#if (eq item.system.category "religious")}}selected{{/if}}>{{localize "RT.GearCategory.Religious"}}</option>
+                                    <option value="luxury" {{#if (eq item.system.category "luxury")}}selected{{/if}}>{{localize "RT.GearCategory.Luxury"}}</option>
+                                    <option value="contraband" {{#if (eq item.system.category "contraband")}}selected{{/if}}>{{localize "RT.GearCategory.Contraband"}}</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Availability -->
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Availability.Label"}}</label>
                                 <select class="rt-field__select" name="system.availability">
-                                    {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                                    {{selectOptions dh.availabilities selected=item.system.availability labelAttr="label" valueAttr="@key"}}
                                 </select>
                             </div>
+                            
+                            <!-- Craftsmanship -->
                             <div class="rt-field">
-                                <label class="rt-field__label">Craftsmanship</label>
+                                <label class="rt-field__label">{{localize "RT.Craftsmanship.Label"}}</label>
                                 <select class="rt-field__select" name="system.craftsmanship">
-                                    {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                                    {{selectOptions dh.craftsmanships selected=item.system.craftsmanship labelAttr="label" valueAttr="@key"}}
                                 </select>
                             </div>
+                            
+                            <!-- Weight -->
                             <div class="rt-field">
-                                <label class="rt-field__label">Weight (kg)</label>
-                                <input type="number" class="rt-field__input" name="system.weight" value="{{item.system.weight}}" step="0.1" />
-                            </div>
-                            <div class="rt-field">
-                                <label class="rt-field__label">Source</label>
-                                <input type="text" class="rt-field__input" name="system.source" value="{{item.system.source}}" />
+                                <label class="rt-field__label">{{localize "RT.Weight"}} (kg)</label>
+                                <input type="number" class="rt-field__input" name="system.weight" 
+                                       value="{{item.system.weight}}" step="0.1" min="0" />
                             </div>
                         </div>
                         
-                        <div style="margin-top: 1rem;">
+                        <div class="rt-field-grid rt-field-grid--3" style="margin-top: 1rem;">
+                            <!-- Quantity -->
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Quantity"}}</label>
+                                <input type="number" class="rt-field__input" name="system.quantity" 
+                                       value="{{item.system.quantity}}" min="0" step="1" />
+                            </div>
+                            
+                            <!-- Cost -->
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Cost"}} (Thrones)</label>
+                                <input type="number" class="rt-field__input" name="system.cost.value" 
+                                       value="{{item.system.cost.value}}" min="0" step="1" />
+                            </div>
+                            
+                            <!-- Total Weight -->
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.TotalWeight"}}</label>
+                                <input type="text" class="rt-field__input" value="{{item.system.totalWeight}} kg" disabled />
+                            </div>
+                        </div>
+                        
+                        <!-- Checkboxes -->
+                        <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
                             <label class="rt-field__checkbox">
-                                <input type="checkbox" name="system.backpack.inBackpack" {{checked item.system.backpack.inBackpack}} />
-                                <span>In Backpack (not carried on person)</span>
+                                <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} />
+                                <span>{{localize "RT.Equipment.Equipped"}}</span>
+                            </label>
+                            
+                            <label class="rt-field__checkbox">
+                                <input type="checkbox" name="system.inBackpack" {{checked item.system.inBackpack}} />
+                                <span>{{localize "RT.Equipment.StowInBackpack"}}</span>
+                            </label>
+                            
+                            <label class="rt-field__checkbox">
+                                <input type="checkbox" name="system.consumable" {{checked item.system.consumable}} />
+                                <span>{{localize "RT.Gear.Consumable"}}</span>
                             </label>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Consumable Panel (if applicable) -->
+                {{#if item.system.consumable}}
                 <div class="rt-panel">
                     <div class="rt-panel__header">
-                        <h3><i class="fas fa-scroll"></i> Description</h3>
+                        <h3><i class="fas fa-fire"></i> {{localize "RT.Gear.ConsumableSettings"}}</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-field-grid rt-field-grid--2">
+                            <!-- Current Uses -->
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Gear.CurrentUses"}}</label>
+                                <div class="rt-field__group">
+                                    <input type="number" class="rt-field__input" name="system.uses.value" 
+                                           value="{{item.system.uses.value}}" min="0" step="1" />
+                                    <button type="button" class="rt-btn rt-btn--icon" data-action="resetUses" 
+                                            data-tooltip="{{localize 'RT.Gear.ResetUses'}}">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Max Uses -->
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Gear.MaxUses"}}</label>
+                                <input type="number" class="rt-field__input" name="system.uses.max" 
+                                       value="{{item.system.uses.max}}" min="0" step="1" />
+                            </div>
+                        </div>
+                        
+                        <!-- Duration -->
+                        <div class="rt-field" style="margin-top: 1rem;">
+                            <label class="rt-field__label">{{localize "RT.Gear.Duration"}}</label>
+                            <input type="text" class="rt-field__input" name="system.duration" 
+                                   value="{{item.system.duration}}" 
+                                   placeholder="{{localize 'RT.Gear.DurationPlaceholder'}}" />
+                            <p class="rt-field__hint">{{localize "RT.Gear.DurationHint"}}</p>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                
+                <!-- Effect Panel -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-bolt"></i> {{localize "RT.Gear.Effect"}}</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-description">
+                            {{editor item.system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+                        </div>
+                        <p class="rt-field__hint">{{localize "RT.Gear.EffectHint"}}</p>
+                    </div>
+                </div>
+                
+                <!-- Description Panel -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-scroll"></i> {{localize "RT.Description"}}</h3>
                     </div>
                     <div class="rt-panel__content">
                         <div class="rt-description">
                             {{editor item.system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notes & Source Panel -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-sticky-note"></i> {{localize "RT.NotesAndSource"}}</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <!-- Notes -->
+                        <div class="rt-field">
+                            <label class="rt-field__label">{{localize "RT.Notes"}}</label>
+                            <textarea class="rt-field__textarea" name="system.notes" rows="3">{{item.system.notes}}</textarea>
+                        </div>
+                        
+                        <!-- Source -->
+                        <div class="rt-field-grid rt-field-grid--3" style="margin-top: 1rem;">
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Source.Book"}}</label>
+                                <input type="text" class="rt-field__input" name="system.source.book" 
+                                       value="{{item.system.source.book}}" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Source.Page"}}</label>
+                                <input type="text" class="rt-field__input" name="system.source.page" 
+                                       value="{{item.system.source.page}}" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">{{localize "RT.Source.Custom"}}</label>
+                                <input type="text" class="rt-field__input" name="system.source.custom" 
+                                       value="{{item.system.source.custom}}" />
+                            </div>
                         </div>
                     </div>
                 </div>

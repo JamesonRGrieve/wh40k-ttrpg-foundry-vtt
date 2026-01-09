@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "1kg",
-    "availability": "Eldar item carried by many of their race. Empty ones are carreid to capture their spirits if  they die, to prevent them being eaten by Slaanesh. Farseers carry filled ones to draw upon the psychic might of their kin. Once per combat encounter, a wearer may tap into a filled Spirit Stone to use one of their Psychic Techniques as a Free Action.",
-    "cost": "Xenotech. Not something a character would normally be able to acquire. If eldar find a non-eldar in possession of these, they will most likely try to kill them even more than normal.",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "RT: Navis Primer",
+    "category": "tools",
+    "weight": 1,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Eldar item carried by many of their race. Empty ones are carreid to capture their spirits if  they die, to prevent them being eaten by Slaanesh. Farseers carry filled ones to draw upon the psychic might of their kin. Once per combat encounter, a wearer may tap into a filled Spirit Stone to use one of their Psychic Techniques as a Free Action.</p>\n<h3>Requirements</h3><p>Xenotech. Not something a character would normally be able to acquire. If eldar find a non-eldar in possession of these, they will most likely try to kill them even more than normal.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Eldar item carried by many of their race. Empty ones are carreid to capture their spirits if  they die, to prevent them being eaten by Slaanesh. Farseers carry filled ones to draw upon the psychic mig"
     },
+    "source": {
+      "book": "RT: Navis Primer",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Eldar item carried by many of their race. Empty ones are carreid to capture their spirits if  they die, to prevent them being eaten by Slaanesh. Farseers carry filled ones to draw upon the psychic might of their kin. Once per combat encounter, a wearer may tap into a filled Spirit Stone to use one of their Psychic Techniques as a Free Action.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

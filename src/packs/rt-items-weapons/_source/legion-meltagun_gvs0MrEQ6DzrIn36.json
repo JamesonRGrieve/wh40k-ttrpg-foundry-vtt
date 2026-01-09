@@ -3,30 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "legion-meltagun",
     "class": "basic",
     "type": "melta",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "2d10+13",
-    "damageType": "Energy",
-    "penetration": 12,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "Melta, SM Wep",
-    "weight": "17kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 13,
+      "penetration": 12
+    },
+    "special": [
+      "melta",
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 17,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Melta, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
     },
-    "damageFormula": "2d10+13",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Chaos Legionary Weapon. Dangerous to own.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

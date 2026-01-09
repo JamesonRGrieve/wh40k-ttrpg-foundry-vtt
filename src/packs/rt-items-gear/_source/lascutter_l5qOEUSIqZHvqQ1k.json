@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "4kg",
-    "availability": "Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets.",
-    "cost": null,
-    "effects": "Average",
-    "notes": "65 T",
-    "source": "Only War Core",
+    "category": "tools",
+    "weight": 4,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 65,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 65 T</p>"
+      "value": "<p>Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 65 T</p>",
+      "chat": "",
+      "summary": "Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets."
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

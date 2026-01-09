@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "1kg",
-    "availability": "A Terrestrial Coral mixed with chemical bonding agents found within the Fish of Spectoris. Applying it to an underwater surface draws coral to create a natural layer of sea life. Applied to the ships of Spectoris as so the native fauna of its oceans do not attempt to destroy objects they would see as foreign if it were not for the paste. Is also useful for Makeshift Hull Repairs.",
-    "cost": "Abundant Availability on the Planet of Spectoris and Free to that world's Agri-Workers.",
-    "effects": "Very Rare",
-    "notes": "225 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "consumable",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 225,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 225 T</p>"
+      "value": "<p>A Terrestrial Coral mixed with chemical bonding agents found within the Fish of Spectoris. Applying it to an underwater surface draws coral to create a natural layer of sea life. Applied to the ships of Spectoris as so the native fauna of its oceans do not attempt to destroy objects they would see as foreign if it were not for the paste. Is also useful for Makeshift Hull Repairs.</p>\n<h3>Requirements</h3><p>Abundant Availability on the Planet of Spectoris and Free to that world's Agri-Workers.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 225 T</p>",
+      "chat": "",
+      "summary": "A Terrestrial Coral mixed with chemical bonding agents found within the Fish of Spectoris. Applying it to an underwater surface draws coral to create a natural layer of sea life. Applied to the ships "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Terrestrial Coral mixed with chemical bonding agents found within the Fish of Spectoris. Applying it to an underwater surface draws coral to create a natural layer of sea life. Applied to the ships of Spectoris as so the native fauna of its oceans do not attempt to destroy objects they would see as foreign if it were not for the paste. Is also useful for Makeshift Hull Repairs.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

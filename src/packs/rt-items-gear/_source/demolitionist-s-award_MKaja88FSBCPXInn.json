@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Medal",
-    "weight": "-",
-    "availability": "Whenever wearer inflicts Righteous Fury against a vehicle, add +1 to the roll on the Critical Hit Table \nMedals can't be acquired, only earned. Looks like a Red Ceramite Medallion emblazoned with gold filigree.",
-    "cost": "Distinguished Service Medal: Destroy a Chaos Engine of War.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "OW: Enemies of the Imperium",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Whenever wearer inflicts Righteous Fury against a vehicle, add +1 to the roll on the Critical Hit Table \nMedals can't be acquired, only earned. Looks like a Red Ceramite Medallion emblazoned with gold filigree.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Destroy a Chaos Engine of War.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Whenever wearer inflicts Righteous Fury against a vehicle, add +1 to the roll on the Critical Hit Table \nMedals can't be acquired, only earned. Looks like a Red Ceramite Medallion emblazoned with gold"
     },
+    "source": {
+      "book": "OW: Enemies of the Imperium",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Whenever wearer inflicts Righteous Fury against a vehicle, add +1 to the roll on the Critical Hit Table \nMedals can't be acquired, only earned. Looks like a Red Ceramite Medallion emblazoned with gold filigree.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "All",
-    "ap": 6,
-    "maxAg": null,
-    "weight": "12kg",
+    "weight": 12,
     "availability": "near-unique",
-    "cost": "-",
     "notes": "Designed for Tau rather than Humans, debatably wearable by humans with some modification. ",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Designed for Tau rather than Humans, debatably wearable by humans with some modification. </p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "howdah-pistol-fykos-flametongue",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "1d10+6",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 2,
-    "reload": "2 Full",
-    "special": "Primitive (8), Reliable",
-    "weight": "2kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 6,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "reliable"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 2,
     "availability": "rare",
-    "cost": "140 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 140,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Reliable</p><p><b>Note:</b> A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

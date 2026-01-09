@@ -15,7 +15,7 @@
 
 .rt-combat-grid {
   display: grid;
-  grid-template-columns: 200px 1fr 200px;
+  grid-template-columns: 250px 350px 250px;
   gap: $rt-space-md;
   min-height: 0;
 }
@@ -29,22 +29,13 @@
 // ============================================
 // SMALL HEADER BUTTONS
 // ============================================
+// NOTE: Use .rt-btn-icon--bordered for new code; this maintains backwards compatibility
 
 .rt-header-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
+  @extend .rt-btn-icon;
   background: rgba($rt-accent-gold, 0.2);
   border: 1px solid rgba($rt-accent-gold, 0.4);
-  border-radius: $rt-radius-sm;
   color: $rt-accent-gold;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: all $rt-transition-fast;
-  flex-shrink: 0;
   
   &:hover {
     background: rgba($rt-accent-gold, 0.3);
@@ -213,29 +204,19 @@
   gap: 4px;
 }
 
+// NOTE: Use .rt-btn-control--compact for new code; this maintains backwards compatibility
 .rt-vital-ctrl-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @extend .rt-btn-control;
   width: 22px;
   height: 22px;
-  padding: 0;
+  font-size: 0.7rem;
   background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.08);
   border: 1px solid rgba(var(--vital-color-rgb, 0, 0, 0), 0.2);
-  border-radius: 4px;
   color: var(--vital-color, $rt-text-primary);
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
   
-  &:hover {
+  &:hover:not(:disabled) {
     background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.15);
     border-color: var(--vital-color, $rt-border-medium);
-    transform: scale(1.1);
-  }
-  
-  &:active {
-    transform: scale(0.95);
   }
   
   i {
@@ -835,6 +816,64 @@
     height: 4px;
     background: linear-gradient(90deg, transparent, rgba($rt-accent-talents, 0.3), transparent);
     border-radius: 2px;
+  }
+}
+
+// Weapons table grid layout
+.rt-weapontable--border {
+  .table-row--head,
+  .table-row {
+    display: grid;
+    grid-template-columns: 1.5rem 2fr 1fr 1fr 1fr 4rem;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-xs $rt-space-sm;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  .table-row--head {
+    background: rgba($rt-accent-combat, 0.08);
+    font-weight: 600;
+    font-size: $rt-font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid rgba($rt-accent-combat, 0.2);
+    padding: $rt-space-sm;
+  }
+  
+  .table-row:hover {
+    background: rgba($rt-accent-combat, 0.04);
+  }
+  
+  .table-cell,
+  .table-cell--last {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .table-cell--settingstoggle {
+    justify-content: center;
+  }
+  
+  .table-cell--left {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  
+  .table-cell--span2 {
+    grid-column: span 2;
+    justify-content: flex-start;
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  .table-cell--last {
+    display: flex;
+    gap: $rt-space-xs;
+    justify-content: flex-end;
   }
 }
 

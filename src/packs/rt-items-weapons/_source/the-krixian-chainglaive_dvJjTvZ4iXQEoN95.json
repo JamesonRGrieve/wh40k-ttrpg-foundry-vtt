@@ -3,30 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "the-krixian-chainglaive",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+8",
-    "damageType": "Rending",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 8,
+      "penetration": 4
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Tearing",
-    "weight": "18kg",
-    "availability": "Famed",
-    "cost": "35 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only. Relic Master-Crafted Astartes Chain-Glaive of the Deathwatch. Two-Handed. Last surviving example of such a weapon.",
+    "weight": 18,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 35,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Chain-Glaive of the Deathwatch. Two-Handed. Last surviving example of such a weapon.</p>"
     },
-    "damageFormula": "1d10+8",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Relic Master-Crafted Astartes Chain-Glaive of the Deathwatch. Two-Handed. Last surviving example of such a weapon.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

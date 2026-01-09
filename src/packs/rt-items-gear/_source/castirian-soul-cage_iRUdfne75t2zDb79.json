@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "55kg",
-    "availability": "Add +20 to any test involved with summoning a Daemon. At the end of a Summoning Ritual Daemon is trapped inside cage as long as character maintains control via Daemonic Mastery tests, must be made every hour the daemon is contained. Cage can be opened intentionally to free or channel the daemon, such as into a Daemon Weapon.",
-    "cost": "Heretical",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "BC: Tome of Fate",
+    "category": "tools",
+    "weight": 55,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Add +20 to any test involved with summoning a Daemon. At the end of a Summoning Ritual Daemon is trapped inside cage as long as character maintains control via Daemonic Mastery tests, must be made every hour the daemon is contained. Cage can be opened intentionally to free or channel the daemon, such as into a Daemon Weapon.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Add +20 to any test involved with summoning a Daemon. At the end of a Summoning Ritual Daemon is trapped inside cage as long as character maintains control via Daemonic Mastery tests, must be made eve"
     },
+    "source": {
+      "book": "BC: Tome of Fate",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Add +20 to any test involved with summoning a Daemon. At the end of a Summoning Ritual Daemon is trapped inside cage as long as character maintains control via Daemonic Mastery tests, must be made every hour the daemon is contained. Cage can be opened intentionally to free or channel the daemon, such as into a Daemon Weapon.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

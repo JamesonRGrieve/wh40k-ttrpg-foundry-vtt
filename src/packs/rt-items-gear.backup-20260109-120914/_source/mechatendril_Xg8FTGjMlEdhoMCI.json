@@ -1,0 +1,30 @@
+{
+  "name": "Mechatendril",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Mechadendrite Equipped with Mechatenril Weapon (Melee;1d10+5;Pen 0;Flexible). Requires Mechadendrite Use (Utility) to use or (Weapon) to attack with without penalty. Each Mechatendril grants +5 to Crafting Skill Tests.",
+    "cost": "Can have up to Toughness Bonus Mechadendrites. Requires Mechanicus Implants.\nHeretical. See Mechatendril in Weapons Tab",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Xg8FTGjMlEdhoMCI"
+}

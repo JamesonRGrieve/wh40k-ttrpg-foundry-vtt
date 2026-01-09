@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "6kg",
-    "availability": "A Device attached to a sturdy backpack or held in one hand. When activatedw ith a Half Action all sound within 10m x Character's Willpower Bonus is silenced, damage from Sonic weapons is halved. Those not Slaanesh Aligned must make +10 Willpower Test each turn or suffer -10 to all tests from the disconcerting silence.",
-    "cost": "Must be Dedicated to Slaanesh to use. Heretical\nThe Silence doesn't help Stealth Tests as the field creates a lot of light at its edge.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "tools",
+    "weight": 6,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Device attached to a sturdy backpack or held in one hand. When activatedw ith a Half Action all sound within 10m x Character's Willpower Bonus is silenced, damage from Sonic weapons is halved. Those not Slaanesh Aligned must make +10 Willpower Test each turn or suffer -10 to all tests from the disconcerting silence.</p>\n<h3>Requirements</h3><p>Must be Dedicated to Slaanesh to use. Heretical\nThe Silence doesn't help Stealth Tests as the field creates a lot of light at its edge.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Device attached to a sturdy backpack or held in one hand. When activatedw ith a Half Action all sound within 10m x Character's Willpower Bonus is silenced, damage from Sonic weapons is halved. Those"
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Device attached to a sturdy backpack or held in one hand. When activatedw ith a Half Action all sound within 10m x Character's Willpower Bonus is silenced, damage from Sonic weapons is halved. Those not Slaanesh Aligned must make +10 Willpower Test each turn or suffer -10 to all tests from the disconcerting silence.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

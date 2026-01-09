@@ -1,0 +1,30 @@
+{
+  "name": "Nephitic Acid",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "Deals 2d10+10 Energy Damage once before becoming inert at the end of the Round. One dose can eat through a 5 centimetre thick square metre of adamantium in one Round.",
+    "cost": "Grey-Green liquid that dissolves most materials in seconds (except in pure-silicate glass) before fading into inert paste. ",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MVoDQxaXkEBQAtoV"
+}

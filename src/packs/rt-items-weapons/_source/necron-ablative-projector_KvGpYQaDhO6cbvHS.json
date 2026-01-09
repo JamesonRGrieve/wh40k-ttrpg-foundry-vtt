@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "necron-ablative-projector",
     "class": "basic",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/2/-",
-    "damage": "1d10+8",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 5
+    },
+    "special": [
+      "reliable",
+      "vengeful-9"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Reliable, Vengeful (9)",
-    "weight": "10kg",
+    "weight": 10,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable, Vengeful (9)</p><p><b>Note:</b> The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

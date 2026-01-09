@@ -1,0 +1,30 @@
+{
+  "name": "Spirit Tonic",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.1kg",
+    "availability": "Powerful Narcotic, provides +10 to all Fear Tests and -10 to all Intelligence Tests for 1d5 hours. ",
+    "cost": "Addictive. Can lead to permenant brain damage amongst frequent users.",
+    "effects": "Common",
+    "notes": "12 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 12 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p9tD5RgM2T4Zkex4"
+}

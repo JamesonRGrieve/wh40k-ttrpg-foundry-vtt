@@ -1,0 +1,30 @@
+{
+  "name": "Tau Drone Controller",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "To activate, make +0 Tech-Use Test across two full actions. Afterwards controller is calibrated to user until they stop using it. Can have one or more Tau Drones that obey simple commands (move, attack, etc). They act after user. Once per round, can make +20 Tech-Use test to personally direct drone, causing its BS Skill to become that of user's.",
+    "cost": "Xenotech. +20 to Acquisition Tests for this item if acquired through Friendly Tau Settlement.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gBGL998VxYK7DpYx"
+}

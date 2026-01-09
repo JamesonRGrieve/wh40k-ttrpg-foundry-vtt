@@ -1,0 +1,30 @@
+{
+  "name": "Jump Pack (Alatus-Pattern)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Requires a Mechanicus Implants and Operate(Aeronautica)/Pilot(Personal). Doubles Base movement speed, can be used to gain Flyer (12) for one minute. After using Flyer Trait, make +0 Toughness Test or gain 1 Fatigue. Its Mechanical Wings give Fear(1) and +10 to Parry Tests by buffetting enemies. ",
+    "cost": "Draws power from the Potentia Coil.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RFG3sWTemQ6K3QrL"
+}

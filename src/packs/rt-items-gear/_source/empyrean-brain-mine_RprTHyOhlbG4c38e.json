@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1kg",
-    "availability": "Attached to target with Grapple Action in Melee. If successful for 3 rounds at the start of target's turn they must make -20 Agility Test, if successful can only perform one Half Action a turn, if failed can perform no actions that round, including Reactions. Of removed causes 1d10+5 Rending Dmaage not reduced by Armour if removed. After 3 rounds device burns out and dislodges on its own.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Beyond",
+    "category": "tools",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Attached to target with Grapple Action in Melee. If successful for 3 rounds at the start of target's turn they must make -20 Agility Test, if successful can only perform one Half Action a turn, if failed can perform no actions that round, including Reactions. Of removed causes 1d10+5 Rending Dmaage not reduced by Armour if removed. After 3 rounds device burns out and dislodges on its own.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Attached to target with Grapple Action in Melee. If successful for 3 rounds at the start of target's turn they must make -20 Agility Test, if successful can only perform one Half Action a turn, if fai"
     },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Attached to target with Grapple Action in Melee. If successful for 3 rounds at the start of target's turn they must make -20 Agility Test, if successful can only perform one Half Action a turn, if failed can perform no actions that round, including Reactions. Of removed causes 1d10+5 Rending Dmaage not reduced by Armour if removed. After 3 rounds device burns out and dislodges on its own.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

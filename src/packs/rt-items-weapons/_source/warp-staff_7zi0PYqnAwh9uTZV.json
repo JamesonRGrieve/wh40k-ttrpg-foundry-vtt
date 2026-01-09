@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "warp-staff",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

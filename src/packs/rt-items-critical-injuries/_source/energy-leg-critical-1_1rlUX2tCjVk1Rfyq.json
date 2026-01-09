@@ -1,0 +1,32 @@
+{
+  "name": "Energy Leg Critical 1",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_leg_1",
+    "damageType": "energy",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effect": "<p>The blast of energy sears the flesh and bone of the target's leg, leaving a nasty burn scar. The target cannot use the Run or Charge actions for 2 rounds.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Leg (Severity 1)</strong></p><p>The blast of energy sears the flesh and bone of the target's leg, leaving a nasty burn scar. The target cannot use the Run or Charge actions for 2 rounds.</p>",
+      "chat": "",
+      "summary": "Energy Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "1rlUX2tCjVk1Rfyq"
+}

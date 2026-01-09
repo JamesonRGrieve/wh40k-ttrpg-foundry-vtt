@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-stinkbomb",
     "class": "thrown",
     "type": "exotic",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "smoke",
+      "blast-10"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Smoke, Blast (10)",
-    "weight": "1.5kg",
+    "weight": 1.5,
     "availability": "rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "-20 Toughness or vomit for 1d5 rounds. +20 if respirators/sealed armour. Even if pass, -10 to all Tests from watering eyes. No effect on orks or creatures with no sense of smell. For Orks, Common.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Smoke, Blast (10)</p><p><b>Note:</b> -20 Toughness or vomit for 1d5 rounds. +20 if respirators/sealed armour. Even if pass, -10 to all Tests from watering eyes. No effect on orks or creatures with no sense of smell. For Orks, Common.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "-20 Toughness or vomit for 1d5 rounds. +20 if respirators/sealed armour. Even if pass, -10 to all Tests from watering eyes. No effect on orks or creatures with no sense of smell. For Orks, Common.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

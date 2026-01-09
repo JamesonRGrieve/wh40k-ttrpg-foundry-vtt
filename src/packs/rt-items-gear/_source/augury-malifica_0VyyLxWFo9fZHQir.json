@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "1kg",
-    "availability": "Master-Crafted Relic Auspex of the Deathwatch. Works as regular Auspex but has +30 to Awareness Tests to detect Daemons and only +5 against other adversaries. Can also provide cryptic clues or hints of impending Daemonic Activity. ",
-    "cost": "Officially belongs to the Grey Knights, they think it lost, and would be annoyed to find the Deathwatch have it.",
-    "effects": "Hero",
-    "notes": "20 R",
-    "source": "DW: Rites of Battle",
+    "category": "luxury",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 20 R</p>"
+      "value": "<p>Master-Crafted Relic Auspex of the Deathwatch. Works as regular Auspex but has +30 to Awareness Tests to detect Daemons and only +5 against other adversaries. Can also provide cryptic clues or hints of impending Daemonic Activity. </p>\n<h3>Requirements</h3><p>Officially belongs to the Grey Knights, they think it lost, and would be annoyed to find the Deathwatch have it.</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 20 R</p>",
+      "chat": "",
+      "summary": "Master-Crafted Relic Auspex of the Deathwatch. Works as regular Auspex but has +30 to Awareness Tests to detect Daemons and only +5 against other adversaries. Can also provide cryptic clues or hints o"
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Master-Crafted Relic Auspex of the Deathwatch. Works as regular Auspex but has +30 to Awareness Tests to detect Daemons and only +5 against other adversaries. Can also provide cryptic clues or hints of impending Daemonic Activity. ",
+    "duration": "",
+    "notes": "20 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

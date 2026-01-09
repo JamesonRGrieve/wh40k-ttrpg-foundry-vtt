@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "stiletto-landunder-devils-kiss",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 3
+    },
+    "special": [
+      "fast",
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Fast, Primitive (8)",
-    "weight": "0.3kg",
+    "weight": 0.3,
     "availability": "rare",
-    "cost": "55 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "A Long and Incredibly Narrow Blade",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 55,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Fast, Primitive (8)</p><p><b>Note:</b> A Long and Incredibly Narrow Blade</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Long and Incredibly Narrow Blade",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

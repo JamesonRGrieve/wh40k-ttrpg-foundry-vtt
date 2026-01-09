@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "Found at sites of recent Daemonic Incursions or summoning, constantly generates heat and crumbles to ash when touched. Can be used to create a summoning circle of chaos symbol, granting +30 to Daemoni Summoning Rituals. Coating a weapon in it grants it Overheats and Tainted Qualities, and removes Sanctified Quality permenantly. Covering one's skin with it grants Daemonic (X) for X Minutes, where X = Willpower Bonus / 2. Causes 1d5 Corruption per minute of exposure, if this causes mutation/malignancy, test has -20. Can also enhance Malefic Psychic Powers or increase the chance or effects of Psychic Pheonomena",
-    "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic must be stored in stasis, its unclean heat destroying any container over time.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Beyond",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Found at sites of recent Daemonic Incursions or summoning, constantly generates heat and crumbles to ash when touched. Can be used to create a summoning circle of chaos symbol, granting +30 to Daemoni Summoning Rituals. Coating a weapon in it grants it Overheats and Tainted Qualities, and removes Sanctified Quality permenantly. Covering one's skin with it grants Daemonic (X) for X Minutes, where X = Willpower Bonus / 2. Causes 1d5 Corruption per minute of exposure, if this causes mutation/malignancy, test has -20. Can also enhance Malefic Psychic Powers or increase the chance or effects of Psychic Pheonomena</p>\n<h3>Requirements</h3><p>Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic must be stored in stasis, its unclean heat destroying any container over time.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Found at sites of recent Daemonic Incursions or summoning, constantly generates heat and crumbles to ash when touched. Can be used to create a summoning circle of chaos symbol, granting +30 to Daemoni"
     },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Found at sites of recent Daemonic Incursions or summoning, constantly generates heat and crumbles to ash when touched. Can be used to create a summoning circle of chaos symbol, granting +30 to Daemoni Summoning Rituals. Coating a weapon in it grants it Overheats and Tainted Qualities, and removes Sanctified Quality permenantly. Covering one's skin with it grants Daemonic (X) for X Minutes, where X = Willpower Bonus / 2. Causes 1d5 Corruption per minute of exposure, if this causes mutation/malignancy, test has -20. Can also enhance Malefic Psychic Powers or increase the chance or effects of Psychic Pheonomena",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Bootleg Anesthetic, makes you feel drunk, numbs the body and mind.",
-    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
-    "effects": "Abundant",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Bootleg Anesthetic, makes you feel drunk, numbs the body and mind.</p>\n<h3>Requirements</h3><p>Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Bootleg Anesthetic, makes you feel drunk, numbs the body and mind."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Bootleg Anesthetic, makes you feel drunk, numbs the body and mind.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -14,3 +14,6 @@ export { default as DamageRollDialog, prepareDamageRoll } from "./damage-roll-di
 export { default as SimpleRollDialog, prepareSimpleRoll } from "./simple-roll-dialog.mjs";
 export { default as EnhancedSkillDialog, prepareEnhancedSkillRoll } from "./enhanced-skill-dialog.mjs";
 export { default as SpecialistSkillDialog, prepareCreateSpecialistSkillPrompt } from "./specialist-skill-dialog.mjs";
+
+// Utility dialogs
+export { default as AddXPDialog, openAddXPDialog } from "./add-xp-dialog.mjs";

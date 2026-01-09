@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "0.5kg",
-    "availability": "A Catchall of texts considered Blasphemous by the Imperium of Man, they may simply be cautions on Imperial Policies, they could also be in-depth heretical ritual guides and mind-numbing Chaos scrawls. Its use Grants +20 to Social Skill Tests such as Intimidation, Charm, and Decieve that are relevent to the Text's Contents at GM Discretion.",
-    "cost": "Heretical",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Catchall of texts considered Blasphemous by the Imperium of Man, they may simply be cautions on Imperial Policies, they could also be in-depth heretical ritual guides and mind-numbing Chaos scrawls. Its use Grants +20 to Social Skill Tests such as Intimidation, Charm, and Decieve that are relevent to the Text's Contents at GM Discretion.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Catchall of texts considered Blasphemous by the Imperium of Man, they may simply be cautions on Imperial Policies, they could also be in-depth heretical ritual guides and mind-numbing Chaos scrawls."
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Catchall of texts considered Blasphemous by the Imperium of Man, they may simply be cautions on Imperial Policies, they could also be in-depth heretical ritual guides and mind-numbing Chaos scrawls. Its use Grants +20 to Social Skill Tests such as Intimidation, Charm, and Decieve that are relevent to the Text's Contents at GM Discretion.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

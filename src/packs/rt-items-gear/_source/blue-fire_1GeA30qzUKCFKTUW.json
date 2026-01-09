@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "[Addictive] Lasts 1d10 Rounds, allows user to reroll any Focus Power Tests made during this time. However even Fettered Powers can trigger Psychic Phenomena as if Unfettered. User must also make -10 Willpower Test or gain 1 Corruption Point (source: failiure) when using power.",
-    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>[Addictive] Lasts 1d10 Rounds, allows user to reroll any Focus Power Tests made during this time. However even Fettered Powers can trigger Psychic Phenomena as if Unfettered. User must also make -10 Willpower Test or gain 1 Corruption Point (source: failiure) when using power.</p>\n<h3>Requirements</h3><p>Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "[Addictive] Lasts 1d10 Rounds, allows user to reroll any Focus Power Tests made during this time. However even Fettered Powers can trigger Psychic Phenomena as if Unfettered. User must also make -10 W"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "[Addictive] Lasts 1d10 Rounds, allows user to reroll any Focus Power Tests made during this time. However even Fettered Powers can trigger Psychic Phenomena as if Unfettered. User must also make -10 Willpower Test or gain 1 Corruption Point (source: failiure) when using power.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

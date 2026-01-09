@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "grashskull",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+10",
-    "damageType": "Rending",
-    "penetration": 11,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 10,
+      "penetration": 11
+    },
+    "special": [
+      "power-field",
+      "sanctified",
+      "balanced",
+      "tearing",
+      "daemon-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Sanctified, Balanced, Tearing, Daemon Wep",
-    "weight": "10kg",
+    "weight": 10,
     "availability": "unique",
-    "cost": "-",
-    "source": "HB",
-    "note": "Weapon: Nemesis Greatsword (Bastardised). Daemon WP 55 (Undivided Daemon), Bind Str 3. Att.: Vicious, Bloodlust. Make +0 WP Test or enter Frenzy on drawing Weapon, must make -10 WP Test to sheath weapon and end Frenzied State. If weapon kills daemonic entities of a lower WP than it, it permenantly consumes them, if weapon has been fed within 12 hours does not force frenzy effect. If weapon has been fed well, may provide occasional assistance to wielder (or hinder them if not fed). Sanctified represents weapon's ability to kill daemons.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Sanctified, Balanced, Tearing, Daemon Wep</p><p><b>Note:</b> Weapon: Nemesis Greatsword (Bastardised). Daemon WP 55 (Undivided Daemon), Bind Str 3. Att.: Vicious, Bloodlust. Make +0 WP Test or enter Frenzy on drawing Weapon, must make -10 WP Test to sheath weapon and end Frenzied State. If weapon kills daemonic entities of a lower WP than it, it permenantly consumes them, if weapon has been fed within 12 hours does not force frenzy effect. If weapon has been fed well, may provide occasional assistance to wielder (or hinder them if not fed). Sanctified represents weapon's ability to kill daemons.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Nemesis Greatsword (Bastardised). Daemon WP 55 (Undivided Daemon), Bind Str 3. Att.: Vicious, Bloodlust. Make +0 WP Test or enter Frenzy on drawing Weapon, must make -10 WP Test to sheath weapon and end Frenzied State. If weapon kills daemonic entities of a lower WP than it, it permenantly consumes them, if weapon has been fed within 12 hours does not force frenzy effect. If weapon has been fed well, may provide occasional assistance to wielder (or hinder them if not fed). Sanctified represents weapon's ability to kill daemons.",
+    "source": "HB"
   },
   "effects": [],
   "flags": {},

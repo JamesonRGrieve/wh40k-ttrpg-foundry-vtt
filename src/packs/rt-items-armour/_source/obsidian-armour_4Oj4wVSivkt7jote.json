@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Arms, Body, Legs",
-    "ap": 7,
-    "maxAg": null,
-    "weight": "4kg",
+    "weight": 4,
     "availability": "unique",
-    "cost": "-",
     "notes": "Weapons with the Force Quality have it negated while attacking anyone wearing this armour.",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Weapons with the Force Quality have it negated while attacking anyone wearing this armour.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 7,
       "body": 7,
       "leftArm": 7,
       "rightArm": 7,
@@ -33,7 +28,8 @@
       "rightLeg": 7
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

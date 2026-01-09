@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "bolas-alt",
     "class": "thrown",
     "type": "primitive",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 1,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-1",
+      "snare-1",
+      "inaccurate"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (1), Snare (1), Inaccurate",
-    "weight": "1.5kg",
+    "weight": 1.5,
     "availability": "average",
-    "cost": "10 T",
-    "source": "Only War: Core",
-    "note": "A set of balls connected by cords that can wrap around a target when thrown at them",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (1), Snare (1), Inaccurate</p><p><b>Note:</b> A set of balls connected by cords that can wrap around a target when thrown at them</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A set of balls connected by cords that can wrap around a target when thrown at them",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

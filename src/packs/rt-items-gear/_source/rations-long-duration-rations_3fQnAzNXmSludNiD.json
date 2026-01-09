@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "1kg",
-    "availability": "Similar to regular ration packs but with higher energy items for long forward marches or intense activities away from central command.",
-    "cost": "One day's worth of food for one person",
-    "effects": "Common",
-    "notes": "5 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "consumable",
+    "weight": 1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+      "value": "<p>Similar to regular ration packs but with higher energy items for long forward marches or intense activities away from central command.</p>\n<h3>Requirements</h3><p>One day's worth of food for one person</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>",
+      "chat": "",
+      "summary": "Similar to regular ration packs but with higher energy items for long forward marches or intense activities away from central command."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Similar to regular ration packs but with higher energy items for long forward marches or intense activities away from central command.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

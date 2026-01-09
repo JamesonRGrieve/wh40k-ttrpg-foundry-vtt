@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "1kg",
-    "availability": "A user that possesses this tome gains +20 to Common Lore (Ecclesiarchy, Imperial Creed), and Scholastic Lore (Imperial Creed) Tests.",
-    "cost": "Also known as the \"Book of Hours\" by Sebastian Thore, containing many prayers, liturgies, sermons, and a calender of feast days.",
-    "effects": "Average",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A user that possesses this tome gains +20 to Common Lore (Ecclesiarchy, Imperial Creed), and Scholastic Lore (Imperial Creed) Tests.</p>\n<h3>Requirements</h3><p>Also known as the \"Book of Hours\" by Sebastian Thore, containing many prayers, liturgies, sermons, and a calender of feast days.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A user that possesses this tome gains +20 to Common Lore (Ecclesiarchy, Imperial Creed), and Scholastic Lore (Imperial Creed) Tests."
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A user that possesses this tome gains +20 to Common Lore (Ecclesiarchy, Imperial Creed), and Scholastic Lore (Imperial Creed) Tests.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

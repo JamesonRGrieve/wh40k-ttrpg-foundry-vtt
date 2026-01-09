@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autopistol-lyndwyrm-volcano",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "30m",
-    "rof": "S/2/6",
-    "damage": "1d10+2",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 18,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
     "availability": "scarce",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "There are special best craftsmanship versions of this weapon emblazoned with a crimson blade that have the \"Sanctified\" Quality.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> There are special best craftsmanship versions of this weapon emblazoned with a crimson blade that have the \"Sanctified\" Quality.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "There are special best craftsmanship versions of this weapon emblazoned with a crimson blade that have the \"Sanctified\" Quality.",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

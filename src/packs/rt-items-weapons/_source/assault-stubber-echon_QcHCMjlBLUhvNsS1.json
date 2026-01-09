@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "assault-stubber-echon",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "100m",
-    "rof": "-/-/6",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 3,
-    "clip": 200,
-    "reload": "2 Full",
-    "special": "Storm",
-    "weight": "21kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "storm"
+    ],
+    "clip": {
+      "max": 200,
+      "value": 200,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 21,
     "availability": "average",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Storm</p><p><b>Note:</b> Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

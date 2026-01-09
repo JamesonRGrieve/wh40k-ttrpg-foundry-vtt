@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "2kg",
-    "availability": "+20 Medicae Skill when used, user must have Medicae Skill.\nContains 6 Doses of Stimm which must be replaced seperately.",
-    "cost": "GM Dependant as to whether it is actually consumed on use",
-    "effects": "Common",
-    "notes": "150 T",
-    "source": "Rogue Trader Core",
+    "category": "consumable",
+    "weight": 2,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 150,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 150 T</p>"
+      "value": "<p>+20 Medicae Skill when used, user must have Medicae Skill.\nContains 6 Doses of Stimm which must be replaced seperately.</p>\n<h3>Requirements</h3><p>GM Dependant as to whether it is actually consumed on use</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 150 T</p>",
+      "chat": "",
+      "summary": "+20 Medicae Skill when used, user must have Medicae Skill.\nContains 6 Doses of Stimm which must be replaced seperately."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+20 Medicae Skill when used, user must have Medicae Skill.\nContains 6 Doses of Stimm which must be replaced seperately.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

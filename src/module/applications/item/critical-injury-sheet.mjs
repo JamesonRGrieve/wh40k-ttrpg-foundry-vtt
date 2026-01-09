@@ -22,7 +22,7 @@ export default class CriticalInjurySheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-critical-injury-sheet.hbs",
+            template: "systems/rogue-trader/templates/item/item-critical-injury-sheet-v2.hbs",
             scrollable: [".rt-tab-content"]
         }
     };

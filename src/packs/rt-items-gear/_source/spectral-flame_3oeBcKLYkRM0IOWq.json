@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "An ornate stand holding a seemingly mundane candle that releases an unending flame that constantly reshapes itself into daemonic faces, grasping claws, lost friends, and many other things beyond comprehension. If one looks closely into the flames, they can choose any Lore Skill of any rank, and perform a willpower test with a penalty equal to the rank x 10 (EG: Lore Rank 2 (+10) would be a -20 penalty). If the test is passed, the user gains that lore skill at that rank for Degrees of Success days, as well as 1d5 Corruption per rank. If test is failed, user suffers 1d10 nonpermnenant Intelligence damage per degree of Failiure. The flame naturally attracts Daemons who may cavort with the fire or seek to reclaim it. Those weak of will may be driven made by the flames.",
-    "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic must discover how to extinguish its eternal flames, and not be tempted by its promise of knowledge",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Beyond",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>An ornate stand holding a seemingly mundane candle that releases an unending flame that constantly reshapes itself into daemonic faces, grasping claws, lost friends, and many other things beyond comprehension. If one looks closely into the flames, they can choose any Lore Skill of any rank, and perform a willpower test with a penalty equal to the rank x 10 (EG: Lore Rank 2 (+10) would be a -20 penalty). If the test is passed, the user gains that lore skill at that rank for Degrees of Success days, as well as 1d5 Corruption per rank. If test is failed, user suffers 1d10 nonpermnenant Intelligence damage per degree of Failiure. The flame naturally attracts Daemons who may cavort with the fire or seek to reclaim it. Those weak of will may be driven made by the flames.</p>\n<h3>Requirements</h3><p>Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic must discover how to extinguish its eternal flames, and not be tempted by its promise of knowledge</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "An ornate stand holding a seemingly mundane candle that releases an unending flame that constantly reshapes itself into daemonic faces, grasping claws, lost friends, and many other things beyond compr"
     },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "An ornate stand holding a seemingly mundane candle that releases an unending flame that constantly reshapes itself into daemonic faces, grasping claws, lost friends, and many other things beyond comprehension. If one looks closely into the flames, they can choose any Lore Skill of any rank, and perform a willpower test with a penalty equal to the rank x 10 (EG: Lore Rank 2 (+10) would be a -20 penalty). If the test is passed, the user gains that lore skill at that rank for Degrees of Success days, as well as 1d5 Corruption per rank. If test is failed, user suffers 1d10 nonpermnenant Intelligence damage per degree of Failiure. The flame naturally attracts Daemons who may cavort with the fire or seek to reclaim it. Those weak of will may be driven made by the flames.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

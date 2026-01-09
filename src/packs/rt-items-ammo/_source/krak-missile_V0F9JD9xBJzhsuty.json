@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Missile Launcher",
-    "damageOrEffect": "4d10+10, Pen 10, Blast(1)",
-    "qualities": "Blast(1)",
-    "weight": "1.5kg",
+    "identifier": "krak-missile",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-1"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>4d10+10, Pen 10, Blast(1)</p>",
+    "notes": "",
+    "weight": 1.5,
     "availability": "average",
-    "cost": "150T each",
-    "source": "DH: Inquisitor's Handbook",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 150,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 4d10+10, Pen 10, Blast(1)</p><p><b>Qualities:</b> Blast(1)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH: Inquisitor's Handbook",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

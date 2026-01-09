@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "-",
-    "availability": "Improved Combi-Tool, provides +20 to Tech-use. As a Full Action can remove 1d5 damage from a servitor that has at least 1 Wound Remaining.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "25 R",
-    "source": "DW: First Founding",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 25 R</p>"
+      "value": "<p>Improved Combi-Tool, provides +20 to Tech-use. As a Full Action can remove 1d5 damage from a servitor that has at least 1 Wound Remaining.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 25 R</p>",
+      "chat": "",
+      "summary": "Improved Combi-Tool, provides +20 to Tech-use. As a Full Action can remove 1d5 damage from a servitor that has at least 1 Wound Remaining."
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Improved Combi-Tool, provides +20 to Tech-use. As a Full Action can remove 1d5 damage from a servitor that has at least 1 Wound Remaining.",
+    "duration": "",
+    "notes": "25 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

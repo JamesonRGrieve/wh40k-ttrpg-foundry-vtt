@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "surturs-breath",
     "class": "basic",
     "type": "exotic",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "1d10+12",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": 8,
-    "reload": "2 Full",
-    "special": "SM Wep, Flame",
-    "weight": "15kg",
-    "availability": "Respected",
-    "cost": "25 R",
-    "source": "DW: First Founding",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Flamer of the Salamanders. Targets set on fire by this weapon must also make a -20 Willpower Test, if failed they roll on the Shock Table as if they had just failed a Fear Test. Those set on fire by Astartes flamer weapons take +4 damage from the flames.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "flame"
+    ],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 15,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Flame</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Flamer of the Salamanders. Targets set on fire by this weapon must also make a -20 Willpower Test, if failed they roll on the Shock Table as if they had just failed a Fear Test. Those set on fire by Astartes flamer weapons take +4 damage from the flames.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Flamer of the Salamanders. Targets set on fire by this weapon must also make a -20 Willpower Test, if failed they roll on the Shock Table as if they had just failed a Fear Test. Those set on fire by Astartes flamer weapons take +4 damage from the flames.",
+    "source": "DW: First Founding"
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Leg Critical 2",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_leg_2",
+    "damageType": "explosive",
+    "bodyPart": "leg",
+    "severity": 2,
+    "effect": "<p>The force of the explosion takes the target's feet out from under him. He is knocked Prone and cannot use any Movement action except for the Half Move action for [[1d5]] rounds.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Leg (Severity 2)</strong></p><p>The force of the explosion takes the target's feet out from under him. He is knocked Prone and cannot use any Movement action except for the Half Move action for [[1d5]] rounds.</p>",
+      "chat": "",
+      "summary": "Explosive Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "2YEjWQhr3w9xmdbO"
+}

@@ -1141,8 +1141,13 @@
       "templates": [
         "itemDescription"
       ],
-      "type": "impact",
-      "part": "body"
+      "identifier": "",
+      "damageType": "impact",
+      "bodyPart": "body",
+      "severity": 1,
+      "effect": "",
+      "permanent": false,
+      "notes": ""
     },
     "cybernetic": {
       "templates": [

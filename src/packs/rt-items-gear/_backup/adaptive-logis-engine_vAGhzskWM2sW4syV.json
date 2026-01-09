@@ -1,0 +1,30 @@
+{
+  "name": "Adaptive Logis Engine",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "4kg",
+    "availability": "Archeotech device used to breach otherwise Alien Systems. Can be attached to an Alient Computer, Lock, or other Interface Device that user wishes to bypass and make -20 Security Test. If successful the Engine interfaces with the device and character can treat it as a normal lock/cogitator, etc for further tests. Takes 5 minutes to interface, -30 seconds per DoS (min 30 seconds).",
+    "cost": null,
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vAGhzskWM2sW4syV"
+}

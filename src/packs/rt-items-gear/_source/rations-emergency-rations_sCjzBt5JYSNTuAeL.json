@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "1kg",
-    "availability": "Stored in tnaks or aircraft in individual packs for when a unit is waiting relief or rescue. Daily packs can be stretched to a week of sustenance if one is desperate.",
-    "cost": "One day's worth of food for one person",
-    "effects": "Average",
-    "notes": "10 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "consumable",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>"
+      "value": "<p>Stored in tnaks or aircraft in individual packs for when a unit is waiting relief or rescue. Daily packs can be stretched to a week of sustenance if one is desperate.</p>\n<h3>Requirements</h3><p>One day's worth of food for one person</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>",
+      "chat": "",
+      "summary": "Stored in tnaks or aircraft in individual packs for when a unit is waiting relief or rescue. Daily packs can be stretched to a week of sustenance if one is desperate."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Stored in tnaks or aircraft in individual packs for when a unit is waiting relief or rescue. Daily packs can be stretched to a week of sustenance if one is desperate.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

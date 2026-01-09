@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Can extend up to 1.5m from shoulder or back mounting. Has Fixed Strength Characteristic of 75 and Unnatural Strength(7) Trait, uses this value regardless of Character's strength or talents. No Fine Manipulation, but can lift or tether objects as a Free Action. Has Melee Profile (2d10+14 I, Pen 10, Unwieldy)",
-    "cost": "Best Craftmanship:  85 Strength, +1 Damage.\nRequires Mechadendrite Use (Utility) to use and Mechadendrite Use(Weapon) to attack",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "OW: Hammer of the Emperor",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "best",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Can extend up to 1.5m from shoulder or back mounting. Has Fixed Strength Characteristic of 75 and Unnatural Strength(7) Trait, uses this value regardless of Character's strength or talents. No Fine Manipulation, but can lift or tether objects as a Free Action. Has Melee Profile (2d10+14 I, Pen 10, Unwieldy)</p>\n<h3>Requirements</h3><p>Best Craftmanship:  85 Strength, +1 Damage.\nRequires Mechadendrite Use (Utility) to use and Mechadendrite Use(Weapon) to attack</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Can extend up to 1.5m from shoulder or back mounting. Has Fixed Strength Characteristic of 75 and Unnatural Strength(7) Trait, uses this value regardless of Character's strength or talents. No Fine Ma"
     },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Can extend up to 1.5m from shoulder or back mounting. Has Fixed Strength Characteristic of 75 and Unnatural Strength(7) Trait, uses this value regardless of Character's strength or talents. No Fine Manipulation, but can lift or tether objects as a Free Action. Has Melee Profile (2d10+14 I, Pen 10, Unwieldy)",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

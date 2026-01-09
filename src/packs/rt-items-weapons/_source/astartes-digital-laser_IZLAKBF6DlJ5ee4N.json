@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-digital-laser",
     "class": "pistol",
     "type": "exotic",
-    "range": "4m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": 1,
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 4,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "reliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Reliable",
-    "weight": "0.1kg",
-    "availability": "Famed",
-    "cost": "35 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.",
+    "weight": 0.1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 35,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Reliable</p><p><b>Note:</b> Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

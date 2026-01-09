@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-gilded-boltgun",
     "class": "basic",
     "type": "bolt",
-    "range": "100m",
-    "rof": "S/2/4",
-    "damage": "1d10+9",
-    "damageType": "Explosive",
-    "penetration": 4,
-    "clip": 30,
-    "reload": "Full",
-    "special": "SM Wep, Tearing",
-    "weight": "20kg",
-    "availability": "Distinguished",
-    "cost": "20 R",
-    "source": "DW: First Founding",
-    "note": "Space Marines Only.  Ultramarines variant Master-Crafted Astartes Bolter. Adds +10 to Fellowship and Skill Tests based on Fellowship when carried. If wielder is squad leader, Ultramarines Squad Mode abilities reduce their cohesion cost by 1 (min 1).",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 9,
+      "penetration": 4
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 20,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only.  Ultramarines variant Master-Crafted Astartes Bolter. Adds +10 to Fellowship and Skill Tests based on Fellowship when carried. If wielder is squad leader, Ultramarines Squad Mode abilities reduce their cohesion cost by 1 (min 1).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only.  Ultramarines variant Master-Crafted Astartes Bolter. Adds +10 to Fellowship and Skill Tests based on Fellowship when carried. If wielder is squad leader, Ultramarines Squad Mode abilities reduce their cohesion cost by 1 (min 1).",
+    "source": "DW: First Founding"
   },
   "effects": [],
   "flags": {},

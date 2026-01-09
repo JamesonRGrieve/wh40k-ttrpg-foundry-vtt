@@ -1,0 +1,32 @@
+{
+  "name": "Energy Arm Critical 7",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_arm_7",
+    "damageType": "energy",
+    "bodyPart": "arm",
+    "severity": 7,
+    "effect": "<p>With a terrible snapping sound, the heat of the attack boils the marrow in the target’s arm, causing it to crack or even shatter. The target suffers [[1d5]] levels of Fatigue and is Stunned for 1 round. His arm is Useless until it is repaired.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Arm (Severity 7)</strong></p><p>With a terrible snapping sound, the heat of the attack boils the marrow in the target’s arm, causing it to crack or even shatter. The target suffers [[1d5]] levels of Fatigue and is Stunned for 1 round. His arm is Useless until it is repaired.</p>",
+      "chat": "",
+      "summary": "Energy Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "R4fOMhiWGyRWCuXn"
+}

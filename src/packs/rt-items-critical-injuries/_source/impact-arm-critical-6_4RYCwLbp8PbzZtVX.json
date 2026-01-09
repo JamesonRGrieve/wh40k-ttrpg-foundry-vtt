@@ -1,0 +1,32 @@
+{
+  "name": "Impact Arm Critical 6",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_arm_6",
+    "damageType": "impact",
+    "bodyPart": "arm",
+    "severity": 6,
+    "effect": "<p>The attack pulverises the target's hand, crushing and breaking [[1d5]] fingers. The target suffers 1 level of Fatigue. He must make a Challenging (+0) Toughness test; if he fails, permanently reduce his Weapon Skill and Ballistic Skill characteristics by 2.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Arm (Severity 6)</strong></p><p>The attack pulverises the target's hand, crushing and breaking [[1d5]] fingers. The target suffers 1 level of Fatigue. He must make a Challenging (+0) Toughness test; if he fails, permanently reduce his Weapon Skill and Ballistic Skill characteristics by 2.</p>",
+      "chat": "",
+      "summary": "Impact Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "4RYCwLbp8PbzZtVX"
+}

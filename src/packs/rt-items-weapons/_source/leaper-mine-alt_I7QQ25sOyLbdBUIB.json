@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "leaper-mine-alt",
     "class": "thrown",
     "type": "explosive",
-    "range": "2m",
-    "rof": "S/-/-",
-    "damage": "3d10+9",
-    "damageType": "Impact",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 2,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 9,
+      "penetration": 3
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (5)",
-    "weight": "2kg",
-    "availability": "Initiated",
-    "cost": "5 R",
-    "source": "Deathwatch: Errata",
-    "note": "Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.",
+    "weight": 2,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

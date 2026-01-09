@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Astartes Missile Launcher",
-    "damageOrEffect": "2d10+12 E, Pen 8, Blast (3), Volatile. Continues to do full damage within blast area for 1d5 rounds after detonation. If targeting a vehicle on 4+ DoS Blast centres on vehicle rather than a stationary point.",
-    "qualities": "Blast(3), Volatile",
-    "weight": "3kg",
-    "availability": "Distinguished",
-    "cost": "25 R Each",
-    "source": "Deathwatch: Core",
+    "identifier": "plasma-missile-astartes",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-3",
+      "volatile"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>2d10+12 E, Pen 8, Blast (3), Volatile. Continues to do full damage within blast area for 1d5 rounds after detonation. If targeting a vehicle on 4+ DoS Blast centres on vehicle rather than a stationary point.</p>",
+    "notes": "",
+    "weight": 3,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10+12 E, Pen 8, Blast (3), Volatile. Continues to do full damage within blast area for 1d5 rounds after detonation. If targeting a vehicle on 4+ DoS Blast centres on vehicle rather than a stationary point.</p><p><b>Qualities:</b> Blast(3), Volatile</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

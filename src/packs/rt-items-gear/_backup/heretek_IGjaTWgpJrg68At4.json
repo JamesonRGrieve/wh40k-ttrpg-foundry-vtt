@@ -1,0 +1,30 @@
+{
+  "name": "Heretek",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Can be hired for hard currency or in exchange for rare technology or data. Can aid in identifying Archeotech relics, installing prohibited cybernetics, or increasing the Craftsmanship of an item by one level through esotetic and likely heretical modifications that may have other drawbacks.",
+    "cost": "One who has violated the Edicts of the Machine Cult to experiment with forbidden technology and conduct unhindered research.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IGjaTWgpJrg68At4"
+}

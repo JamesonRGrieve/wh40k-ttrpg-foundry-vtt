@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "2kg",
-    "availability": "When worn provides Fear(2), or increases Character's Fear rating by 1 if they already have Fear(2) or higher. Also grants Battle Range Talent and Unnatural Weapon Skill(4). Can't be worn over a helmet.",
-    "cost": "Must have Mark of Khorne to wear, Heretical.",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "BC: Tome of Blood",
+    "category": "tools",
+    "weight": 2,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When worn provides Fear(2), or increases Character's Fear rating by 1 if they already have Fear(2) or higher. Also grants Battle Range Talent and Unnatural Weapon Skill(4). Can't be worn over a helmet.</p>\n<h3>Requirements</h3><p>Must have Mark of Khorne to wear, Heretical.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When worn provides Fear(2), or increases Character's Fear rating by 1 if they already have Fear(2) or higher. Also grants Battle Range Talent and Unnatural Weapon Skill(4). Can't be worn over a helmet"
     },
+    "source": {
+      "book": "BC: Tome of Blood",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When worn provides Fear(2), or increases Character's Fear rating by 1 if they already have Fear(2) or higher. Also grants Battle Range Talent and Unnatural Weapon Skill(4). Can't be worn over a helmet.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

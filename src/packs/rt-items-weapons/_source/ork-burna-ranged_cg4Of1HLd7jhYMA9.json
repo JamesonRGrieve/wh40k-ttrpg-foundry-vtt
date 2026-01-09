@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-burna-ranged",
     "class": "basic",
     "type": "exotic",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 2,
-    "clip": 6,
-    "reload": "Full",
-    "special": "Flame, Spray, Unreliable",
-    "weight": "8kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "spray",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Not Unreliable when wielded by an Ork. Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Spray, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Not Unreliable when wielded by an Ork. Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

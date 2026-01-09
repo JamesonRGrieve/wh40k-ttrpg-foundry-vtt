@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "missile-launcher-retobi",
     "class": "heavy",
     "type": "launcher",
-    "range": "200m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 5,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "35kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 35,
     "availability": "rare",
-    "cost": "-",
-    "source": "Rogue Trader: Core",
-    "note": "Traits vary with ammo (Ammo - Missiles)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Traits vary with ammo (Ammo - Missiles)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Traits vary with ammo (Ammo - Missiles)",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

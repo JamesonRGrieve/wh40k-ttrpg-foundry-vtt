@@ -3,19 +3,48 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP/Bolt: Hand Cannons, Heavy Stubbers, Bolt Weapons",
-    "damageOrEffect": "If target takes any damage, make Toughness test with -10 per point of damage taken. If fail, take additional 2d10 R damage, (ignores AP/T)",
-    "qualities": null,
-    "weight": "10% wep",
+    "identifier": "organgrinder-rounds",
+    "weaponTypes": [
+      "solid-projectile",
+      "bolt"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>If target takes any damage, make Toughness test with -10 per point of damage taken. If fail, take additional 2d10 R damage, (ignores AP/T)</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "extremely-rare",
-    "cost": null,
-    "source": "RT: Into the Storm",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> If target takes any damage, make Toughness test with -10 per point of damage taken. If fail, take additional 2d10 R damage, (ignores AP/T)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

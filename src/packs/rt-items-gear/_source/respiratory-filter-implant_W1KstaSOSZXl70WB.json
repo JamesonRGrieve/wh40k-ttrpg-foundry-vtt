@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

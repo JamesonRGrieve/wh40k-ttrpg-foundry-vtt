@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "2kg",
-    "availability": "Projects illusions of the user during movement, and causes user to fade into their surroundings when still. Imposes -20 to BS and WS Tests to target user. When stationary grants +30 Concealment and additional -20 to be hit with ranged weapons.",
-    "cost": "A Rare Xenotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 2,
+    "availability": "extremely-rare",
+    "craftsmanship": "good",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Projects illusions of the user during movement, and causes user to fade into their surroundings when still. Imposes -20 to BS and WS Tests to target user. When stationary grants +30 Concealment and additional -20 to be hit with ranged weapons.</p>\n<h3>Requirements</h3><p>A Rare Xenotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Projects illusions of the user during movement, and causes user to fade into their surroundings when still. Imposes -20 to BS and WS Tests to target user. When stationary grants +30 Concealment and ad"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Projects illusions of the user during movement, and causes user to fade into their surroundings when still. Imposes -20 to BS and WS Tests to target user. When stationary grants +30 Concealment and additional -20 to be hit with ranged weapons.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

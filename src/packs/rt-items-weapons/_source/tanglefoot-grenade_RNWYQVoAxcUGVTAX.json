@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tanglefoot-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-2",
+      "snare"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (2), Snare",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (2), Snare</p><p><b>Note:</b> Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

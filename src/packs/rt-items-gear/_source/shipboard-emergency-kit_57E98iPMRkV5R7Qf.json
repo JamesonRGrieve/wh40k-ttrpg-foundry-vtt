@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "6kg",
-    "availability": "Contains Glowstick, Power Cell, 1 Day of Rations, Emergency Vox, 30 mins of Air + Mask, Anti-Radiation Tablets, and Hull Sealent Spray.",
-    "cost": "Glowstick lasts 1d5 hours, power cell powers glowstick/vox for 1d5 hours, or 5 laspistol shots, Vox may have distress signal.",
-    "effects": "Common",
-    "notes": "300 T",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 6,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 300 T</p>"
+      "value": "<p>Contains Glowstick, Power Cell, 1 Day of Rations, Emergency Vox, 30 mins of Air + Mask, Anti-Radiation Tablets, and Hull Sealent Spray.</p>\n<h3>Requirements</h3><p>Glowstick lasts 1d5 hours, power cell powers glowstick/vox for 1d5 hours, or 5 laspistol shots, Vox may have distress signal.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 300 T</p>",
+      "chat": "",
+      "summary": "Contains Glowstick, Power Cell, 1 Day of Rations, Emergency Vox, 30 mins of Air + Mask, Anti-Radiation Tablets, and Hull Sealent Spray."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Contains Glowstick, Power Cell, 1 Day of Rations, Emergency Vox, 30 mins of Air + Mask, Anti-Radiation Tablets, and Hull Sealent Spray.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

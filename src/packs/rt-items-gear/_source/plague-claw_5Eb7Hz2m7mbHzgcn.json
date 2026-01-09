@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Mechadendrite Equipped with Plague Claw Weapon (Melee;1d10+2;Pen 2;Decay(3), Tearing). Grants +10 to Medicae Tests for Diagnose and Chem-Use Special Uses. Can store samples of Plagues, Toxins, and other conconctions, can be loaded with one as a Full Action, until end of encounter any damaged by its weapon suffer Diseases/Toxin's effects.",
-    "cost": "Despite being a Mechadendrite it doesn't need Mechanicus Implants. Is incredibly Heretical however.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "BC: Tome of Decay",
+    "category": "tech",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Mechadendrite Equipped with Plague Claw Weapon (Melee;1d10+2;Pen 2;Decay(3), Tearing). Grants +10 to Medicae Tests for Diagnose and Chem-Use Special Uses. Can store samples of Plagues, Toxins, and other conconctions, can be loaded with one as a Full Action, until end of encounter any damaged by its weapon suffer Diseases/Toxin's effects.</p>\n<h3>Requirements</h3><p>Despite being a Mechadendrite it doesn't need Mechanicus Implants. Is incredibly Heretical however.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Mechadendrite Equipped with Plague Claw Weapon (Melee;1d10+2;Pen 2;Decay(3), Tearing). Grants +10 to Medicae Tests for Diagnose and Chem-Use Special Uses. Can store samples of Plagues, Toxins, and oth"
     },
+    "source": {
+      "book": "BC: Tome of Decay",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Mechadendrite Equipped with Plague Claw Weapon (Melee;1d10+2;Pen 2;Decay(3), Tearing). Grants +10 to Medicae Tests for Diagnose and Chem-Use Special Uses. Can store samples of Plagues, Toxins, and other conconctions, can be loaded with one as a Full Action, until end of encounter any damaged by its weapon suffer Diseases/Toxin's effects.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

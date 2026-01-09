@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "1kg",
-    "availability": "Carries up to 30-50kg. Taking an object out requires a Full Action. Mutually exlusive with a Combat Vest.\nUsually takes a Full Action to take something out of it.",
-    "cost": "Worn on the back (duh)",
-    "effects": "Plentiful",
-    "notes": "10 T",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 1,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 10 T</p>"
+      "value": "<p>Carries up to 30-50kg. Taking an object out requires a Full Action. Mutually exlusive with a Combat Vest.\nUsually takes a Full Action to take something out of it.</p>\n<h3>Requirements</h3><p>Worn on the back (duh)</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 10 T</p>",
+      "chat": "",
+      "summary": "Carries up to 30-50kg. Taking an object out requires a Full Action. Mutually exlusive with a Combat Vest.\nUsually takes a Full Action to take something out of it."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Carries up to 30-50kg. Taking an object out requires a Full Action. Mutually exlusive with a Combat Vest.\nUsually takes a Full Action to take something out of it.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

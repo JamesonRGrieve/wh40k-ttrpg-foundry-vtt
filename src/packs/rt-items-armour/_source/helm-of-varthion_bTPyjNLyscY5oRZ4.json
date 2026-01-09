@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "Head",
-    "ap": 12,
-    "maxAg": null,
-    "weight": "18kg",
+    "weight": 18,
     "availability": "Hero",
-    "cost": "70 R",
     "notes": "Grants +10 to all Attack Rolls, +3 to Penetration of any weapon wielded by wearer. Increases Effective Rank by 1 for determining Squad Cohesion or for Ultramarine Chapter Abilities in Solo Mode.",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Grants +10 to all Attack Rolls, +3 to Penetration of any weapon wielded by wearer. Increases Effective Rank by 1 for determining Squad Cohesion or for Ultramarine Chapter Abilities in Solo Mode.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "head"
     ],
     "armourPoints": {
       "head": 12,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "body": 12,
+      "leftArm": 12,
+      "rightArm": 12,
+      "leftLeg": 12,
+      "rightLeg": 12
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

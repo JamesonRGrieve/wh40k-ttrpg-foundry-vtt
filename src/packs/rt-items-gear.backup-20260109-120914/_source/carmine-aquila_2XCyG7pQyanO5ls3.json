@@ -1,0 +1,30 @@
+{
+  "name": "Carmine Aquila",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "A Metal Sigil of the Imperium that irremovably tarnished red as the ship it was upon travelled the warp, before the ship was lost. It is an omen of bad luck amongst those that sail the stars. If this item is within 3m of a Psychic Phenomena, Perils of the Warp are automatically triggered, if not caused by an  individual who ever is nearest becomes the target. Each character who witnessed it gains Corruption equal to the max number of Fate Threshold. Fate Points used by those of the Imperial Creed are weakened or sometimes twisted in its presence. Warp Translations of ships this item is aboard are often horrific events of flickering Gellar Fields and cracking hulls.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2XCyG7pQyanO5ls3"
+}

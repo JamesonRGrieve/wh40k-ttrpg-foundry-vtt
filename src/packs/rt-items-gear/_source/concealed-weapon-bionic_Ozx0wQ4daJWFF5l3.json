@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Pre-existing Bionic Arm is fitted with a Pistol or short single-handed melee weapon, can be deployed and readied as a Half Action.Weapon cannot be Disarmed and requires detailed inspection/auspex scan to find. A Jam/Overheat disables the limb as well as the weapon. Poor: Weapon gains Unreliable Quality, Good: Weapon functions as Best Craftsmanship.",
-    "cost": "Cost does not include Bionic Arm or Weapon\nPoor costs 150, Good is Rare and costs 750",
-    "effects": "Scarce",
-    "notes": "300 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 300 T</p>"
+      "value": "<p>Pre-existing Bionic Arm is fitted with a Pistol or short single-handed melee weapon, can be deployed and readied as a Half Action.Weapon cannot be Disarmed and requires detailed inspection/auspex scan to find. A Jam/Overheat disables the limb as well as the weapon. Poor: Weapon gains Unreliable Quality, Good: Weapon functions as Best Craftsmanship.</p>\n<h3>Requirements</h3><p>Cost does not include Bionic Arm or Weapon\nPoor costs 150, Good is Rare and costs 750</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 300 T</p>",
+      "chat": "",
+      "summary": "Pre-existing Bionic Arm is fitted with a Pistol or short single-handed melee weapon, can be deployed and readied as a Half Action.Weapon cannot be Disarmed and requires detailed inspection/auspex scan"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Pre-existing Bionic Arm is fitted with a Pistol or short single-handed melee weapon, can be deployed and readied as a Half Action.Weapon cannot be Disarmed and requires detailed inspection/auspex scan to find. A Jam/Overheat disables the limb as well as the weapon. Poor: Weapon gains Unreliable Quality, Good: Weapon functions as Best Craftsmanship.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "0.5kg",
-    "availability": "Can be used by Diviniation Discipline Psyker. Once per session, spend 3d10 minutes and make +0 Trade (Soothsayer) Test, targeting present indivudal or one of their personal belongings. If successful, individual gains one Temporary Fate point that can be spent, but not burnt for rest of session. Tarot may also provide insight into future events.",
-    "cost": "A set of cards used to fortell the future, or if used by a psyker, potentially change it.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Can be used by Diviniation Discipline Psyker. Once per session, spend 3d10 minutes and make +0 Trade (Soothsayer) Test, targeting present indivudal or one of their personal belongings. If successful, individual gains one Temporary Fate point that can be spent, but not burnt for rest of session. Tarot may also provide insight into future events.</p>\n<h3>Requirements</h3><p>A set of cards used to fortell the future, or if used by a psyker, potentially change it.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Can be used by Diviniation Discipline Psyker. Once per session, spend 3d10 minutes and make +0 Trade (Soothsayer) Test, targeting present indivudal or one of their personal belongings. If successful, "
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Can be used by Diviniation Discipline Psyker. Once per session, spend 3d10 minutes and make +0 Trade (Soothsayer) Test, targeting present indivudal or one of their personal belongings. If successful, individual gains one Temporary Fate point that can be spent, but not burnt for rest of session. Tarot may also provide insight into future events.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

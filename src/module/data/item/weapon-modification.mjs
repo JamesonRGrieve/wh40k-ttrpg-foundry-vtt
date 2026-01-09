@@ -26,11 +26,11 @@ export default class WeaponModificationData extends ItemDataModel.mixin(
       restrictions: new fields.SchemaField({
         weaponClasses: new fields.SetField(
           new fields.StringField({ required: true }),
-          { required: true, initial: [] }
+          { required: true, initial: new Set() }
         ),
         weaponTypes: new fields.SetField(
           new fields.StringField({ required: true }),
-          { required: true, initial: [] }
+          { required: true, initial: new Set() }
         )
       }),
       
@@ -53,17 +53,17 @@ export default class WeaponModificationData extends ItemDataModel.mixin(
       // Qualities added
       addedQualities: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Qualities removed
       removedQualities: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Effect description
-      effect: new fields.HTMLField({ required: false, blank: true }),
+      effect: new fields.HTMLField({ required: false }),
       
       // Notes
       notes: new fields.StringField({ required: false, blank: true })

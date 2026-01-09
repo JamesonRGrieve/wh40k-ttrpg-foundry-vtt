@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "2kg",
-    "availability": "A Kit containing papers, inks, quills, etc.",
-    "cost": null,
-    "effects": "Common",
-    "notes": "20 T",
-    "source": "Dark Heresy: Core",
+    "category": "tools",
+    "weight": 2,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>"
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "A Kit containing papers, inks, quills, etc."
     },
+    "source": {
+      "book": "Dark Heresy: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

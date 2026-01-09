@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "6kg",
-    "availability": "Ornate Brazier-like torch that burns prometheum at a highly efficient rate, lasting for months between refuelings and can be easily turned on and off by user. Holding one while it is lit gives +5 to Intimidate and Command Tests, and counts as Exotic Pistol Weapon to those that know how to use it.",
-    "cost": "Weapon Stats: Pistol; 6m; S/-/-; 1d10+6 E; Pen 2; Spray, Flame; Clip 1; Reload 2 Full",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "RT: Stars of Inquity",
+    "category": "tools",
+    "weight": 6,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Ornate Brazier-like torch that burns prometheum at a highly efficient rate, lasting for months between refuelings and can be easily turned on and off by user. Holding one while it is lit gives +5 to Intimidate and Command Tests, and counts as Exotic Pistol Weapon to those that know how to use it.</p>\n<h3>Requirements</h3><p>Weapon Stats: Pistol; 6m; S/-/-; 1d10+6 E; Pen 2; Spray, Flame; Clip 1; Reload 2 Full</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Ornate Brazier-like torch that burns prometheum at a highly efficient rate, lasting for months between refuelings and can be easily turned on and off by user. Holding one while it is lit gives +5 to I"
     },
+    "source": {
+      "book": "RT: Stars of Inquity",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Ornate Brazier-like torch that burns prometheum at a highly efficient rate, lasting for months between refuelings and can be easily turned on and off by user. Holding one while it is lit gives +5 to Intimidate and Command Tests, and counts as Exotic Pistol Weapon to those that know how to use it.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

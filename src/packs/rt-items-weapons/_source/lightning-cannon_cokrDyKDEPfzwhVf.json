@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "lightning-cannon",
     "class": "basic",
     "type": "exotic",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "2d5+4",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 2,
-    "reload": "Full",
-    "special": "Overheats, Shocking",
-    "weight": "0.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d5",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [
+      "overheats",
+      "shocking"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 0.5,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Overheats, Shocking</p><p><b>Note:</b> Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

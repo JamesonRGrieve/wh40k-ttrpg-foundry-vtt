@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autopistol-volg-ripper-clip",
     "class": "pistol",
     "type": "solid-projectile",
-    "range": "20m",
-    "rof": "-/-/6",
-    "damage": "1d10+2",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 12,
-    "reload": "Full",
-    "special": "Inaccurate, Unreliable",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
     "availability": "scarce",
-    "cost": "40 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Common Availability on the Planet Volg",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> Common Availability on the Planet Volg</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Common Availability on the Planet Volg",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

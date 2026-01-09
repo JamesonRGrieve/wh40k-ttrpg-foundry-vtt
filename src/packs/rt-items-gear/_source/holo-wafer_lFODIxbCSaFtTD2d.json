@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "-",
-    "availability": "Officially used as Fealty-Badges, signal markers, etc. Thin, palm-sized disks that produce a small holographic image when activated.\nUnofficially used as kill-counters or markers left as calling cards by assassins.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "5 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 5 T</p>"
+      "value": "<p>Officially used as Fealty-Badges, signal markers, etc. Thin, palm-sized disks that produce a small holographic image when activated.\nUnofficially used as kill-counters or markers left as calling cards by assassins.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 5 T</p>",
+      "chat": "",
+      "summary": "Officially used as Fealty-Badges, signal markers, etc. Thin, palm-sized disks that produce a small holographic image when activated.\nUnofficially used as kill-counters or markers left as calling cards"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Officially used as Fealty-Badges, signal markers, etc. Thin, palm-sized disks that produce a small holographic image when activated.\nUnofficially used as kill-counters or markers left as calling cards by assassins.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

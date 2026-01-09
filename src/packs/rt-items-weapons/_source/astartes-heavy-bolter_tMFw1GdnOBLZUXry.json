@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-heavy-bolter",
     "class": "heavy",
     "type": "bolt",
-    "range": "150m",
-    "rof": "-/-/10",
-    "damage": "2d10+10",
-    "damageType": "Explosive",
-    "penetration": 5,
-    "clip": 60,
-    "reload": "Full",
-    "special": "SM Wep, Tearing",
-    "weight": "68kg",
-    "availability": "Initiated",
-    "cost": "20 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 10,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 68,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

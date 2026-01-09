@@ -1,0 +1,32 @@
+{
+  "name": "Energy Head Critical 7",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_head_7",
+    "damageType": "energy",
+    "bodyPart": "head",
+    "severity": 7,
+    "effect": "<p>In a gruesome display, the flesh is burned from the target's head, exposing charred bone and muscle underneath. The target suffers [[1d10]] levels of Fatigue. He is Blinded permanently. Roll [[1d10]]; this is the target's new Fellowship characteristic value. If his Fellowship value is already 10 or lower, this can be skipped as no one would notice any difference in his behaviour and demeanour.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Head (Severity 7)</strong></p><p>In a gruesome display, the flesh is burned from the target's head, exposing charred bone and muscle underneath. The target suffers [[1d10]] levels of Fatigue. He is Blinded permanently. Roll [[1d10]]; this is the target's new Fellowship characteristic value. If his Fellowship value is already 10 or lower, this can be skipped as no one would notice any difference in his behaviour and demeanour.</p>",
+      "chat": "",
+      "summary": "Energy Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "M7TKGwwre4bwOxhy"
+}

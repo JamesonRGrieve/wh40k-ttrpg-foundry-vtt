@@ -1,0 +1,30 @@
+{
+  "name": "Rainbow",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Immediately allows patients to reroll any failed Tests to resist disease or toxins and stops Blood Loss. However also must make a Toughness Test or take 1d5 Damage that ignores Armour and Toughness. An all in one injection of anti-baterials, blood-clotting agents, allergens, poison and radiation boosters, white blood cell stimulators, and a sedative.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "75 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 75 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LxstuMG944U0PYTi"
+}

@@ -3,19 +3,52 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP/Flame Weapon",
-    "damageOrEffect": "Gain Toxic Quality, on weapon jam, wielder takes 1d5 damage (Ignores AP/Toughness)",
-    "qualities": "Toxic",
-    "weight": "10% wep",
+    "identifier": "toxic-shot",
+    "weaponTypes": [
+      "solid-projectile",
+      "flame"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "toxic",
+      "on-weapon-jam",
+      "wielder-takes-1d5-damage"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Toxic Quality, on weapon jam, wielder takes 1d5 damage (Ignores AP/Toughness)</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "scarce",
-    "cost": null,
-    "source": "RT: Into the Storm",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Toxic Quality, on weapon jam, wielder takes 1d5 damage (Ignores AP/Toughness)</p><p><b>Qualities:</b> Toxic</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

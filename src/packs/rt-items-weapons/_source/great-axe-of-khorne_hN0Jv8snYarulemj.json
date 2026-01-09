@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "great-axe-of-khorne",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "3d10+8",
-    "damageType": "Rending",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "rending",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "daemon-wep",
+      "proven-4",
+      "unbalanced",
+      "devastating-2",
+      "warp-weapon"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Proven (4), Unbalanced, Devastating (2), Warp Weapon",
-    "weight": "8kg",
+    "weight": 8,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Weapon: Great Weapon. Daemon WP 88 (Greater Daemon of Khorne), Bind Str 5. Att.: Fuelled by Slaughter, Impossibly Sharp, Skulltaker.\nGrants Wielder Lightning Attack and Frenzy Talents. Must have Mark of Khorne, Two Handed unless Strength Bonus 10+, Daemon frees itself automatically if wielder dies.  Regain 1d10 Wounds per living creature killed, Called Melee Shots on the Head are +0 and a Half Action.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Proven (4), Unbalanced, Devastating (2), Warp Weapon</p><p><b>Note:</b> Weapon: Great Weapon. Daemon WP 88 (Greater Daemon of Khorne), Bind Str 5. Att.: Fuelled by Slaughter, Impossibly Sharp, Skulltaker.\nGrants Wielder Lightning Attack and Frenzy Talents. Must have Mark of Khorne, Two Handed unless Strength Bonus 10+, Daemon frees itself automatically if wielder dies.  Regain 1d10 Wounds per living creature killed, Called Melee Shots on the Head are +0 and a Half Action.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Great Weapon. Daemon WP 88 (Greater Daemon of Khorne), Bind Str 5. Att.: Fuelled by Slaughter, Impossibly Sharp, Skulltaker.\nGrants Wielder Lightning Attack and Frenzy Talents. Must have Mark of Khorne, Two Handed unless Strength Bonus 10+, Daemon frees itself automatically if wielder dies.  Regain 1d10 Wounds per living creature killed, Called Melee Shots on the Head are +0 and a Half Action.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

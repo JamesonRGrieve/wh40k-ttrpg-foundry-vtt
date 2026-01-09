@@ -3,19 +3,51 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP: Longshot",
-    "damageOrEffect": "Comes in pack of 5. 1d10+1 Damage, 2 Penetration. Blast (1), Corrosive, Toxic (2).\nHalve Range and No Accurate Quality when firing this.",
-    "qualities": "Blast (1), Corrosive, Toxic (2)",
-    "weight": "10% wep",
+    "identifier": "longshot-toxin-slug",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 1,
+      "penetration": 0,
+      "range": -50,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-1",
+      "corrosive",
+      "toxic-2"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Comes in pack of 5. 1d10+1 Damage, 2 Penetration. Blast (1), Corrosive, Toxic (2).\nHalve Range and No Accurate Quality when firing this.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "extremely-rare",
-    "cost": null,
-    "source": "OW: Shield of Humanity",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Comes in pack of 5. 1d10+1 Damage, 2 Penetration. Blast (1), Corrosive, Toxic (2).\nHalve Range and No Accurate Quality when firing this.</p><p><b>Qualities:</b> Blast (1), Corrosive, Toxic (2)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "OW: Shield of Humanity",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "A Feral World Shaman or barely trained Hive Splicer\nInt 30, Medicae Skill",
-    "cost": "For Extended Care, Cost is per day. Cost of service may vary with location and the honesty/charitability of those that offer it.",
-    "effects": "Average",
-    "notes": "50 T",
-    "source": "Dark Heresy: Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 50 T</p>"
+      "value": "<p>A Feral World Shaman or barely trained Hive Splicer\nInt 30, Medicae Skill</p>\n<h3>Requirements</h3><p>For Extended Care, Cost is per day. Cost of service may vary with location and the honesty/charitability of those that offer it.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 50 T</p>",
+      "chat": "",
+      "summary": "A Feral World Shaman or barely trained Hive Splicer\nInt 30, Medicae Skill"
     },
+    "source": {
+      "book": "Dark Heresy: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Feral World Shaman or barely trained Hive Splicer\nInt 30, Medicae Skill",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

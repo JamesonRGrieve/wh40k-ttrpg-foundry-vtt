@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "1kg",
-    "availability": "Metallic Pouch containing one complete meal alongside vitamin supplements, salt, water purification tablets, a protein bar, and minor medical supplies. No cooking required but somewhat advised to get some level of taste out of the otherwise tasteless meal. Not advised for long term use.",
-    "cost": "One day's worth of food for one person",
-    "effects": "Plentiful",
-    "notes": "2 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "consumable",
+    "weight": 1,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 2 T</p>"
+      "value": "<p>Metallic Pouch containing one complete meal alongside vitamin supplements, salt, water purification tablets, a protein bar, and minor medical supplies. No cooking required but somewhat advised to get some level of taste out of the otherwise tasteless meal. Not advised for long term use.</p>\n<h3>Requirements</h3><p>One day's worth of food for one person</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 2 T</p>",
+      "chat": "",
+      "summary": "Metallic Pouch containing one complete meal alongside vitamin supplements, salt, water purification tablets, a protein bar, and minor medical supplies. No cooking required but somewhat advised to get "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Metallic Pouch containing one complete meal alongside vitamin supplements, salt, water purification tablets, a protein bar, and minor medical supplies. No cooking required but somewhat advised to get some level of taste out of the otherwise tasteless meal. Not advised for long term use.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

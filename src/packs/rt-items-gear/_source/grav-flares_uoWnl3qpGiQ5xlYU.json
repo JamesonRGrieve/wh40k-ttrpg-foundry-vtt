@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "-",
-    "availability": "Fired from integrated tube, will fly up to reletively high altitude and ignite, illuminating ~10km across for 2d10 minutes. Comes in red, white, green, gold, or blue colours.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "7 R",
-    "source": "DW: Rites of Battle",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 7 R</p>"
+      "value": "<p>Fired from integrated tube, will fly up to reletively high altitude and ignite, illuminating ~10km across for 2d10 minutes. Comes in red, white, green, gold, or blue colours.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 7 R</p>",
+      "chat": "",
+      "summary": "Fired from integrated tube, will fly up to reletively high altitude and ignite, illuminating ~10km across for 2d10 minutes. Comes in red, white, green, gold, or blue colours."
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Fired from integrated tube, will fly up to reletively high altitude and ignite, illuminating ~10km across for 2d10 minutes. Comes in red, white, green, gold, or blue colours.",
+    "duration": "",
+    "notes": "7 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

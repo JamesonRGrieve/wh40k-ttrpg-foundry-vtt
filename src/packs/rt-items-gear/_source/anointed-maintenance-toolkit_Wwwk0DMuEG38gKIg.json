@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "10kg",
-    "availability": "A Large array of tools for reparing vehicles and other things. Whilst possessing, always count as having the appropriate tools for maintenance and repair work, although won't replicate the functionality of a fully stocked workshop or provide anything more than the most basic of spare parts.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": null,
-    "source": "Only War Core",
+    "category": "tools",
+    "weight": 10,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p>"
+      "value": "<p>A Large array of tools for reparing vehicles and other things. Whilst possessing, always count as having the appropriate tools for maintenance and repair work, although won't replicate the functionality of a fully stocked workshop or provide anything more than the most basic of spare parts.</p>\n<p><b>Effect:</b> Scarce</p>",
+      "chat": "",
+      "summary": "A Large array of tools for reparing vehicles and other things. Whilst possessing, always count as having the appropriate tools for maintenance and repair work, although won't replicate the functionali"
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Large array of tools for reparing vehicles and other things. Whilst possessing, always count as having the appropriate tools for maintenance and repair work, although won't replicate the functionality of a fully stocked workshop or provide anything more than the most basic of spare parts.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

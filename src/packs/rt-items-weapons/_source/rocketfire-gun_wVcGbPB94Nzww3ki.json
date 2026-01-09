@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "rocketfire-gun",
     "class": "basic",
     "type": "exotic",
-    "range": "80m",
-    "rof": "S/-/-",
-    "damage": "1d10+5",
-    "damageType": "Impact",
-    "penetration": 4,
-    "clip": 6,
-    "reload": "Full",
-    "special": "Tearing",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "A Precursor to the boltgun, fires rocket-propelled shells that ignite in the barrel and spin as a result of exhaust vents. Lacks the impact of a boltgun, but has little recoil and is relatively quiet.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> A Precursor to the boltgun, fires rocket-propelled shells that ignite in the barrel and spin as a result of exhaust vents. Lacks the impact of a boltgun, but has little recoil and is relatively quiet.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Precursor to the boltgun, fires rocket-propelled shells that ignite in the barrel and spin as a result of exhaust vents. Lacks the impact of a boltgun, but has little recoil and is relatively quiet.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

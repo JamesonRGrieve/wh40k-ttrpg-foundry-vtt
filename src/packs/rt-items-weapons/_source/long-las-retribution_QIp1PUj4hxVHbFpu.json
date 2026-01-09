@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "long-las-retribution",
     "class": "basic",
     "type": "las",
-    "range": "90m",
-    "rof": "S/-/-",
-    "damage": "1d10+3",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 10,
-    "reload": "Full",
-    "special": "Accurate",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 90,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

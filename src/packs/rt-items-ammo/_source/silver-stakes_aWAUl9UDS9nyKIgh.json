@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Primitive: Crossbows",
-    "damageOrEffect": "Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.",
-    "qualities": "Sanctified",
-    "weight": "10% wep",
+    "identifier": "silver-stakes",
+    "weaponTypes": [
+      "primitive"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "sanctified"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Sanctified Quality. +1d10 Damage against Daemonic or Psyker Targets.</p><p><b>Qualities:</b> Sanctified</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH 2E: Enemies Within",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

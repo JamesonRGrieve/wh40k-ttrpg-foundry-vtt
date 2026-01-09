@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Arms, Body, Legs",
-    "ap": 1,
-    "maxAg": "-",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "average",
-    "cost": "-",
     "notes": null,
     "source": "Dark Heresy 2E: Core",
     "description": {
       "value": ""
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 1,
       "body": 1,
       "leftArm": 1,
       "rightArm": 1,
@@ -33,7 +28,8 @@
       "rightLeg": 1
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

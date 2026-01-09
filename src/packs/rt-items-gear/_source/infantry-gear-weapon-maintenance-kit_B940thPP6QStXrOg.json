@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Infantry Gear",
-    "weight": "1kg",
-    "availability": "Blessed oils, swabbing clothes, cleaning gels, weapon specific tools and basic spare parts (such as stocks/barrels) typically designed around standard-issue Lasguns. Also included are the appropriate litanties and invocations to the machine spirits required for proper function.",
-    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
-    "effects": "Average",
-    "notes": "20 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "survival",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 20 T</p>"
+      "value": "<p>Blessed oils, swabbing clothes, cleaning gels, weapon specific tools and basic spare parts (such as stocks/barrels) typically designed around standard-issue Lasguns. Also included are the appropriate litanties and invocations to the machine spirits required for proper function.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "Blessed oils, swabbing clothes, cleaning gels, weapon specific tools and basic spare parts (such as stocks/barrels) typically designed around standard-issue Lasguns. Also included are the appropriate "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Blessed oils, swabbing clothes, cleaning gels, weapon specific tools and basic spare parts (such as stocks/barrels) typically designed around standard-issue Lasguns. Also included are the appropriate litanties and invocations to the machine spirits required for proper function.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

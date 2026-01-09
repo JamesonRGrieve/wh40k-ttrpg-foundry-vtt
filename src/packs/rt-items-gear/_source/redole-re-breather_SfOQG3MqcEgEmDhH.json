@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "1kg",
-    "availability": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "250 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "clothing",
+    "weight": 1,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 250,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 250 T</p>"
+      "value": "<p>A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 250 T</p>",
+      "chat": "",
+      "summary": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing r"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

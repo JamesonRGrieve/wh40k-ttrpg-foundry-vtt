@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Hiring the Services of a Voidship for a year. Does not grant absolute command over the vessel, but they will generally follow non-suicidal orders.",
-    "cost": null,
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Hiring the Services of a Voidship for a year. Does not grant absolute command over the vessel, but they will generally follow non-suicidal orders.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Hiring the Services of a Voidship for a year. Does not grant absolute command over the vessel, but they will generally follow non-suicidal orders."
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Hiring the Services of a Voidship for a year. Does not grant absolute command over the vessel, but they will generally follow non-suicidal orders.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

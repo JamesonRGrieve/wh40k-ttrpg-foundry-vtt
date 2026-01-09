@@ -3,19 +3,52 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Las: Laspistols, lascarbines, lasguns, long-las",
-    "damageOrEffect": "+1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.",
-    "qualities": "Tearing, Reliable (lose)",
-    "weight": "10% wep",
+    "identifier": "hot-shot-charge-packs",
+    "weaponTypes": [
+      "las"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 4,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "tearing"
+    ],
+    "removedQualities": [
+      "reliable",
+      "clip-reduced-to-1"
+    ],
+    "clipModifier": 0,
+    "effect": "<p>+1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "scarce",
-    "cost": "15T each",
-    "source": "Rogue Trader Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> +1 DMG, +4 PEN , Lose reliable Quality, clip reduced to 1. Gain Tearing Quality. Can be recharged as with Charge Packs.</p><p><b>Qualities:</b> Tearing, Reliable (lose)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Rogue Trader Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "laspistol-triplex-fury",
     "class": "pistol",
     "type": "las",
-    "range": "20m",
-    "rof": "S/2/5",
-    "damage": "1d10+2",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 30,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "1.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 1.5,
     "availability": "scarce",
-    "cost": "100 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

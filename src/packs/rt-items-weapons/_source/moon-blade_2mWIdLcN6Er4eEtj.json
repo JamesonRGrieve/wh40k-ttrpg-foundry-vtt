@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "moon-blade",
     "class": "melee",
     "type": "primitive",
-    "range": "5m",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 5,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "fast",
+      "primitive-8",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Fast, Primitive (8), Unwieldy",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "rare",
-    "cost": "25 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Can be thrown. Usually wielded in pairs.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Fast, Primitive (8), Unwieldy</p><p><b>Note:</b> Can be thrown. Usually wielded in pairs.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be thrown. Usually wielded in pairs.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

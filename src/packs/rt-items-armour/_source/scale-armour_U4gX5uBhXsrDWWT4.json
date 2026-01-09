@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "primitive",
-    "locations": "Arms, Body, Legs",
-    "ap": 3,
-    "maxAg": null,
-    "weight": "15kg",
+    "weight": 15,
     "availability": "very-rare",
-    "cost": "1000 T",
     "notes": "Provides +10 to Agililty Tests to avoid catching fire.\nHalve primitive armour AP vs non primitive weapons",
     "source": "DH: The Inquisitor's Handbook",
     "description": {
       "value": "<p>Provides +10 to Agililty Tests to avoid catching fire.\nHalve primitive armour AP vs non primitive weapons</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 3,
       "body": 3,
       "leftArm": 3,
       "rightArm": 3,
@@ -33,7 +28,8 @@
       "rightLeg": 3
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

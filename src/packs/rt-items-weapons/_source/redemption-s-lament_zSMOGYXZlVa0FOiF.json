@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "redemptions-lament",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+8",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "felling-4",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Balanced, Felling (4), Sanctified",
-    "weight": "5kg",
-    "availability": "Famed",
-    "cost": "45 R",
-    "source": "DW: Honour the Chapter",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Angels of Absolution Chapter. Whenever the wielder would gain Insanity, they gain +1 additional Insanity.",
+    "weight": 5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 45,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Balanced, Felling (4), Sanctified</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Angels of Absolution Chapter. Whenever the wielder would gain Insanity, they gain +1 additional Insanity.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Angels of Absolution Chapter. Whenever the wielder would gain Insanity, they gain +1 additional Insanity.",
+    "source": "DW: Honour the Chapter"
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Impact Arm Critical 10",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_arm_10",
+    "damageType": "impact",
+    "bodyPart": "arm",
+    "severity": 10,
+    "effect": "<p>In a rain of blood, gore, and meat, the target's arm is removed from his body. Screaming incoherently, he twists about in agony for a few seconds before collapsing to the ground and dying. As the arm is removed by the force of the attack, bone, chunks of flesh, clothing, and armour fragments fly about like blood-soaked shrapnel. Each target within 2 metres suffers a single hit for 1d5-3 Impact damage to a randomly determined Hit Location.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Arm (Severity 10)</strong></p><p>In a rain of blood, gore, and meat, the target's arm is removed from his body. Screaming incoherently, he twists about in agony for a few seconds before collapsing to the ground and dying. As the arm is removed by the force of the attack, bone, chunks of flesh, clothing, and armour fragments fly about like blood-soaked shrapnel. Each target within 2 metres suffers a single hit for 1d5-3 Impact damage to a randomly determined Hit Location.</p>",
+      "chat": "",
+      "summary": "Impact Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "mU6eWf96LQ6ROhNB"
+}

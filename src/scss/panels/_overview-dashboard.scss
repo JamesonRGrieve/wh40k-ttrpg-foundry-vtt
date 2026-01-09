@@ -1,0 +1,1027 @@
+// ============================================
+// Overview Dashboard - Ultra-Dense At-a-Glance Layout
+// ============================================
+// New dashboard design for Overview tab - all critical info visible without scrolling
+
+// Dashboard Container
+.rt-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// Dashboard Rows
+// Uses --rt-columns CSS variable set by ResizeObserver
+.rt-dashboard-row {
+  display: grid;
+  gap: $rt-space-sm;
+  
+  &.rt-dashboard-row--top {
+    grid-template-columns: repeat(var(--rt-columns, 3), 1fr);
+    min-height: 200px;
+  }
+  
+  &.rt-dashboard-row--middle {
+    // Middle row: 1:2 ratio at 3+ cols, 1:1 at 2 cols, stacked at 1 col
+    grid-template-columns: 1fr 2fr;
+    min-height: 140px;
+  }
+  
+  &.rt-dashboard-row--bottom {
+    grid-template-columns: repeat(var(--rt-columns, 3), 1fr);
+    min-height: 100px;
+  }
+}
+
+// Dashboard Zones
+.rt-dashboard-zone {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// Zone Header
+.rt-zone-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  
+  i {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+  }
+}
+
+// Zone Content
+.rt-zone-content {
+  padding: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+// Zone Subsection
+.rt-zone-subsection {
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--color-border-light);
+  margin-top: auto;
+}
+
+// ============================================
+// Zone 1: Vitals
+// ============================================
+
+.rt-zone-vitals {
+  border-left: 3px solid $rt-accent-combat;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba($rt-accent-combat, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: $rt-accent-combat;
+    }
+  }
+}
+
+.rt-vital-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  
+  &.rt-vital-row--critical {
+    background: rgba(139, 0, 0, 0.1);
+    margin: 0 -8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+}
+
+.rt-vital-icon {
+  width: 18px;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.85rem;
+}
+
+.rt-vital-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 50px;
+}
+
+.rt-vital-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.rt-vital-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-highlight);
+    color: var(--color-text-primary);
+  }
+}
+
+.rt-vital-btn-small {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    color: $rt-accent-gold;
+  }
+}
+
+.rt-vital-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  min-width: 45px;
+  text-align: center;
+  
+  &.rt-critical {
+    color: $rt-accent-combat;
+  }
+  
+  &.rt-warning {
+    color: darken($rt-accent-gold, 10%);
+  }
+  
+  &.rt-vital-value--static {
+    background: var(--color-bg-option);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+}
+
+.rt-vital-penalty {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: $rt-accent-combat;
+  background: rgba($rt-accent-combat, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+// Fate Stars Inline
+.rt-fate-stars-inline {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.rt-fate-pip {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+  
+  &.rt-fate-pip--filled {
+    color: $rt-color-gold;
+    text-shadow: 0 0 4px rgba($rt-color-gold, 0.5);
+  }
+  
+  &:hover {
+    transform: scale(1.2);
+    color: $rt-color-gold;
+  }
+}
+
+// Critical Pips Inline
+.rt-critical-pips-inline {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.rt-crit-pip-mini {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-secondary);
+  
+  &.rt-crit-pip-mini--filled {
+    background: $rt-accent-combat;
+    border-color: darken($rt-accent-combat, 10%);
+  }
+}
+
+// Mental State Rows
+.rt-mental-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.rt-mental-icon {
+  width: 16px;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+}
+
+.rt-mental-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 60px;
+}
+
+.rt-mental-value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  min-width: 25px;
+  text-align: center;
+}
+
+.rt-mental-degree {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: auto;
+  
+  &.rt-degree-pure,
+  &.rt-degree-stable {
+    color: #2d7a6b;
+    background: rgba(45, 122, 107, 0.1);
+  }
+  
+  &.rt-degree-tainted,
+  &.rt-degree-unsettled {
+    color: #8b7355;
+    background: rgba(139, 115, 85, 0.1);
+  }
+  
+  &.rt-degree-soiled,
+  &.rt-degree-disturbed {
+    color: #9b59b6;
+    background: rgba(155, 89, 182, 0.1);
+  }
+  
+  &.rt-degree-debased,
+  &.rt-degree-unhinged {
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.1);
+  }
+  
+  &.rt-degree-profane,
+  &.rt-degree-deranged {
+    color: #8b0000;
+    background: rgba(139, 0, 0, 0.15);
+  }
+}
+
+// ============================================
+// Zone 2: Characteristics
+// ============================================
+
+.rt-zone-characteristics {
+  border-left: 3px solid $rt-accent-gold;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba($rt-accent-gold, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: $rt-accent-gold;
+    }
+  }
+}
+
+.rt-char-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+
+.rt-char-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+  }
+}
+
+.rt-char-name-compact {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  min-width: 24px;
+  text-align: left;
+  
+  &:hover {
+    color: $rt-accent-gold;
+  }
+}
+
+.rt-char-total-compact {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  min-width: 22px;
+  text-align: right;
+}
+
+.rt-char-bonus-compact {
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+  min-width: 20px;
+}
+
+.rt-char-roll-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 0.65rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  margin-left: auto;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    color: $rt-accent-gold;
+    transform: scale(1.15);
+  }
+}
+
+// ============================================
+// Zone 3: Key Skills
+// ============================================
+
+.rt-zone-skills {
+  border-left: 3px solid #2ecc71;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba(46, 204, 113, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: #2ecc71;
+    }
+  }
+}
+
+.rt-skill-list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rt-skill-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+  }
+}
+
+.rt-skill-name-compact {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  flex: 1;
+}
+
+.rt-skill-value-compact {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  min-width: 28px;
+  text-align: right;
+}
+
+.rt-skill-roll-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    color: #2ecc71;
+    transform: scale(1.15);
+  }
+}
+
+// ============================================
+// Zone 4: Movement & Load
+// ============================================
+
+.rt-zone-movement {
+  border-left: 3px solid #3498db;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba(52, 152, 219, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: #3498db;
+    }
+  }
+}
+
+.rt-movement-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rt-movement-speeds {
+  display: flex;
+  gap: 8px;
+}
+
+.rt-speed-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  flex: 1;
+  
+  &.rt-speed-item--highlight {
+    background: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+  }
+}
+
+.rt-speed-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+}
+
+.rt-speed-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.rt-encumbrance-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-enc-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 0.75rem;
+}
+
+.rt-enc-current-compact {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.rt-enc-separator {
+  color: var(--color-text-tertiary);
+}
+
+.rt-enc-max-compact {
+  color: var(--color-text-secondary);
+}
+
+.rt-enc-bar-compact {
+  height: 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+  
+  &.rt-enc-over {
+    .rt-enc-fill-compact {
+      background: $rt-accent-combat;
+    }
+  }
+}
+
+.rt-enc-fill-compact {
+  height: 100%;
+  background: linear-gradient(90deg, #27ae60 0%, #3498db 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+// ============================================
+// Zone 5: Quick Combat
+// ============================================
+
+.rt-zone-combat {
+  border-left: 3px solid $rt-accent-combat;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba($rt-accent-combat, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: $rt-accent-combat;
+    }
+  }
+}
+
+.rt-combat-weapon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  
+  &.rt-empty {
+    justify-content: center;
+    color: var(--color-text-tertiary);
+    font-style: italic;
+  }
+}
+
+.rt-weapon-icon {
+  color: $rt-accent-combat;
+  font-size: 0.85rem;
+}
+
+.rt-weapon-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rt-weapon-damage {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  font-family: 'Modesto Condensed', serif;
+}
+
+.rt-weapon-attack-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $rt-accent-combat;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: white;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: darken($rt-accent-combat, 10%);
+    transform: scale(1.05);
+  }
+}
+
+.rt-weapon-empty {
+  font-size: 0.75rem;
+}
+
+.rt-combat-stats-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.rt-combat-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  flex: 1;
+}
+
+.rt-stat-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.rt-stat-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+}
+
+.rt-armour-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.rt-armour-label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.rt-armour-loc {
+  color: var(--color-text-primary);
+  font-family: 'Modesto Condensed', serif;
+}
+
+.rt-forcefield-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.2);
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.rt-ff-icon {
+  color: #3498db;
+  font-size: 0.8rem;
+}
+
+.rt-ff-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+}
+
+.rt-ff-rating {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: #3498db;
+}
+
+.rt-ff-toggle {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.15s ease;
+  
+  &.rt-ff-active {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: #27ae60;
+    color: #27ae60;
+  }
+  
+  &:hover {
+    border-color: #3498db;
+    color: #3498db;
+  }
+}
+
+// ============================================
+// Zone 6: Progression
+// ============================================
+
+.rt-zone-progression {
+  border-left: 3px solid $rt-color-gold;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: $rt-color-gold;
+    }
+  }
+}
+
+.rt-xp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+  
+  &.rt-rank-row {
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid var(--color-border-light);
+  }
+}
+
+.rt-xp-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.rt-xp-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  
+  &.rt-xp-available {
+    color: $rt-color-gold;
+    font-size: 1rem;
+  }
+}
+
+.rt-rank-value {
+  color: $rt-accent-gold;
+}
+
+// ============================================
+// Zone 7: Dynasty
+// ============================================
+
+.rt-zone-dynasty {
+  border-left: 3px solid #f39c12;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba(243, 156, 18, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: #f39c12;
+    }
+  }
+}
+
+.rt-dynasty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+  
+  &.rt-pf-row {
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-border-light);
+    margin-bottom: 4px;
+  }
+  
+  &.rt-endeavour-row {
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid var(--color-border-light);
+  }
+}
+
+.rt-dynasty-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.rt-dynasty-value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  
+  &.rt-pf-value {
+    font-size: 1rem;
+    color: #f39c12;
+  }
+}
+
+.rt-endeavour-name {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ============================================
+// Zone 8: Active Effects Preview
+// ============================================
+
+.rt-zone-effects {
+  border-left: 3px solid #9b59b6;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba(155, 89, 182, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: #9b59b6;
+    }
+  }
+}
+
+.rt-effects-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.rt-effect-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  
+  &.rt-effect-chip--disabled {
+    opacity: 0.5;
+  }
+}
+
+.rt-effect-icon-mini {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.rt-effect-name-mini {
+  color: var(--color-text-secondary);
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rt-effects-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+// ============================================
+// Status Tab Grid (moved from overview)
+// ============================================
+
+.rt-status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+    border-radius: 3px;
+    
+    &:hover {
+      background: var(--color-border-primary);
+    }
+  }
+}
+
+.rt-status-col {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+}
+
+// ============================================
+// Responsive Adjustments
+// ============================================
+// These work with the --rt-columns CSS variable set by ResizeObserver
+// Fallback media queries for non-JS environments
+
+@media (max-width: 700px) {
+  .rt-dashboard-row {
+    &.rt-dashboard-row--top,
+    &.rt-dashboard-row--middle,
+    &.rt-dashboard-row--bottom {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  .rt-dashboard-row {
+    &.rt-dashboard-row--top {
+      grid-template-columns: 1fr 1fr;
+      
+      .rt-zone-skills {
+        grid-column: span 2;
+      }
+    }
+    
+    &.rt-dashboard-row--middle {
+      grid-template-columns: 1fr;
+    }
+    
+    &.rt-dashboard-row--bottom {
+      grid-template-columns: 1fr 1fr;
+      
+      .rt-zone-effects {
+        grid-column: span 2;
+      }
+    }
+  }
+}

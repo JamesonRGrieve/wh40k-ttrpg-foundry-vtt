@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Contact is made with a powerful warp entity such as a Greater Daemon to teach the rites of a Warp Ritual or give their unholy blessing on it. Given example: A Ritual Capable of transporting a small warband from one world to another.",
-    "cost": "Heretical",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Contact is made with a powerful warp entity such as a Greater Daemon to teach the rites of a Warp Ritual or give their unholy blessing on it. Given example: A Ritual Capable of transporting a small warband from one world to another.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Contact is made with a powerful warp entity such as a Greater Daemon to teach the rites of a Warp Ritual or give their unholy blessing on it. Given example: A Ritual Capable of transporting a small wa"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Contact is made with a powerful warp entity such as a Greater Daemon to teach the rites of a Warp Ritual or give their unholy blessing on it. Given example: A Ritual Capable of transporting a small warband from one world to another.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

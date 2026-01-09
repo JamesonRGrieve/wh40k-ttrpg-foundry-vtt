@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "forearm-powerblade",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+1",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 1,
+      "penetration": 4
+    },
+    "special": [
+      "power-field",
+      "balanced",
+      "defensive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Balanced, Defensive",
-    "weight": "1.5kg",
+    "weight": 1.5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Balanced, Defensive</p><p><b>Note:</b> Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

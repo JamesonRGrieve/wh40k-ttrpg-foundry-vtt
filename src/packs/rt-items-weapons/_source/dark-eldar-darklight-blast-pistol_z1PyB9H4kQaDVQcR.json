@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-darklight-blast-pistol",
     "class": "pistol",
     "type": "exotic",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 16,
-    "clip": 6,
-    "reload": "3 Full",
-    "special": "Felling (4), Proven (2)",
-    "weight": "2kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 16
+    },
+    "special": [
+      "felling-4",
+      "proven-2"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 2,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Rare Availability if acquired from Dark Eldar Settlement.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Felling (4), Proven (2)</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement.",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

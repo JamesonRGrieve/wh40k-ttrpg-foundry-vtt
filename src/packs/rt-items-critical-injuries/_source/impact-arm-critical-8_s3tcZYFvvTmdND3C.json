@@ -1,0 +1,32 @@
+{
+  "name": "Impact Arm Critical 8",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_arm_8",
+    "damageType": "impact",
+    "bodyPart": "arm",
+    "severity": 8,
+    "effect": "<p>The force of the attack takes the arm off just below the shoulder, showering blood and gore across the ground. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he suffers [[1d5]] levels of Fatigue, is Stunned for [[1d10]] rounds, and suffers Blood Loss. He also now suffers from the Lost Arm condition (see page 242).</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Arm (Severity 8)</strong></p><p>The force of the attack takes the arm off just below the shoulder, showering blood and gore across the ground. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he suffers [[1d5]] levels of Fatigue, is Stunned for [[1d10]] rounds, and suffers Blood Loss. He also now suffers from the Lost Arm condition (see page 242).</p>",
+      "chat": "",
+      "summary": "Impact Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "s3tcZYFvvTmdND3C"
+}

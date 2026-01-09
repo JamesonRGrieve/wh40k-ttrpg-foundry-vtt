@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1kg",
-    "availability": "White-Crysalline rocks that when struck together create sparks, works when wet. Useful for lightning tinder, torches, fires, etc.",
-    "cost": "Comes in a set of 2",
-    "effects": "Common",
-    "notes": "2 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 2 T</p>"
+      "value": "<p>White-Crysalline rocks that when struck together create sparks, works when wet. Useful for lightning tinder, torches, fires, etc.</p>\n<h3>Requirements</h3><p>Comes in a set of 2</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 2 T</p>",
+      "chat": "",
+      "summary": "White-Crysalline rocks that when struck together create sparks, works when wet. Useful for lightning tinder, torches, fires, etc."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "White-Crysalline rocks that when struck together create sparks, works when wet. Useful for lightning tinder, torches, fires, etc.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

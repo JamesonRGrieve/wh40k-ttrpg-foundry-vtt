@@ -1,0 +1,30 @@
+{
+  "name": "Auspex (Siege)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "Powerful Scanner that can see through dense materials and find weakpoints, has a range of 20m, which may be reduced by energy fields, very thick bulkheads, etc.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "13 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 13 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5LASb03BaHWmJoql"
+}

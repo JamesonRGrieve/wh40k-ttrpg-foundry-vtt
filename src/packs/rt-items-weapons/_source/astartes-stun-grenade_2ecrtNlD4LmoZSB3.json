@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-stun-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Blast (5)",
-    "weight": "0.8kg",
-    "availability": "Initiated",
-    "cost": "10 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable. Causes loud flash and incapacitating sound. Those in blast make +0 Toughness Test or become Stunned for 1d10 Rounds. Photo-Visors and Sealed armour provide +20 to test, input filtering or additional visual and sound protection provides immunity.",
+    "weight": 0.8,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Causes loud flash and incapacitating sound. Those in blast make +0 Toughness Test or become Stunned for 1d10 Rounds. Photo-Visors and Sealed armour provide +20 to test, input filtering or additional visual and sound protection provides immunity.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Causes loud flash and incapacitating sound. Those in blast make +0 Toughness Test or become Stunned for 1d10 Rounds. Photo-Visors and Sealed armour provide +20 to test, input filtering or additional visual and sound protection provides immunity.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

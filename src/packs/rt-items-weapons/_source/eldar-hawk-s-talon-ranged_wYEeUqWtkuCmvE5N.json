@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-hawks-talon-ranged",
     "class": "basic",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/3/10",
-    "damage": "2d10+2",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 60,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 4
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

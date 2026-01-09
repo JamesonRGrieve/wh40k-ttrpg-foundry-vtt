@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "2kg",
-    "availability": "Master Crafted Relic Tome of the Novamarines Chapter. Adds 1d5 Degrees of Success to successful Forbidden Lore (Xenos) Tests. No such tests concerning a species prviously encountered by the Imperium can suffer worse than a -10 penalty due to obscurity.",
-    "cost": null,
-    "effects": "Distinguished",
-    "notes": "20 R",
-    "source": "DW: Honour the Chapter",
+    "category": "luxury",
+    "weight": 2,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 20 R</p>"
+      "value": "<p>Master Crafted Relic Tome of the Novamarines Chapter. Adds 1d5 Degrees of Success to successful Forbidden Lore (Xenos) Tests. No such tests concerning a species prviously encountered by the Imperium can suffer worse than a -10 penalty due to obscurity.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 20 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Tome of the Novamarines Chapter. Adds 1d5 Degrees of Success to successful Forbidden Lore (Xenos) Tests. No such tests concerning a species prviously encountered by the Imperium c"
     },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Master Crafted Relic Tome of the Novamarines Chapter. Adds 1d5 Degrees of Success to successful Forbidden Lore (Xenos) Tests. No such tests concerning a species prviously encountered by the Imperium can suffer worse than a -10 penalty due to obscurity.",
+    "duration": "",
+    "notes": "20 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

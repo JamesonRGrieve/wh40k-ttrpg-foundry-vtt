@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "-",
-    "availability": "A Hive-City Citizen's Identity Card, used for Tracking, Taxing, and Identifiyng Citizens. Roughly the size and shap of a playing card of blank iron-grey. Has a Symbol of the Issuing Hive/Guild/Etc that the citizen serves. Its loss could mean the loss of identity, right to work, and even to be fed and housed. Stolen and Fabricated ID's are therefore very valuable.",
-    "cost": null,
-    "effects": "Plentiful",
-    "notes": "Varies T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> Varies T</p>"
+      "value": "<p>A Hive-City Citizen's Identity Card, used for Tracking, Taxing, and Identifiyng Citizens. Roughly the size and shap of a playing card of blank iron-grey. Has a Symbol of the Issuing Hive/Guild/Etc that the citizen serves. Its loss could mean the loss of identity, right to work, and even to be fed and housed. Stolen and Fabricated ID's are therefore very valuable.</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> Varies T</p>",
+      "chat": "",
+      "summary": "A Hive-City Citizen's Identity Card, used for Tracking, Taxing, and Identifiyng Citizens. Roughly the size and shap of a playing card of blank iron-grey. Has a Symbol of the Issuing Hive/Guild/Etc tha"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Hive-City Citizen's Identity Card, used for Tracking, Taxing, and Identifiyng Citizens. Roughly the size and shap of a playing card of blank iron-grey. Has a Symbol of the Issuing Hive/Guild/Etc that the citizen serves. Its loss could mean the loss of identity, right to work, and even to be fed and housed. Stolen and Fabricated ID's are therefore very valuable.",
+    "duration": "",
+    "notes": "Varies T",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

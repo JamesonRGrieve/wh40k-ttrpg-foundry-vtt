@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "Head",
-    "ap": 8,
-    "maxAg": null,
-    "weight": "30kg",
+    "weight": 30,
     "availability": "Initiated",
-    "cost": "15 R",
     "notes": "Used by Apothacaries, provides +10 to Medicae Tests when working on a patient. Acts as a Preysense Sight.\nHas all normal functions of an Astartes Helmet.",
     "source": "Deathwatch: Core",
     "description": {
       "value": "<p>Used by Apothacaries, provides +10 to Medicae Tests when working on a patient. Acts as a Preysense Sight.\nHas all normal functions of an Astartes Helmet.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "head"
     ],
     "armourPoints": {
       "head": 8,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "body": 8,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "forgewhip",
     "class": "melee",
     "type": "primitive",
-    "range": "4m",
-    "rof": "-",
-    "damage": "1d10+8",
-    "damageType": "Rending",
-    "penetration": 12,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 4,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 8,
+      "penetration": 12
+    },
+    "special": [
+      "daemon-wep",
+      "flame",
+      "flexible"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Flame, Flexible",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Weapon: Whip. Daemon WP 68 (Khorne Daemon), Bind Str 4. Att.: Bloodlust, Blood Tracker. Must be Dedicated to Khorne to wield.\nWhen drawing must make +0 WP Test or Frenzy can make -10 WP Test to sheath and end Frenzy. Gain Unnatural Senses (Daemon's WP)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Flame, Flexible</p><p><b>Note:</b> Weapon: Whip. Daemon WP 68 (Khorne Daemon), Bind Str 4. Att.: Bloodlust, Blood Tracker. Must be Dedicated to Khorne to wield.\nWhen drawing must make +0 WP Test or Frenzy can make -10 WP Test to sheath and end Frenzy. Gain Unnatural Senses (Daemon's WP)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Whip. Daemon WP 68 (Khorne Daemon), Bind Str 4. Att.: Bloodlust, Blood Tracker. Must be Dedicated to Khorne to wield.\nWhen drawing must make +0 WP Test or Frenzy can make -10 WP Test to sheath and end Frenzy. Gain Unnatural Senses (Daemon's WP)",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

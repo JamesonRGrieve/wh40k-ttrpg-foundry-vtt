@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.55,
-    "maxAg": "-",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "Hero",
-    "cost": "60 R",
-    "notes": "Master Crafted Relic Astartes Iron Halo of the Howling Griffons Chapter. Overload 01. Attacks not stopped by the Force Field halve their Penetration.",
+    "notes": "Master Crafted Relic Astartes Iron Halo of the Howling Griffons Chapter. Overload 01. Attacks not stopped by the Force Field halve their Penetration. [AP: 55%]",
     "source": "DW: Honour the Chapter",
     "description": {
       "value": "<p>Master Crafted Relic Astartes Iron Halo of the Howling Griffons Chapter. Overload 01. Attacks not stopped by the Force Field halve their Penetration.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.55,
-      "body": 0.55,
-      "leftArm": 0.55,
-      "rightArm": 0.55,
-      "leftLeg": 0.55,
-      "rightLeg": 0.55
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

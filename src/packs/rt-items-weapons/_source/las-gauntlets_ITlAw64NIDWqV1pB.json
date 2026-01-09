@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "las-gauntlets",
     "class": "pistol",
     "type": "las",
-    "range": "50m",
-    "rof": "S/4/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 1,
-    "clip": 20,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 1
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "Rogue Trader: Core",
-    "note": "Fits over the forearm with glove controls. Difficult to disarm.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Fits over the forearm with glove controls. Difficult to disarm.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fits over the forearm with glove controls. Difficult to disarm.",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

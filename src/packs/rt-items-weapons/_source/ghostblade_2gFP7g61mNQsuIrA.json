@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ghostblade",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "felling-4",
+      "razor-sharp",
+      "overheats"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Felling (4), Razor Sharp, Overheats",
-    "weight": "6kg",
+    "weight": 6,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Felling (4), Razor Sharp, Overheats</p><p><b>Note:</b> Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

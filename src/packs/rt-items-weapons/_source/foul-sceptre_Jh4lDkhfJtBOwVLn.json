@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "foul-sceptre",
     "class": "basic",
     "type": "exotic",
-    "range": "70m",
-    "rof": "S/-/-",
-    "damage": "2d10+5",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 70,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 10
+    },
+    "special": [
+      "recharge",
+      "shocking",
+      "toxic"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Recharge, Shocking, Toxic",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Recharge, Shocking, Toxic</p><p><b>Note:</b> Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

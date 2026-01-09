@@ -1,0 +1,30 @@
+{
+  "name": "Augur Array",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: acts as normal handheld Auspex. Good: acts as normal handheld Auspex and can reroll perception tests using its functions.",
+    "cost": null,
+    "effects": "Rare / Initiated",
+    "notes": "1000 T\n15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1000 T\n15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EpWQoyKRTGb3KXd4"
+}

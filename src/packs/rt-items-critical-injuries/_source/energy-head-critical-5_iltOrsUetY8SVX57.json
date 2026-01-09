@@ -1,0 +1,32 @@
+{
+  "name": "Energy Head Critical 5",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_head_5",
+    "damageType": "energy",
+    "bodyPart": "head",
+    "severity": 5,
+    "effect": "<p>A blast of energy envelops the target's head, burning his face and hair, crisping his skin, and causing him to scream like a stuck grox. In addition to losing all hair on his scalp and face, he is Blinded for [[1d10]] rounds and Stunned for 1 round. Permanently reduce the target's Fellowship characteristic by 1.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Head (Severity 5)</strong></p><p>A blast of energy envelops the target's head, burning his face and hair, crisping his skin, and causing him to scream like a stuck grox. In addition to losing all hair on his scalp and face, he is Blinded for [[1d10]] rounds and Stunned for 1 round. Permanently reduce the target's Fellowship characteristic by 1.</p>",
+      "chat": "",
+      "summary": "Energy Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "iltOrsUetY8SVX57"
+}

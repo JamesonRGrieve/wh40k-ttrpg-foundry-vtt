@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "combi-bolter-flamer",
     "class": "basic",
     "type": "bolt",
-    "range": "100m",
-    "rof": "S/3/-",
-    "damage": "1d10+5",
-    "damageType": "Explosive",
-    "penetration": 4,
-    "clip": 24,
-    "reload": "Full",
-    "special": "Tearing",
-    "weight": "18kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 18,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Listed stats are for Bolter, weapon has undermounted Flamer with a Clip of 1. Can be used by Terminators.\nFlamer Profile: (Range 20m, S/-/-, 1d10+4 E, Pen 2, Clip 1, Rld 2 Full, Flame, Spray)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Listed stats are for Bolter, weapon has undermounted Flamer with a Clip of 1. Can be used by Terminators.\nFlamer Profile: (Range 20m, S/-/-, 1d10+4 E, Pen 2, Clip 1, Rld 2 Full, Flame, Spray)</p>"
     },
-    "damageFormula": "1d10+5",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Listed stats are for Bolter, weapon has undermounted Flamer with a Clip of 1. Can be used by Terminators.\nFlamer Profile: (Range 20m, S/-/-, 1d10+4 E, Pen 2, Clip 1, Rld 2 Full, Flame, Spray)",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

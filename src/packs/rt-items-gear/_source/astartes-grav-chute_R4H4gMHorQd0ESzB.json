@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "-",
-    "availability": "Allows for a safe fall from any height by slowing the fall down via suspensor fields. Good for stealth. More often used by Space Marine scouts, may struggle to slow a fully armoured space marine.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "5 R",
-    "source": "DW: Rites of Battle",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 5 R</p>"
+      "value": "<p>Allows for a safe fall from any height by slowing the fall down via suspensor fields. Good for stealth. More often used by Space Marine scouts, may struggle to slow a fully armoured space marine.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 5 R</p>",
+      "chat": "",
+      "summary": "Allows for a safe fall from any height by slowing the fall down via suspensor fields. Good for stealth. More often used by Space Marine scouts, may struggle to slow a fully armoured space marine."
     },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows for a safe fall from any height by slowing the fall down via suspensor fields. Good for stealth. More often used by Space Marine scouts, may struggle to slow a fully armoured space marine.",
+    "duration": "",
+    "notes": "5 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

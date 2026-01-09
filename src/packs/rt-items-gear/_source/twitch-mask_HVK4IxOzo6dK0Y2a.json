@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance. Good versions also change pigments and voice, granting +20 to Disguise Tests.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Hostile Acquisitions",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance. Good versions also change pigments and voice, granting +20 to Disguise Tests.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance"
     },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance. Good versions also change pigments and voice, granting +20 to Disguise Tests.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

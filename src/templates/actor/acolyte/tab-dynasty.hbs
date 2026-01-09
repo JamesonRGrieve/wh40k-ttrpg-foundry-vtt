@@ -4,25 +4,81 @@
     <div class="rt-dynasty-grid">
         {{!-- Left Column --}}
         <div class="rt-dynasty-col">
-            {{!-- Profit Factor Panel --}}
-            <div class="rt-panel rt-panel-profit">
+            {{!-- Profit Factor Panel with Visual Gauge --}}
+            <div class="rt-panel rt-panel-profit-v2">
                 <div class="rt-panel-header">
                     <span class="rt-panel-title"><i class="fas fa-coins"></i> Profit Factor</span>
+                    <button type="button" class="rt-acquisition-btn" data-action="openAcquisitionDialog" data-tooltip="Roll Acquisition Test">
+                        <i class="fas fa-dice-d20"></i>
+                    </button>
                 </div>
                 <div class="rt-panel-body">
-                    <div class="rt-profit-main-display">
-                        <div class="rt-profit-current">
-                            <span class="rt-profit-label">Current PF</span>
-                            <input type="number" class="rt-profit-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
+                    {{!-- Main PF Display with Wealth Tier --}}
+                    <div class="rt-pf-hero">
+                        <div class="rt-pf-value-display">
+                            <input type="number" class="rt-pf-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
                         </div>
-                        <div class="rt-profit-starting">
-                            <span class="rt-profit-label">Starting</span>
-                            <input type="number" class="rt-vital-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
+                        <div class="rt-pf-tier rt-pf-tier--{{dynastyData.wealthTier.key}}">
+                            <span class="rt-pf-tier-label">{{dynastyData.wealthTier.label}}</span>
                         </div>
                     </div>
-                    <div class="rt-misfortunes">
-                        <label class="rt-field-label">Misfortunes & PF Changes</label>
-                        <textarea class="rt-textarea" name="system.rogueTrader.profitFactor.misfortunes" rows="3" placeholder="Record any losses or gains to Profit Factor...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+
+                    {{!-- Visual Wealth Gauge --}}
+                    <div class="rt-pf-gauge">
+                        <div class="rt-pf-gauge-track">
+                            <div class="rt-pf-gauge-fill" style="width: {{dynastyData.pfPercentage}}%"></div>
+                            <div class="rt-pf-gauge-marker" style="left: {{dynastyData.pfPercentage}}%">
+                                <i class="fas fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <div class="rt-pf-gauge-labels">
+                            <span class="rt-pf-tier-label rt-pf-tier--poor" data-tooltip="1-24: Struggling resources">Poor</span>
+                            <span class="rt-pf-tier-label rt-pf-tier--modest" data-tooltip="25-49: Modest wealth">Modest</span>
+                            <span class="rt-pf-tier-label rt-pf-tier--notable" data-tooltip="50-74: Notable dynasty">Notable</span>
+                            <span class="rt-pf-tier-label rt-pf-tier--mighty" data-tooltip="75-99: Mighty empire">Mighty</span>
+                            <span class="rt-pf-tier-label rt-pf-tier--legendary" data-tooltip="100+: Legendary wealth">Legendary</span>
+                        </div>
+                    </div>
+
+                    {{!-- PF Breakdown --}}
+                    <div class="rt-pf-breakdown">
+                        <div class="rt-pf-breakdown-row">
+                            <span class="rt-pf-breakdown-label">Starting PF:</span>
+                            <input type="number" class="rt-pf-breakdown-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
+                        </div>
+                        <div class="rt-pf-breakdown-row">
+                            <span class="rt-pf-breakdown-label">Modifier:</span>
+                            <input type="number" class="rt-pf-breakdown-input" name="system.rogueTrader.profitFactor.modifier" value="{{system.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
+                        </div>
+                        <div class="rt-pf-breakdown-row rt-pf-breakdown-row--total">
+                            <span class="rt-pf-breakdown-label">Effective PF:</span>
+                            <span class="rt-pf-breakdown-value">{{dynastyData.effectivePF}}</span>
+                        </div>
+                    </div>
+
+                    {{!-- Misfortunes Section --}}
+                    <div class="rt-pf-misfortunes">
+                        <label class="rt-field-label"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
+                        <textarea class="rt-textarea" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+                    </div>
+
+                    {{!-- Quick Acquisition Reference --}}
+                    <div class="rt-pf-acquisition-ref">
+                        <div class="rt-pf-ref-header">
+                            <i class="fas fa-shopping-cart"></i> Acquisition Modifiers
+                        </div>
+                        <div class="rt-pf-ref-grid">
+                            <span class="rt-pf-ref-item rt-pf-ref--positive">Ubiquitous +70</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--positive">Abundant +50</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--positive">Plentiful +30</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--positive">Common +10</span>
+                            <span class="rt-pf-ref-item">Average +0</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--negative">Scarce −10</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--negative">Rare −20</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--negative">Very Rare −30</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--negative">Ext. Rare −40</span>
+                            <span class="rt-pf-ref-item rt-pf-ref--negative">Near Unique −50</span>
+                        </div>
                     </div>
                 </div>
             </div>

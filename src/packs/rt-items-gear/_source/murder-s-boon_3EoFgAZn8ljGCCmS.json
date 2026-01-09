@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "xenos",
-    "weight": "0.1kg",
-    "availability": "Scarce Availability if acquired from Dark Eldar Settlement. When consumed, gain \"Proven (4)\" Quality on all Melee Attacks for duration. Afterwards gain 1 Fatigue and make +0 Willpower Test or suffer -20 to Fellowship, Intelligence, and Willpower for 1d5 Hours. Lasts 50+2d10 Minutes, causes 1d5 Corruption. Can only use one Eldar Drug at a time.",
-    "cost": "Non-Eldar make -20 Toughness Test or are stunned for 1d5 Rounds, if 4+ DoF also take 1d10 Damage (ignore armour+toughness). Eldar make test if taking multiple Eldar drugs.",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "RT: The Soul Reaver",
+    "category": "luxury",
+    "weight": 0.1,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Scarce Availability if acquired from Dark Eldar Settlement. When consumed, gain \"Proven (4)\" Quality on all Melee Attacks for duration. Afterwards gain 1 Fatigue and make +0 Willpower Test or suffer -20 to Fellowship, Intelligence, and Willpower for 1d5 Hours. Lasts 50+2d10 Minutes, causes 1d5 Corruption. Can only use one Eldar Drug at a time.</p>\n<h3>Requirements</h3><p>Non-Eldar make -20 Toughness Test or are stunned for 1d5 Rounds, if 4+ DoF also take 1d10 Damage (ignore armour+toughness). Eldar make test if taking multiple Eldar drugs.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Scarce Availability if acquired from Dark Eldar Settlement. When consumed, gain \"Proven (4)\" Quality on all Melee Attacks for duration. Afterwards gain 1 Fatigue and make +0 Willpower Test or suffer -"
     },
+    "source": {
+      "book": "RT: The Soul Reaver",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Scarce Availability if acquired from Dark Eldar Settlement. When consumed, gain \"Proven (4)\" Quality on all Melee Attacks for duration. Afterwards gain 1 Fatigue and make +0 Willpower Test or suffer -20 to Fellowship, Intelligence, and Willpower for 1d5 Hours. Lasts 50+2d10 Minutes, causes 1d5 Corruption. Can only use one Eldar Drug at a time.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

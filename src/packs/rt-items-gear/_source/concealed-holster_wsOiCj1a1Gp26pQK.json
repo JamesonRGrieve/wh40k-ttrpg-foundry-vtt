@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "2kg",
-    "availability": "Holster for hiding and rapid access of weapon. Only works with Compact Pistol weapons. Common or Good Craftsmanship impose -20 to Awareness, Scrutiny, or Search to discover the stored weapon on the user. Best Craftsmanship allow wielder to draw weapon as a Free Action.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 2,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Holster for hiding and rapid access of weapon. Only works with Compact Pistol weapons. Common or Good Craftsmanship impose -20 to Awareness, Scrutiny, or Search to discover the stored weapon on the user. Best Craftsmanship allow wielder to draw weapon as a Free Action.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Holster for hiding and rapid access of weapon. Only works with Compact Pistol weapons. Common or Good Craftsmanship impose -20 to Awareness, Scrutiny, or Search to discover the stored weapon on the us"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Holster for hiding and rapid access of weapon. Only works with Compact Pistol weapons. Common or Good Craftsmanship impose -20 to Awareness, Scrutiny, or Search to discover the stored weapon on the user. Best Craftsmanship allow wielder to draw weapon as a Free Action.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

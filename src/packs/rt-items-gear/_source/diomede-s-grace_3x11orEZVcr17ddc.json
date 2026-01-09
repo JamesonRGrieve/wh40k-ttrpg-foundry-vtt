@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "45kg",
-    "availability": "Master Crafted Relic Astartes Jump Pack of the Raptors Chapter. User can never suffer worse than a -20 to their Pilot (Personal) Tests from terrain or space contstraints in any area large enough to fit them when using this jump pack. Whilst in a jungle or forest, grants +10 to Pilot (Personal) Tests to use this. Also grants regular Astartes Jump Pack effects.",
-    "cost": null,
-    "effects": "Hero",
-    "notes": "35 R",
-    "source": "DW: Honour the Chapter",
+    "category": "luxury",
+    "weight": 45,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 35 R</p>"
+      "value": "<p>Master Crafted Relic Astartes Jump Pack of the Raptors Chapter. User can never suffer worse than a -20 to their Pilot (Personal) Tests from terrain or space contstraints in any area large enough to fit them when using this jump pack. Whilst in a jungle or forest, grants +10 to Pilot (Personal) Tests to use this. Also grants regular Astartes Jump Pack effects.</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Astartes Jump Pack of the Raptors Chapter. User can never suffer worse than a -20 to their Pilot (Personal) Tests from terrain or space contstraints in any area large enough to fi"
     },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Master Crafted Relic Astartes Jump Pack of the Raptors Chapter. User can never suffer worse than a -20 to their Pilot (Personal) Tests from terrain or space contstraints in any area large enough to fit them when using this jump pack. Whilst in a jungle or forest, grants +10 to Pilot (Personal) Tests to use this. Also grants regular Astartes Jump Pack effects.",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

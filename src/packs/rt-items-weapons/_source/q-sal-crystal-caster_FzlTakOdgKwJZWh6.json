@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "qsal-crystal-caster",
     "class": "pistol",
     "type": "exotic",
-    "range": "15m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 5,
-    "clip": "-",
-    "reload": "Full",
-    "special": "Razor-Sharp, Crippling (6)",
-    "weight": "0.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 5
+    },
+    "special": [
+      "razor-sharp",
+      "crippling-6"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 0.5,
     "availability": "rare",
-    "cost": "-",
-    "source": "BC: Tome of Fate",
-    "note": "-20 to Awarness Tests to hear shots or discover weapon on person, can only attempt to hear from half distance. If Target takes no damage from weapon, must make -20 Tougness Test. If fail Stunned for 1 round per DoF. Can incorporate into another weapon as an upgrade, reducing clip size to 1, but test to discover -40.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Razor-Sharp, Crippling (6)</p><p><b>Note:</b> -20 to Awarness Tests to hear shots or discover weapon on person, can only attempt to hear from half distance. If Target takes no damage from weapon, must make -20 Tougness Test. If fail Stunned for 1 round per DoF. Can incorporate into another weapon as an upgrade, reducing clip size to 1, but test to discover -40.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "-20 to Awarness Tests to hear shots or discover weapon on person, can only attempt to hear from half distance. If Target takes no damage from weapon, must make -20 Tougness Test. If fail Stunned for 1 round per DoF. Can incorporate into another weapon as an upgrade, reducing clip size to 1, but test to discover -40.",
+    "source": "BC: Tome of Fate"
   },
   "effects": [],
   "flags": {},

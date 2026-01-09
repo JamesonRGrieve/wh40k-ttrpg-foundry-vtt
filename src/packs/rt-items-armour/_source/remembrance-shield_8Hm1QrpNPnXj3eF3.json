@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": 0.3,
-    "maxAg": "-",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "Famed",
-    "cost": "30 R",
-    "notes": "Master-Crafted Relic Astartes Combat Shield of the Deathwatch. Has Protection 30 Force Field with overload 01-10. -30 to Fellowship Tests with Craftworld Eldar as long as the shield is present (even if not wielded). Eldar have +10 to WS Tests vs bearer and will try to take the shield. Shield is decorated with Eldar jewels that may or may not be Spirit Stones.",
+    "notes": "Master-Crafted Relic Astartes Combat Shield of the Deathwatch. Has Protection 30 Force Field with overload 01-10. -30 to Fellowship Tests with Craftworld Eldar as long as the shield is present (even if not wielded). Eldar have +10 to WS Tests vs bearer and will try to take the shield. Shield is decorated with Eldar jewels that may or may not be Spirit Stones. [AP: 30%]",
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>Master-Crafted Relic Astartes Combat Shield of the Deathwatch. Has Protection 30 Force Field with overload 01-10. -30 to Fellowship Tests with Craftworld Eldar as long as the shield is present (even if not wielded). Eldar have +10 to WS Tests vs bearer and will try to take the shield. Shield is decorated with Eldar jewels that may or may not be Spirit Stones.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
     "armourPoints": {
-      "head": 0.3,
-      "body": 0.3,
-      "leftArm": 0.3,
-      "rightArm": 0.3,
-      "leftLeg": 0.3,
-      "rightLeg": 0.3
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

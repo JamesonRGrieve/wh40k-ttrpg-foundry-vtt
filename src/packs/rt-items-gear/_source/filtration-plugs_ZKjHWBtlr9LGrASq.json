@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "-",
-    "availability": "+20 To Toughness Test to resist effects of gas. Good Craftsmanship adds another +10. Poor Craftsmanship only lasts 5 hours before filter becomes unusable.",
-    "cost": null,
-    "effects": "Common",
-    "notes": "15 T",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 15,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 15 T</p>"
+      "value": "<p>+20 To Toughness Test to resist effects of gas. Good Craftsmanship adds another +10. Poor Craftsmanship only lasts 5 hours before filter becomes unusable.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 15 T</p>",
+      "chat": "",
+      "summary": "+20 To Toughness Test to resist effects of gas. Good Craftsmanship adds another +10. Poor Craftsmanship only lasts 5 hours before filter becomes unusable."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+20 To Toughness Test to resist effects of gas. Good Craftsmanship adds another +10. Poor Craftsmanship only lasts 5 hours before filter becomes unusable.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

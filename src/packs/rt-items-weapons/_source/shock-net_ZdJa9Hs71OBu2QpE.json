@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "shock-net",
     "class": "thrown",
     "type": "shock",
-    "range": "-",
-    "rof": "-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "shocking",
+      "snare"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Shocking, Snare",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "average",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Shocking, Snare</p><p><b>Note:</b> Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

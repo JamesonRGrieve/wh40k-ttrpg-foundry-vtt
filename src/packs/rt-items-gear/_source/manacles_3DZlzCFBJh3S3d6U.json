@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "1kg",
-    "availability": "Used for restraining people.",
-    "cost": null,
-    "effects": "Plentiful",
-    "notes": "35 T",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 1,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 35,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 35 T</p>"
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 35 T</p>",
+      "chat": "",
+      "summary": "Used for restraining people."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

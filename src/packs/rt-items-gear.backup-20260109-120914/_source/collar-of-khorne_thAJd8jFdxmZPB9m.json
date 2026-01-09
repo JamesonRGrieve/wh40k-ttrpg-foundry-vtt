@@ -1,0 +1,30 @@
+{
+  "name": "Collar of Khorne",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1kg",
+    "availability": "Cannot be removed after attached as long as character is alive. Whilst worn acts as a Null Rod (+30 to Resist Psychic Powers that affect character), Force Weapons do not gain benefits against Character. If placed around a defenceless Psyker, they are agonizingly choked to death unless they burn 1d5 Infamy or a Fate Point.",
+    "cost": "Heretical",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "thAJd8jFdxmZPB9m"
+}

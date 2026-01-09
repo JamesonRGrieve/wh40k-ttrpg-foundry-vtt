@@ -34,10 +34,10 @@ BaseActorSheet = 8 mixins + ActorSheetV2
 
 ### Character Sheet Structure
 
-**AcolyteSheet** (1740 lines) uses 10 PARTS:
+**AcolyteSheet** (1740 lines) uses 11 PARTS:
 - `header` - Portrait, name, player, career, rank
-- `tabs` - 8-tab navigation bar
-- 8 tab content parts: overview, combat, skills, talents, equipment, powers, dynasty, biography
+- `tabs` - 9-tab navigation bar
+- 9 tab content parts: overview (dashboard), status (detailed tracking), combat, skills, talents, equipment, powers, dynasty, biography
 
 **Context Flow**: `_prepareContext()` → `_preparePartContext(partId)` → part-specific methods
 
@@ -756,13 +756,14 @@ async _preparePartContext(partId, context, options) {
 
 ### Acolyte Sheet PARTS
 
-The **AcolyteSheet** uses 10 template parts (header + tabs + 8 tab contents):
+The **AcolyteSheet** uses 11 template parts (header + tabs + 9 tab contents):
 
 | Part | Template | Description |
 |------|----------|-------------|
 | `header` | `acolyte/header.hbs` | Portrait, name, player, career, rank, characteristics HUD |
-| `tabs` | `acolyte/tabs.hbs` | Tab navigation bar (8 tabs) |
-| `overview` | `acolyte/tab-overview.hbs` | Wounds, fatigue, fate, corruption, insanity, XP, movement |
+| `tabs` | `acolyte/tabs.hbs` | Tab navigation bar (9 tabs) |
+| `overview` | `acolyte/tab-overview.hbs` | **Ultra-dense dashboard** - at-a-glance vitals, chars, skills, combat stats |
+| `status` | `acolyte/tab-status.hbs` | Detailed tracking - wounds, fatigue, fate, corruption, insanity, XP, movement, effects |
 | `combat` | `acolyte/tab-combat.hbs` | "Battle Station" - weapons, reactions, vitals, armour display |
 | `skills` | `acolyte/tab-skills.hbs` | Standard skills panel with training buttons |
 | `talents` | `acolyte/tab-talents.hbs` | Specialist skills, talents, traits panels |
@@ -989,7 +990,7 @@ $rt-accent-biography: #34495e;   // Dark blue-gray
     - Uses DocumentSheetConfig API for sheet registration
     - Eliminates V1 Application deprecation warning
 22. **Template Parts Refactor** - Acolyte sheet now uses proper ApplicationV2 PARTS system:
-    - 10 separate template parts (header, tabs, 8 tab content parts)
+    - 11 separate template parts (header, tabs, 9 tab content parts)
     - Each part can be re-rendered independently for better performance
     - Implemented `_preparePartContext()` for targeted context preparation
     - Created `templates/actor/acolyte/` directory for part templates

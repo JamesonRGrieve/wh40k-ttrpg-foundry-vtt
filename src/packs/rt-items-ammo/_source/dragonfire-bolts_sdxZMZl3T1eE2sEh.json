@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Bolt Pistols, Bolters, Heavy Bolters",
-    "damageOrEffect": "Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.",
-    "qualities": "Blast (2)",
-    "weight": "10% wep",
+    "identifier": "dragonfire-bolts",
+    "weaponTypes": [
+      "bolt"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-2",
+      "reduce-damage-by-1"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": null,
-    "source": "RT: Faith and Coin",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p><p><b>Qualities:</b> Blast (2)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Faith and Coin",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

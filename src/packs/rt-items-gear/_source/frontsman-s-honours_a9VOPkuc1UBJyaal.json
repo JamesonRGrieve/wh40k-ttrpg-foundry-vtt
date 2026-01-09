@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Medal",
-    "weight": "-",
-    "availability": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.",
-    "cost": "Distinguished Service Medal: Hold a Pass, Fortification, or Entrenchment against an Ork Horde of at least 100 for 24 hours or longer.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "OW: Enemies of the Imperium",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Hold a Pass, Fortification, or Entrenchment against an Ork Horde of at least 100 for 24 hours or longer.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron."
     },
+    "source": {
+      "book": "OW: Enemies of the Imperium",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

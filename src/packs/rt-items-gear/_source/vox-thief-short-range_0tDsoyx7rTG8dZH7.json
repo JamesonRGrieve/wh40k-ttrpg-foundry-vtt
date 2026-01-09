@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "0.5kg",
-    "availability": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Short Range Versions are the size of a Data-Slate and have a range of 2-3km.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "500 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 500 T</p>"
+      "value": "<p>Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Short Range Versions are the size of a Data-Slate and have a range of 2-3km.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 500 T</p>",
+      "chat": "",
+      "summary": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If the"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Designed to be used by an operator, or placed covertly to record a particular area. Requires a -10 Tech-Use Test (or harder depending on cirucmstances) to listen in or record Vox transmissions. If they are encrypted further analysis may be required. Short Range Versions are the size of a Data-Slate and have a range of 2-3km.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

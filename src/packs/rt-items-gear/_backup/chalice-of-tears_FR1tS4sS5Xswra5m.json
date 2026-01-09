@@ -1,0 +1,30 @@
+{
+  "name": "Chalice of Tears",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "An Ornate metallic cup covered in complex and hypnotic designs. Some say it held tears of redeemed heretics who saw the light of The Emperor just before their executions. Others believe the tears are not human at all, or of anything remotely natural, a shimmering liquid that reeks of the Warp. Some heretics believe it grants immortality. Those who drink from it do so as a Half Action and make -30 Willpower Test, followed by +0 Corruption Test, remove damage equal to total number of DoS, or remove 1 Critical Damage, gain 1 Corruption for each damage point removed. If either test is failed gain 1 corruption per total DoF. If 3+ DoF trigger Psychic Phenomena and add DoF x 10 to the roll. Can be used as part of a Daemonic Shrine. To those who are uncorrupted it may burn at the touch or tempt with visions in the waters.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FR1tS4sS5Xswra5m"
+}

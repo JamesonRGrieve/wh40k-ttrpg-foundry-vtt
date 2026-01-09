@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "Unlike many profane objects, this is known to exist, the mystery instead comes in how many times it has been copied and where those copies are. Allegedly a set of 4 tomes dedicated to combating the Chaos Powers (1 book per god), it was denounced as trickery, and merely concealed daemonic rituals and other forbidden knowledge. Fresh versions seem to surface from those that would see such denouncments as advertisements. Requires Forbidden Lore (Daemonology or The Warp) +20 to read. Gain 1d5 Corruption per hour spent reading it. Different Craftsmanship Ratings represent the quality of the copy. Poor: Barely legible scrawls, copied from someone who understood little of the original, never gain corruption by reading but take twice as long to use as research and are of little true help. Common: A Basic specimen, likely a copy of a copy with various annotations and additions. Good: Retains most of the original text, only requires Linguistics (High Gothic) to read. Best: Potentially one of the originals, human leather covers bearing daemonic marks, being near it alone is uncomfortable, gain 1 Insanity for each Corruption when reading.",
-    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Unlike many profane objects, this is known to exist, the mystery instead comes in how many times it has been copied and where those copies are. Allegedly a set of 4 tomes dedicated to combating the Chaos Powers (1 book per god), it was denounced as trickery, and merely concealed daemonic rituals and other forbidden knowledge. Fresh versions seem to surface from those that would see such denouncments as advertisements. Requires Forbidden Lore (Daemonology or The Warp) +20 to read. Gain 1d5 Corruption per hour spent reading it. Different Craftsmanship Ratings represent the quality of the copy. Poor: Barely legible scrawls, copied from someone who understood little of the original, never gain corruption by reading but take twice as long to use as research and are of little true help. Common: A Basic specimen, likely a copy of a copy with various annotations and additions. Good: Retains most of the original text, only requires Linguistics (High Gothic) to read. Best: Potentially one of the originals, human leather covers bearing daemonic marks, being near it alone is uncomfortable, gain 1 Insanity for each Corruption when reading.</p>\n<h3>Requirements</h3><p>A Profane Object of Legend. It cannot be acquired, it must be earned or found. </p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Unlike many profane objects, this is known to exist, the mystery instead comes in how many times it has been copied and where those copies are. Allegedly a set of 4 tomes dedicated to combating the Ch"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Unlike many profane objects, this is known to exist, the mystery instead comes in how many times it has been copied and where those copies are. Allegedly a set of 4 tomes dedicated to combating the Chaos Powers (1 book per god), it was denounced as trickery, and merely concealed daemonic rituals and other forbidden knowledge. Fresh versions seem to surface from those that would see such denouncments as advertisements. Requires Forbidden Lore (Daemonology or The Warp) +20 to read. Gain 1d5 Corruption per hour spent reading it. Different Craftsmanship Ratings represent the quality of the copy. Poor: Barely legible scrawls, copied from someone who understood little of the original, never gain corruption by reading but take twice as long to use as research and are of little true help. Common: A Basic specimen, likely a copy of a copy with various annotations and additions. Good: Retains most of the original text, only requires Linguistics (High Gothic) to read. Best: Potentially one of the originals, human leather covers bearing daemonic marks, being near it alone is uncomfortable, gain 1 Insanity for each Corruption when reading.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "Body",
-    "ap": 3,
-    "maxAg": null,
-    "weight": "1kg",
+    "weight": 1,
     "availability": "rare",
-    "cost": "-",
     "notes": "Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.",
     "source": "RT: Tau Character Guide",
     "description": {
       "value": "<p>Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "body"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 3,
       "body": 3,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

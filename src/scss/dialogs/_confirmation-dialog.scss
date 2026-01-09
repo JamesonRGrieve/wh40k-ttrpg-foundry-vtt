@@ -1,0 +1,127 @@
+// ============================================
+// Confirmation Dialog Styling
+// ============================================
+// ApplicationV2 replacement for Dialog.confirm()
+
+.confirmation-dialog {
+  .window-content {
+    padding: 0;
+    background: linear-gradient(180deg, #1a1a24 0%, #0d0d12 100%);
+  }
+}
+
+.confirmation-dialog-content {
+  padding: 20px;
+  color: var(--rt-text-primary, #e8e4d9);
+  font-family: 'Roboto', sans-serif;
+}
+
+.confirmation-message {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--rt-text-primary, #e8e4d9);
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 6px;
+  margin-bottom: 20px;
+  
+  // Allow HTML content styling
+  p {
+    margin: 0 0 0.75em 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  strong {
+    color: var(--rt-accent-gold, #c9a227);
+    font-weight: 600;
+  }
+  
+  em {
+    color: var(--rt-text-secondary, #9a9a8a);
+  }
+}
+
+// Footer with buttons
+.confirmation-dialog-content .form-footer {
+  display: flex;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+// Base dialog button styles
+.confirmation-dialog .dialog-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  i {
+    font-size: 14px;
+  }
+}
+
+// Cancel button
+.confirmation-dialog .dialog-button.cancel {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
+// Confirm button (primary action)
+.confirmation-dialog .dialog-button.confirm {
+  background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+  color: #0a0a0f;
+  box-shadow: 
+    0 4px 12px rgba(201, 162, 39, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  
+  &:hover {
+    background: linear-gradient(135deg, #d4ad32 0%, #9a7818 100%);
+    box-shadow: 
+      0 6px 20px rgba(201, 162, 39, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(201, 162, 39, 0.3);
+  }
+}
+
+// Danger variant for delete confirmations
+.confirmation-dialog.confirmation-danger .dialog-button.confirm {
+  background: linear-gradient(135deg, #c13832 0%, #8b2222 100%);
+  box-shadow: 
+    0 4px 12px rgba(193, 56, 50, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  
+  &:hover {
+    background: linear-gradient(135deg, #d14540 0%, #a02828 100%);
+    box-shadow: 
+      0 6px 20px rgba(193, 56, 50, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+}

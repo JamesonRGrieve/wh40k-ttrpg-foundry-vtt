@@ -3,29 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "grenade-launcher-voss",
     "class": "basic",
     "type": "launcher",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": 6,
-    "reload": "Full",
-    "special": "Inaccurate",
-    "weight": "12.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 12.5,
     "availability": "scarce",
-    "cost": "500 T",
-    "source": "Rogue Trader: Core",
-    "note": "Traits vary with ammo (Weapon - Grenades)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Traits vary with ammo (Weapon - Grenades)</p>"
     },
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Traits vary with ammo (Weapon - Grenades)",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

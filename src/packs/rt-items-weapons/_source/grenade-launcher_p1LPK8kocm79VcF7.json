@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "grenade-launcher",
     "class": "basic",
     "type": "launcher",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 6,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "12kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 12,
     "availability": "average",
-    "cost": "500 T",
-    "source": "Only War: Core",
-    "note": "Traits vary with ammo (Weapon - Grenades)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Traits vary with ammo (Weapon - Grenades)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Traits vary with ammo (Weapon - Grenades)",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

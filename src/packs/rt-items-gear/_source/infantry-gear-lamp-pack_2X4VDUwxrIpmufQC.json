@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Infantry Gear",
-    "weight": "1kg",
-    "availability": "Compact light source held in the hand or attached to the bayonet lug of most rifles. Light beam can be adjusted via a focusing dial to cover a wide area or a tighter, longer range illumination. Lasts about 1d5+5 hours before needing recharge.",
-    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
-    "effects": "Average",
-    "notes": "10 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "survival",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>"
+      "value": "<p>Compact light source held in the hand or attached to the bayonet lug of most rifles. Light beam can be adjusted via a focusing dial to cover a wide area or a tighter, longer range illumination. Lasts about 1d5+5 hours before needing recharge.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>",
+      "chat": "",
+      "summary": "Compact light source held in the hand or attached to the bayonet lug of most rifles. Light beam can be adjusted via a focusing dial to cover a wide area or a tighter, longer range illumination. Lasts "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Compact light source held in the hand or attached to the bayonet lug of most rifles. Light beam can be adjusted via a focusing dial to cover a wide area or a tighter, longer range illumination. Lasts about 1d5+5 hours before needing recharge.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All",
-    "ap": 14,
-    "maxAg": null,
-    "weight": "450kg",
+    "weight": 450,
     "availability": "near-unique",
-    "cost": "-",
     "notes": "Gain +30 to Strength, increase size by 1 step, gain Auto-Stabilised Trait and can wield Heavy Weapons with one hand. If Auto Senses are Enabled, also count as being equipped with an Auspex and Force Field with Protection Rating 35 (no overload). Cannot Run or Dodge, suffer -20 to Agility, and -10 to Fine Manipulation Tasks. 24 Hour Power Supply.  Choose 3 Subsystems to add to functionality. Has Limited list of weapons it can use due to its bulk: Combi-Bolter (or any variant), Chainfirst, Lightning Claw, Power Axe, Power Fist, Power Mace, Power Scythe, Power Sword, Thunder Hammer, Reaper Autocannon, Heavy Flamer, Any Daemon Weapon, Any Force Weapon.",
     "source": "Black Crusade: Core",
     "description": {
       "value": "<p>Gain +30 to Strength, increase size by 1 step, gain Auto-Stabilised Trait and can wield Heavy Weapons with one hand. If Auto Senses are Enabled, also count as being equipped with an Auspex and Force Field with Protection Rating 35 (no overload). Cannot Run or Dodge, suffer -20 to Agility, and -10 to Fine Manipulation Tasks. 24 Hour Power Supply.  Choose 3 Subsystems to add to functionality. Has Limited list of weapons it can use due to its bulk: Combi-Bolter (or any variant), Chainfirst, Lightning Claw, Power Axe, Power Fist, Power Mace, Power Scythe, Power Sword, Thunder Hammer, Reaper Autocannon, Heavy Flamer, Any Daemon Weapon, Any Force Weapon.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 14
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

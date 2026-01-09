@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All",
-    "ap": 6,
-    "maxAg": 50,
-    "weight": "16kg",
+    "weight": 16,
     "availability": "extremely-rare",
-    "cost": "-",
     "notes": "Contains Integrated Respirator, Comm-link, Photo-Visor, Targeter, Recoil-Suppression Sleeves (recoil gloves), and a Magnetic Harness on the back that can hold one basic weapon. Property of the Adeptus Mechanicus, wearers not aligned to them gain Enemy (Mechanicus) whilst openly wearing or displaying it.",
     "source": "DH 2E: Enemies Within",
     "description": {
       "value": "<p>Contains Integrated Respirator, Comm-link, Photo-Visor, Targeter, Recoil-Suppression Sleeves (recoil gloves), and a Magnetic Harness on the back that can hold one basic weapon. Property of the Adeptus Mechanicus, wearers not aligned to them gain Enemy (Mechanicus) whilst openly wearing or displaying it.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": 50
+    "maxAgility": 50,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "legion-thunder-hammer",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+9",
-    "damageType": "Energy",
-    "penetration": 9,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 9
+    },
+    "special": [
+      "sm-wep",
+      "concussive-3",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Concussive (3), Power Field, Unwieldy",
-    "weight": "18kg",
+    "weight": 18,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Excess",
-    "note": "Chaos Legionary Weapon. Dangerous to own.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Concussive (3), Power Field, Unwieldy</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Chaos Legionary Weapon. Dangerous to own.",
+    "source": "BC: Tome of Excess"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "chogoris-lightning-blade",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+7",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Balanced, Power Field",
-    "weight": "3kg",
-    "availability": "Famed",
-    "cost": "20 R",
-    "source": "DW: First Founding",
-    "note": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the White Scars. Incredibly light as a result of integrated suspensors.",
+    "weight": 3,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Sword of the White Scars. Incredibly light as a result of integrated suspensors.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the White Scars. Incredibly light as a result of integrated suspensors.",
+    "source": "DW: First Founding"
   },
   "effects": [],
   "flags": {},

@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "void",
-    "locations": "All",
-    "ap": "55%",
-    "maxAg": "-",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "near-unique",
-    "cost": "-",
-    "notes": "When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.",
+    "notes": "When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock. [AP: 55%]",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>When attack blocked, roll 1d10 for  direction and move 2d10 metres, emerge on solid ground in empty space. If Direction and distance dice roll same number (EG 3 7's), user does not emerge for 1d5 rounds, gains 1 Corruption. If wearer was Suprised when this happens, forfeits next turn in shock.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 0
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "bone-maul",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10",
-    "damageType": "Impact",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "unbalanced",
+      "tainted"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Unbalanced, Tainted",
-    "weight": "7kg",
+    "weight": 7,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Unbalanced, Tainted</p><p><b>Note:</b> Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

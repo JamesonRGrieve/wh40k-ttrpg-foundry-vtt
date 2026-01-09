@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "vehicle",
+    "identifier": "hellstrike-missiles",
+    "class": "melee",
     "type": "launcher",
-    "range": "300m",
-    "rof": "S/-/-",
-    "damage": "3d10+7",
-    "damageType": "Explosive",
-    "penetration": 7,
-    "clip": 1,
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 7,
+      "penetration": 7
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (5)",
-    "weight": "85kg",
+    "weight": 85,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

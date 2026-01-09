@@ -3,30 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "chain-stick",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+1",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 1,
+      "penetration": 0
+    },
+    "special": [
+      "fast",
+      "primitive-8",
+      "toxic"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Fast, Primitive (8), Toxic",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "scarce",
-    "cost": "30 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Toxic Nunchucks",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Fast, Primitive (8), Toxic</p><p><b>Note:</b> Toxic Nunchucks</p>"
     },
-    "damageFormula": "1d10+1",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Toxic Nunchucks",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

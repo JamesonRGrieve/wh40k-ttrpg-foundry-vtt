@@ -1,0 +1,30 @@
+{
+  "name": "Night Cloak",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "2kg",
+    "availability": "Hide from infrared sensors, +30 to Concealment in the dark, but make +0 Toughness Test per hour or suffer 1 fatigue level due to heat buildup",
+    "cost": null,
+    "effects": "Average",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rJ5q3EuYHbGf0uhk"
+}

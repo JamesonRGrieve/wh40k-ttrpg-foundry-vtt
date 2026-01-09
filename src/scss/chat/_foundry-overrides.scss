@@ -1,0 +1,201 @@
+// ============================================
+// Foundry VTT Chat Message Dark Mode Overrides
+// ============================================
+// These styles must be extremely specific to override Foundry's default styles
+// Applied globally to #chat-log for all systems
+
+/* ========================================
+   DARK MODE CHAT MESSAGES - GLOBAL OVERRIDE
+   ======================================== */
+
+// Use body.theme-dark to ensure these only apply in dark mode
+body.theme-dark {
+  // Target the chat log container
+  #chat-log {
+    // Override message background
+    .message {
+      background-color: var(--rt-panel-bg-solid) !important;
+      border-color: var(--rt-border-color) !important;
+      box-shadow: 0 2px 4px var(--rt-shadow-medium) !important;
+      
+      // Message header (sender name, timestamp)
+      .message-header {
+        background: var(--rt-panel-bg) !important;
+        border-bottom: 1px solid var(--rt-border-color) !important;
+        color: var(--rt-text-dark) !important;
+        
+        .message-sender {
+          color: var(--rt-gold) !important;
+          font-weight: 600 !important;
+        }
+        
+        .message-metadata {
+          color: var(--rt-text-muted) !important;
+          
+          .message-timestamp {
+            color: var(--rt-text-subtle) !important;
+          }
+        }
+      }
+      
+      // Message content area
+      .message-content {
+        background: transparent !important;
+        color: var(--rt-text-dark) !important;
+        
+        // All text elements
+        p, span, div, td, th, li, label {
+          color: var(--rt-text-dark) !important;
+        }
+        
+        // Links
+        a {
+          color: var(--rt-gold) !important;
+          
+          &:hover {
+            color: var(--rt-gold-bright) !important;
+          }
+        }
+        
+        // Emphasis
+        strong, b {
+          color: var(--rt-text-dark) !important;
+          font-weight: 700 !important;
+        }
+        
+        em, i {
+          color: var(--rt-text-medium) !important;
+        }
+        
+        // Headings
+        h1, h2, h3, h4, h5, h6 {
+          color: var(--rt-text-dark) !important;
+        }
+        
+        // Tables
+        table {
+          background: transparent !important;
+          border-color: var(--rt-border-color) !important;
+          
+          th {
+            background: var(--rt-panel-bg) !important;
+            border-color: var(--rt-border-color) !important;
+            color: var(--rt-text-dark) !important;
+          }
+          
+          td {
+            border-color: var(--rt-border-color) !important;
+            background: transparent !important;
+            color: var(--rt-text-dark) !important;
+          }
+        }
+        
+        // Code blocks
+        code, pre {
+          background: var(--rt-panel-bg) !important;
+          color: var(--rt-text-dark) !important;
+          border-color: var(--rt-border-color) !important;
+        }
+      }
+      
+      // Flavor text (whispers, etc.)
+      .flavor-text {
+        color: var(--rt-text-muted) !important;
+        background: var(--rt-panel-bg) !important;
+      }
+    }
+    
+    // Whisper messages (GM only)
+    .message.whisper {
+      background: rgba(106, 90, 74, 0.3) !important;
+      border-color: var(--rt-bio-border) !important;
+      
+      .message-header {
+        background: rgba(106, 90, 74, 0.4) !important;
+      }
+    }
+    
+    // Blind messages (hidden from players)
+    .message.blind {
+      background: rgba(74, 55, 40, 0.3) !important;
+      border-color: var(--rt-border-color-strong) !important;
+    }
+  }
+  
+  // Chat form (message input area)
+  #chat-form {
+    background: var(--rt-panel-bg-solid) !important;
+    border-color: var(--rt-border-color) !important;
+    
+    textarea {
+      background: var(--rt-input-bg) !important;
+      color: var(--rt-text-dark) !important;
+      border-color: var(--rt-border-color) !important;
+      
+      &:focus {
+        background: var(--rt-input-bg-focus) !important;
+        border-color: var(--rt-gold) !important;
+      }
+    }
+    
+    button {
+      background: var(--rt-btn-bg) !important;
+      color: var(--rt-text-dark) !important;
+      border-color: var(--rt-border-color) !important;
+      
+      &:hover {
+        background: var(--rt-btn-bg-hover) !important;
+        border-color: var(--rt-gold) !important;
+      }
+    }
+  }
+}
+
+/* ========================================
+   ROGUE TRADER SPECIFIC CHAT CARDS
+   ======================================== */
+
+// These cards work in both light and dark mode via CSS vars
+body.theme-dark {
+  #chat-log {
+    // Hit location / Initiative cards
+    .rt-hit-location-result {
+      background: var(--rt-panel-bg-solid) !important;
+      border-color: var(--rt-border-color) !important;
+      
+      h3 {
+        color: var(--rt-text-dark) !important;
+        
+        i {
+          color: var(--rt-gold) !important;
+        }
+      }
+      
+      .rt-roll-result {
+        background: var(--rt-panel-bg) !important;
+        color: var(--rt-text-dark) !important;
+        border-color: var(--rt-border-color-strong) !important;
+      }
+      
+      .rt-location-name {
+        color: var(--rt-text-dark) !important;
+      }
+      
+      .rt-location-armour {
+        color: var(--rt-text-muted) !important;
+      }
+    }
+    
+    // Roll cards
+    .rt-roll-card {
+      background: var(--rt-panel-bg-solid) !important;
+      border-color: var(--rt-gold) !important;
+    }
+    
+    // Item cards
+    .rt-item-card {
+      background: var(--rt-panel-bg-solid) !important;
+      border-color: var(--rt-bronze) !important;
+    }
+  }
+}

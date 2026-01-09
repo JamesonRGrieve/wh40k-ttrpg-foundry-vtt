@@ -1,0 +1,30 @@
+{
+  "name": "Chem Gland",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Concealed in the Body, internally synthesises up to three substances chosen at implantation (appropriate consumables/drugs). As a Half Action make +10 Toughness Test to self-adminster one of these substances via the gland. Failiure instead causes 1 Fatigue. 4+ Degrees of Failure also deals 1d10 nonpermenant Toughness Damage.",
+    "cost": "Cost does not include Drug Doses which must be acquired seperately.",
+    "effects": "Very Rare",
+    "notes": "5000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 5000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F8PAJ709KsCrvS1N"
+}

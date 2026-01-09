@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ork-bomb-squig",
     "class": "thrown",
     "type": "exotic",
-    "range": "3d10m",
-    "rof": "S/-/-",
-    "damage": "4d10+5",
-    "damageType": "Explosive",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "3d10m"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 0
+    },
+    "special": [
+      "accurate",
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Accurate, Blast (5)",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Accurate, Blast (5)</p><p><b>Note:</b> Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. ",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

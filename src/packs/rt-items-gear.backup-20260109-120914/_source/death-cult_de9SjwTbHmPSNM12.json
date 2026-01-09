@@ -1,0 +1,30 @@
+{
+  "name": "Death Cult",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Hired to violently kill someone. Some see the slaying of a worthy target as payment enough, some require additional incentive such as keeping all or part of the victim's body, or a few drops of blood from the requester. If Requisition is a double there are numerous additional casulties, if 4+ DoF, death cult may see the requester as their next sacrifice.",
+    "cost": "The Hiring of those dedicated to the ending of lives. Some are devout worshippers of The Emperor, some less so. ",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "de9SjwTbHmPSNM12"
+}

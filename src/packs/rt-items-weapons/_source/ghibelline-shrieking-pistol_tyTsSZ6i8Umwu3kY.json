@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "ghibelline-shrieking-pistol",
     "class": "pistol",
     "type": "exotic",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 12,
-    "reload": "Full",
-    "special": "Concussive (0), Overcharge",
-    "weight": "8kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [
+      "concussive-0",
+      "overcharge"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
     "availability": "rare",
-    "cost": "-",
-    "source": "BC: Tome of Excess",
-    "note": "Sonic Weapon, uses a backpack ammo supply included in weapon weight.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (0), Overcharge</p><p><b>Note:</b> Sonic Weapon, uses a backpack ammo supply included in weapon weight.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Sonic Weapon, uses a backpack ammo supply included in weapon weight.",
+    "source": "BC: Tome of Excess"
   },
   "effects": [],
   "flags": {},

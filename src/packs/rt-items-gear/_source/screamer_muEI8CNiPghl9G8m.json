@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1.5kg",
-    "availability": "When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Good: Detects Specific Sounds, Movements, and/or odours, and have more subtle warnings (such as scream via vox) ",
-    "cost": null,
-    "effects": "Average / Initiated",
-    "notes": "140 T\n5 R",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 140,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 140 T\n5 R</p>"
+      "value": "<p>When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Good: Detects Specific Sounds, Movements, and/or odours, and have more subtle warnings (such as scream via vox) </p>\n<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 140 T\n5 R</p>",
+      "chat": "",
+      "summary": "When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Go"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Good: Detects Specific Sounds, Movements, and/or odours, and have more subtle warnings (such as scream via vox) ",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

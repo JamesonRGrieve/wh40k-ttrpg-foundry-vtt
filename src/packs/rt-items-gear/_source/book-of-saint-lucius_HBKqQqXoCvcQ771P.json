@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "1.5kg",
-    "availability": " Once per Combat, user may take 2 Full actions and make +10 Fellowship Test to grant any ally that can hear them +20 to Tests to resist effects of Fear and Pinning until the end of the encounter. If user is killed, stunned, or the sermon interrupted, gives -20 instead.",
-    "cost": "A Tome that provides inspiration and guidance.",
-    "effects": "Average",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+      "value": "<p> Once per Combat, user may take 2 Full actions and make +10 Fellowship Test to grant any ally that can hear them +20 to Tests to resist effects of Fear and Pinning until the end of the encounter. If user is killed, stunned, or the sermon interrupted, gives -20 instead.</p>\n<h3>Requirements</h3><p>A Tome that provides inspiration and guidance.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": " Once per Combat, user may take 2 Full actions and make +10 Fellowship Test to grant any ally that can hear them +20 to Tests to resist effects of Fear and Pinning until the end of the encounter. If u"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": " Once per Combat, user may take 2 Full actions and make +10 Fellowship Test to grant any ally that can hear them +20 to Tests to resist effects of Fear and Pinning until the end of the encounter. If user is killed, stunned, or the sermon interrupted, gives -20 instead.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

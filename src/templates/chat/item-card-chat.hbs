@@ -1,6 +1,6 @@
 {{!-- Rogue Trader Item Card Chat Template - Modern Design --}}
 <div class="rt-chat">
-    <div class="rt-item-card {{#if isWeapon}}rt-item-card--weapon{{/if}}{{#if isArmour}}rt-item-card--armour{{/if}}{{#if isTalent}}rt-item-card--talent{{/if}}{{#if isPsychicPower}}rt-item-card--power{{/if}}{{#if isShipComponent}}rt-item-card--component{{/if}}">
+    <div class="rt-item-card {{#if isWeapon}}rt-item-card--weapon{{/if}}{{#if isArmour}}rt-item-card--armour{{/if}}{{#if isTalent}}rt-item-card--talent{{/if}}{{#if isPsychicPower}}rt-item-card--power{{/if}}{{#if isShipComponent}}rt-item-card--component{{/if}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
         {{!-- Header --}}
         <div class="rt-item-card__header">
             <img class="rt-item-card__image" src="{{item.img}}" alt="{{item.name}}" />
@@ -156,6 +156,15 @@
             {{/if}}
         </div>
 
+        {{!-- Properties/Qualities Tags --}}
+        {{#if item.system.qualities}}
+            <div class="rt-item-card__properties">
+                {{#each item.system.qualities as |quality|}}
+                    <span class="rt-item-card__property-tag">{{quality.name}}</span>
+                {{/each}}
+            </div>
+        {{/if}}
+
         {{!-- Footer --}}
         {{#if item.system.source}}
             <div class="rt-item-card__footer">
@@ -167,19 +176,25 @@
         {{#if hasActions}}
             <div class="rt-item-card__actions">
                 {{#if isRollable}}
-                    <button class="rt-item-card__btn rt-item-card__btn--roll" data-item-id="{{item._id}}" data-action="roll">
-                        <span class="material-icons">casino</span>
+                    <button type="button" class="rt-item-card__btn rt-item-card__btn--roll" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
+                        <i class="fas fa-dice-d20"></i>
                         Roll
                     </button>
                 {{/if}}
                 {{#if isWeapon}}
-                    <button class="rt-item-card__btn rt-item-card__btn--attack" data-item-id="{{item._id}}" data-action="attack">
-                        <span class="material-icons">gps_fixed</span>
+                    <button type="button" class="rt-item-card__btn rt-item-card__btn--attack" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
+                        <i class="fas fa-crosshairs"></i>
                         Attack
                     </button>
-                    <button class="rt-item-card__btn rt-item-card__btn--damage" data-item-id="{{item._id}}" data-action="damage">
-                        <span class="material-icons">whatshot</span>
+                    <button type="button" class="rt-item-card__btn rt-item-card__btn--damage" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
+                        <i class="fas fa-burst"></i>
                         Damage
+                    </button>
+                {{/if}}
+                {{#if isUsable}}
+                    <button type="button" class="rt-item-card__btn rt-item-card__btn--use" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
+                        <i class="fas fa-hand-sparkles"></i>
+                        Use
                     </button>
                 {{/if}}
             </div>

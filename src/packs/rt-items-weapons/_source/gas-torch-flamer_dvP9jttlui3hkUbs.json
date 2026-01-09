@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "gas-torch-flamer",
     "class": "basic",
     "type": "flame",
-    "range": "5m",
-    "rof": "S/-/-",
-    "damage": "1d10+1",
-    "damageType": "Energy",
-    "penetration": 2,
-    "clip": 5,
-    "reload": "2 Full",
-    "special": "Flame, Spray",
-    "weight": "20kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 5,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 1,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 20,
     "availability": "scarce",
-    "cost": "150 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 150,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

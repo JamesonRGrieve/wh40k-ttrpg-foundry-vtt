@@ -1,11 +1,12 @@
 /**
  * RT Rich Tooltips
  * Gothic 40K themed contextual tooltips with breakdowns
+ * Applied to Foundry's #tooltip element when .rt-tooltip class is added
  */
 
-.rt-tooltip {
-    position: fixed;
-    z-index: 10000;
+// When Foundry's tooltip gets the .rt-tooltip class, apply our styling
+#tooltip.rt-tooltip {
+    // Override Foundry's default tooltip styling
     min-width: 250px;
     max-width: 350px;
     padding: 0;
@@ -19,15 +20,6 @@
     color: var(--rt-bone, #e8dcc8);
     font-family: var(--rt-font-body, "Garamond", serif);
     font-size: 0.9rem;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-
-    &.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
 
     // Parchment texture overlay
     &::before {
@@ -47,6 +39,7 @@
             );
         pointer-events: none;
         border-radius: 4px;
+        z-index: -1;
     }
 
     /* Header */
@@ -309,6 +302,35 @@
         }
     }
 
+    /* Hint text (non-interactive guidance) */
+    .rt-tooltip__hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(50, 50, 50, 0.5);
+        border-top: 1px solid rgba(212, 175, 55, 0.2);
+        font-size: 0.8rem;
+        color: rgba(232, 220, 200, 0.7);
+        font-style: italic;
+
+        i {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+    }
+
+    /* Skill description */
+    .rt-tooltip__description {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: rgba(232, 220, 200, 0.85);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        background: rgba(0, 0, 0, 0.2);
+    }
+
     /* Generic Content */
     .rt-tooltip__content {
         padding: 0.75rem 1rem;
@@ -319,25 +341,26 @@
 }
 
 /* Type-specific styling */
-.rt-tooltip--characteristic {
+#tooltip.rt-tooltip--characteristic {
     .rt-tooltip__header {
         background: linear-gradient(135deg, rgba(220, 20, 60, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
     }
 }
 
-.rt-tooltip--skill {
+#tooltip.rt-tooltip--skill {
     .rt-tooltip__header {
         background: linear-gradient(135deg, rgba(70, 130, 180, 0.3) 0%, rgba(25, 25, 112, 0.3) 100%);
     }
 }
 
-.rt-tooltip--armor {
+#tooltip.rt-tooltip--armor,
+#tooltip.rt-tooltip--armour {
     .rt-tooltip__header {
         background: linear-gradient(135deg, rgba(105, 105, 105, 0.3) 0%, rgba(47, 79, 79, 0.3) 100%);
     }
 }
 
-.rt-tooltip--weapon {
+#tooltip.rt-tooltip--weapon {
     .rt-tooltip__header {
         background: linear-gradient(135deg, rgba(178, 34, 34, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
     }

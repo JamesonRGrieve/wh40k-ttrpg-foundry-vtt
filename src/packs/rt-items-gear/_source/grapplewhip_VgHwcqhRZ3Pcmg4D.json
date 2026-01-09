@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "3kg",
-    "availability": "To use make +0 Weapon Skill Test, on success user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. Can be used as Exotic Melee Weapon. Without proper training, missed attacks hit the user in random location.",
-    "cost": "Weapon Stats: Melee; 5m; 1d10+2 R; Pen 0; Flexible; Snare",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "RT: Stars of Inquity",
+    "category": "tools",
+    "weight": 3,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>To use make +0 Weapon Skill Test, on success user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. Can be used as Exotic Melee Weapon. Without proper training, missed attacks hit the user in random location.</p>\n<h3>Requirements</h3><p>Weapon Stats: Melee; 5m; 1d10+2 R; Pen 0; Flexible; Snare</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "To use make +0 Weapon Skill Test, on success user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. Can be used as Exotic Melee Weapon."
     },
+    "source": {
+      "book": "RT: Stars of Inquity",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "To use make +0 Weapon Skill Test, on success user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. Can be used as Exotic Melee Weapon. Without proper training, missed attacks hit the user in random location.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

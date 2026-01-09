@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Arm Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_arm_3",
+    "damageType": "explosive",
+    "bodyPart": "arm",
+    "severity": 3,
+    "effect": "<p>The explosion removes 1 finger (and the tips from up to [[1d5]] others) from the target's hand. The target suffers [[1d10]] Weapon Skill and [[1d10]] Ballistic Skill damage, and anything he was carrying in that hand is destroyed. If this is an explosive such as a grenade, it detonates; immediately resolve the 9 effect on this table upon the target.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Arm (Severity 3)</strong></p><p>The explosion removes 1 finger (and the tips from up to [[1d5]] others) from the target's hand. The target suffers [[1d10]] Weapon Skill and [[1d10]] Ballistic Skill damage, and anything he was carrying in that hand is destroyed. If this is an explosive such as a grenade, it detonates; immediately resolve the 9 effect on this table upon the target.</p>",
+      "chat": "",
+      "summary": "Explosive Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "PDzoEjBwUew56FJy"
+}

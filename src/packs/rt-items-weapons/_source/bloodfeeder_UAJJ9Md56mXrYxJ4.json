@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "bloodfeeder",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+7",
-    "damageType": "Rending",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 7,
+      "penetration": 4
+    },
+    "special": [
+      "daemon-wep",
+      "balanced",
+      "felling-4"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Daemon Wep, Balanced, Felling (4)",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Weapon: Sword. Daemon WP 75 (Khorne Daemon), Bind Str 5. Att.: Accursed and Rampage. Each kill, reduce Bind Str by 1 and gain temporary Unaligned/Khorne Trait. At 0, Daemon tries to escape. Daemonic Mastery Test resets Bind Str(lose temp traits)\nOnce every other round when making charge attack, can choose to attack all enemies within 1 metre. Must be aligned to Khorne to wield.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Daemon Wep, Balanced, Felling (4)</p><p><b>Note:</b> Weapon: Sword. Daemon WP 75 (Khorne Daemon), Bind Str 5. Att.: Accursed and Rampage. Each kill, reduce Bind Str by 1 and gain temporary Unaligned/Khorne Trait. At 0, Daemon tries to escape. Daemonic Mastery Test resets Bind Str(lose temp traits)\nOnce every other round when making charge attack, can choose to attack all enemies within 1 metre. Must be aligned to Khorne to wield.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Sword. Daemon WP 75 (Khorne Daemon), Bind Str 5. Att.: Accursed and Rampage. Each kill, reduce Bind Str by 1 and gain temporary Unaligned/Khorne Trait. At 0, Daemon tries to escape. Daemonic Mastery Test resets Bind Str(lose temp traits)\nOnce every other round when making charge attack, can choose to attack all enemies within 1 metre. Must be aligned to Khorne to wield.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

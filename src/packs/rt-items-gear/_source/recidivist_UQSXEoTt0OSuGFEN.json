@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Useful for gaining illegal substances, information, assassinations, or all the other resources of a criminal network. Most only care for hard cash, although some representatives of larger organisations may ask for a favour at a later date. For Stats see Dark Heresy 2E Core: Page 386-388.",
-    "cost": "A wide category of individuals performing illegal activities such as narco-dealers, thugs, oilers, hired killers, skulkers, etc. ",
-    "effects": "Common",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "general",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Useful for gaining illegal substances, information, assassinations, or all the other resources of a criminal network. Most only care for hard cash, although some representatives of larger organisations may ask for a favour at a later date. For Stats see Dark Heresy 2E Core: Page 386-388.</p>\n<h3>Requirements</h3><p>A wide category of individuals performing illegal activities such as narco-dealers, thugs, oilers, hired killers, skulkers, etc. </p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Useful for gaining illegal substances, information, assassinations, or all the other resources of a criminal network. Most only care for hard cash, although some representatives of larger organisation"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Useful for gaining illegal substances, information, assassinations, or all the other resources of a criminal network. Most only care for hard cash, although some representatives of larger organisations may ask for a favour at a later date. For Stats see Dark Heresy 2E Core: Page 386-388.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

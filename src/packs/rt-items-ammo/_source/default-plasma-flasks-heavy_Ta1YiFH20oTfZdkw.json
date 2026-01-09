@@ -3,19 +3,48 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Plasma Weapons (Heavy)",
-    "damageOrEffect": "-",
-    "qualities": "-",
-    "weight": "10% wep",
+    "identifier": "-default-plasma-flasks-heavy",
+    "weaponTypes": [
+      "las",
+      "plasma"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>-</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": null,
-    "source": "Rogue Trader Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> -</p><p><b>Qualities:</b> -</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Rogue Trader Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

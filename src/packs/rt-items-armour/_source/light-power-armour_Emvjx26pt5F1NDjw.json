@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All",
-    "ap": 7,
-    "maxAg": 40,
-    "weight": "40kg",
+    "weight": 40,
     "availability": "extremely-rare",
-    "cost": "8500 T",
     "notes": "+10 to Strength, armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>+10 to Strength, armour is sealed with rebreather, power pack lasts 1d5 hours. Weight doesn't count to carry limit</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 7
     },
     "modifications": [],
-    "maxAgility": 40
+    "maxAgility": 40,
+    "properties": []
   },
   "effects": [],
   "flags": {},

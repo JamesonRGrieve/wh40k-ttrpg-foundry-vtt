@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "chainsword-ironfang",
     "class": "melee",
     "type": "chain",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+3",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 3
+    },
+    "special": [
+      "concussive-0",
+      "tearing",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (0), Tearing, Unbalanced",
-    "weight": "12kg",
+    "weight": 12,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Uses a Backpack-mounted power pack to improve its power. Backpack included in weapon weight.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (0), Tearing, Unbalanced</p><p><b>Note:</b> Uses a Backpack-mounted power pack to improve its power. Backpack included in weapon weight.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses a Backpack-mounted power pack to improve its power. Backpack included in weapon weight.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "5kg",
-    "availability": "Master Crafted Relic Back Banner of the Doom Eagels Chapter. Back Banner provides its usual benefits even if the character is not the Kill-Team leader. If they are the Kill Team Leader, they restore Willpower Bonus Cohesion each time they spend a Fate Point to restore Cohesion.",
-    "cost": null,
-    "effects": "Hero",
-    "notes": "35 R",
-    "source": "DW: Honour the Chapter",
+    "category": "luxury",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 35 R</p>"
+      "value": "<p>Master Crafted Relic Back Banner of the Doom Eagels Chapter. Back Banner provides its usual benefits even if the character is not the Kill-Team leader. If they are the Kill Team Leader, they restore Willpower Bonus Cohesion each time they spend a Fate Point to restore Cohesion.</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Back Banner of the Doom Eagels Chapter. Back Banner provides its usual benefits even if the character is not the Kill-Team leader. If they are the Kill Team Leader, they restore W"
     },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Master Crafted Relic Back Banner of the Doom Eagels Chapter. Back Banner provides its usual benefits even if the character is not the Kill-Team leader. If they are the Kill Team Leader, they restore Willpower Bonus Cohesion each time they spend a Fate Point to restore Cohesion.",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Body Critical 10",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_body_10",
+    "damageType": "explosive",
+    "bodyPart": "body",
+    "severity": 10,
+    "effect": "<p>Pieces of the target's body fly in all directions as he is torn into bloody gobbets. If the target is carrying any ammunition, it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres. If the target is carrying any grenades or missiles, these detonate immediately. Anyone within [[1d10]] metres of the target is drenched in gore. Each affected character must make a Challenging (+0) Agility test or suffer a -10 penalty to Weapon Skill and Ballistic Skill tests for 1 round, as blood fouls his sight.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Body (Severity 10)</strong></p><p>Pieces of the target's body fly in all directions as he is torn into bloody gobbets. If the target is carrying any ammunition, it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres. If the target is carrying any grenades or missiles, these detonate immediately. Anyone within [[1d10]] metres of the target is drenched in gore. Each affected character must make a Challenging (+0) Agility test or suffer a -10 penalty to Weapon Skill and Ballistic Skill tests for 1 round, as blood fouls his sight.</p>",
+      "chat": "",
+      "summary": "Explosive Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "VzMxVbyEgnrHEhzY"
+}

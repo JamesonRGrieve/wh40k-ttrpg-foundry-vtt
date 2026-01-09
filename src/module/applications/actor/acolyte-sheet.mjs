@@ -11,6 +11,8 @@ import { AssignDamageData } from "../../rolls/assign-damage-data.mjs";
 import { prepareAssignDamageRoll } from "../prompts/assign-damage-dialog.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 import LoadoutPresetDialog from "../dialogs/loadout-preset-dialog.mjs";
+import AcquisitionDialog from "../dialogs/acquisition-dialog.mjs";
+import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
@@ -53,6 +55,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
             removeAcquisition: AcolyteSheet.#removeAcquisition,
+            openAcquisitionDialog: AcolyteSheet.#openAcquisitionDialog,
             
             // Experience actions
             customXP: AcolyteSheet.#customXP,
@@ -93,6 +96,11 @@ export default class AcolyteSheet extends BaseActorSheet {
         },
         overview: {
             template: "systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs",
+            container: { classes: ["rt-body"], id: "tab-body" },
+            scrollable: [""]
+        },
+        status: {
+            template: "systems/rogue-trader/templates/actor/acolyte/tab-status.hbs",
             container: { classes: ["rt-body"], id: "tab-body" },
             scrollable: [""]
         },
@@ -141,6 +149,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static TABS = [
         { tab: "overview", label: "RT.Tabs.Overview", group: "primary", cssClass: "tab-overview" },
+        { tab: "status", label: "RT.Tabs.Status", group: "primary", cssClass: "tab-status" },
         { tab: "combat", label: "RT.Tabs.Combat", group: "primary", cssClass: "tab-combat" },
         { tab: "skills", label: "RT.Tabs.Skills", group: "primary", cssClass: "tab-skills" },
         { tab: "talents", label: "RT.Tabs.Talents", group: "primary", cssClass: "tab-talents" },
@@ -334,6 +343,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             );
         }
 
+        // Prepare dynasty tab data
+        context.dynastyData = this._prepareDynastyData();
+
         return context;
     }
 
@@ -360,6 +372,8 @@ export default class AcolyteSheet extends BaseActorSheet {
             case "biography":
                 return await this._prepareBiographyContext(context, options);
             case "overview":
+                return await this._prepareOverviewDashboardContext(context, options);
+            case "status":
             case "combat":
             case "skills":
             case "talents":
@@ -608,8 +622,14 @@ export default class AcolyteSheet extends BaseActorSheet {
             equipped: []
         };
 
+        // Equipment item types that should appear in backpack
+        const equipmentTypes = ["weapon", "armour", "forceField", "cybernetic", "gear", "storageLocation", "ammunition", "drugOrConsumable"];
+
         for (const item of this.actor.items) {
-            categories.all.push(item);
+            // Only add equipment-type items to "all" for backpack display
+            if (equipmentTypes.includes(item.type)) {
+                categories.all.push(item);
+            }
 
             // Categorize by type
             if (item.type === "weapon" || item.isWeapon) categories.weapons.push(item);
@@ -795,6 +815,47 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Prepare dynasty tab data including wealth tiers and gauge positioning.
+     * @returns {object} Dynasty display data
+     * @protected
+     */
+    _prepareDynastyData() {
+        const pf = this.actor.system?.rogueTrader?.profitFactor ?? {};
+        const currentPF = pf.current ?? 0;
+        const startingPF = pf.starting ?? 0;
+        const modifier = pf.modifier ?? 0;
+        const effectivePF = currentPF + modifier;
+
+        // Determine wealth tier (Rogue Trader wealth categories)
+        let wealthTier;
+        if (effectivePF >= 100) {
+            wealthTier = { key: "legendary", label: "Legendary Wealth", min: 100 };
+        } else if (effectivePF >= 75) {
+            wealthTier = { key: "mighty", label: "Mighty Empire", min: 75 };
+        } else if (effectivePF >= 50) {
+            wealthTier = { key: "notable", label: "Notable Dynasty", min: 50 };
+        } else if (effectivePF >= 25) {
+            wealthTier = { key: "modest", label: "Modest Wealth", min: 25 };
+        } else {
+            wealthTier = { key: "poor", label: "Poor Resources", min: 0 };
+        }
+
+        // Calculate percentage for gauge (cap at 100 for display, but allow >100 PF)
+        const pfPercentage = Math.min(Math.max((effectivePF / 100) * 100, 0), 100);
+
+        return {
+            currentPF,
+            startingPF,
+            modifier,
+            effectivePF,
+            wealthTier,
+            pfPercentage
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Prepare overview tab context.
      * @param {object} context  Context being prepared.
      * @param {object} options  Render options.
@@ -809,6 +870,37 @@ export default class AcolyteSheet extends BaseActorSheet {
             icon: effect.icon,
             document: effect
         }));
+        
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare overview dashboard context for the new ultra-dense dashboard.
+     * @param {object} context  Context being prepared.
+     * @param {object} options  Render options.
+     * @returns {Promise<object>}
+     * @protected
+     */
+    async _prepareOverviewDashboardContext(context, options) {
+        // First prepare standard tab context
+        await this._prepareTabPartContext("overview", context, options);
+        
+        // Add Active Effects data for dashboard preview
+        context.effects = this.actor.effects.map(effect => ({
+            id: effect.id,
+            name: effect.name,
+            icon: effect.icon,
+            disabled: effect.disabled,
+            document: effect
+        }));
+        
+        // Ensure combat data is available (for primaryWeapon, dodgeTarget, parryTarget)
+        // This is already prepared in _prepareContext via _prepareCombatData
+        
+        // Ensure characteristics data is available in the format expected by dashboard
+        // This is already prepared in _prepareContext
         
         return context;
     }
@@ -932,17 +1024,27 @@ export default class AcolyteSheet extends BaseActorSheet {
             const agBonus = this.actor.characteristics?.agility?.bonus ?? 0;
             const roll = await new Roll("1d10 + @ab", { ab: agBonus }).evaluate();
 
+            const content = `
+                <div class="rt-hit-location-result">
+                    <h3><i class="fas fa-bolt"></i> Initiative Roll</h3>
+                    <div class="rt-hit-roll">
+                        <span class="rt-roll-result">${roll.total}</span>
+                    </div>
+                    <div class="rt-hit-location">
+                        <span class="rt-location-armour">1d10 + Agility Bonus (${agBonus})</span>
+                    </div>
+                </div>
+            `;
+
             await ChatMessage.create({
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content: `
-                    <div class="rt-initiative-roll">
-                        <h3><i class="fas fa-bolt"></i> Initiative Roll</h3>
-                        <div class="rt-roll-formula">1d10 + ${agBonus} (Ag Bonus)</div>
-                        <div class="rt-roll-result">${roll.total}</div>
-                    </div>
-                `,
+                content,
                 rolls: [roll],
-                type: CONST.CHAT_MESSAGE_STYLES.ROLL
+                flags: {
+                    "rogue-trader": {
+                        type: "initiative"
+                    }
+                }
             });
         } catch (error) {
             this._notify("error", `Initiative roll failed: ${error.message}`, {
@@ -1241,10 +1343,11 @@ export default class AcolyteSheet extends BaseActorSheet {
                 message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`;
                 break;
             case "burn":
-                const confirm = await Dialog.confirm({
+                const confirm = await ConfirmationDialog.confirm({
                     title: "Burn Fate Point?",
-                    content: "<p>Are you sure you want to <strong>permanently burn</strong> a Fate Point?</p>",
-                    defaultYes: false
+                    content: "Are you sure you want to <strong>permanently burn</strong> a Fate Point?",
+                    confirmLabel: "Burn",
+                    cancelLabel: "Cancel"
                 });
                 if (!confirm) return;
                 message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
@@ -1462,6 +1565,19 @@ export default class AcolyteSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+
+    /**
+     * Open the Acquisition Dialog for rolling acquisition tests.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #openAcquisitionDialog(event, target) {
+        event.preventDefault();
+        await AcquisitionDialog.show(this.actor);
+    }
+
+    /* -------------------------------------------- */
     /*  Event Handlers - Experience                 */
     /* -------------------------------------------- */
 
@@ -1473,44 +1589,8 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static async #customXP(event, target) {
         event.preventDefault();
-        
-        const currentTotal = this.actor.system?.experience?.total ?? 0;
-        
-        // Create a simple dialog to get XP amount
-        const content = `
-            <form>
-                <div class="form-group">
-                    <label>Current Total XP: <strong>${currentTotal}</strong></label>
-                </div>
-                <div class="form-group">
-                    <label>XP to Add/Subtract:</label>
-                    <input type="number" name="xpAmount" value="0" autofocus />
-                    <p class="hint">Enter a positive number to add XP, or negative to subtract.</p>
-                </div>
-            </form>
-        `;
-        
-        const xpAmount = await Dialog.prompt({
-            title: "Adjust Total XP",
-            content: content,
-            label: "Apply",
-            callback: (html) => {
-                const form = html.querySelector("form");
-                const input = form.querySelector('[name="xpAmount"]');
-                return parseInt(input.value) || 0;
-            },
-            rejectClose: false
-        });
-        
-        if (xpAmount === null || xpAmount === 0) return;
-        
-        const newTotal = Math.max(0, currentTotal + xpAmount);
-        await this.actor.update({ "system.experience.total": newTotal });
-        
-        const verb = xpAmount > 0 ? "added" : "removed";
-        this._notify("info", `${Math.abs(xpAmount)} XP ${verb}. Total: ${newTotal}`, {
-            duration: 3000
-        });
+        const { openAddXPDialog } = await import("../prompts/add-xp-dialog.mjs");
+        await openAddXPDialog(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1806,10 +1886,11 @@ export default class AcolyteSheet extends BaseActorSheet {
                 return;
             }
             
-            const confirmed = await Dialog.confirm({
+            const confirmed = await ConfirmationDialog.confirm({
                 title: "Delete Active Effect",
-                content: `<p>Are you sure you want to delete <strong>${effect.name}</strong>?</p>`,
-                defaultYes: false
+                content: `Are you sure you want to delete <strong>${effect.name}</strong>?`,
+                confirmLabel: "Delete",
+                cancelLabel: "Cancel"
             });
             
             if (confirmed) {

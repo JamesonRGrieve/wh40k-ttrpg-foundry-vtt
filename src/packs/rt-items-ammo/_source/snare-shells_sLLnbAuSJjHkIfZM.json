@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP: Shotguns, Shotgun Pistols, and Shotcannons",
-    "damageOrEffect": "-2 Damage, gives weapon Snare Quality.",
-    "qualities": "Snare",
-    "weight": "10% wep",
+    "identifier": "snare-shells",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": -2,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "snare"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>-2 Damage, gives weapon Snare Quality.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "rare",
-    "cost": null,
-    "source": "RT: Into the Storm",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> -2 Damage, gives weapon Snare Quality.</p><p><b>Qualities:</b> Snare</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

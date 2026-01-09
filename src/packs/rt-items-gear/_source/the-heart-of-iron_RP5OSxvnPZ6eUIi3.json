@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "-",
-    "availability": "Relic Mastercrafted Cybernetic of the Iron Hands. Once it has bonded with the user, they gain Regeneration (5) Trait, and become immune to Fatigue. If worn for more than a single mission, the wearer suffers 1d10+5 temporary Toughness Damage for each subsequent mission. If not removed, the character will die if reahcing 0 or lower Toughness.",
-    "cost": "Iron Hands Only",
-    "effects": "Famed",
-    "notes": "30 R",
-    "source": "DW: First Founding",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 30 R</p>"
+      "value": "<p>Relic Mastercrafted Cybernetic of the Iron Hands. Once it has bonded with the user, they gain Regeneration (5) Trait, and become immune to Fatigue. If worn for more than a single mission, the wearer suffers 1d10+5 temporary Toughness Damage for each subsequent mission. If not removed, the character will die if reahcing 0 or lower Toughness.</p>\n<h3>Requirements</h3><p>Iron Hands Only</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 30 R</p>",
+      "chat": "",
+      "summary": "Relic Mastercrafted Cybernetic of the Iron Hands. Once it has bonded with the user, they gain Regeneration (5) Trait, and become immune to Fatigue. If worn for more than a single mission, the wearer s"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Relic Mastercrafted Cybernetic of the Iron Hands. Once it has bonded with the user, they gain Regeneration (5) Trait, and become immune to Fatigue. If worn for more than a single mission, the wearer suffers 1d10+5 temporary Toughness Damage for each subsequent mission. If not removed, the character will die if reahcing 0 or lower Toughness.",
+    "duration": "",
+    "notes": "30 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

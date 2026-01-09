@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "The Meals provided whilst aboard a Void Craft. Fungus Bread, Condensation Water, Void Sweat. Unpleasent, but better than starving.",
-    "cost": "Cost is per day",
-    "effects": "Plentiful",
-    "notes": "1 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "general",
+    "weight": 0,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 1 T</p>"
+      "value": "<p>The Meals provided whilst aboard a Void Craft. Fungus Bread, Condensation Water, Void Sweat. Unpleasent, but better than starving.</p>\n<h3>Requirements</h3><p>Cost is per day</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 1 T</p>",
+      "chat": "",
+      "summary": "The Meals provided whilst aboard a Void Craft. Fungus Bread, Condensation Water, Void Sweat. Unpleasent, but better than starving."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Meals provided whilst aboard a Void Craft. Fungus Bread, Condensation Water, Void Sweat. Unpleasent, but better than starving.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

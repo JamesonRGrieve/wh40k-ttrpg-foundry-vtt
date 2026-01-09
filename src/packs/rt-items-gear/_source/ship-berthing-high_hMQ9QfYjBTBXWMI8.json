@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "The Living Quarters whilst aboard a Void Craft. Gilded Villas, Noble Suites, Starlane Lodges. The Height of luxury with a price to match.",
-    "cost": "Cost is per day",
-    "effects": "Scarce",
-    "notes": "100 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>"
+      "value": "<p>The Living Quarters whilst aboard a Void Craft. Gilded Villas, Noble Suites, Starlane Lodges. The Height of luxury with a price to match.</p>\n<h3>Requirements</h3><p>Cost is per day</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "The Living Quarters whilst aboard a Void Craft. Gilded Villas, Noble Suites, Starlane Lodges. The Height of luxury with a price to match."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Living Quarters whilst aboard a Void Craft. Gilded Villas, Noble Suites, Starlane Lodges. The Height of luxury with a price to match.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

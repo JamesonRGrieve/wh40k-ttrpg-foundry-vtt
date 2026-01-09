@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Provides information on xenos races, be they living or dead. Often possessing vast knowledge arrays and forbidden data on xenos species. May help in identifying xenos items or samples, excavating alien ruins, etc. Possesses Forbidden Lore (Xenos) +20 and Intelligence 45 at a minimum.",
-    "cost": "Researchers of aliens. Some are sanctioned for perform excavations and studies by the Mechanicus or Adminstratum. Some do so in secret, possessing vast forbidden libraries.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "general",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Provides information on xenos races, be they living or dead. Often possessing vast knowledge arrays and forbidden data on xenos species. May help in identifying xenos items or samples, excavating alien ruins, etc. Possesses Forbidden Lore (Xenos) +20 and Intelligence 45 at a minimum.</p>\n<h3>Requirements</h3><p>Researchers of aliens. Some are sanctioned for perform excavations and studies by the Mechanicus or Adminstratum. Some do so in secret, possessing vast forbidden libraries.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Provides information on xenos races, be they living or dead. Often possessing vast knowledge arrays and forbidden data on xenos species. May help in identifying xenos items or samples, excavating alie"
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Provides information on xenos races, be they living or dead. Often possessing vast knowledge arrays and forbidden data on xenos species. May help in identifying xenos items or samples, excavating alien ruins, etc. Possesses Forbidden Lore (Xenos) +20 and Intelligence 45 at a minimum.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

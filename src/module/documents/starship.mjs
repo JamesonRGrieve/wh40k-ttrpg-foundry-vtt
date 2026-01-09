@@ -156,11 +156,11 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
 
         const html = await renderTemplate('systems/rogue-trader/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        ChatMessage.create({
+        await ChatMessage.create({
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this }),
             content: html,
-            type: CONST.CHAT_MESSAGE_STYLES.OTHER
+
         });
     }
 
@@ -171,18 +171,21 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
         
         const content = `
-            <div class="rt-ship-initiative-roll">
+            <div class="rt-hit-location-result">
                 <h3><i class="fas fa-satellite-dish"></i> Ship Initiative</h3>
-                <div class="rt-roll-formula">1d10 + Detection Bonus (${this.detectionBonus})</div>
-                <div class="rt-roll-result">${roll.total}</div>
+                <div class="rt-hit-roll">
+                    <span class="rt-roll-result">${roll.total}</span>
+                </div>
+                <div class="rt-hit-location">
+                    <span class="rt-location-armour">1d10 + Detection Bonus (${this.detectionBonus})</span>
+                </div>
             </div>
         `;
 
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this }),
             content: content,
-            rolls: [roll],
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL
+            rolls: [roll]
         });
 
         return roll;

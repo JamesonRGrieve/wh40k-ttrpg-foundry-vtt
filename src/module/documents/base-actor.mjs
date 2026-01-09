@@ -4,6 +4,62 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.mjs';
 
 export class RogueTraderBaseActor extends Actor {
 
+    /* -------------------------------------------- */
+    /*  Descendant Document Hooks                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle the creation of descendant documents (items).
+     * Triggers recalculation of item-based data.
+     * @override
+     */
+    _onCreateDescendantDocuments(parent, collection, documents, data, options, userId) {
+        super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
+        if (collection === "items") {
+            this._onItemsChanged();
+        }
+    }
+
+    /**
+     * Handle the update of descendant documents (items).
+     * Triggers recalculation of item-based data.
+     * @override
+     */
+    _onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId) {
+        super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
+        if (collection === "items") {
+            this._onItemsChanged();
+        }
+    }
+
+    /**
+     * Handle the deletion of descendant documents (items).
+     * Triggers recalculation of item-based data.
+     * @override
+     */
+    _onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId) {
+        super._onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId);
+        if (collection === "items") {
+            this._onItemsChanged();
+        }
+    }
+
+    /**
+     * Called when items are created, updated, or deleted.
+     * Triggers recalculation of item-based data via prepareEmbeddedData.
+     * @protected
+     */
+    _onItemsChanged() {
+        // Re-run embedded data preparation if the DataModel supports it
+        if (typeof this.system?.prepareEmbeddedData === 'function') {
+            // Reset modifier tracking before recalculating
+            if (typeof this.system._initializeModifierTracking === 'function') {
+                this.system._initializeModifierTracking();
+            }
+            this.system.prepareEmbeddedData();
+        }
+    }
+
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
         let initData = {

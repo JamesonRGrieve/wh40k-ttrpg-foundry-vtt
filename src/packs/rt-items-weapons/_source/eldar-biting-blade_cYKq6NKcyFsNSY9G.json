@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-biting-blade",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Rending",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 2
+    },
+    "special": [
+      "tearing",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Tearing, Unbalanced",
-    "weight": "7kg",
+    "weight": 7,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Xenotech. +2 damage per two degrees of success on WS Test to attack. Large Eldar Chainsword, suprisingly quiet.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Xenotech. +2 damage per two degrees of success on WS Test to attack. Large Eldar Chainsword, suprisingly quiet.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. +2 damage per two degrees of success on WS Test to attack. Large Eldar Chainsword, suprisingly quiet.",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

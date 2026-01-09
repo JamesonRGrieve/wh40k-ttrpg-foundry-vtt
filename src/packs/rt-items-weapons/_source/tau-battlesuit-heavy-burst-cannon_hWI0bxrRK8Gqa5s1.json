@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-heavy-burst-cannon",
     "class": "heavy",
     "type": "exotic",
-    "range": "80m",
-    "rof": "-/6/12",
-    "damage": "2d10+7",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 120,
-    "reload": "4 Full",
-    "special": "Tearing",
-    "weight": "35kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 6,
+        "full": 12
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 6
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 120,
+      "value": 120,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 35,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one.Typically not mountable on anything smaller than an XV104 Riptide",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.Typically not mountable on anything smaller than an XV104 Riptide</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one.Typically not mountable on anything smaller than an XV104 Riptide",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

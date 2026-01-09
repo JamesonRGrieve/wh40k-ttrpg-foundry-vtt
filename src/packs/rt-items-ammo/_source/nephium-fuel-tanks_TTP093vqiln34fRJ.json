@@ -3,19 +3,47 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Flame Weapons",
-    "damageOrEffect": "-10 to Agilitiy Test to avoid damage, and +2 to base damage.",
-    "qualities": null,
-    "weight": "10% wep",
+    "identifier": "nephium-fuel-tanks",
+    "weaponTypes": [
+      "flame"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>-10 to Agilitiy Test to avoid damage, and +2 to base damage.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": null,
-    "source": "RT: Into the Storm",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> -10 to Agilitiy Test to avoid damage, and +2 to base damage.</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

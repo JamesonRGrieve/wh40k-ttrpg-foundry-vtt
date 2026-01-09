@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "5kg",
-    "availability": "Dome-Shaped Tents formed of polycarbonate sides and plasteel rods. Difficult to transport but incredibly durable. Designs are modular and can be linked into larger structures. Usually has a camoflauged exterior. By Default, Primitive AP 8 but can be upgraded to Primitive AP 12 for extra cost. Comes in 3 Person and 6 Person variants.",
-    "cost": "3 Person Tent: 5kg, Common, 60 Thrones Cost | 6 Person Tent: 10kg, Scarce, 100 Thrones.\nBeetle Tent Armour Upgrade: +8kg, Rare, 80 Thrones, ",
-    "effects": "Common",
-    "notes": "60 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 60,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 60 T</p>"
+      "value": "<p>Dome-Shaped Tents formed of polycarbonate sides and plasteel rods. Difficult to transport but incredibly durable. Designs are modular and can be linked into larger structures. Usually has a camoflauged exterior. By Default, Primitive AP 8 but can be upgraded to Primitive AP 12 for extra cost. Comes in 3 Person and 6 Person variants.</p>\n<h3>Requirements</h3><p>3 Person Tent: 5kg, Common, 60 Thrones Cost | 6 Person Tent: 10kg, Scarce, 100 Thrones.\nBeetle Tent Armour Upgrade: +8kg, Rare, 80 Thrones, </p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 60 T</p>",
+      "chat": "",
+      "summary": "Dome-Shaped Tents formed of polycarbonate sides and plasteel rods. Difficult to transport but incredibly durable. Designs are modular and can be linked into larger structures. Usually has a camoflauge"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Dome-Shaped Tents formed of polycarbonate sides and plasteel rods. Difficult to transport but incredibly durable. Designs are modular and can be linked into larger structures. Usually has a camoflauged exterior. By Default, Primitive AP 8 but can be upgraded to Primitive AP 12 for extra cost. Comes in 3 Person and 6 Person variants.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

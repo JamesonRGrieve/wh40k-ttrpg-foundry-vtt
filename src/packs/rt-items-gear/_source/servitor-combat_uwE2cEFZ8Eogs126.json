@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Lobotomised, Augmented Human that performs combat tasks (see Rogue Trader: Core, Page 374)",
-    "cost": null,
-    "effects": "Rare / Distinguished",
-    "notes": "20 R",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare / Distinguished</p><p><b>Notes:</b> 20 R</p>"
+      "value": "<p>Lobotomised, Augmented Human that performs combat tasks (see Rogue Trader: Core, Page 374)</p>\n<p><b>Effect:</b> Rare / Distinguished</p><p><b>Notes:</b> 20 R</p>",
+      "chat": "",
+      "summary": "Lobotomised, Augmented Human that performs combat tasks (see Rogue Trader: Core, Page 374)"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Lobotomised, Augmented Human that performs combat tasks (see Rogue Trader: Core, Page 374)",
+    "duration": "",
+    "notes": "20 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

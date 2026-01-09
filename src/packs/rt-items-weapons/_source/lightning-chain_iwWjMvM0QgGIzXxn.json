@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "lightning-chain",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+1",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 1,
+      "penetration": 0
+    },
+    "special": [
+      "flexible",
+      "primitive-8",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Flexible, Primitive (8), Shocking",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "very-rare",
-    "cost": "100 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Made of a strange material that stores and releases sparks of energy",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Flexible, Primitive (8), Shocking</p><p><b>Note:</b> Made of a strange material that stores and releases sparks of energy</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Made of a strange material that stores and releases sparks of energy",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

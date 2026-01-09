@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "-",
-    "availability": "Detects Harmful Radiation, Airborne Toxins, and Pollutants, about the size of a Chrono. The Basic Version simply detects danger is present.",
-    "cost": null,
-    "effects": "Common",
-    "notes": "20 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>"
+      "value": "<p>Detects Harmful Radiation, Airborne Toxins, and Pollutants, about the size of a Chrono. The Basic Version simply detects danger is present.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "Detects Harmful Radiation, Airborne Toxins, and Pollutants, about the size of a Chrono. The Basic Version simply detects danger is present."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Detects Harmful Radiation, Airborne Toxins, and Pollutants, about the size of a Chrono. The Basic Version simply detects danger is present.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

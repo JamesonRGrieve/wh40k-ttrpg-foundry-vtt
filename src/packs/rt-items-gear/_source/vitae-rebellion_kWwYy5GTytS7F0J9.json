@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "xenos",
-    "weight": "0.1kg",
-    "availability": "Extremely Rare Availability if acquired from Dark Eldar Settlement. may not be acquirable elsewhere. Failing Toughness Test, target takes 2d10 Explosive Damage that ignores Armour, but is reduced by Toughness Bonus as normal.",
-    "cost": "Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "RT: The Soul Reaver",
+    "category": "luxury",
+    "weight": 0.1,
+    "availability": "unique",
+    "craftsmanship": "good",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Extremely Rare Availability if acquired from Dark Eldar Settlement. may not be acquirable elsewhere. Failing Toughness Test, target takes 2d10 Explosive Damage that ignores Armour, but is reduced by Toughness Bonus as normal.</p>\n<h3>Requirements</h3><p>Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.</p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Extremely Rare Availability if acquired from Dark Eldar Settlement. may not be acquirable elsewhere. Failing Toughness Test, target takes 2d10 Explosive Damage that ignores Armour, but is reduced by T"
     },
+    "source": {
+      "book": "RT: The Soul Reaver",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Extremely Rare Availability if acquired from Dark Eldar Settlement. may not be acquirable elsewhere. Failing Toughness Test, target takes 2d10 Explosive Damage that ignores Armour, but is reduced by Toughness Bonus as normal.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

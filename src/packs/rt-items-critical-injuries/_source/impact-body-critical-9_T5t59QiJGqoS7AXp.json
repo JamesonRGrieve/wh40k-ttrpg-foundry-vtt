@@ -1,0 +1,32 @@
+{
+  "name": "Impact Body Critical 9",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body_9",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 9,
+    "effect": "<p>The target jerks back from the force of the attack, throwing back his head and spewing out a jet of blood before crumpling to the ground dead.</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Body (Severity 9)</strong></p><p>The target jerks back from the force of the attack, throwing back his head and spewing out a jet of blood before crumpling to the ground dead.</p>",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "T5t59QiJGqoS7AXp"
+}

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "assault-shotgun-skitarri-vanaheim",
     "class": "basic",
     "type": "solid-projectile",
-    "range": "40m",
-    "rof": "S/3/6",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 15,
-    "reload": "Full",
-    "special": "Scatter",
-    "weight": "8kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "scatter"
+    ],
+    "clip": {
+      "max": 15,
+      "value": 15,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
     "availability": "average",
-    "cost": "300 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

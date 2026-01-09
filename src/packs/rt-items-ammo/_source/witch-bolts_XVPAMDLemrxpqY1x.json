@@ -3,19 +3,45 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Bolt: Any",
-    "damageOrEffect": "Creatures with Psy Rating that are damaged by this ammo reduce their Psy Rating by 1 for 1d10 Rounds, effect stacks. During this time target cannot Push their Psychic Powers and targets with Warp Instability Trait must immediately make a Willpower test for it.",
-    "qualities": null,
-    "weight": "10% wep",
-    "availability": "Distinguished",
-    "cost": "12 R / Clip",
-    "source": "Deathwatch: Core",
+    "identifier": "witch-bolts",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Creatures with Psy Rating that are damaged by this ammo reduce their Psy Rating by 1 for 1d10 Rounds, effect stacks. During this time target cannot Push their Psychic Powers and targets with Warp Instability Trait must immediately make a Willpower test for it.</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 12,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Creatures with Psy Rating that are damaged by this ammo reduce their Psy Rating by 1 for 1d10 Rounds, effect stacks. During this time target cannot Push their Psychic Powers and targets with Warp Instability Trait must immediately make a Willpower test for it.</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

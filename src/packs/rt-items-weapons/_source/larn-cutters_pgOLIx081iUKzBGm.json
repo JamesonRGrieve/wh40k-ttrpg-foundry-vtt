@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "larn-cutters",
     "class": "basic",
     "type": "exotic",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "4d10+6",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": 4,
-    "reload": "3 Full",
-    "special": "Tearing",
-    "weight": "10kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 4,
+      "value": 4,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 10,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP/Bolt: Shotguns, Shotgun Pistols, shotcannons, bolt pistols, bolters.",
-    "damageOrEffect": "Does 2d10 E Pen 0 Damage, if target takes damage suffers effects as if set on fire. Each hit reduces AP by 1 (down to min 0) until repaired.",
-    "qualities": "Flame",
-    "weight": "10% wep",
+    "identifier": "acid-shells",
+    "weaponTypes": [
+      "solid-projectile",
+      "bolt"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "flame"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Does 2d10 E Pen 0 Damage, if target takes damage suffers effects as if set on fire. Each hit reduces AP by 1 (down to min 0) until repaired.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": null,
-    "source": "RT: Into the Storm",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Does 2d10 E Pen 0 Damage, if target takes damage suffers effects as if set on fire. Each hit reduces AP by 1 (down to min 0) until repaired.</p><p><b>Qualities:</b> Flame</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm",
+    "damage": {
+      "formula": "2d10",
+      "bonus": 0,
+      "type": "energy",
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

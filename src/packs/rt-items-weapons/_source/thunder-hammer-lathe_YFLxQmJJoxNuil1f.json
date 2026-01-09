@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "thunder-hammer-lathe",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+4",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 10
+    },
+    "special": [
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Unwieldy",
-    "weight": "15kg",
+    "weight": 15,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

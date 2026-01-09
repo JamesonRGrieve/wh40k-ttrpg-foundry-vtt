@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "0.5kg",
-    "availability": "Grants +30 to performing a curse. Extremely poisonous, suffer 1d5 Energy Damage with Toxic(3) Quality on consumption that ignores Armour and Toughness",
-    "cost": "Heretical",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "BC: Tome of Excess",
+    "category": "consumable",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Grants +30 to performing a curse. Extremely poisonous, suffer 1d5 Energy Damage with Toxic(3) Quality on consumption that ignores Armour and Toughness</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Grants +30 to performing a curse. Extremely poisonous, suffer 1d5 Energy Damage with Toxic(3) Quality on consumption that ignores Armour and Toughness"
     },
+    "source": {
+      "book": "BC: Tome of Excess",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Grants +30 to performing a curse. Extremely poisonous, suffer 1d5 Energy Damage with Toxic(3) Quality on consumption that ignores Armour and Toughness",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

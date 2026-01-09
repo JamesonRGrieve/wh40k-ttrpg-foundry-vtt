@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP/Bolt: Shotguns, Bolt weapons",
-    "damageOrEffect": "When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)",
-    "qualities": "Flame",
-    "weight": "10% wep",
+    "identifier": "inferno-shells",
+    "weaponTypes": [
+      "solid-projectile",
+      "bolt"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "flame"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "rare",
-    "cost": "18T each",
-    "source": "Rogue Trader Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 18,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> When hit, make Agility Test or Set on fire, in addition to normal damage (see Flame Quality)</p><p><b>Qualities:</b> Flame</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Rogue Trader Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

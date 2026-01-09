@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Disease",
-    "weight": "-",
-    "availability": "Infected Character gains new attack: (Pistol; 10m;S/-/-;2d10 E;Pen 2; Corrosive, Spray, Toxic(2)). Cannot Jam,  any that fail the Toxic Toughness Test contract Disease. If damage roll is ever 2 7's, Character instantly dies in a gorey, pus filled explosion. Everyone within 3d10m is hit by weapon. Cured by 2 Week rest and -20 Medicae Test. ",
-    "cost": "Acquired in batch of 5. Any exposed to disease must make listed Toughness Test or catch it.\nNurgle Dedicated suffer disease as normal, although do not see it as suffering.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "BC: Tome of Decay",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Infected Character gains new attack: (Pistol; 10m;S/-/-;2d10 E;Pen 2; Corrosive, Spray, Toxic(2)). Cannot Jam,  any that fail the Toxic Toughness Test contract Disease. If damage roll is ever 2 7's, Character instantly dies in a gorey, pus filled explosion. Everyone within 3d10m is hit by weapon. Cured by 2 Week rest and -20 Medicae Test. </p>\n<h3>Requirements</h3><p>Acquired in batch of 5. Any exposed to disease must make listed Toughness Test or catch it.\nNurgle Dedicated suffer disease as normal, although do not see it as suffering.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Infected Character gains new attack: (Pistol; 10m;S/-/-;2d10 E;Pen 2; Corrosive, Spray, Toxic(2)). Cannot Jam,  any that fail the Toxic Toughness Test contract Disease. If damage roll is ever 2 7's, C"
     },
+    "source": {
+      "book": "BC: Tome of Decay",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Infected Character gains new attack: (Pistol; 10m;S/-/-;2d10 E;Pen 2; Corrosive, Spray, Toxic(2)). Cannot Jam,  any that fail the Toxic Toughness Test contract Disease. If damage roll is ever 2 7's, Character instantly dies in a gorey, pus filled explosion. Everyone within 3d10m is hit by weapon. Cured by 2 Week rest and -20 Medicae Test. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

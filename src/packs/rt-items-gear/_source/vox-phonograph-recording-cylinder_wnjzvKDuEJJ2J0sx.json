@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Structure",
-    "weight": "1kg",
-    "availability": "A Cylinder that may be played in a Vox-Phonograph, may be used to store video and audio, or record new information onto. Effectively a Space VHS.",
-    "cost": null,
-    "effects": "Common",
-    "notes": "20+T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20+T</p>"
+      "value": "<p>A Cylinder that may be played in a Vox-Phonograph, may be used to store video and audio, or record new information onto. Effectively a Space VHS.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20+T</p>",
+      "chat": "",
+      "summary": "A Cylinder that may be played in a Vox-Phonograph, may be used to store video and audio, or record new information onto. Effectively a Space VHS."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Cylinder that may be played in a Vox-Phonograph, may be used to store video and audio, or record new information onto. Effectively a Space VHS.",
+    "duration": "",
+    "notes": "20+T",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "choke-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-10"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (10)",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "rare",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

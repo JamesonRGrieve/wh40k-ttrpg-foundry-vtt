@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "sollex-electo-pult",
     "class": "heavy",
     "type": "launcher",
-    "range": "500m",
-    "rof": "S/-/-",
-    "damage": "3d10+10",
-    "damageType": "Explosive",
-    "penetration": 10,
-    "clip": 1,
-    "reload": "3 Full",
-    "special": "Accurate, Blast (1), Overheats",
-    "weight": "38kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 500,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "accurate",
+      "blast-1",
+      "overheats"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 38,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: Faith and Coin",
-    "note": "Can't use Unusual Ammunition unless it is specifically designed for this weapon.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Accurate, Blast (1), Overheats</p><p><b>Note:</b> Can't use Unusual Ammunition unless it is specifically designed for this weapon.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can't use Unusual Ammunition unless it is specifically designed for this weapon.",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

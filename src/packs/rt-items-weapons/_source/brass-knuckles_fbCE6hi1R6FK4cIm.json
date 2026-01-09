@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "brass-knuckles",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d5-1",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "impact",
+      "bonus": -1,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (8)",
-    "weight": "0.5kg",
+    "weight": 0.5,
     "availability": "plentiful",
-    "cost": "5 T",
-    "source": "Dark Heresy: Core",
-    "note": "Easy to Hide",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Easy to Hide</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Easy to Hide",
+    "source": "Dark Heresy: Core"
   },
   "effects": [],
   "flags": {},

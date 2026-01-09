@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "cryo-grenade",
     "class": "thrown",
     "type": "explosive",
-    "range": "SBx3",
-    "rof": "S/-/-",
-    "damage": "4d10+6",
-    "damageType": "Energy",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 3
+    },
+    "special": [
+      "blast-3"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (3)",
-    "weight": "0.5kg",
-    "availability": "Initiated",
-    "cost": "18 R",
-    "source": "DW: Rites of Battle",
-    "note": "Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.",
+    "weight": 0.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 18,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

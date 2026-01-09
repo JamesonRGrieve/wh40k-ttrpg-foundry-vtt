@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "1kg",
-    "availability": "Used to fuel vehicles, flamethrowers, and explosives. If used for explosives, inflicts 1d10 E, Flame per kilogram, with a blast radius of 4 metres per kilogram. Those caught in the blast must make Agility Test or be set on fire. No Good or Best Craftsmanship",
-    "cost": "GM should consider blast radius/dmg to curve off with excessive mass, oil tankers can carry over 400k tonnes, if that exploded it would be Exterminatus grade by these rules.",
-    "effects": "Abundant",
-    "notes": "60 T",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 1,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 60,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 60 T</p>"
+      "value": "<p>Used to fuel vehicles, flamethrowers, and explosives. If used for explosives, inflicts 1d10 E, Flame per kilogram, with a blast radius of 4 metres per kilogram. Those caught in the blast must make Agility Test or be set on fire. No Good or Best Craftsmanship</p>\n<h3>Requirements</h3><p>GM should consider blast radius/dmg to curve off with excessive mass, oil tankers can carry over 400k tonnes, if that exploded it would be Exterminatus grade by these rules.</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 60 T</p>",
+      "chat": "",
+      "summary": "Used to fuel vehicles, flamethrowers, and explosives. If used for explosives, inflicts 1d10 E, Flame per kilogram, with a blast radius of 4 metres per kilogram. Those caught in the blast must make Agi"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Used to fuel vehicles, flamethrowers, and explosives. If used for explosives, inflicts 1d10 E, Flame per kilogram, with a blast radius of 4 metres per kilogram. Those caught in the blast must make Agility Test or be set on fire. No Good or Best Craftsmanship",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

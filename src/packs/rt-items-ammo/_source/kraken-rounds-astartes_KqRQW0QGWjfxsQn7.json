@@ -3,19 +3,45 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Bolt: Any Astartes",
-    "damageOrEffect": "Increase Penetration by 8, and increase Range by 50%",
-    "qualities": null,
-    "weight": "10% wep",
-    "availability": "Initiated",
-    "cost": "15 R / Clip",
-    "source": "Deathwatch: Core",
+    "identifier": "kraken-rounds-astartes",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Increase Penetration by 8, and increase Range by 50%</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Increase Penetration by 8, and increase Range by 50%</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

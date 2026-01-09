@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Increases the Machine Trait of the Cyber Familiar by 1, up to a max of Machine(5)",
-    "cost": null,
-    "effects": "Special",
-    "notes": "500 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> 500 T</p>"
+      "value": "<p>Increases the Machine Trait of the Cyber Familiar by 1, up to a max of Machine(5)</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> 500 T</p>",
+      "chat": "",
+      "summary": "Increases the Machine Trait of the Cyber Familiar by 1, up to a max of Machine(5)"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Increases the Machine Trait of the Cyber Familiar by 1, up to a max of Machine(5)",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

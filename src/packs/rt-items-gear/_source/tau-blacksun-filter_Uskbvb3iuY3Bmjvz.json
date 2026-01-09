@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "0.5kg",
-    "availability": "Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.",
-    "cost": "Xenotech. +20 to Acquisition Tests for this item if acquired through Friendly Tau Settlement.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Tau Character Guide",
+    "category": "tools",
+    "weight": 0.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.</p>\n<h3>Requirements</h3><p>Xenotech. +20 to Acquisition Tests for this item if acquired through Friendly Tau Settlement.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices."
     },
+    "source": {
+      "book": "RT: Tau Character Guide",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

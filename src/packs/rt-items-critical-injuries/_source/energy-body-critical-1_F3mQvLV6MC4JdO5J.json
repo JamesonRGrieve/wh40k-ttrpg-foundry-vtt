@@ -1,0 +1,32 @@
+{
+  "name": "Energy Body Critical 1",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_body_1",
+    "damageType": "energy",
+    "bodyPart": "body",
+    "severity": 1,
+    "effect": "<p>A blow to the target’s body steals the air from his lungs. The target can take only a Half Action on his next turn.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Body (Severity 1)</strong></p><p>A blow to the target’s body steals the air from his lungs. The target can take only a Half Action on his next turn.</p>",
+      "chat": "",
+      "summary": "Energy Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "F3mQvLV6MC4JdO5J"
+}

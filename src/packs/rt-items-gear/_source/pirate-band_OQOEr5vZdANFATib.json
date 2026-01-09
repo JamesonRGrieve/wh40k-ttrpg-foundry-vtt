@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Void raiders and outlaws useful for providing space-services such as smuggling, guides, and piracy. Some make contact with xenos and so may aid in brokering deals, selling goods, or introductions to such aliens. For each degree of Success on Requisition Test, add +10 to character's next Requisition test for xenos services or equipment.",
-    "cost": "Pirates and Unsanctioned Traders amongst the stars, skilled in void warfare and often possessing many criminal contacts, some with xenos raiders they interact with.",
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Void raiders and outlaws useful for providing space-services such as smuggling, guides, and piracy. Some make contact with xenos and so may aid in brokering deals, selling goods, or introductions to such aliens. For each degree of Success on Requisition Test, add +10 to character's next Requisition test for xenos services or equipment.</p>\n<h3>Requirements</h3><p>Pirates and Unsanctioned Traders amongst the stars, skilled in void warfare and often possessing many criminal contacts, some with xenos raiders they interact with.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Void raiders and outlaws useful for providing space-services such as smuggling, guides, and piracy. Some make contact with xenos and so may aid in brokering deals, selling goods, or introductions to s"
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Void raiders and outlaws useful for providing space-services such as smuggling, guides, and piracy. Some make contact with xenos and so may aid in brokering deals, selling goods, or introductions to such aliens. For each degree of Success on Requisition Test, add +10 to character's next Requisition test for xenos services or equipment.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

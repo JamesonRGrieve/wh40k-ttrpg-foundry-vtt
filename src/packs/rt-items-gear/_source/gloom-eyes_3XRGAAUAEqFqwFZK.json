@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "-",
-    "availability": "A Small rounded lump that glows a slowly shifting shade and colour. Counts as a Charm and sheds dim light around the wearer about as bright as a candle. Characters from Hive Volg gain +10 to Tests made to avoid pinning.",
-    "cost": "Scarce on Hive Volg, Very Rare Elsewhere",
-    "effects": "Very Rare",
-    "notes": "300 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 300 T</p>"
+      "value": "<p>A Small rounded lump that glows a slowly shifting shade and colour. Counts as a Charm and sheds dim light around the wearer about as bright as a candle. Characters from Hive Volg gain +10 to Tests made to avoid pinning.</p>\n<h3>Requirements</h3><p>Scarce on Hive Volg, Very Rare Elsewhere</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 300 T</p>",
+      "chat": "",
+      "summary": "A Small rounded lump that glows a slowly shifting shade and colour. Counts as a Charm and sheds dim light around the wearer about as bright as a candle. Characters from Hive Volg gain +10 to Tests mad"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Small rounded lump that glows a slowly shifting shade and colour. Counts as a Charm and sheds dim light around the wearer about as bright as a candle. Characters from Hive Volg gain +10 to Tests made to avoid pinning.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

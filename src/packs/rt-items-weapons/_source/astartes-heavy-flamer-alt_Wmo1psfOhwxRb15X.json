@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-heavy-flameralt",
     "class": "heavy",
     "type": "flame",
-    "range": "30m",
-    "rof": "S/-/-",
-    "damage": "1d10+12",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 10,
-    "reload": "2 Full",
-    "special": "SM Wep, Flame, Spray",
-    "weight": "65kg",
-    "availability": "Initiated",
-    "cost": "15 R",
-    "source": "Deathwatch: Errata",
-    "note": "Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 65,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,47 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Exotic: Webbers",
-    "damageOrEffect": "Inflict additional -20 to attempts to escape the Snare of Webber effect. Escape attempts deal 2d10 R, Pen 8 Damage, successful or not.",
-    "qualities": null,
-    "weight": "10% wep",
-    "availability": "Famed",
-    "cost": "6 R / Clip",
-    "source": "DW: Rites of Battle",
+    "identifier": "razor-web",
+    "weaponTypes": [
+      "exotic"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Inflict additional -20 to attempts to escape the Snare of Webber effect. Escape attempts deal 2d10 R, Pen 8 Damage, successful or not.</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 6,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Inflict additional -20 to attempts to escape the Snare of Webber effect. Escape attempts deal 2d10 R, Pen 8 Damage, successful or not.</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DW: Rites of Battle",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Crude Augmentations to allow a person to perform more efficient labour. Gives a Character an Extra Limb fitted with a Breacher Weapon. Increases Strength and Toughness Characteristics by +10. However reduce Agility by -10 and gain 1d10 Insanity from the considerable pain and discomfort of the uncaring implantation.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "2000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 2000 T</p>"
+      "value": "<p>Crude Augmentations to allow a person to perform more efficient labour. Gives a Character an Extra Limb fitted with a Breacher Weapon. Increases Strength and Toughness Characteristics by +10. However reduce Agility by -10 and gain 1d10 Insanity from the considerable pain and discomfort of the uncaring implantation.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 2000 T</p>",
+      "chat": "",
+      "summary": "Crude Augmentations to allow a person to perform more efficient labour. Gives a Character an Extra Limb fitted with a Breacher Weapon. Increases Strength and Toughness Characteristics by +10. However "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Crude Augmentations to allow a person to perform more efficient labour. Gives a Character an Extra Limb fitted with a Breacher Weapon. Increases Strength and Toughness Characteristics by +10. However reduce Agility by -10 and gain 1d10 Insanity from the considerable pain and discomfort of the uncaring implantation.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

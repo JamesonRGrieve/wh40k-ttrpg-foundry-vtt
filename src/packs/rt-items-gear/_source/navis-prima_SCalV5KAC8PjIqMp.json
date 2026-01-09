@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "1kg",
-    "availability": "Outlines safe warp routes and travel times. Good Craftmanship gives +10 to Navigation (Stellar/Warp) Tests, Best Craftsmanship gives +20.",
-    "cost": "Considered incredibly valuable, lost maps may hide hidden routes to places unknown.",
-    "effects": "Very Rare",
-    "notes": "priceless",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> priceless</p>"
+      "value": "<p>Outlines safe warp routes and travel times. Good Craftmanship gives +10 to Navigation (Stellar/Warp) Tests, Best Craftsmanship gives +20.</p>\n<h3>Requirements</h3><p>Considered incredibly valuable, lost maps may hide hidden routes to places unknown.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> priceless</p>",
+      "chat": "",
+      "summary": "Outlines safe warp routes and travel times. Good Craftmanship gives +10 to Navigation (Stellar/Warp) Tests, Best Craftsmanship gives +20."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Outlines safe warp routes and travel times. Good Craftmanship gives +10 to Navigation (Stellar/Warp) Tests, Best Craftsmanship gives +20.",
+    "duration": "",
+    "notes": "priceless",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

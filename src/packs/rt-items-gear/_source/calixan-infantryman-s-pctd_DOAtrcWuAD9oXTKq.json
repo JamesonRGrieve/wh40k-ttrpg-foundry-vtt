@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "-",
-    "availability": "The Calixian Infantryman's Portable Communications Transcription Device is a device allowing a multifaceted near silent visual-kinetic communication employed in the absence of voxcasters. Imploring use of staining liquid, breaking metal, or Fissionable Material it may be applied upon any rough surface, leaving a recognisable imprint. ",
-    "cost": "Also known as a Pen/Pencil. Poor version fails 20% of the time, requires +10 Tech-Use Test to fix. Best Works in space and has multiple colours.",
-    "effects": "Plentiful",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "tools",
+    "weight": 0,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+      "value": "<p>The Calixian Infantryman's Portable Communications Transcription Device is a device allowing a multifaceted near silent visual-kinetic communication employed in the absence of voxcasters. Imploring use of staining liquid, breaking metal, or Fissionable Material it may be applied upon any rough surface, leaving a recognisable imprint. </p>\n<h3>Requirements</h3><p>Also known as a Pen/Pencil. Poor version fails 20% of the time, requires +10 Tech-Use Test to fix. Best Works in space and has multiple colours.</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "The Calixian Infantryman's Portable Communications Transcription Device is a device allowing a multifaceted near silent visual-kinetic communication employed in the absence of voxcasters. Imploring us"
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Calixian Infantryman's Portable Communications Transcription Device is a device allowing a multifaceted near silent visual-kinetic communication employed in the absence of voxcasters. Imploring use of staining liquid, breaking metal, or Fissionable Material it may be applied upon any rough surface, leaving a recognisable imprint. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

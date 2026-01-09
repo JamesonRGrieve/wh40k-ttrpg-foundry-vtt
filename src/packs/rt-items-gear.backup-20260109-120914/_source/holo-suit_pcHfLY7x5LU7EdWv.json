@@ -1,0 +1,30 @@
+{
+  "name": "Holo-Suit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "2kg",
+    "availability": "Projects illusions of the user during movement, and causes user to fade into their surroundings when still. Imposes -20 to BS and WS Tests to target user. When stationary grants +30 Concealment and additional -20 to be hit with ranged weapons.",
+    "cost": "A Rare Xenotech Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pcHfLY7x5LU7EdWv"
+}

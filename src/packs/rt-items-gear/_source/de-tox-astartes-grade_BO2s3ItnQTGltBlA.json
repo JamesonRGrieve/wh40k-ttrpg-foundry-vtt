@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Adminstered Manually. Immediately ends all ongoing effects of drugs, toxins, or gases affecting the character, be they positive or negative. Renders the character immune to them for another 1d10 rounds.",
-    "cost": "Astartes Grade Drugs require +10 Medicae Test if adminstered to humans, failing administers anyway but also causes 1d5 Fatigue and 1 Round of Stun.",
-    "effects": "Initiated",
-    "notes": "10 R",
-    "source": "Deathwatch: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+      "value": "<p>Adminstered Manually. Immediately ends all ongoing effects of drugs, toxins, or gases affecting the character, be they positive or negative. Renders the character immune to them for another 1d10 rounds.</p>\n<h3>Requirements</h3><p>Astartes Grade Drugs require +10 Medicae Test if adminstered to humans, failing administers anyway but also causes 1d5 Fatigue and 1 Round of Stun.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>",
+      "chat": "",
+      "summary": "Adminstered Manually. Immediately ends all ongoing effects of drugs, toxins, or gases affecting the character, be they positive or negative. Renders the character immune to them for another 1d10 round"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Adminstered Manually. Immediately ends all ongoing effects of drugs, toxins, or gases affecting the character, be they positive or negative. Renders the character immune to them for another 1d10 rounds.",
+    "duration": "",
+    "notes": "10 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Medal",
-    "weight": "-",
-    "availability": "+10 to all Command Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull flanked by wings accompanied with a stencil on the officer's shoulder guards.",
-    "cost": "Distinguished Service Medal: Awarded to a character whose incredible leadership brought their troops to victory.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>+10 to all Command Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull flanked by wings accompanied with a stencil on the officer's shoulder guards.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Awarded to a character whose incredible leadership brought their troops to victory.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "+10 to all Command Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull flanked by wings accompanied with a stencil on the officer's shoulder guards."
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+10 to all Command Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull flanked by wings accompanied with a stencil on the officer's shoulder guards.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

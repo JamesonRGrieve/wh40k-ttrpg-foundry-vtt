@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "kabalite-splinter-rifle",
     "class": "basic",
     "type": "exotic",
-    "range": "80m",
-    "rof": "S/3/5",
-    "damage": "1d10+2",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 200,
-    "reload": "2 Full",
-    "special": "Toxic",
-    "weight": "2.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "toxic"
+    ],
+    "clip": {
+      "max": 200,
+      "value": 200,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 2.5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. ",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. </p>"
     },
-    "damageFormula": "1d10+2",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. ",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

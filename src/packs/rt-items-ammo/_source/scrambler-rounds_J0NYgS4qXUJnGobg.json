@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP/Bolt: Any",
-    "damageOrEffect": "Gain Hallucinogenic (2) and Recharge Qualities",
-    "qualities": "Hallucinogenic (2), Recharge",
-    "weight": "10% wep",
+    "identifier": "scrambler-rounds",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "hallucinogenic-2",
+      "recharge",
+      "recharge-qualities"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Hallucinogenic (2) and Recharge Qualities</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "rare",
-    "cost": "-",
-    "source": "Dark Heresy 2E: Core",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Hallucinogenic (2) and Recharge Qualities</p><p><b>Qualities:</b> Hallucinogenic (2), Recharge</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Dark Heresy 2E: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

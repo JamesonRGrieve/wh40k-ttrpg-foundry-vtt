@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "bolt-carbine-ceres",
     "class": "basic",
     "type": "bolt",
-    "range": "90m",
-    "rof": "S/2/-",
-    "damage": "1d10+5",
-    "damageType": "Explosive",
-    "penetration": 4,
-    "clip": 12,
-    "reload": "2 Full",
-    "special": "Reliable, Tearing",
-    "weight": "5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 90,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "reliable",
+      "tearing"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 5,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable, Tearing</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

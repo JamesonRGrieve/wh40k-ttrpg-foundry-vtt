@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "vehicle",
+    "identifier": "volcano-cannon",
+    "class": "melee",
     "type": "melta",
-    "range": "3000m",
-    "rof": "S/-/-",
-    "damage": "10d10+20",
-    "damageType": "Energy",
-    "penetration": 20,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 3000,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "10d10",
+      "type": "energy",
+      "bonus": 20,
+      "penetration": 20
+    },
+    "special": [
+      "blast-8",
+      "felling-6",
+      "overheats",
+      "recharge"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Blast (8), Felling (6), Overheats, Recharge",
-    "weight": "8000kg",
+    "weight": 8000,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "OW: Shield of Humanity",
-    "note": "13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (8), Felling (6), Overheats, Recharge</p><p><b>Note:</b> 13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.",
+    "source": "OW: Shield of Humanity"
   },
   "effects": [],
   "flags": {},

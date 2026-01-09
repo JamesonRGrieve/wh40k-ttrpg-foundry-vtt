@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "55kg",
-    "availability": "Master Crafted Relic Astartes Jump Pack of the Hawk Lords Chapter. Doubles as an Astartes Backpack Ammo Suppy. Grants user Auto-Stabilised Trait.",
-    "cost": null,
-    "effects": "Distinguished",
-    "notes": "60 R",
-    "source": "DW: Honour the Chapter",
+    "category": "luxury",
+    "weight": 55,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 60 R</p>"
+      "value": "<p>Master Crafted Relic Astartes Jump Pack of the Hawk Lords Chapter. Doubles as an Astartes Backpack Ammo Suppy. Grants user Auto-Stabilised Trait.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 60 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Astartes Jump Pack of the Hawk Lords Chapter. Doubles as an Astartes Backpack Ammo Suppy. Grants user Auto-Stabilised Trait."
     },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Master Crafted Relic Astartes Jump Pack of the Hawk Lords Chapter. Doubles as an Astartes Backpack Ammo Suppy. Grants user Auto-Stabilised Trait.",
+    "duration": "",
+    "notes": "60 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

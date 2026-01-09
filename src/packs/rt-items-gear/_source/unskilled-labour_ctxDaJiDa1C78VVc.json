@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "As it says, basic labour for construction, transport, etc.",
-    "cost": null,
-    "effects": "Plentiful",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+      "value": "<p>As it says, basic labour for construction, transport, etc.</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "As it says, basic labour for construction, transport, etc."
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "As it says, basic labour for construction, transport, etc.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

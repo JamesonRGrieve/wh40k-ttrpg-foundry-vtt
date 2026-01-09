@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "deuce-pistol",
     "class": "pistol",
     "type": "primitive",
-    "range": "15m",
-    "rof": "S/-/-",
-    "damage": "1d10+2",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 2,
-    "reload": "3 Full",
-    "special": "Primitive (8), Unreliable",
-    "weight": "2kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 2,
     "availability": "common",
-    "cost": "40 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Can fire both barrels at once (HB: Treat as Twin-Linked shot)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8), Unreliable</p><p><b>Note:</b> Can fire both barrels at once (HB: Treat as Twin-Linked shot)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can fire both barrels at once (HB: Treat as Twin-Linked shot)",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

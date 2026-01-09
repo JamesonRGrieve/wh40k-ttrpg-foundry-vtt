@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "crossbow-catechist",
     "class": "basic",
     "type": "primitive",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 5,
-    "reload": "2 Full",
-    "special": "Sanctified",
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "sanctified"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
     "availability": "rare",
-    "cost": "750 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Fires special 15cm adamantine-silver razor stakes. If fired against Psychic enemies, has the Tearing Quality. If deaing 5+ damage after Toughness and Armour becomes embedded, removing it by force causes an additional 1d5 damage that ignores Armour and Toughness. Bolts are Rare and cost 50 Thrones each from the Holy Ordos.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 750,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Sanctified</p><p><b>Note:</b> Fires special 15cm adamantine-silver razor stakes. If fired against Psychic enemies, has the Tearing Quality. If deaing 5+ damage after Toughness and Armour becomes embedded, removing it by force causes an additional 1d5 damage that ignores Armour and Toughness. Bolts are Rare and cost 50 Thrones each from the Holy Ordos.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires special 15cm adamantine-silver razor stakes. If fired against Psychic enemies, has the Tearing Quality. If deaing 5+ damage after Toughness and Armour becomes embedded, removing it by force causes an additional 1d5 damage that ignores Armour and Toughness. Bolts are Rare and cost 50 Thrones each from the Holy Ordos.",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

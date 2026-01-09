@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autocannon-m34-guard",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "300m",
-    "rof": "S/3/-",
-    "damage": "3d10+8",
-    "damageType": "Impact",
-    "penetration": 6,
-    "clip": 20,
-    "reload": "2 Full",
-    "special": "Ogryn-Proof, Reliable",
-    "weight": "40kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 6
+    },
+    "special": [
+      "ogryn-proof",
+      "reliable"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 40,
     "availability": "very-rare",
-    "cost": "1000 T",
-    "source": "Only War: Core",
-    "note": "Can be manned as a crew of two.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Ogryn-Proof, Reliable</p><p><b>Note:</b> Can be manned as a crew of two.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be manned as a crew of two.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

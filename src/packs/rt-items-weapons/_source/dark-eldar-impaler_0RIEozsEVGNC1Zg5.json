@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "dark-eldar-impaler",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+3",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 3
+    },
+    "special": [
+      "razor-sharp"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Razor-Sharp",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "unique",
-    "cost": "-",
-    "source": "RT: The Soul Reaver",
-    "note": "Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.",
+    "source": "RT: The Soul Reaver"
   },
   "effects": [],
   "flags": {},

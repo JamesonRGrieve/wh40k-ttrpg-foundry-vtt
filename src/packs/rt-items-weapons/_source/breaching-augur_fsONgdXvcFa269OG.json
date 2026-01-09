@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "breaching-augur",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "4d10+3",
-    "damageType": "Rending",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "tearing",
+      "unwieldy",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "SM Wep, Tearing, Unwieldy, Power Field",
-    "weight": "28kg",
-    "availability": "Initiated",
-    "cost": "18 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).",
+    "weight": 28,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 18,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing, Unwieldy, Power Field</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

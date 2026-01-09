@@ -389,7 +389,6 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content,
             flavor: "Profit Factor Acquisition Test",
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             rolls: [data.roll]
         });
     }

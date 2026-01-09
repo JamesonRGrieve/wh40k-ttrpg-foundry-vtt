@@ -3,24 +3,63 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "nachraael-the-hungering",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+7",
-    "damageType": "Rending",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 7,
+      "penetration": 7
+    },
+    "special": [
+      "balanced",
+      "felling-4",
+      "tearing",
+      "warp-weapon",
+      "daemon-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Felling (4), Tearing, Warp Weapon,Daemon Wep",
-    "weight": "3kg",
+    "weight": 3,
     "availability": "unique",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Felling (4), Tearing, Warp Weapon,Daemon Wep</p><p><b>Note:</b> Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

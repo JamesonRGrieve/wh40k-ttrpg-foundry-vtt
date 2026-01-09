@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Revives an unconcious Space Marine and immediatley wakes them up. If they have taken Fatigue in excess of their Toughness Bonus, it revers them to Toughness Bonus Fatigue. No effect on concious characters or those with less Fatigue than their Toughness Bonus.",
-    "cost": "Astartes Grade Drugs require +10 Medicae Test if adminstered to humans, failing administers anyway but also causes 1d5 Fatigue and 1 Round of Stun.",
-    "effects": "Initiated",
-    "notes": "5 R",
-    "source": "Deathwatch: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 5 R</p>"
+      "value": "<p>Revives an unconcious Space Marine and immediatley wakes them up. If they have taken Fatigue in excess of their Toughness Bonus, it revers them to Toughness Bonus Fatigue. No effect on concious characters or those with less Fatigue than their Toughness Bonus.</p>\n<h3>Requirements</h3><p>Astartes Grade Drugs require +10 Medicae Test if adminstered to humans, failing administers anyway but also causes 1d5 Fatigue and 1 Round of Stun.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 5 R</p>",
+      "chat": "",
+      "summary": "Revives an unconcious Space Marine and immediatley wakes them up. If they have taken Fatigue in excess of their Toughness Bonus, it revers them to Toughness Bonus Fatigue. No effect on concious charac"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Revives an unconcious Space Marine and immediatley wakes them up. If they have taken Fatigue in excess of their Toughness Bonus, it revers them to Toughness Bonus Fatigue. No effect on concious characters or those with less Fatigue than their Toughness Bonus.",
+    "duration": "",
+    "notes": "5 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

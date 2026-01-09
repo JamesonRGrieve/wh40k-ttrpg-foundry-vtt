@@ -61,9 +61,6 @@ export default class TalentData extends ItemDataModel.mixin(
       // Is this a passive talent or can it be activated?
       isPassive: new fields.BooleanField({ required: true, initial: true }),
       
-      // Can this be rolled?
-      isRollable: new fields.BooleanField({ required: true, initial: false }),
-      
       // Roll configuration (if rollable)
       rollConfig: new fields.SchemaField({
         characteristic: new fields.StringField({ required: false, blank: true }),
@@ -116,6 +113,15 @@ export default class TalentData extends ItemDataModel.mixin(
   /* -------------------------------------------- */
   /*  Properties                                  */
   /* -------------------------------------------- */
+
+  /**
+   * Whether this talent can be rolled/activated.
+   * @type {boolean}
+   * @override
+   */
+  get isRollable() {
+    return !this.isPassive && (!!this.rollConfig?.characteristic || !!this.rollConfig?.skill);
+  }
 
   /**
    * Get the tier label.

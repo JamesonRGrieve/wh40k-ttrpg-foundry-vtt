@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "Wards feelings of drowsiness. User can ignore one level of fatigue for 1d5 hours, additional doses prolong effect, but can't counteract more than one fatigue level. After wearing off, user suffers another level of fatigue.",
-    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
-    "effects": "Plentiful",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Wards feelings of drowsiness. User can ignore one level of fatigue for 1d5 hours, additional doses prolong effect, but can't counteract more than one fatigue level. After wearing off, user suffers another level of fatigue.</p>\n<h3>Requirements</h3><p>Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Wards feelings of drowsiness. User can ignore one level of fatigue for 1d5 hours, additional doses prolong effect, but can't counteract more than one fatigue level. After wearing off, user suffers ano"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Wards feelings of drowsiness. User can ignore one level of fatigue for 1d5 hours, additional doses prolong effect, but can't counteract more than one fatigue level. After wearing off, user suffers another level of fatigue.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "eldar-shardcarbine",
     "class": "basic",
     "type": "exotic",
-    "range": "60m",
-    "rof": "S/3/5",
-    "damage": "1d10+2",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 150,
-    "reload": "2 Full",
-    "special": "Storm, Toxic (1)",
-    "weight": "3kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "storm",
+      "toxic-1"
+    ],
+    "clip": {
+      "max": 150,
+      "value": 150,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 3,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "A More Compact version of the Splinter Rifle, used in boarding actions for capturing slaves and amongst Eldar mercenary bands. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Storm, Toxic (1)</p><p><b>Note:</b> A More Compact version of the Splinter Rifle, used in boarding actions for capturing slaves and amongst Eldar mercenary bands. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A More Compact version of the Splinter Rifle, used in boarding actions for capturing slaves and amongst Eldar mercenary bands. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "-",
-    "availability": "Basic Rations, quality varies from corpse starch to grox meat",
-    "cost": null,
-    "effects": "Ubiquitous",
-    "notes": "10 T",
-    "source": "Rogue Trader Core",
+    "category": "consumable",
+    "weight": 0,
+    "availability": "ubiquitous",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Ubiquitous</p><p><b>Notes:</b> 10 T</p>"
+      "value": "<p>Basic Rations, quality varies from corpse starch to grox meat</p>\n<p><b>Effect:</b> Ubiquitous</p><p><b>Notes:</b> 10 T</p>",
+      "chat": "",
+      "summary": "Basic Rations, quality varies from corpse starch to grox meat"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Basic Rations, quality varies from corpse starch to grox meat",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "4kg",
-    "availability": "Provides +10 to Climb Tests and Tests to force open doors or locks when used.\nCan also act as a weapon (1d10+2 I or R, Pen 0, Primitive, Unbalanced)",
-    "cost": null,
-    "effects": "Abundant",
-    "notes": "20 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 4,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 20 T</p>"
+      "value": "<p>Provides +10 to Climb Tests and Tests to force open doors or locks when used.\nCan also act as a weapon (1d10+2 I or R, Pen 0, Primitive, Unbalanced)</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "Provides +10 to Climb Tests and Tests to force open doors or locks when used.\nCan also act as a weapon (1d10+2 I or R, Pen 0, Primitive, Unbalanced)"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Provides +10 to Climb Tests and Tests to force open doors or locks when used.\nCan also act as a weapon (1d10+2 I or R, Pen 0, Primitive, Unbalanced)",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

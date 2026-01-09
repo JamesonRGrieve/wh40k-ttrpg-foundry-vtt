@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Restores a sense. Poor: -20 to tests involving the sense, Good: gain relevent Heightened Senses Talent, and +20 to resists to resist attacks to that sense, such as blinding flashes.\nAdvanced Cybernetic Eyes may count as Photo-visors/magnifying lenses, or Dark Sight. Cybernetic Ears may include Micro-beads (these would be seperate acquisitions that upgrade existing)",
-    "cost": "Advanced cybernetic eyes may also act as a scope (telescopic sight, photo-scope, etc), advanced hearing may include Microbead.",
-    "effects": "Rare / Initiated",
-    "notes": "2250 T\n15 R",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2250,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 2250 T\n15 R</p>"
+      "value": "<p>Restores a sense. Poor: -20 to tests involving the sense, Good: gain relevent Heightened Senses Talent, and +20 to resists to resist attacks to that sense, such as blinding flashes.\nAdvanced Cybernetic Eyes may count as Photo-visors/magnifying lenses, or Dark Sight. Cybernetic Ears may include Micro-beads (these would be seperate acquisitions that upgrade existing)</p>\n<h3>Requirements</h3><p>Advanced cybernetic eyes may also act as a scope (telescopic sight, photo-scope, etc), advanced hearing may include Microbead.</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 2250 T\n15 R</p>",
+      "chat": "",
+      "summary": "Restores a sense. Poor: -20 to tests involving the sense, Good: gain relevent Heightened Senses Talent, and +20 to resists to resist attacks to that sense, such as blinding flashes.\nAdvanced Cyberneti"
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Restores a sense. Poor: -20 to tests involving the sense, Good: gain relevent Heightened Senses Talent, and +20 to resists to resist attacks to that sense, such as blinding flashes.\nAdvanced Cybernetic Eyes may count as Photo-visors/magnifying lenses, or Dark Sight. Cybernetic Ears may include Micro-beads (these would be seperate acquisitions that upgrade existing)",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

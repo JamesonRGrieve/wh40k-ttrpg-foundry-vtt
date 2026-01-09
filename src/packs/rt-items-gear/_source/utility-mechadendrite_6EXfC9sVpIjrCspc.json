@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "+10 to Tech-Use, has six injectors of Sacred Ungents. Can blast censer chaff as Half Action once every 15 minutes, causes -5 to WS tests for  living creatures in 2 metres for one Round. +10 to detect user by smell unless censor is deactivated. Counts as Mono-knife",
-    "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
-    "effects": "Very Rare",
-    "notes": "500 T",
-    "source": "Rogue Trader Core",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+      "value": "<p>+10 to Tech-Use, has six injectors of Sacred Ungents. Can blast censer chaff as Half Action once every 15 minutes, causes -5 to WS tests for  living creatures in 2 metres for one Round. +10 to detect user by smell unless censor is deactivated. Counts as Mono-knife</p>\n<h3>Requirements</h3><p>Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>",
+      "chat": "",
+      "summary": "+10 to Tech-Use, has six injectors of Sacred Ungents. Can blast censer chaff as Half Action once every 15 minutes, causes -5 to WS tests for  living creatures in 2 metres for one Round. +10 to detect "
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+10 to Tech-Use, has six injectors of Sacred Ungents. Can blast censer chaff as Half Action once every 15 minutes, causes -5 to WS tests for  living creatures in 2 metres for one Round. +10 to detect user by smell unless censor is deactivated. Counts as Mono-knife",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

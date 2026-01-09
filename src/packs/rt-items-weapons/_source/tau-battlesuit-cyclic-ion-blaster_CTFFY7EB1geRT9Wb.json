@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-battlesuit-cyclic-ion-blaster",
     "class": "heavy",
     "type": "exotic",
-    "range": "50m",
-    "rof": "S/3/6",
-    "damage": "2d10+5",
-    "damageType": "Energy",
-    "penetration": 6,
-    "clip": 100,
-    "reload": "2 Full",
-    "special": "Overcharge (4)",
-    "weight": "25kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "overcharge-4"
+    ],
+    "clip": {
+      "max": 100,
+      "value": 100,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 25,
     "availability": "near-unique",
-    "cost": "-",
-    "source": "RT: Tau Char. Guide",
-    "note": "Tau Battlesuit Weapon, not practical to wield outside of one.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Overcharge (4)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one.",
+    "source": "RT: Tau Char. Guide"
   },
   "effects": [],
   "flags": {},

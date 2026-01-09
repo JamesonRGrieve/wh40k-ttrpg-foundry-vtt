@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "10kg",
-    "availability": "Wearer is immune to Mind-Mould unless they are a  Psyker. Sealed, and Filtration Systems provide +40 to any Toughness Tests to resist harmful gases, +10 to resist extreme temperatures and being set on fire. inbuilt Rebreather lasts 5 hours before needing replacement. Can be worn over armour. If taking 5+ damage in a single round it becomes damaged and is no longer sealed.",
-    "cost": "Max AG 40 whilst wearing. Likely protects against other similar particulates.",
-    "effects": "Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Within",
+    "category": "clothing",
+    "weight": 10,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Wearer is immune to Mind-Mould unless they are a  Psyker. Sealed, and Filtration Systems provide +40 to any Toughness Tests to resist harmful gases, +10 to resist extreme temperatures and being set on fire. inbuilt Rebreather lasts 5 hours before needing replacement. Can be worn over armour. If taking 5+ damage in a single round it becomes damaged and is no longer sealed.</p>\n<h3>Requirements</h3><p>Max AG 40 whilst wearing. Likely protects against other similar particulates.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Wearer is immune to Mind-Mould unless they are a  Psyker. Sealed, and Filtration Systems provide +40 to any Toughness Tests to resist harmful gases, +10 to resist extreme temperatures and being set on"
     },
+    "source": {
+      "book": "DH 2E: Enemies Within",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Wearer is immune to Mind-Mould unless they are a  Psyker. Sealed, and Filtration Systems provide +40 to any Toughness Tests to resist harmful gases, +10 to resist extreme temperatures and being set on fire. inbuilt Rebreather lasts 5 hours before needing replacement. Can be worn over armour. If taking 5+ damage in a single round it becomes damaged and is no longer sealed.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

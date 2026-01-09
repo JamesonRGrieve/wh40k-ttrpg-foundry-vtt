@@ -3,24 +3,57 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hot-shot-laspistol",
     "class": "pistol",
     "type": "las",
-    "range": "20m",
-    "rof": "S/2/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 7,
-    "clip": 40,
-    "reload": "2 Full",
-    "special": null,
-    "weight": "4kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 7
+    },
+    "special": [],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
     "availability": "rare",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Uses 10kg Backpack power source.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Note:</b> Uses 10kg Backpack power source.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses 10kg Backpack power source.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

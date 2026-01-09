@@ -3,19 +3,49 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Launcher: Astartes Missile Launcher",
-    "damageOrEffect": "2d10 X, Pen 4, Blast (5)\nIncluded with Missile Launcher Requisition. Cost is only for \"Excessive\" Requests",
-    "qualities": "Blast(5)",
-    "weight": "2kg",
-    "availability": "Initiated",
-    "cost": "5 R",
-    "source": "Deathwatch: Core",
+    "identifier": "frag-missile-astartes",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-5"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>2d10 X, Pen 4, Blast (5)\nIncluded with Missile Launcher Requisition. Cost is only for \"Excessive\" Requests</p>",
+    "notes": "",
+    "weight": 2,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 2d10 X, Pen 4, Blast (5)\nIncluded with Missile Launcher Requisition. Cost is only for \"Excessive\" Requests</p><p><b>Qualities:</b> Blast(5)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

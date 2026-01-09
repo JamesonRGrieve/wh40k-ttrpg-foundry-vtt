@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "lasgun-stormfront",
     "class": "basic",
     "type": "las",
-    "range": "100m",
-    "rof": "S/3/-",
-    "damage": "1d10+3",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 60,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 5,
     "availability": "very-rare",
-    "cost": "85 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Makes use of a Wooden Stock and integral bayonet. Counts as a Spear in close combat (Melee, 1d10 R, Pen 0, Primitive (8))",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 85,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Makes use of a Wooden Stock and integral bayonet. Counts as a Spear in close combat (Melee, 1d10 R, Pen 0, Primitive (8))</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Makes use of a Wooden Stock and integral bayonet. Counts as a Spear in close combat (Melee, 1d10 R, Pen 0, Primitive (8))",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

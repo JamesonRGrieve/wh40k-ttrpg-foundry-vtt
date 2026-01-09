@@ -338,13 +338,15 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             item: this,
             itemTypeLabel: this.itemTypeLabel,
             isWeapon: this.isWeapon,
+            isArmour: this.isArmour,
             isNavigatorPower: this.isNavigatorPower,
             isShipComponent: this.isShipComponent,
             isPsychicPower: this.isPsychicPower,
             isTalent: this.isTalent,
             hasActions: this.hasActions,
             isRollable: this.isRollable,
-            actor: this.actor?.name || '',
+            isUsable: this.isConsumable || this.isDrug || this.isTool,
+            actor: this.actor,
             ...options
         };
 
@@ -354,7 +356,23 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            type: CONST.CHAT_MESSAGE_STYLES.OTHER,
+            // Set flags for ChatMessageRT enrichment
+            flags: {
+                "rogue-trader": {
+                    itemCard: true,
+                    item: {
+                        uuid: this.uuid,
+                        id: this.id,
+                        name: this.name,
+                        type: this.type
+                    },
+                    actor: this.actor ? {
+                        uuid: this.actor.uuid,
+                        id: this.actor.id,
+                        name: this.actor.name
+                    } : null
+                }
+            }
         };
 
         const rollMode = game.settings.get('core', 'rollMode');
@@ -443,8 +461,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
-            roll: roll
+            rolls: [roll]
         });
     }
 
@@ -487,8 +504,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
-            roll: roll
+            rolls: [roll]
         });
     }
 
@@ -526,8 +542,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
-            roll: roll
+            rolls: [roll]
         });
     }
 
@@ -565,8 +580,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            type: CONST.CHAT_MESSAGE_STYLES.ROLL,
-            roll: roll
+            rolls: [roll]
         });
     }
 

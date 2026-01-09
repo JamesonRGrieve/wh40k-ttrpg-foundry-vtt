@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tyranid-devourer",
     "class": "basic",
     "type": "exotic",
-    "range": "30m",
-    "rof": "-/-/6",
-    "damage": "1d10+6",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 0
+    },
+    "special": [
+      "living-ammunition",
+      "storm",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Living Ammunition, Storm, Tearing",
-    "weight": "-",
-    "availability": "Special",
-    "cost": "-",
-    "source": "Deathwatch: Core",
-    "note": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Some versions hose Brain Leech Worms, which increase damage to 2d10+6 R and deal one additional point of Cohesion Damage.",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Living Ammunition, Storm, Tearing</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Some versions hose Brain Leech Worms, which increase damage to 2d10+6 R and deal one additional point of Cohesion Damage.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Some versions hose Brain Leech Worms, which increase damage to 2d10+6 R and deal one additional point of Cohesion Damage.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

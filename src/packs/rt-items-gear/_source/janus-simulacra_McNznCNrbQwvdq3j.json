@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Skirting the edge of Techno-Heresy. These servitors are human-sized and shaped yet are almost entirely lacking in living tissue whilst capable of concerningly human-like responses. Only a fool would try to pass them off as human though, the Mechanicus have burned worlds for less. ",
-    "cost": "See Bestiary/InqHandbook Pg 141.",
-    "effects": "Very Rare",
-    "notes": "20000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 20000 T</p>"
+      "value": "<p>Skirting the edge of Techno-Heresy. These servitors are human-sized and shaped yet are almost entirely lacking in living tissue whilst capable of concerningly human-like responses. Only a fool would try to pass them off as human though, the Mechanicus have burned worlds for less. </p>\n<h3>Requirements</h3><p>See Bestiary/InqHandbook Pg 141.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 20000 T</p>",
+      "chat": "",
+      "summary": "Skirting the edge of Techno-Heresy. These servitors are human-sized and shaped yet are almost entirely lacking in living tissue whilst capable of concerningly human-like responses. Only a fool would t"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Skirting the edge of Techno-Heresy. These servitors are human-sized and shaped yet are almost entirely lacking in living tissue whilst capable of concerningly human-like responses. Only a fool would try to pass them off as human though, the Mechanicus have burned worlds for less. ",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

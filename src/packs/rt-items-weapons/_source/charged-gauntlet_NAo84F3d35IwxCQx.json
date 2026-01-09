@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "charged-gauntlet",
     "class": "melee",
     "type": "shock",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 2
+    },
+    "special": [
+      "balanced",
+      "unstable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced, Unstable",
-    "weight": "5kg",
-    "availability": "Special",
-    "cost": "-",
-    "source": "RT: Stars of Inequity",
-    "note": "Found as Treasure via book's Treasure Generator.",
+    "weight": 5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced, Unstable</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity"
   },
   "effects": [],
   "flags": {},

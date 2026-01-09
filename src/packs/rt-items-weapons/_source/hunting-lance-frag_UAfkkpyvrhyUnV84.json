@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hunting-lance-frag",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+3",
-    "damageType": "Explosive",
-    "penetration": 7,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 3,
+      "penetration": 7
+    },
+    "special": [
+      "concussive-3"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (3)",
-    "weight": "4kg",
+    "weight": 4,
     "availability": "scarce",
-    "cost": "-",
-    "source": "Only War: Core",
-    "note": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (3)</p><p><b>Note:</b> Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

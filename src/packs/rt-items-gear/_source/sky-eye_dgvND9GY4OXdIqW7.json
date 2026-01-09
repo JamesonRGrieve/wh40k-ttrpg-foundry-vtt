@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "4kg",
-    "availability": "A Miniscule-Sized Hovering Sphere that comes with a 4kg case that contains a docking station and various holo-displays. The Sphere can scout up to 15km from its docking station, once it returns it produces a 3D holomap of the scouted area, downloadable to standard data-slates. Sphere has Flyer 8, 1 Wound, and No AP/T. Attempting to detect it by sight or hearing has -30.",
-    "cost": "Rumoured Inqusititorial versions incorporate active camoflage and ultra quiet dampeners to scout room interiors and buildings unnoticed.",
-    "effects": "Very Rare",
-    "notes": "1500 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1500,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 1500 T</p>"
+      "value": "<p>A Miniscule-Sized Hovering Sphere that comes with a 4kg case that contains a docking station and various holo-displays. The Sphere can scout up to 15km from its docking station, once it returns it produces a 3D holomap of the scouted area, downloadable to standard data-slates. Sphere has Flyer 8, 1 Wound, and No AP/T. Attempting to detect it by sight or hearing has -30.</p>\n<h3>Requirements</h3><p>Rumoured Inqusititorial versions incorporate active camoflage and ultra quiet dampeners to scout room interiors and buildings unnoticed.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 1500 T</p>",
+      "chat": "",
+      "summary": "A Miniscule-Sized Hovering Sphere that comes with a 4kg case that contains a docking station and various holo-displays. The Sphere can scout up to 15km from its docking station, once it returns it pro"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Miniscule-Sized Hovering Sphere that comes with a 4kg case that contains a docking station and various holo-displays. The Sphere can scout up to 15km from its docking station, once it returns it produces a 3D holomap of the scouted area, downloadable to standard data-slates. Sphere has Flyer 8, 1 Wound, and No AP/T. Attempting to detect it by sight or hearing has -30.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,30 @@
+{
+  "name": "Poi-Savant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "A Handheld device that can measure bio-chemical and toxin makeup of anything it analyses, clearing those safe for consumption as edible, if not always appetizing. Also very good at detecting poisoned food. Requires updating with new toxin data every now and then. Requires a +20 Tech-Use Test to use, failiure gives inconclusive readings, 3+ DoF gives incorrect readings.",
+    "cost": "Can be personalised and minaturised into rings, wands, etc. Used by nobility (assume one step rarer)",
+    "effects": "Rare",
+    "notes": "300 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 300 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0mR1dI7Kark3hM33"
+}

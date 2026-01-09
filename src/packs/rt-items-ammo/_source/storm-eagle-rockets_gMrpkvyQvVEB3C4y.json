@@ -3,19 +3,48 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Vehicle: Manticore Vehicle",
-    "damageOrEffect": "6d10 X Damage, Pen 4, Blast(10), Concussive (6)\nAfter initial hit, scatter 1d5 additional hits 2d10 metres from initial hit. Afterwards resolve damage as normal.",
-    "qualities": "Blast(10), Concussive (6)",
-    "weight": "4500kg",
+    "identifier": "storm-eagle-rockets",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-10",
+      "concussive-6"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>6d10 X Damage, Pen 4, Blast(10), Concussive (6)\nAfter initial hit, scatter 1d5 additional hits 2d10 metres from initial hit. Afterwards resolve damage as normal.</p>",
+    "notes": "",
+    "weight": 4500,
     "availability": "very-rare",
-    "cost": null,
-    "source": "OW: Shield of Humanity",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> 6d10 X Damage, Pen 4, Blast(10), Concussive (6)\nAfter initial hit, scatter 1d5 additional hits 2d10 metres from initial hit. Afterwards resolve damage as normal.</p><p><b>Qualities:</b> Blast(10), Concussive (6)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "OW: Shield of Humanity",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

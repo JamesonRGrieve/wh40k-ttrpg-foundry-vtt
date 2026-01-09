@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "A Psy-Bonded Familiar, its master able to directly control and experience the senses of the familiar. Must be Scrawny Sized or Smaller animal with Bestial Trait. Can be controlled within Willpower Bonus Kilometres. Creature gains +5 Intelligence and Willpower and +1 Wound. Doesn't innately require Psychic Powers to use.",
-    "cost": "Not Mutually exclusive with Cyber Familiar Upgrade. Does not include costs of creature for Cyber Creature Upgrade and any equipment or abilities that are also implanted.",
-    "effects": "Rare",
-    "notes": "5000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 5000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 5000 T</p>"
+      "value": "<p>A Psy-Bonded Familiar, its master able to directly control and experience the senses of the familiar. Must be Scrawny Sized or Smaller animal with Bestial Trait. Can be controlled within Willpower Bonus Kilometres. Creature gains +5 Intelligence and Willpower and +1 Wound. Doesn't innately require Psychic Powers to use.</p>\n<h3>Requirements</h3><p>Not Mutually exclusive with Cyber Familiar Upgrade. Does not include costs of creature for Cyber Creature Upgrade and any equipment or abilities that are also implanted.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 5000 T</p>",
+      "chat": "",
+      "summary": "A Psy-Bonded Familiar, its master able to directly control and experience the senses of the familiar. Must be Scrawny Sized or Smaller animal with Bestial Trait. Can be controlled within Willpower Bon"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Psy-Bonded Familiar, its master able to directly control and experience the senses of the familiar. Must be Scrawny Sized or Smaller animal with Bestial Trait. Can be controlled within Willpower Bonus Kilometres. Creature gains +5 Intelligence and Willpower and +1 Wound. Doesn't innately require Psychic Powers to use.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

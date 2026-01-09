@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "0.5kg",
-    "availability": "Those with  \"Pure Faith\" Talent gain +1 fate point that can be spent but not burned if posessing relic. If released, or contact made with infected individual (living or dead) make -30 Toughness Test (repeat every hour in proximity), if fail, 50% chance of infection. Detecting Disease requires -30 Medicae Test. If infected suffer 1d5 Toughness Damage per day it is uncured. Per 10 Toughness damage, make +20 Toughness Test, with 5 DoS cure self, if fail take 2d10 Rending damage (ignore toughness/armour). Toughness can't heal while infected. No known Cure, better try to make one... (See \"The Folio Languor\")",
-    "cost": "Relic Poison/Disease. Holds religious significance to some, and death to the rest. Relics are unique, one of a kind items, they must be earned as opposed to acquired. ",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "luxury",
+    "weight": 0.5,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Those with  \"Pure Faith\" Talent gain +1 fate point that can be spent but not burned if posessing relic. If released, or contact made with infected individual (living or dead) make -30 Toughness Test (repeat every hour in proximity), if fail, 50% chance of infection. Detecting Disease requires -30 Medicae Test. If infected suffer 1d5 Toughness Damage per day it is uncured. Per 10 Toughness damage, make +20 Toughness Test, with 5 DoS cure self, if fail take 2d10 Rending damage (ignore toughness/armour). Toughness can't heal while infected. No known Cure, better try to make one... (See \"The Folio Languor\")</p>\n<h3>Requirements</h3><p>Relic Poison/Disease. Holds religious significance to some, and death to the rest. Relics are unique, one of a kind items, they must be earned as opposed to acquired. </p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Those with  \"Pure Faith\" Talent gain +1 fate point that can be spent but not burned if posessing relic. If released, or contact made with infected individual (living or dead) make -30 Toughness Test ("
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Those with  \"Pure Faith\" Talent gain +1 fate point that can be spent but not burned if posessing relic. If released, or contact made with infected individual (living or dead) make -30 Toughness Test (repeat every hour in proximity), if fail, 50% chance of infection. Detecting Disease requires -30 Medicae Test. If infected suffer 1d5 Toughness Damage per day it is uncured. Per 10 Toughness damage, make +20 Toughness Test, with 5 DoS cure self, if fail take 2d10 Rending damage (ignore toughness/armour). Toughness can't heal while infected. No known Cure, better try to make one... (See \"The Folio Languor\")",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

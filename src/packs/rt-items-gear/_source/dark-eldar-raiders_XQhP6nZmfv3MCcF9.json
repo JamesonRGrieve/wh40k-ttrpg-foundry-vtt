@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Can be hired to attack a typically vulnerable location, deliver slaves of any species, or cause mayhem. Always expect payment in living souls, who will never be seen again and suffer fates infinitely worse than death. If Requisition Test fails by 4+ DoF, the Dark Eldar may make the character and their allies their next quarry.",
-    "cost": "The Hiring of a Raiding part from a Dark Eldar Kabal to perform some act of terror. They can smell fear, and desire only to inflict unfathomable suffering.",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "general",
+    "weight": 0,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Can be hired to attack a typically vulnerable location, deliver slaves of any species, or cause mayhem. Always expect payment in living souls, who will never be seen again and suffer fates infinitely worse than death. If Requisition Test fails by 4+ DoF, the Dark Eldar may make the character and their allies their next quarry.</p>\n<h3>Requirements</h3><p>The Hiring of a Raiding part from a Dark Eldar Kabal to perform some act of terror. They can smell fear, and desire only to inflict unfathomable suffering.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Can be hired to attack a typically vulnerable location, deliver slaves of any species, or cause mayhem. Always expect payment in living souls, who will never be seen again and suffer fates infinitely "
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Can be hired to attack a typically vulnerable location, deliver slaves of any species, or cause mayhem. Always expect payment in living souls, who will never be seen again and suffer fates infinitely worse than death. If Requisition Test fails by 4+ DoF, the Dark Eldar may make the character and their allies their next quarry.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

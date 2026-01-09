@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "man-portable-lascannon-guard",
     "class": "heavy",
     "type": "las",
-    "range": "300m",
-    "rof": "S/-/-",
-    "damage": "5d10+10",
-    "damageType": "Energy",
-    "penetration": 10,
-    "clip": 5,
-    "reload": "2 Full",
-    "special": "Proven (3)",
-    "weight": "55kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "5d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "proven-3"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
     "availability": "very-rare",
-    "cost": "5000 T",
-    "source": "Only War: Core",
-    "note": "Usually operated by a crew of two, uses a Separate Power Pack.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Proven (3)</p><p><b>Note:</b> Usually operated by a crew of two, uses a Separate Power Pack.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Usually operated by a crew of two, uses a Separate Power Pack.",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

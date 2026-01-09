@@ -1,0 +1,30 @@
+{
+  "name": "Medicae, Feral",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Local Tribe Shaman or other experienced indivudal with access to folk cures, prayer, incense, and strange fungi.\nInt 40, Trained Medicae, uses Healer Kit (Feral)",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "50 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 50 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qa96kbXVQMbVXemu"
+}

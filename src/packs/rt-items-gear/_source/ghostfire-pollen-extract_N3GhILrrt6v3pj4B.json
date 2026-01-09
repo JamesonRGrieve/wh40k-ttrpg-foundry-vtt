@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Drug",
-    "weight": "-",
-    "availability": "A Dangerous liquid drug that the majority of the sector's Frenzon is derived, although it is far less potent than this. For 2d10 Minutes Grants Fearless and Frenzy Talents, and Unnatural Agility(x2) Trait. However, user takes 1 point of damage ignoring armour and toughness due to bleeding through their pores.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "300 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 300 T</p>"
+      "value": "<p>A Dangerous liquid drug that the majority of the sector's Frenzon is derived, although it is far less potent than this. For 2d10 Minutes Grants Fearless and Frenzy Talents, and Unnatural Agility(x2) Trait. However, user takes 1 point of damage ignoring armour and toughness due to bleeding through their pores.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 300 T</p>",
+      "chat": "",
+      "summary": "A Dangerous liquid drug that the majority of the sector's Frenzon is derived, although it is far less potent than this. For 2d10 Minutes Grants Fearless and Frenzy Talents, and Unnatural Agility(x2) T"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Dangerous liquid drug that the majority of the sector's Frenzon is derived, although it is far less potent than this. For 2d10 Minutes Grants Fearless and Frenzy Talents, and Unnatural Agility(x2) Trait. However, user takes 1 point of damage ignoring armour and toughness due to bleeding through their pores.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

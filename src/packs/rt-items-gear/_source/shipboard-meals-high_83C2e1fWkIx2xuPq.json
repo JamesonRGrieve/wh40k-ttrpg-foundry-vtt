@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "The Meals provided whilst aboard a Void Craft. Fresh Fruit, Jellied Grox Tongue, Amasec. Not quite noble fine dining but still far better than many hive scum will ever taste.",
-    "cost": "Cost is per day",
-    "effects": "Scarce",
-    "notes": "40 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 40 T</p>"
+      "value": "<p>The Meals provided whilst aboard a Void Craft. Fresh Fruit, Jellied Grox Tongue, Amasec. Not quite noble fine dining but still far better than many hive scum will ever taste.</p>\n<h3>Requirements</h3><p>Cost is per day</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 40 T</p>",
+      "chat": "",
+      "summary": "The Meals provided whilst aboard a Void Craft. Fresh Fruit, Jellied Grox Tongue, Amasec. Not quite noble fine dining but still far better than many hive scum will ever taste."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "The Meals provided whilst aboard a Void Craft. Fresh Fruit, Jellied Grox Tongue, Amasec. Not quite noble fine dining but still far better than many hive scum will ever taste.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

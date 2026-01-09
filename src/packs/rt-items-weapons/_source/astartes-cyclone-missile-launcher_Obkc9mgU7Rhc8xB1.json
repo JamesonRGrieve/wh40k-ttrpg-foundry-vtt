@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
-    "class": "mounted",
+    "identifier": "astartes-cyclone-missile-launcher",
+    "class": "melee",
     "type": "launcher",
-    "range": "300m",
-    "rof": "S/2/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": "-",
-    "clip": 12,
-    "reload": "3 Full",
-    "special": "SM Wep",
-    "weight": "95kg",
-    "availability": "Famed",
-    "cost": "25 R",
-    "source": "Deathwatch: Core",
-    "note": "Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 95,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.",
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

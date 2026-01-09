@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "A 3 Metre long pole ,grafted to the spine and affixed by bracing that helps channel psychic power. When  psyker pushes a psychic power, can add additional +1 to psy rating. Poor versions also add +10 to Psychic Phenomena Rolls, wheras Good versions reduce them by -10.",
-    "cost": "Xenotech",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "RT: Hostile Acquisitions",
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A 3 Metre long pole ,grafted to the spine and affixed by bracing that helps channel psychic power. When  psyker pushes a psychic power, can add additional +1 to psy rating. Poor versions also add +10 to Psychic Phenomena Rolls, wheras Good versions reduce them by -10.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A 3 Metre long pole ,grafted to the spine and affixed by bracing that helps channel psychic power. When  psyker pushes a psychic power, can add additional +1 to psy rating. Poor versions also add +10 "
     },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A 3 Metre long pole ,grafted to the spine and affixed by bracing that helps channel psychic power. When  psyker pushes a psychic power, can add additional +1 to psy rating. Poor versions also add +10 to Psychic Phenomena Rolls, wheras Good versions reduce them by -10.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "knife",
     "class": "melee",
     "type": "primitive",
-    "range": "5m",
-    "rof": "-",
-    "damage": "1d5",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 5,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Primitive (8)",
-    "weight": "1kg",
+    "weight": 1,
     "availability": "abundant",
-    "cost": "5 T",
-    "source": "Rogue Trader: Core",
-    "note": "Can be Thrown",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Can be Thrown</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be Thrown",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

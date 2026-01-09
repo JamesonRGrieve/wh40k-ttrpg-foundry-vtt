@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "0.1kg",
-    "availability": "In Primitive Societies, many locks will be made to fit one master key, this is one of such keys and will open all locks made to fit it.",
-    "cost": null,
-    "effects": "Rare",
-    "notes": "24 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0.1,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 24,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 24 T</p>"
+      "value": "<p>In Primitive Societies, many locks will be made to fit one master key, this is one of such keys and will open all locks made to fit it.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 24 T</p>",
+      "chat": "",
+      "summary": "In Primitive Societies, many locks will be made to fit one master key, this is one of such keys and will open all locks made to fit it."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "In Primitive Societies, many locks will be made to fit one master key, this is one of such keys and will open all locks made to fit it.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

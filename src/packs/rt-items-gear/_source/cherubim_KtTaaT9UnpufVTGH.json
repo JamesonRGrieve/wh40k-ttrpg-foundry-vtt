@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Familiar",
-    "weight": "-",
-    "availability": "Homunculi scuplted to look like a genderless baby with implanted augmetic wings and a grav generator. Disturbing to some, can perform simple tasks such as copy text, fetching objects, carrying items, and singing The Emperor's praises.",
-    "cost": "See Bestiary or Inquisitor's Handbook Page 192/193",
-    "effects": "Rare",
-    "notes": "300 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 300,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 300 T</p>"
+      "value": "<p>Homunculi scuplted to look like a genderless baby with implanted augmetic wings and a grav generator. Disturbing to some, can perform simple tasks such as copy text, fetching objects, carrying items, and singing The Emperor's praises.</p>\n<h3>Requirements</h3><p>See Bestiary or Inquisitor's Handbook Page 192/193</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 300 T</p>",
+      "chat": "",
+      "summary": "Homunculi scuplted to look like a genderless baby with implanted augmetic wings and a grav generator. Disturbing to some, can perform simple tasks such as copy text, fetching objects, carrying items, "
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Homunculi scuplted to look like a genderless baby with implanted augmetic wings and a grav generator. Disturbing to some, can perform simple tasks such as copy text, fetching objects, carrying items, and singing The Emperor's praises.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

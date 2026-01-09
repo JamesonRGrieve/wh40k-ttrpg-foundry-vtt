@@ -1,0 +1,30 @@
+{
+  "name": "Sacred Ungents",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Full Action to apply to a weapon, weapon becomes immune to jamming for a number of shots equal to its Clip Size. If weapon is jammed, unjams it with no further effect",
+    "cost": null,
+    "effects": "Very Rare / Initiated",
+    "notes": "150 T\n20 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare / Initiated</p><p><b>Notes:</b> 150 T\n20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tqp0LZVNpSUSbdhr"
+}

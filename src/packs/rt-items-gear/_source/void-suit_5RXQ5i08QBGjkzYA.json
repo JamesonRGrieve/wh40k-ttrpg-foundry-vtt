@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "8kg",
-    "availability": "Allows surviving in a vacuum, has a Rebreather, tether lines, clamps, etc. At least 1 hour of air. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)",
-    "cost": "Poor suits may not have adequate protection, leading to long term sickness",
-    "effects": "Plentiful",
-    "notes": "100 T",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 8,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 100 T</p>"
+      "value": "<p>Allows surviving in a vacuum, has a Rebreather, tether lines, clamps, etc. At least 1 hour of air. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)</p>\n<h3>Requirements</h3><p>Poor suits may not have adequate protection, leading to long term sickness</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "Allows surviving in a vacuum, has a Rebreather, tether lines, clamps, etc. At least 1 hour of air. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not "
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows surviving in a vacuum, has a Rebreather, tether lines, clamps, etc. At least 1 hour of air. Whenever taking Rending or Explosive Damage, 40% chance that suit is breached. Breached suits do not count as sealed (Can be repaired with tape, patches, etc, as a Full Action)",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

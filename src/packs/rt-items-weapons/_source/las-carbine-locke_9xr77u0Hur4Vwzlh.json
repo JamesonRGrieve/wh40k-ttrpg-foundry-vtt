@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "las-carbine-locke",
     "class": "basic",
     "type": "las",
-    "range": "60m",
-    "rof": "S/2/-",
-    "damage": "1d10+3",
-    "damageType": "Energy",
-    "penetration": 0,
-    "clip": 40,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "2.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 2.5,
     "availability": "scarce",
-    "cost": "75 T",
-    "source": "Rogue Trader: Core",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 75,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

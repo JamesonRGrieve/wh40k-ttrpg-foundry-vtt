@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing (Astartes)",
-    "weight": "-",
-    "availability": "Counts as a Back Banner (If Kill-Team's Leader, when spending Fate Point to regain Cohesion, regain +1 extra). Can choose one enemy type to be displayed as a trophy, be it a race, organisation, or specific foe. When fighting members of that race, organisation, or foe, character counts as having Fear +1. Character may first have to defeat such a foe to be able to display the trophy.",
-    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: White Scars",
-    "effects": "Initiated",
-    "notes": "-",
-    "source": "DW: First Founding",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Counts as a Back Banner (If Kill-Team's Leader, when spending Fate Point to regain Cohesion, regain +1 extra). Can choose one enemy type to be displayed as a trophy, be it a race, organisation, or specific foe. When fighting members of that race, organisation, or foe, character counts as having Fear +1. Character may first have to defeat such a foe to be able to display the trophy.</p>\n<h3>Requirements</h3><p>Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: White Scars</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Counts as a Back Banner (If Kill-Team's Leader, when spending Fate Point to regain Cohesion, regain +1 extra). Can choose one enemy type to be displayed as a trophy, be it a race, organisation, or spe"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Counts as a Back Banner (If Kill-Team's Leader, when spending Fate Point to regain Cohesion, regain +1 extra). Can choose one enemy type to be displayed as a trophy, be it a race, organisation, or specific foe. When fighting members of that race, organisation, or foe, character counts as having Fear +1. Character may first have to defeat such a foe to be able to display the trophy.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Primitive: Crossbows",
-    "damageOrEffect": "Gain Blast (5) and Concussive (5) Qualities. In addition to normal effects anyone within Blast Radius must make -20 Strength Test or be thrown 1d5 metres from blast and knocked prone.",
-    "qualities": "Blast (5), Concussive (5)",
-    "weight": "10% wep",
+    "identifier": "concussion-bolts-theta",
+    "weaponTypes": [
+      "primitive"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-5",
+      "concussive-5"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Gain Blast (5) and Concussive (5) Qualities. In addition to normal effects anyone within Blast Radius must make -20 Strength Test or be thrown 1d5 metres from blast and knocked prone.</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Within",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Gain Blast (5) and Concussive (5) Qualities. In addition to normal effects anyone within Blast Radius must make -20 Strength Test or be thrown 1d5 metres from blast and knocked prone.</p><p><b>Qualities:</b> Blast (5), Concussive (5)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "DH 2E: Enemies Within",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Consumable",
-    "weight": "0.5kg",
-    "availability": "After ingesting gain 2 additional Degrees of Success on successful Fellowship and Intelligence Tests for 1d5 hours. Afterwards make +0 Toughness Test or suffer -20 to Perception Tests for 1d5 hours, if failing by 3+ DoF, suffer additional -20 to Willpower tests for 1d5 hours, or until ingesting another dose.",
-    "cost": null,
-    "effects": "Scarce",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "consumable",
+    "weight": 0.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+      "value": "<p>After ingesting gain 2 additional Degrees of Success on successful Fellowship and Intelligence Tests for 1d5 hours. Afterwards make +0 Toughness Test or suffer -20 to Perception Tests for 1d5 hours, if failing by 3+ DoF, suffer additional -20 to Willpower tests for 1d5 hours, or until ingesting another dose.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "After ingesting gain 2 additional Degrees of Success on successful Fellowship and Intelligence Tests for 1d5 hours. Afterwards make +0 Toughness Test or suffer -20 to Perception Tests for 1d5 hours, i"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "After ingesting gain 2 additional Degrees of Success on successful Fellowship and Intelligence Tests for 1d5 hours. Afterwards make +0 Toughness Test or suffer -20 to Perception Tests for 1d5 hours, if failing by 3+ DoF, suffer additional -20 to Willpower tests for 1d5 hours, or until ingesting another dose.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,30 @@
+{
+  "name": "Lascutter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "4kg",
+    "availability": "Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "65 T",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 65 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l5qOEUSIqZHvqQ1k"
+}

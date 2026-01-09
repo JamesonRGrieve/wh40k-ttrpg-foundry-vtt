@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "flak",
-    "locations": "Arms, Body, Legs",
-    "ap": 5,
-    "maxAg": null,
-    "weight": "12kg",
+    "weight": 12,
     "availability": "rare",
-    "cost": "-",
     "notes": "Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm",
@@ -25,7 +20,7 @@
       "rightLeg"
     ],
     "armourPoints": {
-      "head": 0,
+      "head": 5,
       "body": 5,
       "leftArm": 5,
       "rightArm": 5,
@@ -33,7 +28,8 @@
       "rightLeg": 5
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

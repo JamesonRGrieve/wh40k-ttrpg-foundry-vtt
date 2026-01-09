@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "redemption-of-st-sulech",
     "class": "heavy",
     "type": "exotic",
-    "range": "160m",
-    "rof": "-/-/12",
-    "damage": "2d10+12",
-    "damageType": "Explosive",
-    "penetration": 6,
-    "clip": 60,
-    "reload": "Full",
-    "special": "SM Wep, Tearing",
-    "weight": "68kg",
-    "availability": "Famed",
-    "cost": "40 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only. Relic Master-Crafted Astartes Heavy Bolter of the Deathwatch. User cannot be the Squad Leader. The Squad Leader suffers -10 to tests to prevent Cohesion Damage. The weapon is a symbol of honour, but also of disobeying orders.",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 160,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 12
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 12,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 68,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Heavy Bolter of the Deathwatch. User cannot be the Squad Leader. The Squad Leader suffers -10 to tests to prevent Cohesion Damage. The weapon is a symbol of honour, but also of disobeying orders.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Relic Master-Crafted Astartes Heavy Bolter of the Deathwatch. User cannot be the Squad Leader. The Squad Leader suffers -10 to tests to prevent Cohesion Damage. The weapon is a symbol of honour, but also of disobeying orders.",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

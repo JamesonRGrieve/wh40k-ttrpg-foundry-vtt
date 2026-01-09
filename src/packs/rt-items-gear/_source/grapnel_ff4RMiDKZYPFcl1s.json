@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "2kg",
-    "availability": "Fires hooked/magnetic grapple attached to 100m of wire. Can climb or use powered winch.",
-    "cost": "Also counts as 1-shot Crossbow.",
-    "effects": "Average",
-    "notes": "30 T",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 2,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 30 T</p>"
+      "value": "<p>Fires hooked/magnetic grapple attached to 100m of wire. Can climb or use powered winch.</p>\n<h3>Requirements</h3><p>Also counts as 1-shot Crossbow.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 30 T</p>",
+      "chat": "",
+      "summary": "Fires hooked/magnetic grapple attached to 100m of wire. Can climb or use powered winch."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Fires hooked/magnetic grapple attached to 100m of wire. Can climb or use powered winch.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

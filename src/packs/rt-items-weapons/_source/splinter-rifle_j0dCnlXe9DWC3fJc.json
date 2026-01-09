@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "splinter-rifle",
     "class": "basic",
     "type": "exotic",
-    "range": "100m",
-    "rof": "S/3/5",
-    "damage": "1d10+2",
-    "damageType": "Rending",
-    "penetration": 3,
-    "clip": 200,
-    "reload": "2 Full",
-    "special": "Toxic (4)",
-    "weight": "2.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "toxic-4"
+    ],
+    "clip": {
+      "max": 200,
+      "value": 200,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 2.5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Likely Eldar Weapon",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Toxic (4)</p><p><b>Note:</b> Likely Eldar Weapon</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Likely Eldar Weapon",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

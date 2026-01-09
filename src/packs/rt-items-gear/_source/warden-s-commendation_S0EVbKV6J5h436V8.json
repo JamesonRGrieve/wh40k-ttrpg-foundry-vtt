@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Medal",
-    "weight": "-",
-    "availability": "When making a Toughness Test due to a Critical Effect, wearer can use Willpower Characteristic in place of Toughness.\nMedals can't be acquired, only earned. Looks Like a platinum cross with gold inlay.",
-    "cost": "Distinguished Service Medal: Slaying a Powerful Dark Eldar Warrior, such as an Archon, Succubus, Haemonculus, or Incubus in melee combat.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "OW: Enemies of the Imperium",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When making a Toughness Test due to a Critical Effect, wearer can use Willpower Characteristic in place of Toughness.\nMedals can't be acquired, only earned. Looks Like a platinum cross with gold inlay.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Slaying a Powerful Dark Eldar Warrior, such as an Archon, Succubus, Haemonculus, or Incubus in melee combat.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When making a Toughness Test due to a Critical Effect, wearer can use Willpower Characteristic in place of Toughness.\nMedals can't be acquired, only earned. Looks Like a platinum cross with gold inlay"
     },
+    "source": {
+      "book": "OW: Enemies of the Imperium",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When making a Toughness Test due to a Critical Effect, wearer can use Willpower Characteristic in place of Toughness.\nMedals can't be acquired, only earned. Looks Like a platinum cross with gold inlay.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

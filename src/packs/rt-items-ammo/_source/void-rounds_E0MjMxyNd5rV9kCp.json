@@ -3,19 +3,50 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "SP Weapon",
-    "damageOrEffect": "Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n",
-    "qualities": "Reliable (conditional)",
-    "weight": "10% wep",
+    "identifier": "void-rounds",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": -1,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "reliable",
+      "reliable-in-a-vacuum"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n</p>",
+    "notes": "",
+    "weight": 0,
     "availability": "rare",
-    "cost": "8 T each",
-    "source": "RT: Into the Storm / DH: Inquisitor's HB",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 8,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Weapon gains Reliable Quality in a Vacuum. -1 Damage while in atmosphere.\n</p><p><b>Qualities:</b> Reliable (conditional)</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "RT: Into the Storm / DH: Inquisitor's HB",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

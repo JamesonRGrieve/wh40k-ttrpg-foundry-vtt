@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "breacher",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+5",
-    "damageType": "Rending",
-    "penetration": 4,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Tearing, Unwieldy",
-    "weight": "18kg",
+    "weight": 18,
     "availability": "scarce",
-    "cost": "750 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": "Wielded as a Slung Rig over the shoulder, or just implanted into the flesh  where the arm was. Requires a Strength Bonus of 5 or suffer -10 to WS per SB Less than this.\nIf this weapon causes Righteous Fury, it deals an extra 2d10 Damage rather than 1d10 (or causes two critical hits if using OW)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 750,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Wielded as a Slung Rig over the shoulder, or just implanted into the flesh  where the arm was. Requires a Strength Bonus of 5 or suffer -10 to WS per SB Less than this.\nIf this weapon causes Righteous Fury, it deals an extra 2d10 Damage rather than 1d10 (or causes two critical hits if using OW)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Wielded as a Slung Rig over the shoulder, or just implanted into the flesh  where the arm was. Requires a Strength Bonus of 5 or suffer -10 to WS per SB Less than this.\nIf this weapon causes Righteous Fury, it deals an extra 2d10 Damage rather than 1d10 (or causes two critical hits if using OW)",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

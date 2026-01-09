@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "tau-pulse-rifle-alt",
     "class": "basic",
     "type": "exotic",
-    "range": "150m",
-    "rof": "S/3/-",
-    "damage": "1d10+12",
-    "damageType": "Energy",
-    "penetration": 4,
-    "clip": 36,
-    "reload": "Half",
-    "special": "Gyro-Stabilised",
-    "weight": "8kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 4
+    },
+    "special": [
+      "gyro-stabilised"
+    ],
+    "clip": {
+      "max": 36,
+      "value": 36,
+      "type": ""
+    },
+    "reload": "half",
+    "weight": 8,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "Deathwatch: Errata",
-    "note": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Gyro-Stabilised</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "source": "Deathwatch: Errata"
   },
   "effects": [],
   "flags": {},

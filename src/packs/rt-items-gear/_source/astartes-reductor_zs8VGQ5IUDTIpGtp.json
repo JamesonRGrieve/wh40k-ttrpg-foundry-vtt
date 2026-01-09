@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Astartes",
-    "weight": "4kg",
-    "availability": "A Tool designed to reduce the time required to extract a Progenoid Gland from an often fallen Astartes. Mounted under the wrist by Apothacaries. Takes 1 Round to remove one gland, meaning two rounds for full recovery. Can also be used as a Melee Weapon, although not designed for it (1d10+2 R, Pen 10), doesn't add SB to damage.",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "8 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 4,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 8 R</p>"
+      "value": "<p>A Tool designed to reduce the time required to extract a Progenoid Gland from an often fallen Astartes. Mounted under the wrist by Apothacaries. Takes 1 Round to remove one gland, meaning two rounds for full recovery. Can also be used as a Melee Weapon, although not designed for it (1d10+2 R, Pen 10), doesn't add SB to damage.</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 8 R</p>",
+      "chat": "",
+      "summary": "A Tool designed to reduce the time required to extract a Progenoid Gland from an often fallen Astartes. Mounted under the wrist by Apothacaries. Takes 1 Round to remove one gland, meaning two rounds f"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Tool designed to reduce the time required to extract a Progenoid Gland from an often fallen Astartes. Mounted under the wrist by Apothacaries. Takes 1 Round to remove one gland, meaning two rounds for full recovery. Can also be used as a Melee Weapon, although not designed for it (1d10+2 R, Pen 10), doesn't add SB to damage.",
+    "duration": "",
+    "notes": "8 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

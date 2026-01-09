@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "-",
-    "availability": "User can make Navigate Test to use the seeker to find the caller, with difficulty varying on distance. Hiding a Caller on a person or object requires a Concealment Test, with Degrees of Success Opposing latyer Search Tests by those attempting to find it. A Caller can also be embedded into an object, such as a Data Slate or Weapon with a +10 Test (Tech-Use/Trade(Armourer)",
-    "cost": "A tiny metal sphere (The Caller) and a small translucent globe with a needle of identical material to the caller inside (The Seeker). The Seeker always points to the caller regardless of distance, even over entire star sectors. ",
-    "effects": "Initiated",
-    "notes": "30 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 30 R</p>"
+      "value": "<p>User can make Navigate Test to use the seeker to find the caller, with difficulty varying on distance. Hiding a Caller on a person or object requires a Concealment Test, with Degrees of Success Opposing latyer Search Tests by those attempting to find it. A Caller can also be embedded into an object, such as a Data Slate or Weapon with a +10 Test (Tech-Use/Trade(Armourer)</p>\n<h3>Requirements</h3><p>A tiny metal sphere (The Caller) and a small translucent globe with a needle of identical material to the caller inside (The Seeker). The Seeker always points to the caller regardless of distance, even over entire star sectors. </p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 30 R</p>",
+      "chat": "",
+      "summary": "User can make Navigate Test to use the seeker to find the caller, with difficulty varying on distance. Hiding a Caller on a person or object requires a Concealment Test, with Degrees of Success Opposi"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "User can make Navigate Test to use the seeker to find the caller, with difficulty varying on distance. Hiding a Caller on a person or object requires a Concealment Test, with Degrees of Success Opposing latyer Search Tests by those attempting to find it. A Caller can also be embedded into an object, such as a Data Slate or Weapon with a +10 Test (Tech-Use/Trade(Armourer)",
+    "duration": "",
+    "notes": "30 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

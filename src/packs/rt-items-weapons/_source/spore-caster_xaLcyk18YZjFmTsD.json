@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "spore-caster",
     "class": "basic",
     "type": "exotic",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "-",
-    "damageType": "Special",
-    "penetration": 0,
-    "clip": 1,
-    "reload": "2 Full",
-    "special": "Devastating (5), Hallucinogenic (3), Spray",
-    "weight": "5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "devastating-5",
+      "hallucinogenic-3",
+      "spray"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 5,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Devastating (5), Hallucinogenic (3), Spray</p><p><b>Note:</b> Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

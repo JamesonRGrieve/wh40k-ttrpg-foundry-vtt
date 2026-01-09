@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "12kg",
-    "availability": "If allies in 30 metres inflict Righteous Fury they auto-pass second attack test. Once per Combat encounter, wielder may make -10 Command Test as Free action, if succeed, allies in 30 metres can move towards the banner or charge at a foe up to a distance of the Wielder's Agility Bonus as a Free Action.",
-    "cost": "An Ancient Battle Standard, takes one hand to carry. Relics are unique, one of a kind items, they must be earned as opposed to acquired. ",
-    "effects": "Unique",
-    "notes": "-",
-    "source": "RT: Faith and Coin",
+    "category": "luxury",
+    "weight": 12,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>If allies in 30 metres inflict Righteous Fury they auto-pass second attack test. Once per Combat encounter, wielder may make -10 Command Test as Free action, if succeed, allies in 30 metres can move towards the banner or charge at a foe up to a distance of the Wielder's Agility Bonus as a Free Action.</p>\n<h3>Requirements</h3><p>An Ancient Battle Standard, takes one hand to carry. Relics are unique, one of a kind items, they must be earned as opposed to acquired. </p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "If allies in 30 metres inflict Righteous Fury they auto-pass second attack test. Once per Combat encounter, wielder may make -10 Command Test as Free action, if succeed, allies in 30 metres can move t"
     },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "If allies in 30 metres inflict Righteous Fury they auto-pass second attack test. Once per Combat encounter, wielder may make -10 Command Test as Free action, if succeed, allies in 30 metres can move towards the banner or charge at a foe up to a distance of the Wielder's Agility Bonus as a Free Action.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

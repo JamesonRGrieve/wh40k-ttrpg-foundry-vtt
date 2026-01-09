@@ -1,0 +1,30 @@
+{
+  "name": "Counterseptics",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "25 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 25 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BCpEEvWIDu9bJJ49"
+}

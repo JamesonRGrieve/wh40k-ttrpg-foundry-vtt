@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Leg Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_leg_3",
+    "damageType": "explosive",
+    "bodyPart": "leg",
+    "severity": 3,
+    "effect": "<p>The concussion causes the target's leg to fracture. The target suffers [[2d10]] Agility damage.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Leg (Severity 3)</strong></p><p>The concussion causes the target's leg to fracture. The target suffers [[2d10]] Agility damage.</p>",
+      "chat": "",
+      "summary": "Explosive Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "gDyLFUpFXyRhHuat"
+}

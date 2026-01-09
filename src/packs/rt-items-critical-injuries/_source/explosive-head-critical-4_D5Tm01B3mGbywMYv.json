@@ -1,0 +1,32 @@
+{
+  "name": "Explosive Head Critical 4",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_head_4",
+    "damageType": "explosive",
+    "bodyPart": "head",
+    "severity": 4,
+    "effect": "<p>The force of the blast knocks the target to the ground and leaves him senseless. The target suffers [[1d10]] Intelligence damage and is knocked Prone. He must also pass a Challenging (+0) Toughness test; if he fails, he is Stunned for 2 rounds and his Intelligence characteristic is permanently reduced by 1.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Head (Severity 4)</strong></p><p>The force of the blast knocks the target to the ground and leaves him senseless. The target suffers [[1d10]] Intelligence damage and is knocked Prone. He must also pass a Challenging (+0) Toughness test; if he fails, he is Stunned for 2 rounds and his Intelligence characteristic is permanently reduced by 1.</p>",
+      "chat": "",
+      "summary": "Explosive Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "D5Tm01B3mGbywMYv"
+}

@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-balefire-gun",
     "class": "basic",
     "type": "flame",
-    "range": "20m",
-    "rof": "S/-/-",
-    "damage": "2d10+2",
-    "damageType": "Energy",
-    "penetration": 3,
-    "clip": 6,
-    "reload": "2 Full",
-    "special": "SM Wep, Flame, Spray, Toxic",
-    "weight": "7kg",
-    "availability": "Respected",
-    "cost": "16 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. ",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "sm-wep",
+      "flame",
+      "spray",
+      "toxic"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 7,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 16,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Flame, Spray, Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

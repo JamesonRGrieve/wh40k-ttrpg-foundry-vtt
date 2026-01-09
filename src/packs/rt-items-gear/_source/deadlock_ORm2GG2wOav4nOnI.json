@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Poison",
-    "weight": "-",
-    "availability": "Victim makes -10 Toughness Test, if failed they suffer 1d10 Temprary Strength Damage, +1d10 per Degree of Failiure on Test. If they reach 0 Strength as a result they are completely paralysed. This paralysis and any damage to strength wear off after 2d5-TB Minutes (minimum 1 minute). (TB is victim's Toughness Bonus)",
-    "cost": null,
-    "effects": "Initiated",
-    "notes": "10 R",
-    "source": "Deathwatch: Core",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+      "value": "<p>Victim makes -10 Toughness Test, if failed they suffer 1d10 Temprary Strength Damage, +1d10 per Degree of Failiure on Test. If they reach 0 Strength as a result they are completely paralysed. This paralysis and any damage to strength wear off after 2d5-TB Minutes (minimum 1 minute). (TB is victim's Toughness Bonus)</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>",
+      "chat": "",
+      "summary": "Victim makes -10 Toughness Test, if failed they suffer 1d10 Temprary Strength Damage, +1d10 per Degree of Failiure on Test. If they reach 0 Strength as a result they are completely paralysed. This par"
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Victim makes -10 Toughness Test, if failed they suffer 1d10 Temprary Strength Damage, +1d10 per Degree of Failiure on Test. If they reach 0 Strength as a result they are completely paralysed. This paralysis and any damage to strength wear off after 2d5-TB Minutes (minimum 1 minute). (TB is victim's Toughness Bonus)",
+    "duration": "",
+    "notes": "10 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

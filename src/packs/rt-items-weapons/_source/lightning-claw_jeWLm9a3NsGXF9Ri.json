@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "lightning-claw",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10+6",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "power-field",
+      "proven-4"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Proven (4)",
-    "weight": "30kg",
+    "weight": 30,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "Can only be used whilst wearing power armour. Does +1 Damage per Degree of Success on the attack roll, or +2 if wielded as a pair of Lightning Claws. The claw can be used for basic manipulation (couldn't use a weapon or write, but could pick something up)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Proven (4)</p><p><b>Note:</b> Can only be used whilst wearing power armour. Does +1 Damage per Degree of Success on the attack roll, or +2 if wielded as a pair of Lightning Claws. The claw can be used for basic manipulation (couldn't use a weapon or write, but could pick something up)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can only be used whilst wearing power armour. Does +1 Damage per Degree of Success on the attack roll, or +2 if wielded as a pair of Lightning Claws. The claw can be used for basic manipulation (couldn't use a weapon or write, but could pick something up)",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,62 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "plasma-cannon-ryza",
     "class": "heavy",
     "type": "plasma",
-    "range": "120m",
-    "rof": "S/-/-",
-    "damage": "2d10+10",
-    "damageType": "Energy",
-    "penetration": 8,
-    "clip": 16,
-    "reload": "5 Full",
-    "special": "Maximal,Overheats, Blast (1), Unreliable",
-    "weight": "40kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "maximal",
+      "overheats",
+      "blast-1",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 40,
     "availability": "very-rare",
-    "cost": "8500 T",
-    "source": "Rogue Trader: Core",
-    "note": "Can choose between firing normally or maximally",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 8500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Maximal,Overheats, Blast (1), Unreliable</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can choose between firing normally or maximally",
+    "source": "Rogue Trader: Core"
   },
   "effects": [],
   "flags": {},

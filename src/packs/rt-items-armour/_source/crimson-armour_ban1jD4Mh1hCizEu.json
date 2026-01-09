@@ -4,19 +4,14 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "All",
-    "ap": 6,
-    "maxAg": null,
-    "weight": "6kg",
+    "weight": 6,
     "availability": "near-unique",
-    "cost": "-",
     "notes": "Gives +1 Unnatural Strength. Has Good Photo-Visor. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)",
     "source": "OW: Shield of Humanity",
     "description": {
       "value": "<p>Gives +1 Unnatural Strength. Has Good Photo-Visor. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "all"
     ],
@@ -29,7 +24,8 @@
       "rightLeg": 6
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

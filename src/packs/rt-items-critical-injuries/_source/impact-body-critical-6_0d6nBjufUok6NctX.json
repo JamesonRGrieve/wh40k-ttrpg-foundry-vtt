@@ -1,0 +1,32 @@
+{
+  "name": "Impact Body Critical 6",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body_6",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 6,
+    "effect": "<p>The attack knocks the target sprawling on the ground. The target suffers [[1d5]] levels of Fatigue, is flung [[1d5]] metres away from the attacker (stopping if he hits a solid object), and falls Prone. He is Stunned for 2 rounds.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Body (Severity 6)</strong></p><p>The attack knocks the target sprawling on the ground. The target suffers [[1d5]] levels of Fatigue, is flung [[1d5]] metres away from the attacker (stopping if he hits a solid object), and falls Prone. He is Stunned for 2 rounds.</p>",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "0d6nBjufUok6NctX"
+}

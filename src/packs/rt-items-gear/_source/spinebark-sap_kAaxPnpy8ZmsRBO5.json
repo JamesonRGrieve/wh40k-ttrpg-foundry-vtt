@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Poison",
-    "weight": "-",
-    "availability": "Creatures exosed to it must pass -20 Toughness Test or suffer 1d10 Strength damage, +1d10 per DoF (non-permenant). Requires -10 Chem-Use test to apply, load, or handle this poison, failiure counts as being exposed to it. Contact poison, causes spinebark tree to grow over a paralyzed victim.",
-    "cost": null,
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "RT: Hostile Acquisitions",
+    "category": "drugs",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Creatures exosed to it must pass -20 Toughness Test or suffer 1d10 Strength damage, +1d10 per DoF (non-permenant). Requires -10 Chem-Use test to apply, load, or handle this poison, failiure counts as being exposed to it. Contact poison, causes spinebark tree to grow over a paralyzed victim.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Creatures exosed to it must pass -20 Toughness Test or suffer 1d10 Strength damage, +1d10 per DoF (non-permenant). Requires -10 Chem-Use test to apply, load, or handle this poison, failiure counts as "
     },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Creatures exosed to it must pass -20 Toughness Test or suffer 1d10 Strength damage, +1d10 per DoF (non-permenant). Requires -10 Chem-Use test to apply, load, or handle this poison, failiure counts as being exposed to it. Contact poison, causes spinebark tree to grow over a paralyzed victim.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

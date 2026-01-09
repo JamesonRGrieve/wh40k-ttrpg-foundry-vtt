@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "8kg",
-    "availability": "Psykers within 5m of one or more Banishing rods cannot push Psychic Powers, and apply -20 to any Psychic Phenomena Rolls (min 1). Characters with the Daemonic Trait treat this area as Treacherous Environment. When used as part of an Exorcism, each rod placed around the target grants +5 to the Daemonic Mastery Test",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Beyond",
+    "category": "tools",
+    "weight": 8,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Psykers within 5m of one or more Banishing rods cannot push Psychic Powers, and apply -20 to any Psychic Phenomena Rolls (min 1). Characters with the Daemonic Trait treat this area as Treacherous Environment. When used as part of an Exorcism, each rod placed around the target grants +5 to the Daemonic Mastery Test</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Psykers within 5m of one or more Banishing rods cannot push Psychic Powers, and apply -20 to any Psychic Phenomena Rolls (min 1). Characters with the Daemonic Trait treat this area as Treacherous Envi"
     },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Psykers within 5m of one or more Banishing rods cannot push Psychic Powers, and apply -20 to any Psychic Phenomena Rolls (min 1). Characters with the Daemonic Trait treat this area as Treacherous Environment. When used as part of an Exorcism, each rod placed around the target grants +5 to the Daemonic Mastery Test",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

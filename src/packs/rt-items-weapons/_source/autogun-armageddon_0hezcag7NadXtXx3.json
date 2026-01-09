@@ -3,30 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "autogun-armageddon",
     "class": "basic",
     "type": "solid-projectile",
-    "range": "100m",
-    "rof": "S/2/6",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 15,
-    "reload": "Full",
-    "special": "Reliable",
-    "weight": "8.5kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 15,
+      "value": 15,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8.5,
     "availability": "average",
-    "cost": "100 T",
-    "source": "DH: Inquisitor's Handbook",
-    "note": null,
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable</p>"
     },
-    "damageFormula": "1d10+4",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "DH: Inquisitor's Handbook"
   },
   "effects": [],
   "flags": {},

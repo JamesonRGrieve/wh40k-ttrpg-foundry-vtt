@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "Twelve Oddly shaped devices of unknown yet maddening purpose. Attempts to study even a single one bring madness, especially if activated. Effects may include Psychic Phenomena, Warp breaches, Daemonic attention, and so on. The more devices brought together, the worse these effects become as these items meld together into incomprehensible shapes. Should all 12 be brought together, it would bring fourth a power to shatter worlds, like that of Narwil V.",
-    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Twelve Oddly shaped devices of unknown yet maddening purpose. Attempts to study even a single one bring madness, especially if activated. Effects may include Psychic Phenomena, Warp breaches, Daemonic attention, and so on. The more devices brought together, the worse these effects become as these items meld together into incomprehensible shapes. Should all 12 be brought together, it would bring fourth a power to shatter worlds, like that of Narwil V.</p>\n<h3>Requirements</h3><p>A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Twelve Oddly shaped devices of unknown yet maddening purpose. Attempts to study even a single one bring madness, especially if activated. Effects may include Psychic Phenomena, Warp breaches, Daemonic"
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Twelve Oddly shaped devices of unknown yet maddening purpose. Attempts to study even a single one bring madness, especially if activated. Effects may include Psychic Phenomena, Warp breaches, Daemonic attention, and so on. The more devices brought together, the worse these effects become as these items meld together into incomprehensible shapes. Should all 12 be brought together, it would bring fourth a power to shatter worlds, like that of Narwil V.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

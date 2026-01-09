@@ -1,0 +1,32 @@
+{
+  "name": "Rending Head Critical 6",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_head_6",
+    "damageType": "rending",
+    "bodyPart": "head",
+    "severity": 6,
+    "effect": "<p>The blow rips violently across the target's face, taking with it an important feature. He suffers [[1d5]] levels of Fatigue and suffers Blood Loss. Roll [[1d10]] to see what the target has lost.\n1-3: Eye (see the Lost Eye condition on page 242),\n4-7: Nose (permanently reduce his Fellowship characteristic by [[1d10]]),\n8-10: Ear (the target is Deafened until he receives medical attention).</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Head (Severity 6)</strong></p><p>The blow rips violently across the target's face, taking with it an important feature. He suffers [[1d5]] levels of Fatigue and suffers Blood Loss. Roll [[1d10]] to see what the target has lost.\n1-3: Eye (see the Lost Eye condition on page 242),\n4-7: Nose (permanently reduce his Fellowship characteristic by [[1d10]]),\n8-10: Ear (the target is Deafened until he receives medical attention).</p>",
+      "chat": "",
+      "summary": "Rending Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "khv7Xl9AISBqeZ1L"
+}

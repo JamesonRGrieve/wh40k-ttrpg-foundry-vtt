@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "guldaniri-bile-projector",
     "class": "basic",
     "type": "exotic",
-    "range": "60m",
-    "rof": "S/-/-",
-    "damage": "3d10",
-    "damageType": "Energy",
-    "penetration": "-",
-    "clip": 10,
-    "reload": "3 Full",
-    "special": "Blast (2), Corrosive, Toxic (2)",
-    "weight": "11kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-2",
+      "corrosive",
+      "toxic-2"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 11,
     "availability": "very-rare",
-    "cost": "-",
-    "source": "DH 2E: Enemies Without",
-    "note": "Considered Dangerously Easy to find for those who know where to look.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Blast (2), Corrosive, Toxic (2)</p><p><b>Note:</b> Considered Dangerously Easy to find for those who know where to look.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Considered Dangerously Easy to find for those who know where to look.",
+    "source": "DH 2E: Enemies Without"
   },
   "effects": [],
   "flags": {},

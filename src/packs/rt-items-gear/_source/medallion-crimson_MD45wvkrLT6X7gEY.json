@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Medal",
-    "weight": "-",
-    "availability": "When the wearer takes damage for the first time during a combat encounter, reduce that damage by 1 (min 0)\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull with three sylised gems inset beneath",
-    "cost": "Distinguished Service Medal: Awarded for continuing to fight despite suffering a Critical Wound.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "Only War Core",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When the wearer takes damage for the first time during a combat encounter, reduce that damage by 1 (min 0)\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull with three sylised gems inset beneath</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Awarded for continuing to fight despite suffering a Critical Wound.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When the wearer takes damage for the first time during a combat encounter, reduce that damage by 1 (min 0)\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull"
     },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When the wearer takes damage for the first time during a combat encounter, reduce that damage by 1 (min 0)\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull with three sylised gems inset beneath",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

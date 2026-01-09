@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1kg",
-    "availability": "When activated with the Ready Action, user gains Unnaural Agility x2 and Unnatural Speed x2 Traits for 1d10 Rounds (Recalculating Initative Order), On the first round the effect starts, and the round after it ends user has -10 WS and BS from adapting to the change in the flow of time. After usage requires 1 hour to recharge. Can't be used with Force Fields and vice versa.",
-    "cost": "Archeotech device that alters the flow of time for the wearer.",
-    "effects": "Famed",
-    "notes": "45 R",
-    "source": "Deathwatch: Core",
+    "category": "tools",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 45 R</p>"
+      "value": "<p>When activated with the Ready Action, user gains Unnaural Agility x2 and Unnatural Speed x2 Traits for 1d10 Rounds (Recalculating Initative Order), On the first round the effect starts, and the round after it ends user has -10 WS and BS from adapting to the change in the flow of time. After usage requires 1 hour to recharge. Can't be used with Force Fields and vice versa.</p>\n<h3>Requirements</h3><p>Archeotech device that alters the flow of time for the wearer.</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 45 R</p>",
+      "chat": "",
+      "summary": "When activated with the Ready Action, user gains Unnaural Agility x2 and Unnatural Speed x2 Traits for 1d10 Rounds (Recalculating Initative Order), On the first round the effect starts, and the round "
     },
+    "source": {
+      "book": "Deathwatch: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When activated with the Ready Action, user gains Unnaural Agility x2 and Unnatural Speed x2 Traits for 1d10 Rounds (Recalculating Initative Order), On the first round the effect starts, and the round after it ends user has -10 WS and BS from adapting to the change in the flow of time. After usage requires 1 hour to recharge. Can't be used with Force Fields and vice versa.",
+    "duration": "",
+    "notes": "45 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

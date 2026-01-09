@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Handheld",
-    "weight": "10kg",
-    "availability": "A Representation of a time of purification at the hands of the Inquisition is upon those that fall before the banner. The user increases their visibility for the purposes of any talents that benefit from visibility (such as Into the Jaws of Hell Talent), and gives everyone including themselves Fear(1) vs the enemies of the Holy Ordos. Often takes the form of a standard aloft a suspensor field.",
-    "cost": "Can't be acquired, only created by an Inquisitor and sometimes given to their most worthy acolytes for a particular battle.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 10,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A Representation of a time of purification at the hands of the Inquisition is upon those that fall before the banner. The user increases their visibility for the purposes of any talents that benefit from visibility (such as Into the Jaws of Hell Talent), and gives everyone including themselves Fear(1) vs the enemies of the Holy Ordos. Often takes the form of a standard aloft a suspensor field.</p>\n<h3>Requirements</h3><p>Can't be acquired, only created by an Inquisitor and sometimes given to their most worthy acolytes for a particular battle.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Representation of a time of purification at the hands of the Inquisition is upon those that fall before the banner. The user increases their visibility for the purposes of any talents that benefit f"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Representation of a time of purification at the hands of the Inquisition is upon those that fall before the banner. The user increases their visibility for the purposes of any talents that benefit from visibility (such as Into the Jaws of Hell Talent), and gives everyone including themselves Fear(1) vs the enemies of the Holy Ordos. Often takes the form of a standard aloft a suspensor field.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

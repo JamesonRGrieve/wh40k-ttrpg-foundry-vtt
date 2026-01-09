@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "hunting-lance-krak",
     "class": "melee",
     "type": "primitive",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10+5",
-    "damageType": "Explosive",
-    "penetration": 8,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 8
+    },
+    "special": [
+      "concussive-3",
+      "proven-2",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Concussive (3), Proven (2), Unbalanced",
-    "weight": "5kg",
+    "weight": 5,
     "availability": "rare",
-    "cost": "-",
-    "source": "OW: Hammer of the Emperor",
-    "note": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Concussive (3), Proven (2), Unbalanced</p><p><b>Note:</b> Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "source": "OW: Hammer of the Emperor"
   },
   "effects": [],
   "flags": {},

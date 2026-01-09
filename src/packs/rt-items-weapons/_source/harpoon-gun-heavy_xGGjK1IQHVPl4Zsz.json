@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "harpoon-gun-heavy",
     "class": "heavy",
     "type": "solid-projectile",
-    "range": "40m",
-    "rof": "S/-/-",
-    "damage": "2d10+2",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": 1,
-    "reload": "4 Full",
-    "special": "Crippling (5), Primitive (9), Snare (1)",
-    "weight": "18kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "crippling-5",
+      "primitive-9",
+      "snare-1"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 18,
     "availability": "scarce",
-    "cost": "-",
-    "source": "Black Crusade: Core",
-    "note": "If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Crippling (5), Primitive (9), Snare (1)</p><p><b>Note:</b> If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.",
+    "source": "Black Crusade: Core"
   },
   "effects": [],
   "flags": {},

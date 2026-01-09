@@ -1,0 +1,32 @@
+{
+  "name": "Rending Arm Critical 8",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_arm_8",
+    "damageType": "rending",
+    "bodyPart": "arm",
+    "severity": 8,
+    "effect": "<p>With an assortment of unnatural, wet, ripping sounds, the arm flies free of the body trailing blood behind it in a crimson arc. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He suffers from the Lost Arm condition (see page 242).</p>",
+    "permanent": true,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Arm (Severity 8)</strong></p><p>With an assortment of unnatural, wet, ripping sounds, the arm flies free of the body trailing blood behind it in a crimson arc. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He suffers from the Lost Arm condition (see page 242).</p>",
+      "chat": "",
+      "summary": "Rending Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "mQOpYDNS7McgwXRP"
+}

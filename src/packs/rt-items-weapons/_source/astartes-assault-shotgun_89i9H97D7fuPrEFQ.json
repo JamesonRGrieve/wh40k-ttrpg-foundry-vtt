@@ -3,24 +3,61 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "astartes-assault-shotgun",
     "class": "basic",
     "type": "solid-projectile",
-    "range": "30m",
-    "rof": "S/3/5",
-    "damage": "2d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 20,
-    "reload": "Full",
-    "special": "SM Wep, Reliable, Scatter",
-    "weight": "10kg",
-    "availability": "Initiated",
-    "cost": "7 R",
-    "source": "DW: Rites of Battle",
-    "note": "Space Marines Only, not easily acquirable. ",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "reliable",
+      "scatter"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 10,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 7,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> SM Wep, Reliable, Scatter</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "DW: Rites of Battle"
   },
   "effects": [],
   "flags": {},

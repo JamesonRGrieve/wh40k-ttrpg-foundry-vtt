@@ -1,0 +1,32 @@
+{
+  "name": "Impact Leg Critical 3",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_leg_3",
+    "damageType": "impact",
+    "bodyPart": "leg",
+    "severity": 3,
+    "effect": "<p>A solid blow to the leg sends lightning agony coursing through the target. He is knocked Prone and suffers [[1d10]] Agility damage.</p>",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Leg (Severity 3)</strong></p><p>A solid blow to the leg sends lightning agony coursing through the target. He is knocked Prone and suffers [[1d10]] Agility damage.</p>",
+      "chat": "",
+      "summary": "Impact Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "1.0"
+    }
+  },
+  "_id": "1tFU6V6UbE0Ni334"
+}

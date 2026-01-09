@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "javelin-relic",
     "class": "thrown",
     "type": "primitive",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "1d10",
-    "damageType": "Rending",
-    "penetration": 0,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Accurate",
-    "weight": "0.5kg",
-    "availability": "Special",
-    "cost": "-",
-    "source": "RT: Stars of Inequity",
-    "note": "Found as Treasure via book's Treasure Generator.",
+    "weight": 0.5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity"
   },
   "effects": [],
   "flags": {},

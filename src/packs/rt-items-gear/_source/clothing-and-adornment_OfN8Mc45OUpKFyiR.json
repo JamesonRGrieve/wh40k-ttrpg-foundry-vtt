@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Clothing",
-    "weight": "-",
-    "availability": "What the Character wears, availability depends on what they want.",
-    "cost": "Baseline: Common Clothes: Abundant; Merchant Clothes: Average; Noble Clothes: Scarce\nOther examples: Rags, Coveralls, Bodygloves, Court Robes, Fine cloths, etc.",
-    "effects": "Special",
-    "notes": "Varies",
-    "source": "Rogue Trader Core",
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> Varies</p>"
+      "value": "<p>What the Character wears, availability depends on what they want.</p>\n<h3>Requirements</h3><p>Baseline: Common Clothes: Abundant; Merchant Clothes: Average; Noble Clothes: Scarce\nOther examples: Rags, Coveralls, Bodygloves, Court Robes, Fine cloths, etc.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> Varies</p>",
+      "chat": "",
+      "summary": "What the Character wears, availability depends on what they want."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "What the Character wears, availability depends on what they want.",
+    "duration": "",
+    "notes": "Varies",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Useful for bringing back a target dead or alive. Tracking them to places few humans would go. Such as hunting a human who fled to wilderness space, an alien of note, or so on. To determine success roll 1d5 + DoS on Requisition Test. If this amount is more than Influence Bonus or Threat Rating of target, succeed. Modify test based on target and requirements.",
-    "cost": "Kroot Trackers, Eldar Rangers, and so on make for excellent Bounty hunters given the right price.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "general",
+    "weight": 0,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Useful for bringing back a target dead or alive. Tracking them to places few humans would go. Such as hunting a human who fled to wilderness space, an alien of note, or so on. To determine success roll 1d5 + DoS on Requisition Test. If this amount is more than Influence Bonus or Threat Rating of target, succeed. Modify test based on target and requirements.</p>\n<h3>Requirements</h3><p>Kroot Trackers, Eldar Rangers, and so on make for excellent Bounty hunters given the right price.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Useful for bringing back a target dead or alive. Tracking them to places few humans would go. Such as hunting a human who fled to wilderness space, an alien of note, or so on. To determine success rol"
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Useful for bringing back a target dead or alive. Tracking them to places few humans would go. Such as hunting a human who fled to wilderness space, an alien of note, or so on. To determine success roll 1d5 + DoS on Requisition Test. If this amount is more than Influence Bonus or Threat Rating of target, succeed. Modify test based on target and requirements.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

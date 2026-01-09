@@ -3,30 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "power-fist",
     "class": "melee",
     "type": "power",
-    "range": "-",
-    "rof": "-",
-    "damage": "2d10",
-    "damageType": "Energy",
-    "penetration": 9,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 9
+    },
+    "special": [
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Power Field, Unwieldy",
-    "weight": "13kg",
+    "weight": 13,
     "availability": "very-rare",
-    "cost": "3100 T",
-    "source": "Only War: Core",
-    "note": "Add 2x Strength Bonus to melee damage rather than 1x",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 3100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Add 2x Strength Bonus to melee damage rather than 1x</p>"
     },
-    "damageFormula": "2d10",
-    "craftsmanshipMods": {
-      "toHit": 0,
-      "damage": 0,
-      "penetration": 0
-    }
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Add 2x Strength Bonus to melee damage rather than 1x",
+    "source": "Only War: Core"
   },
   "effects": [],
   "flags": {},

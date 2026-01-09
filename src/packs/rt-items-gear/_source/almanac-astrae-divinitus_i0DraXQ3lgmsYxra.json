@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Tome",
-    "weight": "4kg",
-    "availability": "+10 to Navigation, Pilot, Scholastic Lore (Astromancy), or Trade (Astrographer) when relevent.",
-    "cost": "Tome for making one's way through the stars.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "Rogue Trader Core",
+    "category": "tools",
+    "weight": 4,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>+10 to Navigation, Pilot, Scholastic Lore (Astromancy), or Trade (Astrographer) when relevent.</p>\n<h3>Requirements</h3><p>Tome for making one's way through the stars.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "+10 to Navigation, Pilot, Scholastic Lore (Astromancy), or Trade (Astrographer) when relevent."
     },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "+10 to Navigation, Pilot, Scholastic Lore (Astromancy), or Trade (Astrographer) when relevent.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

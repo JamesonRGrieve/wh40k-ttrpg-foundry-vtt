@@ -3,24 +3,59 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "kursian-sickle-sword",
     "class": "melee",
     "type": "exotic",
-    "range": "-",
-    "rof": "-",
-    "damage": "1d10",
-    "damageType": "Rending",
-    "penetration": 2,
-    "clip": "-",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
     "reload": "-",
-    "special": "Balanced",
-    "weight": "2kg",
+    "weight": 2,
     "availability": "extremely-rare",
-    "cost": "-",
-    "source": "BC: Tome of Blood",
-    "note": "Needs Exotic Weapon Training(Kursian Pit Weapons). Additional +10 to Parry Tests, if gaining 3+ DoS on parry test, can make Disarm Action on attacker as Free Action. Best Quality versions have the Tainted Quality.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons). Additional +10 to Parry Tests, if gaining 3+ DoS on parry test, can make Disarm Action on attacker as Free Action. Best Quality versions have the Tainted Quality.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Needs Exotic Weapon Training(Kursian Pit Weapons). Additional +10 to Parry Tests, if gaining 3+ DoS on parry test, can make Disarm Action on attacker as Free Action. Best Quality versions have the Tainted Quality.",
+    "source": "BC: Tome of Blood"
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "exotic",
-    "weight": "?",
-    "availability": "A clearly Eldar weapon that contains the souls of an entire craftworld lost during the fall of the ancient race, it is sought by all manner of Eldar Corsairs, Inquisitors, and Slaaneshi Cultists. The first time a character moves within 5m of the staff they must make a -20 Willpower test (-40 if a Psyker) or gain 1d10 Insanity Points. Psykers who cause Psychic Phenomena automatically roll twice on Perils of the Warp instead. Weapon can be used as a Force Staff, but those wielding it gain Enemy (Eldar) (4), and Eldar fighting them gain +20 to WS against them.",
-    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "DH 2E: Enemies Without",
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>A clearly Eldar weapon that contains the souls of an entire craftworld lost during the fall of the ancient race, it is sought by all manner of Eldar Corsairs, Inquisitors, and Slaaneshi Cultists. The first time a character moves within 5m of the staff they must make a -20 Willpower test (-40 if a Psyker) or gain 1d10 Insanity Points. Psykers who cause Psychic Phenomena automatically roll twice on Perils of the Warp instead. Weapon can be used as a Force Staff, but those wielding it gain Enemy (Eldar) (4), and Eldar fighting them gain +20 to WS against them.</p>\n<h3>Requirements</h3><p>A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A clearly Eldar weapon that contains the souls of an entire craftworld lost during the fall of the ancient race, it is sought by all manner of Eldar Corsairs, Inquisitors, and Slaaneshi Cultists. The "
     },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A clearly Eldar weapon that contains the souls of an entire craftworld lost during the fall of the ancient race, it is sought by all manner of Eldar Corsairs, Inquisitors, and Slaaneshi Cultists. The first time a character moves within 5m of the staff they must make a -20 Willpower test (-40 if a Psyker) or gain 1d10 Insanity Points. Psykers who cause Psychic Phenomena automatically roll twice on Perils of the Warp instead. Weapon can be used as a Force Staff, but those wielding it gain Enemy (Eldar) (4), and Eldar fighting them gain +20 to WS against them.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

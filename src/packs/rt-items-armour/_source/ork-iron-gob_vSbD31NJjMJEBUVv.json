@@ -4,32 +4,28 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "xenos",
-    "locations": "Head",
-    "ap": 2,
-    "maxAg": null,
-    "weight": "5kg",
+    "weight": 5,
     "availability": "very-rare",
-    "cost": "-",
     "notes": "For Orks, Scarce. Gives +10 to Intimidation Tests, AP Stacks with other armour in the head location. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
     "source": "RT: Into the Storm",
     "description": {
       "value": "<p>For Orks, Scarce. Gives +10 to Intimidation Tests, AP Stacks with other armour in the head location. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "head"
     ],
     "armourPoints": {
       "head": 2,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "body": 2,
+      "leftArm": 2,
+      "rightArm": 2,
+      "leftLeg": 2,
+      "rightLeg": 2
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

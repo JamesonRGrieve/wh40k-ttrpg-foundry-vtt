@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "2kg",
-    "availability": "Gives +10 to Medicae Skill when used for first-aid. Best Craftsmanship gives +20. ",
-    "cost": "Containins Needles, scalpels, bandages, antiseptics, gauzes, painkillers, flesh spray, wound glue, etc. Good for minor wounds. ",
-    "effects": "Common",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 2,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Gives +10 to Medicae Skill when used for first-aid. Best Craftsmanship gives +20. </p>\n<h3>Requirements</h3><p>Containins Needles, scalpels, bandages, antiseptics, gauzes, painkillers, flesh spray, wound glue, etc. Good for minor wounds. </p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Gives +10 to Medicae Skill when used for first-aid. Best Craftsmanship gives +20. "
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Gives +10 to Medicae Skill when used for first-aid. Best Craftsmanship gives +20. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

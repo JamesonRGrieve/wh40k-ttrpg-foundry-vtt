@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "assault-flamer-salamander",
     "class": "basic",
     "type": "flame",
-    "range": "10m",
-    "rof": "S/-/-",
-    "damage": "1d10+4",
-    "damageType": "Energy",
-    "penetration": 1,
-    "clip": 12,
-    "reload": "3 Full",
-    "special": "Spray, Flame",
-    "weight": "6kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 1
+    },
+    "special": [
+      "spray",
+      "flame"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 6,
     "availability": "scarce",
-    "cost": "-",
-    "source": "RT: Into the Storm",
-    "note": "Fires in a 45-degree arc, as opposed to a 30-degree arc. Designed for backpack mounted fuel canister.",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Spray, Flame</p><p><b>Note:</b> Fires in a 45-degree arc, as opposed to a 30-degree arc. Designed for backpack mounted fuel canister.</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires in a 45-degree arc, as opposed to a 30-degree arc. Designed for backpack mounted fuel canister.",
+    "source": "RT: Into the Storm"
   },
   "effects": [],
   "flags": {},

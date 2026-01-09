@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "-",
-    "availability": "When Worn, once per encounter at the start of turn, can make +10 Willpower Test, with -10 per ally they wish to affect. If successful, gain bonuses depending on DoS: 1 Dos: Reroll Melee Damage, gain Zealous Hatred on 9+. 2 DoS: Also add +2 to PEN. 3 DoS: Increase Pen to +4. 4+ DoS: Zealous Hatred occurs on 8+. Effects last for WP Bonus Rounds.",
-    "cost": "Must have Mark of Khorne to use. Affected allies must either be Unaligned or Dedicated to Khorne. Heretical.",
-    "effects": "Near Unique",
-    "notes": "-",
-    "source": "BC: Tome of Blood",
+    "category": "tools",
+    "weight": 0,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When Worn, once per encounter at the start of turn, can make +10 Willpower Test, with -10 per ally they wish to affect. If successful, gain bonuses depending on DoS: 1 Dos: Reroll Melee Damage, gain Zealous Hatred on 9+. 2 DoS: Also add +2 to PEN. 3 DoS: Increase Pen to +4. 4+ DoS: Zealous Hatred occurs on 8+. Effects last for WP Bonus Rounds.</p>\n<h3>Requirements</h3><p>Must have Mark of Khorne to use. Affected allies must either be Unaligned or Dedicated to Khorne. Heretical.</p>\n<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When Worn, once per encounter at the start of turn, can make +10 Willpower Test, with -10 per ally they wish to affect. If successful, gain bonuses depending on DoS: 1 Dos: Reroll Melee Damage, gain Z"
     },
+    "source": {
+      "book": "BC: Tome of Blood",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When Worn, once per encounter at the start of turn, can make +10 Willpower Test, with -10 per ally they wish to affect. If successful, gain bonuses depending on DoS: 1 Dos: Reroll Melee Damage, gain Zealous Hatred on 9+. 2 DoS: Also add +2 to PEN. 3 DoS: Increase Pen to +4. 4+ DoS: Zealous Hatred occurs on 8+. Effects last for WP Bonus Rounds.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

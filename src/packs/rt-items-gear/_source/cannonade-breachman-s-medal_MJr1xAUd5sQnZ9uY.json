@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Medal",
-    "weight": "-",
-    "availability": "Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre.",
-    "cost": "Distinguished Service Medal: Infiltrate behind Enemy Lines to destroy an active Rebel Artillery Battery.",
-    "effects": "Special",
-    "notes": "-",
-    "source": "OW: Enemies of the Imperium",
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Infiltrate behind Enemy Lines to destroy an active Rebel Artillery Battery.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre."
     },
+    "source": {
+      "book": "OW: Enemies of the Imperium",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

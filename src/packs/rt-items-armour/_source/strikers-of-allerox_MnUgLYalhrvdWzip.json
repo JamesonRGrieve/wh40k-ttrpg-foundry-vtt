@@ -4,33 +4,29 @@
   "img": "icons/svg/shield.svg",
   "system": {
     "type": "power",
-    "locations": "Arms",
-    "ap": 9,
-    "maxAg": null,
-    "weight": "4kg",
+    "weight": 4,
     "availability": "Famed",
-    "cost": "30 R",
     "notes": "Space Marines Only. Master-Crafted Relic Gauntlets of the Imperial Fists Chapter. Grants +5 Strength when fighting Unarmed, or +15 Strength when Grappling.\nOnce used to Strangle a Herald of Khorne.",
     "source": "DW: Rites of Battle",
     "description": {
       "value": "<p>Space Marines Only. Master-Crafted Relic Gauntlets of the Imperial Fists Chapter. Grants +5 Strength when fighting Unarmed, or +15 Strength when Grappling.\nOnce used to Strangle a Herald of Khorne.</p>"
     },
     "modificationSlots": 2,
-    "installedMods": [],
     "coverage": [
       "leftArm",
       "rightArm"
     ],
     "armourPoints": {
-      "head": 0,
-      "body": 0,
+      "head": 9,
+      "body": 9,
       "leftArm": 9,
       "rightArm": 9,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftLeg": 9,
+      "rightLeg": 9
     },
     "modifications": [],
-    "maxAgility": null
+    "maxAgility": null,
+    "properties": []
   },
   "effects": [],
   "flags": {},

@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Service",
-    "weight": "-",
-    "availability": "Someone knowledgable with the local area, who may aid in pointing out its threat and finding where to go.\nProvides +20 to Navigation and Survival Tests, as well as other potential bonuses.",
-    "cost": "Paid Weekly",
-    "effects": "Scarce",
-    "notes": "15 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 15,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 15 T</p>"
+      "value": "<p>Someone knowledgable with the local area, who may aid in pointing out its threat and finding where to go.\nProvides +20 to Navigation and Survival Tests, as well as other potential bonuses.</p>\n<h3>Requirements</h3><p>Paid Weekly</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 15 T</p>",
+      "chat": "",
+      "summary": "Someone knowledgable with the local area, who may aid in pointing out its threat and finding where to go.\nProvides +20 to Navigation and Survival Tests, as well as other potential bonuses."
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Someone knowledgable with the local area, who may aid in pointing out its threat and finding where to go.\nProvides +20 to Navigation and Survival Tests, as well as other potential bonuses.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

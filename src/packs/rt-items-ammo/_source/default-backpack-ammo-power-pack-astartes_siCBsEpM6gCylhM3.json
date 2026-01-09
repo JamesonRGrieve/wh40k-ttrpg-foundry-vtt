@@ -3,19 +3,45 @@
   "type": "ammunition",
   "img": "icons/svg/ammo.svg",
   "system": {
-    "usedWith": "Any Plasma, Melta, Las, Bolt, SP, Flame (Astartes)",
-    "damageOrEffect": "Backpack contains one of: Plasma/Melta/Las = 100 , SP/Bolt = 250, Flame = 75\nReplaces weapon's default clip size with this. Automatically issued alongside any Heavy Weapon.",
-    "qualities": null,
-    "weight": "40kg",
-    "availability": "Special",
-    "cost": null,
-    "source": "Deathwatch: Core",
+    "identifier": "-default-backpack-ammopower-pack-astartes",
+    "weaponTypes": [],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Backpack contains one of: Plasma/Melta/Las = 100 , SP/Bolt = 250, Flame = 75\nReplaces weapon's default clip size with this. Automatically issued alongside any Heavy Weapon.</p>",
+    "notes": "",
+    "weight": 40,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Damage/Effect:</b> Backpack contains one of: Plasma/Melta/Las = 100 , SP/Bolt = 250, Flame = 75\nReplaces weapon's default clip size with this. Automatically issued alongside any Heavy Weapon.</p>"
     },
-    "damageModifier": 0,
-    "penetrationModifier": 0,
-    "specialRules": []
+    "source": "Deathwatch: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
   },
   "effects": [],
   "flags": {},

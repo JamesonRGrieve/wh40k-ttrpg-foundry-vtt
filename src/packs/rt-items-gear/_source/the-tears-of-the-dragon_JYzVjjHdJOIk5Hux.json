@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Misc",
-    "weight": "-",
-    "availability": "A Memetic Virus rarely used on Elite Skitarri. Once infected the subject falls into a deathy feaver and is confronted with pre-programmed visions of great horror and torment. Those that survive must make a -10 Willpower Test, if failed they gain 1d10+10 Insanity Points, if passed they gain the Fearless Talent but permenantly lose 1d10 Fellowship.",
-    "cost": null,
-    "effects": "Very Rare",
-    "notes": "6000 T",
-    "source": "DH: The Inquisitor's Handbook",
+    "category": "tools",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 6000,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 6000 T</p>"
+      "value": "<p>A Memetic Virus rarely used on Elite Skitarri. Once infected the subject falls into a deathy feaver and is confronted with pre-programmed visions of great horror and torment. Those that survive must make a -10 Willpower Test, if failed they gain 1d10+10 Insanity Points, if passed they gain the Fearless Talent but permenantly lose 1d10 Fellowship.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 6000 T</p>",
+      "chat": "",
+      "summary": "A Memetic Virus rarely used on Elite Skitarri. Once infected the subject falls into a deathy feaver and is confronted with pre-programmed visions of great horror and torment. Those that survive must m"
     },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "A Memetic Virus rarely used on Elite Skitarri. Once infected the subject falls into a deathy feaver and is confronted with pre-programmed visions of great horror and torment. Those that survive must make a -10 Willpower Test, if failed they gain 1d10+10 Insanity Points, if passed they gain the Fearless Talent but permenantly lose 1d10 Fellowship.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

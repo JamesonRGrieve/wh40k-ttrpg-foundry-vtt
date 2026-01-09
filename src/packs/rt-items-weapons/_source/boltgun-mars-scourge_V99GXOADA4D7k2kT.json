@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "boltgun-mars-scourge",
     "class": "basic",
     "type": "bolt",
-    "range": "90m",
-    "rof": "S/2/4",
-    "damage": "1d10+5",
-    "damageType": "Explosive",
-    "penetration": 4,
-    "clip": 24,
-    "reload": "Full",
-    "special": "Tearing, Reliable",
-    "weight": "10kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 90,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing",
+      "reliable"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 10,
     "availability": "very-rare",
-    "cost": "650 T",
-    "source": "RT: Faith and Coin",
-    "note": "Has an undermounted blade that can be used in melee combat. (1d10+2 R, Pen 0, Unbalanced)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 650,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Tearing, Reliable</p><p><b>Note:</b> Has an undermounted blade that can be used in melee combat. (1d10+2 R, Pen 0, Unbalanced)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has an undermounted blade that can be used in melee combat. (1d10+2 R, Pen 0, Unbalanced)",
+    "source": "RT: Faith and Coin"
   },
   "effects": [],
   "flags": {},

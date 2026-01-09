@@ -3,24 +3,60 @@
   "type": "weapon",
   "img": "icons/svg/sword.svg",
   "system": {
+    "identifier": "shotgun-persecutor",
     "class": "basic",
     "type": "solid-projectile",
-    "range": "35m",
-    "rof": "S/3/-",
-    "damage": "1d10+4",
-    "damageType": "Impact",
-    "penetration": 0,
-    "clip": 20,
-    "reload": "Full",
-    "special": "Reliable, Scatter",
-    "weight": "6kg",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 35,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "reliable",
+      "scatter"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 6,
     "availability": "rare",
-    "cost": "-",
-    "source": "RT: Hostile Acquisitions",
-    "note": "Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
     "description": {
       "value": "<p><b>Special:</b> Reliable, Scatter</p><p><b>Note:</b> Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)</p>"
-    }
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)",
+    "source": "RT: Hostile Acquisitions"
   },
   "effects": [],
   "flags": {},

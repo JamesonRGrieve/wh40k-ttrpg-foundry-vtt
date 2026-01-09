@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Device",
-    "weight": "1kg",
-    "availability": "Allows user to tap into local vox signals and data transmissions, set up with Tech-use Test. Can receive within 1km for number of minutes equal to Tech-Use Test. If test failed by more DoF than Intelligence Bonus, sender/receiver becomes aware of the tapping. Advanced versions allow broadcasts to be copied, allowing them to be hidden and retrieved later.",
-    "cost": "Considered tech-heresy unless properly consecrated by the mechanicus.",
-    "effects": "Very Rare",
-    "notes": "-",
-    "source": "Black Crusade: Core",
+    "category": "tools",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Allows user to tap into local vox signals and data transmissions, set up with Tech-use Test. Can receive within 1km for number of minutes equal to Tech-Use Test. If test failed by more DoF than Intelligence Bonus, sender/receiver becomes aware of the tapping. Advanced versions allow broadcasts to be copied, allowing them to be hidden and retrieved later.</p>\n<h3>Requirements</h3><p>Considered tech-heresy unless properly consecrated by the mechanicus.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows user to tap into local vox signals and data transmissions, set up with Tech-use Test. Can receive within 1km for number of minutes equal to Tech-Use Test. If test failed by more DoF than Intell"
     },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Allows user to tap into local vox signals and data transmissions, set up with Tech-use Test. Can receive within 1km for number of minutes equal to Tech-Use Test. If test failed by more DoF than Intelligence Bonus, sender/receiver becomes aware of the tapping. Advanced versions allow broadcasts to be copied, allowing them to be hidden and retrieved later.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

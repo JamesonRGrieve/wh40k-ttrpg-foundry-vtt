@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Pre-existing Bionic Limb. Doesn't count as a seperate cybernetic system from the cybernetic limb it is a part of. If Inbuilt Blade is Best Quality, it is hidden when not active, requiring -20 Scrutiny Test to notice. If limb is depowered, so is this. Has Profile of any Pistol, but Halve Clip and cannot fire if seperated from limb. Availability of Pistol is Base Availability of this Cybernetic.",
-    "cost": "Character with Cybernetic Limb that doesn't already have an installed weapon can have this installed, Requires +0 Tech-Use Test and several Hours",
-    "effects": "Special",
-    "notes": "-",
-    "source": "OW: Hammer of the Emperor",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+      "value": "<p>Pre-existing Bionic Limb. Doesn't count as a seperate cybernetic system from the cybernetic limb it is a part of. If Inbuilt Blade is Best Quality, it is hidden when not active, requiring -20 Scrutiny Test to notice. If limb is depowered, so is this. Has Profile of any Pistol, but Halve Clip and cannot fire if seperated from limb. Availability of Pistol is Base Availability of this Cybernetic.</p>\n<h3>Requirements</h3><p>Character with Cybernetic Limb that doesn't already have an installed weapon can have this installed, Requires +0 Tech-Use Test and several Hours</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Pre-existing Bionic Limb. Doesn't count as a seperate cybernetic system from the cybernetic limb it is a part of. If Inbuilt Blade is Best Quality, it is hidden when not active, requiring -20 Scrutiny"
     },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Pre-existing Bionic Limb. Doesn't count as a seperate cybernetic system from the cybernetic limb it is a part of. If Inbuilt Blade is Best Quality, it is hidden when not active, requiring -20 Scrutiny Test to notice. If limb is depowered, so is this. Has Profile of any Pistol, but Halve Clip and cannot fire if seperated from limb. Availability of Pistol is Base Availability of this Cybernetic.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

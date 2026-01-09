@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Cybernetic",
-    "weight": "-",
-    "availability": "Upgrade to a Cybernetic Limb. Before each mission, character chooses one Astartes Digitial Weapon (Astartes Digital Flamer, Astartes Digital Laser, or Astartes Digital Melta). This weapon is integrated into the arm and follows all its normal rules, it cannot be dropped. Can't use arm for any other task when firing weapon.",
-    "cost": "Iron Hands Only",
-    "effects": "Famed",
-    "notes": "35 R",
-    "source": "DW: First Founding",
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 35 R</p>"
+      "value": "<p>Upgrade to a Cybernetic Limb. Before each mission, character chooses one Astartes Digitial Weapon (Astartes Digital Flamer, Astartes Digital Laser, or Astartes Digital Melta). This weapon is integrated into the arm and follows all its normal rules, it cannot be dropped. Can't use arm for any other task when firing weapon.</p>\n<h3>Requirements</h3><p>Iron Hands Only</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Upgrade to a Cybernetic Limb. Before each mission, character chooses one Astartes Digitial Weapon (Astartes Digital Flamer, Astartes Digital Laser, or Astartes Digital Melta). This weapon is integrate"
     },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "Upgrade to a Cybernetic Limb. Before each mission, character chooses one Astartes Digitial Weapon (Astartes Digital Flamer, Astartes Digital Laser, or Astartes Digital Melta). This weapon is integrated into the arm and follows all its normal rules, it cannot be dropped. Can't use arm for any other task when firing weapon.",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},

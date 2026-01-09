@@ -3,26 +3,37 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "type": "Tool - Worn",
-    "weight": "25kg",
-    "availability": "When extended and activated gives Flyer (12) Trait. Requires Pilot (Personal) Skill to use and wearer must launcher from an elevated position of at least 15 metres. Best Craftsmanship gives +10 to Skill Tests to use.",
-    "cost": "Half a Metre thick and bulky when folded as a backpack, quite wide when extended, may not fit in tight spaces.",
-    "effects": "Extremely Rare",
-    "notes": "-",
-    "source": "RT: Into the Storm",
+    "category": "tools",
+    "weight": 25,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
     "description": {
-      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+      "value": "<p>When extended and activated gives Flyer (12) Trait. Requires Pilot (Personal) Skill to use and wearer must launcher from an elevated position of at least 15 metres. Best Craftsmanship gives +10 to Skill Tests to use.</p>\n<h3>Requirements</h3><p>Half a Metre thick and bulky when folded as a backpack, quite wide when extended, may not fit in tight spaces.</p>\n<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "When extended and activated gives Flyer (12) Trait. Requires Pilot (Personal) Skill to use and wearer must launcher from an elevated position of at least 15 metres. Best Craftsmanship gives +10 to Ski"
     },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
     "consumable": false,
-    "charges": {
-      "max": 0,
-      "value": 0
+    "uses": {
+      "value": 0,
+      "max": 0
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {}
-    }
+    "effect": "When extended and activated gives Flyer (12) Trait. Requires Pilot (Personal) Skill to use and wearer must launcher from an elevated position of at least 15 metres. Best Craftsmanship gives +10 to Skill Tests to use.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
   },
   "effects": [],
   "flags": {},
