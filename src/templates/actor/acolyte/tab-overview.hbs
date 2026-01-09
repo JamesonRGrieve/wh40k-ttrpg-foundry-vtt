@@ -1,37 +1,439 @@
-{{!-- Acolyte Sheet Overview Tab --}}
-{{!-- This part renders the Overview tab content with vitals and status --}}
+{{!-- Acolyte Sheet Overview Tab - Ultra-Dense Dashboard --}}
+{{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    {{!-- Two Column Layout --}}
-    <div class="rt-overview-grid">
-        {{!-- Left Column --}}
-        <div class="rt-overview-col">
-            {{!-- Wounds Panel V2 --}}
-            {{> systems/rogue-trader/templates/actor/panel/wounds-panel-v2.hbs}}
-
-            {{!-- Fatigue Panel V2 --}}
-            {{> systems/rogue-trader/templates/actor/panel/fatigue-panel-v2.hbs}}
-
-            {{!-- Corruption Panel V2 --}}
-            {{> systems/rogue-trader/templates/actor/panel/corruption-panel-v2.hbs}}
-
-            {{!-- Insanity Panel V2 --}}
-            {{> systems/rogue-trader/templates/actor/panel/insanity-panel-v2.hbs}}
-        </div>
-
-        {{!-- Right Column --}}
-        <div class="rt-overview-col">
-            {{!-- Experience Panel V2 --}}
-            {{> systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs}}
-
-            {{!-- Fate Panel V2 --}}
-            {{> systems/rogue-trader/templates/actor/panel/fate-panel-v2.hbs}}
-
-            {{!-- Movement & Physical Capacity (Full Version) --}}
-            {{> systems/rogue-trader/templates/actor/panel/movement-panel-full.hbs}}
+    <div class="rt-dashboard">
+        {{!-- Row 1: Vitals | Characteristics | Key Skills --}}
+        <div class="rt-dashboard-row rt-dashboard-row--top">
             
-            {{!-- Active Effects Panel --}}
-            {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
+            {{!-- Zone 1: Vitals (Top-Left) --}}
+            <div class="rt-dashboard-zone rt-zone-vitals">
+                <div class="rt-zone-header">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Vitals</span>
+                </div>
+                <div class="rt-zone-content">
+                    {{!-- Wounds --}}
+                    <div class="rt-vital-row">
+                        <span class="rt-vital-icon"><i class="fas fa-heart"></i></span>
+                        <span class="rt-vital-label">Wounds</span>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="−1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="rt-vital-value {{#if (eq system.wounds.value 0)}}rt-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}rt-warning{{/if}}">
+                                {{system.wounds.value}}/{{system.wounds.max}}
+                            </span>
+                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.wounds.value" data-max="{{system.wounds.max}}" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {{!-- Fatigue --}}
+                    <div class="rt-vital-row">
+                        <span class="rt-vital-icon"><i class="fas fa-bolt"></i></span>
+                        <span class="rt-vital-label">Fatigue</span>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="−1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="rt-vital-value {{#if (gt system.fatigue.value system.fatigue.max)}}rt-critical{{else if (gt system.fatigue.value 0)}}rt-warning{{/if}}">
+                                {{system.fatigue.value}}/{{system.fatigue.max}}
+                            </span>
+                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.fatigue.value" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        {{#if (gt system.fatigue.value 0)}}
+                        <span class="rt-vital-penalty">−10</span>
+                        {{/if}}
+                    </div>
+                    
+                    {{!-- Fate Points --}}
+                    <div class="rt-vital-row">
+                        <span class="rt-vital-icon"><i class="fas fa-star"></i></span>
+                        <span class="rt-vital-label">Fate</span>
+                        <div class="rt-fate-stars-inline">
+                            {{#each (range 1 (add system.fate.max 1)) as |index|}}
+                                <button type="button"
+                                        class="rt-fate-pip {{#if (lte index ../system.fate.value)}}rt-fate-pip--filled{{/if}}"
+                                        data-action="setFateStar"
+                                        data-fate-index="{{index}}"
+                                        title="Fate Point {{index}}">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            {{/each}}
+                        </div>
+                        <button type="button" class="rt-vital-btn-small" data-action="restoreFate" title="Restore All">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    
+                    {{!-- Initiative --}}
+                    <div class="rt-vital-row">
+                        <span class="rt-vital-icon"><i class="fas fa-dice-d20"></i></span>
+                        <span class="rt-vital-label">Initiative</span>
+                        <span class="rt-vital-value rt-vital-value--static">{{actor.characteristics.agility.bonus}}</span>
+                        <button type="button" class="rt-vital-btn-small rt-roll-btn" data-action="rollInitiative" title="Roll Initiative">
+                            <i class="fas fa-dice"></i>
+                        </button>
+                    </div>
+                    
+                    {{!-- Critical Damage (if any) --}}
+                    {{#if (gt system.wounds.critical 0)}}
+                    <div class="rt-vital-row rt-vital-row--critical">
+                        <span class="rt-vital-icon"><i class="fas fa-skull"></i></span>
+                        <span class="rt-vital-label">Critical</span>
+                        <div class="rt-critical-pips-inline">
+                            {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
+                                <span class="rt-crit-pip-mini {{#if (lte level ../system.wounds.critical)}}rt-crit-pip-mini--filled{{/if}}"></span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+                
+                {{!-- Mental State (compact) --}}
+                <div class="rt-zone-subsection">
+                    <div class="rt-mental-row">
+                        <span class="rt-mental-icon"><i class="fas fa-skull"></i></span>
+                        <span class="rt-mental-label">Corruption</span>
+                        <span class="rt-mental-value">{{system.corruption}}</span>
+                        <span class="rt-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
+                    </div>
+                    <div class="rt-mental-row">
+                        <span class="rt-mental-icon"><i class="fas fa-brain"></i></span>
+                        <span class="rt-mental-label">Insanity</span>
+                        <span class="rt-mental-value">{{system.insanity}}</span>
+                        <span class="rt-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Zone 2: Characteristics (Top-Center) --}}
+            <div class="rt-dashboard-zone rt-zone-characteristics">
+                <div class="rt-zone-header">
+                    <i class="fas fa-user"></i>
+                    <span>Characteristics</span>
+                </div>
+                <div class="rt-zone-content">
+                    <div class="rt-char-grid-compact">
+                        {{#each actor.characteristics as |char name|}}
+                            {{#unless (eq name "influence")}}
+                            <div class="rt-char-row-compact">
+                                <button type="button" 
+                                        class="rt-char-name-compact roll-characteristic"
+                                        data-action="roll"
+                                        data-roll-type="characteristic"
+                                        data-roll-target="{{name}}"
+                                        title="Roll {{char.label}}">
+                                    {{char.short}}
+                                </button>
+                                <span class="rt-char-total-compact">{{char.total}}</span>
+                                <span class="rt-char-bonus-compact">({{char.bonus}})</span>
+                                <button type="button" 
+                                        class="rt-char-roll-btn"
+                                        data-action="roll"
+                                        data-roll-type="characteristic"
+                                        data-roll-target="{{name}}"
+                                        title="Roll {{char.label}}">
+                                    <i class="fas fa-dice"></i>
+                                </button>
+                            </div>
+                            {{/unless}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Zone 3: Key Skills (Top-Right) --}}
+            <div class="rt-dashboard-zone rt-zone-skills">
+                <div class="rt-zone-header">
+                    <i class="fas fa-star"></i>
+                    <span>Key Skills</span>
+                </div>
+                <div class="rt-zone-content">
+                    <div class="rt-skill-list-compact">
+                        {{!-- Awareness --}}
+                        <div class="rt-skill-row-compact">
+                            <span class="rt-skill-name-compact">Awareness</span>
+                            <span class="rt-skill-value-compact">{{actor.skills.awareness.current}}</span>
+                            <button type="button" 
+                                    class="rt-skill-roll-btn"
+                                    data-action="roll"
+                                    data-roll-type="skill"
+                                    data-roll-target="awareness"
+                                    title="Roll Awareness">
+                                <i class="fas fa-dice"></i>
+                            </button>
+                        </div>
+                        {{!-- Dodge --}}
+                        <div class="rt-skill-row-compact">
+                            <span class="rt-skill-name-compact">Dodge</span>
+                            <span class="rt-skill-value-compact">{{actor.skills.dodge.current}}</span>
+                            <button type="button" 
+                                    class="rt-skill-roll-btn"
+                                    data-action="roll"
+                                    data-roll-type="skill"
+                                    data-roll-target="dodge"
+                                    title="Roll Dodge">
+                                <i class="fas fa-dice"></i>
+                            </button>
+                        </div>
+                        {{!-- Parry --}}
+                        <div class="rt-skill-row-compact">
+                            <span class="rt-skill-name-compact">Parry</span>
+                            <span class="rt-skill-value-compact">{{actor.skills.parry.current}}</span>
+                            <button type="button" 
+                                    class="rt-skill-roll-btn"
+                                    data-action="roll"
+                                    data-roll-type="skill"
+                                    data-roll-target="parry"
+                                    title="Roll Parry">
+                                <i class="fas fa-dice"></i>
+                            </button>
+                        </div>
+                        {{!-- Command --}}
+                        <div class="rt-skill-row-compact">
+                            <span class="rt-skill-name-compact">Command</span>
+                            <span class="rt-skill-value-compact">{{actor.skills.command.current}}</span>
+                            <button type="button" 
+                                    class="rt-skill-roll-btn"
+                                    data-action="roll"
+                                    data-roll-type="skill"
+                                    data-roll-target="command"
+                                    title="Roll Command">
+                                <i class="fas fa-dice"></i>
+                            </button>
+                        </div>
+                        {{!-- Commerce --}}
+                        <div class="rt-skill-row-compact">
+                            <span class="rt-skill-name-compact">Commerce</span>
+                            <span class="rt-skill-value-compact">{{actor.skills.commerce.current}}</span>
+                            <button type="button" 
+                                    class="rt-skill-roll-btn"
+                                    data-action="roll"
+                                    data-roll-type="skill"
+                                    data-roll-target="commerce"
+                                    title="Roll Commerce">
+                                <i class="fas fa-dice"></i>
+                            </button>
+                        </div>
+                        {{!-- Scrutiny --}}
+                        <div class="rt-skill-row-compact">
+                            <span class="rt-skill-name-compact">Scrutiny</span>
+                            <span class="rt-skill-value-compact">{{actor.skills.scrutiny.current}}</span>
+                            <button type="button" 
+                                    class="rt-skill-roll-btn"
+                                    data-action="roll"
+                                    data-roll-type="skill"
+                                    data-roll-target="scrutiny"
+                                    title="Roll Scrutiny">
+                                <i class="fas fa-dice"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Row 2: Movement & Load | Quick Combat Stats --}}
+        <div class="rt-dashboard-row rt-dashboard-row--middle">
+            
+            {{!-- Zone 4: Movement & Load --}}
+            <div class="rt-dashboard-zone rt-zone-movement">
+                <div class="rt-zone-header">
+                    <i class="fas fa-running"></i>
+                    <span>Movement & Load</span>
+                </div>
+                <div class="rt-zone-content rt-movement-compact">
+                    <div class="rt-movement-speeds">
+                        <div class="rt-speed-item">
+                            <span class="rt-speed-value">{{actor.movement.half}}</span>
+                            <span class="rt-speed-label">Half</span>
+                        </div>
+                        <div class="rt-speed-item">
+                            <span class="rt-speed-value">{{actor.movement.full}}</span>
+                            <span class="rt-speed-label">Full</span>
+                        </div>
+                        <div class="rt-speed-item">
+                            <span class="rt-speed-value">{{actor.movement.charge}}</span>
+                            <span class="rt-speed-label">Charge</span>
+                        </div>
+                        <div class="rt-speed-item rt-speed-item--highlight">
+                            <span class="rt-speed-value">{{actor.movement.run}}</span>
+                            <span class="rt-speed-label">Run</span>
+                        </div>
+                    </div>
+                    <div class="rt-encumbrance-compact">
+                        <div class="rt-enc-info">
+                            <span class="rt-enc-current-compact">{{actor.encumbrance.current}}</span>
+                            <span class="rt-enc-separator">/</span>
+                            <span class="rt-enc-max-compact">{{actor.encumbrance.max}} kg</span>
+                        </div>
+                        <div class="rt-enc-bar-compact {{#if actor.encumbrance.encumbered}}rt-enc-over{{/if}}">
+                            <div class="rt-enc-fill-compact" style="width: {{encumbrancePercent}}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Zone 5: Quick Combat Stats --}}
+            <div class="rt-dashboard-zone rt-zone-combat">
+                <div class="rt-zone-header">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>Quick Combat</span>
+                </div>
+                <div class="rt-zone-content">
+                    {{!-- Primary Weapon --}}
+                    {{#if primaryWeapon}}
+                    <div class="rt-combat-weapon">
+                        <span class="rt-weapon-icon"><i class="fas fa-crosshairs"></i></span>
+                        <span class="rt-weapon-name">{{primaryWeapon.name}}</span>
+                        <span class="rt-weapon-damage">{{primaryWeapon.system.damage.formula}} {{primaryWeapon.system.damage.type}}</span>
+                        <button type="button" 
+                                class="rt-weapon-attack-btn"
+                                data-action="itemRoll"
+                                data-item-id="{{primaryWeapon.id}}"
+                                title="Attack with {{primaryWeapon.name}}">
+                            <i class="fas fa-dice"></i>
+                        </button>
+                    </div>
+                    {{else}}
+                    <div class="rt-combat-weapon rt-empty">
+                        <span class="rt-weapon-empty">No weapon equipped</span>
+                    </div>
+                    {{/if}}
+                    
+                    {{!-- Combat Stats --}}
+                    <div class="rt-combat-stats-row">
+                        <div class="rt-combat-stat">
+                            <span class="rt-stat-label">SB Dmg</span>
+                            <span class="rt-stat-value">+{{actor.characteristics.strength.bonus}}</span>
+                        </div>
+                        <div class="rt-combat-stat">
+                            <span class="rt-stat-label">Dodge</span>
+                            <span class="rt-stat-value">{{dodgeTarget}}</span>
+                        </div>
+                        <div class="rt-combat-stat">
+                            <span class="rt-stat-label">Parry</span>
+                            <span class="rt-stat-value">{{parryTarget}}</span>
+                        </div>
+                    </div>
+                    
+                    {{!-- Armour Summary --}}
+                    <div class="rt-armour-summary">
+                        <span class="rt-armour-label">Armour:</span>
+                        <span class="rt-armour-loc">H({{actor.armour.head.total}})</span>
+                        <span class="rt-armour-loc">B({{actor.armour.body.total}})</span>
+                        <span class="rt-armour-loc">RA({{actor.armour.rightArm.total}})</span>
+                        <span class="rt-armour-loc">LA({{actor.armour.leftArm.total}})</span>
+                        <span class="rt-armour-loc">RL({{actor.armour.rightLeg.total}})</span>
+                        <span class="rt-armour-loc">LL({{actor.armour.leftLeg.total}})</span>
+                    </div>
+                    
+                    {{!-- Force Field (if any) --}}
+                    {{#if hasForceField}}
+                    <div class="rt-forcefield-row">
+                        <span class="rt-ff-icon"><i class="fas fa-shield-alt"></i></span>
+                        <span class="rt-ff-name">{{forceField.name}}</span>
+                        <span class="rt-ff-rating">{{forceField.system.rating}}</span>
+                        <button type="button" 
+                                class="rt-ff-toggle {{#if forceField.system.activated}}rt-ff-active{{/if}}"
+                                data-action="toggleActivate"
+                                data-item-id="{{forceField.id}}"
+                                title="Toggle Force Field">
+                            {{#if forceField.system.activated}}<i class="fas fa-power-off"></i>{{else}}<i class="far fa-circle"></i>{{/if}}
+                        </button>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Row 3: Progression | Wealth & Dynasty --}}
+        <div class="rt-dashboard-row rt-dashboard-row--bottom">
+            
+            {{!-- Zone 6: Progression --}}
+            <div class="rt-dashboard-zone rt-zone-progression">
+                <div class="rt-zone-header">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Progression</span>
+                </div>
+                <div class="rt-zone-content">
+                    <div class="rt-xp-row">
+                        <span class="rt-xp-label">Available XP</span>
+                        <span class="rt-xp-value rt-xp-available">{{actor.system.experience.available}}</span>
+                    </div>
+                    <div class="rt-xp-row">
+                        <span class="rt-xp-label">Spent XP</span>
+                        <span class="rt-xp-value">{{actor.system.experience.used}}</span>
+                    </div>
+                    <div class="rt-xp-row">
+                        <span class="rt-xp-label">Total XP</span>
+                        <span class="rt-xp-value">{{actor.system.experience.total}}</span>
+                    </div>
+                    <div class="rt-xp-row rt-rank-row">
+                        <span class="rt-xp-label">Rank</span>
+                        <span class="rt-xp-value rt-rank-value">{{system.rogueTrader.rank}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Zone 7: Wealth & Dynasty --}}
+            <div class="rt-dashboard-zone rt-zone-dynasty">
+                <div class="rt-zone-header">
+                    <i class="fas fa-coins"></i>
+                    <span>Wealth & Dynasty</span>
+                </div>
+                <div class="rt-zone-content">
+                    <div class="rt-dynasty-row rt-pf-row">
+                        <span class="rt-dynasty-label">Profit Factor</span>
+                        <span class="rt-dynasty-value rt-pf-value">{{system.rogueTrader.profitFactor.current}}</span>
+                    </div>
+                    {{#if system.rogueTrader.acquisitions.length}}
+                    <div class="rt-dynasty-row">
+                        <span class="rt-dynasty-label">Acquisitions</span>
+                        <span class="rt-dynasty-value">{{system.rogueTrader.acquisitions.length}} items</span>
+                    </div>
+                    {{/if}}
+                    {{#if system.rogueTrader.endeavour.name}}
+                    <div class="rt-dynasty-row rt-endeavour-row">
+                        <span class="rt-dynasty-label">Endeavour</span>
+                        <span class="rt-dynasty-value rt-endeavour-name">{{system.rogueTrader.endeavour.name}}</span>
+                    </div>
+                    <div class="rt-dynasty-row">
+                        <span class="rt-dynasty-label">Progress</span>
+                        <span class="rt-dynasty-value">{{system.rogueTrader.endeavour.achievementPointsCurrent}}/{{system.rogueTrader.endeavour.achievementPointsRequired}} AP</span>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            
+            {{!-- Zone 8: Active Effects Preview --}}
+            <div class="rt-dashboard-zone rt-zone-effects">
+                <div class="rt-zone-header">
+                    <i class="fas fa-magic"></i>
+                    <span>Active Effects</span>
+                </div>
+                <div class="rt-zone-content">
+                    {{#if effects.length}}
+                    <div class="rt-effects-preview">
+                        {{#each effects as |effect|}}
+                        <div class="rt-effect-chip {{#if effect.disabled}}rt-effect-chip--disabled{{/if}}" title="{{effect.name}}">
+                            <img src="{{effect.icon}}" alt="" class="rt-effect-icon-mini" />
+                            <span class="rt-effect-name-mini">{{effect.name}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <div class="rt-effects-empty">
+                        <span>No active effects</span>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
         </div>
     </div>
 </section>

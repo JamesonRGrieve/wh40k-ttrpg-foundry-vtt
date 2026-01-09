@@ -1,0 +1,78 @@
+{{!-- Roll Configuration Dialog Template --}}
+<div class="roll-config-dialog">
+    {{!-- Header with actor info --}}
+    {{#if actor}}
+    <header class="roll-config-header">
+        <img class="roll-config-portrait" src="{{actorImg}}" alt="{{actorName}}" />
+        <div class="roll-config-info">
+            <h3 class="roll-config-name">{{rollName}}</h3>
+            <span class="roll-config-actor">{{actorName}}</span>
+        </div>
+    </header>
+    {{else}}
+    <header class="roll-config-header roll-config-header--simple">
+        <h3 class="roll-config-name">{{rollName}}</h3>
+    </header>
+    {{/if}}
+
+    {{!-- Target Display --}}
+    <div class="roll-config-target">
+        <div class="roll-config-target-row">
+            <span class="roll-config-label">{{localize "RT.Roll.BaseTarget"}}</span>
+            <span class="roll-config-value">{{baseTarget}}</span>
+        </div>
+        {{#if (ne totalModifier 0)}}
+        <div class="roll-config-target-row roll-config-target-row--modifier {{#if (gt totalModifier 0)}}positive{{else}}negative{{/if}}">
+            <span class="roll-config-label">{{localize "RT.Roll.Modifier"}}</span>
+            <span class="roll-config-value">{{#if (gt totalModifier 0)}}+{{/if}}{{totalModifier}}</span>
+        </div>
+        {{/if}}
+        <div class="roll-config-target-row roll-config-target-row--final">
+            <span class="roll-config-label">{{localize "RT.Roll.FinalTarget"}}</span>
+            <span class="roll-config-value roll-config-value--large">{{finalTarget}}</span>
+        </div>
+    </div>
+
+    {{!-- Difficulty Selection --}}
+    <div class="form-group">
+        <label>{{localize "RT.Roll.Difficulty"}}</label>
+        <select name="difficulty" class="roll-config-select">
+            {{#each difficulties}}
+            <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>
+                {{this.label}} ({{#if (gt this.value 0)}}+{{/if}}{{this.value}})
+            </option>
+            {{/each}}
+        </select>
+    </div>
+
+    {{!-- Custom Modifier --}}
+    <div class="form-group">
+        <label>{{localize "RT.Roll.CustomModifier"}}</label>
+        <div class="roll-config-modifier-input">
+            <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0" />
+            <span class="roll-config-modifier-hint">{{localize "RT.Roll.CustomModifierHint"}}</span>
+        </div>
+    </div>
+
+    {{!-- Roll Mode --}}
+    <div class="form-group">
+        <label>{{localize "RT.Roll.RollMode"}}</label>
+        <select name="rollMode" class="roll-config-select">
+            {{#each rollModes}}
+            <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>
+                {{this.label}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+
+    {{!-- Buttons --}}
+    <footer class="roll-config-footer">
+        {{#each buttons}}
+        <button type="{{this.type}}" class="roll-config-btn {{this.cssClass}}" {{#if this.action}}data-action="{{this.action}}"{{/if}}>
+            <i class="{{this.icon}}"></i>
+            {{localize this.label}}
+        </button>
+        {{/each}}
+    </footer>
+</div>

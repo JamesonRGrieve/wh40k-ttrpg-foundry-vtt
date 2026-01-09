@@ -14,6 +14,18 @@
   }
 }
 
+.rt-tab[data-tab="status"],
+.rt-tab-status {
+  // Override the base .rt-tab grid display  
+  &.active {
+    display: block !important;
+  }
+  
+  .rt-panel-header {
+    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.08) 0%, transparent 100%);
+  }
+}
+
 .rt-tab[data-tab="combat"],
 .rt-tab-combat {
   // Override the base .rt-tab grid display

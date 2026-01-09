@@ -201,8 +201,7 @@ export default class StarshipSheet extends BaseActorSheet {
         ChatMessage.create({
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: html,
-            type: CONST.CHAT_MESSAGE_STYLES.OTHER
+            content: html
         });
     }
 

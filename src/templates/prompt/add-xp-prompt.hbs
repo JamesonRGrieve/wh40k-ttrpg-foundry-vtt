@@ -1,0 +1,61 @@
+{{!-- Add XP Dialog Template --}}
+<div class="rt-dialog-content">
+    
+    {{!-- Current XP Display --}}
+    <div class="rt-dialog-section">
+        <div class="rt-xp-current-display">
+            <span class="rt-xp-label">Current Total XP:</span>
+            <span class="rt-xp-value">{{currentTotal}}</span>
+        </div>
+    </div>
+
+    {{!-- XP Input --}}
+    <div class="rt-dialog-section">
+        <label class="rt-dialog-label">
+            <span class="rt-dialog-label-text">XP to Add/Subtract:</span>
+            <input type="number" 
+                   name="xpAmount" 
+                   value="{{xpAmount}}" 
+                   data-dtype="Number"
+                   class="rt-dialog-input"
+                   placeholder="0"
+                   step="1" />
+        </label>
+        <p class="rt-dialog-hint">
+            <i class="fas fa-info-circle"></i>
+            Enter a positive number to add XP, or negative to subtract.
+        </p>
+    </div>
+
+    {{!-- Preview New Total --}}
+    {{#if (ne xpAmount 0)}}
+    <div class="rt-dialog-section rt-xp-preview">
+        <div class="rt-xp-preview-box {{#if isAddition}}rt-xp-preview--positive{{else}}rt-xp-preview--negative{{/if}}">
+            <div class="rt-xp-preview-change">
+                <i class="fas {{#if isAddition}}fa-arrow-up{{else}}fa-arrow-down{{/if}}"></i>
+                {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} XP
+            </div>
+            <div class="rt-xp-preview-result">
+                <span class="rt-xp-preview-label">New Total:</span>
+                <span class="rt-xp-preview-value">{{newTotal}}</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{!-- Action Buttons --}}
+    <div class="rt-dialog-buttons">
+        <button type="button" 
+                class="rt-dialog-button rt-dialog-button--primary"
+                data-action="apply"
+                {{#if (eq xpAmount 0)}}disabled{{/if}}>
+            <i class="fas fa-check"></i> Apply
+        </button>
+        <button type="button" 
+                class="rt-dialog-button rt-dialog-button--secondary"
+                data-action="cancel">
+            <i class="fas fa-times"></i> Cancel
+        </button>
+    </div>
+
+</div>

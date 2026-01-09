@@ -11,17 +11,17 @@
                     <div class="rt-card-header">
                         <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
                         <div class="rt-card-info">
-                            <span class="rt-card-name item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+                            <span class="rt-card-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
                             {{#if item.system.tier}}
                             <span class="rt-card-meta">Tier {{item.system.tier}}</span>
                             {{/if}}
                         </div>
                     </div>
                     <div class="rt-card-actions">
-                        <button type="button" class="rt-card-btn item-vocalize" data-item-id="{{item.id}}" title="Send to Chat">
+                        <button type="button" class="rt-card-btn" data-action="itemVocalize" data-item-id="{{item.id}}" title="Send to Chat">
                             <i class="fas fa-comment"></i>
                         </button>
-                        <button type="button" class="rt-card-btn rt-btn-danger item-delete" data-item-id="{{item.id}}" title="Delete">
+                        <button type="button" class="rt-card-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>

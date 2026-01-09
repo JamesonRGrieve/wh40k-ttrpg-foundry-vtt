@@ -1,0 +1,593 @@
+// ============================================
+// UNIFIED COMPONENT LIBRARY
+// ============================================
+// Single source of truth for buttons, inputs, and typography
+// Standardizes the 4+ button and 3+ input variations
+
+// ============================================
+// TYPOGRAPHY HIERARCHY
+// ============================================
+
+:root {
+  // Header hierarchy (use for consistent sizing)
+  --rt-text-h1: 1.5rem;     // Tab headers, major sections
+  --rt-text-h2: 1.25rem;    // Panel headers
+  --rt-text-h3: 1.1rem;     // Section headers, subsections
+  --rt-text-h4: 0.95rem;    // Minor headers
+  --rt-text-body: 0.9rem;   // Normal text
+  --rt-text-small: 0.8rem;  // Labels, captions
+  --rt-text-tiny: 0.7rem;   // Badges, meta info
+  --rt-text-micro: 0.65rem; // Smallest labels
+
+  // Font stacks
+  --rt-font-display: "Modesto Condensed", "Cinzel", serif;
+  --rt-font-heading: "Modesto Condensed", "IM Fell DW Pica", serif;
+  --rt-font-body-alt: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --rt-font-numeric: "Modesto Condensed", "Roboto Mono", monospace;
+}
+
+// ============================================
+// UNIFIED BUTTON SYSTEM
+// ============================================
+// Replaces: .rt-vital-btn, .rt-vital-btn-compact, .rt-vital-ctrl-btn,
+//           .rt-btn-minus, .rt-btn-plus, .rt-quick-action-btn,
+//           .rt-control-button, .rt-header-btn, .rt-add-btn-small, etc.
+
+// Base button reset and shared styles
+%rt-btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $rt-transition-fast;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  
+  &:hover:not(:disabled) {
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--color-border-highlight);
+  }
+  
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--rt-gold);
+    outline-offset: 1px;
+  }
+  
+  i, .fas, .far, .fa {
+    line-height: 1;
+  }
+}
+
+// ----------------------------------------
+// PRIMARY BUTTON - Major actions (roll, use, activate)
+// ----------------------------------------
+.rt-btn-primary {
+  @extend %rt-btn-base;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
+  border: 1px solid var(--rt-gold-dark);
+  color: #fff;
+  font-size: $rt-font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, lighten($rt-color-gold, 5%) 0%, var(--rt-gold) 100%);
+    border-color: var(--rt-gold);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  // Combat variant
+  &--combat {
+    background: linear-gradient(135deg, $rt-accent-combat 0%, darken($rt-accent-combat, 10%) 100%);
+    border-color: darken($rt-accent-combat, 10%);
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, lighten($rt-accent-combat, 5%) 0%, $rt-accent-combat 100%);
+      border-color: $rt-accent-combat;
+    }
+  }
+  
+  // Skills variant
+  &--skills {
+    background: linear-gradient(135deg, $rt-accent-skills 0%, darken($rt-accent-skills, 10%) 100%);
+    border-color: darken($rt-accent-skills, 10%);
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, lighten($rt-accent-skills, 5%) 0%, $rt-accent-skills 100%);
+      border-color: $rt-accent-skills;
+    }
+  }
+  
+  // Compact variant for tighter spaces
+  &--compact {
+    padding: 4px 8px;
+    font-size: $rt-font-size-xs;
+  }
+}
+
+// ----------------------------------------
+// CONTROL BUTTON - Stat adjustments (±), toggle, edit
+// ----------------------------------------
+.rt-btn-control {
+  @extend %rt-btn-base;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  
+  &:hover:not(:disabled) {
+    transform: scale(1.08);
+    box-shadow: 0 2px 6px var(--rt-shadow-soft);
+  }
+  
+  // Minus/Decrease variant
+  &--minus {
+    color: $rt-accent-combat;
+    
+    &:hover:not(:disabled) {
+      border-color: $rt-accent-combat;
+      background: var(--rt-wounds-bg);
+    }
+  }
+  
+  // Plus/Increase variant
+  &--plus {
+    color: $rt-color-success;
+    
+    &:hover:not(:disabled) {
+      border-color: $rt-color-success;
+      background: var(--rt-success-bg);
+    }
+  }
+  
+  // Compact variant (22-24px)
+  &--compact {
+    width: 24px;
+    height: 24px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+  }
+  
+  // Large variant (36px)
+  &--large {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+  }
+}
+
+// ----------------------------------------
+// ICON BUTTON - Config, delete, expand, collapse
+// ----------------------------------------
+.rt-btn-icon {
+  @extend %rt-btn-base;
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  border-radius: $rt-radius-sm;
+  
+  i {
+    font-size: 0.75rem;
+  }
+  
+  &:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+  
+  // Delete variant
+  &--delete {
+    color: var(--rt-wounds-secondary);
+    
+    &:hover:not(:disabled) {
+      background: var(--rt-wounds-bg);
+      color: var(--rt-wounds-primary);
+    }
+  }
+  
+  // Add variant
+  &--add {
+    color: var(--rt-success-secondary);
+    
+    &:hover:not(:disabled) {
+      background: var(--rt-success-bg);
+      color: var(--rt-success-primary);
+    }
+  }
+  
+  // Gold/accent variant
+  &--accent {
+    color: var(--rt-gold);
+    
+    &:hover:not(:disabled) {
+      background: rgba($rt-color-gold, 0.15);
+      color: var(--rt-gold-bright);
+    }
+  }
+  
+  // Bordered variant (for header buttons)
+  &--bordered {
+    background: rgba($rt-accent-gold, 0.2);
+    border: 1px solid rgba($rt-accent-gold, 0.4);
+    color: $rt-accent-gold;
+    
+    &:hover:not(:disabled) {
+      background: rgba($rt-accent-gold, 0.3);
+      border-color: $rt-accent-gold;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// ----------------------------------------
+// QUICK ACTION BUTTON - Rest, clear, restore, etc.
+// ----------------------------------------
+.rt-btn-quick {
+  @extend %rt-btn-base;
+  flex: 1;
+  padding: 6px 10px;
+  font-size: $rt-font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  
+  i {
+    font-size: 0.85em;
+  }
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px var(--rt-shadow-medium);
+  }
+  
+  // Success variant (rest, heal, restore)
+  &--success {
+    border-color: rgba(74, 143, 92, 0.4);
+    color: var(--rt-success-primary);
+    
+    i { color: var(--rt-success-secondary); }
+    
+    &:hover:not(:disabled) {
+      border-color: var(--rt-success-primary);
+      background: var(--rt-success-bg);
+    }
+  }
+  
+  // Warning variant (clear, reset)
+  &--warning {
+    border-color: var(--rt-fatigue-border);
+    color: var(--rt-fatigue-primary);
+    
+    i { color: var(--rt-fatigue-secondary); }
+    
+    &:hover:not(:disabled) {
+      border-color: var(--rt-fatigue-secondary);
+      background: var(--rt-fatigue-bg);
+    }
+  }
+  
+  // Danger variant (delete, remove)
+  &--danger {
+    border-color: var(--rt-wounds-border);
+    color: var(--rt-wounds-primary);
+    
+    i { color: var(--rt-wounds-secondary); }
+    
+    &:hover:not(:disabled) {
+      border-color: var(--rt-wounds-secondary);
+      background: var(--rt-wounds-bg);
+    }
+  }
+  
+  // Full width variant
+  &--full {
+    width: 100%;
+  }
+}
+
+// ============================================
+// UNIFIED INPUT SYSTEM
+// ============================================
+// Replaces: .rt-edit-input, .rt-vital-input, .rt-field-input,
+//           .rt-xp-input, .rt-critical-input, .rt-bio-input, etc.
+
+// Base input styles
+%rt-input-base {
+  width: 100%;
+  padding: 4px 8px;
+  background: var(--rt-input-bg);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: $rt-font-size-base;
+  transition: all $rt-transition-fast;
+  
+  &:hover:not(:disabled):not(:read-only) {
+    border-color: var(--color-border-highlight);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-gold);
+    background: var(--rt-input-bg-focus);
+    box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+  }
+  
+  &:disabled,
+  &:read-only {
+    background: var(--rt-panel-bg);
+    color: var(--color-text-tertiary);
+    cursor: not-allowed;
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+    font-style: italic;
+  }
+}
+
+// ----------------------------------------
+// STANDARD INPUT - Default text/number input
+// ----------------------------------------
+.rt-input {
+  @extend %rt-input-base;
+  
+  // Compact variant
+  &--compact {
+    padding: 2px 6px;
+    font-size: $rt-font-size-sm;
+  }
+  
+  // Large variant
+  &--large {
+    padding: 6px 10px;
+    font-size: $rt-font-size-md;
+  }
+}
+
+// ----------------------------------------
+// NUMERIC INPUT - Numbers with special styling
+// ----------------------------------------
+.rt-input-numeric {
+  @extend %rt-input-base;
+  width: auto;
+  min-width: 50px;
+  max-width: 80px;
+  padding: 4px 8px;
+  text-align: center;
+  font-family: var(--rt-font-numeric);
+  font-weight: 600;
+  
+  // Styled variant (for vitals/stats)
+  &--styled {
+    height: 36px;
+    border-width: 2px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+    }
+  }
+  
+  // Large display variant
+  &--display {
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  // Width variants
+  &--narrow { min-width: 40px; max-width: 60px; }
+  &--wide { min-width: 70px; max-width: 100px; }
+}
+
+// ----------------------------------------
+// INLINE INPUT - Transparent, underline style
+// ----------------------------------------
+.rt-input-inline {
+  @extend %rt-input-base;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rt-border-color-light);
+  border-radius: 0;
+  padding: 2px 4px;
+  
+  &:hover:not(:disabled):not(:read-only) {
+    border-bottom-color: var(--rt-border-color);
+  }
+  
+  &:focus {
+    border-bottom-color: var(--rt-gold);
+    box-shadow: 0 1px 0 var(--rt-gold);
+    background: transparent;
+  }
+  
+  // Name variant (larger, bolder)
+  &--name {
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 2px 5px;
+  }
+}
+
+// ----------------------------------------
+// SELECT INPUT - Dropdown styling
+// ----------------------------------------
+.rt-select {
+  @extend %rt-input-base;
+  appearance: none;
+  cursor: pointer;
+  padding-right: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ----------------------------------------
+// TEXTAREA - Multi-line input
+// ----------------------------------------
+.rt-textarea {
+  @extend %rt-input-base;
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.4;
+}
+
+// ============================================
+// UNIFIED PANEL STRUCTURE
+// ============================================
+// Standard panel structure for all tabs
+
+.rt-panel-unified {
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: $rt-space-md;
+  box-shadow: 0 2px 8px var(--rt-shadow-soft);
+  position: relative;
+  
+  // Optional accent strip
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--panel-accent, transparent);
+    pointer-events: none;
+  }
+  
+  // Accent color modifiers
+  &--wounds { --panel-accent: #{$rt-accent-combat}; }
+  &--fatigue { --panel-accent: #{$rt-color-gold}; }
+  &--fate { --panel-accent: var(--rt-fate-secondary); }
+  &--corruption { --panel-accent: #2d7a6b; }
+  &--insanity { --panel-accent: #7b5aa6; }
+  &--skills { --panel-accent: #{$rt-accent-skills}; }
+  &--talents { --panel-accent: #{$rt-accent-talents}; }
+  &--equipment { --panel-accent: #{$rt-accent-equipment}; }
+  &--powers { --panel-accent: #{$rt-accent-powers}; }
+  &--dynasty { --panel-accent: #{$rt-accent-dynasty}; }
+  &--bio { --panel-accent: #{$rt-accent-bio}; }
+}
+
+.rt-panel-unified__header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm $rt-space-md;
+  background: linear-gradient(180deg, rgba($rt-accent-gold, 0.12) 0%, rgba($rt-accent-gold, 0.04) 100%);
+  border-bottom: 1px solid var(--rt-border-color-light);
+  cursor: pointer;
+  user-select: none;
+  transition: background $rt-transition-fast;
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.18) 0%, rgba($rt-accent-gold, 0.08) 100%);
+  }
+  
+  // Panel title
+  .rt-panel-unified__title {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    font-family: var(--rt-font-display);
+    font-size: var(--rt-text-h3);
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    letter-spacing: 0.02em;
+    
+    i {
+      color: var(--panel-accent, $rt-accent-gold);
+      font-size: 0.9em;
+    }
+  }
+  
+  // Chevron indicator
+  .rt-panel-unified__chevron {
+    font-size: 0.75rem;
+    color: var(--rt-text-muted);
+    transition: transform $rt-transition-fast;
+  }
+  
+  // Header actions (buttons)
+  .rt-panel-unified__actions {
+    display: flex;
+    gap: $rt-space-xs;
+    margin-left: auto;
+  }
+}
+
+.rt-panel-unified__body {
+  padding: $rt-space-md;
+  background: var(--rt-panel-body-bg);
+}
+
+// Collapsed state
+.rt-panel-unified--collapsed {
+  .rt-panel-unified__body {
+    display: none;
+  }
+  
+  .rt-panel-unified__chevron {
+    transform: rotate(-90deg);
+  }
+}
+
+// ============================================
+// LEGACY CLASS ALIASES
+// ============================================
+// Map old classes to new unified classes for backwards compatibility
+// These can be removed once all templates are updated
+
+// Button aliases
+.rt-vital-btn { @extend .rt-btn-control; }
+.rt-vital-btn-compact { @extend .rt-btn-control--compact; }
+.rt-vital-ctrl-btn { @extend .rt-btn-control--compact; }
+.rt-btn-minus { @extend .rt-btn-control--minus; }
+.rt-btn-plus { @extend .rt-btn-control--plus; }
+.rt-header-btn { @extend .rt-btn-icon--bordered; }
+.rt-add-btn-small { @extend .rt-btn-icon--add; }
+
+// Note: These aliases ensure existing templates work while migration happens

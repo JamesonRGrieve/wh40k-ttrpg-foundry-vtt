@@ -1,5 +1,6 @@
 // Core Panel Component (Specialist Style)
 // ============================================
+// Single source of truth for panel styling across all tabs
 
 .rt-panel {
   background: var(--rt-panel-bg);
@@ -25,6 +26,26 @@
     position: relative;
     z-index: 1;
   }
+  
+  // Accent color modifiers (use CSS custom properties for icon/accent colors)
+  &--wounds { --panel-accent: #{$rt-accent-combat}; }
+  &--fatigue { --panel-accent: #{$rt-color-gold}; }
+  &--fate { --panel-accent: var(--rt-fate-secondary); }
+  &--corruption { --panel-accent: #2d7a6b; }
+  &--insanity { --panel-accent: #7b5aa6; }
+  &--skills { --panel-accent: #{$rt-accent-skills}; }
+  &--talents { --panel-accent: #{$rt-accent-talents}; }
+  &--equipment { --panel-accent: #{$rt-accent-equipment}; }
+  &--powers { --panel-accent: #{$rt-accent-powers}; }
+  &--dynasty { --panel-accent: #{$rt-accent-dynasty}; }
+  &--bio { --panel-accent: #{$rt-accent-bio}; }
+  &--combat { --panel-accent: #{$rt-accent-combat}; }
+  &--xp { --panel-accent: #{$rt-color-gold}; }
+  
+  // Apply accent color to header icon when modifier is present
+  &[class*="--"] .rt-panel-header .rt-panel-title i {
+    color: var(--panel-accent, $rt-accent-gold);
+  }
 }
 
 .rt-panel-header {
@@ -42,8 +63,8 @@
   
   .rt-panel-title {
     flex: 1 1 auto !important;
-    font-family: 'Modesto Condensed', serif;
-    font-size: 1.1rem;
+    font-family: var(--rt-font-display, 'Modesto Condensed', serif);
+    font-size: var(--rt-text-h3, 1.1rem);
     font-weight: 600;
     color: var(--rt-text-dark);
     letter-spacing: 0.02em;
@@ -57,7 +78,7 @@
     
     i {
       margin-right: 0;
-      color: $rt-accent-gold;
+      color: var(--panel-accent, $rt-accent-gold);
       flex-shrink: 0;
     }
   }
@@ -66,7 +87,9 @@
   > button,
   > label,
   > .rt-control-button,
-  > .rt-header-btn {
+  > .rt-header-btn,
+  > .rt-btn-icon,
+  > .rt-btn-control {
     flex-shrink: 0 !important;
     margin-left: auto;
   }

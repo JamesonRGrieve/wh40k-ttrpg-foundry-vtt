@@ -6,6 +6,12 @@
 // ============================================
 
 // ============================================
+// Responsive Column CSS Variable
+// ============================================
+// --rt-columns is set dynamically by ResizeObserver in base-actor-sheet.mjs
+// Breakpoints: <700px = 1 col, <900px = 2 cols, >=900px = 3 cols
+
+// ============================================
 // Shared Grid & Column Classes
 // ============================================
 // These replace the duplicate *-grid and *-col classes
@@ -18,12 +24,13 @@
 .rt-bio-grid,
 .rt-talents-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  // Use CSS variable with fallback to 2 columns
+  grid-template-columns: repeat(var(--rt-columns, 2), 1fr);
   gap: $rt-space-md;
   width: 100%;
 }
 
-// Talents tab uses 60/40 split instead of 50/50
+// Talents tab uses 60/40 split instead of equal columns (only when 2+ columns)
 .rt-talents-grid {
   grid-template-columns: 60% 40%;
 }
@@ -70,10 +77,11 @@
 // ============================================
 
 // ============================================
-// Responsive Breakpoints
+// Responsive Breakpoints (fallback for non-JS)
 // ============================================
+// These are fallbacks in case ResizeObserver doesn't run
 
-@media (max-width: 1200px) {
+@media (max-width: 700px) {
   .rt-overview-grid,
   .rt-combat-grid,
   .rt-powers-grid,
@@ -82,5 +90,16 @@
   .rt-bio-grid,
   .rt-talents-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  .rt-overview-grid,
+  .rt-combat-grid,
+  .rt-powers-grid,
+  .rt-equipment-grid,
+  .rt-dynasty-grid,
+  .rt-bio-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

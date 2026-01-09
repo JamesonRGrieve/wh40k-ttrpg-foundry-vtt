@@ -26,7 +26,7 @@ export default class DamageTemplate extends SystemDataModel {
       }),
       special: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       )
     };
   }

@@ -1,0 +1,37 @@
+{{!-- Acolyte Sheet Status Tab --}}
+{{!-- Detailed status tracking - moved from Overview tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    
+    {{!-- Two Column Layout --}}
+    <div class="rt-status-grid">
+        {{!-- Left Column --}}
+        <div class="rt-status-col">
+            {{!-- Wounds Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/wounds-panel-v2.hbs}}
+
+            {{!-- Fatigue Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/fatigue-panel-v2.hbs}}
+
+            {{!-- Corruption Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/corruption-panel-v2.hbs}}
+
+            {{!-- Insanity Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/insanity-panel-v2.hbs}}
+        </div>
+
+        {{!-- Right Column --}}
+        <div class="rt-status-col">
+            {{!-- Experience Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs}}
+
+            {{!-- Fate Panel V2 --}}
+            {{> systems/rogue-trader/templates/actor/panel/fate-panel-v2.hbs}}
+
+            {{!-- Movement & Physical Capacity (Full Version) --}}
+            {{> systems/rogue-trader/templates/actor/panel/movement-panel-full.hbs}}
+            
+            {{!-- Active Effects Panel --}}
+            {{> systems/rogue-trader/templates/actor/panel/active-effects-panel.hbs}}
+        </div>
+    </div>
+</section>

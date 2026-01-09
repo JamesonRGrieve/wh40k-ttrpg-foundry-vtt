@@ -249,16 +249,25 @@ export default class BaseItemSheet extends PrimarySheetMixin(
 
     /**
      * Handle input changes to numeric form fields, allowing them to accept delta-typed inputs.
+     * Supports +N (add), -N (subtract), =N (set absolute value) notation.
      * @param {Event} event  Triggering event.
      * @protected
      */
     _onChangeInputDelta(event) {
         const input = event.target;
-        const value = input.value;
-        if (["+", "-"].includes(value[0])) {
+        const value = input.value.trim();
+        if (!value) return;
+
+        const firstChar = value[0];
+        if (firstChar === "=") {
+            // Set absolute value
+            const absolute = parseFloat(value.slice(1));
+            if (!isNaN(absolute)) input.value = absolute;
+        } else if (["+", "-"].includes(firstChar)) {
+            // Add or subtract delta
             const current = foundry.utils.getProperty(this.item, input.name) ?? 0;
             const delta = parseFloat(value);
-            input.value = current + delta;
+            if (!isNaN(delta)) input.value = current + delta;
         }
     }
 

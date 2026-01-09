@@ -34,27 +34,27 @@
 
         <!-- Quick Stats Bar -->
         <div class="rt-quick-stats">
-            {{#if item.system.damage}}
+            {{#if item.system.damage.formula}}
             <div class="rt-stat-badge rt-stat-badge--damage">
                 <span class="rt-stat-badge__icon"><i class="fas fa-burst"></i></span>
                 <span class="rt-stat-badge__label">DMG</span>
-                <span class="rt-stat-badge__value">{{item.system.damage}}</span>
+                <span class="rt-stat-badge__value">{{item.system.damageLabel}}</span>
             </div>
             {{/if}}
             
-            {{#if item.system.penetration}}
+            {{#if item.system.damage.penetration}}
             <div class="rt-stat-badge">
                 <span class="rt-stat-badge__icon"><i class="fas fa-bullseye"></i></span>
                 <span class="rt-stat-badge__label">PEN</span>
-                <span class="rt-stat-badge__value">{{item.system.penetration}}</span>
+                <span class="rt-stat-badge__value">{{item.system.damage.penetration}}</span>
             </div>
             {{/if}}
             
-            {{#if item.system.range}}
+            {{#if item.system.rangeLabel}}
             <div class="rt-stat-badge">
                 <span class="rt-stat-badge__icon"><i class="fas fa-arrows-left-right"></i></span>
                 <span class="rt-stat-badge__label">RNG</span>
-                <span class="rt-stat-badge__value">{{item.system.range}}m</span>
+                <span class="rt-stat-badge__value">{{item.system.rangeLabel}}</span>
             </div>
             {{/if}}
             
@@ -69,7 +69,7 @@
             <div class="rt-stat-badge">
                 <span class="rt-stat-badge__icon"><i class="fas fa-weight-hanging"></i></span>
                 <span class="rt-stat-badge__label">WT</span>
-                <span class="rt-stat-badge__value">{{item.system.weight}}</span>
+                <span class="rt-stat-badge__value">{{item.system.weight}}kg</span>
             </div>
             
             {{#if item.system.equipped}}
@@ -107,18 +107,25 @@
                     <div class="rt-panel__content">
                         <div class="rt-field-grid rt-field-grid--3">
                             <div class="rt-field">
-                                <label class="rt-field__label">Damage</label>
-                                <input type="text" class="rt-field__input" name="system.damage" value="{{item.system.damage}}" placeholder="1d10+3" />
+                                <label class="rt-field__label">Damage Formula</label>
+                                <input type="text" class="rt-field__input" name="system.damage.formula" value="{{item.system.damage.formula}}" placeholder="2d10" />
                             </div>
                             <div class="rt-field">
-                                <label class="rt-field__label">Damage Type</label>
-                                <select class="rt-field__select" name="system.damageType">
-                                    {{selectOptions (arrayToObject dh.combat.damage_types) selected=item.system.damageType}}
-                                </select>
+                                <label class="rt-field__label">Damage Bonus</label>
+                                <input type="number" class="rt-field__input" name="system.damage.bonus" value="{{item.system.damage.bonus}}" placeholder="+0" />
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">Penetration</label>
-                                <input type="text" class="rt-field__input" name="system.penetration" value="{{item.system.penetration}}" placeholder="0" />
+                                <input type="number" class="rt-field__input" name="system.damage.penetration" value="{{item.system.damage.penetration}}" placeholder="0" />
+                            </div>
+                        </div>
+                        
+                        <div class="rt-field-grid rt-field-grid--2" style="margin-top: 1rem;">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Damage Type</label>
+                                <select class="rt-field__select" name="system.damage.type">
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.damageTypes) selected=item.system.damage.type}}
+                                </select>
                             </div>
                         </div>
                         
@@ -126,20 +133,20 @@
                             <div class="rt-field">
                                 <label class="rt-field__label">Weapon Class</label>
                                 <select class="rt-field__select" name="system.class">
-                                    {{selectOptions (arrayToObject dh.combat.weapon_class) selected=item.system.class}}
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.weaponClasses) selected=item.system.class}}
                                 </select>
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">Weapon Type</label>
                                 <select class="rt-field__select" name="system.type">
-                                    {{selectOptions (arrayToObject dh.combat.weapon_type) selected=item.system.type}}
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.weaponTypes) selected=item.system.type}}
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                {{#if item.isRanged}}
+                {{#if item.system.isRangedWeapon}}
                 <div class="rt-panel">
                     <div class="rt-panel__header">
                         <h3><i class="fas fa-crosshairs"></i> Ranged Attack</h3>
@@ -148,19 +155,23 @@
                         <div class="rt-field-grid rt-field-grid--4">
                             <div class="rt-field">
                                 <label class="rt-field__label">Range (m)</label>
-                                <input type="text" class="rt-field__input" name="system.range" value="{{item.system.range}}" />
+                                <input type="number" class="rt-field__input" name="system.attack.range.value" value="{{item.system.attack.range.value}}" />
                             </div>
                             <div class="rt-field">
-                                <label class="rt-field__label">Single</label>
-                                <input type="number" class="rt-field__input" name="system.rateOfFire.single" value="{{item.system.rateOfFire.single}}" />
+                                <label class="rt-field__label">Range Special</label>
+                                <input type="text" class="rt-field__input" name="system.attack.range.special" value="{{item.system.attack.range.special}}" placeholder="SBx3" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Single Shot</label>
+                                <input type="checkbox" name="system.attack.rateOfFire.single" {{checked item.system.attack.rateOfFire.single}} />
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">Semi-Auto</label>
-                                <input type="number" class="rt-field__input" name="system.rateOfFire.burst" value="{{item.system.rateOfFire.burst}}" />
+                                <input type="number" class="rt-field__input" name="system.attack.rateOfFire.semi" value="{{item.system.attack.rateOfFire.semi}}" placeholder="0" />
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">Full-Auto</label>
-                                <input type="number" class="rt-field__input" name="system.rateOfFire.full" value="{{item.system.rateOfFire.full}}" />
+                                <input type="number" class="rt-field__input" name="system.attack.rateOfFire.full" value="{{item.system.attack.rateOfFire.full}}" placeholder="0" />
                             </div>
                         </div>
                     </div>
@@ -183,7 +194,12 @@
                             <div class="rt-field">
                                 <label class="rt-field__label">Reload Time</label>
                                 <select class="rt-field__select" name="system.reload">
-                                    {{selectOptions (arrayToObject dh.combat.action_speeds) selected=item.system.reload}}
+                                    <option value="-" {{#if (eq item.system.reload "-")}}selected{{/if}}>-</option>
+                                    <option value="free" {{#if (eq item.system.reload "free")}}selected{{/if}}>Free Action</option>
+                                    <option value="half" {{#if (eq item.system.reload "half")}}selected{{/if}}>Half Action</option>
+                                    <option value="full" {{#if (eq item.system.reload "full")}}selected{{/if}}>Full Action</option>
+                                    <option value="2-full" {{#if (eq item.system.reload "2-full")}}selected{{/if}}>2 Full Actions</option>
+                                    <option value="3-full" {{#if (eq item.system.reload "3-full")}}selected{{/if}}>3 Full Actions</option>
                                 </select>
                             </div>
                         </div>
@@ -228,13 +244,13 @@
                             <div class="rt-field">
                                 <label class="rt-field__label">Availability</label>
                                 <select class="rt-field__select" name="system.availability">
-                                    {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.availabilities) selected=item.system.availability}}
                                 </select>
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">Craftsmanship</label>
                                 <select class="rt-field__select" name="system.craftsmanship">
-                                    {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.craftsmanships) selected=item.system.craftsmanship}}
                                 </select>
                             </div>
                             <div class="rt-field">
@@ -243,7 +259,7 @@
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">Source</label>
-                                <input type="text" class="rt-field__input" name="system.source" value="{{item.system.source}}" />
+                                <input type="text" class="rt-field__input" name="system.source" value="{{item.system.source}}" placeholder="Rogue Trader: Core" />
                             </div>
                         </div>
                         

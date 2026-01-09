@@ -1,4 +1,4 @@
-{{!-- Rogue Trader Ammo Sheet - Modern Design --}}
+{{!-- Rogue Trader Ammo Sheet - Modern V13 Design --}}
 <form class="rt-item-sheet" autocomplete="off">
     {{!-- Header --}}
     <div class="rt-item-sheet__header">
@@ -8,48 +8,105 @@
         <div class="rt-item-sheet__title-area">
             <div class="rt-item-sheet__name-field">
                 <label class="rt-item-sheet__name-label">Name</label>
-                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
+                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Ammunition Name" />
+            </div>
+            <div class="rt-item-sheet__subtitle">
+                <i class="fas fa-bullseye"></i> Ammunition
             </div>
         </div>
     </div>
     
-    {{!-- Main Fields --}}
+    {{!-- Modifiers Panel --}}
+    <div class="rt-item-sheet__panel">
+        <h3 class="rt-item-sheet__panel-title">Modifiers</h3>
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Damage Modifier</label>
+                <input class="rt-item-sheet__input" name="system.modifiers.damage" type="number" value="{{item.system.modifiers.damage}}" />
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Penetration Modifier</label>
+                <input class="rt-item-sheet__input" name="system.modifiers.penetration" type="number" value="{{item.system.modifiers.penetration}}" />
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Range Modifier (%)</label>
+                <input class="rt-item-sheet__input" name="system.modifiers.range" type="number" value="{{item.system.modifiers.range}}" />
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Compatibility Panel --}}
+    <div class="rt-item-sheet__panel">
+        <h3 class="rt-item-sheet__panel-title">Weapon Compatibility</h3>
+        <div class="rt-item-sheet__field">
+            <label class="rt-item-sheet__label">Weapon Types (leave empty for universal)</label>
+            <select class="rt-item-sheet__select" name="system.weaponTypes" multiple size="5">
+                <option value="las" {{#if (arrayIncludes "las" item.system.weaponTypes)}}selected{{/if}}>Las</option>
+                <option value="solid-projectile" {{#if (arrayIncludes "solid-projectile" item.system.weaponTypes)}}selected{{/if}}>Solid Projectile</option>
+                <option value="bolt" {{#if (arrayIncludes "bolt" item.system.weaponTypes)}}selected{{/if}}>Bolt</option>
+                <option value="melta" {{#if (arrayIncludes "melta" item.system.weaponTypes)}}selected{{/if}}>Melta</option>
+                <option value="plasma" {{#if (arrayIncludes "plasma" item.system.weaponTypes)}}selected{{/if}}>Plasma</option>
+                <option value="flame" {{#if (arrayIncludes "flame" item.system.weaponTypes)}}selected{{/if}}>Flame</option>
+                <option value="launcher" {{#if (arrayIncludes "launcher" item.system.weaponTypes)}}selected{{/if}}>Launcher</option>
+                <option value="primitive" {{#if (arrayIncludes "primitive" item.system.weaponTypes)}}selected{{/if}}>Primitive</option>
+            </select>
+        </div>
+    </div>
+    
+    {{!-- Qualities Panel --}}
+    <div class="rt-item-sheet__panel">
+        <h3 class="rt-item-sheet__panel-title">Quality Changes</h3>
+        <div class="rt-item-sheet__field-row">
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Added Qualities</label>
+                <div class="rt-tags">
+                    {{#each item.system.addedQualities as |quality|}}
+                    <span class="rt-tag rt-tag--success">{{quality}}</span>
+                    {{/each}}
+                    {{#unless item.system.addedQualities.length}}
+                    <span class="rt-help-text">No qualities added</span>
+                    {{/unless}}
+                </div>
+            </div>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Removed Qualities</label>
+                <div class="rt-tags">
+                    {{#each item.system.removedQualities as |quality|}}
+                    <span class="rt-tag rt-tag--danger">{{quality}}</span>
+                    {{/each}}
+                    {{#unless item.system.removedQualities.length}}
+                    <span class="rt-help-text">No qualities removed</span>
+                    {{/unless}}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Physical Properties --}}
     <div class="rt-item-sheet__panel">
         <div class="rt-item-sheet__field-row">
             <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Source</label>
-                <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
+                <label class="rt-item-sheet__label">Weight (kg)</label>
+                <input class="rt-item-sheet__input" name="system.weight" type="number" step="0.1" value="{{item.system.weight}}" />
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Weight</label>
-                <input class="rt-item-sheet__input" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
-            </div>
-        </div>
-        
-        <div class="rt-item-sheet__field-row">
             <div class="rt-item-sheet__field">
                 <label class="rt-item-sheet__label">Availability</label>
                 <select class="rt-item-sheet__select" name="system.availability">
-                    {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.availabilities) selected=item.system.availability}}
                 </select>
             </div>
-            <div class="rt-item-sheet__checkbox-field">
-                <input class="rt-item-sheet__input" name="system.backpack.inBackpack" type="checkbox" data-dtype="Boolean" {{checked item.system.backpack.inBackpack}} />
-                <label class="rt-item-sheet__label">In Backpack</label>
+            <div class="rt-item-sheet__field">
+                <label class="rt-item-sheet__label">Source</label>
+                <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" placeholder="RT: Core" />
             </div>
-        </div>
-        
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Weapon Types</label>
-            <input class="rt-item-sheet__input" name="system.weapon_type" type="text" value="{{item.system.weapon_type}}" />
         </div>
     </div>
     
-    {{!-- Effect --}}
+    {{!-- Effect Description --}}
     <div class="rt-item-sheet__description">
         <div class="rt-item-sheet__field">
             <label class="rt-item-sheet__label">Effect</label>
-            <textarea class="rt-item-sheet__textarea" name="system.effect">{{item.system.effect}}</textarea>
+            {{editor item.system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
         </div>
     </div>
 </form>

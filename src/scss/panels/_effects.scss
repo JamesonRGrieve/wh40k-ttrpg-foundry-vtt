@@ -1,221 +1,259 @@
 /**
  * Active Effects Panel Styles
- * Displays active effects with visual indicators for nature (beneficial/harmful/neutral)
+ * Card-based design with clean layout
  */
 
-.rt-panel-effects {
+.rt-effects-panel {
     .rt-badge {
-        background: var(--rt-gold);
-        color: var(--rt-black);
-        padding: 2px 6px;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        margin-left: 6px;
-    }
-
-    .rt-effects-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .rt-effect-card {
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        padding: 8px;
-        transition: all 0.2s ease;
-
-        &.rt-effect-beneficial {
-            border-left: 3px solid var(--rt-green, #4caf50);
-            background: rgba(76, 175, 80, 0.05);
-        }
-
-        &.rt-effect-harmful {
-            border-left: 3px solid var(--rt-red, #f44336);
-            background: rgba(244, 67, 54, 0.05);
-        }
-
-        &.rt-effect-neutral {
-            border-left: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        &.disabled {
-            opacity: 0.5;
-            filter: grayscale(0.8);
-        }
-
-        &:hover {
-            background: rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-    }
-
-    .rt-effect-header {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 6px;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        margin-left: 8px;
+        background: linear-gradient(135deg, $rt-accent-gold 0%, darken($rt-accent-gold, 10%) 100%);
+        color: #0a0a0f;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .rt-effect-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        flex-shrink: 0;
+    .rt-panel-body {
+        padding: $rt-space-md;
+    }
+}
+
+.rt-effects-list {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+}
+
+.rt-effect-card {
+    background: $rt-bg-paper-light;
+    border: 1px solid $rt-border-light;
+    border-left: 3px solid $rt-accent-gold;
+    border-radius: 6px;
+    padding: $rt-space-sm;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.8);
+        border-color: $rt-border-medium;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transform: translateX(2px);
     }
 
-    .rt-effect-info {
-        flex: 1;
-        min-width: 0;
+    &.rt-effect-disabled {
+        opacity: 0.5;
+        border-left-color: $rt-text-muted;
+        
+        .rt-effect-icon {
+            filter: grayscale(100%);
+        }
+        
+        .rt-effect-name {
+            text-decoration: line-through;
+            color: $rt-text-muted;
+        }
+    }
+}
+
+.rt-effect-card-header {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+}
+
+.rt-effect-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid $rt-border-medium;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.rt-effect-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.rt-effect-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.rt-effect-source {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: $rt-text-muted;
+    font-style: italic;
+    
+    i {
+        font-size: 0.7rem;
+    }
+}
+
+.rt-effect-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.rt-effect-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid $rt-border-medium;
+    border-radius: 4px;
+    color: $rt-text-muted;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    i {
+        font-size: 0.85rem;
+    }
+    
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: $rt-accent-gold;
+        color: $rt-accent-gold;
+    }
+}
+
+.rt-effect-toggle {
+    &:hover {
+        background: rgba(46, 204, 113, 0.1);
+        border-color: #2ecc71;
+        color: #2ecc71;
+    }
+}
+
+.rt-effect-edit {
+    &:hover {
+        background: rgba(52, 152, 219, 0.1);
+        border-color: #3498db;
+        color: #3498db;
+    }
+}
+
+.rt-effect-delete {
+    &:hover {
+        background: rgba(231, 76, 60, 0.1);
+        border-color: #e74c3c;
+        color: #e74c3c;
+    }
+}
+
+.rt-effect-changes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: $rt-space-sm;
+    padding-top: $rt-space-sm;
+    border-top: 1px solid $rt-border-light;
+}
+
+.rt-effect-change {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: 'Courier New', monospace;
+}
+
+.rt-change-key {
+    color: $rt-text-muted;
+    font-weight: 500;
+}
+
+.rt-change-mode {
+    color: $rt-accent-gold;
+    font-weight: 600;
+}
+
+.rt-change-value {
+    color: var(--color-text-primary);
+    font-weight: 700;
+}
+
+.rt-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $rt-space-xl $rt-space-md;
+    color: $rt-text-muted;
+    text-align: center;
+
+    i {
+        font-size: 2rem;
+        margin-bottom: $rt-space-sm;
+        opacity: 0.5;
     }
 
-    .rt-effect-name {
-        font-weight: bold;
-        color: var(--rt-gold);
-        font-size: 0.95rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .rt-effect-source {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.6);
+    p {
+        margin: 0;
+        font-size: 0.85rem;
         font-style: italic;
     }
+}
 
-    .rt-effect-controls {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        flex-shrink: 0;
+.rt-panel-footer {
+    margin-top: $rt-space-md;
+    padding-top: $rt-space-md;
+    border-top: 1px solid $rt-border-light;
+}
+
+.rt-btn-create-effect {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-sm $rt-space-md;
+    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.1) 0%, rgba($rt-accent-gold, 0.05) 100%);
+    border: 1px solid rgba($rt-accent-gold, 0.3);
+    border-radius: 4px;
+    color: $rt-accent-gold;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, rgba($rt-accent-gold, 0.2) 0%, rgba($rt-accent-gold, 0.1) 100%);
+        border-color: $rt-accent-gold;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba($rt-accent-gold, 0.2);
     }
 
-    .rt-effect-duration {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.8);
-
-        &.expiring {
-            background: rgba(244, 67, 54, 0.2);
-            color: var(--rt-red, #f44336);
-            animation: pulse-warning 1s infinite;
-        }
+    &:active {
+        transform: translateY(0);
     }
 
-    .rt-effect-toggle,
-    .rt-effect-delete {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 3px;
-        padding: 4px 8px;
-        color: rgba(255, 255, 255, 0.7);
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.4);
-            color: white;
-        }
-
-        i {
-            font-size: 0.9rem;
-        }
-    }
-
-    .rt-effect-delete {
-        &:hover {
-            background: rgba(244, 67, 54, 0.2);
-            border-color: var(--rt-red, #f44336);
-            color: var(--rt-red, #f44336);
-        }
-    }
-
-    .rt-effect-changes {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 6px;
-        padding-top: 6px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .rt-effect-change {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 8px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 3px;
-        font-size: 0.8rem;
-    }
-
-    .rt-change-label {
-        color: rgba(255, 255, 255, 0.7);
-    }
-
-    .rt-change-value {
-        color: var(--rt-gold);
-        font-weight: bold;
-    }
-
-    .rt-empty-state {
-        text-align: center;
-        padding: 24px 12px;
-        color: rgba(255, 255, 255, 0.4);
-
-        i {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            opacity: 0.5;
-        }
-
-        p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-    }
-
-    .rt-panel-footer {
-        margin-top: 8px;
-        padding-top: 8px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .rt-btn-add {
-        width: 100%;
-        background: rgba(var(--rt-gold-rgb, 196, 135, 29), 0.1);
-        border: 1px solid var(--rt-gold);
-        color: var(--rt-gold);
-        padding: 6px 12px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s ease;
+    i {
         font-size: 0.9rem;
-
-        &:hover {
-            background: rgba(var(--rt-gold-rgb, 196, 135, 29), 0.2);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(var(--rt-gold-rgb, 196, 135, 29), 0.3);
-        }
-
-        i {
-            margin-right: 6px;
-        }
     }
 }
-
-@keyframes pulse-warning {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-}
-

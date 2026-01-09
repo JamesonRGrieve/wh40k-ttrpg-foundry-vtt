@@ -85,38 +85,20 @@
   padding: $rt-space-sm 0;
 }
 
+// NOTE: .rt-vital-btn-compact is now aliased from .rt-btn-control--compact in _unified-components.scss
+// Keep this for any additional overrides specific to vital buttons
 .rt-vital-btn-compact {
+  @extend .rt-btn-control;
   width: 26px;
   height: 26px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: 6px;
   font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  color: var(--color-text-primary);
-  
-  &:hover {
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-highlight);
-    transform: scale(1.05);
-  }
-  
-  &:active {
-    transform: scale(0.95);
-  }
 }
 
 .rt-vital-value-compact {
   display: flex;
   align-items: baseline;
   gap: 4px;
-  font-family: 'Modesto Condensed', serif;
+  font-family: var(--rt-font-display, 'Modesto Condensed', serif);
   
   .rt-vital-current {
     font-size: 1.6rem;
@@ -159,7 +141,7 @@
   background: rgba($rt-accent-gold, 0.1);
   border: 1px solid rgba($rt-accent-gold, 0.2);
   border-radius: 3px;
-  font-size: 0.65rem;
+  font-size: var(--rt-text-micro, 0.65rem);
   color: var(--color-text-tertiary);
   margin-top: $rt-space-xs;
   
@@ -170,32 +152,11 @@
 }
 
 // Quick action button (for fatigue clear, fate restore, etc.)
+// NOTE: Use .rt-btn-quick for new code; this maintains backwards compatibility
 .rt-quick-action-btn {
+  @extend .rt-btn-quick;
   width: 100%;
-  padding: 6px;
   margin-top: $rt-space-xs;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: 4px;
-  color: var(--color-text-secondary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  
-  &:hover {
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-highlight);
-    color: var(--color-text-primary);
-  }
-  
-  i {
-    font-size: 0.8rem;
-  }
 }
 
 // ============================================

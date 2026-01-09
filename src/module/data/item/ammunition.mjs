@@ -28,7 +28,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(
       // What weapon types can use this ammo
       weaponTypes: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Ammo modifiers (applied to weapon when loaded)
@@ -46,13 +46,13 @@ export default class AmmunitionData extends ItemDataModel.mixin(
       // Special qualities added by this ammo
       addedQualities: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Qualities removed by this ammo
       removedQualities: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Clip size modifier
@@ -61,9 +61,29 @@ export default class AmmunitionData extends ItemDataModel.mixin(
       // Effect description
       effect: new fields.HTMLField({ required: false, blank: true }),
       
-      // Notes
-      notes: new fields.StringField({ required: false, blank: true })
+      // Notes & source
+      notes: new fields.StringField({ required: false, blank: true }),
+      source: new fields.StringField({ required: false, blank: true })
     };
+  }
+  
+  /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+  
+  /** @override */
+  static migrateData(source) {
+    const migrated = super.migrateData(source);
+    
+    // Legacy field cleanup
+    if (migrated.usedWith) delete migrated.usedWith;
+    if (migrated.damageOrEffect) delete migrated.damageOrEffect;
+    if (migrated.qualities) delete migrated.qualities;
+    if (migrated.damageModifier !== undefined) delete migrated.damageModifier;
+    if (migrated.penetrationModifier !== undefined) delete migrated.penetrationModifier;
+    if (migrated.specialRules) delete migrated.specialRules;
+    
+    return migrated;
   }
 
   /* -------------------------------------------- */
@@ -75,8 +95,11 @@ export default class AmmunitionData extends ItemDataModel.mixin(
    * @type {string}
    */
   get weaponTypesLabel() {
-    if ( !this.weaponTypes.size ) return game.i18n.localize("RT.Ammunition.AllWeapons");
-    return Array.from(this.weaponTypes).join(", ");
+    if ( !this.weaponTypes || !this.weaponTypes.size ) return game.i18n.localize("RT.Ammunition.AllWeapons");
+    return Array.from(this.weaponTypes).map(t => {
+      const label = CONFIG.ROGUE_TRADER?.weaponTypes?.[t]?.label;
+      return label ? game.i18n.localize(label) : t;
+    }).join(", ");
   }
 
   /**

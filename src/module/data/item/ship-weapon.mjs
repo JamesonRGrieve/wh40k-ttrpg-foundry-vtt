@@ -39,7 +39,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
       // Hull type restrictions
       hullType: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: ["all"] }
+        { required: true, initial: new Set(["all"]) }
       ),
       
       // Resource requirements
@@ -56,7 +56,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
       // Special qualities
       special: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Availability

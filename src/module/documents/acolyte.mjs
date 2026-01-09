@@ -1,14 +1,12 @@
-import { prepareEnhancedSkillRoll } from '../applications/prompts/enhanced-skill-dialog.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.mjs';
-import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { RogueTraderBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
 import { prepareForceFieldRoll } from '../applications/prompts/force-field-dialog.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
-import { getDegree, roll1d100 } from '../rolls/roll-helpers.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { D100Roll } from '../dice/_module.mjs';
 
 const SKILL_ALIASES = {
     navigate: 'navigation',
@@ -126,9 +124,86 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     }
 
     /* -------------------------------------------- */
-    /*  Roll Methods                                */
+    /*  Roll Methods (New D100Roll System)          */
     /* -------------------------------------------- */
 
+    /**
+     * Roll a characteristic test using the new D100Roll system
+     * @param {string} charKey - The characteristic key (e.g., "weaponSkill")
+     * @param {string} [flavorOverride] - Optional flavor text override
+     * @param {Object} [options] - Additional roll options
+     * @returns {Promise<ChatMessage|null>}
+     */
+    async rollCharacteristic(charKey, flavorOverride, options = {}) {
+        const char = this.system.characteristics?.[charKey];
+        if (!char) {
+            foundry.applications.api.Toast.warning(`Characteristic "${charKey}" not found`, {
+                duration: 3000
+            });
+            return null;
+        }
+
+        const flavor = flavorOverride || `${char.label} Test`;
+
+        return D100Roll.build({
+            actor: this,
+            target: char.total,
+            baseTarget: char.total,
+            flavor: flavor,
+            name: flavor,
+            speaker: ChatMessage.getSpeaker({ actor: this }),
+            type: "characteristic",
+            characteristic: charKey,
+            ...options
+        });
+    }
+
+    /**
+     * Roll a skill test using the new D100Roll system
+     * @param {string} skillName - The skill key or name
+     * @param {string} [specialityName] - Optional speciality name for specialist skills
+     * @param {Object} [options] - Additional roll options
+     * @returns {Promise<ChatMessage|null>}
+     */
+    async rollSkill(skillName, specialityName, options = {}) {
+        const resolvedSkillName = this._resolveSkillName(skillName);
+        let skill = this.skills[resolvedSkillName];
+        if (!skill) {
+            foundry.applications.api.Toast.warning(`Unable to find skill ${skillName}`, {
+                duration: 3000
+            });
+            return null;
+        }
+        let label = skill.label;
+        let targetValue = skill.current;
+
+        // Handle specialist skills
+        if (specialityName !== undefined && Array.isArray(skill?.entries)) {
+            const speciality = this._findSpecialistSkill(skill, specialityName);
+            if (speciality) {
+                const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
+                label = `${label}: ${specialityLabel}`;
+                targetValue = speciality.current ?? skill.current;
+            }
+        }
+
+        return D100Roll.build({
+            actor: this,
+            target: targetValue,
+            baseTarget: targetValue,
+            flavor: `${label} Test`,
+            name: label,
+            speaker: ChatMessage.getSpeaker({ actor: this }),
+            type: "skill",
+            skill: resolvedSkillName,
+            ...options
+        });
+    }
+
+    /**
+     * Roll weapon damage
+     * @param {Item} weapon - The weapon item
+     */
     async rollWeaponDamage(weapon) {
         if (!weapon.system.equipped) {
             foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
@@ -151,6 +226,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         });
     }
 
+    /**
+     * Roll psychic power damage
+     * @param {Item} power - The psychic power item
+     */
     async rollPsychicPowerDamage(power) {
         await prepareDamageRoll({
             psychicPower: true,
@@ -162,36 +241,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         });
     }
 
-    async rollSkill(skillName, specialityName) {
-        const resolvedSkillName = this._resolveSkillName(skillName);
-        let skill = this.skills[resolvedSkillName];
-        if (!skill) {
-            foundry.applications.api.Toast.warning(`Unable to find skill ${skillName}`, {
-                duration: 3000
-            });
-            return;
-        }
-        let label = skill.label;
-
-        if (specialityName !== undefined && Array.isArray(skill?.entries)) {
-            const speciality = this._findSpecialistSkill(skill, specialityName);
-            if (speciality) {
-                skill = speciality;
-                const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
-                label = `${label}: ${specialityLabel}`;
-            }
-        }
-
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.nameOverride = label;
-        rollData.type = 'Skill';
-        rollData.baseTarget = skill.current;
-        rollData.modifiers.modifier = 0;
-        await prepareEnhancedSkillRoll(simpleSkillData);
-    }
-
+    /**
+     * Roll/use an item
+     * @param {string} itemId - The item ID
+     */
     async rollItem(itemId) {
         game.rt.log('RollItem', itemId);
         const item = this.items.get(itemId);
@@ -203,19 +256,19 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                     });
                     return;
                 }
-                if(game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
-                    if(item.isRanged) {
+                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
+                    if (item.isRanged) {
                         await this.rollCharacteristic('ballisticSkill', item.name);
                     } else {
-                        await this.rollCharacteristic('weaponSkill',  item.name);
+                        await this.rollCharacteristic('weaponSkill', item.name);
                     }
                 } else {
                     await DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
             case 'psychicPower':
-                if(game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower',  item.name)
+                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls)) {
+                    await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
@@ -245,6 +298,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         }
     }
 
+    /**
+     * Roll damage for an item
+     * @param {string} itemId - The item ID
+     */
     async damageItem(itemId) {
         const item = this.items.get(itemId);
         switch (item.type) {
@@ -258,6 +315,90 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 return foundry.applications.api.Toast.warning(`No actions implemented for item type: ${item.type}`, {
                     duration: 3000
                 });
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Quick Roll Methods (no dialog)              */
+    /* -------------------------------------------- */
+
+    /**
+     * Perform a quick characteristic check without dialog
+     * @param {string} characteristic - The characteristic key
+     * @returns {Promise<D100Roll|null>} The evaluated roll
+     */
+    async rollCharacteristicCheck(characteristic) {
+        const char = this.getCharacteristicFuzzy(characteristic);
+        if (!char) {
+            game.rt.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
+            return null;
+        }
+
+        // Quick roll without dialog
+        const roll = await D100Roll.evaluate({
+            actor: this,
+            target: char.total,
+            configure: false
+        });
+
+        return roll;
+    }
+
+    /**
+     * Perform a quick d100 check against a target number
+     * @param {number} targetNumber - The target number
+     * @returns {Promise<D100Roll>} The evaluated roll
+     */
+    async rollCheck(targetNumber) {
+        const roll = await D100Roll.evaluate({
+            actor: this,
+            target: targetNumber,
+            configure: false
+        });
+
+        return roll;
+    }
+
+    /**
+     * Perform an opposed characteristic test
+     * @param {Actor} targetActor - The opposing actor
+     * @param {string} characteristic - The characteristic to test
+     * @returns {Promise<Object>} The opposed test result
+     */
+    async opposedCharacteristicTest(targetActor, characteristic) {
+        const sourceRoll = await this.rollCharacteristicCheck(characteristic);
+        const targetRoll = targetActor ? await targetActor.rollCharacteristicCheck(characteristic) : null;
+        return this.opposedTest(sourceRoll, targetRoll);
+    }
+
+    /**
+     * Compare two roll results for opposed tests
+     * @param {D100Roll} rollCheckSource - The source actor's roll
+     * @param {D100Roll} rollCheckTarget - The target actor's roll
+     * @returns {Object} The opposed test result
+     */
+    opposedTest(rollCheckSource, rollCheckTarget) {
+        if (!rollCheckSource) return null;
+
+        if (rollCheckTarget) {
+            let success = false;
+            if (rollCheckSource.isSuccess) {
+                if (!rollCheckTarget.isSuccess) {
+                    success = true;
+                } else {
+                    success = rollCheckSource.degreesOfSuccess >= rollCheckTarget.degreesOfSuccess;
+                }
+            }
+            return {
+                source: rollCheckSource,
+                target: rollCheckTarget,
+                success: success
+            };
+        } else {
+            return {
+                source: rollCheckSource,
+                success: rollCheckSource.isSuccess
+            };
         }
     }
 
@@ -309,7 +450,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
     hasTalentFuzzyWords(words) {
         return !!this.items.filter((i) => i.type === 'talent').find((t) => {
-            for(const word of words) {
+            for (const word of words) {
                 if (!t.name.includes(word)) return false;
             }
             return true;
@@ -324,71 +465,5 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         await this.update({
             "system.fate.value": this.system.fate.value - 1
         });
-    }
-
-    /* -------------------------------------------- */
-    /*  Characteristic Tests                        */
-    /* -------------------------------------------- */
-
-    async rollCharacteristicCheck(characteristic) {
-        const char = this.getCharacteristicFuzzy(characteristic);
-        if(!char) {
-            game.rt.error('Unable to perform characteristic test. Could not find provided characteristic.', char);
-            return null;
-        }
-        return await this.rollCheck(char.total);
-    }
-
-    async opposedCharacteristicTest(targetActor, characteristic) {
-        const sourceRoll = await this.rollCharacteristicCheck(characteristic);
-        const targetRoll = targetActor ? await targetActor.rollCharacteristicCheck(characteristic) : null;
-        return await this.opposedTest(sourceRoll, targetRoll);
-    }
-
-    async rollCheck(targetNumber) {
-        const roll = await roll1d100();
-        const success = roll.total === 1 || (roll.total <= targetNumber && roll.total !== 100);
-        let dos = 0;
-        let dof = 0;
-
-        if(success) {
-            dos = 1 + getDegree(targetNumber, roll.total);
-        } else {
-            dof = 1 + getDegree(roll.total, targetNumber);
-        }
-
-        return {
-            roll: roll,
-            target: targetNumber,
-            success: success,
-            dos: dos,
-            dof: dof
-        }
-    }
-
-    async opposedTest(rollCheckSource, rollCheckTarget) {
-        if(!rollCheckSource) {
-            return null;
-        }
-        if(rollCheckTarget) {
-            let success = false;
-            if(rollCheckSource.success) {
-                if(!rollCheckTarget.success) {
-                    success = true;
-                } else {
-                    success = rollCheckSource.dos >= rollCheckTarget.dos;
-                }
-            }
-            return {
-                source: rollCheckSource,
-                target: rollCheckTarget,
-                success: success
-            }
-        } else {
-            return {
-                source: rollCheckSource,
-                success: true
-            };
-        }
     }
 }

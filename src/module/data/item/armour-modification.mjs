@@ -26,7 +26,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
       restrictions: new fields.SchemaField({
         armourTypes: new fields.SetField(
           new fields.StringField({ required: true }),
-          { required: true, initial: [] }
+          { required: true, initial: new Set() }
         )
       }),
       
@@ -40,17 +40,17 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
       // Properties added
       addedProperties: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Properties removed
       removedProperties: new fields.SetField(
         new fields.StringField({ required: true }),
-        { required: true, initial: [] }
+        { required: true, initial: new Set() }
       ),
       
       // Effect description
-      effect: new fields.HTMLField({ required: false, blank: true }),
+      effect: new fields.HTMLField({ required: false }),
       
       // Notes
       notes: new fields.StringField({ required: false, blank: true })

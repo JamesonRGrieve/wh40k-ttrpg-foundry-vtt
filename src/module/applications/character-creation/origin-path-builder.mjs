@@ -6,6 +6,7 @@
  */
 
 import { HandlebarsApplicationMixin } from "foundry-api";
+import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
 
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
     
@@ -445,11 +446,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(foundr
      * @private
      */
     static async #randomize(event, target) {
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize("RT.OriginPath.RandomizeTitle"),
-            content: `<p>${game.i18n.localize("RT.OriginPath.RandomizeConfirm")}</p>`,
-            yes: () => true,
-            no: () => false
+            content: game.i18n.localize("RT.OriginPath.RandomizeConfirm"),
+            confirmLabel: game.i18n.localize("RT.Confirm"),
+            cancelLabel: game.i18n.localize("RT.Cancel")
         });
 
         if (!confirmed) return;
@@ -492,11 +493,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(foundr
      * @private
      */
     static async #reset(event, target) {
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize("RT.OriginPath.ResetTitle"),
-            content: `<p>${game.i18n.localize("RT.OriginPath.ResetConfirm")}</p>`,
-            yes: () => true,
-            no: () => false
+            content: game.i18n.localize("RT.OriginPath.ResetConfirm"),
+            confirmLabel: game.i18n.localize("RT.Confirm"),
+            cancelLabel: game.i18n.localize("RT.Cancel")
         });
 
         if (!confirmed) return;
@@ -637,11 +638,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(foundr
             return;
         }
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize("RT.OriginPath.CommitTitle"),
-            content: `<p>${game.i18n.localize("RT.OriginPath.CommitConfirm")}</p>`,
-            yes: () => true,
-            no: () => false
+            content: game.i18n.localize("RT.OriginPath.CommitConfirm"),
+            confirmLabel: game.i18n.localize("RT.Confirm"),
+            cancelLabel: game.i18n.localize("RT.Cancel")
         });
 
         if (!confirmed) return;

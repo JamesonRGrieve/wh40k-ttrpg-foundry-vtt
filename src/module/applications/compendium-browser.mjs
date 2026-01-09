@@ -99,6 +99,13 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         context.groupByOptions = this._getGroupByOptions();
         context.groupedResults = this._groupResults(context.results);
         
+        // Add armour-specific filters if filtering armour
+        const hasArmour = context.results.some(r => r.type === "armour");
+        if (hasArmour) {
+            context.armourTypes = CONFIG.ROGUE_TRADER?.armourTypes || {};
+            context.hasArmourFilters = true;
+        }
+
         return context;
     }
 
@@ -164,27 +171,97 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         
         for (const pack of packs) {
             const index = await pack.getIndex({ 
-                fields: ['name', 'type', 'img', 'system.source', 'system.category', 'flags'] 
+                fields: [
+                    'name', 'type', 'img', 
+                    'system.source', 'system.category', 'flags',
+                    // Armour-specific fields
+                    'system.type', 'system.armourPoints', 'system.coverage', 
+                    'system.maxAgility', 'system.properties'
+                ] 
             });
             
             for (const entry of index) {
                 if (!this._passesFilters(entry, pack)) continue;
+                
                 const sourceLabel = this._getEntrySource(entry);
                 const categoryLabel = this._getEntryCategory(entry);
                 
-                results.push({
+                const result = {
                     ...entry,
                     pack: pack.metadata.label,
                     packId: pack.metadata.id,
                     sourceLabel,
                     categoryLabel,
                     uuid: `Compendium.${pack.collection}.${entry._id}`
-                });
+                };
+                
+                // Add armour-specific metadata
+                if (entry.type === "armour" && entry.system) {
+                    result.armourData = this._prepareArmourData(entry.system);
+                }
+                
+                results.push(result);
             }
         }
         
         results.sort((a, b) => a.name.localeCompare(b.name));
         return results;
+    }
+
+    /**
+     * Prepare armour-specific display data.
+     * @param {object} system  The armour system data
+     * @returns {object}       Prepared armour data
+     */
+    _prepareArmourData(system) {
+        const ap = system.armourPoints || {};
+        const coverage = system.coverage || [];
+        
+        // Calculate AP summary
+        const locations = ["head", "body", "leftArm", "rightArm", "leftLeg", "rightLeg"];
+        const values = locations.map(loc => ap[loc] || 0);
+        const allSame = values.every(v => v === values[0]);
+        
+        let apSummary;
+        if (allSame && (coverage.includes("all") || coverage.length === 6)) {
+            apSummary = `All: ${values[0]}`;
+        } else {
+            const abbrs = { head: "H", body: "B", leftArm: "LA", rightArm: "RA", leftLeg: "LL", rightLeg: "RL" };
+            const nonZero = locations.filter(loc => (ap[loc] || 0) > 0);
+            if (nonZero.length <= 3) {
+                apSummary = nonZero.map(loc => `${abbrs[loc]}:${ap[loc]}`).join(" ");
+            } else {
+                apSummary = `${Math.min(...values)}-${Math.max(...values)} AP`;
+            }
+        }
+        
+        // Calculate coverage icons
+        let coverageIcons;
+        if (coverage.includes("all")) {
+            coverageIcons = "●●●●●●";
+        } else {
+            const icons = [];
+            icons.push(coverage.includes("head") ? "●" : "○");
+            icons.push(coverage.includes("body") ? "●" : "○");
+            icons.push(coverage.includes("leftArm") || coverage.includes("rightArm") ? "●" : "○");
+            icons.push(coverage.includes("leftLeg") || coverage.includes("rightLeg") ? "●" : "○");
+            coverageIcons = icons.join("");
+        }
+        
+        // Get type label
+        const typeKey = (system.type || "flak").split("-").map(s => s.capitalize()).join("");
+        const typeLabel = game.i18n.localize(`RT.ArmourType.${typeKey}`);
+        
+        return {
+            type: system.type,
+            typeLabel,
+            apSummary,
+            coverageIcons,
+            maxAP: Math.max(...values),
+            minAP: Math.min(...values),
+            maxAgility: system.maxAgility,
+            properties: system.properties || []
+        };
     }
 
     _getGroupByOptions() {

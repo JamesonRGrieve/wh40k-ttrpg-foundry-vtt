@@ -2,5 +2,6 @@
 // Rogue Trader Chat System - Index
 // ============================================
 
+@import 'foundry-overrides';  // Must be first - global Foundry overrides
 @import 'roll-cards';
 @import 'item-cards';

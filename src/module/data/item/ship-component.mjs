@@ -37,7 +37,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(
           required: true,
           choices: ["transport", "raider", "frigate", "light-cruiser", "cruiser", "battlecruiser", "grand-cruiser", "all"]
         }),
-        { required: true, initial: ["all"] }
+        { required: true, initial: new Set(["all"]) }
       ),
       
       // Resource requirements

@@ -68,11 +68,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         choices: ["-", "free", "half", "full", "2-full", "3-full"]
       }),
       
-      // Weapon qualities (stored as set of quality identifiers)
-      qualities: new fields.SetField(
-        new fields.StringField({ required: true }),
-        { required: true, initial: [] }
-      ),
+
       
       // Modifications (references to weaponModification items)
       modifications: new fields.ArrayField(
@@ -184,8 +180,8 @@ export default class WeaponData extends ItemDataModel.mixin(
       props.push(`Reload: ${this.reloadLabel}`);
     }
     
-    if ( this.qualities.size ) {
-      props.push(`Qualities: ${Array.from(this.qualities).join(", ")}`);
+    if ( this.special?.size ) {
+      props.push(`Qualities: ${Array.from(this.special).join(", ")}`);
     }
     
     return props;

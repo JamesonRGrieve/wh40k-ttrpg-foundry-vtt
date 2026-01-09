@@ -6,7 +6,9 @@
             <div class="rt-skill-row" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                    <button type="button" class="rt-skill-name roll-skill" data-skill="{{entry.[0]}}"
+                    <button type="button" class="rt-skill-name roll-skill" 
+                            data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
+                            data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                             data-rt-tooltip="skill" data-rt-tooltip-data="{{entry.[1].tooltipData}}">
                         <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
                     </button>
@@ -31,7 +33,9 @@
             <div class="rt-skill-row" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                    <button type="button" class="rt-skill-name roll-skill" data-skill="{{entry.[0]}}"
+                    <button type="button" class="rt-skill-name roll-skill" 
+                            data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
+                            data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                             data-rt-tooltip="skill" data-rt-tooltip-data="{{entry.[1].tooltipData}}">
                         <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
                     </button>

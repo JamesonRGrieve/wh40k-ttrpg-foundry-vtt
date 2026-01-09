@@ -13,7 +13,7 @@ export default class AmmoSheet extends BaseItemSheet {
         classes: ["ammunition"],
         position: {
             width: 520,
-            height: 400
+            height: 500
         }
     };
 
@@ -41,4 +41,16 @@ export default class AmmoSheet extends BaseItemSheet {
     tabGroups = {
         primary: "details"
     };
+    
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        
+        // Add CONFIG reference for templates
+        context.CONFIG = CONFIG;
+        
+        return context;
+    }
 }

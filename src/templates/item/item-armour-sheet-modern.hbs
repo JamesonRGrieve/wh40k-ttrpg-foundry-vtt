@@ -10,12 +10,21 @@
                 <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Armour Name" />
                 <div class="rt-item-title__type">
                     <i class="fas fa-shield-halved"></i>
-                    <span>{{item.system.type}} Armour</span>
+                    <span>{{item.system.typeLabel}} Armour</span>
                 </div>
                 <div class="rt-item-meta">
-                    {{#if item.system.type}}
-                    <span class="rt-meta-badge rt-meta-badge--type">
-                        <i class="fas fa-shield"></i> {{item.system.type}}
+                    <span class="rt-meta-badge rt-meta-badge--type rt-meta-badge--{{item.system.type}}">
+                        <i class="fas fa-shield"></i> {{item.system.typeLabel}}
+                    </span>
+                    <span class="rt-meta-badge rt-meta-badge--ap">
+                        <i class="fas fa-shield-halved"></i> {{apSummary}}
+                    </span>
+                    <span class="rt-meta-badge rt-meta-badge--coverage" title="{{coverageLabel}}">
+                        <i class="fas fa-person"></i> {{coverageIcons}}
+                    </span>
+                    {{#if item.system.maxAgility}}
+                    <span class="rt-meta-badge rt-meta-badge--agility">
+                        <i class="fas fa-person-running"></i> Max Ag: {{item.system.maxAgility}}
                     </span>
                     {{/if}}
                     {{#if item.system.craftsmanship}}
@@ -103,6 +112,149 @@
         <section class="rt-tab-content">
             <!-- Protection Tab -->
             <div class="tab active" data-tab="protection" data-group="primary">
+                <!-- Coverage Visual -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-person"></i> Coverage</h3>
+                        <span class="rt-panel__subtitle">{{coverageLabel}}</span>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-coverage-grid">
+                            <button type="button" 
+                                    class="rt-coverage-badge {{#if (includes coverageArray "all")}}rt-coverage-badge--active{{/if}} {{#if (includes coverageArray "head")}}rt-coverage-badge--active{{/if}}"
+                                    data-action="toggleCoverage"
+                                    data-location="head"
+                                    title="Head">
+                                <i class="fas fa-head-side"></i>
+                                <span>Head</span>
+                            </button>
+                            
+                            <button type="button" 
+                                    class="rt-coverage-badge {{#if (includes coverageArray "all")}}rt-coverage-badge--active{{/if}} {{#if (includes coverageArray "body")}}rt-coverage-badge--active{{/if}}"
+                                    data-action="toggleCoverage"
+                                    data-location="body"
+                                    title="Body">
+                                <i class="fas fa-person"></i>
+                                <span>Body</span>
+                            </button>
+                            
+                            <button type="button" 
+                                    class="rt-coverage-badge {{#if (includes coverageArray "all")}}rt-coverage-badge--active{{/if}} {{#if (includes coverageArray "leftArm")}}rt-coverage-badge--active{{/if}}"
+                                    data-action="toggleCoverage"
+                                    data-location="leftArm"
+                                    title="Left Arm">
+                                <i class="fas fa-hand"></i>
+                                <span>L.Arm</span>
+                            </button>
+                            
+                            <button type="button" 
+                                    class="rt-coverage-badge {{#if (includes coverageArray "all")}}rt-coverage-badge--active{{/if}} {{#if (includes coverageArray "rightArm")}}rt-coverage-badge--active{{/if}}"
+                                    data-action="toggleCoverage"
+                                    data-location="rightArm"
+                                    title="Right Arm">
+                                <i class="fas fa-hand"></i>
+                                <span>R.Arm</span>
+                            </button>
+                            
+                            <button type="button" 
+                                    class="rt-coverage-badge {{#if (includes coverageArray "all")}}rt-coverage-badge--active{{/if}} {{#if (includes coverageArray "leftLeg")}}rt-coverage-badge--active{{/if}}"
+                                    data-action="toggleCoverage"
+                                    data-location="leftLeg"
+                                    title="Left Leg">
+                                <i class="fas fa-socks"></i>
+                                <span>L.Leg</span>
+                            </button>
+                            
+                            <button type="button" 
+                                    class="rt-coverage-badge {{#if (includes coverageArray "all")}}rt-coverage-badge--active{{/if}} {{#if (includes coverageArray "rightLeg")}}rt-coverage-badge--active{{/if}}"
+                                    data-action="toggleCoverage"
+                                    data-location="rightLeg"
+                                    title="Right Leg">
+                                <i class="fas fa-socks"></i>
+                                <span>R.Leg</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Armour Points -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-shield-halved"></i> Armour Points by Location</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-armour-diagram">
+                            <div class="rt-field-grid rt-field-grid--3">
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Head</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.armourPoints.head" value="{{item.system.armourPoints.head}}" min="0" max="20" />
+                                </div>
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Body</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.armourPoints.body" value="{{item.system.armourPoints.body}}" min="0" max="20" />
+                                </div>
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Max Agility</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.maxAgility" value="{{item.system.maxAgility}}" min="0" max="100" placeholder="—" />
+                                </div>
+                            </div>
+                            
+                            <div class="rt-field-grid rt-field-grid--4" style="margin-top: 1rem;">
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Left Arm</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.armourPoints.leftArm" value="{{item.system.armourPoints.leftArm}}" min="0" max="20" />
+                                </div>
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Right Arm</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.armourPoints.rightArm" value="{{item.system.armourPoints.rightArm}}" min="0" max="20" />
+                                </div>
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Left Leg</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.armourPoints.leftLeg" value="{{item.system.armourPoints.leftLeg}}" min="0" max="20" />
+                                </div>
+                                <div class="rt-field">
+                                    <label class="rt-field__label">Right Leg</label>
+                                    <input type="number" class="rt-field__input rt-field__input--centered" name="system.armourPoints.rightLeg" value="{{item.system.armourPoints.rightLeg}}" min="0" max="20" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Special Properties -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-star"></i> Special Properties</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-property-list">
+                            {{#each propertyLabels as |label index|}}
+                            <span class="rt-tag rt-tag--property">
+                                {{label}}
+                                <button type="button" class="rt-tag__remove" data-action="removeProperty" data-property="{{lookup ../item.system.properties index}}" title="Remove property">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </span>
+                            {{/each}}
+                            {{#unless propertyLabels.length}}
+                            <p class="rt-empty-text">No special properties.</p>
+                            {{/unless}}
+                        </div>
+                        
+                        <div class="rt-field-grid rt-field-grid--2" style="margin-top: 1rem;">
+                            <select class="rt-field__select" name="new-property">
+                                <option value="">— Add Property —</option>
+                                {{#each availableProperties as |prop key|}}
+                                <option value="{{key}}">{{localize prop.label}}</option>
+                                {{/each}}
+                            </select>
+                            <button type="button" class="rt-btn rt-btn--primary" data-action="addProperty">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="rt-panel">
                     <div class="rt-panel__header">
                         <h3><i class="fas fa-shield-halved"></i> Armour Points by Location</h3>

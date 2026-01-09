@@ -6,6 +6,7 @@ import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { Hit } from '../rolls/damage-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { ConfirmationDialog } from '../applications/dialogs/_module.mjs';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -70,16 +71,17 @@ export class BasicActionManager {
             return;
         }
 
-        Dialog.confirm({
-            title: 'Confirm Refund',
-            content: '<p>Are you sure you would like to refund ammo, fate, etc for this action?</p>',
-            yes: async () => {
-                await actionData.refundResources();
-                ui.notifications.info(`Resources refunded`);
-            },
-            no: () => {},
-            defaultYes: false,
+        const confirmed = await ConfirmationDialog.confirm({
+            title: "Confirm Refund",
+            content: "Are you sure you would like to refund ammo, fate, etc for this action?",
+            confirmLabel: "Refund",
+            cancelLabel: "Cancel"
         });
+        
+        if (confirmed) {
+            await actionData.refundResources();
+            ui.notifications.info(`Resources refunded`);
+        }
     }
 
     async _fateReroll(event) {
@@ -98,24 +100,25 @@ export class BasicActionManager {
             return;
         }
 
-        Dialog.confirm({
-            title: 'Confirm Re-Roll',
-            content: '<p>Are you sure you would like to use a fate point to re-roll action?</p>',
-            yes: async () => {
-                // Generate new ID for action data
-                actionData.id = uuid();
-                // Use a FP
-                await actionData.rollData.sourceActor.spendFate();
-                // Refund Initial Resources
-                await actionData.refundResources();
-                // Reset
-                actionData.reset();
-                // Run it back
-                await actionData.performActionAndSendToChat();
-            },
-            no: () => {},
-            defaultYes: false,
+        const confirmed = await ConfirmationDialog.confirm({
+            title: "Confirm Re-Roll",
+            content: "Are you sure you would like to use a fate point to re-roll action?",
+            confirmLabel: "Re-Roll",
+            cancelLabel: "Cancel"
         });
+        
+        if (confirmed) {
+            // Generate new ID for action data
+            actionData.id = uuid();
+            // Use a FP
+            await actionData.rollData.sourceActor.spendFate();
+            // Refund Initial Resources
+            await actionData.refundResources();
+            // Reset
+            actionData.reset();
+            // Run it back
+            await actionData.performActionAndSendToChat();
+        }
     }
 
     async _assignDamage(event) {
@@ -244,14 +247,13 @@ export class BasicActionManager {
             user: game.user.id,
             content: html,
             rollMode: game.settings.get('core', 'rollMode'),
-            type: CONST.CHAT_MESSAGE_TYPES.IC,
         };
         if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
             chatData.whisper = ChatMessage.getWhisperRecipients('GM');
         } else if (chatData.rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
-        ChatMessage.create(chatData);
+        await ChatMessage.create(chatData);
     }
 }
 

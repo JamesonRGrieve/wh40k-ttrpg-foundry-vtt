@@ -1,5 +1,10 @@
 {
   "RT": {
+    "Confirm": "Confirm",
+    "Cancel": "Cancel",
+    "Delete": "Delete",
+    "Yes": "Yes",
+    "No": "No",
     "Character": {
       "Name": "Name",
       "Player": "Player",
@@ -7,6 +12,7 @@
     },
     "Tabs": {
       "Overview": "Overview",
+      "Status": "Status",
       "Combat": "Combat",
       "Abilities": "Abilities",
       "Skills": "Skills",
@@ -61,6 +67,40 @@
       "AddWeapon": "Add Weapon",
       "EmptySlot": "Drag weapon here",
       "OtherWeapons": "Other Weapons"
+    },
+    "DamageType": {
+      "Label": "Damage Type",
+      "Impact": "Impact",
+      "Rending": "Rending",
+      "Explosive": "Explosive",
+      "Energy": "Energy"
+    },
+    "BodyPart": {
+      "Label": "Body Location",
+      "Head": "Head",
+      "Arm": "Arm",
+      "Body": "Body",
+      "Leg": "Leg"
+    },
+    "CriticalInjury": {
+      "Label": "Critical Injury",
+      "Severity": "Severity",
+      "Permanent": "Permanent",
+      "Effect": "Effect",
+      "Notes": "Notes",
+      "DamageType": "Damage Type",
+      "BodyPart": "Body Location",
+      "Create": "Create Critical Injury",
+      "Edit": "Edit Critical Injury",
+      "Delete": "Delete Critical Injury",
+      "None": "No critical injuries",
+      "Add": "Add Injury",
+      "SeverityLevels": {
+        "Minor": "Minor (1-3)",
+        "Moderate": "Moderate (4-6)",
+        "Severe": "Severe (7-9)",
+        "Fatal": "Fatal (10)"
+      }
     },
     "OriginPath": {
       "Header": "Origin Path",
@@ -175,12 +215,12 @@
       "WeightTotal": "Weight (Total)",
       "WeightCurrent": "Weight (Current)",
       "ArmourHeader": "Armour by Location",
-      "ArmourHead": "Head (1–10)",
-      "ArmourRightArm": "RA (11–20)",
-      "ArmourLeftArm": "LA (21–30)",
-      "ArmourBody": "Body (31–70)",
-      "ArmourRightLeg": "RL (71–85)",
-      "ArmourLeftLeg": "LL (86–100)",
+      "ArmourHead": "Head (1\u201310)",
+      "ArmourRightArm": "RA (11\u201320)",
+      "ArmourLeftArm": "LA (21\u201330)",
+      "ArmourBody": "Body (31\u201370)",
+      "ArmourRightLeg": "RL (71\u201385)",
+      "ArmourLeftLeg": "LL (86\u2013100)",
       "HealthHeader": "Combat Trackers",
       "WoundsTotal": "Wounds (Total)",
       "WoundsCurrent": "Wounds (Current)",
@@ -367,6 +407,153 @@
     },
     "Theme": {
       "Switched": "Theme switched to {theme} mode"
+    },
+    "Chat": {
+      "NoItemFound": "No item found on this chat card.",
+      "ItemNotFound": "The item could not be found. It may have been deleted.",
+      "NoTokensTargeted": "No tokens are currently targeted. Target one or more tokens to apply damage."
+    },
+    "Roll": {
+      "ConfigureRoll": "Configure Roll",
+      "Roll": "Roll",
+      "BaseTarget": "Base Target",
+      "Modifier": "Modifier",
+      "FinalTarget": "Final Target",
+      "Difficulty": "Difficulty",
+      "CustomModifier": "Custom Modifier",
+      "CustomModifierHint": "Additional situational modifiers",
+      "RollMode": "Roll Mode",
+      "Success": "Success",
+      "Failure": "Failure",
+      "CriticalSuccess": "Critical Success!",
+      "CriticalFailure": "Critical Failure!",
+      "DegreesOfSuccess": "Degrees of Success",
+      "DegreesOfFailure": "Degrees of Failure"
+    },
+    "Difficulty": {
+      "Trivial": "Trivial",
+      "Elementary": "Elementary",
+      "Easy": "Easy",
+      "Routine": "Routine",
+      "Ordinary": "Ordinary",
+      "Challenging": "Challenging",
+      "Difficult": "Difficult",
+      "Hard": "Hard",
+      "VeryHard": "Very Hard",
+      "Arduous": "Arduous",
+      "Punishing": "Punishing",
+      "Hellish": "Hellish",
+      "Infernal": "Infernal"
+    },
+    "ArmourType": {
+      "Flak": "Flak Armour",
+      "Mesh": "Mesh Armour",
+      "Carapace": "Carapace Armour",
+      "Power": "Power Armour",
+      "LightPower": "Light Power Armour",
+      "StormTrooper": "Storm Trooper Carapace",
+      "FeudalWorld": "Feudal World Armour",
+      "Primitive": "Primitive Armour",
+      "Xenos": "Xenos Armour",
+      "Void": "Void Suit",
+      "Enforcer": "Enforcer Light Carapace",
+      "HostileEnvironment": "Hostile Environment Suit"
+    },
+    "ArmourProperty": {
+      "Sealed": "Sealed",
+      "SealedDesc": "Provides complete environmental protection",
+      "AutoStabilized": "Auto-Stabilized",
+      "AutoStabilizedDesc": "Built-in stabilization system for ranged weapons",
+      "Hexagrammic": "Hexagrammic Wards",
+      "HexagrammicDesc": "Psychic protection runes provide +20 to resist psychic effects",
+      "Blessed": "Blessed",
+      "BlessedDesc": "Blessed by the Ecclesiarchy, provides bonus vs corruption",
+      "Camouflage": "Camouflage",
+      "CamouflageDesc": "Provides bonus to Concealment tests",
+      "Lightweight": "Lightweight",
+      "LightweightDesc": "Reduced weight, easier to wear",
+      "Reinforced": "Reinforced",
+      "ReinforcedDesc": "Extra structural support, increased durability",
+      "AgilityBonus": "Agility Bonus",
+      "AgilityBonusDesc": "Enhanced mobility systems provide Agility bonus",
+      "StrengthBonus": "Strength Bonus",
+      "StrengthBonusDesc": "Power assistance provides Strength bonus"
+    },
+    "Coverage": {
+      "All": "All Locations",
+      "None": "No Coverage",
+      "Head": "Head",
+      "Body": "Body",
+      "Arms": "Arms",
+      "Legs": "Legs"
+    },
+    "BodyLocation": {
+      "Head": "Head",
+      "RightArm": "Right Arm",
+      "LeftArm": "Left Arm",
+      "Body": "Body",
+      "RightLeg": "Right Leg",
+      "LeftLeg": "Left Leg"
+    },
+    "GearCategory": {
+      "General": "General Equipment",
+      "Tools": "Tools & Devices",
+      "Drugs": "Drugs & Chemicals",
+      "Consumable": "Consumables",
+      "Clothing": "Clothing & Garments",
+      "Survival": "Survival Gear",
+      "Communications": "Communications",
+      "Detection": "Detection & Sensors",
+      "Medical": "Medical Supplies",
+      "Tech": "Technology",
+      "Religious": "Religious Items",
+      "Luxury": "Luxury & Exotic",
+      "Contraband": "Contraband"
+    },
+    "Gear": {
+      "Category": "Category",
+      "Effect": "Effect",
+      "EffectHint": "Describe what this item does when used (rules text, mechanical effects, etc.)",
+      "Duration": "Duration",
+      "DurationPlaceholder": "e.g., 1d10 hours, 1 round, permanent",
+      "DurationHint": "How long the effect lasts (for drugs, consumables, etc.)",
+      "Uses": "Uses",
+      "CurrentUses": "Current Uses",
+      "MaxUses": "Maximum Uses",
+      "UsesRemaining": "{uses} uses remaining",
+      "Consume": "Consume",
+      "ConsumedUse": "{name} consumed (remaining: {remaining})",
+      "ResetUses": "Reset to Maximum",
+      "UsesReset": "{name} uses reset to {max}",
+      "Exhausted": "Exhausted",
+      "UsesExhausted": "This item has no uses remaining",
+      "NoConsumableUses": "This item is not consumable",
+      "NoEffect": "No effect description",
+      "Consumable": "Consumable",
+      "ConsumableSettings": "Consumable Settings",
+      "NamePlaceholder": "Gear Name"
+    },
+    "Item": {
+      "Properties": "Item Properties"
+    },
+    "Details": "Details",
+    "Quantity": "Quantity",
+    "Cost": "Cost",
+    "TotalWeight": "Total Weight",
+    "Weight": "Weight",
+    "Notes": "Notes",
+    "NotesAndSource": "Notes & Source",
+    "Description": "Description",
+    "Source": {
+      "Book": "Book",
+      "Page": "Page",
+      "Custom": "Custom"
+    },
+    "Availability": {
+      "Label": "Availability"
+    },
+    "Craftsmanship": {
+      "Label": "Craftsmanship"
     }
   }
 }
