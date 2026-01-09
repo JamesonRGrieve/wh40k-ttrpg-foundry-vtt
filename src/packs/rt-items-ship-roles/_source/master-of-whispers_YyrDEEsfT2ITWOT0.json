@@ -5,9 +5,38 @@
   "system": {
     "rank": 3,
     "purpose": "Spymaster for both internal and external plots.",
-    "careerPreferences": "Usually Seneschal, any but Missionary.",
-    "subordinates": "Agents/Spies (on and off ship), void-ship librarium savants.",
-    "importantSkills": "Inquiry, Deceive, Interrogation, Scrutiny",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Arch-Militant",
+      "Astropath Transcendent",
+      "Explorator",
+      "Navigator",
+      "Seneschal",
+      "Void-Master"
+    ],
+    "subordinates": [
+      "Agents/Spies (on",
+      "off ship)",
+      "void-ship librarium savants"
+    ],
+    "importantSkills": [
+      {
+        "name": "Inquiry",
+        "specialization": ""
+      },
+      {
+        "name": "Deceive",
+        "specialization": ""
+      },
+      {
+        "name": "Interrogation",
+        "specialization": ""
+      },
+      {
+        "name": "Scrutiny",
+        "specialization": ""
+      }
+    ],
     "effect": "+10 to Disinformation Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Spymaster for both internal and external plots.</p><p><b>Effect:</b> +10 to Disinformation Extended Action</p>"
@@ -19,7 +48,17 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Typically Seneschal",
+    "abilities": [
+      {
+        "name": "Disinformation Expertise",
+        "description": "<p>+10 to Disinformation Extended Action</p>",
+        "bonus": 10,
+        "action": "Disinformation",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

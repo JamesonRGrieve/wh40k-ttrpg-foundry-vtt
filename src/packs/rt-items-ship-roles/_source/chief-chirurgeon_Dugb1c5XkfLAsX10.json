@@ -5,9 +5,38 @@
   "system": {
     "rank": 3,
     "purpose": "Oversees and Maintains Crew Health",
-    "careerPreferences": "Missionary, Explorator, or Seneschal.",
-    "subordinates": "Biologis Tech-Adepts, medicae and doctors",
-    "importantSkills": "Medicae, Chem-se, Scholastic Lore (Chymistry), Tech-Use, Trade (Technomat)",
+    "careerPreferences": [
+      "Missionary",
+      "Explorator",
+      "Seneschal"
+    ],
+    "subordinates": [
+      "Biologis Tech-Adepts",
+      "medicae",
+      "doctors"
+    ],
+    "importantSkills": [
+      {
+        "name": "Medicae",
+        "specialization": ""
+      },
+      {
+        "name": "Chem-se",
+        "specialization": ""
+      },
+      {
+        "name": "Scholastic Lore",
+        "specialization": "Chymistry"
+      },
+      {
+        "name": "Tech-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Trade",
+        "specialization": "Technomat"
+      }
+    ],
     "effect": "+10 to Triage Extended Action (Chief Chirurgeon Talent)",
     "description": {
       "value": "<p><b>Purpose:</b> Oversees and Maintains Crew Health</p><p><b>Effect:</b> +10 to Triage Extended Action (Chief Chirurgeon Talent)</p>"
@@ -19,7 +48,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "abilities": [
+      {
+        "name": "Triage Expertise",
+        "description": "<p>+10 to Triage Extended Action (Chief Chirurgeon Talent)</p>",
+        "bonus": 10,
+        "action": "Triage",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

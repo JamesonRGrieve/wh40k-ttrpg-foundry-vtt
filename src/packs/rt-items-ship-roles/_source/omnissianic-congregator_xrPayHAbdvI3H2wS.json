@@ -5,9 +5,28 @@
   "system": {
     "rank": 4,
     "purpose": "Performs rites to appease the Vessel's Machine Spirits.",
-    "careerPreferences": "Explorators or chars with Forge World background",
-    "subordinates": "Shipwrights, lexmechanics of cogitation vaults, keepers of the Altar Omnissiah",
-    "importantSkills": "Tech-Use, Forbidden Lore (Adeptus Mechanicus), Trade (Technomat)",
+    "careerPreferences": [
+      "Explorators"
+    ],
+    "subordinates": [
+      "Shipwrights",
+      "lexmechanics of cogitation vaults",
+      "keepers of the Altar Omnissiah"
+    ],
+    "importantSkills": [
+      {
+        "name": "Tech-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Forbidden Lore",
+        "specialization": "Adeptus Mechanicus"
+      },
+      {
+        "name": "Trade",
+        "specialization": "Technomat"
+      }
+    ],
     "effect": "+10 to \"Aid the Machine Spirit\" Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Performs rites to appease the Vessel's Machine Spirits.</p><p><b>Effect:</b> +10 to \"Aid the Machine Spirit\" Extended Action</p>"
@@ -19,7 +38,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "abilities": [
+      {
+        "name": "Aid the Machine Spirit Expertise",
+        "description": "<p>+10 to \"Aid the Machine Spirit\" Extended Action</p>",
+        "bonus": 10,
+        "action": "Aid the Machine Spirit",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

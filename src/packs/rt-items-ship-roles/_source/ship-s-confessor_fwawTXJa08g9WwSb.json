@@ -5,9 +5,37 @@
   "system": {
     "rank": 4,
     "purpose": "Maintains Crew Spritual Purity and Faith.",
-    "careerPreferences": "Usually Missionary, any but Explorator/Seneschal",
-    "subordinates": "Lesser Clerics/Confessors of shrines, Ministorum Emissaries, Zealots mobs.",
-    "importantSkills": "Scholastic Lore (Imperial Creed), Common Lore (Ecclesiarchy/Imperial Creed), Charm, Intimidate.",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Arch-Militant",
+      "Astropath Transcendent",
+      "Missionary",
+      "Navigator",
+      "Void-Master"
+    ],
+    "subordinates": [
+      "Lesser Clerics/Confessors of shrines",
+      "Ministorum Emissaries",
+      "Zealots mobs"
+    ],
+    "importantSkills": [
+      {
+        "name": "Scholastic Lore",
+        "specialization": "Imperial Creed"
+      },
+      {
+        "name": "Common Lore",
+        "specialization": "Ecclesiarchy/Imperial Creed"
+      },
+      {
+        "name": "Charm",
+        "specialization": ""
+      },
+      {
+        "name": "Intimidate.",
+        "specialization": ""
+      }
+    ],
     "effect": "+10 to \"Put your Backs in It!\" Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Maintains Crew Spritual Purity and Faith.</p><p><b>Effect:</b> +10 to \"Put your Backs in It!\" Extended Action</p>"
@@ -19,7 +47,17 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Typically Missionary",
+    "abilities": [
+      {
+        "name": "Put your Backs in It! Expertise",
+        "description": "<p>+10 to \"Put your Backs in It!\" Extended Action</p>",
+        "bonus": 10,
+        "action": "Put your Backs in It!",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

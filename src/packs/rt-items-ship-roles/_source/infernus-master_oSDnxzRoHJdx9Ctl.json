@@ -5,9 +5,30 @@
   "system": {
     "rank": 4,
     "purpose": "Leads Firefighting and Damage control efforts.",
-    "careerPreferences": "Not Rogue Trader, Astropath, Explorator, or Navigator.",
-    "subordinates": "Shipboard Troops, damage-control crew",
-    "importantSkills": "Command, Intimidate, Search",
+    "careerPreferences": [
+      "Not Rogue Trader",
+      "Astropath",
+      "Explorator",
+      "Navigator"
+    ],
+    "subordinates": [
+      "Shipboard Troops",
+      "damage-control crew"
+    ],
+    "importantSkills": [
+      {
+        "name": "Command",
+        "specialization": ""
+      },
+      {
+        "name": "Intimidate",
+        "specialization": ""
+      },
+      {
+        "name": "Search",
+        "specialization": ""
+      }
+    ],
     "effect": "+20 to Command Tests made to combat ship-board fires.",
     "description": {
       "value": "<p><b>Purpose:</b> Leads Firefighting and Damage control efforts.</p><p><b>Effect:</b> +20 to Command Tests made to combat ship-board fires.</p>"
@@ -19,7 +40,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "abilities": [
+      {
+        "name": "Infernus Master Bonus",
+        "description": "<p>+20 to Command Tests made to combat ship-board fires.</p>",
+        "bonus": 20,
+        "skill": "C",
+        "actionType": "passive"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

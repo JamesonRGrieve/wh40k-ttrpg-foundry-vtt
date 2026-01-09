@@ -5,9 +5,38 @@
   "system": {
     "rank": 3,
     "purpose": "Responsible for Military Actions and Security.",
-    "careerPreferences": "Ususally Arch-Militant, any but Void-master",
-    "subordinates": "Armoury Crew, Ship Commanders, Mercenary Leaders",
-    "importantSkills": "Command, Tech-Use, Intimidate, Scholastic Lore (Tactica Imperialis)",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Arch-Militant",
+      "Astropath Transcendent",
+      "Explorator",
+      "Missionary",
+      "Navigator",
+      "Seneschal"
+    ],
+    "subordinates": [
+      "Armoury Crew",
+      "Ship Commanders",
+      "Mercenary Leaders"
+    ],
+    "importantSkills": [
+      {
+        "name": "Command",
+        "specialization": ""
+      },
+      {
+        "name": "Tech-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Intimidate",
+        "specialization": ""
+      },
+      {
+        "name": "Scholastic Lore",
+        "specialization": "Tactica Imperialis"
+      }
+    ],
     "effect": "+10 to \"Prepare to Repel Boardars\" Extended Actions.",
     "description": {
       "value": "<p><b>Purpose:</b> Responsible for Military Actions and Security.</p><p><b>Effect:</b> +10 to \"Prepare to Repel Boardars\" Extended Actions.</p>"
@@ -19,7 +48,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "abilities": [
+      {
+        "name": "Prepare to Repel Boardars Expertise",
+        "description": "<p>+10 to \"Prepare to Repel Boardars\" Extended Actions.</p>",
+        "bonus": 10,
+        "action": "Prepare to Repel Boardars",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

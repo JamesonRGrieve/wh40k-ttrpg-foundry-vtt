@@ -5,9 +5,28 @@
   "system": {
     "rank": 4,
     "purpose": "Master and Maintainer of the Plasma Drives.",
-    "careerPreferences": "Only Explorators",
-    "subordinates": "Drive Temple Enginseers, servitors, and plasma maintenance crew.",
-    "importantSkills": "Tech-Use, Forbidden Lore (Archeotech), Pilot (Space Craft)",
+    "careerPreferences": [
+      "Explorators"
+    ],
+    "subordinates": [
+      "Drive Temple Enginseers",
+      "servitors",
+      "and plasma maintenance crew"
+    ],
+    "importantSkills": [
+      {
+        "name": "Tech-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Forbidden Lore",
+        "specialization": "Archeotech"
+      },
+      {
+        "name": "Pilot",
+        "specialization": "Space Craft"
+      }
+    ],
     "effect": "+10 to \"Flank Speed\" Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Master and Maintainer of the Plasma Drives.</p><p><b>Effect:</b> +10 to \"Flank Speed\" Extended Action</p>"
@@ -19,7 +38,17 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Exclusive role",
+    "abilities": [
+      {
+        "name": "Flank Speed Expertise",
+        "description": "<p>+10 to \"Flank Speed\" Extended Action</p>",
+        "bonus": 10,
+        "action": "Flank Speed",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

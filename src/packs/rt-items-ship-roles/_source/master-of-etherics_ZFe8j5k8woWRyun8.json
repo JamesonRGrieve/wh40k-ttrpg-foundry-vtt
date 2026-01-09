@@ -5,9 +5,33 @@
   "system": {
     "rank": 3,
     "purpose": "Responsible for the Auspex and Vox relays.",
-    "careerPreferences": "Usually Void-Master, any but Explorator/Arch-Militant",
-    "subordinates": "Auspex and Vox Officers, Etherics Tech-Priests.",
-    "importantSkills": "Scrutiny, Tech-Use, Trade (Voidfarer)",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Astropath Transcendent",
+      "Missionary",
+      "Navigator",
+      "Seneschal",
+      "Void-Master"
+    ],
+    "subordinates": [
+      "Auspex",
+      "Vox Officers",
+      "Etherics Tech-Priests"
+    ],
+    "importantSkills": [
+      {
+        "name": "Scrutiny",
+        "specialization": ""
+      },
+      {
+        "name": "Tech-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Trade",
+        "specialization": "Voidfarer"
+      }
+    ],
     "effect": "+10 to Focused Augury Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Responsible for the Auspex and Vox relays.</p><p><b>Effect:</b> +10 to Focused Augury Extended Action</p>"
@@ -19,7 +43,17 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Typically Void-Master",
+    "abilities": [
+      {
+        "name": "Focused Augury Expertise",
+        "description": "<p>+10 to Focused Augury Extended Action</p>",
+        "bonus": 10,
+        "action": "Focused Augury",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

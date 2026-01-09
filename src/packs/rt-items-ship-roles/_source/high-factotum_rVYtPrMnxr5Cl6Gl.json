@@ -5,9 +5,34 @@
   "system": {
     "rank": 2,
     "purpose": "Manages Finances, Trade, and the making of Profits.",
-    "careerPreferences": "Usually Seneschal, any but Missionary.",
-    "subordinates": "Quartermasters, negotiators, crew officers.",
-    "importantSkills": "Barter, Commerce, Evaluate",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Arch-Militant",
+      "Astropath Transcendent",
+      "Explorator",
+      "Navigator",
+      "Seneschal",
+      "Void-Master"
+    ],
+    "subordinates": [
+      "Quartermasters",
+      "negotiators",
+      "crew officers"
+    ],
+    "importantSkills": [
+      {
+        "name": "Barter",
+        "specialization": ""
+      },
+      {
+        "name": "Commerce",
+        "specialization": ""
+      },
+      {
+        "name": "Evaluate",
+        "specialization": ""
+      }
+    ],
     "effect": "Once per Session, can take up to 300 Achievement Points earned to the completion of one Endeavour and apply them to another.",
     "description": {
       "value": "<p><b>Purpose:</b> Manages Finances, Trade, and the making of Profits.</p><p><b>Effect:</b> Once per Session, can take up to 300 Achievement Points earned to the completion of one Endeavour and apply them to another.</p>"
@@ -19,7 +44,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Typically Seneschal",
+    "abilities": [
+      {
+        "name": "High Factotum Authority",
+        "description": "<p>Once per Session, can take up to 300 Achievement Points earned to the completion of one Endeavour and apply them to another.</p>",
+        "action": "take up to 300 Achievement Points earned to the completion of one Endeavour and apply them to another",
+        "actionType": "special"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

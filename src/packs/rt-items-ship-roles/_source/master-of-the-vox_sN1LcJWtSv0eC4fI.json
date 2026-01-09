@@ -5,9 +5,29 @@
   "system": {
     "rank": 4,
     "purpose": "Keep clear and maintain vox communications.",
-    "careerPreferences": "Astropath Transcendant, Seneschal or Void-master.",
-    "subordinates": "Communication and Cryptography Officers, vox-maintenance personnel",
-    "importantSkills": "Ciphers (Rogue Trader), Secret Tongue (Rogue Trader), Trade (Cryptographer)",
+    "careerPreferences": [
+      "Seneschal",
+      "Void"
+    ],
+    "subordinates": [
+      "Communication",
+      "Cryptography Officers",
+      "vox-maintenance personnel"
+    ],
+    "importantSkills": [
+      {
+        "name": "Ciphers",
+        "specialization": "Rogue Trader"
+      },
+      {
+        "name": "Secret Tongue",
+        "specialization": "Rogue Trader"
+      },
+      {
+        "name": "Trade",
+        "specialization": "Cryptographer"
+      }
+    ],
     "effect": "+20 to \"Jam Communications\" Extended Action",
     "description": {
       "value": "<p><b>Purpose:</b> Keep clear and maintain vox communications.</p><p><b>Effect:</b> +20 to \"Jam Communications\" Extended Action</p>"
@@ -19,7 +39,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "abilities": [
+      {
+        "name": "Jam Communications Expertise",
+        "description": "<p>+20 to \"Jam Communications\" Extended Action</p>",
+        "bonus": 20,
+        "action": "Jam Communications",
+        "actionType": "extended"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

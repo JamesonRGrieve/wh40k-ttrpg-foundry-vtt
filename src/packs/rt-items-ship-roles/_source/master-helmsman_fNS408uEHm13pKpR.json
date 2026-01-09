@@ -5,9 +5,33 @@
   "system": {
     "rank": 3,
     "purpose": "Directs Vessel movements and the crew that make it so.",
-    "careerPreferences": "Usually Void-Master, any but Explorator/Arch-Militant",
-    "subordinates": "Helm Crew, Engine Tech-Priests, less Auspex Officers",
-    "importantSkills": "Pilot (Space Craft), Scholastic Lore (Astromancy), Trade (Voidfarer)",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Astropath Transcendent",
+      "Missionary",
+      "Navigator",
+      "Seneschal",
+      "Void-Master"
+    ],
+    "subordinates": [
+      "Helm Crew",
+      "Engine Tech-Priests",
+      "less Auspex Officers"
+    ],
+    "importantSkills": [
+      {
+        "name": "Pilot",
+        "specialization": "Space Craft"
+      },
+      {
+        "name": "Scholastic Lore",
+        "specialization": "Astromancy"
+      },
+      {
+        "name": "Trade",
+        "specialization": "Voidfarer"
+      }
+    ],
     "effect": "+10 to \"Evasive Manoeuvres\" Action",
     "description": {
       "value": "<p><b>Purpose:</b> Directs Vessel movements and the crew that make it so.</p><p><b>Effect:</b> +10 to \"Evasive Manoeuvres\" Action</p>"
@@ -19,7 +43,17 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Typically Void-Master",
+    "abilities": [
+      {
+        "name": "Master Helmsman Bonus",
+        "description": "<p>+10 to \"Evasive Manoeuvres\" Action</p>",
+        "bonus": 10,
+        "skill": "\"",
+        "actionType": "passive"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

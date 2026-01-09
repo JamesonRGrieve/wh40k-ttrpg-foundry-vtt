@@ -5,9 +5,29 @@
   "system": {
     "rank": 4,
     "purpose": "Finds safe warp and realspace travel routes.",
-    "careerPreferences": "Seneschal, Navigator, Explorers, or other scholars.",
-    "subordinates": "Navigator Archivists, Librarium keepers, auger operators",
-    "importantSkills": "Trader (Astrographer), Navigation (Stellar and Warp), Forbidden Lore (Navigators)",
+    "careerPreferences": [
+      "Seneschal",
+      "Navigator"
+    ],
+    "subordinates": [
+      "Navigator Archivists",
+      "Librarium keepers",
+      "auger operators"
+    ],
+    "importantSkills": [
+      {
+        "name": "Trader",
+        "specialization": "Astrographer"
+      },
+      {
+        "name": "Navigation",
+        "specialization": "Stellar and Warp"
+      },
+      {
+        "name": "Forbidden Lore",
+        "specialization": "Navigators"
+      }
+    ],
     "effect": "+10 to all Awareness and Perception Checks made during Warp Navigation and when detecting Stellar Phenomena.",
     "description": {
       "value": "<p><b>Purpose:</b> Finds safe warp and realspace travel routes.</p><p><b>Effect:</b> +10 to all Awareness and Perception Checks made during Warp Navigation and when detecting Stellar Phenomena.</p>"
@@ -19,7 +39,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "abilities": [
+      {
+        "name": "Carto-Artifex Bonus",
+        "description": "<p>+10 to all Awareness and Perception Checks made during Warp Navigation and when detecting Stellar Phenomena.</p>",
+        "bonus": 10,
+        "skill": "A",
+        "actionType": "passive"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

@@ -5,9 +5,30 @@
   "system": {
     "rank": 3,
     "purpose": "Directs Ship Weapons, Gunneries, and Fighter Pilots.",
-    "careerPreferences": "Usually Arch-Militant, any but Void-Master",
-    "subordinates": "Gunnery and Squadron Officers, Ordnance Crew.",
-    "importantSkills": "Command, Scholastic Lore (Tactica Imperialis_, Trader (Voidfarer)",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Arch-Militant",
+      "Astropath Transcendent",
+      "Explorator",
+      "Missionary",
+      "Navigator",
+      "Seneschal"
+    ],
+    "subordinates": [
+      "Gunnery",
+      "Squadron Officers",
+      "Ordnance Crew"
+    ],
+    "importantSkills": [
+      {
+        "name": "Command",
+        "specialization": ""
+      },
+      {
+        "name": "Scholastic Lore",
+        "specialization": "Tactica Imperialis_, Trader (Voidfarer"
+      }
+    ],
     "effect": "Additional +5 to BS Tests on Ship Weapons while using \"Lock on Target\" Extended Action.",
     "description": {
       "value": "<p><b>Purpose:</b> Directs Ship Weapons, Gunneries, and Fighter Pilots.</p><p><b>Effect:</b> Additional +5 to BS Tests on Ship Weapons while using \"Lock on Target\" Extended Action.</p>"
@@ -16,10 +37,20 @@
     "shipBonuses": {
       "manoeuvrability": 0,
       "detection": 0,
-      "ballisticSkill": 0,
+      "ballisticSkill": 5,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Typically Arch-Militant",
+    "abilities": [
+      {
+        "name": "Master of Ordnance Bonus",
+        "description": "<p>Additional +5 to BS Tests on Ship Weapons while using \"Lock on Target\" Extended Action.</p>",
+        "bonus": 5,
+        "skill": "B",
+        "actionType": "passive"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

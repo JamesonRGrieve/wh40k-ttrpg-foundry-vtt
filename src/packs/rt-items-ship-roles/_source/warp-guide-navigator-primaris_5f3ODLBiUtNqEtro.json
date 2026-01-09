@@ -5,9 +5,33 @@
   "system": {
     "rank": 3,
     "purpose": "Guides the Vessel Through the Warp, avoiding its dangers.",
-    "careerPreferences": "Only Navigator",
-    "subordinates": "Lesser Navigators, bodyguards and assassins, Navigator Emmisaries",
-    "importantSkills": "Navigation (Warp), Trade (Astrographer), Scholastic Lore (Astromancy), Forbbiden Lore (Warp)",
+    "careerPreferences": [
+      "Navigator"
+    ],
+    "subordinates": [
+      "Lesser Navigators",
+      "bodyguards",
+      "assassins",
+      "Navigator Emmisaries"
+    ],
+    "importantSkills": [
+      {
+        "name": "Navigation",
+        "specialization": "Warp"
+      },
+      {
+        "name": "Trade",
+        "specialization": "Astrographer"
+      },
+      {
+        "name": "Scholastic Lore",
+        "specialization": "Astromancy"
+      },
+      {
+        "name": "Forbbiden Lore",
+        "specialization": "Warp"
+      }
+    ],
     "effect": "+5 to Navigation (Stellar) Skill when steering the ship through the warp",
     "description": {
       "value": "<p><b>Purpose:</b> Guides the Vessel Through the Warp, avoiding its dangers.</p><p><b>Effect:</b> +5 to Navigation (Stellar) Skill when steering the ship through the warp</p>"
@@ -19,7 +43,17 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Exclusive role",
+    "abilities": [
+      {
+        "name": "Warp Guide/Navigator Primaris Bonus",
+        "description": "<p>+5 to Navigation (Stellar) Skill when steering the ship through the warp</p>",
+        "bonus": 5,
+        "skill": "N",
+        "actionType": "passive"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

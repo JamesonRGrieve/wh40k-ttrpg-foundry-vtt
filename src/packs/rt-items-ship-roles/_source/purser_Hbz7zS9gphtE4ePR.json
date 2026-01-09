@@ -5,9 +5,28 @@
   "system": {
     "rank": 4,
     "purpose": "Balance the books, crew payments.",
-    "careerPreferences": "Only Seneschal",
-    "subordinates": "Financial Managers, accountants, Master of Pensions",
-    "importantSkills": "Barter, Commerce, Evaluate",
+    "careerPreferences": [
+      "Seneschal"
+    ],
+    "subordinates": [
+      "Financial Managers",
+      "accountants",
+      "Master of Pensions"
+    ],
+    "importantSkills": [
+      {
+        "name": "Barter",
+        "specialization": ""
+      },
+      {
+        "name": "Commerce",
+        "specialization": ""
+      },
+      {
+        "name": "Evaluate",
+        "specialization": ""
+      }
+    ],
     "effect": "When Replenishing Morale with Achievement Points, Purser only has to spend 25, and always makes +20 Barter Test instead of Charm test, regardless of how many times method is used.",
     "description": {
       "value": "<p><b>Purpose:</b> Balance the books, crew payments.</p><p><b>Effect:</b> When Replenishing Morale with Achievement Points, Purser only has to spend 25, and always makes +20 Barter Test instead of Charm test, regardless of how many times method is used.</p>"
@@ -19,7 +38,15 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Exclusive role",
+    "abilities": [
+      {
+        "name": "Purser Effect",
+        "description": "<p>When Replenishing Morale with Achievement Points, Purser only has to spend 25, and always makes +20 Barter Test instead of Charm test, regardless of how many times method is used.</p>",
+        "actionType": "passive"
+      }
+    ]
   },
   "effects": [],
   "flags": {},

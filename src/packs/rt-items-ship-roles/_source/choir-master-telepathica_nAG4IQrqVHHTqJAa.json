@@ -5,9 +5,28 @@
   "system": {
     "rank": 3,
     "purpose": "Directs Astropathic Choir Communications.",
-    "careerPreferences": "Only Astropath Transcendent",
-    "subordinates": "Less Astropathic Choir, Choir Support staff, Rite-masters of Astra Telepathica",
-    "importantSkills": "Psyniscience, Forbidden Lore (Warp), Command",
+    "careerPreferences": [
+      "Astropath Transcendent"
+    ],
+    "subordinates": [
+      "Less Astropathic Choir",
+      "Choir Support staff",
+      "Rite-masters of Astra Telepathica"
+    ],
+    "importantSkills": [
+      {
+        "name": "Psyniscience",
+        "specialization": ""
+      },
+      {
+        "name": "Forbidden Lore",
+        "specialization": "Warp"
+      },
+      {
+        "name": "Command",
+        "specialization": ""
+      }
+    ],
     "effect": "May increase range of Astropathic Signals by one step.",
     "description": {
       "value": "<p><b>Purpose:</b> Directs Astropathic Choir Communications.</p><p><b>Effect:</b> May increase range of Astropathic Signals by one step.</p>"
@@ -19,7 +38,16 @@
       "ballisticSkill": 0,
       "crewRating": 0
     },
-    "specialAbility": ""
+    "specialAbility": "",
+    "careerNote": "Exclusive role",
+    "abilities": [
+      {
+        "name": "Choir-Master Telepathica Ability",
+        "description": "<p>May increase range of Astropathic Signals by one step.</p>",
+        "action": "increase range of Astropathic Signals by one step",
+        "actionType": "special"
+      }
+    ]
   },
   "effects": [],
   "flags": {},
