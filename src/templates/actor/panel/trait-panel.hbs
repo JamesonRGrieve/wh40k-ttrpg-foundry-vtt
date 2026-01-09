@@ -1,28 +1,40 @@
-<div class="rt-panel rt-ability-panel rt-traits-panel">
-    <div class="rt-ability-header">
-        <h3 class="rt-ability-title"><i class="fas fa-shield-alt"></i> Traits</h3>
-        <button type="button" class="rt-ability-add item-create" data-type="trait" title="Add Trait">
-            <i class="fas fa-plus"></i>
-        </button>
+<div class="rt-panel rt-panel-traits-list">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-shield-alt"></i> Traits</span>
     </div>
-    <div class="rt-ability-list">
-        {{#each actor.items as |item|}}
-            {{#if item.isTrait}}
-            <div class="rt-ability-row" data-item-id="{{item.id}}">
-                <img src="{{item.img}}" class="rt-ability-thumb" alt="" />
-                <button type="button" class="rt-ability-name item-edit" data-item-id="{{item.id}}">
-                    {{item.name}}{{#if item.system.level}} ({{item.system.level}}){{/if}}
-                </button>
-                <div class="rt-ability-actions">
-                    <button type="button" class="rt-ability-btn item-vocalize" data-item-id="{{item.id}}" title="Post to Chat">
-                        <i class="fas fa-comment"></i>
-                    </button>
-                    <button type="button" class="rt-ability-btn item-delete" data-item-id="{{item.id}}" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
+    <div class="rt-panel-body">
+        {{#if traitsCount}}
+        <div class="rt-traits-list" data-drop-zone="traits" data-accepts="trait">
+            {{#each actor.items as |item|}}
+                {{#if item.isTrait}}
+                <div class="rt-trait-card item-drag" data-item-id="{{item.id}}" draggable="true">
+                    <div class="rt-card-header">
+                        <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
+                        <div class="rt-card-info">
+                            <span class="rt-card-name item-edit" data-item-id="{{item.id}}">
+                                {{item.name}}{{#if item.system.level}} ({{item.system.level}}){{/if}}
+                            </span>
+                            {{#if item.system.type}}
+                            <span class="rt-card-meta">{{item.system.type}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="rt-card-actions">
+                        <button type="button" class="rt-card-btn item-vocalize" data-item-id="{{item.id}}" title="Send to Chat">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                        <button type="button" class="rt-card-btn rt-btn-danger item-delete" data-item-id="{{item.id}}" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            {{/if}}
-        {{/each}}
+                {{/if}}
+            {{/each}}
+        </div>
+        {{/if}}
+        <div class="rt-dropzone" data-action="itemCreate" data-type="trait">
+            <i class="fas fa-shield-alt rt-dropzone-icon"></i>
+            <span class="rt-dropzone-text">Drop Trait or Click to Create</span>
+        </div>
     </div>
 </div>

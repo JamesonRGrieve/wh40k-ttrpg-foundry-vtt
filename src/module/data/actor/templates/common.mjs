@@ -98,37 +98,8 @@ export default class CommonTemplate extends ActorDataModel {
 
   /** @override */
   static migrateData(source) {
-    // Ensure wounds values are integers
+    // Ensure wounds values are integers - only modify if the property exists
     if (source.wounds) {
-      source.wounds.max = this._toInt(source.wounds.max);
-      source.wounds.value = this._toInt(source.wounds.value);
-      source.wounds.critical = this._toInt(source.wounds.critical);
-    }
-
-    // Ensure fatigue values are integers (defined in creature template but migrate here for safety)
-    if (source.fatigue) {
-      source.fatigue.max = this._toInt(source.fatigue.max);
-      source.fatigue.value = this._toInt(source.fatigue.value);
-    }
-
-    // Ensure characteristic values are integers
-    if (source.characteristics) {
-      for (const char of Object.values(source.characteristics)) {
-        char.base = this._toInt(char.base);
-        char.advance = this._toInt(char.advance);
-        char.modifier = this._toInt(char.modifier);
-        char.unnatural = this._toInt(char.unnatural);
-        char.cost = this._toInt(char.cost);
-      }
-    }
-
-    return super.migrateData(source);
-  }
-
-  /** @override */
-  static cleanData(source, options = {}) {
-    // Clean integer fields before validation
-    if (source?.wounds) {
       if (source.wounds.max !== undefined) {
         source.wounds.max = this._toInt(source.wounds.max);
       }
@@ -139,12 +110,72 @@ export default class CommonTemplate extends ActorDataModel {
         source.wounds.critical = this._toInt(source.wounds.critical);
       }
     }
-    if (source?.fatigue) {
+
+    // Ensure fatigue values are integers (defined in creature template but migrate here for safety)
+    if (source.fatigue) {
       if (source.fatigue.max !== undefined) {
         source.fatigue.max = this._toInt(source.fatigue.max);
       }
       if (source.fatigue.value !== undefined) {
         source.fatigue.value = this._toInt(source.fatigue.value);
+      }
+    }
+
+    // Ensure characteristic values are integers - only modify if properties exist
+    if (source.characteristics) {
+      for (const char of Object.values(source.characteristics)) {
+        if (char.base !== undefined) char.base = this._toInt(char.base);
+        if (char.advance !== undefined) char.advance = this._toInt(char.advance);
+        if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
+        if (char.unnatural !== undefined) char.unnatural = this._toInt(char.unnatural);
+        if (char.cost !== undefined) char.cost = this._toInt(char.cost);
+      }
+    }
+
+    return super.migrateData(source);
+  }
+
+  /** @override */
+  static cleanData(source, options = {}) {
+    // Clean integer fields before validation
+    // IMPORTANT: Delete empty/null values to prevent overwriting existing data
+    if (source?.wounds) {
+      if (source.wounds.max !== undefined) {
+        if (source.wounds.max === "" || source.wounds.max === null) {
+          delete source.wounds.max;  // Don't overwrite with 0
+        } else {
+          source.wounds.max = this._toInt(source.wounds.max);
+        }
+      }
+      if (source.wounds.value !== undefined) {
+        if (source.wounds.value === "" || source.wounds.value === null) {
+          delete source.wounds.value;  // Don't overwrite with 0
+        } else {
+          source.wounds.value = this._toInt(source.wounds.value);
+        }
+      }
+      if (source.wounds.critical !== undefined) {
+        if (source.wounds.critical === "" || source.wounds.critical === null) {
+          delete source.wounds.critical;  // Don't overwrite with 0
+        } else {
+          source.wounds.critical = this._toInt(source.wounds.critical);
+        }
+      }
+    }
+    if (source?.fatigue) {
+      if (source.fatigue.max !== undefined) {
+        if (source.fatigue.max === "" || source.fatigue.max === null) {
+          delete source.fatigue.max;  // Don't overwrite with 0
+        } else {
+          source.fatigue.max = this._toInt(source.fatigue.max);
+        }
+      }
+      if (source.fatigue.value !== undefined) {
+        if (source.fatigue.value === "" || source.fatigue.value === null) {
+          delete source.fatigue.value;  // Don't overwrite with 0
+        } else {
+          source.fatigue.value = this._toInt(source.fatigue.value);
+        }
       }
     }
     return super.cleanData(source, options);

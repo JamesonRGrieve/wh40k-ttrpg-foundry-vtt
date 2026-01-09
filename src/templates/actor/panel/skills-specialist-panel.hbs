@@ -1,6 +1,10 @@
-<div class="rt-specialist-panel">
-    {{#each skillLists.specialist as |entry|}}
-    <div class="rt-specialist-group" data-skill="{{entry.[0]}}">
+<div class="rt-panel rt-specialist-panel">
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
+    </div>
+    <div class="rt-panel-body">
+        {{#each skillLists.specialist as |entry|}}
+        <div class="rt-specialist-group" data-skill="{{entry.[0]}}">
         <!-- Group Header -->
         <div class="rt-specialist-header">
             <span class="rt-specialist-name">{{entry.[1].label}}</span>
@@ -66,4 +70,5 @@
         </div>
     </div>
     {{/each}}
+    </div>
 </div>

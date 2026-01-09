@@ -54,6 +54,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             addAcquisition: AcolyteSheet.#addAcquisition,
             removeAcquisition: AcolyteSheet.#removeAcquisition,
             
+            // Experience actions
+            customXP: AcolyteSheet.#customXP,
+            
             // Active Effect actions
             createEffect: AcolyteSheet.#createEffect,
             toggleEffect: AcolyteSheet.#toggleEffect,
@@ -281,6 +284,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     async _updateSystemField(field, value) {
         // Direct field update to avoid overwriting calculated properties
+        console.log(`[RT DEBUG] _updateSystemField:`, { field, value, updateData: { [field]: value } });
         await this.actor.update({ [field]: value });
     }
 
@@ -312,6 +316,10 @@ export default class AcolyteSheet extends BaseActorSheet {
         context.shipRoles = this.actor.items.filter(
             item => item.type === "shipRole" || item.isShipRole
         );
+
+        // Prepare item counts for panel headers
+        context.talentsCount = this.actor.items.filter(item => item.isTalent).length;
+        context.traitsCount = this.actor.items.filter(item => item.isTrait).length;
 
         // Prepare loadout/equipment data (uses cached categorized items)
         this._prepareLoadoutData(context, categorized);
@@ -968,9 +976,17 @@ export default class AcolyteSheet extends BaseActorSheet {
     async #adjustStatImpl(event, target) {
         const field = target.dataset.field;
         const action = target.dataset.statAction;
-        const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
-        const max = target.dataset.max !== undefined ? parseInt(target.dataset.max) : null;
-
+        
+        // DEBUG: Log before update
+        console.log(`[RT DEBUG] adjustStat BEFORE:`, {
+            field,
+            action,
+            woundsMax: this.actor.system.wounds?.max,
+            woundsValue: this.actor.system.wounds?.value,
+            fateMax: this.actor.system.fate?.max,
+            fateValue: this.actor.system.fate?.value
+        });
+        
         // Handle special actions
         if (action === "clear-fatigue") {
             await this._updateSystemField("system.fatigue.value", 0);
@@ -979,6 +995,21 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Get current value
         const currentValue = foundry.utils.getProperty(this.actor, field) || 0;
+        
+        // Smart min/max derivation: if field ends with .value, check for .max/.min siblings
+        let min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
+        let max = target.dataset.max !== undefined ? parseInt(target.dataset.max) : null;
+        
+        // Auto-derive max from field structure (e.g., system.wounds.value -> system.wounds.max)
+        if (max === null && field.endsWith('.value')) {
+            const basePath = field.substring(0, field.lastIndexOf('.value'));
+            const maxPath = `${basePath}.max`;
+            const derivedMax = foundry.utils.getProperty(this.actor, maxPath);
+            if (derivedMax !== undefined && derivedMax !== null) {
+                max = derivedMax;
+            }
+        }
+        
         let newValue = currentValue;
 
         if (action === "increment") {
@@ -989,8 +1020,18 @@ export default class AcolyteSheet extends BaseActorSheet {
             if (min !== null && newValue < min) newValue = min;
         }
 
+        console.log(`[RT DEBUG] adjustStat update:`, { field, currentValue, newValue, min, max });
+
         if (newValue !== currentValue) {
             await this._updateSystemField(field, newValue);
+            
+            // DEBUG: Log after update
+            console.log(`[RT DEBUG] adjustStat AFTER:`, {
+                woundsMax: this.actor.system.wounds?.max,
+                woundsValue: this.actor.system.wounds?.value,
+                fateMax: this.actor.system.fate?.max,
+                fateValue: this.actor.system.fate?.value
+            });
         }
     }
 
@@ -1418,6 +1459,58 @@ export default class AcolyteSheet extends BaseActorSheet {
         const updatedAcquisitions = structuredClone(acquisitions);
         updatedAcquisitions.splice(index, 1);
         await this.actor.update({ "system.rogueTrader.acquisitions": updatedAcquisitions });
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Experience                 */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle custom XP addition/subtraction.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #customXP(event, target) {
+        event.preventDefault();
+        
+        const currentTotal = this.actor.system?.experience?.total ?? 0;
+        
+        // Create a simple dialog to get XP amount
+        const content = `
+            <form>
+                <div class="form-group">
+                    <label>Current Total XP: <strong>${currentTotal}</strong></label>
+                </div>
+                <div class="form-group">
+                    <label>XP to Add/Subtract:</label>
+                    <input type="number" name="xpAmount" value="0" autofocus />
+                    <p class="hint">Enter a positive number to add XP, or negative to subtract.</p>
+                </div>
+            </form>
+        `;
+        
+        const xpAmount = await Dialog.prompt({
+            title: "Adjust Total XP",
+            content: content,
+            label: "Apply",
+            callback: (html) => {
+                const form = html.querySelector("form");
+                const input = form.querySelector('[name="xpAmount"]');
+                return parseInt(input.value) || 0;
+            },
+            rejectClose: false
+        });
+        
+        if (xpAmount === null || xpAmount === 0) return;
+        
+        const newTotal = Math.max(0, currentTotal + xpAmount);
+        await this.actor.update({ "system.experience.total": newTotal });
+        
+        const verb = xpAmount > 0 ? "added" : "removed";
+        this._notify("info", `${Math.abs(xpAmount)} XP ${verb}. Total: ${newTotal}`, {
+            duration: 3000
+        });
     }
 
     /* -------------------------------------------- */

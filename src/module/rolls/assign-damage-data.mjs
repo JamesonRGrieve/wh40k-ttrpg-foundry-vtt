@@ -99,17 +99,11 @@ export class AssignDamageData {
     }
 
     async performActionAndSendToChat() {
-        // Assign Damage
+        // Assign Damage - use dot notation to avoid overwriting sibling properties
         this.actor = await this.actor.update({
-            system: {
-                wounds: {
-                    value: this.actor.system.wounds.value - this.damageTaken,
-                    critical: this.actor.system.wounds.critical + this.criticalDamageTaken,
-                },
-                fatigue: {
-                    value: this.actor.system.fatigue.value + this.fatigueTaken
-                }
-            }
+            "system.wounds.value": this.actor.system.wounds.value - this.damageTaken,
+            "system.wounds.critical": this.actor.system.wounds.critical + this.criticalDamageTaken,
+            "system.fatigue.value": this.actor.system.fatigue.value + this.fatigueTaken
         });
         game.rt.log('performActionAndSendToChat', this)
 

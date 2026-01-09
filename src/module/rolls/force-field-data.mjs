@@ -50,11 +50,9 @@ export class ForceFieldData {
 
         // Update to overloaded if necessary
         if(this.overload) {
-            this.forceField = this.forceField.update({
-                system: {
-                    overloaded: true
-                }
-            })
+            this.forceField = await this.forceField.update({
+                "system.overloaded": true
+            });
         }
 
         const html = await renderTemplate('systems/rogue-trader/templates/chat/force-field-roll-chat.hbs', this);

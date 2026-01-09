@@ -1,187 +1,437 @@
 // ============================================
-// MOVEMENT PANELS - Full & Compact Versions
+// MOVEMENT PANEL - Modern Dynamic Design
 // ============================================
+// Sleek, game-like UI with gauges and animations
 
-// Full Movement Panel (Overview Tab)
-// ============================================
 .rt-panel-movement-full {
+  .rt-panel-header {
+    background: linear-gradient(135deg, rgba(#3498db, 0.15) 0%, rgba(#2ecc71, 0.1) 100%);
+    border-bottom: 2px solid rgba(#3498db, 0.3);
+    
+    .rt-panel-title {
+      i {
+        color: #3498db;
+      }
+    }
+  }
+  
   .rt-panel-body {
+    padding: $rt-space-md;
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
+    gap: $rt-space-lg;
+    background: linear-gradient(180deg, rgba(#1a1a2e, 0.3) 0%, transparent 100%);
   }
 }
 
-.rt-movement-section {
-  display: flex;
-  flex-direction: column;
-  gap: $rt-space-sm;
-}
-
-.rt-section-label {
-  font-size: $rt-font-size-sm;
-  font-weight: 600;
-  color: $rt-text-secondary;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding-bottom: $rt-space-xs;
-  border-bottom: 1px solid rgba($rt-border-light, 0.5);
-  
-  i {
-    margin-right: $rt-space-xs;
-    color: rgba($rt-accent-gold, 0.7);
-  }
-}
-
-.rt-movement-grid-full {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $rt-space-sm;
-  
-  &.rt-movement-grid-3col {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.rt-move-cell {
+// ============================================
+// Speed Hero Section - Gauge Display
+// ============================================
+.rt-speed-hero {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.05) 0%, rgba($rt-accent-gold, 0.02) 100%);
-  border: 1px solid rgba($rt-border-light, 0.6);
-  border-radius: $rt-radius-sm;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.04) 100%);
-    border-color: rgba($rt-accent-gold, 0.4);
-    transform: translateY(-1px);
-  }
+  gap: $rt-space-xl;
+  padding: $rt-space-md;
+  background: linear-gradient(135deg, rgba(#0a0a15, 0.6) 0%, rgba(#1a1a2e, 0.4) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(#3498db, 0.2);
 }
 
-.rt-move-icon {
-  font-size: 1.2rem;
-  color: rgba($rt-accent-gold, 0.6);
+// Circular Gauge
+.rt-speed-gauge {
+  position: relative;
+  width: 110px;
+  height: 110px;
   flex-shrink: 0;
 }
 
-.rt-move-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
+.rt-gauge-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
 }
 
-.rt-move-label {
-  font-size: $rt-font-size-xs;
-  font-weight: 600;
-  color: $rt-text-secondary;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+.rt-gauge-bg {
+  fill: none;
+  stroke: rgba(#fff, 0.1);
+  stroke-width: 8;
 }
 
-.rt-move-value {
-  font-size: $rt-font-size-base;
-  font-weight: 700;
-  color: $rt-text-primary;
-  font-family: $rt-font-family-monospace;
-}
-
-// Encumbrance Display
-// ============================================
-.rt-encumbrance-display {
-  display: flex;
-  flex-direction: column;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm;
-  background: rgba($rt-bg-paper, 0.5);
-  border-radius: $rt-radius-sm;
-}
-
-.rt-enc-values {
-  display: flex;
-  align-items: center;
-  gap: $rt-space-xs;
-  font-size: $rt-font-size-base;
-  font-weight: 600;
-}
-
-.rt-enc-current {
-  color: $rt-text-primary;
-  font-family: $rt-font-family-monospace;
-}
-
-.rt-enc-sep {
-  color: $rt-text-muted;
-}
-
-.rt-enc-max {
-  color: $rt-text-secondary;
-  font-family: $rt-font-family-monospace;
-}
-
-.rt-enc-warning {
-  margin-left: auto;
-  color: #e74c3c;
-  font-size: $rt-font-size-xs;
-  font-weight: 700;
+.rt-gauge-fill {
+  fill: none;
+  stroke: url(#speedGradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 327;  // 2 * PI * 52
+  stroke-dashoffset: calc(327 - (327 * min(var(--gauge-percent), 30) / 30));
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 0 6px rgba(#3498db, 0.6));
   
-  i {
-    margin-right: 3px;
+  // Fallback gradient via stops
+  stroke: #3498db;
+}
+
+.rt-gauge-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.rt-gauge-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  font-family: 'Modesto Condensed', sans-serif;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(#3498db, 0.8);
+}
+
+.rt-gauge-unit {
+  font-size: 0.6rem;
+  color: rgba(#fff, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.rt-gauge-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #3498db;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+// Speed Tiers (Stacked Bars)
+.rt-speed-tiers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-speed-tier {
+  display: grid;
+  grid-template-columns: 1fr 50px 50px;
+  align-items: center;
+  gap: $rt-space-sm;
+}
+
+.rt-tier-bar {
+  height: 8px;
+  background: rgba(#fff, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.rt-tier-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(#fff, 0.3) 0%, transparent 100%);
+    border-radius: 4px 4px 0 0;
   }
 }
 
-.rt-enc-percentage {
+.rt-tier-walk .rt-tier-fill { background: linear-gradient(90deg, #95a5a6, #7f8c8d); }
+.rt-tier-move .rt-tier-fill { background: linear-gradient(90deg, #3498db, #2980b9); }
+.rt-tier-charge .rt-tier-fill { background: linear-gradient(90deg, #e67e22, #d35400); }
+.rt-tier-run .rt-tier-fill { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+
+.rt-tier-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: $rt-font-alt;
   text-align: right;
-  font-size: $rt-font-size-xs;
-  color: $rt-text-muted;
-  font-weight: 600;
-  font-family: $rt-font-family-monospace;
 }
 
-// Size Field
+.rt-tier-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(#fff, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 // ============================================
-.rt-movement-size-field {
+// Physical Grid - Athletics & Carrying
+// ============================================
+.rt-physical-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $rt-space-md;
+}
+
+.rt-physical-column {
+  background: rgba(#0a0a15, 0.4);
+  border-radius: 10px;
+  padding: $rt-space-md;
+  border: 1px solid rgba(#fff, 0.08);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: rgba(#fff, 0.15);
+    background: rgba(#0a0a15, 0.5);
+  }
+}
+
+.rt-column-header {
   display: flex;
   align-items: center;
   gap: $rt-space-sm;
+  margin-bottom: $rt-space-md;
+  padding-bottom: $rt-space-sm;
+  border-bottom: 1px solid rgba(#fff, 0.1);
   
-  .rt-field-label {
-    font-size: $rt-font-size-sm;
-    font-weight: 600;
-    color: $rt-text-secondary;
-    white-space: nowrap;
-    
-    i {
-      margin-right: $rt-space-xs;
-      color: rgba($rt-accent-gold, 0.7);
-    }
+  i {
+    font-size: 1rem;
   }
   
-  .rt-size-select {
-    flex: 1;
-    padding: 6px 10px;
-    background: $rt-bg-paper;
-    border: 1px solid $rt-border-light;
-    border-radius: $rt-radius-sm;
-    font-size: $rt-font-size-sm;
-    color: $rt-text-primary;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      border-color: rgba($rt-accent-gold, 0.4);
-    }
-    
-    &:focus {
-      outline: none;
-      border-color: $rt-accent-gold;
-      box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
-    }
+  span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(#fff, 0.7);
   }
 }
 
+.rt-athletics-col {
+  .rt-column-header i { color: #9b59b6; }
+  border-top: 3px solid #9b59b6;
+}
+
+.rt-carrying-col {
+  .rt-column-header i { color: #27ae60; }
+  border-top: 3px solid #27ae60;
+}
+
+// Athletics Metrics
+.rt-metric-row {
+  display: flex;
+  gap: $rt-space-sm;
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-metric {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm;
+  background: rgba(#9b59b6, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(#9b59b6, 0.2);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(#9b59b6, 0.2);
+    transform: translateX(2px);
+  }
+  
+  i {
+    font-size: 1rem;
+    color: #9b59b6;
+    opacity: 0.8;
+  }
+}
+
+.rt-metric-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.rt-metric-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: $rt-font-alt;
+  line-height: 1;
+}
+
+.rt-metric-label {
+  font-size: 0.6rem;
+  color: rgba(#fff, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// Carrying Metrics
+.rt-carry-metrics {
+  display: flex;
+  justify-content: space-between;
+  gap: $rt-space-xs;
+  margin-bottom: $rt-space-md;
+}
+
+.rt-carry-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $rt-space-sm $rt-space-xs;
+  background: linear-gradient(180deg, rgba(#27ae60, 0.15) 0%, rgba(#27ae60, 0.05) 100%);
+  border-radius: 6px;
+  border: 1px solid rgba(#27ae60, 0.2);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba(#27ae60, 0.25) 0%, rgba(#27ae60, 0.1) 100%);
+    transform: translateY(-2px);
+  }
+}
+
+.rt-carry-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  font-family: $rt-font-alt;
+  line-height: 1;
+}
+
+.rt-carry-unit {
+  font-size: 0.55rem;
+  color: rgba(#27ae60, 0.8);
+  font-weight: 600;
+}
+
+.rt-carry-label {
+  font-size: 0.55rem;
+  color: rgba(#fff, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+// Encumbrance Display
+.rt-encumbrance-display {
+  padding: $rt-space-sm;
+  background: rgba(#000, 0.3);
+  border-radius: 6px;
+}
+
+.rt-enc-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.rt-enc-current {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #2ecc71;
+  font-family: $rt-font-alt;
+  
+  .rt-over & {
+    color: #e74c3c;
+  }
+}
+
+.rt-enc-separator {
+  color: rgba(#fff, 0.3);
+  font-size: 0.8rem;
+}
+
+.rt-enc-max {
+  font-size: 0.75rem;
+  color: rgba(#fff, 0.5);
+}
+
+.rt-enc-track {
+  position: relative;
+  height: 10px;
+  background: rgba(#fff, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.rt-enc-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #27ae60 0%, #2ecc71 50%, #f1c40f 80%, #e74c3c 100%);
+  background-size: 300% 100%;
+  background-position: left;
+  border-radius: 5px;
+  position: relative;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  .rt-over & {
+    animation: enc-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+.rt-enc-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(#fff, 0.4));
+  border-radius: 0 5px 5px 0;
+}
+
+.rt-enc-markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.rt-enc-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(#fff, 0.2);
+  transform: translateX(-50%);
+  
+  &.rt-mark-danger {
+    background: rgba(#e74c3c, 0.5);
+  }
+}
+
+@keyframes enc-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(#e74c3c, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(#e74c3c, 0.8);
+  }
+}
+
+// ============================================
+// Responsive
+// ============================================
+@media (max-width: 600px) {
+  .rt-speed-hero {
+    flex-direction: column;
+  }
+  
+  .rt-physical-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================
 // Compact Movement Panel (Combat Tab)
 // ============================================
 .rt-panel-movement-compact {
@@ -238,28 +488,7 @@
   font-size: 0.9rem;
   font-weight: 700;
   color: $rt-text-primary;
-  font-family: $rt-font-family-monospace;
+  font-family: $rt-font-alt;
   line-height: 1.2;
 }
 
-// Responsive Adjustments
-// ============================================
-@media (max-width: 1200px) {
-  .rt-movement-grid-full {
-    grid-template-columns: repeat(2, 1fr);
-    
-    &.rt-movement-grid-3col {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .rt-movement-grid-full {
-    grid-template-columns: 1fr;
-  }
-  
-  .rt-movement-grid-compact {
-    grid-template-columns: 1fr;
-  }
-}

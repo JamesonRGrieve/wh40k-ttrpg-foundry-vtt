@@ -1,750 +1,788 @@
 // ============================================
-// Insanity Panel V2 - Redesigned with Degree Badges
+// INSANITY PANEL V2 - Dark Theme, Degree Badges, Sanity Icon
 // ============================================
-// Purple theme with threshold warnings, broken mind visual, mental disorder tracking
+// Complete redesign matching corruption panel with threshold warnings and disorder tracking
 
 .rt-insanity-panel-v2 {
-    background: var(--rt-insanity-panel-bg);
-    border: 2px solid var(--rt-insanity-secondary);
+  // Base panel styling inherits from rt-panel
+
+  // Dynamic border color based on insanity degree
+  &.degree-stable { border-left: 4px solid $rt-degree-stable; }
+  &.degree-unsettled { border-left: 4px solid $rt-degree-unsettled; }
+  &.degree-disturbed { border-left: 4px solid $rt-degree-disturbed; }
+  &.degree-unhinged { border-left: 4px solid $rt-degree-unhinged; }
+  &.degree-deranged { border-left: 4px solid $rt-degree-deranged; }
+  &.degree-terminally {
+    border-left: 4px solid $rt-degree-terminally;
+    animation: insane-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes insane-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(139, 0, 0, 0);
+    }
+  }
+
+  // ============================================
+  // Header Status (Badge with Icon)
+  // ============================================
+
+  .rt-insanity-header-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: 8px;
+  }
+
+  .rt-insanity-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 2px solid;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    font-family: 'Modesto Condensed', serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    .rt-badge-icon {
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .rt-badge-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+    }
+
+    // STABLE (0-9) - Green
+    &.degree-stable {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: #16a34a;
+      color: #15803d;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+      }
+    }
+
+    // UNSETTLED (10-39) - Yellow/Gold
+    &.degree-unsettled {
+      background: rgba(234, 179, 8, 0.15);
+      border-color: #ca8a04;
+      color: #a16207;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+      }
+    }
+
+    // DISTURBED (40-59) - Orange
+    &.degree-disturbed {
+      background: rgba(249, 115, 22, 0.15);
+      border-color: #ea580c;
+      color: #c2410c;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+      }
+    }
+
+    // UNHINGED (60-79) - Red
+    &.degree-unhinged {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #dc2626;
+      color: #b91c1c;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+      }
+    }
+
+    // DERANGED (80-99) - Dark Red
+    &.degree-deranged {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: #b91c1c;
+      color: #991b1b;
+      animation: badge-pulse 2s ease-in-out infinite;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+      }
+    }
+
+    // TERMINALLY INSANE (100) - Darkest Red
+    &.degree-terminally {
+      background: rgba(127, 29, 29, 0.25);
+      border-color: #7f1d1d;
+      color: #7f1d1d;
+      animation: badge-pulse 1s ease-in-out infinite;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
+      
+      .rt-badge-label {
+        text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
+      }
+    }
+  }
+
+  @keyframes badge-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.06);
+    }
+  }
+
+  @keyframes seal-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.08);
+    }
+  }
+
+  // ============================================
+  // Main Display Area
+  // ============================================
+
+  .rt-insanity-display {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+  }
+
+  // Header with value and modifier
+  .rt-insanity-header {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+    align-items: center;
+  }
+
+  .rt-insanity-value {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-md;
+  }
+
+  // +/- Control Buttons
+  .rt-insanity-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-btn-bg);
+    border: 2px solid var(--rt-border-color);
     border-radius: 8px;
-    box-shadow: 0 2px 8px var(--rt-insanity-bg);
-    margin-bottom: 12px;
-    transition: border-color 0.3s ease;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--rt-text-medium);
 
-    // Dynamic border color based on insanity degree
-    &.rt-insanity-stable {
-        border-color: var(--rt-insanity-secondary); // STABLE - medium purple
+    i {
+      font-size: 0.85rem;
     }
 
-    &.rt-insanity-unsettled {
-        border-color: #8a63c4; // UNSETTLED - darker purple
+    &:hover {
+      background: var(--rt-btn-bg-hover);
+      border-color: var(--rt-border-color-strong);
+      transform: scale(1.08);
+      box-shadow: 0 2px 6px var(--rt-shadow-medium);
     }
 
-    &.rt-insanity-disturbed {
-        border-color: #7b4db8; // DISTURBED - deep purple
+    &:active {
+      transform: scale(0.95);
+      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    }
+  }
+
+  .rt-insanity-minus {
+    color: var(--rt-success-secondary);
+    &:hover {
+      border-color: var(--rt-success-primary);
+      background: var(--rt-success-bg);
+    }
+  }
+
+  .rt-insanity-plus {
+    color: var(--rt-insanity-primary);
+    &:hover {
+      border-color: var(--rt-insanity-primary);
+      background: var(--rt-insanity-bg);
+    }
+  }
+
+  // Number Display
+  .rt-insanity-number {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  .rt-insanity-current {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ef4444; // Brighter red instead of dark purple
+    line-height: 1;
+  }
+
+  .rt-insanity-max {
+    font-size: 1.3rem;
+    color: var(--rt-text-muted);
+    font-weight: 600;
+  }
+
+  // Modifier Display
+  .rt-insanity-modifier {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rt-text-muted);
+  }
+
+  .rt-modifier-value {
+    font-size: 1.1rem;
+    color: #ef4444; // Brighter red instead of dark purple
+    font-family: 'Modesto Condensed', serif;
+  }
+
+  // ============================================
+  // Progress Bar with Threshold Markers
+  // ============================================
+
+  .rt-insanity-bar-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .rt-insanity-bar {
+    width: 100%;
+    height: 14px;
+    background: var(--rt-border-accent);
+    border-radius: 7px;
+    overflow: visible; // Allow markers to show
+    position: relative;
+    box-shadow: inset 0 1px 3px var(--rt-shadow-medium);
+  }
+
+  .rt-insanity-bar-fill {
+    height: 100%;
+    border-radius: 7px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  // Bar color matches current degree
+  &.degree-stable .rt-insanity-bar-fill {
+    background-color: #22c55e;
+  }
+
+  &.degree-unsettled .rt-insanity-bar-fill {
+    background-color: #eab308;
+  }
+
+  &.degree-disturbed .rt-insanity-bar-fill {
+    background-color: #f97316;
+  }
+
+  &.degree-unhinged .rt-insanity-bar-fill {
+    background-color: #ef4444;
+  }
+
+  &.degree-deranged .rt-insanity-bar-fill {
+    background-color: #dc2626;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
+  }
+
+  &.degree-terminally .rt-insanity-bar-fill {
+    background-color: #7f1d1d;
+    box-shadow: 0 0 10px rgba(127, 29, 29, 0.6);
+  }
+
+  // Threshold Markers
+  .rt-threshold-marker {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .rt-threshold-line {
+    width: 2px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .rt-threshold-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--rt-text-muted);
+    margin-top: 2px;
+    background: var(--rt-panel-bg-solid);
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+
+  // ============================================
+  // Alert Messages
+  // ============================================
+
+  .rt-insanity-alert {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-sm;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+
+    i {
+      font-size: 1.2em;
+    }
+  }
+
+  .rt-alert-debased {
+    background: rgba(139, 69, 19, 0.2);
+    color: #8b4513;
+    border: 2px solid rgba(139, 69, 19, 0.5);
+  }
+
+  .rt-alert-profane {
+    background: rgba(139, 0, 0, 0.2);
+    color: #8b0000;
+    border: 2px solid rgba(139, 0, 0, 0.6);
+    animation: alert-pulse 2s ease-in-out infinite;
+  }
+
+  .rt-alert-damned {
+    background: rgba(0, 0, 0, 0.3);
+    color: #ff0000;
+    border: 2px solid #8b0000;
+    animation: damned-alert 1s ease-in-out infinite;
+  }
+
+  @keyframes alert-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 4px rgba(139, 0, 0, 0);
+    }
+  }
+
+  @keyframes damned-alert {
+    0%, 100% {
+      background: rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    50% {
+      background: rgba(139, 0, 0, 0.4);
+      box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
+    }
+  }
+
+  // ============================================
+  // Disorder Preview
+  // ============================================
+
+  .rt-disorder-preview {
+    padding: $rt-space-sm;
+    background: var(--rt-insanity-bg);
+    border: 1px solid var(--rt-insanity-border);
+    border-radius: 6px;
+  }
+
+  .rt-disorder-count {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--rt-insanity-primary);
+
+    i {
+      font-size: 1.1em;
+    }
+  }
+
+  // ============================================
+  // Edit Mode Sections
+  // ============================================
+
+  .rt-insanity-edit-section {
+    padding: $rt-space-md;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    margin-bottom: $rt-space-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .rt-insanity-edit-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-medium);
+    margin-bottom: $rt-space-sm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+
+    i {
+      font-size: 0.9em;
+      color: var(--rt-insanity-primary);
+    }
+  }
+
+  .rt-insanity-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rt-edit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+  }
+
+  .rt-edit-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 $rt-space-sm;
+    border: 2px solid var(--rt-insanity-border);
+    border-radius: 6px;
+    background: var(--rt-input-bg);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--rt-insanity-primary);
+    text-align: center;
+    font-family: 'Modesto Condensed', serif;
+    transition: all 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--rt-insanity-primary);
+      background: var(--rt-input-bg-focus);
+      box-shadow: 0 0 0 3px var(--rt-insanity-bg);
     }
 
-    &.rt-insanity-unhinged {
-        border-color: #6a3aa8; // UNHINGED - very deep purple
+    &:hover {
+      border-color: rgba(139, 0, 0, 0.5);
+    }
+  }
+
+  // Quick Adjust Buttons
+  .rt-insanity-quick-set {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $rt-space-xs;
+    margin-top: $rt-space-sm;
+  }
+
+  .rt-quick-adjust-btn {
+    padding: $rt-space-sm;
+    background: var(--rt-panel-bg-solid);
+    border: 2px solid var(--rt-border-color);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rt-text-medium);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Modesto Condensed', serif;
+
+    &:hover {
+      background: var(--rt-panel-bg-alt);
+      border-color: var(--rt-border-color-strong);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px var(--rt-shadow-soft);
     }
 
-    &.rt-insanity-incurable {
-        border-color: var(--rt-insanity-primary); // INCURABLE - darkest purple
-        box-shadow: 0 2px 12px rgba(90, 40, 148, 0.4);
+    &:active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
     }
 
-    &.rt-insanity-insane {
-        border-color: #4b1c7d; // INSANE - nearly black purple
-        box-shadow: 0 4px 16px rgba(75, 28, 125, 0.6);
-        animation: border-pulse-insane 2s ease-in-out infinite;
+    // Decrease buttons (green tint)
+    &[data-delta^="-"] {
+      color: var(--rt-success-secondary);
+      
+      &:hover {
+        border-color: var(--rt-success-primary);
+        background: var(--rt-success-bg);
+        color: var(--rt-success-primary);
+      }
     }
 
-    .rt-panel-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 8px 12px;
-        background: linear-gradient(90deg, var(--rt-insanity-bg) 0%, transparent 100%);
-        border-bottom: 1px solid var(--rt-insanity-border);
-        border-radius: 6px 6px 0 0;
-
-        .rt-panel-title {
-            flex: 1;  // Allow title to expand and take available space
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--rt-insanity-primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-width: 0;  // Allow flexbox to shrink if needed
-
-            i {
-                font-size: 18px;
-                color: var(--rt-insanity-secondary);
-                flex-shrink: 0;  // Prevent icon from shrinking
-            }
-        }
-
-        .rt-insanity-degree-badge {
-            flex-shrink: 0;  // Prevent badge from shrinking
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid;
-            transition: all 0.3s ease;
-
-            &.rt-insanity-stable {
-                background: linear-gradient(135deg, #c8b8e8 0%, #b8a5d9 100%);
-                color: #4a2875;
-                border-color: var(--rt-insanity-secondary);
-            }
-
-            &.rt-insanity-unsettled {
-                background: linear-gradient(135deg, #b8a5d9 0%, #a890ca 100%);
-                color: #3d1f62;
-                border-color: #8a63c4;
-            }
-
-            &.rt-insanity-disturbed {
-                background: linear-gradient(135deg, #a890ca 0%, #9872ba 100%);
-                color: #31184f;
-                border-color: #7b4db8;
-            }
-
-            &.rt-insanity-unhinged {
-                background: linear-gradient(135deg, #9872ba 0%, #8855aa 100%);
-                color: #28113e;
-                border-color: #6a3aa8;
-            }
-
-            &.rt-insanity-incurable {
-                background: linear-gradient(135deg, #8855aa 0%, #743894 100%);
-                color: #f0e8f8;
-                border-color: #5a2894;
-                animation: badge-pulse-incurable 2s ease-in-out infinite;
-            }
-
-            &.rt-insanity-insane {
-                background: linear-gradient(135deg, #5a2894 0%, #4b1c7d 100%);
-                color: #ffffff;
-                border-color: #3c1465;
-                animation: badge-pulse-insane 1.5s ease-in-out infinite;
-            }
-        }
-
-        .rt-vital-expand-btn {
-            flex-shrink: 0;  // Prevent button from shrinking
-            background: transparent;
-            border: 1px solid var(--rt-insanity-border);
-            color: var(--rt-insanity-secondary);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-
-            &:hover {
-                background: var(--rt-insanity-bg);
-                border-color: var(--rt-insanity-secondary);
-                color: var(--rt-insanity-primary);
-            }
-        }
-    }
-
-    .rt-panel-body {
-        padding: 12px;
-    }
-
-    // Main Display
-    .rt-insanity-display {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .rt-insanity-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    .rt-insanity-value {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .rt-insanity-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: 2px solid var(--rt-insanity-secondary);
-        background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
-        color: var(--rt-insanity-primary);
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover {
-            background: linear-gradient(135deg, var(--rt-insanity-secondary) 0%, #8a63c4 100%);
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 2px 6px var(--rt-insanity-bg);
-        }
-
-        &:active {
-            transform: scale(0.95);
-        }
-    }
-
-    .rt-insanity-number {
-        display: flex;
-        align-items: baseline;
-        gap: 4px;
-        font-family: 'Modesto Condensed', serif;
-
-        .rt-insanity-current {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--rt-insanity-primary);
-        }
-
-        .rt-insanity-max {
-            font-size: 18px;
-            color: var(--rt-insanity-secondary);
-        }
-    }
-
-    .rt-insanity-modifier {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
+    // Increase buttons (red tint)
+    &[data-delta^="+"]:not([data-delta="+0"]) {
+      color: var(--rt-insanity-primary);
+      
+      &:hover {
+        border-color: var(--rt-insanity-primary);
         background: var(--rt-insanity-bg);
-        border-radius: 6px;
-        border: 1px solid var(--rt-insanity-border);
-
-        .rt-modifier-label {
-            font-size: 12px;
-            color: var(--rt-insanity-primary);
-            font-weight: 600;
-        }
-
-        .rt-modifier-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--rt-insanity-primary);
-            font-family: 'Modesto Condensed', serif;
-        }
-    }
-
-    // Progress Bar with Threshold Markers
-    .rt-insanity-bar-container {
-        position: relative;
-        width: 100%;
-    }
-
-    .rt-insanity-bar {
-        position: relative;
-        width: 100%;
-        height: 20px;
-        background: linear-gradient(90deg,
-            rgba(200, 184, 232, 0.3) 0%,
-            var(--rt-insanity-bg) 100%
-        );
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid var(--rt-insanity-border);
-    }
-
-    .rt-insanity-bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg,
-            #c8b8e8 0%,       // STABLE - light purple
-            #b8a5d9 15%,      // UNSETTLED - medium purple
-            #9370db 30%,      // DISTURBED - dark purple
-            #7b4db8 50%,      // mid
-            #6a3aa8 75%,      // UNHINGED - very dark purple
-            #5a2894 90%,      // INCURABLE - darkest purple
-            #4b1c7d 100%      // INSANE - nearly black purple
-        );
-        transition: width 0.3s ease;
-        box-shadow: 0 0 10px rgba(147, 112, 219, 0.4);
-    }
-
-    .rt-threshold-marker {
-        position: absolute;
-        top: -2px;
-        height: 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        pointer-events: none;
-        z-index: 2;
-
-        .rt-threshold-line {
-            width: 2px;
-            height: 100%;
-            background: var(--rt-insanity-border);
-            border-radius: 1px;
-        }
-
-        .rt-threshold-label {
-            position: absolute;
-            top: -20px;
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--rt-insanity-primary);
-            background: var(--rt-panel-bg-solid);
-            padding: 2px 4px;
-            border-radius: 3px;
-            border: 1px solid var(--rt-insanity-border);
-        }
-    }
-
-    // Broken Mind Visual (fractures at high insanity)
-    .rt-broken-mind {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 8px;
-        color: var(--rt-insanity-secondary);
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-
-        i {
-            font-size: 24px;
-            filter: drop-shadow(0 2px 4px var(--rt-insanity-bg));
-        }
-
-        .rt-mind-text {
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-    }
-
-    // Fractured Mind (60+ insanity)
-    .rt-mind-fractured {
         color: var(--rt-insanity-primary);
+      }
+    }
+  }
 
-        i {
-            filter: drop-shadow(0 2px 4px rgba(123, 77, 184, 0.4)) grayscale(0.2);
-            animation: mind-crack 3s ease-in-out infinite;
-        }
+  // ============================================
+  // Disorder List
+  // ============================================
 
-        .rt-mind-text::after {
-            content: ' (Fractured)';
-            color: #6a3aa8;
-        }
+  .rt-disorder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rt-disorder-card {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-xs $rt-space-sm;
+    background: var(--rt-insanity-bg);
+    border: 1px solid var(--rt-insanity-border);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba(139, 0, 0, 0.15);
+      border-color: var(--rt-insanity-primary);
+    }
+  }
+
+  .rt-disorder-name {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 4px;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rt-text-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease;
+
+    i {
+      font-size: 0.9em;
+      color: var(--rt-insanity-primary);
     }
 
-    // Shattered Mind (90+ insanity)
-    .rt-mind-shattered {
-        color: var(--rt-insanity-primary);
+    &:hover {
+      color: var(--rt-insanity-primary);
+    }
+  }
 
-        i {
-            filter: drop-shadow(0 2px 8px rgba(90, 40, 148, 0.6)) grayscale(0.4);
-            animation: mind-shatter 1.5s ease-in-out infinite;
-        }
+  .rt-disorder-delete {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-wounds-bg);
+    border: 1px solid var(--rt-wounds-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
 
-        .rt-mind-text::after {
-            content: ' (Shattered)';
-            color: #4b1c7d;
-        }
+    i {
+      font-size: 0.7rem;
+      color: var(--rt-wounds-secondary);
     }
 
-    // Alert Messages
-    .rt-insanity-alert {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 12px;
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        border: 1px solid;
-        animation: alert-pulse 2s ease-in-out infinite;
-
-        i {
-            font-size: 16px;
-        }
+    &:hover {
+      background: rgba(182, 58, 43, 0.2);
+      border-color: var(--rt-wounds-secondary);
+      transform: scale(1.05);
     }
+  }
 
-    .rt-alert-unhinged {
-        background: linear-gradient(135deg, rgba(106, 58, 168, 0.15) 0%, rgba(106, 58, 168, 0.05) 100%);
-        color: #6a3aa8;
-        border-color: #6a3aa8;
+  // Drop zone styling (matches purple/brain theme)
+  .rt-insanity-edit-section .rt-dropzone {
+    .rt-dropzone-icon {
+      color: rgba(147, 51, 234, 0.5); // Purple brain icon
     }
-
-    .rt-alert-incurable {
-        background: linear-gradient(135deg, rgba(90, 40, 148, 0.2) 0%, rgba(90, 40, 148, 0.1) 100%);
-        color: #5a2894;
-        border-color: #5a2894;
+    
+    .rt-dropzone-text {
+      color: rgba(147, 51, 234, 0.7);
     }
-
-    .rt-alert-insane {
-        background: linear-gradient(135deg, rgba(75, 28, 125, 0.25) 0%, rgba(75, 28, 125, 0.15) 100%);
-        color: #4b1c7d;
-        border-color: #4b1c7d;
+    
+    &:hover {
+      .rt-dropzone-icon {
+        color: rgba(147, 51, 234, 0.8);
+      }
+      
+      .rt-dropzone-text {
+        color: rgba(147, 51, 234, 0.9);
+      }
     }
+  }
 
-    // Mental Disorder Preview
-    .rt-disorder-preview {
-        margin-top: 8px;
-        padding: 8px 12px;
-        background: var(--rt-insanity-bg);
-        border-radius: 6px;
-        border: 1px solid var(--rt-insanity-border);
+  // Empty state - lighter purple (no disorders yet)
+  .rt-insanity-edit-section .rt-dropzone-empty {
+    .rt-dropzone-icon {
+      color: rgba(168, 85, 247, 0.6); // Lighter purple smile
     }
-
-    .rt-disorder-count {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--rt-insanity-primary);
-
-        i {
-            font-size: 16px;
-            color: var(--rt-insanity-secondary);
-        }
+    
+    .rt-dropzone-text {
+      color: rgba(168, 85, 247, 0.7);
     }
-
-    // Edit Mode
-    .rt-panel-details {
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid var(--rt-insanity-border);
+    
+    &:hover {
+      .rt-dropzone-icon {
+        color: rgba(168, 85, 247, 0.8);
+      }
+      
+      .rt-dropzone-text {
+        color: rgba(168, 85, 247, 0.9);
+      }
     }
+  }
 
-    .rt-insanity-edit-section {
-        margin-bottom: 16px;
+  // ============================================
+  // Info Box
+  // ============================================
 
-        &:last-child {
-            margin-bottom: 0;
-        }
+  .rt-insanity-info-box {
+    display: flex;
+    gap: $rt-space-sm;
+    padding: $rt-space-md;
+    background: var(--rt-insanity-bg);
+    border-left: 3px solid var(--rt-insanity-border);
+    border-radius: 4px;
+
+    > i {
+      color: var(--rt-insanity-primary);
+      font-size: 1.3rem;
+      margin-top: 2px;
+      flex-shrink: 0;
     }
+  }
 
-    .rt-insanity-edit-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--rt-insanity-primary);
-        margin-bottom: 8px;
+  .rt-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
 
-        i {
-            color: var(--rt-insanity-secondary);
-        }
-    }
-
-    .rt-insanity-edit-field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-bottom: 12px;
-
-        .rt-edit-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--rt-insanity-primary);
-        }
-
-        .rt-edit-input {
-            padding: 8px 12px;
-            border: 1px solid var(--rt-insanity-border);
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: 'Modesto Condensed', serif;
-            background: var(--rt-input-bg);
-            transition: all 0.2s ease;
-
-            &:focus {
-                outline: none;
-                border-color: var(--rt-insanity-secondary);
-                box-shadow: 0 0 0 2px var(--rt-insanity-bg);
-            }
-        }
-    }
-
-    // Quick Set Buttons
-    .rt-insanity-quick-set {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
-    }
-
-    .rt-quick-set-btn {
-        padding: 8px;
-        border: 1px solid var(--rt-insanity-border);
-        border-radius: 4px;
-        background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
-        color: var(--rt-insanity-primary);
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-
-        i {
-            font-size: 14px;
-        }
-
-        &:hover {
-            background: linear-gradient(135deg, var(--rt-insanity-secondary) 0%, #8a63c4 100%);
-            color: white;
-            border-color: var(--rt-insanity-secondary);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px var(--rt-insanity-bg);
-        }
-
-        &:active {
-            transform: translateY(0);
-        }
-    }
-
-    // Mental Disorder List
-    .rt-disorder-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .rt-disorder-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        padding: 8px 12px;
-        background: linear-gradient(135deg, rgba(200, 184, 232, 0.15) 0%, rgba(200, 184, 232, 0.05) 100%);
-        border: 1px solid var(--rt-insanity-border);
-        border-radius: 6px;
-        transition: all 0.2s ease;
-
-        &:hover {
-            background: linear-gradient(135deg, rgba(200, 184, 232, 0.25) 0%, rgba(200, 184, 232, 0.15) 100%);
-            border-color: var(--rt-insanity-secondary);
-        }
-    }
-
-    .rt-disorder-name {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--rt-insanity-primary);
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        text-align: left;
-        padding: 0;
-
-        i {
-            font-size: 14px;
-            color: var(--rt-insanity-secondary);
-        }
-
-        &:hover {
-            color: var(--rt-insanity-primary);
-        }
-    }
-
-    .rt-disorder-delete {
-        width: 24px;
-        height: 24px;
-        border-radius: 4px;
-        border: 1px solid var(--rt-insanity-border);
-        background: transparent;
-        color: var(--rt-insanity-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover {
-            background: var(--rt-danger-primary);
-            border-color: var(--rt-danger-primary);
-            color: white;
-        }
-    }
-
-    .rt-add-btn-small {
-        width: 24px;
-        height: 24px;
-        border-radius: 4px;
-        border: 1px solid var(--rt-insanity-border);
-        background: linear-gradient(135deg, #f8f5fc 0%, #ede7f5 100%);
-        color: var(--rt-insanity-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        i {
-            font-size: 12px;
-        }
-
-        &:hover {
-            background: linear-gradient(135deg, var(--rt-insanity-secondary) 0%, #8a63c4 100%);
-            color: white;
-            border-color: var(--rt-insanity-secondary);
-        }
-    }
-
-    .rt-insanity-empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        padding: 16px;
-        color: var(--rt-insanity-secondary);
-        font-size: 13px;
-        text-align: center;
-
-        i {
-            font-size: 24px;
-            opacity: 0.5;
-        }
-    }
-
-    // Info Box
-    .rt-insanity-info-box {
-        background: linear-gradient(135deg, rgba(200, 184, 232, 0.1) 0%, rgba(200, 184, 232, 0.05) 100%);
-        border: 1px solid var(--rt-insanity-border);
-        border-radius: 6px;
-        padding: 12px;
-        display: flex;
-        gap: 12px;
-
-        > i {
-            font-size: 24px;
-            color: var(--rt-insanity-secondary);
-            flex-shrink: 0;
-        }
-
-        .rt-info-content {
-            flex: 1;
-
-            strong {
-                display: block;
-                font-size: 14px;
-                color: var(--rt-insanity-primary);
-                margin-bottom: 8px;
-            }
-        }
+    strong {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--rt-text-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
     .rt-degree-list {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 12px 0;
-        font-size: 12px;
+      font-size: 0.75rem;
+      color: var(--rt-text-muted);
+      line-height: 1.6;
+      margin: 0;
+      padding-left: 20px;
 
-        li {
-            padding: 4px 0;
-            color: var(--rt-insanity-primary);
+      li {
+        margin: 4px 0;
+      }
 
-            .rt-degree-name {
-                font-weight: 600;
-                color: var(--rt-insanity-primary);
+      .rt-degree-name {
+        font-weight: 700;
+        color: var(--rt-text-medium);
+      }
 
-                &.rt-degree-insane {
-                    color: #4b1c7d;
-                }
-            }
-
-            strong {
-                color: var(--rt-insanity-primary);
-            }
-        }
-    }
-
-    .rt-insanity-warning {
-        margin: 0;
-        padding: 8px;
-        background: var(--rt-insanity-bg);
-        border-left: 3px solid var(--rt-insanity-secondary);
-        font-size: 12px;
+      .rt-degree-terminally {
         color: var(--rt-insanity-primary);
-        border-radius: 0 4px 4px 0;
+      }
 
-        i {
-            color: var(--rt-insanity-secondary);
-        }
+      strong {
+        font-size: inherit;
+        text-transform: none;
+        letter-spacing: normal;
+        color: var(--rt-insanity-primary);
+      }
     }
-}
 
-// Animations
-@keyframes border-pulse-insane {
-    0%, 100% {
-        border-color: #4b1c7d;
-        box-shadow: 0 4px 16px rgba(75, 28, 125, 0.6);
+    p {
+      font-size: 0.75rem;
+      color: var(--rt-text-muted);
+      line-height: 1.5;
+      margin: 6px 0 0 0;
     }
-    50% {
-        border-color: #5a2894;
-        box-shadow: 0 6px 20px rgba(90, 40, 148, 0.8);
-    }
-}
+  }
 
-@keyframes badge-pulse-incurable {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(90, 40, 148, 0.4);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 10px rgba(90, 40, 148, 0.6);
-    }
-}
+  .rt-insanity-warning {
+    padding: $rt-space-xs $rt-space-sm;
+    background: var(--rt-insanity-bg);
+    border-left: 2px solid var(--rt-insanity-primary);
+    border-radius: 3px;
+    color: var(--rt-insanity-primary) !important;
 
-@keyframes badge-pulse-insane {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(75, 28, 125, 0.6);
+    i {
+      margin-right: 4px;
     }
-    50% {
-        transform: scale(1.08);
-        box-shadow: 0 0 15px rgba(75, 28, 125, 0.8);
-    }
-}
+  }
 
-@keyframes mind-crack {
-    0%, 100% {
-        transform: rotate(0deg);
-        filter: drop-shadow(0 2px 4px rgba(123, 77, 184, 0.4)) grayscale(0.2);
-    }
-    25% {
-        transform: rotate(-2deg);
-        filter: drop-shadow(0 2px 6px rgba(123, 77, 184, 0.5)) grayscale(0.25);
-    }
-    75% {
-        transform: rotate(2deg);
-        filter: drop-shadow(0 2px 6px rgba(123, 77, 184, 0.5)) grayscale(0.25);
-    }
-}
+  // ============================================
+  // Add Button Small
+  // ============================================
 
-@keyframes mind-shatter {
-    0%, 100% {
-        transform: rotate(0deg) scale(1);
-        filter: drop-shadow(0 2px 8px rgba(90, 40, 148, 0.6)) grayscale(0.4) brightness(1);
-    }
-    25% {
-        transform: rotate(-5deg) scale(0.98);
-        filter: drop-shadow(0 4px 12px rgba(90, 40, 148, 0.8)) grayscale(0.5) brightness(0.9);
-    }
-    50% {
-        transform: rotate(0deg) scale(0.95);
-        filter: drop-shadow(0 6px 16px rgba(90, 40, 148, 1)) grayscale(0.6) brightness(0.8);
-    }
-    75% {
-        transform: rotate(5deg) scale(0.98);
-        filter: drop-shadow(0 4px 12px rgba(90, 40, 148, 0.8)) grayscale(0.5) brightness(0.9);
-    }
-}
+  .rt-add-btn-small {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-success-bg);
+    border: 1px solid rgba(74, 143, 92, 0.4);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
 
-@keyframes alert-pulse {
-    0%, 100% {
-        opacity: 1;
+    i {
+      font-size: 0.7rem;
+      color: var(--rt-success-secondary);
     }
-    50% {
-        opacity: 0.85;
+
+    &:hover {
+      background: rgba(74, 143, 92, 0.25);
+      border-color: var(--rt-success-primary);
+      transform: scale(1.05);
     }
+  }
 }

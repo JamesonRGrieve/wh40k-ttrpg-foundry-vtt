@@ -21,11 +21,7 @@ export async function useAmmo(actionData) {
         }
 
         await actionItem.update({
-            system: {
-                clip: {
-                    value: newValue
-                }
-            }
+            "system.clip.value": newValue
         });
 
         if (actionItem.system.clip.value === 0) {
@@ -38,11 +34,7 @@ export async function refundAmmo(actionData) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (actionItem.usesAmmo) {
         await actionItem.update({
-            system: {
-                clip: {
-                    value: actionItem.system.clip.value += actionData.rollData.ammoUsed
-                }
-            }
+            "system.clip.value": actionItem.system.clip.value + actionData.rollData.ammoUsed
         });
     }
 }

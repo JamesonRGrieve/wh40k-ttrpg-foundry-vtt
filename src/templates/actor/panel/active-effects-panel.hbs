@@ -3,9 +3,6 @@
         <span class="rt-panel-title">
             <i class="fas fa-bolt"></i> Active Effects
         </span>
-        <button type="button" class="rt-effects-add effect-create" title="Add Effect">
-            <i class="fas fa-plus"></i>
-        </button>
     </div>
     <div class="rt-panel-body">
         {{#if effects.length}}
@@ -34,7 +31,7 @@
         {{/each}}
         </div>
         {{/if}}
-        <div class="rt-dropzone effect-create">
+        <div class="rt-dropzone" data-action="effectCreate">
             <i class="fas fa-bolt rt-dropzone-icon"></i>
             <span class="rt-dropzone-text">Drop Effects Here or Click to Create</span>
         </div>

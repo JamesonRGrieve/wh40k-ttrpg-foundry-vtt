@@ -61,122 +61,402 @@
 // No override needed here - using the base styles
 
 // ============================================
-// VITALS PANELS
+// VITALS HUD - Modern Status Display
 // ============================================
 
-.rt-vital-display {
+.rt-vitals-hud {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
+  gap: $rt-space-sm;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: $rt-space-sm;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.rt-vital-tracker {
+.rt-vitals-hud-header {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: $rt-space-xs;
-}
-
-.rt-vital-btn {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-medium;
-  border-radius: $rt-radius-sm;
-  font-size: 1rem;
+  padding: 6px $rt-space-sm;
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.1) 0%, rgba($rt-accent-gold, 0.05) 100%);
+  border-left: 3px solid $rt-accent-gold;
+  border-radius: 4px;
+  font-size: 0.7rem;
   font-weight: 700;
-  cursor: pointer;
-  transition: all $rt-transition-fast;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: $rt-accent-gold;
   
-  &:hover {
-    background: $rt-bg-paper-light;
-    border-color: $rt-accent-gold;
+  i {
+    font-size: 0.85rem;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+// ============================================
+// VITAL STAT CARD
+// ============================================
+
+.rt-vital-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  
+  // Accent strip
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--vital-color, $rt-border-medium);
+    transition: all 0.3s ease;
   }
   
-  &.rt-btn-minus { color: $rt-accent-combat; }
-  &.rt-btn-plus { color: $rt-color-success; }
+  &:hover {
+    border-color: var(--vital-color, $rt-border-medium);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    
+    &::before {
+      width: 5px;
+    }
+  }
 }
 
-.rt-vital-current {
-  font-size: $rt-font-size-xl;
+// Vital-specific colors
+.rt-vital-wounds {
+  --vital-color: #{$rt-accent-combat};
+}
+
+.rt-vital-fatigue {
+  --vital-color: #c08020;
+}
+
+.rt-vital-fate {
+  --vital-color: #{$rt-accent-gold};
+}
+
+// Warning states
+.rt-vital-warning {
+  border-color: rgba(255, 165, 0, 0.4);
+  background: rgba(255, 165, 0, 0.05);
+  
+  &::before {
+    background: linear-gradient(180deg, #ffa500 0%, #ff8c00 100%);
+    animation: pulse-warn 1.5s ease-in-out infinite;
+  }
+}
+
+.rt-vital-critical {
+  border-color: rgba($rt-accent-combat, 0.6);
+  background: rgba($rt-accent-combat, 0.08);
+  
+  &::before {
+    background: linear-gradient(180deg, $rt-accent-combat 0%, darken($rt-accent-combat, 15%) 100%);
+    animation: pulse-critical 1s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-warn {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes pulse-critical {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+// ============================================
+// STAT HEADER
+// ============================================
+
+.rt-vital-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $rt-space-sm;
+}
+
+.rt-vital-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: var(--color-text-primary);
-  min-width: 28px;
-  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vital-color, $rt-text-secondary);
+  
+  i {
+    font-size: 0.75rem;
+  }
 }
 
-.rt-vital-sep {
-  font-size: $rt-font-size-lg;
+.rt-vital-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.rt-vital-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.08);
+  border: 1px solid rgba(var(--vital-color-rgb, 0, 0, 0), 0.2);
+  border-radius: 4px;
+  color: var(--vital-color, $rt-text-primary);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.15);
+    border-color: var(--vital-color, $rt-border-medium);
+    transform: scale(1.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  i {
+    font-size: 0.65rem;
+  }
+}
+
+// Add RGB versions for rgba usage
+.rt-vital-wounds { --vital-color-rgb: 168, 32, 32; }
+.rt-vital-fatigue { --vital-color-rgb: 192, 128, 32; }
+.rt-vital-fate { --vital-color-rgb: 212, 175, 55; }
+
+// ============================================
+// STAT BODY
+// ============================================
+
+.rt-vital-stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-vital-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.rt-vital-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--vital-color, $rt-text-primary);
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.rt-vital-max-label {
+  font-size: 0.9rem;
+  font-weight: 600;
   color: $rt-text-muted;
+  line-height: 1;
 }
 
-.rt-vital-max {
-  font-size: $rt-font-size-base;
-  color: var(--color-text-secondary);
-  min-width: 24px;
-}
+// ============================================
+// PROGRESS BAR
+// ============================================
 
-.rt-vital-bar {
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.rt-vital-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.4s ease;
-}
-
-.rt-wounds-fill {
-  background: linear-gradient(90deg, $rt-accent-combat, lighten($rt-accent-combat, 10%));
-}
-
-.rt-fatigue-fill {
-  background: linear-gradient(90deg, $rt-color-gold-dark, $rt-color-gold);
-}
-
-.rt-fate-value {
-  color: $rt-accent-gold !important;
-}
-
-.rt-critical-warning,
-.rt-exhausted-warning {
+.rt-vital-bar-wrapper {
   display: flex;
   align-items: center;
   gap: $rt-space-xs;
-  padding: 4px $rt-space-sm;
-  font-size: $rt-font-size-xs;
-  font-weight: 600;
-  text-transform: uppercase;
-  border-radius: $rt-radius-sm;
+}
+
+.rt-vital-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.rt-vital-bar-progress {
+  height: 100%;
+  width: var(--progress, 0%);
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
   
-  i { font-size: 0.8em; }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.2) 50%, 
+      transparent 100%
+    );
+    animation: shimmer 2s linear infinite;
+  }
 }
 
-.rt-critical-warning {
-  background: rgba($rt-accent-combat, 0.15);
-  color: $rt-accent-combat;
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-.rt-exhausted-warning {
-  background: rgba(180, 80, 20, 0.2);
-  color: #8b4000;
+.rt-wounds-progress {
+  background: linear-gradient(90deg, 
+    darken($rt-accent-combat, 10%) 0%, 
+    $rt-accent-combat 50%, 
+    lighten($rt-accent-combat, 10%) 100%
+  );
 }
 
-.rt-exhausted {
-  border-color: rgba(180, 80, 20, 0.4);
+.rt-fatigue-progress {
+  background: linear-gradient(90deg, 
+    #a06020 0%, 
+    #c08020 50%, 
+    #d09030 100%
+  );
 }
 
-// Panel icon colors
-.rt-panel-wounds .rt-panel-header i { color: $rt-accent-combat; }
-.rt-panel-fatigue .rt-panel-header i { color: #c08020; }
-.rt-panel-fate .rt-panel-header i { color: $rt-accent-gold; }
+.rt-vital-percent {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: $rt-text-muted;
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+// ============================================
+// ALERT MESSAGES
+// ============================================
+
+.rt-vital-alert {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.12);
+  border: 1px solid rgba(var(--vital-color-rgb, 0, 0, 0), 0.25);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--vital-color, $rt-text-primary);
+  
+  i {
+    font-size: 0.75rem;
+    animation: alert-pulse 1s ease-in-out infinite;
+  }
+}
+
+@keyframes alert-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+.rt-alert-fatigue {
+  --vital-color-rgb: 192, 128, 32;
+  --vital-color: #c08020;
+}
+
+// ============================================
+// FATE STARS DISPLAY
+// ============================================
+
+.rt-fate-stars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0;
+}
+
+.rt-fate-pip {
+  font-size: 1.2rem;
+  color: rgba($rt-accent-gold, 0.25);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: scale(1.15);
+  }
+  
+  &.rt-fate-pip--active {
+    color: $rt-accent-gold;
+    text-shadow: 0 0 8px rgba($rt-accent-gold, 0.5), 0 0 4px rgba($rt-accent-gold, 0.3);
+    animation: star-glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes star-glow {
+  0%, 100% { 
+    filter: brightness(1); 
+    transform: scale(1);
+  }
+  50% { 
+    filter: brightness(1.2); 
+    transform: scale(1.05);
+  }
+}
+
+.rt-fate-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.rt-fate-available {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $rt-accent-gold;
+  line-height: 1;
+}
+
+.rt-fate-total {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $rt-text-muted;
+  line-height: 1;
+}
+
+// ============================================
+// PANEL ICON COLORS
+// ============================================
+
 .rt-panel-reactions .rt-panel-header i { color: $rt-accent-skills; }
 .rt-panel-initiative .rt-panel-header i { color: $rt-accent-gold; }
 .rt-panel-injuries .rt-panel-header i { color: $rt-accent-combat; }

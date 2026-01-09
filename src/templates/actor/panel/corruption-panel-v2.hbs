@@ -8,9 +8,16 @@
         <span class="rt-panel-title">
             <i class="fas fa-skull"></i> Corruption
         </span>
-        <span class="rt-corruption-degree-badge {{corruptionDegreeClass system.corruption}}">
-            {{corruptionDegree system.corruption}}
-        </span>
+        
+        {{!-- Dynamic Purity Seal Badge --}}
+        <div class="rt-corruption-header-status">
+            <div class="rt-corruption-badge {{corruptionDegreeClass system.corruption}}"
+                 title="{{corruptionDegree system.corruption}} - {{corruptionModifier system.corruption}} to tests">
+                <i class="fas fa-certificate rt-badge-icon"></i>
+                <span class="rt-badge-label">{{corruptionDegree system.corruption}}</span>
+            </div>
+        </div>
+        
         <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'corruption_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
     </div>
 
@@ -74,12 +81,6 @@
                 </div>
             </div>
 
-            {{!-- Purity Seal Visual (cracks at high corruption) --}}
-            <div class="rt-purity-seal {{#if (gte system.corruption 60)}}rt-seal-cracked{{/if}} {{#if (gte system.corruption 90)}}rt-seal-burning{{/if}}">
-                <i class="fas fa-certificate"></i>
-                <span class="rt-seal-text">Purity Seal</span>
-            </div>
-
             {{!-- Warning Messages at Thresholds --}}
             {{#if (eq system.corruption 100)}}
             <div class="rt-corruption-alert rt-alert-damned">
@@ -128,22 +129,47 @@
                            value="{{system.corruption}}"
                            min="0"
                            max="100"
-                           placeholder="0" />
+                           placeholder="0"
+                           {{#unless (isExpanded 'corruption_details' actor)}}disabled{{/unless}} />
                 </div>
 
-                {{!-- Quick Set Buttons --}}
+                {{!-- Quick Adjust Buttons --}}
                 <div class="rt-corruption-quick-set">
-                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="0" title="Set to 0 (PURE)">
-                        <i class="fas fa-dove"></i> PURE
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.corruption" 
+                            data-delta="-5"
+                            data-min="0"
+                            title="Decrease by 5">
+                        -5
                     </button>
-                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="30" title="Set to 30 (SOILED)">
-                        30
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.corruption" 
+                            data-delta="-1"
+                            data-min="0"
+                            title="Decrease by 1">
+                        -1
                     </button>
-                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="60" title="Set to 60 (DEBASED)">
-                        60
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.corruption" 
+                            data-delta="1"
+                            data-max="100"
+                            title="Increase by 1">
+                        +1
                     </button>
-                    <button type="button" class="rt-quick-set-btn" data-action="set-corruption" data-value="90" title="Set to 90 (PROFANE)">
-                        90
+                    <button type="button" 
+                            class="rt-quick-adjust-btn" 
+                            data-action="adjustStat" 
+                            data-field="system.corruption" 
+                            data-delta="5"
+                            data-max="100"
+                            title="Increase by 5">
+                        +5
                     </button>
                 </div>
             </div>
@@ -152,12 +178,6 @@
             <div class="rt-corruption-edit-section">
                 <div class="rt-corruption-edit-header">
                     <i class="fas fa-biohazard"></i> Malignancies
-                    <button type="button"
-                            class="rt-add-btn-small item-create"
-                            data-type="malignancy"
-                            title="Add Malignancy">
-                        <i class="fas fa-plus"></i>
-                    </button>
                 </div>
 
                 {{#if (any actor.items "isMalignancy")}}
@@ -182,12 +202,21 @@
                         {{/if}}
                     {{/each}}
                 </div>
-                {{else}}
-                <div class="rt-corruption-empty">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>No malignancies (yet)</span>
-                </div>
                 {{/if}}
+                
+                {{!-- Drop Zone (always visible) --}}
+                <div class="rt-dropzone {{#unless (any actor.items "isMalignancy")}}rt-dropzone-empty{{/unless}}" 
+                     data-action="itemCreate"
+                     data-type="malignancy">
+                    <i class="fas fa-shield-alt rt-dropzone-icon"></i>
+                    <span class="rt-dropzone-text">
+                        {{#if (any actor.items "isMalignancy")}}
+                            Drop Malignancies Here or Click to Create
+                        {{else}}
+                            No malignancies (yet)
+                        {{/if}}
+                    </span>
+                </div>
             </div>
 
             {{!-- Info Section --}}

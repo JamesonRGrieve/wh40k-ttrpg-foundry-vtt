@@ -66,7 +66,7 @@
 
 .rt-armour-silhouette {
   display: grid;
-  grid-template-columns: 1fr 1.6fr 1fr;
+  grid-template-columns: 120px 1fr 120px;
   grid-template-rows: auto auto auto;
   grid-template-areas:
     ".       head      ."
@@ -74,7 +74,7 @@
     "rleg    .         lleg";
   gap: 6px;
   padding: var(--rt-space-sm);
-  max-width: 300px;
+  max-width: 450px;
   margin: 0 auto;
 }
 
@@ -200,15 +200,15 @@
 
 .rt-box-right-leg {
   grid-area: rleg;
-  justify-self: center;
-  margin-right: -16px;
+  justify-self: end;
+  margin-right: 8px;
   min-height: 100px;
 }
 
 .rt-box-left-leg {
   grid-area: lleg;
-  justify-self: center;
-  margin-left: -16px;
+  justify-self: start;
+  margin-left: 8px;
   min-height: 100px;
 }
 

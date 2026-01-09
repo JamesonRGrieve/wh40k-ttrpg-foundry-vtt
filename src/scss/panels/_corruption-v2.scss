@@ -27,6 +27,134 @@
   }
 
   // ============================================
+  // Header Status (Badge with Icon)
+  // ============================================
+
+  .rt-corruption-header-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: 8px;
+  }
+
+  .rt-corruption-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 2px solid;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    font-family: 'Modesto Condensed', serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    .rt-badge-icon {
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .rt-badge-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+    }
+
+    // PURE (0) - Green
+    &.degree-pure {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: #16a34a;
+      color: #15803d;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+      }
+    }
+
+    // TAINTED (1-30) - Yellow/Gold
+    &.degree-tainted {
+      background: rgba(234, 179, 8, 0.15);
+      border-color: #ca8a04;
+      color: #a16207;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+      }
+    }
+
+    // SOILED (31-60) - Orange
+    &.degree-soiled {
+      background: rgba(249, 115, 22, 0.15);
+      border-color: #ea580c;
+      color: #c2410c;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+      }
+    }
+
+    // DEBASED (61-90) - Red
+    &.degree-debased {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #dc2626;
+      color: #b91c1c;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+      }
+    }
+
+    // PROFANE (91-99) - Dark Red
+    &.degree-profane {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: #b91c1c;
+      color: #991b1b;
+      animation: badge-pulse 2s ease-in-out infinite;
+      
+      .rt-badge-label {
+        text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+      }
+    }
+
+    // DAMNED (100) - Darkest Red
+    &.degree-damned {
+      background: rgba(127, 29, 29, 0.25);
+      border-color: #7f1d1d;
+      color: #7f1d1d;
+      animation: badge-pulse 1s ease-in-out infinite;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
+      
+      .rt-badge-label {
+        text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
+      }
+    }
+  }
+
+  @keyframes badge-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.06);
+    }
+  }
+
+  @keyframes seal-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.08);
+    }
+  }
+
+  // ============================================
   // Main Display Area
   // ============================================
 
@@ -157,21 +285,35 @@
   .rt-corruption-bar-fill {
     height: 100%;
     border-radius: 7px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  }
 
-    // Dark gradient from green (pure) to deep red (damned)
-    background: linear-gradient(90deg,
-      #4a8f5c 0%,       // PURE - green
-      #c4871d 15%,      // TAINTED - gold
-      #c08020 30%,      // SOILED - orange
-      #8b4513 50%,      // mid
-      #8b0000 75%,      // DEBASED - dark red
-      #5a0000 90%,      // PROFANE - darker red
-      #2d0000 100%      // DAMNED - black red
-    );
-    background-size: 100% 100%;
+  // Bar color matches current degree
+  .degree-pure .rt-corruption-bar-fill {
+    background-color: #22c55e;
+  }
 
-    box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+  .degree-tainted .rt-corruption-bar-fill {
+    background-color: #eab308;
+  }
+
+  .degree-soiled .rt-corruption-bar-fill {
+    background-color: #f97316;
+  }
+
+  .degree-debased .rt-corruption-bar-fill {
+    background-color: #ef4444;
+  }
+
+  .degree-profane .rt-corruption-bar-fill {
+    background-color: #dc2626;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
+  }
+
+  .degree-damned .rt-corruption-bar-fill {
+    background-color: #7f1d1d;
+    box-shadow: 0 0 10px rgba(127, 29, 29, 0.6);
   }
 
   // Threshold Markers
@@ -201,93 +343,6 @@
     background: var(--rt-panel-bg-solid);
     padding: 1px 3px;
     border-radius: 2px;
-  }
-
-  // ============================================
-  // Purity Seal Visual
-  // ============================================
-
-  .rt-purity-seal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: $rt-space-sm;
-    color: var(--rt-fate-secondary);
-    transition: all 0.3s ease;
-    position: relative;
-
-    i {
-      font-size: 2rem;
-      filter: drop-shadow(0 2px 4px var(--rt-shadow-medium));
-      transition: all 0.3s ease;
-    }
-
-    .rt-seal-text {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-  }
-
-  // Cracked seal (60+ corruption)
-  .rt-seal-cracked {
-    color: var(--rt-fatigue-primary);
-
-    i {
-      filter: drop-shadow(0 2px 4px var(--rt-shadow-medium)) grayscale(0.3);
-      animation: seal-shake 3s ease-in-out infinite;
-    }
-
-    .rt-seal-text::after {
-      content: ' (Cracked)';
-      color: var(--rt-corruption-primary);
-    }
-  }
-
-  @keyframes seal-shake {
-    0%, 100% {
-      transform: rotate(0deg);
-    }
-    25% {
-      transform: rotate(-2deg);
-    }
-    75% {
-      transform: rotate(2deg);
-    }
-  }
-
-  // Burning seal (90+ corruption)
-  .rt-seal-burning {
-    color: var(--rt-corruption-primary);
-
-    i {
-      filter: drop-shadow(0 2px 8px rgba(139, 0, 0, 0.8)) grayscale(0.5);
-      animation: seal-burn 1.5s ease-in-out infinite;
-    }
-
-    .rt-seal-text::after {
-      content: ' (Burning)';
-      color: var(--rt-corruption-primary);
-      animation: text-flicker 0.5s ease-in-out infinite;
-    }
-  }
-
-  @keyframes seal-burn {
-    0%, 100% {
-      transform: rotate(0deg) scale(1);
-      filter: drop-shadow(0 2px 8px rgba(139, 0, 0, 0.8)) brightness(1);
-    }
-    50% {
-      transform: rotate(5deg) scale(1.05);
-      filter: drop-shadow(0 4px 12px rgba(255, 69, 0, 1)) brightness(1.3);
-    }
-  }
-
-  @keyframes text-flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
   }
 
   // ============================================
@@ -510,11 +565,59 @@
     }
   }
 
-  // Quick Set Buttons
+  // Quick Adjust Buttons
   .rt-corruption-quick-set {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: $rt-space-xs;
     margin-top: $rt-space-sm;
+  }
+
+  .rt-quick-adjust-btn {
+    padding: $rt-space-sm;
+    background: var(--rt-panel-bg-solid);
+    border: 2px solid var(--rt-border-color);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rt-text-medium);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Modesto Condensed', serif;
+
+    &:hover {
+      background: var(--rt-panel-bg-alt);
+      border-color: var(--rt-border-color-strong);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px var(--rt-shadow-soft);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    }
+
+    // Decrease buttons (green tint)
+    &[data-delta^="-"] {
+      color: var(--rt-success-secondary);
+      
+      &:hover {
+        border-color: var(--rt-success-primary);
+        background: var(--rt-success-bg);
+        color: var(--rt-success-primary);
+      }
+    }
+
+    // Increase buttons (red tint)
+    &[data-delta^="+"]:not([data-delta="+0"]) {
+      color: var(--rt-corruption-primary);
+      
+      &:hover {
+        border-color: var(--rt-corruption-primary);
+        background: var(--rt-corruption-bg);
+        color: var(--rt-corruption-primary);
+      }
+    }
   }
 
   .rt-quick-set-btn {
@@ -622,26 +725,24 @@
     }
   }
 
-  .rt-corruption-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px dashed var(--rt-border-color-light);
-    border-radius: 6px;
-
-    i {
-      font-size: 1.8rem;
-      color: var(--rt-success-secondary);
-      opacity: 0.5;
+  // Drop zone styling (special state for empty malignancies)
+  .rt-corruption-edit-section .rt-dropzone-empty {
+    .rt-dropzone-icon {
+      color: rgba(34, 197, 94, 0.6); // Green shield for "protected" state
     }
-
-    span {
-      font-size: 0.75rem;
-      color: var(--rt-text-muted);
-      font-style: italic;
+    
+    .rt-dropzone-text {
+      color: var(--rt-success-secondary);
+    }
+    
+    &:hover {
+      .rt-dropzone-icon {
+        color: rgba(34, 197, 94, 0.8);
+      }
+      
+      .rt-dropzone-text {
+        color: var(--rt-success-primary);
+      }
     }
   }
 

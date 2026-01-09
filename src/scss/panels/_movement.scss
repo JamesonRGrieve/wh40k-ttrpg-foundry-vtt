@@ -196,3 +196,193 @@
   color: var(--color-text-primary);
 }
 
+// ============================================
+// Modern Compact Movement Panel (Combat Tab)
+// ============================================
+
+.rt-movement-modern-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rt-move-modern-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-light);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--color-bg-primary);
+    border-color: var(--color-border-primary);
+    transform: translateX(2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.rt-move-modern-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.15) 0%, rgba($rt-accent-gold, 0.05) 100%);
+  color: $rt-accent-gold;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.rt-move-modern-content {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex: 1;
+  z-index: 2;
+}
+
+.rt-move-modern-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-text-muted;
+  min-width: 50px;
+}
+
+.rt-move-modern-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.rt-move-unit {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: $rt-text-muted;
+  margin-left: 2px;
+}
+
+.rt-move-modern-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--move-percent, 50%);
+  background: linear-gradient(90deg, 
+    rgba($rt-accent-gold, 0.08) 0%, 
+    rgba($rt-accent-gold, 0.02) 100%);
+  border-right: 2px solid rgba($rt-accent-gold, 0.2);
+  z-index: 1;
+  transition: width 0.3s ease;
+}
+
+// Specific movement type styling
+.rt-move-half .rt-move-modern-icon {
+  background: linear-gradient(135deg, rgba(#2ecc71, 0.15) 0%, rgba(#2ecc71, 0.05) 100%);
+  color: #27ae60;
+}
+
+.rt-move-full .rt-move-modern-icon {
+  background: linear-gradient(135deg, rgba(#3498db, 0.15) 0%, rgba(#3498db, 0.05) 100%);
+  color: #2980b9;
+}
+
+.rt-move-charge .rt-move-modern-icon {
+  background: linear-gradient(135deg, rgba(#f39c12, 0.15) 0%, rgba(#f39c12, 0.05) 100%);
+  color: #e67e22;
+}
+
+.rt-move-run .rt-move-modern-icon {
+  background: linear-gradient(135deg, rgba(#e74c3c, 0.15) 0%, rgba(#e74c3c, 0.05) 100%);
+  color: #c0392b;
+}
+
+// ============================================
+// Dense Movement Grid (Overview Tab Full Panel)
+// ============================================
+
+.rt-movement-dense-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.rt-stat-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $rt-space-sm;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-light);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--color-bg-primary);
+    border-color: var(--color-border-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  i {
+    font-size: 1rem;
+    color: var(--color-text-dark-secondary);
+    opacity: 0.7;
+  }
+}
+
+.rt-stat-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-dark-secondary);
+  text-align: center;
+}
+
+.rt-stat-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-dark-primary);
+  line-height: 1;
+}
+
+// Size select field
+.rt-size-select-wrapper {
+  .rt-size-select-inline {
+    width: 100%;
+    padding: 2px 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--color-border-light);
+    border-radius: 4px;
+    background: var(--color-bg-primary);
+    color: var(--color-text-dark-primary);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-border-highlight);
+    }
+  }
+}
+
+// Encumbrance status
+.rt-enc-compact {
+  .rt-enc-over {
+    color: #e74c3c;
+    font-weight: 700;
+  }
+}
+

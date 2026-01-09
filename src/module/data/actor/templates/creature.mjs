@@ -243,17 +243,27 @@ export default class CreatureTemplate extends CommonTemplate {
       }
     }
     
-    // Ensure fate values are integers
+    // Ensure fate values are integers - only modify if property exists
     if (source.fate) {
-      source.fate.max = this._toInt(source.fate.max);
-      source.fate.value = this._toInt(source.fate.value);
+      if (source.fate.max !== undefined) {
+        source.fate.max = this._toInt(source.fate.max);
+      }
+      if (source.fate.value !== undefined) {
+        source.fate.value = this._toInt(source.fate.value);
+      }
     }
     
-    // Ensure psy values are integers
+    // Ensure psy values are integers - only modify if property exists
     if (source.psy) {
-      source.psy.rating = this._toInt(source.psy.rating);
-      source.psy.sustained = this._toInt(source.psy.sustained);
-      source.psy.defaultPR = this._toInt(source.psy.defaultPR);
+      if (source.psy.rating !== undefined) {
+        source.psy.rating = this._toInt(source.psy.rating);
+      }
+      if (source.psy.sustained !== undefined) {
+        source.psy.sustained = this._toInt(source.psy.sustained);
+      }
+      if (source.psy.defaultPR !== undefined) {
+        source.psy.defaultPR = this._toInt(source.psy.defaultPR);
+      }
     }
     
     return super.migrateData(source);

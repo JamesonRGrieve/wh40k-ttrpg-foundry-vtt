@@ -1,12 +1,9 @@
 {{!-- Active Effects Panel --}}
 {{!-- Displays all active effects on the actor --}}
-<div class="rt-panel rt-panel-effects {{#if collapsible}}rt-collapsible{{/if}}" data-panel-id="effects">
+<div class="rt-panel rt-panel-effects-list {{#if collapsible}}rt-collapsible{{/if}}" data-panel-id="effects">
     <div class="rt-panel-header" {{#if collapsible}}data-action="togglePanel"{{/if}}>
         <span class="rt-panel-title">
             <i class="fas fa-magic"></i> Active Effects
-            {{#if effects.length}}
-                <span class="rt-badge">{{effects.length}}</span>
-            {{/if}}
         </span>
         {{#if collapsible}}
             <i class="fas fa-chevron-down rt-collapse-icon"></i>
@@ -17,11 +14,11 @@
             <div class="rt-effects-list">
                 {{#each effects as |effect|}}
                     <div class="rt-effect-card {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
-                        <div class="rt-effect-header">
-                            <img src="{{effect.icon}}" alt="{{effect.name}}" class="rt-effect-icon">
-                            <div class="rt-effect-info">
-                                <div class="rt-effect-name">{{effect.name}}</div>
-                                <div class="rt-effect-source">{{effect.document.sourceName}}</div>
+                        <div class="rt-card-header">
+                            <img src="{{effect.icon}}" alt="{{effect.name}}" class="rt-card-icon">
+                            <div class="rt-card-info">
+                                <div class="rt-card-name">{{effect.name}}</div>
+                                <div class="rt-card-meta">{{effect.document.sourceName}}</div>
                             </div>
                             <div class="rt-effect-controls">
                                 {{#if effect.document.isTemporary}}
@@ -35,17 +32,17 @@
                                         {{/if}}
                                     </span>
                                 {{/if}}
-                                <button class="rt-effect-toggle" 
+                                <button class="rt-card-btn" 
                                         data-action="toggleEffect" 
                                         data-effect-id="{{effect.id}}"
-                                        data-tooltip="{{#if effect.document.disabled}}Enable{{else}}Disable{{/if}} Effect">
+                                        title="{{#if effect.document.disabled}}Enable{{else}}Disable{{/if}} Effect">
                                     <i class="fas {{#if effect.document.disabled}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
                                 </button>
                                 {{#if ../editable}}
-                                    <button class="rt-effect-delete" 
+                                    <button class="rt-card-btn rt-btn-danger" 
                                             data-action="deleteEffect" 
                                             data-effect-id="{{effect.id}}"
-                                            data-tooltip="Delete Effect">
+                                            title="Delete Effect">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 {{/if}}
@@ -65,18 +62,12 @@
                     </div>
                 {{/each}}
             </div>
-        {{else}}
-            <div class="rt-empty-state">
-                <i class="fas fa-magic"></i>
-                <p>No active effects</p>
-            </div>
         {{/if}}
         
         {{#if editable}}
-            <div class="rt-panel-footer">
-                <button class="rt-btn rt-btn-add" data-action="createEffect">
-                    <i class="fas fa-plus"></i> Add Effect
-                </button>
+            <div class="rt-dropzone" data-action="effectCreate">
+                <i class="fas fa-magic rt-dropzone-icon"></i>
+                <span class="rt-dropzone-text">Drop Effect or Click to Create</span>
             </div>
         {{/if}}
     </div>
